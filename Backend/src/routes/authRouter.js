@@ -2,9 +2,9 @@ import {Router} from 'express'
 import {asyncHandler} from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
 import validate from '@/app/middleware/common/validate'
-import * as authMiddleware from '../app/middleware/auth.middleware'
-import * as authRequest from '../app/requests/auth.request'
-import * as authController from '../app/controllers/auth.controller'
+import * as authMiddleware from '../app/middleware/authMiddleware'
+import * as authRequest from '../app/requests/authRequest'
+import * as authController from '../app/controllers/authController'
 
 const authRouter = Router()
 

@@ -1,5 +1,5 @@
 import {db} from '@/configs'
-import userSeeder from './user.seeder'
+import userSeeder from './userSeeder'
 import chalk from 'chalk'
 
 async function seed() {

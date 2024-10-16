@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import {JsonWebTokenError, TokenExpiredError} from 'jsonwebtoken'
 import {User} from '@/models'
-import {tokenBlocklist} from '@/app/services/auth.service'
+import {tokenBlocklist} from '@/app/services/authService'
 import {TOKEN_TYPE} from '@/configs'
 import {abort, getToken, verifyToken} from '@/utils/helpers'
 
