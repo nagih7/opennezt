@@ -13,12 +13,17 @@ import formDataHandler from './handlers/form-data.handler'
 import initLocalsHandler from './handlers/init-locals.handler'
 import notFoundHandler from './handlers/not-found.handler'
 import errorHandler from './handlers/error.handler'
+import cookieParser from 'cookie-parser'
 
+// import routes
 import route from './routes'
 
 function createApp() {
     // Init app
     const app = express()
+
+    // Config cookie-parser
+    app.use(cookieParser())
 
     app.response.jsonify = jsonify
     app.response.sendMail = sendMail
@@ -36,6 +41,8 @@ function createApp() {
     app.use(serveFavicon(path.join(PUBLIC_DIR, 'favicon.ico')))
     app.use('/static', express.static(PUBLIC_DIR))
     app.use(helmet())
+
+    // Sử dụng expres parser để xử lý dữ liệu thành dạng json
     app.use(express.json())
     app.use(express.urlencoded({extended: true}))
     app.use(multer({storage: multer.memoryStorage()}).any())

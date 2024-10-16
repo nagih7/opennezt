@@ -7,7 +7,12 @@ export async function login(req, res) {
     const validLogin = await authService.checkValidLogin(req.body)
 
     if (validLogin) {
-        res.jsonify(authService.authToken(validLogin))
+        // Set cookie
+        res.cookie('access_token', authService.authToken(validLogin).access_token, {
+            httpOnly: true,
+            // secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+        }).jsonify(authService.authToken(validLogin))
     } else {
         abort(400, 'Email hoặc mật khẩu không đúng.')
     }

@@ -9,6 +9,9 @@ import {
 	startRequestRegister,
 	startRequestRegisterSuccess,
 	startRequestRegisterFail,
+	startRequestLogout,
+	startRequestLogoutSuccess,
+	startRequestLogoutFail,
 } from "../../states/modules/auth";
 
 export const login = (data) => async (dispatch, getState) => {
@@ -60,6 +63,21 @@ export const register = (data) => async (dispatch, getState) => {
 			phone: data.phone,
 			address: data.address,
 		},
+		dispatch,
+		getState,
+	});
+};
+
+export const logout = () => async (dispatch, getState) => {
+	return callApi({
+		method: "post",
+		apiPath: `auth/logout`,
+		actionTypes: [
+			startRequestLogout,
+			startRequestLogoutSuccess,
+			startRequestLogoutFail,
+		],
+		variables: {},
 		dispatch,
 		getState,
 	});

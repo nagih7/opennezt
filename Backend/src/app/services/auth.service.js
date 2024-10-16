@@ -21,9 +21,14 @@ export async function checkValidLogin({email, password}) {
 }
 
 export function authToken(user) {
+    // Generate access token
     const accessToken = generateToken({user_id: user._id}, TOKEN_TYPE.AUTHORIZATION, LOGIN_EXPIRE_IN)
+
+    // Decode access token to get expire time
     const decode = jwt.decode(accessToken)
     const expireIn = decode.exp - decode.iat
+
+    // Return access token and expire time
     return {
         access_token: accessToken,
         expire_in: expireIn,

@@ -31,11 +31,10 @@ export default async function callApi({
 		url: apiPath,
 		data: variables,
 		params: method === "get" ? variables : "",
+		withCredentials: true,
 	})
 		.then(function (response) {
-			console.log(response);
 			dispatch(successType(response.data));
-			return response.data;
 		})
 		.catch((error) => {
 			let response = error.response ? error.response : error;
