@@ -1,12 +1,12 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import Login from "../pages/Auth/Login";
-import Register from "../pages/Auth/Register";
-import ForgotPassword from "../pages/Auth/ForgotPassword";
-import Profile from "../pages/Profile";
-import Home from "../pages/Home";
-import Employee from "../pages/Employee";
-import About from "../pages/About";
+import Login from "../components/pages/Auth/Login";
+import Register from "../components/pages/Auth/Register";
+import ForgotPassword from "../components/pages/Auth/ForgotPassword";
+import Profile from "../components/pages/Profile";
+import Home from "../components/pages/Home";
+import Employee from "../components/pages/Employee";
+import About from "../components/pages/About";
 import { rootLoader } from "./rootLoader";
 
 const router = createBrowserRouter([
