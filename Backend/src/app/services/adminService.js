@@ -9,3 +9,7 @@ export async function getAllUsers() {
     })
     return users
 }
+
+export async function getTotalUsers() {
+    return await User.countDocuments()
+}

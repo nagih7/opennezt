@@ -11,6 +11,12 @@ const adminRouter = Router()
 // Middleware to check if the user is authenticated
 adminRouter.use(asyncHandler(requireAuthentication))
 
-adminRouter.get('/all-users', asyncHandler(adminController.getAllUsers))
+adminRouter.get('/all-users', asyncHandler(requireAuthentication), asyncHandler(adminController.getAllUsers))
+
+adminRouter.get(
+    '/total-users',
+    asyncHandler(requireAuthentication),
+    asyncHandler(adminController.getTotalUsers)
+)
 
 export default adminRouter
