@@ -1,11 +1,13 @@
 import authRouter from './authRouter'
 import userRouter from './userRouter'
 import homeRouter from './homeRouter'
+import adminRouter from './adminRouter'
 
 function route(app) {
     app.use('/auth', authRouter)
     app.use('/users', userRouter)
     app.use('/home', homeRouter)
+    app.use('/admin', adminRouter)
 
     app.get('/', (req, res) => {
         res.jsonify({

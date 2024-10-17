@@ -52,11 +52,3 @@ export async function remove(user) {
     }
     await User.deleteOne({_id: user._id})
 }
-
-export async function getAll() {
-    const users = await User.find()
-    users.forEach(function (user) {
-        user.avatar = user.avatar && LINK_STATIC_URL + user.avatar
-    })
-    return users
-}
