@@ -2,7 +2,7 @@ import {User} from '@/models'
 
 async function userSeeder(session) {
     const email = 'user@opennezt.vn'
-    const password = '12345'
+    const password = 'User.12345'
     const role = 'user'
     let superAdmin = await User.findOne({email})
     if (!superAdmin) {

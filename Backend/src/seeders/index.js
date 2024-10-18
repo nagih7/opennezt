@@ -7,6 +7,7 @@ async function seed() {
     await db.transaction(async function (session) {
         console.log(chalk.bold('Initializing data...'))
 
+        await adminSeeder(session)
         await userSeeder(session)
         await adminSeeder(session)
 
