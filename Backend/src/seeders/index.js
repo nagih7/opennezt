@@ -9,6 +9,7 @@ async function seed() {
 
         await adminSeeder(session)
         await userSeeder(session)
+        await adminSeeder(session)
 
         console.log(chalk.bold('Data has been initialized!'))
     })
