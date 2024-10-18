@@ -24,6 +24,11 @@ const User = createModel(
                 return bcrypt.hashSync(password, salt)
             },
         },
+        role: {
+            type: String,
+            default: 'user',
+            required: true,
+        },
         phone: {
             type: String,
             default: '',
