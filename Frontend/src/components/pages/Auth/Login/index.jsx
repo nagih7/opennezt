@@ -29,16 +29,19 @@ function Login() {
 		(state) => state.auth.isLoadingBtnLogin
 	);
 	const isAuthSuccess = useSelector((state) => state.auth.isAuthSuccess);
+	const authorize = useSelector((state) => state.auth.authorize);
 
 	useEffect(() => {
 		handleResetError();
 	}, [dataLogin]);
 
 	useEffect(() => {
-		if (isAuthSuccess) {
+		if (isAuthSuccess && authorize === "admin") {
+			navigate("/manage");
+		} else if (isAuthSuccess && authorize === "user") {
 			navigate("/");
 		}
-	}, [isAuthSuccess, navigate]);
+	}, [isAuthSuccess, authorize, navigate]);
 
 	const handleResetError = () => {
 		setErrorDataLogin({

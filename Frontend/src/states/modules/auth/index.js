@@ -4,6 +4,7 @@ const authSlice = createSlice({
 	name: "auth",
 	initialState: {
 		isAuthSuccess: false,
+		authorize: "user",
 		authUser: {},
 		errorRegister: {
 			name: "",
@@ -36,11 +37,13 @@ const authSlice = createSlice({
 			...state,
 			isAuthSuccess: true,
 			authUser: action.payload.data,
+			authorize: action.payload.data.role,
 		}),
 		startRequestGetMeFail: (state) => ({
 			...state,
 			isAuthSuccess: false,
 			authUser: {},
+			authorize: "user",
 		}),
 		startRequestRegister: (state) => ({
 			...state,

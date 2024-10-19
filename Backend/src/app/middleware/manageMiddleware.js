@@ -6,7 +6,7 @@ import {TOKEN_TYPE} from '@/configs'
 import {abort, getToken, verifyToken} from '@/utils/helpers'
 
 // Middleware to require authentication
-async function requireAuthentication(req, res, next) {
+export async function checkAuthorizeManage(req, res, next) {
     try {
         // Get token from request headers
         const token = getToken(req.headers)
@@ -18,7 +18,9 @@ async function requireAuthentication(req, res, next) {
                 const {user_id} = verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
                 const user = await User.findOne({_id: user_id})
                 if (user) {
-                    req.currentUser = user
+                    if (user.role !== 'admin') {
+                        abort(403, 'Bạn không có quyền truy cập.')
+                    }
                     next()
                     return
                 }
@@ -34,5 +36,3 @@ async function requireAuthentication(req, res, next) {
     }
     abort(401)
 }
-
-export default requireAuthentication

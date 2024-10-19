@@ -4,6 +4,7 @@ import Login from "../components/pages/Auth/Login";
 import Register from "../components/pages/Auth/Register";
 import ForgotPassword from "../components/pages/Auth/ForgotPassword";
 import Profile from "../components/pages/Profile";
+import Manage from "../components/pages/Manage";
 import Home from "../components/pages/Home";
 import Employee from "../components/pages/Employee";
 import About from "../components/pages/About";
@@ -30,6 +31,12 @@ const router = createBrowserRouter([
 		element: <Profile />,
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROFILE_PAGE"),
+	},
+	{
+		path: "/manage",
+		element: <Manage />,
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_MANAGE_PAGE"),
 	},
 	{
 		path: "/",
