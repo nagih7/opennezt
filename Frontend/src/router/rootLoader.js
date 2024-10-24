@@ -19,6 +19,9 @@ export const rootLoader = async (
 	if (url.pathname === "/manage") {
 		await store.dispatch(getTotalUsers());
 	}
+	if (url.pathname === "/about-you") {
+		await store.dispatch(getMe());
+	}
 	let { auth } = store.getState();
 
 	if (!auth.isAuthSuccess && getAuthToken()) {
@@ -37,6 +40,7 @@ export const rootLoader = async (
 		if (auth.isAuthSuccess && auth.authorize === "admin") {
 			return redirect("/manage");
 		} else if (auth.isAuthSuccess && auth.authorize === "user") {
+			console.log("auth.authorize");
 			return redirect("/");
 		}
 	}

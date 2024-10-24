@@ -8,6 +8,7 @@ import Manage from "../components/pages/Manage";
 import Home from "../components/pages/Home";
 import Employee from "../components/pages/Employee";
 import About from "../components/pages/About";
+import AboutYou from "../components/pages/AboutYou";
 import { rootLoader } from "./rootLoader";
 
 const router = createBrowserRouter([
@@ -42,6 +43,12 @@ const router = createBrowserRouter([
 		path: "/",
 		element: <Home />,
 		loader: ({ request }) => rootLoader({ request }, true, "LOAD_HOME_PAGE"),
+	},
+	{
+		path: "/about-you",
+		element: <AboutYou />,
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_ABOUT_YOU_PAGE"),
 	},
 	{
 		path: "/about",

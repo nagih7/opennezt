@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MainLayout from "../../layouts/MainLayout";
+import MainLayout from "../../layouts/ManageLayout";
 import styles from "./styles.module.scss";
 import TableCustom from "../../../components/UI/Table";
 import InputMASQ from "../../../components/UI/Input";

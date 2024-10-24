@@ -1,0 +1,154 @@
+@import "src/assets/scss/variables";
+
+/* Nav item */
+.navItemWrap {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	cursor: pointer;
+	padding: 14px 22px;
+
+	.textWrap {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+
+		.iconWrap {
+			width: 25px;
+			display: flex;
+			justify-content: center;
+			// color: $colorBlack;
+			color: (--cui-sidebar-nav-link-icon-color);
+		}
+
+		.text {
+			font-weight: 500;
+			// color: $colorBlack;
+			color: #ffffffde;
+			margin-left: 15px;
+			clear: both;
+			display: inline-block;
+			overflow: hidden;
+			white-space: nowrap;
+		}
+	}
+
+	.btnDrop {
+		font-size: 11px;
+		transition: ease 0.3s;
+		svg {
+			color: $colorBlack;
+		}
+	}
+}
+
+.navItemCloseWrap {
+	justify-content: center;
+}
+
+.navItemActiveWrap {
+	.textWrap {
+		.text,
+		g {
+			color: $colorActive;
+		}
+	}
+
+	.btnDrop {
+		transition: 0.3s;
+		transform: rotate(180deg);
+	}
+}
+
+.activeNavItemAndSubMenuWrap {
+	.btnDrop {
+		transition: ease 0.3s;
+		transform: rotate(180deg);
+	}
+}
+
+/* Sub menu */
+.menuSubNav {
+	list-style: none;
+	max-height: 0;
+	padding: 0;
+	overflow: hidden;
+	transition: all 0.3s;
+
+	.menuSubNavItem {
+		width: 100%;
+		// background-color: $mainColor;
+		background-color: transparent;
+		// color: $colorBlack;
+		color: (--cui-sidebar-nav-link-icon-color);
+		transition: ease 0.3s;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		padding: 14px 22px 14px 60px;
+		&:hover {
+			color: $colorActive;
+		}
+
+		.subNavIconWrap {
+			width: 25px;
+			display: flex;
+			justify-content: center;
+			// color: $colorBlack;
+			color: (--cui-sidebar-nav-link-icon-color);
+		}
+
+		.contentSubNavItemWrap {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			cursor: pointer;
+			margin-left: 15px;
+
+			.textWrap {
+				display: flex;
+				justify-content: flex-start;
+
+				.text {
+					font-weight: 500;
+					clear: both;
+					display: inline-block;
+					overflow: hidden;
+					white-space: nowrap;
+					color: #ffffffde;
+				}
+			}
+		}
+
+		.menuSubFoSubItemActive {
+			.textWrap {
+				color: $colorActive;
+				transition: ease 0.3s;
+			}
+		}
+	}
+}
+
+.menuSubForSubItemActive {
+	width: 100%;
+	max-height: 80vh;
+	overflow-y: auto;
+	overflow-x: hidden;
+	transition: all 0.5s;
+
+	&::-webkit-scrollbar {
+		width: 7px;
+		transition: all 2s;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: rgba(217, 219, 226, 0);
+		border-radius: 5px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: rgba(217, 219, 226, 0);
+		border-radius: 8px;
+		transition: all 2s;
+	}
+}

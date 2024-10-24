@@ -2,7 +2,13 @@ import React from "react";
 
 export const routeMap = [
 	{
+		path: "/",
+		exact: true,
+		name: "Home",
+	},
+	{
 		label: "Dashboard",
+		name: "Dashboard",
 		icon: (
 			<svg
 				fill="none"

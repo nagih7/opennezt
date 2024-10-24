@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MainLayout from "../../layouts/MainLayout";
+import MainLayout from "../../layouts/ManageLayout";
 import styles from "./styles.module.scss";
 import { Col, Row } from "antd";
 import { useSelector } from "react-redux";

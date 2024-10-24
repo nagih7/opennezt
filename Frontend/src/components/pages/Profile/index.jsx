@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import MainLayout from "../../layouts/MainLayout";
+import MainLayout from "../../layouts/ManageLayout";
 import styles from "./styles.module.scss";
 import "./styles.scss";
 import { Col, Row, Tabs } from "antd";

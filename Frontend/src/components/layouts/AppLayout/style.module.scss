@@ -1,0 +1,73 @@
+// @import "styles.module";
+
+// .mainLayoutWrap {
+//   .mainWrap {
+//     .mainContentWrap {
+//       background-color: #1a1a3c;
+//     }
+//   }
+// }
+
+@import "../../../assets/scss/variables";
+
+.appLayoutContainer {
+	background-color: #f3f3f3;
+
+	.appLayoutWrap {
+		margin: auto;
+
+		.mainWrap {
+			transition: ease 0.3s;
+
+			.mainContentWrap {
+				height: calc(100% - 60px);
+				overflow-y: auto;
+				overflow-x: hidden;
+				background-color: $backgroundMain;
+				padding: 31px 22px 30px 22px;
+
+				&::-webkit-scrollbar {
+					width: 7px;
+					transition: all 2s;
+				}
+
+				&::-webkit-scrollbar-track {
+					background: rgba(217, 219, 226, 0);
+					border-radius: 5px;
+				}
+
+				&::-webkit-scrollbar-thumb {
+					background: rgba(217, 219, 226, 0);
+					border-radius: 8px;
+					transition: all 2s;
+				}
+
+				&:hover::-webkit-scrollbar-thumb:vertical {
+					background-color: rgba(119, 111, 111, 0.68);
+				}
+
+				&::-webkit-scrollbar-thumb:vertical:hover {
+					background-color: rgba(133, 133, 133, 0.68);
+				}
+			}
+		}
+
+		.mainWrapWithConditionSideBarClose {
+			width: calc(100% - 64px);
+			margin-left: 64px;
+		}
+
+		@media only screen and (max-width: 1024px) {
+			.mainWrap {
+				width: calc(100% - 64px);
+				margin-left: 64px;
+				transition: all 0.5s;
+				height: 100vh;
+			}
+			.mainWrapWithConditionSideBarClose {
+				width: calc(100% - 64px);
+				margin-left: 64px;
+			}
+		}
+	}
+}

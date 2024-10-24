@@ -1,0 +1,47 @@
+import React, { useEffect } from "react";
+import styles from "./style.module.scss";
+import SideBar from "./SiderBar";
+import Header from "./Header";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setLocation } from "../../../states/modules/app";
+
+function AppLayout(props) {
+	const { children } = props;
+	const isShowSideBar = useSelector((state) => state.app.isShowSideBar);
+	const isThemeLight = useSelector((state) => state.app.isThemeLight);
+	const location = useSelector((state) => state.app.location);
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (location.pathName !== location.prevPathName) {
+			dispatch(
+				setLocation({
+					pathName: location.pathName,
+					payload: location.payload,
+					prevPathName: location.pathName,
+				})
+			);
+			navigate(location.pathName);
+		}
+	}, [location, navigate, dispatch]);
+
+	return (
+		<div className={`${styles.appLayoutContainer}`}>
+			<div className={styles.appLayoutWrap}>
+				<SideBar
+					isThemeLight={isThemeLight}
+					isShowSideBar={isShowSideBar}
+				/>
+				<div
+					className={`wrapper d-flex flex-column min-vh-100 ${styles.mainWrap}`}>
+					<Header />
+					<main className={styles.mainContentWrap}>{children}</main>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+export default AppLayout;
