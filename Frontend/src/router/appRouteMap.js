@@ -7,7 +7,7 @@ import {
 	HomeOutlined,
 } from "@ant-design/icons";
 
-export const appRouteMap = [
+const appRouteMap = [
 	{
 		label: "Explore",
 		icon: (
@@ -18,7 +18,7 @@ export const appRouteMap = [
 			/>
 		),
 		path: "",
-		routeActive: ["/Home"],
+		routeActive: ["/"],
 		permissions: ["home_page"],
 		children: [
 			{
@@ -31,7 +31,7 @@ export const appRouteMap = [
 					/>
 				),
 				path: "/",
-				routeActive: ["/Home"],
+				routeActive: ["/"],
 				permissions: ["home_page"],
 			},
 			{
@@ -99,8 +99,8 @@ export const appRouteMap = [
 			/>
 		),
 		path: "",
-		routeActive: ["/support", "/contact&support"],
-		permissions: ["support_page"],
+		routeActive: ["/about", "/contact&support"],
+		permissions: ["about_page"],
 		children: [
 			{
 				label: "Contact & Support",
@@ -131,3 +131,5 @@ export const appRouteMap = [
 		],
 	},
 ];
+
+export default appRouteMap;

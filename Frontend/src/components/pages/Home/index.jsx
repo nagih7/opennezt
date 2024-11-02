@@ -1,7 +1,5 @@
 import React from "react";
-import AppLayout from "../../layouts/AppLayout";
-import "../../scss/style.scss";
-// import styles from "./styles.module.scss";
+import AppLayout from "components/layouts/AppLayout";
 
 function Home() {
 	return (

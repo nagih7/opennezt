@@ -6,7 +6,7 @@
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
-	padding: 14px 22px;
+	padding: 1rem;
 
 	.textWrap {
 		display: flex;
@@ -17,14 +17,12 @@
 			width: 25px;
 			display: flex;
 			justify-content: center;
-			// color: $colorBlack;
-			color: (--cui-sidebar-nav-link-icon-color);
+			color: $colorLight;
 		}
 
 		.text {
 			font-weight: 500;
-			// color: $colorBlack;
-			color: #ffffffde;
+			color: $colorLight;
 			margin-left: 15px;
 			clear: both;
 			display: inline-block;
@@ -35,9 +33,9 @@
 
 	.btnDrop {
 		font-size: 11px;
-		transition: ease 0.3s;
+		transition: all 0.3s;
 		svg {
-			color: $colorBlack;
+			color: $colorWhite;
 		}
 	}
 }
@@ -62,7 +60,7 @@
 
 .activeNavItemAndSubMenuWrap {
 	.btnDrop {
-		transition: ease 0.3s;
+		transition: 0.3s;
 		transform: rotate(180deg);
 	}
 }
@@ -73,29 +71,15 @@
 	max-height: 0;
 	padding: 0;
 	overflow: hidden;
-	transition: all 0.3s;
+	transition: all 0.2s;
 
 	.menuSubNavItem {
 		width: 100%;
-		// background-color: $mainColor;
-		background-color: transparent;
+		background-color: $mainColor;
 		// color: $colorBlack;
-		color: (--cui-sidebar-nav-link-icon-color);
-		transition: ease 0.3s;
-		display: flex;
-		align-items: center;
-		justify-content: flex-start;
-		padding: 14px 22px 14px 60px;
+		transition: all 0.3s;
 		&:hover {
 			color: $colorActive;
-		}
-
-		.subNavIconWrap {
-			width: 25px;
-			display: flex;
-			justify-content: center;
-			// color: $colorBlack;
-			color: (--cui-sidebar-nav-link-icon-color);
 		}
 
 		.contentSubNavItemWrap {
@@ -103,19 +87,20 @@
 			justify-content: space-between;
 			align-items: center;
 			cursor: pointer;
-			margin-left: 15px;
+			padding: 15px 15px 15px 55px;
 
 			.textWrap {
 				display: flex;
 				justify-content: flex-start;
+				align-items: center;
 
 				.text {
 					font-weight: 500;
+					margin-left: 10px;
 					clear: both;
 					display: inline-block;
 					overflow: hidden;
 					white-space: nowrap;
-					color: #ffffffde;
 				}
 			}
 		}
@@ -123,7 +108,7 @@
 		.menuSubFoSubItemActive {
 			.textWrap {
 				color: $colorActive;
-				transition: ease 0.3s;
+				transition: 0.5s;
 			}
 		}
 	}

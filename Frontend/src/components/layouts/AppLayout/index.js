@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 import SideBar from "./SiderBar";
 import Header from "./Header";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,7 @@ function AppLayout(props) {
 	const { children } = props;
 	const isShowSideBar = useSelector((state) => state.app.isShowSideBar);
 	const isThemeLight = useSelector((state) => state.app.isThemeLight);
+	const titlePage = useSelector((state) => state.app.title);
 	const location = useSelector((state) => state.app.location);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -28,16 +29,32 @@ function AppLayout(props) {
 	}, [location, navigate, dispatch]);
 
 	return (
-		<div className={`${styles.appLayoutContainer}`}>
-			<div className={styles.appLayoutWrap}>
+		<div className={`${styles.boxMainLayout}`}>
+			<div className={styles.headerBox}></div>
+			<div className={styles.mainLayoutWrap}>
 				<SideBar
 					isThemeLight={isThemeLight}
 					isShowSideBar={isShowSideBar}
 				/>
 				<div
-					className={`wrapper d-flex flex-column min-vh-100 ${styles.mainWrap}`}>
+					className={`${styles.mainWrap} ${
+						!isShowSideBar ? styles.mainWrapWithConditionSideBarClose : ""
+					}`}>
 					<Header />
-					<main className={styles.mainContentWrap}>{children}</main>
+					<main className={styles.mainContentWrap}>
+						<div className={styles.headerMainWrap}>
+							<div className={styles.titleWrap}>{titlePage}</div>
+							<div className={styles.breadcrumbWrap}>
+								<span className={`${styles.text}`}>Home</span>{" "}
+								<span className={styles.slash}>/</span>
+								<span
+									className={`${styles.text} ${styles.breadcrumbActive}`}>
+									Dashboard
+								</span>
+							</div>
+						</div>
+						{children}
+					</main>
 				</div>
 			</div>
 		</div>

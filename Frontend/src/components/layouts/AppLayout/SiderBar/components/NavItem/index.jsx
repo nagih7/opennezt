@@ -24,15 +24,17 @@ function NavItem(props) {
 			{route.children && route.children.length > 0 ? (
 				<>
 					<div
-						className={`${styles.navItemWrap} ${
-							!isShowSideBar ? styles.navItemCloseWrap : ""
-						} ${
-							handleCheckRouteActive(route.routeActive, isShowMenu)
-								? isShowSideBar
-									? styles.activeNavItemAndSubMenuWrap
-									: styles.navItemActiveWrap
-								: ""
-						}`}>
+						className={`
+            ${styles.navItemWrap}
+            ${!isShowSideBar ? styles.navItemCloseWrap : ""}
+            ${
+					handleCheckRouteActive(route.routeActive, isShowMenu)
+						? isShowSideBar
+							? styles.activeNavItemAndSubMenuWrap
+							: styles.navItemActiveWrap
+						: ""
+				}
+          `}>
 						<div className={styles.textWrap}>
 							<div className={styles.iconWrap}>{route.icon}</div>
 							{isShowSideBar ? (
@@ -63,32 +65,35 @@ function NavItem(props) {
 					</div>
 					{isShowSideBar ? (
 						<ul
-							className={`${styles.menuSubNav} ${
-								handleCheckRouteActive(route.routeActive, isShowMenu)
-									? styles.menuSubForSubItemActive
-									: ""
-							}`}>
+							className={`
+              ${styles.menuSubNav}
+              ${
+						handleCheckRouteActive(route.routeActive, isShowMenu)
+							? styles.menuSubForSubItemActive
+							: ""
+					}
+            `}>
 							{route.children.map((subMenu) => {
 								return (
 									<li
 										key={subMenu.path}
 										className={`${styles.menuSubNavItem}`}>
-										<div className={styles.subNavIconWrap}>
-											{subMenu.icon}
-										</div>
-
 										<div
 											onClick={() => navigate(subMenu.path)}
-											className={`${styles.contentSubNavItemWrap} ${
-												handleCheckRoute(
-													subMenu.routeActive,
-													location.pathname
-												)
-													? styles.menuSubFoSubItemActive
-													: ""
-											}`}>
+											className={`
+                      ${styles.contentSubNavItemWrap}
+                      ${
+									handleCheckRoute(
+										subMenu.routeActive,
+										location.pathname
+									)
+										? styles.menuSubFoSubItemActive
+										: ""
+								}`}>
 											<div className={styles.textWrap}>
-												<div className={styles.iconWrap}></div>
+												<div className={styles.iconWrap}>
+													{subMenu.icon}
+												</div>
 												<span className={styles.text}>
 													{subMenu.label}
 												</span>
@@ -105,13 +110,15 @@ function NavItem(props) {
 			) : (
 				<>
 					<div
-						className={`${styles.navItemWrap} ${
-							!isShowSideBar ? styles.navItemCloseWrap : ""
-						} ${
-							handleCheckRouteActive(route.routeActive)
-								? styles.navItemActiveWrap
-								: ""
-						}`}>
+						className={`
+            ${styles.navItemWrap}
+            ${!isShowSideBar ? styles.navItemCloseWrap : ""}
+            ${
+					handleCheckRouteActive(route.routeActive)
+						? styles.navItemActiveWrap
+						: ""
+				}
+          `}>
 						<div className={styles.textWrap}>
 							<div className={styles.iconWrap}>{route.icon}</div>
 							{isShowSideBar ? (

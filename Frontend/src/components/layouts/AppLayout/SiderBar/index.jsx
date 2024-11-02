@@ -3,13 +3,15 @@ import styles from "./styles.module.scss";
 import PropTypes from "prop-types";
 import { MenuFoldOutlined } from "@ant-design/icons";
 import Logo from "assets/images/logo/OpenNezt_logo_white.png";
-import IconLogo from "assets/images/logo/OpenNezt logo default.png";
+import IconLogo from "assets/images/logo/OpenNezt_icon.png";
 import NavItem from "./components/NavItem";
-import { appRouteMap } from "../../../../router/appRouteMap";
+import manageRouteMap from "../../../../router/manageRouteMap";
+import appRouteMap from "router/appRouteMap";
 import { handleCheckRoute } from "../../../../utils/helper";
 import { useLocation, useNavigate } from "react-router-dom";
-
-import { CSidebar, CSidebarHeader, CSidebarBrand } from "@coreui/react";
+import { useDispatch } from "react-redux";
+import { handleSetIsShowSideBar } from "../../../../states/modules/app";
+import { useSelector } from "react-redux";
 
 SideBar.prototype = {
 	isShowSideBar: PropTypes.bool.isRequired,
@@ -27,6 +29,9 @@ function SideBar(props) {
 	const [topMenuSub, setTopMenuSub] = useState(0);
 	const location = useLocation();
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	const authorize = useSelector((state) => state.auth.authorize);
 
 	const handleToggleMenu = (indexNavItem, menuNavItem) => {
 		if (menuNavItem.path) {
@@ -54,59 +59,105 @@ function SideBar(props) {
 	};
 
 	return (
-		<CSidebar
-			colorScheme="dark"
-			position="fixed"
+		<div
 			onMouseLeave={() => handleLeaveMenuNavItem()}
-			className={`border-end ${styles.sideBarWrap} ${
+			className={`${styles.sideBarWrap} ${
 				!isShowSideBar ? styles.sideBarWrapClose : ""
 			}`}>
-			<CSidebarHeader className={`border-bottom ${styles.logoWrap}`}>
-				<CSidebarBrand to="/">
-					{isShowSideBar ? (
-						<div className={`${styles.imgWrap}`}>
-							<img src={Logo} alt="" />
-						</div>
-					) : (
-						<div className={`${styles.imgWrap} ${styles.imgWrapDesktop}`}>
-							<img src={IconLogo} alt="" />
-						</div>
-					)}
-
+			<div
+				onClick={() => navigate("/")}
+				className={`border-bottom ${styles.logoWrap}`}>
+				{isShowSideBar ? (
 					<div
-						className={`${styles.btnToggleSideBar} ${
-							styles.btnToggleSideBarMobi
-						} ${!isShowSideBar ? styles.btnToggleSideBarClose : ""}`}
-						onClick={() => handleToggleIsShowSideBar()}>
-						<MenuFoldOutlined />
-					</div>
-				</CSidebarBrand>
-			</CSidebarHeader>
+						className={`${styles.imgWrap}`}
+						style={{
+							background: `url(${Logo})`,
+							margin: "1.5rem",
+						}}></div>
+				) : (
+					<div
+						className={`${styles.imgWrap} ${styles.imgWrapDesktop}`}
+						style={{
+							background: `url(${IconLogo})`,
+							margin: "0",
+						}}></div>
+				)}
 
-			<div className={`border-bottom ${styles.navbarWrap}`}>
+				<div
+					className={`${styles.btnToggleSideBar} ${
+						styles.btnToggleSideBarMobi
+					} ${!isShowSideBar ? styles.btnToggleSideBarClose : ""}`}
+					onClick={() => handleToggleIsShowSideBar()}>
+					<MenuFoldOutlined />
+				</div>
+			</div>
+
+			<div className={`${styles.navbarWrap}`}>
 				<ul className={`${styles.menuNav}`}>
-					{appRouteMap.map((route, index) => {
-						return (
-							<li
-								onMouseEnter={(e) => handleHoverMenuNavItem(e, route)}
-								onClick={() => handleToggleMenu(index, route)}
-								key={route.path}
-								className={`${styles.menuNavItem} ${
-									handleCheckRoute(
-										route.routeActive,
-										location.pathname
-									)
-										? styles.menuNavItemActive
-										: ""
-								}`}>
-								<NavItem
-									route={route}
-									isShowMenu={index === indexNavItemSelect}
-								/>
-							</li>
-						);
-					})}
+					{authorize === "admin"
+						? manageRouteMap.map((route, index) => {
+								return (
+									<li
+										onMouseEnter={(e) =>
+											handleHoverMenuNavItem(e, route)
+										}
+										onClick={() => handleToggleMenu(index, route)}
+										key={route.path}
+										className={`
+                    ${styles.menuNavItem}
+                    ${
+								handleCheckRoute(route.routeActive, location.pathname)
+									? styles.menuNavItemActive
+									: ""
+							}
+                  `}>
+										<NavItem
+											route={route}
+											isShowMenu={index === indexNavItemSelect}
+										/>
+									</li>
+								);
+						  })
+						: appRouteMap.map((route, index) => {
+								return (
+									<li
+										onMouseEnter={(e) =>
+											handleHoverMenuNavItem(e, route)
+										}
+										onClick={() => handleToggleMenu(index, route)}
+										key={route.path}
+										className={`
+                    ${styles.menuNavItem}
+                    ${
+								handleCheckRoute(route.routeActive, location.pathname)
+									? styles.menuNavItemActive
+									: ""
+							}
+                  `}>
+										<NavItem
+											route={route}
+											isShowMenu={index === indexNavItemSelect}
+										/>
+									</li>
+								);
+						  })}
 				</ul>
+			</div>
+
+			<div
+				className={`${styles.btnToggleIsShowSideBar} ${
+					!isShowSideBar ? styles.btnToggleIsHideSideBar : ""
+				}`}>
+				<svg
+					onClick={() => dispatch(handleSetIsShowSideBar(!isShowSideBar))}
+					width="16"
+					height="16"
+					viewBox="0 0 16 16"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg">
+					<path d="M13.5.5 7.5 8l6 7.5" stroke="currentColor" />
+					<path d="M8.5.5 2.5 8l6 7.5" stroke="currentColor" />
+				</svg>
 			</div>
 
 			{!isShowSideBar && menuSub && menuSub.length > 0 ? (
@@ -117,7 +168,7 @@ function SideBar(props) {
 					}}>
 					<div className={styles.listMenuSub}>
 						<ul className={styles.menuSubClose}>
-							{menuSub.map((menuSubItem) => {
+							{manageRouteMap.map((menuSubItem) => {
 								return (
 									<li
 										className={styles.menuSubCloseItem}
@@ -137,7 +188,6 @@ function SideBar(props) {
                             `}>
 											<div className={styles.textWrap}>
 												<span className={styles.text}>
-													{" "}
 													{menuSubItem.label}
 												</span>
 											</div>
@@ -151,7 +201,7 @@ function SideBar(props) {
 			) : (
 				""
 			)}
-		</CSidebar>
+		</div>
 	);
 }
 

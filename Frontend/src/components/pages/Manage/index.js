@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MainLayout from "../../layouts/ManageLayout";
+import AppLayout from "components/layouts/AppLayout";
 import styles from "./styles.module.scss";
 import { Col, Row } from "antd";
 import { useSelector } from "react-redux";
@@ -16,7 +16,7 @@ function Manage() {
 	}, [totalUsers]);
 
 	return (
-		<MainLayout>
+		<AppLayout>
 			<div className={styles.dashboardWrap}>
 				<div className={styles.overviewWrap}>
 					<Row gutter={20}>
@@ -164,7 +164,7 @@ function Manage() {
 					</Row>
 				</div>
 			</div>
-		</MainLayout>
+		</AppLayout>
 	);
 }
 

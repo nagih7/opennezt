@@ -18,7 +18,6 @@
 }
 
 .mainLayoutWrap {
-	max-width: 1920px;
 	margin: auto;
 
 	.mainWrap {
@@ -28,7 +27,7 @@
 		height: 100vh;
 
 		.mainContentWrap {
-			height: calc(100% - 60px);
+			height: calc(100% - 65px);
 			overflow-y: auto;
 			overflow-x: hidden;
 			background-color: $backgroundMain;

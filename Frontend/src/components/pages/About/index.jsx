@@ -1,13 +1,13 @@
 import React from "react";
-import Index from "../../layouts/ManageLayout";
+import AppLayout from "components/layouts/AppLayout";
 
 function About() {
 	return (
-		<Index>
+		<AppLayout>
 			<div>
 				<span>Page About</span>
 			</div>
-		</Index>
+		</AppLayout>
 	);
 }
 
