@@ -9,15 +9,7 @@ const Project = createModel('Project', 'Projects', {
         type: String,
         required: true,
     },
-    image: {
-        type: String,
-        default: '',
-    },
     category: {
-        type: String,
-        default: '',
-    },
-    link: {
         type: String,
         default: '',
     },
