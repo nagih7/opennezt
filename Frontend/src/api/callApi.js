@@ -34,6 +34,7 @@ export default async function callApi({
 		withCredentials: true,
 	})
 		.then(function (response) {
+			console.log(response.data);
 			dispatch(successType(response.data));
 		})
 		.catch((error) => {

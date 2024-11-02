@@ -1,19 +1,14 @@
-import {
-  all, fork, put
-} from "redux-saga/effects";
-import {setTitlePage} from "../app";
+import { all, fork, put } from "redux-saga/effects";
+import { setTitlePage } from "../app";
 
-function* loadRouteData () {
-  yield put(setTitlePage('About'));
+function* loadRouteData() {
+	yield put(setTitlePage("About"));
 }
 
-function* handleActions () {
-  //;
+function* handleActions() {
+	//;
 }
 
 export default function* loadAboutSaga() {
-  yield all([
-    fork(loadRouteData),
-    fork(handleActions)
-  ]);
+	yield all([fork(loadRouteData), fork(handleActions)]);
 }

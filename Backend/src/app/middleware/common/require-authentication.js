@@ -5,6 +5,7 @@ import {tokenBlocklist} from '@/app/services/authService'
 import {TOKEN_TYPE} from '@/configs'
 import {abort, getToken, verifyToken} from '@/utils/helpers'
 
+// Middleware to require authentication
 async function requireAuthentication(req, res, next) {
     try {
         // Get token from request headers

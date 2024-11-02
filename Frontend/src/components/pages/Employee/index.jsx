@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MainLayout from "../../layouts/MainLayout";
+import AppLayout from "components/layouts/AppLayout";
 import styles from "./styles.module.scss";
 import TableCustom from "../../../components/UI/Table";
 import InputMASQ from "../../../components/UI/Input";
@@ -172,7 +172,7 @@ function Employee() {
 	};
 
 	return (
-		<MainLayout>
+		<AppLayout>
 			<div className={styles.userManagementWrap}>
 				<div className={styles.mainWrap}>
 					<div className={styles.headerMainWrap}>
@@ -252,7 +252,7 @@ function Employee() {
 					onConfirm={() => handleConfirmDeleteEmployee()}
 				/>
 			</div>
-		</MainLayout>
+		</AppLayout>
 	);
 }
 

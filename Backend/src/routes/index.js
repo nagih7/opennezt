@@ -7,7 +7,7 @@ function route(app) {
     app.use('/auth', authRouter)
     app.use('/users', userRouter)
     app.use('/home', homeRouter)
-    app.use('/admin', adminRouter)
+    app.use('/manage', adminRouter)
 
     app.get('/', (req, res) => {
         res.jsonify({

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import MainLayout from "../../layouts/MainLayout";
+import AppLayout from "components/layouts/AppLayout";
 import styles from "./styles.module.scss";
 import "./styles.scss";
 import { Col, Row, Tabs } from "antd";
@@ -25,7 +25,7 @@ function Profile() {
 	};
 
 	return (
-		<MainLayout>
+		<AppLayout>
 			<div className={styles.profileWrap}>
 				<Row gutter={20}>
 					<Col span={24}>
@@ -81,7 +81,7 @@ function Profile() {
 					{/*}*/}
 				</Row>
 			</div>
-		</MainLayout>
+		</AppLayout>
 	);
 }
 

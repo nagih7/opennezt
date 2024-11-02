@@ -1,14 +1,14 @@
-import React from 'react';
-import Index from '../../layouts/MainLayout';
+import React from "react";
+import AppLayout from "components/layouts/AppLayout";
 
 function About() {
-  return (
-    <Index>
-      <div>
-        <span>Page About</span>
-      </div>
-    </Index>
-  );
+	return (
+		<AppLayout>
+			<div>
+				<span>Page About</span>
+			</div>
+		</AppLayout>
+	);
 }
 
 export default About;

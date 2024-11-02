@@ -2,8 +2,9 @@ import { redirect } from "react-router-dom";
 import store from "../states/configureStore";
 import { initialSaga } from "../states/modules/routing";
 import { hasPermission } from "../utils/helper";
-import { getMe } from "../api/auth";
+import { getMe } from "api/auth";
 import { getAuthToken } from "../utils/localStorage";
+import { getTotalUsers } from "api/manage";
 
 export const rootLoader = async (
 	{ request },
@@ -13,6 +14,12 @@ export const rootLoader = async (
 ) => {
 	const url = new URL(request.url);
 	if (url.pathname === "/profile") {
+		await store.dispatch(getMe());
+	}
+	if (url.pathname === "/manage") {
+		await store.dispatch(getTotalUsers());
+	}
+	if (url.pathname === "/about-you") {
 		await store.dispatch(getMe());
 	}
 	let { auth } = store.getState();
@@ -30,7 +37,10 @@ export const rootLoader = async (
 			return redirect("/403");
 		}
 	} else {
-		if (auth.isAuthSuccess) {
+		if (auth.isAuthSuccess && auth.authorize === "admin") {
+			return redirect("/manage");
+		} else if (auth.isAuthSuccess && auth.authorize === "user") {
+			console.log("auth.authorize");
 			return redirect("/");
 		}
 	}
