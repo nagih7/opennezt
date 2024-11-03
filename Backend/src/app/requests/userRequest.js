@@ -25,7 +25,7 @@ export const createItem = Joi.object({
                 new AsyncValidate(value, async function () {
                     const user = await User.findOne({email: value})
                     return !user ? value : helpers.error('any.exists')
-                }),
+                })
         ),
     phone: Joi.string()
         .trim()
@@ -38,7 +38,7 @@ export const createItem = Joi.object({
                 new AsyncValidate(value, async function () {
                     const user = await User.findOne({phone: value})
                     return !user ? value : helpers.error('any.exists')
-                }),
+                })
         ),
     password: Joi.string().min(6).max(MAX_STRING_SIZE).required().label('Mật khẩu'),
 })
@@ -57,7 +57,7 @@ export const updateItem = Joi.object({
                     const userId = req.params.id
                     const user = await User.findOne({email: value, _id: {$ne: userId}})
                     return !user ? value : helpers.error('any.exists')
-                }),
+                })
         ),
     phone: Joi.string()
         .trim()
@@ -71,7 +71,7 @@ export const updateItem = Joi.object({
                     const userId = req.params.id
                     const user = await User.findOne({phone: value, _id: {$ne: userId}})
                     return !user ? value : helpers.error('any.exists')
-                }),
+                })
         ),
 })
 

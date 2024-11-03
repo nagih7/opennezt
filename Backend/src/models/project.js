@@ -1,6 +1,6 @@
 import createModel from './base'
 
-const Project = createModel('Project', 'Projects', {
+const Project = createModel('Project', 'projects', {
     title: {
         type: String,
         required: true,

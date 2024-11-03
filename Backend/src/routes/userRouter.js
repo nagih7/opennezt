@@ -12,17 +12,6 @@ userRouter.use(asyncHandler(requireAuthentication))
 
 userRouter.get('/', asyncHandler(validate(userRequest.readRoot)), asyncHandler(userController.readRoot))
 
-userRouter.get('/:id', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))
-
-userRouter.post('/', asyncHandler(validate(userRequest.createItem)), asyncHandler(userController.createItem))
-
-userRouter.put(
-    '/:id',
-    asyncHandler(userMiddleware.checkUserId),
-    asyncHandler(validate(userRequest.updateItem)),
-    asyncHandler(userController.updateItem)
-)
-
 userRouter.delete(
     '/:id',
     asyncHandler(userMiddleware.checkUserId),
@@ -35,6 +24,24 @@ userRouter.patch(
     asyncHandler(userMiddleware.checkUserId),
     asyncHandler(validate(userRequest.resetPassword)),
     asyncHandler(userController.resetPassword)
+)
+
+userRouter.post('/create-founder-profile', asyncHandler(userController.createFounderProfile))
+
+userRouter.get('/get-founder-profile', asyncHandler(userController.getFounderProfile))
+
+userRouter.put('/update-founder-pro n n  file', asyncHandler(userController.updateFounderProfile))
+
+// URL dynamic
+userRouter.get('/:id', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))
+
+userRouter.post('/', asyncHandler(validate(userRequest.createItem)), asyncHandler(userController.createItem))
+
+userRouter.put(
+    '/:id',
+    asyncHandler(userMiddleware.checkUserId),
+    asyncHandler(validate(userRequest.updateItem)),
+    asyncHandler(userController.updateItem)
 )
 
 export default userRouter

@@ -29,3 +29,18 @@ export async function resetPassword(req, res) {
     await userService.resetPassword(req.user, req.body.new_password)
     res.status(201).jsonify('Đặt lại mật khẩu thành công.')
 }
+
+export async function createFounderProfile(req, res) {
+    await userService.createFounderProfile(req.currentUser, req.body)
+    res.status(201).jsonify('Tạo hồ sơ người sáng lập thành công.')
+}
+
+export async function getFounderProfile(req, res) {
+    const result = await userService.getFounderProfile(req.currentUser._id)
+    res.jsonify(result)
+}
+
+export async function updateFounderProfile(req, res) {
+    await userService.updateFounderProfile(req.currentUser, req.body)
+    res.status(201).jsonify('Cập nhật hồ sơ người sáng lập thành công.')
+}

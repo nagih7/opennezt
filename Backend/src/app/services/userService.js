@@ -1,4 +1,4 @@
-import {User} from '@/models'
+import {User, FounderProfile} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
 
@@ -51,4 +51,21 @@ export async function remove(user) {
         FileUpload.remove(user.avatar)
     }
     await User.deleteOne({_id: user._id})
+}
+
+export async function createFounderProfile(user, requestBody) {
+    requestBody.user_id = user._id
+    const founder = new FounderProfile(requestBody)
+    await founder.save()
+}
+
+export async function getFounderProfile(userId) {
+    const founder = await FounderProfile.findOne({user_id: userId})
+    return founder
+}
+
+export async function updateFounderProfile(user, requestBody) {
+    const founder = await FounderProfile.findOne({user_id: user._id})
+    founder.set(requestBody)
+    await founder.save()
 }
