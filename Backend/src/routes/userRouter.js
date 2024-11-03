@@ -26,6 +26,15 @@ userRouter.patch(
     asyncHandler(userController.resetPassword)
 )
 
+userRouter.post('/create-project', asyncHandler(userController.createProject))
+
+userRouter.get('/get-project', asyncHandler(userController.getProject))
+
+userRouter.put('/update-project', asyncHandler(userController.updateProject))
+
+userRouter.delete('/delete-project', asyncHandler(userController.deleteProject))
+
+// Founder Profile
 userRouter.post('/create-founder-profile', asyncHandler(userController.createFounderProfile))
 
 userRouter.get('/get-founder-profile', asyncHandler(userController.getFounderProfile))

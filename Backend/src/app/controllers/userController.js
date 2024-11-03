@@ -44,3 +44,23 @@ export async function updateFounderProfile(req, res) {
     await userService.updateFounderProfile(req.currentUser, req.body)
     res.status(201).jsonify('Cập nhật hồ sơ người sáng lập thành công.')
 }
+
+export async function createProject(req, res) {
+    await userService.createProject(req.currentUser, req.body)
+    res.status(201).jsonify('Tạo dự án thành công.')
+}
+
+export async function getProject(req, res) {
+    const result = await userService.getProject(req.currentUser._id)
+    res.jsonify(result)
+}
+
+export async function updateProject(req, res) {
+    await userService.updateProject(req.currentUser, req.body)
+    res.status(201).jsonify('Cập nhật dự án thành công.')
+}
+
+export async function deleteProject(req, res) {
+    await userService.deleteProject(req.currentUser, req.body)
+    res.jsonify('Xoá dự án thành công.')
+}
