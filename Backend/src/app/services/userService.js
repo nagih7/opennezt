@@ -1,4 +1,4 @@
-import {User} from '@/models'
+import {User, FounderProfile, Project} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
 
@@ -34,10 +34,15 @@ export async function details(userId) {
     return user
 }
 
-export async function update(user, {name, email, phone}) {
-    user.name = name
-    user.email = email
-    user.phone = phone
+export async function update(user, {name, email, phone, avatar, linkedIn, region, city, language}) {
+    user.name = name ? name : user.name
+    user.email = email ? email : user.email
+    user.phone = phone ? phone : user.phone
+    user.avatar = avatar ? avatar : user.avatar
+    user.linkedIn = linkedIn ? linkedIn : user.linkedIn
+    user.region = region ? region : user.region
+    user.city = city ? city : user.city
+    user.language = language ? language : user.language
     await user.save()
 }
 
@@ -51,4 +56,43 @@ export async function remove(user) {
         FileUpload.remove(user.avatar)
     }
     await User.deleteOne({_id: user._id})
+}
+
+export async function createFounderProfile(user, requestBody) {
+    requestBody.user_id = user._id
+    const founder = new FounderProfile(requestBody)
+    await founder.save()
+}
+
+export async function getFounderProfile(userId) {
+    const founder = await FounderProfile.findOne({user_id: userId})
+    return founder
+}
+
+export async function updateFounderProfile(user, requestBody) {
+    const founder = await FounderProfile.findOne({user_id: user._id})
+    founder.set(requestBody)
+    await founder.save()
+}
+
+export async function createProject(user, requestBody) {
+    const project = new Project(requestBody)
+    project.user_id = user._id
+    await project.save()
+    // Create project
+}
+
+export async function getProject(userId) {
+    const projects = await Project.find({user_id: userId})
+    return projects
+}
+
+export async function updateProject(user, requestBody) {
+    const project = await Project.findOne({user_id: user._id, _id: requestBody._id})
+    project.set(requestBody)
+    await project.save()
+}
+
+export async function deleteProject(user, requestBody) {
+    await Project.deleteOne({user_id: user._id, _id: requestBody._id})
 }

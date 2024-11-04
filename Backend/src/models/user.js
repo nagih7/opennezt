@@ -37,13 +37,29 @@ const User = createModel(
             type: String,
             default: '',
         },
+        linkedIn: {
+            type: String,
+            default: '',
+        },
+        region: {
+            type: String,
+            default: '',
+        },
+        city: {
+            type: String,
+            default: '',
+        },
+        language: {
+            type: String,
+            default: 'vi',
+        },
     },
     {
         toJSON: {
             virtuals: false,
             transform(doc, ret) {
                 // eslint-disable-next-line no-unused-vars
-                const {password, ...result} = ret
+                const {_id, password, ...result} = ret
                 return result
             },
         },
