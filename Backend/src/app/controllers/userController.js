@@ -6,7 +6,7 @@ export async function readRoot(req, res) {
 }
 
 export async function readItem(req, res) {
-    const result = await userService.details(req.params.id)
+    const result = await userService.details(req.currentUser.id)
     res.jsonify(result)
 }
 
@@ -16,6 +16,7 @@ export async function createItem(req, res) {
 }
 
 export async function updateItem(req, res) {
+    console.log('updateItem', req.body)
     await userService.update(req.user, req.body)
     res.status(201).jsonify('Cập nhật người dùng thành công.')
 }

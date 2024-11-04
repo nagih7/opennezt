@@ -3,8 +3,16 @@ import {User} from '@/models'
 import {abort} from '@/utils/helpers'
 
 export async function checkUserId(req, res, next) {
-    if (isValidObjectId(req.params.id)) {
-        const user = await User.findOne({_id: req.params.id})
+    // if (isValidObjectId(req.params.id)) {
+    //     const user = await User.findOne({_id: req.params.id})
+    //     if (user) {
+    //         req.user = user
+    //         next()
+    //         return
+    //     }
+    // }
+    if (isValidObjectId(req.currentUser._id)) {
+        const user = await User.findOne({_id: req.currentUser._id})
         if (user) {
             req.user = user
             next()

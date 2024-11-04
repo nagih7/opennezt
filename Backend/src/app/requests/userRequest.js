@@ -54,7 +54,7 @@ export const updateItem = Joi.object({
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async function (req) {
-                    const userId = req.params.id
+                    const userId = req.currentUser._id
                     const user = await User.findOne({email: value, _id: {$ne: userId}})
                     return !user ? value : helpers.error('any.exists')
                 })
@@ -68,13 +68,19 @@ export const updateItem = Joi.object({
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async function (req) {
-                    const userId = req.params.id
+                    const userId = req.currentUser._id
                     const user = await User.findOne({phone: value, _id: {$ne: userId}})
                     return !user ? value : helpers.error('any.exists')
                 })
         ),
+    linkedIn: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('LinkedIn'),
+    region: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Khu vực'),
+    city: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Thành phố'),
+    language: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Ngôn ngữ'),
 })
 
 export const resetPassword = Joi.object({
     new_password: Joi.string().min(6).max(MAX_STRING_SIZE).required().label('Mật khẩu'),
 })
+
+// export const createFounderProfile = Joi.object({
