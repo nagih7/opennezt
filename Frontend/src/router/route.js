@@ -1,15 +1,18 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import Login from "../components/pages/Auth/Login";
-import Register from "../components/pages/Auth/Register";
-import ForgotPassword from "../components/pages/Auth/ForgotPassword";
-import Profile from "../components/pages/Profile";
-import Manage from "../components/pages/Manage";
-import Home from "../components/pages/Home";
-import Employee from "../components/pages/Employee";
-import About from "../components/pages/About";
-import AboutYou from "../components/pages/AboutYou";
 import { rootLoader } from "./rootLoader";
+
+const Login = React.lazy(() => import("../components/pages/Auth/Login"));
+const Register = React.lazy(() => import("../components/pages/Auth/Register"));
+const ForgotPassword = React.lazy(() =>
+	import("../components/pages/Auth/ForgotPassword")
+);
+const Profile = React.lazy(() => import("../components/pages/Profile"));
+const Manage = React.lazy(() => import("../components/pages/Manage"));
+const Home = React.lazy(() => import("../components/pages/Home"));
+const Employee = React.lazy(() => import("../components/pages/Employee"));
+const About = React.lazy(() => import("../components/pages/About"));
+const AboutYou = React.lazy(() => import("../components/pages/AboutYou"));
 
 const router = createBrowserRouter([
 	{

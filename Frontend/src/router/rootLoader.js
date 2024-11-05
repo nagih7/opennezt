@@ -40,7 +40,6 @@ export const rootLoader = async (
 		if (auth.isAuthSuccess && auth.authorize === "admin") {
 			return redirect("/manage");
 		} else if (auth.isAuthSuccess && auth.authorize === "user") {
-			console.log("auth.authorize");
 			return redirect("/");
 		}
 	}
