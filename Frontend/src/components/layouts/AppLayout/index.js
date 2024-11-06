@@ -10,7 +10,7 @@ function AppLayout(props) {
 	const { children } = props;
 	const isShowSideBar = useSelector((state) => state.app.isShowSideBar);
 	const isThemeLight = useSelector((state) => state.app.isThemeLight);
-	const titlePage = useSelector((state) => state.app.title);
+	// const titlePage = useSelector((state) => state.app.title);
 	const location = useSelector((state) => state.app.location);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -42,7 +42,7 @@ function AppLayout(props) {
 					}`}>
 					<Header />
 					<main className={styles.mainContentWrap}>
-						<div className={styles.headerMainWrap}>
+						{/* <div className={styles.headerMainWrap}>
 							<div className={styles.titleWrap}>{titlePage}</div>
 							<div className={styles.breadcrumbWrap}>
 								<span className={`${styles.text}`}>Home</span>{" "}
@@ -52,7 +52,7 @@ function AppLayout(props) {
 									Dashboard
 								</span>
 							</div>
-						</div>
+						</div> */}
 						{children}
 					</main>
 				</div>

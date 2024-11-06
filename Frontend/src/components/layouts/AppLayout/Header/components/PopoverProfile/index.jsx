@@ -9,6 +9,7 @@ function PopoverProfile() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const isAuthSuccess = useSelector((state) => state.auth.isAuthSuccess);
+	const authUser = useSelector((state) => state.auth.authUser);
 
 	useEffect(() => {
 		if (!isAuthSuccess) {
@@ -23,8 +24,7 @@ function PopoverProfile() {
 	return (
 		<div className={styles.modalInfoWrap}>
 			<div className={styles.personalInformationWrap}>
-				<div className={styles.name}>OpenNezt</div>
-				<div className={styles.role}>Super Admin</div>
+				<div className={styles.name}>{authUser.name}</div>
 			</div>
 			<div className={styles.mainModalInfoWrap}>
 				<ul className={styles.menuInfoWrap}>
