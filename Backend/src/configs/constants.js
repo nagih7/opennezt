@@ -100,6 +100,7 @@ export const TOKEN_TYPE = {
     FORGOT_PASSWORD: 'FORGOT_PASSWORD',
 }
 export const MAX_STRING_SIZE = 255
+export const MAX_AREAS_STRING_SIZE = 500
 
 export const UUID_TRANSLATOR = short()
 

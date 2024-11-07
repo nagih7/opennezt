@@ -38,7 +38,7 @@ export function authToken(user) {
 
 export async function register({avatar, ...requestBody}) {
     if (avatar instanceof FileUpload) {
-        requestBody.avatar = avatar.save()
+        requestBody.avatar = avatar.save('avatars')
     }
 
     const user = new User(requestBody)

@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import {User} from '../../models'
-import {MAX_STRING_SIZE, VALIDATE_PHONE_REGEX} from '@/configs'
-import {AsyncValidate} from '@/utils/classes'
+import {MAX_STRING_SIZE, VALIDATE_PHONE_REGEX, MAX_AREAS_STRING_SIZE} from '@/configs'
+import {AsyncValidate, FileUpload} from '@/utils/classes'
 import {tryValidateOrDefault} from '@/utils/helpers'
 
 export const readRoot = Joi.object({
@@ -83,4 +83,49 @@ export const resetPassword = Joi.object({
     new_password: Joi.string().min(6).max(MAX_STRING_SIZE).required().label('Mật khẩu'),
 })
 
-// export const createFounderProfile = Joi.object({
+export const createProject = Joi.object({
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Tên dự án'),
+    landing_page_url: Joi.string().trim().max(MAX_STRING_SIZE).label('URL landing page'),
+    related_industries: Joi.array()
+        .items(Joi.string().trim().max(MAX_STRING_SIZE))
+        .required()
+        .label('Các ngành liên quan'),
+    stage: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Giai đoạn'),
+    problem: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Vấn đề'),
+    solution: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Giải pháp'),
+    product_demo_url: Joi.string().trim().max(MAX_STRING_SIZE).required().label('URL demo sản phẩm'),
+    team_intro_url: Joi.string().trim().max(MAX_STRING_SIZE).required().label('URL giới thiệu nhóm'),
+    pitch_deck: Joi.object({
+        mimetype: Joi.valid('application/pdf').label('Định dạng tệp'),
+    })
+        .unknown(true)
+        .instance(FileUpload)
+        .allow('')
+        .label('Pitch deck'),
+    statistics: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Thống kê'),
+    revenues: Joi.array().items(
+        Joi.object({
+            time: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Thời gian'),
+            revenue: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Doanh thu'),
+        })
+    ),
+    funding_sources: Joi.object({
+        friend_and_family: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Bạn bè và gia đình'),
+        grant: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Trợ cấp'),
+        angel: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Nhà đầu tư thiên thần'),
+        venture_capital: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Vốn đầu tư mạo hiểm'),
+        other: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Khác'),
+    }),
+    target_money: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Mục tiêu tài chính'),
+    target_audience: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Đối tượng'),
+    competitors: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Đối thủ cạnh tranh'),
+    competitive_advantage: Joi.string()
+        .trim()
+        .max(MAX_AREAS_STRING_SIZE)
+        .required()
+        .label('Lợi thế cạnh tranh'),
+    why_now: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Tại sao là bây giờ ?'),
+    strategy: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Chiến lược'),
+    milestones: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Các mốc thời gian'),
+    about_opennezt: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Về OpenNezt'),
+})

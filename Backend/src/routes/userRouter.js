@@ -30,7 +30,11 @@ userRouter.patch(
     asyncHandler(userController.resetPassword)
 )
 // Project
-userRouter.post('/create-project', asyncHandler(userController.createProject))
+userRouter.post(
+    '/create-project',
+    asyncHandler(validate(userRequest.createProject)),
+    asyncHandler(userController.createProject)
+)
 
 userRouter.get('/get-project', asyncHandler(userController.getProject))
 
