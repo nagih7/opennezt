@@ -49,6 +49,12 @@ authRouter.post(
 authRouter.get(
     '/reset-password/:token',
     asyncHandler(authMiddleware.verifyForgotPasswordToken),
+    asyncHandler(authController.requestResetPassword)
+)
+
+authRouter.post(
+    '/reset-password/:token',
+    asyncHandler(authMiddleware.verifyForgotPasswordToken),
     asyncHandler(validate(authRequest.resetPassword)),
     asyncHandler(authController.resetPassword)
 )

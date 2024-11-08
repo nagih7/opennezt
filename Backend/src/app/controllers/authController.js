@@ -64,6 +64,14 @@ export async function forgotPassword(req, res) {
     res.status(200).jsonify('Yêu cầu lấy lại mật khẩu thành công! Vui lòng kiểm tra email của bạn.')
 }
 
+export async function requestResetPassword(req, res) {
+    if (req.currentUser) {
+        await res.render('forms/reset-password', {token: req.params.token, email: req.currentUser.email})
+    } else {
+        abort(403, 'Liên kết không hợp lệ.')
+    }
+}
+
 export async function resetPassword(req, res) {
     await userService.resetPassword(req.currentUser, req.body.new_password)
     await authService.blockToken(req.params.token)
