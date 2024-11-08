@@ -17,7 +17,7 @@ async function requireAuthentication(req, res, next) {
             if (allowedToken) {
                 const {user_id} = verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
                 const user = await User.findOne({_id: user_id})
-                if (user) {
+                if (user && user.isActive) {
                     req.currentUser = user
                     next()
                     return

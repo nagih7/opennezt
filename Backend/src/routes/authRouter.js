@@ -16,6 +16,12 @@ authRouter.post(
     asyncHandler(authController.register)
 )
 
+authRouter.get(
+    '/verify-email/:token',
+    asyncHandler(authMiddleware.verifyEmailToken),
+    asyncHandler(authController.verifyEmail)
+)
+
 authRouter.post('/logout', asyncHandler(requireAuthentication), asyncHandler(authController.logout))
 
 authRouter.get('/me', asyncHandler(requireAuthentication), asyncHandler(authController.me))
@@ -37,10 +43,10 @@ authRouter.patch(
 authRouter.post(
     '/forgot-password',
     asyncHandler(validate(authRequest.forgotPassword)),
-    authController.forgotPassword
+    asyncHandler(authController.forgotPassword)
 )
 
-authRouter.post(
+authRouter.get(
     '/reset-password/:token',
     asyncHandler(authMiddleware.verifyForgotPasswordToken),
     asyncHandler(validate(authRequest.resetPassword)),

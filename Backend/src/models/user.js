@@ -53,13 +53,18 @@ const User = createModel(
             type: String,
             default: 'vi',
         },
+        isActive: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
     },
     {
         toJSON: {
             virtuals: false,
             transform(doc, ret) {
                 // eslint-disable-next-line no-unused-vars
-                const {_id, password, ...result} = ret
+                const {_id, password, isActive, created_at, updated_at, ...result} = ret
                 return result
             },
         },
