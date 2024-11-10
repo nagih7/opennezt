@@ -30,6 +30,7 @@ export const register = Joi.object({
         .label('Email')
         .custom(
             (value, helpers) =>
+                // Kiểm tra xem email đã tồn tại trong hệ thống chưa
                 new AsyncValidate(value, async function () {
                     const user = await User.findOne({email: value})
                     return !user ? value : helpers.error('any.exists')
@@ -157,8 +158,10 @@ export const forgotPassword = Joi.object({
             (value, helpers) =>
                 new AsyncValidate(value, async function (req) {
                     const user = await User.findOne({email: value})
-                    req.currentUser = user
-                    return user ? value : helpers.message('{{#label}} không tồn tại.')
+                    if (user && user.isActive) {
+                        req.currentUser = user
+                    }
+                    return user && user.isActive ? value : helpers.message('{{#label}} không tồn tại.')
                 })
         ),
 })

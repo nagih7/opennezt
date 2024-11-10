@@ -25,6 +25,7 @@ function createApp() {
     // Config cookie-parser
     app.use(cookieParser())
 
+    // config response
     app.response.jsonify = jsonify
     app.response.sendMail = sendMail
 

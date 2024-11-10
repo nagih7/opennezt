@@ -40,6 +40,9 @@ assert(!_.isEmpty(APP_URL_API), assertMsg('APP_URL_API'))
 export const APP_URL_CLIENT = process.env.APP_URL_CLIENT
 assert(!_.isEmpty(APP_URL_CLIENT), assertMsg('APP_URL_CLIENT'))
 
+export const APP_URL_AUTH = process.env.APP_URL_AUTH
+assert(!_.isEmpty(APP_URL_AUTH), assertMsg('APP_URL_AUTH'))
+
 export const OTHER_URLS_CLIENT = process.env.OTHER_URLS_CLIENT
     ? JSON.parse(process.env.OTHER_URLS_CLIENT)
     : []
@@ -51,10 +54,14 @@ assert(!_.isEmpty(SECRET_KEY), assertMsg('SECRET_KEY'))
 export const LOGIN_EXPIRE_IN = process.env.LOGIN_EXPIRE_IN
 assert(!_.isEmpty(LOGIN_EXPIRE_IN), assertMsg('LOGIN_EXPIRE_IN'))
 
+export const VERIFY_EMAIL_EXPIRE_IN = process.env.VERIFY_EMAIL_EXPIRE_IN
+assert(!_.isEmpty(VERIFY_EMAIL_EXPIRE_IN), assertMsg('VERIFY_EMAIL_EXPIRE_IN'))
+
 export const REQUESTS_LIMIT_PER_MINUTE = parseInt(process.env.REQUESTS_LIMIT_PER_MINUTE, 10) || 1000
 
 export const LINK_STATIC_URL = `${APP_URL_API}/static/`
-export const LINK_RESET_PASSWORD_URL = `${APP_URL_CLIENT}/reset-password`
+export const LINK_RESET_PASSWORD_URL = `${APP_URL_CLIENT}/${APP_URL_AUTH}/reset-password`
+export const LINK_VERIFY_EMAIL_URL = `${APP_URL_CLIENT}/${APP_URL_AUTH}/verify-email`
 
 assert(!_.isEmpty(process.env.DB_HOST), assertMsg('DB_HOST'))
 assert(!_.isEmpty(process.env.DB_NAME), assertMsg('DB_NAME'))
@@ -98,8 +105,10 @@ assert(!_.isEmpty(MAIL_PASSWORD), assertMsg('MAIL_PASSWORD'))
 export const TOKEN_TYPE = {
     AUTHORIZATION: 'AUTHORIZATION',
     FORGOT_PASSWORD: 'FORGOT_PASSWORD',
+    VERIFY_EMAIL: 'VERIFY_EMAIL',
 }
 export const MAX_STRING_SIZE = 255
+export const MAX_AREAS_STRING_SIZE = 500
 
 export const UUID_TRANSLATOR = short()
 

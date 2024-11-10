@@ -75,11 +75,14 @@ export async function updateFounderProfile(user, requestBody) {
     await founder.save()
 }
 
-export async function createProject(user, requestBody) {
+export async function createProject(user, {pitch_deck, ...requestBody}) {
+    if (pitch_deck instanceof FileUpload) {
+        requestBody.pitch_deck = pitch_deck.save('pitch_decks')
+    }
     const project = new Project(requestBody)
     project.user_id = user._id
+
     await project.save()
-    // Create project
 }
 
 export async function getProject(userId) {

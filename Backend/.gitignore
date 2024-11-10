@@ -26,3 +26,6 @@ package-lock.json
 # IDE config
 /.vscode
 /.idea
+
+# huỷ bỏ folder uploads
+/public/uploads

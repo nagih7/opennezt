@@ -7,6 +7,7 @@ import {PUBLIC_DIR, UUID_TRANSLATOR} from '@/configs'
 class FileUpload {
     static UPLOAD_FOLDER = 'uploads'
 
+    // originalname: string
     constructor({originalname, mimetype, buffer}) {
         this.originalname = originalname
         this.mimetype = mimetype
@@ -14,16 +15,19 @@ class FileUpload {
         this.filename = `${UUID_TRANSLATOR.generate()}.${mime.extension(this.mimetype)}`
     }
 
+    // toJSON: Chuyển đổi dữ liệu thành dạng JSON
     toJSON() {
         const {buffer, ...rest} = this
         rest.filesize = bytes(Buffer.byteLength(buffer))
         return rest
     }
 
+    // toString: Chuyển đổi dữ liệu thành dạng chuỗi
     toString() {
         return this.filepath || this.originalname
     }
 
+    // save: Lưu file vào thư mục upload
     save(...paths) {
         if (!this.filepath) {
             const uploadDir = path.join(PUBLIC_DIR, FileUpload.UPLOAD_FOLDER, ...paths)
@@ -36,6 +40,7 @@ class FileUpload {
         }
     }
 
+    // remove: Xóa file
     static remove(filepath) {
         filepath = path.join(PUBLIC_DIR, filepath)
         if (!fs.existsSync(filepath)) return

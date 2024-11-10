@@ -56,7 +56,7 @@ const Project = createModel('Project', 'projects', {
     },
     lading_page_url: {
         type: String,
-        required: true,
+        required: false,
     },
     related_industries: {
         type: [String],
@@ -82,9 +82,9 @@ const Project = createModel('Project', 'projects', {
         type: String,
         required: true,
     },
-    pitch_deck_url: {
+    pitch_deck: {
         type: String,
-        required: true,
+        required: false,
     },
     statistics: {
         type: String,
@@ -96,7 +96,7 @@ const Project = createModel('Project', 'projects', {
     },
     funding_sources: {
         type: FundingSource,
-        required: true,
+        required: false,
     },
     target_money: {
         type: String,
