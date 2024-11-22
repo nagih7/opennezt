@@ -40,6 +40,9 @@ assert(!_.isEmpty(APP_URL_API), assertMsg('APP_URL_API'))
 export const APP_URL_CLIENT = process.env.APP_URL_CLIENT
 assert(!_.isEmpty(APP_URL_CLIENT), assertMsg('APP_URL_CLIENT'))
 
+export const APP_URL_LOCAL = process.env.APP_URL_LOCAL
+assert(!_.isEmpty(APP_URL_LOCAL), assertMsg('APP_URL_LOCAL'))
+
 export const APP_URL_AUTH = process.env.APP_URL_AUTH
 assert(!_.isEmpty(APP_URL_AUTH), assertMsg('APP_URL_AUTH'))
 
@@ -61,7 +64,7 @@ export const REQUESTS_LIMIT_PER_MINUTE = parseInt(process.env.REQUESTS_LIMIT_PER
 
 export const LINK_STATIC_URL = `${APP_URL_API}/static/`
 export const LINK_RESET_PASSWORD_URL = `${APP_URL_CLIENT}/${APP_URL_AUTH}/reset-password`
-export const LINK_VERIFY_EMAIL_URL = `${APP_URL_CLIENT}/${APP_URL_AUTH}/verify-email`
+export const LINK_VERIFY_EMAIL_URL = `${APP_URL_LOCAL}/${APP_URL_AUTH}/verify-email`
 
 assert(!_.isEmpty(process.env.DB_HOST), assertMsg('DB_HOST'))
 assert(!_.isEmpty(process.env.DB_NAME), assertMsg('DB_NAME'))
