@@ -5,21 +5,27 @@ import helmet from 'helmet'
 import multer from 'multer'
 import {APP_DEBUG, NODE_ENV, PUBLIC_DIR, VIEW_DIR} from './configs'
 
-import {jsonify, sendMail} from './handlers/response.handler'
-import corsHandler from './handlers/cors.handler'
-import httpRequestHandler from './handlers/http-request.handler'
-import limiter from './handlers/rate-limit.handler'
-import formDataHandler from './handlers/form-data.handler'
-import initLocalsHandler from './handlers/init-locals.handler'
-import notFoundHandler from './handlers/not-found.handler'
-import errorHandler from './handlers/error.handler'
-
+import {jsonify, sendMail} from './handlers/responseHandler'
+import corsHandler from './handlers/corsHandler'
+import httpRequestHandler from './handlers/httpRequestHandler'
+import limiter from './handlers/rateLimitHandler'
+import formDataHandler from './handlers/formDataHandler'
+import initLocalsHandler from './handlers/initLocalsHandler'
+import notFoundHandler from './handlers/notFoundHandler'
+import errorHandler from './handlers/errorHandler'
+import cookieParser from 'cookie-parser'
+// require('dotenv').config()
+// import routes
 import route from './routes'
 
 function createApp() {
     // Init app
     const app = express()
 
+    // Config cookie-parser
+    app.use(cookieParser())
+
+    // config response
     app.response.jsonify = jsonify
     app.response.sendMail = sendMail
 
@@ -36,6 +42,8 @@ function createApp() {
     app.use(serveFavicon(path.join(PUBLIC_DIR, 'favicon.ico')))
     app.use('/static', express.static(PUBLIC_DIR))
     app.use(helmet())
+
+    // Sử dụng expres parser để xử lý dữ liệu thành dạng json
     app.use(express.json())
     app.use(express.urlencoded({extended: true}))
     app.use(multer({storage: multer.memoryStorage()}).any())

@@ -1,2 +1,6 @@
 export * from './base'
 export {default as User} from './user'
+export {default as Project} from './project'
+export {default as Messenger} from './messenger'
+export {default as AccessLog} from './accessLog'
+export {default as FounderProfile} from './founderProfile'

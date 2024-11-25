@@ -24,6 +24,11 @@ const User = createModel(
                 return bcrypt.hashSync(password, salt)
             },
         },
+        role: {
+            type: String,
+            default: 'user',
+            required: true,
+        },
         phone: {
             type: String,
             default: '',
@@ -32,13 +37,34 @@ const User = createModel(
             type: String,
             default: '',
         },
+        linkedIn: {
+            type: String,
+            default: '',
+        },
+        region: {
+            type: String,
+            default: '',
+        },
+        city: {
+            type: String,
+            default: '',
+        },
+        language: {
+            type: String,
+            default: 'vi',
+        },
+        isActive: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
     },
     {
         toJSON: {
             virtuals: false,
             transform(doc, ret) {
                 // eslint-disable-next-line no-unused-vars
-                const {password, ...result} = ret
+                const {_id, password, isActive, created_at, updated_at, ...result} = ret
                 return result
             },
         },
