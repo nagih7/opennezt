@@ -63,7 +63,7 @@ assert(!_.isEmpty(VERIFY_EMAIL_EXPIRE_IN), assertMsg('VERIFY_EMAIL_EXPIRE_IN'))
 export const REQUESTS_LIMIT_PER_MINUTE = parseInt(process.env.REQUESTS_LIMIT_PER_MINUTE, 10) || 1000
 
 export const LINK_STATIC_URL = `${APP_URL_API}/static/`
-export const LINK_RESET_PASSWORD_URL = `${APP_URL_CLIENT}/${APP_URL_AUTH}/reset-password`
+export const LINK_RESET_PASSWORD_URL = `${APP_URL_LOCAL}/${APP_URL_AUTH}/reset-password`
 export const LINK_VERIFY_EMAIL_URL = `${APP_URL_LOCAL}/${APP_URL_AUTH}/verify-email`
 
 assert(!_.isEmpty(process.env.DB_HOST), assertMsg('DB_HOST'))

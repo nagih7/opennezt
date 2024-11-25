@@ -12,6 +12,7 @@ function ForgotPassword() {
 	const [errorDataForgotPassword, setErrorDataForgotPassword] = useState({
 		email: "",
 	});
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		handleResetError();
@@ -38,14 +39,37 @@ function ForgotPassword() {
 		return validate.isError;
 	};
 
-	const handleConfirmLogin = () => {
+	const handleForgotPassword = async () => {
 		let validate = handleCheckValidateConfirm(
 			dataForgotPassword,
 			errorDataForgotPassword
 		);
 		setErrorDataForgotPassword(validate.dataError);
+
 		if (!validate.isError) {
-			alert("Login");
+			setLoading(true); 
+			try {
+				const response = await fetch('http://localhost:3456/auth/forgot-password', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ email: dataForgotPassword.email }),
+				});
+
+				if (response.ok) {
+					const data = await response.json();
+					alert(`${data.message}`);
+				} else {
+					const error = await response.json();
+					alert(`Failed to send email: ${error.message}`);
+				}
+			} catch (error) {
+				
+				alert('Something went wrong. Please try again.');
+			} finally {
+				setLoading(false); 
+			}
 		}
 	};
 
@@ -67,9 +91,9 @@ function ForgotPassword() {
 				<div className={styles.btnWrap}>
 					<ButtonMASQ
 						textBtn={"Send email"}
-						loading={false}
-						onClick={() => handleConfirmLogin()}
-						disable={false}
+						loading={loading} 
+						onClick={() => handleForgotPassword()}
+						disable={loading} 
 						style={{
 							display: "flex",
 							justifyContent: "center",

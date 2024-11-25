@@ -1,37 +1,80 @@
+:root {
+  --color-primary: #6C9BCF;
+  --color-danger: #FF0060;
+  --color-success: #1B9C85;
+  --color-warning: #F7D060;
+  --color-white: #fff;
+  --color-info-dark: #7d8da1;
+  --color-dark: #363949;
+  --color-light: rgba(132, 139, 200, 0.18);
+  --color-dark-variant: #677483;
+  --color-background: #f6f6f9;
+
+  --card-border-radius: 2rem;
+  --border-radius-1: 0.4rem;
+  --border-radius-2: 1.2rem;
+
+  --card-padding: 1.8rem;
+  --padding-1: 1.2rem;
+
+  --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+.dark-mode-variables {
+  --color-background: #181a1e;
+  --color-white: #202528;
+  --color-dark: #edeffd;
+  --color-dark-variant: #a3bdcc;
+  --color-light: rgba(0, 0, 0, 0.4);
+  --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+$color-primary: #6C9BCF;
+
 @import "src/assets/scss/variables";
 
 .userManagementWrap {
-  background: $colorWhite;
-  padding: 10px;
-  border-radius: 4px;
+  background: var(--color-white);
+  padding: var(--padding-1);
+  border-radius: 2rem;
+
   .mainWrap {
     .headerMainWrap {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 1.6rem;
 
       .title {
-        font-size: 20px;
-        font-weight: 500;
+        font-size: 1.4rem; // 20px
+        font-weight: 600; // Tăng độ đậm cho rõ hơn
+        color: var(--color-dark);
       }
 
       .btnWrap {
         display: flex;
         justify-content: flex-end;
-        font-size: 14px;
+        font-size: 1rem; // 14px
         font-weight: 500;
 
         .btnSave {
           min-width: 80px;
           border: none;
-          background-color: $mainColor;
+          background-color: $color-primary;
+          color: var(--color-white);
+          padding: 0.6rem 1.2rem;
+          border-radius: var(--border-radius-1);
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: darken($color-primary, 10%);
+          }
         }
       }
     }
 
     .boxFilterWrap {
-      margin-bottom: 2px;
+      margin-bottom: 0.2rem;
       display: flex;
       justify-content: flex-start;
       width: 100%;
@@ -39,19 +82,35 @@
       .inputWrap {
         width: 100%;
         position: relative;
-        margin-right: 10px;
+        margin-right: 1rem;
 
         input {
-          border: 1px solid $colorBorderInput;
-          border-radius: 3px;
-          padding-right: 40px;
+          border: 1px solid var(--color-light);
+          border-radius: var(--border-radius-1);
+          padding: 0.8rem 1rem;
+          padding-right: 2.5rem;
+          color: var(--color-dark);
+          background-color: var(--color-white);
+
+          &:focus {
+            border-color: var(--color-primary);
+            outline: none;
+            box-shadow: 0 0 4px var(--color-primary);
+          }
         }
 
         svg {
           position: absolute;
-          top: 16px;
-          right: 15px;
+          top: 50%;
+          right: 1rem;
+          transform: translateY(-50%);
           cursor: pointer;
+          color: var(--color-dark-variant);
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: var(--color-primary);
+          }
         }
       }
     }
@@ -62,12 +121,15 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+
   .imgWrap {
-    width: 30px;
-    height: 30px;
+    width: 3rem; // 30px
+    height: 3rem;
     overflow: hidden;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 1rem;
+    box-shadow: var(--box-shadow);
+
     img {
       width: 100%;
       height: 100%;
@@ -86,7 +148,14 @@
 
     img {
       cursor: pointer;
-      margin-right: 12px;
+      margin-right: 1.2rem;
+      width: 24px;
+      height: 24px;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
     }
 
     &:last-child {

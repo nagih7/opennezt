@@ -14,7 +14,7 @@ import initLocalsHandler from './handlers/initLocalsHandler'
 import notFoundHandler from './handlers/notFoundHandler'
 import errorHandler from './handlers/errorHandler'
 import cookieParser from 'cookie-parser'
-
+// require('dotenv').config()
 // import routes
 import route from './routes'
 
