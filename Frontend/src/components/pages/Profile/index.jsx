@@ -3,7 +3,7 @@ import AppLayout from "components/layouts/AppLayout";
 import styles from "./styles.module.scss";
 import "./styles.scss";
 import { Col, Row, Tabs } from "antd";
-import User from "../../../assets/images/user/6.jpg";
+// import User from "../../../assets/images/user/6.jpg";
 import EditProfile from "./components/EditProfile";
 // import Order from "./components/Order";
 
@@ -45,10 +45,10 @@ function Profile() {
 											/>
 										</svg>
 									</div>
-									<img src={User} alt="" />
+									<img src="https://media.licdn.com/dms/image/v2/D5603AQGiDfe6UDQjXw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1710736137769?e=1738195200&v=beta&t=FamJoPTUKDP57o9rYNjEWkoJommrWMLdpnsFsKAjhq8" alt="" />
 								</div>
 								<div className={styles.infoWrap}>
-									<div className={styles.name}>Elena Gilbert</div>
+									<div className={styles.name}>Nguyen Huy Hoang</div>
 									<div className={styles.bod}>
 										Member Since: November 2020
 									</div>
