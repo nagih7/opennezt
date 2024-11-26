@@ -16,7 +16,7 @@
 			width: 25px;
 			display: flex;
 			justify-content: center;
-			color: $colorLight;
+			color: $colorNavbar;
 		}
 
 		.text {
@@ -45,6 +45,10 @@
 
 .navItemActiveWrap {
 	.textWrap {
+		.iconWrap {
+			color: $colorActive;
+		}
+
 		.text,
 		g {
 			color: $colorActive;

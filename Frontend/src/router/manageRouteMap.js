@@ -8,12 +8,7 @@ const manageRouteMap = [
 	{
 		label: "Dashboard",
 		name: "Dashboard",
-		icon: (
-			<DashboardIcon
-				className="material-icons"
-				style={{ color: "#7d8da1" }}
-			/>
-		),
+		icon: <DashboardIcon className="material-icons" />,
 		path: "/",
 		routeActive: ["/"],
 		permissions: [""],
@@ -21,15 +16,10 @@ const manageRouteMap = [
 
 	{
 		label: "User Management",
-		icon: (
-			<ManageAccountsIcon
-				style={{ color: "#7d8da1" }}
-				className="material-icons"
-			/>
-		),
-		path: "/employee",
-		routeActive: ["/employee"],
-		permissions: ["employee_page"],
+		icon: <ManageAccountsIcon className="material-icons" />,
+		path: "/admin/user-management",
+		routeActive: ["/admin/user-management"],
+		permissions: ["user-management"],
 	},
 	// {
 	// 	label: "Settings",
@@ -71,9 +61,7 @@ const manageRouteMap = [
 	// },
 	{
 		label: "About Me",
-		icon: (
-			<PersonIcon style={{ color: "#7d8da1" }} className="material-icons" />
-		),
+		icon: <PersonIcon className="material-icons" />,
 		path: "/about",
 		routeActive: ["/about"],
 		permissions: ["about_page"],
@@ -81,14 +69,9 @@ const manageRouteMap = [
 	{
 		label: "Admin",
 		name: "Admin",
-		icon: (
-			<AdminPanelSettingsIcon
-				style={{ color: "#7d8da1" }}
-				className="material-icons"
-			/>
-		),
-		path: "/manage",
-		routeActive: ["/manage"],
+		icon: <AdminPanelSettingsIcon className="material-icons" />,
+		path: "/admin/manage",
+		routeActive: ["/admin/manage"],
 		permissions: ["manage_page"],
 	},
 ];

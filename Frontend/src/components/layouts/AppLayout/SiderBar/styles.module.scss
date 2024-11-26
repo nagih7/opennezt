@@ -19,12 +19,12 @@
 
 	.logoWrap {
 		margin-top: 1.5rem;
-		margin-right: 1.5rem;
 		display: flex;
 		align-items: center;
 
 		.imgWrap {
-			width: 100%;
+			max-width: 100%;
+			height: 30px;
 		}
 	}
 

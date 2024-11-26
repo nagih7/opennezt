@@ -43,7 +43,7 @@ function PopoverProfile() {
 						</svg>
 						<span className={styles.text}>Profile</span>
 					</li>
-					<li
+					{/* <li
 						onClick={() => handleConfirmLogOut()}
 						className={styles.itemInfoWrap}>
 						<svg
@@ -57,7 +57,7 @@ function PopoverProfile() {
 							</g>
 						</svg>
 						<span className={styles.text}>Log out</span>
-					</li>
+					</li> */}
 				</ul>
 			</div>
 		</div>

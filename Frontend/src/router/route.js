@@ -37,7 +37,7 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_PROFILE_PAGE"),
 	},
 	{
-		path: "/manage",
+		path: "admin/manage",
 		element: <Manage />,
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_MANAGE_PAGE"),
@@ -67,7 +67,7 @@ const router = createBrowserRouter([
 		],
 	},
 	{
-		path: "/employee",
+		path: "admin/user-management",
 		element: <Employee />,
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_EMPLOYEE_PAGE"),
