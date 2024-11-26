@@ -1,26 +1,56 @@
+:root {
+  --color-primary: #6C9BCF;
+  --color-danger: #FF0060;
+  --color-success: #1B9C85;
+  --color-warning: #F7D060;
+  --color-white: #fff;
+  --color-black: #363949;
+  --color-note: #677483;
+  --color-info-dark: #7d8da1;
+  --color-light: rgba(132, 139, 200, 0.18);
+  --color-dark-variant: #677483;
+  --color-background: #f6f6f9;
+
+  --border-radius-1: 0.4rem;
+  --border-radius-2: 1.2rem;
+
+  --card-padding: 1.8rem;
+  --padding-1: 1.2rem;
+
+  --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
 @import "src/assets/scss/variables";
 
 .dashboardWrap {
   .overviewWrap {
     .itemWrap {
-      background: $colorWhite;
-      padding: 20px;
-      border-radius: 4px;
+      background: var(--color-white);
+      padding: var(--card-padding);
+      border-radius: var(--border-radius-2);
       height: 100%;
+      box-shadow: var(--box-shadow);
+      transition: box-shadow 0.3s ease;
+
+      &:hover {
+        box-shadow: none;
+      }
+
       .personalWrap {
         .labelWrap {
-          font-size: 13px;
-          margin-bottom: 10px;
+          font-size: 0.93rem; 
+          margin-bottom: 0.6rem; 
+          color: var(--color-dark-variant);
         }
         .numberWrap {
-          font-size: 28px;
-          color: $colorBlack;
+          font-size: 1.75rem; 
+          color: var(--color-black);
           font-weight: 600;
-          margin-bottom: 10px;
+          margin-bottom: 0.6rem; 
         }
         .dateUpdate {
-          font-size: 12px;
-          color: $colorNote
+          font-size: 0.85rem;
+          color: var(--color-note);
         }
       }
 
@@ -29,10 +59,11 @@
         justify-content: center;
         align-items: center;
         height: 100%;
+        font-size: 2rem;
       }
 
       .iconUser {
-        color: rgb(5, 195, 251);
+        color: var(--color-primary);
       }
 
       .iconChart1 {
@@ -40,11 +71,11 @@
       }
 
       .iconChart2 {
-        color: #f7b731;
+        color: var(--color-warning);
       }
 
       .iconMoney {
-        color: rgb(78, 204, 72);
+        color: var(--color-success); 
       }
     }
   }
