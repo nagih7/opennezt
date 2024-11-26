@@ -41,20 +41,7 @@ function AppLayout(props) {
 						!isShowSideBar ? styles.mainWrapWithConditionSideBarClose : ""
 					}`}>
 					<Header />
-					<main className={styles.mainContentWrap}>
-						{/* <div className={styles.headerMainWrap}>
-							<div className={styles.titleWrap}>{titlePage}</div>
-							<div className={styles.breadcrumbWrap}>
-								<span className={`${styles.text}`}>Home</span>{" "}
-								<span className={styles.slash}>/</span>
-								<span
-									className={`${styles.text} ${styles.breadcrumbActive}`}>
-									Dashboard
-								</span>
-							</div>
-						</div> */}
-						{children}
-					</main>
+					<main className={styles.mainContentWrap}>{children}</main>
 				</div>
 			</div>
 		</div>
