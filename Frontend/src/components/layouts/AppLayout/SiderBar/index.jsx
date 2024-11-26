@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import PropTypes from "prop-types";
-import { MenuFoldOutlined } from "@ant-design/icons";
-import Logo from "assets/images/logo/OpenNezt_logo_white.png";
-import IconLogo from "assets/images/logo/OpenNezt_icon.png";
+import Logo from "assets/images/logo/OpenNezt_logo_default.png";
 import NavItem from "./components/NavItem";
 import manageRouteMap from "../../../../router/manageRouteMap";
 import appRouteMap from "router/appRouteMap";
 import { handleCheckRoute } from "../../../../utils/helper";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { handleSetIsShowSideBar } from "../../../../states/modules/app";
+// import { handleSetIsShowSideBar } from "../../../../states/modules/app";
 import { useSelector } from "react-redux";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { logout } from "../../../../api/auth";
 
 SideBar.prototype = {
 	isShowSideBar: PropTypes.bool.isRequired,
@@ -58,6 +58,10 @@ function SideBar(props) {
 		setMenuSub([]);
 	};
 
+	const handleConfirmLogOut = () => {
+		dispatch(logout());
+	};
+
 	return (
 		<div
 			onMouseLeave={() => handleLeaveMenuNavItem()}
@@ -67,29 +71,11 @@ function SideBar(props) {
 			<div
 				onClick={() => navigate("/")}
 				className={`border-bottom ${styles.logoWrap}`}>
-				{isShowSideBar ? (
-					<div
-						className={`${styles.imgWrap}`}
-						style={{
-							background: `url(${Logo})`,
-							margin: "1.5rem",
-						}}></div>
-				) : (
-					<div
-						className={`${styles.imgWrap} ${styles.imgWrapDesktop}`}
-						style={{
-							background: `url(${IconLogo})`,
-							margin: "0",
-						}}></div>
-				)}
-
-				<div
-					className={`${styles.btnToggleSideBar} ${
-						styles.btnToggleSideBarMobi
-					} ${!isShowSideBar ? styles.btnToggleSideBarClose : ""}`}
-					onClick={() => handleToggleIsShowSideBar()}>
-					<MenuFoldOutlined />
-				</div>
+				<img
+					src={Logo}
+					alt="OpenNezt Logo"
+					className={`${styles.imgWrap}`}
+				/>
 			</div>
 
 			<div className={`${styles.navbarWrap}`}>
@@ -103,14 +89,14 @@ function SideBar(props) {
 										}
 										onClick={() => handleToggleMenu(index, route)}
 										key={route.path}
-										className={`
-                    ${styles.menuNavItem}
-                    ${
-								handleCheckRoute(route.routeActive, location.pathname)
-									? styles.menuNavItemActive
-									: ""
-							}
-                  `}>
+										className={`${styles.menuNavItem} ${
+											handleCheckRoute(
+												route.routeActive,
+												location.pathname
+											)
+												? styles.menuNavItemActive
+												: ""
+										}`}>
 										<NavItem
 											route={route}
 											isShowMenu={index === indexNavItemSelect}
@@ -126,14 +112,14 @@ function SideBar(props) {
 										}
 										onClick={() => handleToggleMenu(index, route)}
 										key={route.path}
-										className={`
-                    ${styles.menuNavItem}
-                    ${
-								handleCheckRoute(route.routeActive, location.pathname)
-									? styles.menuNavItemActive
-									: ""
-							}
-                  `}>
+										className={`${styles.menuNavItem}${
+											handleCheckRoute(
+												route.routeActive,
+												location.pathname
+											)
+												? styles.menuNavItemActive
+												: ""
+										}`}>
 										<NavItem
 											route={route}
 											isShowMenu={index === indexNavItemSelect}
@@ -141,10 +127,16 @@ function SideBar(props) {
 									</li>
 								);
 						  })}
+					<li
+						className={`${styles.menuNavItem} ${styles.logout}`}
+						onClick={() => handleConfirmLogOut()}>
+						<LogoutIcon style={{ color: "#7d8da1" }} />
+						Logout
+					</li>
 				</ul>
 			</div>
 
-			<div
+			{/* <div
 				className={`${styles.btnToggleIsShowSideBar} ${
 					!isShowSideBar ? styles.btnToggleIsHideSideBar : ""
 				}`}>
@@ -158,7 +150,7 @@ function SideBar(props) {
 					<path d="M13.5.5 7.5 8l6 7.5" stroke="currentColor" />
 					<path d="M8.5.5 2.5 8l6 7.5" stroke="currentColor" />
 				</svg>
-			</div>
+			</div> */}
 
 			{!isShowSideBar && menuSub && menuSub.length > 0 ? (
 				<div

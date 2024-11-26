@@ -10,10 +10,18 @@ function AppLayout(props) {
 	const { children } = props;
 	const isShowSideBar = useSelector((state) => state.app.isShowSideBar);
 	const isThemeLight = useSelector((state) => state.app.isThemeLight);
+	const isAuthSuccess = useSelector((state) => state.auth.isAuthSuccess);
+
 	// const titlePage = useSelector((state) => state.app.title);
 	const location = useSelector((state) => state.app.location);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (!isAuthSuccess) {
+			navigate("/login");
+		}
+	}, [isAuthSuccess, navigate]);
 
 	useEffect(() => {
 		if (location.pathName !== location.prevPathName) {
@@ -41,7 +49,20 @@ function AppLayout(props) {
 						!isShowSideBar ? styles.mainWrapWithConditionSideBarClose : ""
 					}`}>
 					<Header />
-					<main className={styles.mainContentWrap}>{children}</main>
+					<main className={styles.mainContentWrap}>
+						{/* <div className={styles.headerMainWrap}>
+							<div className={styles.titleWrap}>{titlePage}</div>
+							<div className={styles.breadcrumbWrap}>
+								<span className={`${styles.text}`}>Home</span>{" "}
+								<span className={styles.slash}>/</span>
+								<span
+									className={`${styles.text} ${styles.breadcrumbActive}`}>
+									Dashboard
+								</span>
+							</div>
+						</div> */}
+						{children}
+					</main>
 				</div>
 			</div>
 		</div>

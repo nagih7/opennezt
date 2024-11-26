@@ -1,22 +1,31 @@
 import React from "react";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import PersonIcon from "@mui/icons-material/Person";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const manageRouteMap = [
 	{
 		label: "Dashboard",
 		name: "Dashboard",
 		icon: (
-			<img src="https://www.svgrepo.com/show/425195/home-dashboard-basic.svg" style={{width:"30px"}}></img>
+			<DashboardIcon
+				className="material-icons"
+				style={{ color: "#7d8da1" }}
+			/>
 		),
 		path: "/",
 		routeActive: ["/"],
 		permissions: [""],
 	},
-	
-	
+
 	{
 		label: "User Management",
 		icon: (
-			<img src="https://cdn-icons-png.flaticon.com/512/6102/6102535.png" style={{width:"30px"}}></img>
+			<ManageAccountsIcon
+				style={{ color: "#7d8da1" }}
+				className="material-icons"
+			/>
 		),
 		path: "/employee",
 		routeActive: ["/employee"],
@@ -62,21 +71,21 @@ const manageRouteMap = [
 	// },
 	{
 		label: "About Me",
-		icon : (
-			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/2048px-User_icon_2.svg.png" style={{width:"30px"}}></img>
-		  
+		icon: (
+			<PersonIcon style={{ color: "#7d8da1" }} className="material-icons" />
 		),
 		path: "/about",
 		routeActive: ["/about"],
 		permissions: ["about_page"],
-
 	},
 	{
 		label: "Admin",
 		name: "Admin",
 		icon: (
-			<img src="https://cdn.iconscout.com/icon/free/png-256/free-administrator-icon-download-in-svg-png-gif-file-formats--business-woman-female-man-user-hospital-management-pack-healthcare-medical-icons-5728885.png" style={{width:"30px"}}>
-		</img>
+			<AdminPanelSettingsIcon
+				style={{ color: "#7d8da1" }}
+				className="material-icons"
+			/>
 		),
 		path: "/manage",
 		routeActive: ["/manage"],
