@@ -1,44 +1,154 @@
-import React from 'react';
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 
-function PopoverMessage() {
+function ChatsPopover() {
+  const randomNames = [
+    "Giang Nguyen",
+    "Minh Tran",
+    "Huy Le",
+    "Lan Pham",
+    "Dung Hoang",
+    "Thao Nguyen",
+    "Phuong Tran",
+    "Linh Vu",
+    "Binh Nguyen",
+    "Nam Do",
+  ];
+
+  const randomMessages = [
+    "You: I’ve got a new idea",
+    "You: Let’s catch up later",
+    "You: Can you send me the file?",
+    "You: That’s awesome!",
+    "You: Sure, no problem",
+    "You: I’m on my way",
+    "You: Let me check",
+    "You: Call me back",
+    "You: Thanks a lot!",
+    "You: See you soon",
+  ];
+
+  function generateRandomChatData(count) {
+    const chatData = [];
+    for (let i = 0; i < count; i++) {
+      const name = randomNames[Math.floor(Math.random() * randomNames.length)];
+      const message =
+        randomMessages[Math.floor(Math.random() * randomMessages.length)];
+      const time = `${Math.floor(Math.random() * 60) + 1}m`;
+      const avatarColor = `hsl(${Math.random() * 360}, 70%, 80%)`;
+      chatData.push({ name, message, time, avatarColor });
+    }
+    return chatData;
+  }
+
+  const [chatData] = useState(generateRandomChatData(20));
+  const [searchQuery, setSearchQuery] = useState("");
+  const [openChats, setOpenChats] = useState([]);
+  const [minimizedChats, setMinimizedChats] = useState([]);
+
+  const filteredChatData = chatData.filter((chat) =>
+    chat.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const openChatBox = (chat) => {
+    if (openChats.some((c) => c.name === chat.name)) return;
+
+    if (openChats.length >= 3) {
+      const [removedChat, ...remainingChats] = openChats;
+      setMinimizedChats([...minimizedChats, removedChat]);
+      setOpenChats([...remainingChats, chat]);
+    } else {
+      setOpenChats([...openChats, chat]);
+    }
+  };
+
+  const closeChatBox = (name) => {
+    setOpenChats(openChats.filter((chat) => chat.name !== name));
+  };
+
+  const restoreMinimizedChat = (chat) => {
+    setMinimizedChats(minimizedChats.filter((c) => c.name !== chat.name));
+    openChatBox(chat);
+  };
 
   return (
-    <div className={styles.modalMessageWrap}>
+    <div className={styles.chatPopoverWrap}>
       <div className={styles.headerWrap}>
-        You have 2 messages
+        <h3>Chats</h3>
+        <input
+          type="text"
+          placeholder="Search people"
+          className={styles.searchInput}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
-      <div className={styles.mainModalInfoWrap}>
-        <ul className={styles.menuInfoWrap}>
-          <li className={`${styles.itemInfoWrap}`}>
-            <div className={styles.iconWrap}>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12" width="12" height="12">
-                <path fill="currentColor" d="M1.5 2.625A.376.376 0 0 0 1.125 3v.518l4.043 3.319a1.312 1.312 0 0 0 1.666 0l4.041-3.319V3a.376.376 0 0 0-.375-.375h-9zm-.375 2.348V9c0 .206.169.375.375.375h9A.376.376 0 0 0 10.875 9V4.973L7.547 7.706c-.9.738-2.196.738-3.094 0L1.125 4.973zM0 3c0-.827.673-1.5 1.5-1.5h9c.827 0 1.5.673 1.5 1.5v6c0 .827-.673 1.5-1.5 1.5h-9C.673 10.5 0 9.827 0 9V3z"/>
-              </svg>
+      <div className={styles.chatListWrap}>
+        {filteredChatData.length > 0 ? (
+          filteredChatData.map((chat, index) => (
+            <div
+              className={styles.chatItem}
+              key={index}
+              onClick={() => openChatBox(chat)}
+            >
+              <div
+                className={styles.avatar}
+                style={{ backgroundColor: chat.avatarColor }}
+              >
+                {chat.name[0]}
+              </div>
+              <div className={styles.chatContent}>
+                <div className={styles.chatName}>{chat.name}</div>
+                <div className={styles.chatMessage}>
+                  {chat.message}{" "}
+                  <span className={styles.chatTime}>{chat.time}</span>
+                </div>
+              </div>
             </div>
-            <div className={styles.contentWrap}>
-              <div>New Application received</div>
-              <div className={styles.date}>3 days ago</div>
-            </div>
-          </li>
-          <li className={`${styles.itemInfoWrap}`}>
-            <div className={styles.iconWrap}>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12" width="12" height="12">
-                <path fill="currentColor" d="M1.5 2.625A.376.376 0 0 0 1.125 3v.518l4.043 3.319a1.312 1.312 0 0 0 1.666 0l4.041-3.319V3a.376.376 0 0 0-.375-.375h-9zm-.375 2.348V9c0 .206.169.375.375.375h9A.376.376 0 0 0 10.875 9V4.973L7.547 7.706c-.9.738-2.196.738-3.094 0L1.125 4.973zM0 3c0-.827.673-1.5 1.5-1.5h9c.827 0 1.5.673 1.5 1.5v6c0 .827-.673 1.5-1.5 1.5h-9C.673 10.5 0 9.827 0 9V3z"/>
-              </svg>
-            </div>
-            <div className={styles.contentWrap}>
-              <div>New Application received</div>
-              <div className={styles.date}>3 days ago</div>
-            </div>
-          </li>
-        </ul>
+          ))
+        ) : (
+          <div className={styles.noResult}>No chats found</div>
+        )}
       </div>
-      <div className={styles.footerWrap}>
-        View all notification
+      <div className={styles.miniChatBoxWrap}>
+        {openChats.map((chat, index) => (
+          <div className={styles.miniChatBox} key={index}>
+            <div className={styles.miniChatHeader}>
+              <span>{chat.name}</span>
+              <button
+                onClick={() => closeChatBox(chat.name)}
+                className={styles.closeButton}
+              >
+                X
+              </button>
+            </div>
+            <div className={styles.miniChatBody}>
+              <p>{chat.message}</p>
+            </div>
+            <div className={styles.miniChatFooter}>
+              <input
+                type="text"
+                placeholder="Type a message..."
+                className={styles.miniChatInput}
+              />
+            </div>
+          </div>
+        ))}
+        <div className={styles.minimizedChatIcons}>
+          {minimizedChats.map((chat, index) => (
+            <div
+              key={index}
+              className={styles.minimizedChatIcon}
+              style={{ backgroundColor: chat.avatarColor }}
+              onClick={() => restoreMinimizedChat(chat)}
+            >
+              {chat.name[0]}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-export default PopoverMessage
+export default ChatsPopover;

@@ -7,8 +7,7 @@ function About() {
   const [userData, setUserData] = useState(null);
   const [userAdvanceData, setUserAdvanceData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [editMode, setEditMode] = useState(false); 
-  const [formData, setFormData] = useState({}); 
+
   useEffect(() => {
     const response_advance = {
       status: 200,
@@ -62,21 +61,6 @@ function About() {
     setLoading(false);
   }, []);
 
-  const handleEditClick = () => {
-    setEditMode(true);
-    setFormData(userData); 
-  };
-
-  const handleSaveClick = () => {
-    setUserData(formData);
-    setEditMode(false);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
   if (loading) {
     return (
       <AppLayout>
@@ -96,70 +80,26 @@ function About() {
           </div>
           <div className="avatar">
             <img src={userData.avatar} alt="User Avatar" />
-
           </div>
           <div className="user-info">
-            {editMode ? (
-              <div>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter name"
-                />
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleInputChange}
-                  placeholder="Enter city"
-                />
-                <input
-                  type="text"
-                  name="region"
-                  value={formData.region}
-                  onChange={handleInputChange}
-                  placeholder="Enter region"
-                />
-                <button onClick={handleSaveClick}>Save</button>
-              </div>
-            ) : (
-              <>
-                <h1>
-                  {userData.name}
-                  <img src={verify} alt="Verify" className="verify-icon" />
-                  <svg
-                    onClick={handleEditClick}
-                    className="editicon"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="30"
-                    height="41"
-                    viewBox="0 0 41 41"
-                    fill="none"
-                  >
-                    <path
-                      d="M25.1914 13.6662L27.3325 15.8073L6.6509 36.4433H4.55541V34.3478L25.1914 13.6662ZM33.3912 0C32.8217 0 32.2295 0.22777 31.7968 0.660534L27.6286 4.82873L36.17 13.3701L40.3382 9.20193C41.2265 8.31362 41.2265 6.83312 40.3382 5.99036L35.0083 0.660534C34.5528 0.204993 33.9834 0 33.3912 0ZM25.1914 7.26588L0 32.4573V40.9987H8.54139L33.7328 15.8073L25.1914 7.26588Z"
-                      fill="black"
-                    />
-                  </svg>
-                </h1>
-                <p>
-                  {userData.city}, {userData.region}
-                </p>
-                <p>{userData.language}</p>
-                <a
-                  href={userData.linkedIn}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  LinkedIn Profile
-                </a>
-              </>
-            )}
+            <h1>
+              {userData.name}
+              <img src={verify} alt="Verify" className="verify-icon" />
+            </h1>
+            <p>
+              {userData.city}, {userData.region}
+            </p>
+            <p>{userData.language}</p>
+            <a
+              href={userData.linkedIn}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              LinkedIn Profile
+            </a>
           </div>
         </div>
-		<div className="professional-background">
+        <div className="professional-background">
           <h2>Professional Background</h2>
           <p>
             <strong>Experience Level:</strong> {userAdvanceData.experience_level}
@@ -184,4 +124,3 @@ function About() {
 }
 
 export default About;
-

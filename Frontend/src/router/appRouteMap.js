@@ -1,5 +1,19 @@
 import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+
+import {
+	CompassOutlined,
+	// StarOutlined,
+	// PhoneOutlined,
+	// MessageOutlined,
+	HomeOutlined,
+	// FundOutlined,
+	// FileSearchOutlined,
+	// RocketOutlined,
+	// BulbOutlined,
+	// TeamOutlined,
+	// QuestionCircleOutlined,
+} from "@ant-design/icons";
 import PersonIcon from "@mui/icons-material/Person";
 
 const appRouteMap = [
@@ -16,6 +30,7 @@ const appRouteMap = [
 		routeActive: ["/"],
 		permissions: [""],
 	},
+
 	{
 		label: "About Me",
 		icon: (
@@ -56,6 +71,46 @@ const appRouteMap = [
 	// 			routeActive: ["/"],
 	// 			permissions: ["home_page"],
 	// 		},
+
+			// {
+			// 	label: "News Feed",
+			// 	icon: (
+			// 		<FundOutlined
+			// 			style={{
+			// 				fontSize: "20px",
+			// 			}}
+			// 		/>
+			// 	),
+			// 	path: "/news-feed",
+			// 	routeActive: ["/news-feed"],
+			// 	permissions: ["news_feed_page"],
+			// },
+			// {
+			// 	label: "Recruit Talents",
+			// 	icon: (
+			// 		<FileSearchOutlined
+			// 			style={{
+			// 				fontSize: "20px",
+			// 			}}
+			// 		/>
+			// 	),
+			// 	path: "/recruit-talents",
+			// 	routeActive: ["/recruit-talents"],
+			// 	permissions: ["recruit_talents_page"],
+			// },
+			// {
+			// 	label: "Find Mentors",
+			// 	icon: (
+			// 		<FileSearchOutlined
+			// 			style={{
+			// 				fontSize: "20px",
+			// 			}}
+			// 		/>
+			// 	),
+			// 	path: "/find-mentors",
+			// 	routeActive: ["/find-mentors"],
+			// 	permissions: ["find_mentors_page"],
+			// },
 	// {
 	// 	label: "News Feed",
 	// 	icon: (
