@@ -1,4 +1,6 @@
 import React from "react";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+
 import {
 	CompassOutlined,
 	// StarOutlined,
@@ -15,36 +17,49 @@ import {
 
 const appRouteMap = [
 	{
-		label: "Explore",
+		label: "Dashboard",
+		name: "Dashboard",
 		icon: (
-			<CompassOutlined
-				style={{
-					fontSize: "20px",
-				}}
+			<DashboardIcon
+				className="material-icons"
+				style={{ color: "#7d8da1" }}
 			/>
 		),
-		path: "",
-		routeActive: ["/", "/news-feed", "/recruit-talents", "/find-mentors"],
-		permissions: [
-			"home_page",
-			"news_feed_page",
-			"recruit_talents_page",
-			"find_mentors_page",
-		],
-		children: [
-			{
-				label: "Home",
-				icon: (
-					<HomeOutlined
-						style={{
-							fontSize: "20px",
-						}}
-					/>
-				),
-				path: "/",
-				routeActive: ["/"],
-				permissions: ["home_page"],
-			},
+		path: "/",
+		routeActive: ["/"],
+		permissions: [""],
+	},
+	// {
+	// 	label: "Explore",
+	// 	icon: (
+	// 		<CompassOutlined
+	// 			style={{
+	// 				fontSize: "20px",
+	// 			}}
+	// 		/>
+	// 	),
+	// 	path: "",
+	// 	routeActive: ["/", "/news-feed", "/recruit-talents", "/find-mentors"],
+	// 	permissions: [
+	// 		"home_page",
+	// 		"news_feed_page",
+	// 		"recruit_talents_page",
+	// 		"find_mentors_page",
+	// 	],
+	// 	children: [
+	// 		{
+	// 			label: "Home",
+	// 			icon: (
+	// 				<HomeOutlined
+	// 					style={{
+	// 						fontSize: "20px",
+	// 					}}
+	// 				/>
+	// 			),
+	// 			path: "/",
+	// 			routeActive: ["/"],
+	// 			permissions: ["home_page"],
+	// 		},
 			// {
 			// 	label: "News Feed",
 			// 	icon: (
@@ -84,8 +99,8 @@ const appRouteMap = [
 			// 	routeActive: ["/find-mentors"],
 			// 	permissions: ["find_mentors_page"],
 			// },
-		],
-	},
+	// 	],
+	// },
 	// {
 	// 	label: "My startups",
 	// 	icon: (

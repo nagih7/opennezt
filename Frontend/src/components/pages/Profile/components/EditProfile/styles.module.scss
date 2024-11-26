@@ -1,21 +1,27 @@
-@import "src/assets/scss/variables";
-
 .editProfile {
   .personalInformation {
-    background: $colorWhite;
-    border-radius: 4px;
+    background: #fff; /* Thay thế $colorWhite */
+    border-radius: 16px; /* Tăng độ bo tròn */
     padding: 15px;
     margin-bottom: 20px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05); /* Thêm bóng đổ */
+
     .headerWrap {
-      border-block-end: 1px solid $colorBorderDefault;
+      border-bottom: 1px solid #e4e4e4; /* Thay thế $colorBorderDefault */
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+
       .label {
         font-size: 18px;
         margin-bottom: 5px;
+        font-weight: bold;
+        color: #000; /* Thay thế $colorBlack */
       }
     }
 
     .mainWrap {
       padding: 10px 0;
+
       .inputWrapper {
         width: 100%;
         margin-bottom: 18px;
@@ -25,14 +31,30 @@
           font-weight: 500;
           font-size: 14px;
           line-height: 20px;
-          color: $colorBlack;
+          color: #000; /* Thay thế $colorBlack */
           margin-bottom: 4px;
         }
 
         .error {
           display: block;
-          color: $colorError;
+          color: #ff4d4f; /* Thay thế $colorError */
           font-weight: 500;
+        }
+
+        input {
+          width: 100%;
+          padding: 10px;
+          font-size: 14px;
+          border: 1px solid #e4e4e4;
+          border-radius: 8px;
+          color: #000; /* Văn bản màu đen */
+          background: #fff;
+          outline: none;
+          transition: border-color 0.3s ease;
+
+          &:focus {
+            border-color: #6c9bcf; /* Màu chủ đạo khi focus */
+          }
         }
       }
     }
@@ -40,7 +62,26 @@
     .btnWrap {
       display: flex;
       justify-content: flex-end;
+
+      button {
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #fff;
+        background: #6c9bcf; /* Màu chủ đạo */
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background: #5b8ab2; /* Màu tối hơn khi hover */
+        }
+
+        &:disabled {
+          background: #d3d3d3; /* Màu xám khi bị disable */
+          cursor: not-allowed;
+        }
+      }
     }
   }
 }
-
