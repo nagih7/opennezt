@@ -118,7 +118,7 @@ const Header = () => {
 					<Popover
 						className={`popover-info-wrap`}
 						placement="bottomRight"
-						// content={contentInfo}
+						content={contentInfo}
 						trigger="click">
 						<div className={styles.infoWrap}>
 							<div className={styles.avatarWrap}>

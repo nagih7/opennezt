@@ -38,7 +38,6 @@ function AppLayout(props) {
 
 	return (
 		<div className={`${styles.boxMainLayout}`}>
-			<div className={styles.headerBox}></div>
 			<div className={styles.mainLayoutWrap}>
 				<SideBar
 					isThemeLight={isThemeLight}

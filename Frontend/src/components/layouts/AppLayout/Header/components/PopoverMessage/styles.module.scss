@@ -1,88 +1,223 @@
 @import "src/assets/scss/variables";
+$mainColor: #ffffff; 
+$secondaryColor: #f3f4f6; 
+$secondaryAccent: #6d5dfc; 
+$colorWhite: #ffffff; 
+$colorLight1: #f9fafb; 
+$textColor: #374151; 
+$textColorDark: #1f2937; 
+$colorNote: #9ca3af; 
+$colorLine: #e5e7eb; 
+$backgroundHoverMain: rgba(108, 95, 252, 0.1); 
 
-.modalMessageWrap {
-	min-width: 250px;
-	max-width: 400px;
-	background-color: $mainColor;
-	border-radius: 4px;
+.chatPopoverWrap {
+  background-color: $mainColor;
+  border-radius: 8px;
+  min-width: 320px;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  color: $colorLight1;
+  font-family: "Arial", sans-serif;
 
-	&::before {
-		position: absolute;
-		content: "";
-		height: 12px;
-		width: 12px;
-		top: -6px;
-		right: 15px;
-		border-top-left-radius: 1px;
-		border-top-right-radius: 1px;
-		background-color: $mainColor;
-		transform: rotateZ(45deg);
-	}
+  .headerWrap {
+    padding: 16px;
+    background-color: $secondaryColor;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid $colorBorderDefault;
 
-	.headerWrap {
+    h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: $textColor;
+    }
+
+    .searchInput {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border: 1px solid $colorLine;
+      border-radius: 20px;
+      font-size: 14px;
+      background-color: $colorLight2;
+      outline: none;
+      color: $textColor;
+
+      &:focus {
+        border-color: $secondaryAccent;
+        box-shadow: 0 0 4px rgba($secondaryAccent, 0.6);
+      }
+    }
+  }
+
+  .chatListWrap {
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: $colorLight1;
+
+    .chatItem {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid $colorLine;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        background: rgba($secondaryAccent, 0.1);
+      }
+
+      .avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6d5dfc, #a371f7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: $colorWhite;
+        font-weight: bold;
+        font-size: 18px;
+        margin-right: 14px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .chatContent {
+        flex: 1;
+
+        .chatName {
+          font-size: 15px;
+          font-weight: 600;
+          color: $textColorDark;
+          margin-bottom: 4px;
+        }
+
+        .chatMessage {
+          font-size: 13px;
+          color: $textColor;
+
+          .chatTime {
+            font-size: 12px;
+            color: $colorNote;
+            margin-left: 8px;
+          }
+        }
+      }
+    }
+
+    /* Scrollbar styles */
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: $colorLine;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $secondaryAccent;
+      border-radius: 10px;
+    }
+  }
+}
+.miniChatBoxWrap {
+	position: fixed;
+	bottom: 10px;
+	right: 80px;
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	flex-wrap: wrap;
+  
+	.miniChatBox {
+	  width: 350px; 
+	  background-color: $mainColor;
+	  border-radius: 8px;
+	  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	  display: flex;
+	  flex-direction: column;
+	  overflow: hidden;
+		height: 400px;
+	  .miniChatHeader {
+		background-color: $secondaryAccent;
 		color: $colorWhite;
+		padding: 10px;
 		display: flex;
-		align-items: flex-start;
-		flex-direction: column;
-		padding: 13px;
-		border-block-end: 1px solid $colorBorderDefault;
-		font-weight: 600;
-	}
-
-	.mainModalInfoWrap {
-		.menuInfoWrap {
-			list-style: none;
-			margin: 0;
-			padding: 0;
-			border: 10px;
-
-			.itemInfoWrap {
-				padding: 12px 15px;
-				cursor: pointer;
-				font-weight: 500;
-				font-size: 14px;
-				transition: all 0.3s;
-				color: $colorLight1;
-				display: flex;
-				justify-content: flex-start;
-				align-items: center;
-				border-block-end: 1px solid $colorLine;
-				.iconWrap {
-					min-width: 40px;
-					height: 40px;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					border-radius: 50%;
-					background: rgb(108, 95, 252);
-					box-shadow: 0 5px 10px rgba(108, 95, 252, 0.3);
-					color: $colorWhite;
-				}
-				.contentWrap {
-					margin-left: 10px;
-					.date {
-						font-size: 12px;
-						color: $colorNote;
-					}
-				}
-
-				&:hover {
-					background: $backgroundHoverMain;
-				}
-			}
+		justify-content: space-between;
+		align-items: center;
+		
+		span {
+		  font-size: 16px;
+		  font-weight: bold;
 		}
+  
+		.closeButton {
+		  background: none;
+		  border: none;
+		  color: $colorWhite;
+		  font-size: 16px;
+		  cursor: pointer;
+  
+		  &:hover {
+			color: #ff4d4f;
+		  }
+		}
+	  }
+  
+	  .miniChatBody {
+		padding: 10px;
+		flex: 1;
+		overflow-y: auto;
+		font-size: 14px;
+		color: $textColor;
+	  }
+  
+	  .miniChatFooter {
+		padding: 10px;
+		border-top: 1px solid $colorLine;
+  
+		.miniChatInput {
+		  width: 100%;
+		  padding: 8px;
+		  border: 1px solid $colorLine;
+		  border-radius: 20px;
+		  font-size: 14px;
+		  outline: none;
+  
+		  &:focus {
+			border-color: $secondaryAccent;
+			box-shadow: 0 0 4px rgba($secondaryAccent, 0.6);
+		  }
+		}
+	  }
 	}
-
-	.footerWrap {
+  
+	.minimizedChatIcons {
+	  display: flex;
+	  flex-direction: column; 
+	  align-items: flex-end; 
+	  gap: 8px;
+	  position: fixed;
+	  bottom: 10px;
+	  right: 10px;
+  
+	  .minimizedChatIcon {
+		width: 50px;
+		height: 50px;
+		border-radius: 50%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding: 13px;
+		background-color: $secondaryColor;
+		color: $colorWhite;
+		font-size: 16px;
+		font-weight: bold;
 		cursor: pointer;
-		transition: all 0.3s;
-		color: $colorNote;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
 		&:hover {
-			background: $backgroundHoverMain;
+		  background-color: $secondaryAccent;
 		}
+	  }
 	}
-}
+  }
+  
