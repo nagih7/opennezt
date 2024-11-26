@@ -112,7 +112,7 @@ function SideBar(props) {
 										}
 										onClick={() => handleToggleMenu(index, route)}
 										key={route.path}
-										className={`${styles.menuNavItem}${
+										className={`${styles.menuNavItem} ${
 											handleCheckRoute(
 												route.routeActive,
 												location.pathname

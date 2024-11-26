@@ -14,6 +14,7 @@ import {
 	// TeamOutlined,
 	// QuestionCircleOutlined,
 } from "@ant-design/icons";
+import PersonIcon from "@mui/icons-material/Person";
 
 const appRouteMap = [
 	{
@@ -28,6 +29,16 @@ const appRouteMap = [
 		path: "/",
 		routeActive: ["/"],
 		permissions: [""],
+	},
+
+	{
+		label: "About Me",
+		icon: (
+			<PersonIcon style={{ color: "#7d8da1" }} className="material-icons" />
+		),
+		path: "/about",
+		routeActive: ["/about"],
+		permissions: ["about_page"],
 	},
 	// {
 	// 	label: "Explore",
@@ -60,6 +71,7 @@ const appRouteMap = [
 	// 			routeActive: ["/"],
 	// 			permissions: ["home_page"],
 	// 		},
+
 			// {
 			// 	label: "News Feed",
 			// 	icon: (
@@ -99,6 +111,45 @@ const appRouteMap = [
 			// 	routeActive: ["/find-mentors"],
 			// 	permissions: ["find_mentors_page"],
 			// },
+	// {
+	// 	label: "News Feed",
+	// 	icon: (
+	// 		<FundOutlined
+	// 			style={{
+	// 				fontSize: "20px",
+	// 			}}
+	// 		/>
+	// 	),
+	// 	path: "/news-feed",
+	// 	routeActive: ["/news-feed"],
+	// 	permissions: ["news_feed_page"],
+	// },
+	// {
+	// 	label: "Recruit Talents",
+	// 	icon: (
+	// 		<FileSearchOutlined
+	// 			style={{
+	// 				fontSize: "20px",
+	// 			}}
+	// 		/>
+	// 	),
+	// 	path: "/recruit-talents",
+	// 	routeActive: ["/recruit-talents"],
+	// 	permissions: ["recruit_talents_page"],
+	// },
+	// {
+	// 	label: "Find Mentors",
+	// 	icon: (
+	// 		<FileSearchOutlined
+	// 			style={{
+	// 				fontSize: "20px",
+	// 			}}
+	// 		/>
+	// 	),
+	// 	path: "/find-mentors",
+	// 	routeActive: ["/find-mentors"],
+	// 	permissions: ["find_mentors_page"],
+	// },
 	// 	],
 	// },
 	// {
