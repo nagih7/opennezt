@@ -3,7 +3,7 @@ import AppLayout from "components/layouts/AppLayout";
 import "./styles.scss";
 import verify from "../../../assets/images/icon/verify.png";
 
-function StartUps() {
+function Founders() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -147,4 +147,4 @@ function StartUps() {
   );
 }
 
-export default StartUps;
+export default Founders;
