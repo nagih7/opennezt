@@ -75,6 +75,7 @@ function SideBar(props) {
 					className={`${styles.imgWrap}`}
 				/>
 			</div>
+			<div className={styles.fakeLogoWrap}></div>
 
 			<div className={`${styles.navbarWrap}`}>
 				<ul className={`${styles.menuNav}`}>

@@ -38,10 +38,11 @@ export const rootLoader = async (
 		}
 	} else {
 		if (auth.isAuthSuccess && auth.authorize === "admin") {
-			return redirect("/admin/manage");
+			return redirect("/");
 		} else if (auth.isAuthSuccess && auth.authorize === "user") {
 			return redirect("/");
 		}
+		// return redirect("/");
 	}
 
 	if (saga) {

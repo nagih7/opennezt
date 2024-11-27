@@ -1,14 +1,17 @@
 @import "../../../../assets/scss/variables.scss";
 
 .headerWrap {
+	position: sticky;
+	top: 0;
 	background-color: $colorBackground;
-	width: 100%;
-	padding-top: 1.5rem;
-	height: 45px;
+	width: calc(100% + 2rem);
+	padding-right: 2rem;
+	height: calc(30px + 1.5rem * 2);
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	user-select: none;
+	z-index: 100;
 
 	.headerLeftWrap {
 		display: flex;
