@@ -1,18 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const aboutYouSlice = createSlice({
+const founderSlice = createSlice({
 	name: "founder",
 	initialState: {
-		title: "",
+		founderProfile: {},
 	},
 	reducers: {
-		setTitle: (state) => ({
+		// setTitle: (state) => ({
+		// 	...state,
+		// 	title: "title",
+		// }),
+		startRequestGetFounderProfile: (state) => ({
 			...state,
-			title: "title",
+		}),
+		startRequestGetFounderProfileSuccess: (state, action) => ({
+			...state,
+			founderProfile: action.payload.data,
+		}),
+		startRequestGetFounderProfileFail: (state) => ({
+			...state,
+			founderProfile: {},
 		}),
 	},
 });
 
-export const { setTitle } = aboutYouSlice.actions;
+export const {
+	startRequestGetFounderProfile,
+	startRequestGetFounderProfileSuccess,
+	startRequestGetFounderProfileFail,
+} = founderSlice.actions;
 
-export default aboutYouSlice.reducer;
+export default founderSlice.reducer;

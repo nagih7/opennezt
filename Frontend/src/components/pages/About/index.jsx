@@ -3,79 +3,16 @@ import AppLayout from "components/layouts/AppLayout";
 import "./styles.scss";
 import verify from "../../../assets/images/icon/verify.png";
 import { useSelector } from "react-redux";
+import store from "states/configureStore";
+import { getFounderProfile } from "api/founder";
 
 function About() {
-	const [userData, setUserData] = useState(null);
-	const [userAdvanceData, setUserAdvanceData] = useState(null);
-	const [loading, setLoading] = useState(true);
-
 	const authUser = useSelector((state) => state.auth.authUser);
+	const founderProfile = useSelector((state) => state.founder.founderProfile);
 
 	useEffect(() => {
-		const response_advance = {
-			status: 200,
-			success: true,
-			message: "OK",
-			data: {
-				_id: "6742c8adee7e7a4668d1c67d",
-				user_id: "6740b8710b68e13d16e60363",
-				experience_level: "Senior",
-				industry: "Technology",
-				areas_of_expertise: {
-					accounting_and_finance: ["Financial Analysis", "Budgeting"],
-					human_resource: ["Recruitment", "Employee Relations"],
-					international: ["Export", "Global Market"],
-					law_and_legal: ["Corporate Law", "IP Law"],
-					management: ["Project Management", "Operations"],
-					marketing: ["Digital Marketing", "Content Strategy"],
-					operations: ["Logistics", "Supply Chain"],
-					sales: ["Lead Generation", "B2B Sales"],
-					starting_up: ["Startup Strategy", "Fundraising"],
-					sustainability: ["Green Practices", "CSR"],
-					technology_and_internet: [
-						"Software Development",
-						"Cloud Computing",
-					],
-				},
-				created_at: "2024-11-24T06:33:17.114Z",
-				updated_at: "2024-11-24T06:33:17.114Z",
-			},
-		};
-
-		const { experience_level, industry, areas_of_expertise } =
-			response_advance.data;
-
-		setUserData({
-			name: "Nguyen Huy Hoang",
-			email: "hoang03072005@gmail.com",
-			role: "admin",
-			phone: "0992929943",
-			avatar:
-				"https://media.licdn.com/dms/image/v2/D5603AQGiDfe6UDQjXw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1710736137769?e=1738195200&v=beta&t=FamJoPTUKDP57o9rYNjEWkoJommrWMLdpnsFsKAjhq8",
-			linkedIn: "https://www.linkedin.com/in/hoanggxyuuki/",
-			region: "Vietnam",
-			city: "Hanoi",
-			language: "Vietnamese/English",
-			background:
-				"https://media.licdn.com/dms/image/v2/D5616AQF80Dqr8GgNSQ/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1710736716523?e=1738195200&v=beta&t=RBYVgbbDq4oaehEiErIcqQyWcfQB9IrX799h7sNuNGw",
-		});
-
-		setUserAdvanceData({
-			experience_level,
-			industry,
-			areas_of_expertise,
-		});
-
-		setLoading(false);
+		store.dispatch(getFounderProfile());
 	}, []);
-
-	if (loading) {
-		return (
-			<AppLayout>
-				<div className="loading">Loading...</div>
-			</AppLayout>
-		);
-	}
 
 	return (
 		<AppLayout>
@@ -83,7 +20,14 @@ function About() {
 				<div className="banner-container">
 					<div className="banner">
 						<div className="background">
-							<img src={userData.background} alt="User Background" />
+							{authUser.background ? (
+								<img src={authUser.background} alt="User Background" />
+							) : (
+								<img
+									src="https://www.solidbackgrounds.com/images/1920x1080/1920x1080-gray-solid-color-background.jpg"
+									alt="User Background"
+								/>
+							)}
 						</div>
 					</div>
 					<div className="avatar">
@@ -114,21 +58,23 @@ function About() {
 					<h2>Professional Background</h2>
 					<p>
 						<strong>Experience Level:</strong>{" "}
-						{userAdvanceData.experience_level}
+						{founderProfile.experience_level}
 					</p>
 					<p>
-						<strong>Industry:</strong> {userAdvanceData.industry}
+						<strong>Industry:</strong> {founderProfile.industry}
 					</p>
 					<h3>Areas of Expertise</h3>
 					<ul>
-						{Object.entries(userAdvanceData.areas_of_expertise).map(
-							([key, value]) => (
-								<li key={key}>
-									<strong>{key.replace(/_/g, " ")}</strong>:{" "}
-									{value.join(", ")}
-								</li>
-							)
-						)}
+						{founderProfile &&
+							founderProfile.areas_of_expertise &&
+							Object.entries(founderProfile.areas_of_expertise).map(
+								([key, value]) => (
+									<li key={key}>
+										<strong>{key.replace(/_/g, " ")}</strong>:{" "}
+										{value.join(", ")}
+									</li>
+								)
+							)}
 					</ul>
 				</div>
 			</div>
