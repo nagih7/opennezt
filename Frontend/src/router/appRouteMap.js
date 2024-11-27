@@ -1,6 +1,8 @@
 import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-
+import FeedIcon from '@mui/icons-material/Feed';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FolderIcon from '@mui/icons-material/Folder';
 import {
 	CompassOutlined,
 	// StarOutlined,
@@ -39,6 +41,35 @@ const appRouteMap = [
 		path: "/about",
 		routeActive: ["/about"],
 		permissions: ["about_page"],
+	},
+	{
+		label: "New Feed",
+		icon: (
+			<FeedIcon style={{ color: "#7d8da1" }} className="material-icons" />
+		),
+		path: "/new-feed",
+		routeActive: ["/new-feed"],
+		permissions: ["newfeed_page"],
+	},
+	
+	{
+		label: "Founder",
+		icon: (
+			<AccountCircleIcon style={{ color: "#7d8da1" }} className="material-icons" />
+		),
+		path: "/founder",
+		routeActive: ["/founder"],
+		permissions: ["founder_page"],
+	},
+	{
+		label: "Project",
+		icon :(
+			<FolderIcon style={{ color : "#7d8da1" }} className="material-icons" />
+		),
+		path: "/project",
+		routeActive: ["/project"],
+		permissions: ["project_page"],
+
 	},
 	// {
 	// 	label: "Explore",
