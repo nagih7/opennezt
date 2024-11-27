@@ -9,6 +9,7 @@ import store from "./states/configureStore";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
+  
 	<Provider store={store}>
   <Suspense
     fallback={
@@ -20,9 +21,11 @@ root.render(
         />
       </div>
     }
+    
   >
     <RouterProvider router={router} />
   </Suspense>
+
 </Provider>
 
 );
