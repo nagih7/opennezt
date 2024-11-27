@@ -16,7 +16,7 @@ import {
 	setVisibleModalDeleteEmployee,
 } from "../../../states/modules/employee";
 import _ from "lodash";
-import User from "../../../assets/images/user/6.jpg";
+// import User from "../../../assets/images/user/6.jpg";
 import Filter from "./components/Filter";
 import BtnFilter from "../../UI/ButtonFilter";
 
@@ -30,7 +30,7 @@ function Employee() {
 			render: (text, record) => (
 				<div className={styles.nameWrap}>
 					<div className={styles.imgWrap}>
-						<img src={User} alt="" />
+						{/* <img src={User} alt="" /> */}
 					</div>
 					<span>{record.name}</span>
 				</div>

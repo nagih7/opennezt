@@ -5,7 +5,6 @@ import { Popover } from "antd";
 import contentInfo from "./components/PopoverProfile";
 import contentNotification from "./components/PopoverNotification";
 import contentMessage from "./components/PopoverMessage";
-import ImageUser from "../../../../../src/assets/images/user/6.jpg";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 import NotificationsIcon from "@mui/icons-material/Notifications";

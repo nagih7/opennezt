@@ -68,9 +68,7 @@ function SideBar(props) {
 			className={`${styles.sideBarWrap} ${
 				!isShowSideBar ? styles.sideBarWrapClose : ""
 			}`}>
-			<div
-				onClick={() => navigate("/")}
-				className={`border-bottom ${styles.logoWrap}`}>
+			<div className={`border-bottom ${styles.logoWrap}`}>
 				<img
 					src={Logo}
 					alt="OpenNezt Logo"

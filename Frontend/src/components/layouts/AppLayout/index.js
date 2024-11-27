@@ -43,11 +43,11 @@ function AppLayout(props) {
 					isThemeLight={isThemeLight}
 					isShowSideBar={isShowSideBar}
 				/>
+				<Header />
 				<div
 					className={`${styles.mainWrap} ${
 						!isShowSideBar ? styles.mainWrapWithConditionSideBarClose : ""
 					}`}>
-					<Header />
 					<main className={styles.mainContentWrap}>
 						{/* <div className={styles.headerMainWrap}>
 							<div className={styles.titleWrap}>{titlePage}</div>
