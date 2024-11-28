@@ -12,7 +12,7 @@ const Manage = React.lazy(() => import("../components/pages/Manage"));
 const Home = React.lazy(() => import("../components/pages/Home"));
 const Employee = React.lazy(() => import("../components/pages/Employee"));
 const About = React.lazy(() => import("../components/pages/About"));
-const AboutYou = React.lazy(() => import("../components/pages/AboutYou"));
+// const AboutYou = React.lazy(() => import("../components/pages/AboutYou"));
 const Newfeeds = React.lazy(() => import("../components/pages/Newfeeds"));
 const Founder = React.lazy(() => import("../components/pages/Founder"));
 const Project = React.lazy(() => import("../components/pages/Project"));
@@ -53,12 +53,12 @@ const router = createBrowserRouter([
 		element: <Home />,
 		loader: ({ request }) => rootLoader({ request }, true, "LOAD_HOME_PAGE"),
 	},
-	{
-		path: "/about-you",
-		element: <AboutYou />,
-		loader: ({ request }) =>
-			rootLoader({ request }, true, "LOAD_ABOUT_YOU_PAGE"),
-	},
+	// {
+	// 	path: "/about-you",
+	// 	element: <AboutYou />,
+	// 	loader: ({ request }) =>
+	// 		rootLoader({ request }, true, "LOAD_ABOUT_YOU_PAGE"),
+	// },
 	{
 		path: "/about",
 		element: <About />,

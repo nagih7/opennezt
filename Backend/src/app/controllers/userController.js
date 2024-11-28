@@ -1,3 +1,4 @@
+import {FounderProfile} from '@/models'
 import * as userService from '../services/userService'
 
 export async function readRoot(req, res) {
@@ -16,7 +17,6 @@ export async function createItem(req, res) {
 }
 
 export async function updateItem(req, res) {
-    console.log('updateItem', req.body)
     await userService.update(req.user, req.body)
     res.status(201).jsonify('Cập nhật người dùng thành công.')
 }
@@ -32,6 +32,10 @@ export async function resetPassword(req, res) {
 }
 
 export async function createFounderProfile(req, res) {
+    const isExist = await FounderProfile.findOne({user_id: req.currentUser._id})
+    if (isExist) {
+        res.status(201).jsonify('Hồ sơ người sáng lập đã tồn tại.')
+    }
     await userService.createFounderProfile(req.currentUser, req.body)
     res.status(201).jsonify('Tạo hồ sơ người sáng lập thành công.')
 }

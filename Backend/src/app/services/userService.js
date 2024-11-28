@@ -75,10 +75,14 @@ export async function updateFounderProfile(user, requestBody) {
     await founder.save()
 }
 
-export async function createProject(user, {pitch_deck, ...requestBody}) {
+export async function createProject(user, {pitch_deck, background, ...requestBody}) {
     if (pitch_deck instanceof FileUpload) {
         requestBody.pitch_deck = pitch_deck.save('pitch_decks')
     }
+    if (background instanceof FileUpload) {
+        requestBody.background = background.save('background_projects')
+    }
+
     const project = new Project(requestBody)
     project.user_id = user._id
 
@@ -211,7 +215,7 @@ export async function updateBackground(user, requestBody) {
         if (user.background) {
             FileUpload.remove(user.background)
         }
-        user.background = requestBody.background.save('backgrounds')
+        user.background = requestBody.background.save('background_users')
     }
     await user.save()
 }
