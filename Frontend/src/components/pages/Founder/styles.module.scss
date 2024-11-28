@@ -17,36 +17,33 @@
 	--box-shadow: 0 2rem 3rem var(--color-light);
 }
 
-.about-container {
-	font-family: "Poppins", sans-serif;
+.aboutContainer {
 	color: var(--color-dark);
 
-	.banner-container {
+	.bannerContainer {
 		background-color: var(--color-white);
-		padding: var(--card-padding);
 		border-radius: 2rem;
 		box-shadow: var(--box-shadow);
-		margin: 20px;
+		padding: 2rem;
 
 		.banner {
-			height: 200px;
+			height: auto;
 			display: flex;
 			justify-content: center;
 			align-items: center;
 
 			.background {
 				width: 100%;
-				height: 270px;
+				max-height: 300px;
 				overflow: hidden;
 				border-radius: var(--card-border-radius);
 				box-shadow: var(--box-shadow);
-				margin: 9px;
-				margin-top: 5%;
 				border: 2px solid #f4f4f4;
 
 				img {
 					width: 100%;
 					height: 100%;
+					max-height: 300px;
 					object-fit: cover;
 				}
 			}
@@ -60,7 +57,7 @@
 			border: 3px solid var(--color-white);
 			overflow: hidden;
 			margin-left: 88px;
-			margin-top: -2%;
+			margin-top: -5%;
 
 			img {
 				width: 100%;
@@ -69,7 +66,7 @@
 			}
 		}
 
-		.user-info {
+		.userInfo {
 			background-color: var(--color-white);
 			padding: var(--card-padding);
 			border-radius: var(--card-border-radius);
@@ -84,7 +81,7 @@
 				align-items: center;
 				justify-content: space-between;
 
-				.verify-icon {
+				.verifyIcon {
 					margin-left: 10px;
 					width: 30px;
 					height: 30px;
@@ -168,8 +165,8 @@
 		}
 	}
 }
-.connect-button,
-.skip-button {
+.connectButton,
+.skipButton {
 	display: inline-block;
 	padding: 0.8rem 1.5rem;
 	font-size: 1rem;
@@ -196,18 +193,18 @@
 	}
 }
 
-.connect-button {
+.connectButton {
 	background-color: #00bff3;
 	margin-right: 76rem;
 }
 
-.skip-button {
+.skipButton {
 	background-color: #ffec8d;
 
 	&:hover {
 		background-color: #9b810081;
 	}
 }
-.startup-actions {
+.startupActions {
 	margin-top: 31px;
 }

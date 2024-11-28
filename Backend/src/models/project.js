@@ -54,6 +54,14 @@ const Project = createModel('Project', 'projects', {
         type: String,
         required: true,
     },
+    logo: {
+        type: String,
+        required: false,
+    },
+    background: {
+        type: String,
+        required: true,
+    },
     lading_page_url: {
         type: String,
         required: false,
