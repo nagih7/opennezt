@@ -1,13 +1,10 @@
 @import "../../../assets/scss/variables";
 
 .boxMainLayout {
-	background-color: #f3f3f3;
-
-	.headerBox {
-		height: 60px;
-		background: $colorWhite;
-		margin-bottom: -60px;
-	}
+	margin: 0 auto;
+	max-width: 1920px;
+	padding: 0 2rem;
+	background-color: $colorBackground;
 }
 
 .boxMainLayoutShowBackGround {
@@ -21,17 +18,15 @@
 	margin: auto;
 
 	.mainWrap {
-		width: calc(100% - 250px);
-		margin-left: 250px;
+		padding-left: 1.8rem;
+		width: calc(100% - 200px);
+		margin-left: 200px;
 		transition: all 0.5s;
 		height: 100vh;
 
 		.mainContentWrap {
-			height: calc(100% - 65px);
-			overflow-y: auto;
-			overflow-x: hidden;
+			height: calc(100% - (45px + 11px + 1.5rem));
 			background-color: $backgroundMain;
-			padding: 2rem;
 
 			.headerMainWrap {
 				display: flex;

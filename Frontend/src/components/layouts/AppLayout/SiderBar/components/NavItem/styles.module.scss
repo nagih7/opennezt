@@ -6,7 +6,6 @@
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
-	padding: 1rem;
 
 	.textWrap {
 		display: flex;
@@ -17,12 +16,12 @@
 			width: 25px;
 			display: flex;
 			justify-content: center;
-			color: $colorLight;
+			color: $colorNavbar;
 		}
 
 		.text {
 			font-weight: 500;
-			color: $colorLight;
+			color: $colorNavbar;
 			margin-left: 15px;
 			clear: both;
 			display: inline-block;
@@ -46,6 +45,10 @@
 
 .navItemActiveWrap {
 	.textWrap {
+		.iconWrap {
+			color: $colorActive;
+		}
+
 		.text,
 		g {
 			color: $colorActive;

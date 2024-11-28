@@ -13,7 +13,9 @@ const Home = React.lazy(() => import("../components/pages/Home"));
 const Employee = React.lazy(() => import("../components/pages/Employee"));
 const About = React.lazy(() => import("../components/pages/About"));
 const AboutYou = React.lazy(() => import("../components/pages/AboutYou"));
-
+const Newfeeds = React.lazy(() => import("../components/pages/Newfeeds"));
+const Founder = React.lazy(() => import("../components/pages/Founder"));
+const Project = React.lazy(() => import("../components/pages/Project"))
 const router = createBrowserRouter([
 	{
 		path: "/login",
@@ -37,7 +39,7 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_PROFILE_PAGE"),
 	},
 	{
-		path: "/manage",
+		path: "admin/manage",
 		element: <Manage />,
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_MANAGE_PAGE"),
@@ -67,10 +69,28 @@ const router = createBrowserRouter([
 		],
 	},
 	{
-		path: "/employee",
+		path: "admin/user-management",
 		element: <Employee />,
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_EMPLOYEE_PAGE"),
+	},
+	{
+		path: "/new-feed",
+		element: <Newfeeds />,
+		loader: ({ request }) => 
+			rootLoader({ request }, true, "LOAD_NEWFEED_PAGE"), 
+	},
+	{
+		path: "/founder",
+		element: <Founder />,
+		loader: ({ request }) => 
+			rootLoader({ request }, true, "LOAD_FOUNDER_PAGE"), 
+	},
+	{
+		path:"/project",
+		element: <Project />,
+		loader: ({ request }) =>
+			rootLoader({ request}, true , "LOAD_PROJECT_PAGE"),
 	},
 ]);
 

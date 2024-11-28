@@ -1,16 +1,17 @@
 @import "../../../../assets/scss/variables.scss";
 
 .headerWrap {
-	width: 100%;
-	height: 65px;
-	background: $mainColor;
+	position: sticky;
+	top: 0;
+	background-color: $colorBackground;
+	width: calc(100% + 2rem);
+	padding-right: 2rem;
+	height: calc(30px + 1.5rem * 2);
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 10px 15px;
-	border-block-end: 1px solid #323a49;
-	border-inline-end: 1px solid #323a49;
 	user-select: none;
+	z-index: 100;
 
 	.headerLeftWrap {
 		display: flex;
@@ -24,7 +25,7 @@
 
 			.iconWrap {
 				font-size: 22px;
-				color: #776f6f;
+				color: $colorNavbar;
 				transition: all 0.3s;
 
 				&:hover {
@@ -59,9 +60,9 @@
 		.itemHeaderRight {
 			padding: 10px;
 			margin: 0 5px;
-			cursor: pointer;
 			display: flex;
 			align-items: center;
+			cursor: pointer;
 
 			&:hover {
 				.iconWrap {
@@ -74,7 +75,7 @@
 				align-items: center;
 				font-size: 16px;
 				transition: all 0.3s;
-				color: $colorLight;
+				color: $colorNavbar;
 			}
 
 			.addToCard {

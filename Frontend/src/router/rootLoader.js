@@ -16,7 +16,7 @@ export const rootLoader = async (
 	if (url.pathname === "/profile") {
 		await store.dispatch(getMe());
 	}
-	if (url.pathname === "/manage") {
+	if (url.pathname === "/admin/manage") {
 		await store.dispatch(getTotalUsers());
 	}
 	if (url.pathname === "/about-you") {
@@ -38,10 +38,11 @@ export const rootLoader = async (
 		}
 	} else {
 		if (auth.isAuthSuccess && auth.authorize === "admin") {
-			return redirect("/manage");
+			return redirect("/");
 		} else if (auth.isAuthSuccess && auth.authorize === "user") {
 			return redirect("/");
 		}
+		// return redirect("/");
 	}
 
 	if (saga) {

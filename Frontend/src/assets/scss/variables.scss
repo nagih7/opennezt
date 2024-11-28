@@ -1,9 +1,10 @@
+$colorBackground: #f6f6f9;
 $mainColor: #212631;
-$backgroundMain: #f0f0f5;
+$backgroundMain: #f6f6f9;
 $mainColorDark: #2a2a4a;
 $colorWhite: #fff;
 $colorBlack: #282f53;
-$colorActive: #e55520;
+$colorActive: #6c9bcf;
 $colorNote: #76839a;
 $backgroundHoverMain: #2a303d;
 
@@ -126,3 +127,11 @@ $colorRed: #c30326;
 
 // Line
 $colorLine: #323a49;
+
+// Box
+$box-shadow: 0 2rem 3rem var(--color-light);
+$backgroundNavItemActive: #848bc42e;
+$navItemAciive: #6c9bcf;
+
+// Icon
+$colorNavbar: #7d8da1;

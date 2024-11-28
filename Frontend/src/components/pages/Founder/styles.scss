@@ -1,0 +1,214 @@
+:root {
+  --color-primary: #6C9BCF;
+  --color-danger: #FF0060;
+  --color-success: #1B9C85;
+  --color-warning: #F7D060;
+  --color-white: #fff;
+  --color-info-dark: #7d8da1;
+  --color-dark: #363949;
+  --color-light: rgba(132, 139, 200, 0.18);
+  --color-dark-variant: #677483;
+  --color-background: #f6f6f9;
+  --card-border-radius: 2rem;
+  --border-radius-1: 0.4rem;
+  --card-border-radius: 1.2rem;
+  --card-padding: 1.8rem;
+  --padding-1: 1.2rem;
+  --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+
+.about-container {
+  font-family: 'Poppins', sans-serif;
+  color: var(--color-dark);
+
+  .banner-container {
+    background-color: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: 2rem;
+    box-shadow: var(--box-shadow);
+    margin: 20px;
+
+    .banner {
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .background {
+        width: 100%;
+        height: 270px;
+        overflow: hidden;
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--box-shadow);
+        margin: 9px;
+        margin-top: 5%;
+        border: 2px solid #f4f4f4;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+
+    .avatar {
+      transform: translateX(-50%);
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid var(--color-white);
+      overflow: hidden;
+      margin-left: 88px;
+      margin-top: -2%;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .user-info {
+      background-color: var(--color-white);
+      padding: var(--card-padding);
+      border-radius: var(--card-border-radius);
+      box-shadow: var(--box-shadow);
+      margin: -21px;
+      margin-top: -45px;
+
+      h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        // display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .verify-icon {
+          margin-left: 10px;
+          width: 30px;
+          height: 30px;
+          position: relative;
+    top: 5px;
+        }
+
+        // .editicon {
+        //   cursor: pointer;
+        //   margin-left: auto;
+        //   margin-right: 10px;
+        //   fill: var(--color-dark);
+        //   transition: fill 0.3s ease, transform 0.3s ease;
+
+        //   &:hover {
+        //     fill: var(--color-primary);
+        //     transform: scale(1.1);
+        //   }
+
+        //   svg {
+        //     width: 30px;
+        //     height: 30px;
+        //   }
+        // }
+      }
+
+      p {
+        margin: 5px 0;
+        color: var(--color-dark-variant);
+      }
+
+      a {
+        display: inline-block;
+        margin-top: 10px;
+        color: var(--color-primary);
+        text-decoration: none;
+        font-weight: bold;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .professional-background {
+    background-color: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: 2rem;
+    box-shadow: var(--box-shadow);
+    margin: 20px;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    h3 {
+      margin-top: 15px;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    p {
+      margin: 5px 0;
+      color: var(--color-dark-variant);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin-bottom: 10px;
+
+        strong {
+          font-weight: bold;
+          color: var(--color-dark);
+        }
+      }
+    }
+  }
+}
+.connect-button,
+.skip-button {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-dark); 
+  // background-color: var( --color-white); 
+  border: 2px solid var(--color-white); 
+  border-radius: var(--border-radius-1);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease; 
+  box-shadow: 0 0 0 2px var(--color-white);
+
+  &:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 0 0 4px var(--color-white); 
+    background-color: #0086ac; 
+    color: var(--color-white); 
+  }
+
+  &:active {
+    transform: translateY(0); 
+    box-shadow: 0 0 0 2px var(--color-white); 
+  }
+}
+
+.connect-button {
+  background-color: #00BFF3;
+  margin-right:76rem;
+}
+
+.skip-button {
+  background-color: #FFEC8D;
+
+  &:hover {
+    background-color: #9b810081; 
+  }
+}
+.startup-actions{
+  margin-top: 31px;
+}

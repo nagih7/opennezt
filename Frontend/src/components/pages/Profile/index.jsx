@@ -3,11 +3,15 @@ import AppLayout from "components/layouts/AppLayout";
 import styles from "./styles.module.scss";
 import "./styles.scss";
 import { Col, Row, Tabs } from "antd";
-import User from "../../../assets/images/user/6.jpg";
+// import User from "../../../assets/images/user/6.jpg";
 import EditProfile from "./components/EditProfile";
+import { useSelector } from "react-redux";
+
 // import Order from "./components/Order";
 
 function Profile() {
+	const authUser = useSelector((state) => state.auth.authUser);
+
 	const [keyTable, setKeyTable] = useState("1");
 	const items = [
 		{
@@ -45,10 +49,14 @@ function Profile() {
 											/>
 										</svg>
 									</div>
-									<img src={User} alt="" />
+									{authUser.avatar ? (
+										<img src={authUser.avatar}></img>
+									) : (
+										<img src="https://scontent.fhan5-2.fna.fbcdn.net/v/t1.30497-1/453178253_471506465671661_2781666950760530985_n.png?stp=dst-png_s200x200&_nc_cat=1&ccb=1-7&_nc_sid=136b72&_nc_eui2=AeFwjzt3TLwRlu7A9A-KfDx0Wt9TLzuBU1Ba31MvO4FTUJ3aTrvrVcopb2NyVQPTTf6BthcdOye-NFjZTDew3OW4&_nc_ohc=DXnAdsnLWisQ7kNvgEJlRtG&_nc_zt=24&_nc_ht=scontent.fhan5-2.fna&_nc_gid=AbNmUcQBb3oSbY8ZuoFoTMp&oh=00_AYD0S418FAm6QCijZBx8fRizD-ohHGG1nhDVdX1fNCUjlw&oe=676EA37A" />
+									)}
 								</div>
 								<div className={styles.infoWrap}>
-									<div className={styles.name}>Elena Gilbert</div>
+									<div className={styles.name}>{authUser.name}</div>
 									<div className={styles.bod}>
 										Member Since: November 2020
 									</div>
