@@ -147,7 +147,7 @@ export async function recuitTalents(requestRecuitTalents) {
                         },
                     }
                     : {}),
-                'user_data.isActive': true,
+                'user_data.is_active': true,
             },
         },
         {
@@ -190,7 +190,7 @@ export async function getDetailTalent(email) {
                 _id: 0,
                 password: 0,
                 role: 0,
-                isActive: 0,
+                is_active: 0,
                 created_at: 0,
                 updated_at: 0,
                 talent_profile: {
@@ -204,4 +204,14 @@ export async function getDetailTalent(email) {
     ])
 
     return detailTalent[0]
+}
+
+export async function updateBackground(user, requestBody) {
+    if (requestBody.background instanceof FileUpload) {
+        if (user.background) {
+            FileUpload.remove(user.background)
+        }
+        user.background = requestBody.background.save('backgrounds')
+    }
+    await user.save()
 }

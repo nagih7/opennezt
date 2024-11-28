@@ -37,6 +37,14 @@ const User = createModel(
             type: String,
             default: '',
         },
+        background: {
+            type: String,
+            default: '',
+        },
+        facebook: {
+            type: String,
+            default: '',
+        },
         linkedIn: {
             type: String,
             default: '',
@@ -53,7 +61,7 @@ const User = createModel(
             type: String,
             default: 'vi',
         },
-        isActive: {
+        is_active: {
             type: Boolean,
             required: true,
             default: false,
@@ -64,7 +72,7 @@ const User = createModel(
             virtuals: false,
             transform(doc, ret) {
                 // eslint-disable-next-line no-unused-vars
-                const {_id, password, isActive, created_at, updated_at, ...result} = ret
+                const {_id, password, is_active, created_at, updated_at, ...result} = ret
                 return result
             },
         },
