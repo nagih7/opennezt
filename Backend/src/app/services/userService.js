@@ -101,26 +101,25 @@ export async function deleteProject(user, requestBody) {
 }
 
 export async function recuitTalents(requestRecuitTalents) {
+    const query = {}
+    // Thêm điều kiện cho query
+    if (requestRecuitTalents.expertise_area) {
+        query.industry = {
+            $regex: requestRecuitTalents.expertise_area,
+            $options: 'i',
+        }
+    }
+
+    if (requestRecuitTalents.experience_level) {
+        query.experience_level = {
+            $regex: requestRecuitTalents.experience_level,
+            $options: 'i',
+        }
+    }
+
     const talents = await FounderProfile.aggregate([
         {
-            $match: {
-                ...(requestRecuitTalents.expertise_area
-                    ? {
-                        industry: {
-                            $regex: requestRecuitTalents.expertise_area,
-                            $options: 'i',
-                        },
-                    }
-                    : {}),
-                ...(requestRecuitTalents.experience_level
-                    ? {
-                        experience_level: {
-                            $regex: requestRecuitTalents.experience_level,
-                            $options: 'i',
-                        },
-                    }
-                    : {}),
-            },
+            $match: query,
         },
         {
             $lookup: {
@@ -130,8 +129,6 @@ export async function recuitTalents(requestRecuitTalents) {
                 as: 'user_data',
             },
         },
-
-        {$unwind: '$user_data'}, // Giải nén mảng 'user_data' (vì $lookup trả về mảng)
         {
             $match: {
                 ...(requestRecuitTalents.location
@@ -152,6 +149,12 @@ export async function recuitTalents(requestRecuitTalents) {
                     : {}),
                 'user_data.isActive': true,
             },
+        },
+        {
+            $skip: (requestRecuitTalents.page - 1) * 10,
+        },
+        {
+            $limit: 10,
         },
         {
             $project: {

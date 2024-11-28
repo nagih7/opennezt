@@ -67,7 +67,6 @@ export async function deleteProject(req, res) {
 }
 
 export async function recuitTalents(req, res) {
-    console.log('recuitTalents', req.query)
     const result = await userService.recuitTalents(req.query)
     res.jsonify(result)
 }

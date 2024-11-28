@@ -10,7 +10,8 @@ function RecruitTalents() {
 		experience_level: "",
 		location: "",
 		language: "",
-	});
+		page: 1,
+	}); // Request recruit talents
 
 	useEffect(() => {
 		store.dispatch(recruitTalents(requestRecruitTalents));
