@@ -164,7 +164,6 @@ export async function recuitTalents(requestRecuitTalents) {
                 user_data: {
                     name: 1,
                     email: 1,
-                    phone: 1,
                     avatar: 1,
                     linkedIn: 1,
                     region: 1,
@@ -173,4 +172,36 @@ export async function recuitTalents(requestRecuitTalents) {
         },
     ])
     return talents
+}
+
+export async function getDetailTalent(email) {
+    const detailTalent = await User.aggregate([
+        {$match: {email}},
+        {
+            $lookup: {
+                from: 'founder_profiles',
+                localField: '_id',
+                foreignField: 'user_id',
+                as: 'talent_profile',
+            },
+        },
+        {
+            $project: {
+                _id: 0,
+                password: 0,
+                role: 0,
+                isActive: 0,
+                created_at: 0,
+                updated_at: 0,
+                talent_profile: {
+                    _id: 0,
+                    user_id: 0,
+                    created_at: 0,
+                    updated_at: 0,
+                },
+            },
+        },
+    ])
+
+    return detailTalent[0]
 }

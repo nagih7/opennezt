@@ -16,13 +16,6 @@ userRouter.get(
     asyncHandler(userController.readRoot)
 )
 
-userRouter.delete(
-    '/',
-    asyncHandler(userMiddleware.checkUserId),
-    userMiddleware.checkCanDeleteUser,
-    asyncHandler(userController.removeItem)
-)
-
 userRouter.patch(
     '/reset-password',
     asyncHandler(userMiddleware.checkUserId),
@@ -55,8 +48,22 @@ userRouter.put('/update-founder-profile', asyncHandler(userController.updateFoun
 
 userRouter.get('/recruit-talents', asyncHandler(userController.recuitTalents))
 
+userRouter.get(
+    '/detail-talent/:email',
+
+    // asyncHandler(validate(userRequest.getDetailTalent)),
+    asyncHandler(userController.getDetailTalent)
+)
+
 // URL dynamic
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))
+
+userRouter.delete(
+    '/',
+    asyncHandler(userMiddleware.checkUserId),
+    userMiddleware.checkCanDeleteUser,
+    asyncHandler(userController.removeItem)
+)
 
 userRouter.post('/', asyncHandler(validate(userRequest.createItem)), asyncHandler(userController.createItem))
 

@@ -55,7 +55,7 @@ const AreasOfExpertise = new Schema(
     }
 )
 
-const FounderProfile = createModel('Founder_Profile', 'founders_profiles', {
+const FounderProfile = createModel('Founder_Profile', 'founder_profiles', {
     user_id: {
         type: ObjectId,
         ref: User,

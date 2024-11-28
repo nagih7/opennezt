@@ -129,3 +129,19 @@ export const createProject = Joi.object({
     milestones: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Các mốc thời gian'),
     about_opennezt: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Về OpenNezt'),
 })
+
+export const getDetailTalent = Joi.object({
+    email: Joi.string()
+        .trim()
+        .lowercase()
+        .email()
+        .required()
+        .label('Email')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const user = await User.findOne({email: value})
+                    return user ? value : helpers.error('any.empty')
+                })
+        ),
+})
