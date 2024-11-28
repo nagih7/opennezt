@@ -158,10 +158,10 @@ export const forgotPassword = Joi.object({
             (value, helpers) =>
                 new AsyncValidate(value, async function (req) {
                     const user = await User.findOne({email: value})
-                    if (user && user.isActive) {
+                    if (user && user.is_active) {
                         req.currentUser = user
                     }
-                    return user && user.isActive ? value : helpers.message('{{#label}} không tồn tại.')
+                    return user && user.is_active ? value : helpers.message('{{#label}} không tồn tại.')
                 })
         ),
 })

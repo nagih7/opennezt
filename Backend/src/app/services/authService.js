@@ -48,7 +48,7 @@ export async function register({avatar, ...requestBody}) {
 }
 
 export async function verifyEmail(currentUser) {
-    currentUser.isActive = true
+    currentUser.is_active = true
     await currentUser.save()
 }
 
@@ -61,9 +61,8 @@ export async function blockToken(token) {
 
 export async function profile(userId) {
     const user = await User.findOne({_id: userId})
-    // Add avatar link
     user.avatar = user.avatar && LINK_STATIC_URL + user.avatar
-
+    user.background = user.background && LINK_STATIC_URL + user.background
     return user
 }
 

@@ -75,3 +75,8 @@ export async function getDetailTalent(req, res) {
     const result = await userService.getDetailTalent(req.params.email)
     res.jsonify(result)
 }
+
+export async function updateBackground(req, res) {
+    await userService.updateBackground(req.currentUser, req.body)
+    res.status(201).jsonify('Cập nhật ảnh nền thành công.')
+}
