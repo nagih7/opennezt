@@ -23,13 +23,13 @@ const appRouteMap = [
 		routeActive: ["/about"],
 		permissions: ["about_page"],
 	},
-	{
-		label: "New Feed",
-		icon: <FeedIcon className="material-icons" />,
-		path: "/new-feed",
-		routeActive: ["/new-feed"],
-		permissions: ["newfeed_page"],
-	},
+	// {
+	// 	label: "New Feed",
+	// 	icon: <FeedIcon className="material-icons" />,
+	// 	path: "/new-feed",
+	// 	routeActive: ["/new-feed"],
+	// 	permissions: ["newfeed_page"],
+	// },
 
 	{
 		label: "Founder",

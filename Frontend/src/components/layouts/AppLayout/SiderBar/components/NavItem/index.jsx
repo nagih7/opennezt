@@ -12,11 +12,11 @@ function NavItem(props) {
 	const isShowSideBar = useSelector((state) => state.app.isShowSideBar);
 
 	const handleCheckRouteActive = (routeActive, isShowMenu = false) => {
-		let isActive = false;
+		let is_active = false;
 		if (handleCheckRoute(routeActive, location.pathname) || isShowMenu) {
-			isActive = true;
+			is_active = true;
 		}
-		return isActive;
+		return is_active;
 	};
 
 	return (
