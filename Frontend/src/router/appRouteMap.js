@@ -1,33 +1,16 @@
 import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import FeedIcon from '@mui/icons-material/Feed';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import FolderIcon from '@mui/icons-material/Folder';
-import {
-	CompassOutlined,
-	// StarOutlined,
-	// PhoneOutlined,
-	// MessageOutlined,
-	HomeOutlined,
-	// FundOutlined,
-	// FileSearchOutlined,
-	// RocketOutlined,
-	// BulbOutlined,
-	// TeamOutlined,
-	// QuestionCircleOutlined,
-} from "@ant-design/icons";
+import FeedIcon from "@mui/icons-material/Feed";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import FolderIcon from "@mui/icons-material/Folder";
 import PersonIcon from "@mui/icons-material/Person";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 
 const appRouteMap = [
 	{
 		label: "Dashboard",
 		name: "Dashboard",
-		icon: (
-			<DashboardIcon
-				className="material-icons"
-				style={{ color: "#7d8da1" }}
-			/>
-		),
+		icon: <DashboardIcon className="material-icons" />,
 		path: "/",
 		routeActive: ["/"],
 		permissions: [""],
@@ -35,41 +18,39 @@ const appRouteMap = [
 
 	{
 		label: "About Me",
-		icon: (
-			<PersonIcon style={{ color: "#7d8da1" }} className="material-icons" />
-		),
+		icon: <PersonIcon className="material-icons" />,
 		path: "/about",
 		routeActive: ["/about"],
 		permissions: ["about_page"],
 	},
 	{
 		label: "New Feed",
-		icon: (
-			<FeedIcon style={{ color: "#7d8da1" }} className="material-icons" />
-		),
+		icon: <FeedIcon className="material-icons" />,
 		path: "/new-feed",
 		routeActive: ["/new-feed"],
 		permissions: ["newfeed_page"],
 	},
-	
+
 	{
 		label: "Founder",
-		icon: (
-			<AccountCircleIcon style={{ color: "#7d8da1" }} className="material-icons" />
-		),
+		icon: <AccountCircleIcon className="material-icons" />,
 		path: "/founder",
 		routeActive: ["/founder"],
 		permissions: ["founder_page"],
 	},
 	{
 		label: "Project",
-		icon :(
-			<FolderIcon style={{ color : "#7d8da1" }} className="material-icons" />
-		),
+		icon: <FolderIcon className="material-icons" />,
 		path: "/project",
 		routeActive: ["/project"],
 		permissions: ["project_page"],
-
+	},
+	{
+		label: "Recruit Talents",
+		icon: <PersonSearchIcon className="material-icons" />,
+		path: "/recruit-talents",
+		routeActive: ["/recruit-talents"],
+		permissions: ["recruit_talents_page"],
 	},
 	// {
 	// 	label: "Explore",
@@ -103,45 +84,45 @@ const appRouteMap = [
 	// 			permissions: ["home_page"],
 	// 		},
 
-			// {
-			// 	label: "News Feed",
-			// 	icon: (
-			// 		<FundOutlined
-			// 			style={{
-			// 				fontSize: "20px",
-			// 			}}
-			// 		/>
-			// 	),
-			// 	path: "/news-feed",
-			// 	routeActive: ["/news-feed"],
-			// 	permissions: ["news_feed_page"],
-			// },
-			// {
-			// 	label: "Recruit Talents",
-			// 	icon: (
-			// 		<FileSearchOutlined
-			// 			style={{
-			// 				fontSize: "20px",
-			// 			}}
-			// 		/>
-			// 	),
-			// 	path: "/recruit-talents",
-			// 	routeActive: ["/recruit-talents"],
-			// 	permissions: ["recruit_talents_page"],
-			// },
-			// {
-			// 	label: "Find Mentors",
-			// 	icon: (
-			// 		<FileSearchOutlined
-			// 			style={{
-			// 				fontSize: "20px",
-			// 			}}
-			// 		/>
-			// 	),
-			// 	path: "/find-mentors",
-			// 	routeActive: ["/find-mentors"],
-			// 	permissions: ["find_mentors_page"],
-			// },
+	// {
+	// 	label: "News Feed",
+	// 	icon: (
+	// 		<FundOutlined
+	// 			style={{
+	// 				fontSize: "20px",
+	// 			}}
+	// 		/>
+	// 	),
+	// 	path: "/news-feed",
+	// 	routeActive: ["/news-feed"],
+	// 	permissions: ["news_feed_page"],
+	// },
+	// {
+	// 	label: "Recruit Talents",
+	// 	icon: (
+	// 		<FileSearchOutlined
+	// 			style={{
+	// 				fontSize: "20px",
+	// 			}}
+	// 		/>
+	// 	),
+	// 	path: "/recruit-talents",
+	// 	routeActive: ["/recruit-talents"],
+	// 	permissions: ["recruit_talents_page"],
+	// },
+	// {
+	// 	label: "Find Mentors",
+	// 	icon: (
+	// 		<FileSearchOutlined
+	// 			style={{
+	// 				fontSize: "20px",
+	// 			}}
+	// 		/>
+	// 	),
+	// 	path: "/find-mentors",
+	// 	routeActive: ["/find-mentors"],
+	// 	permissions: ["find_mentors_page"],
+	// },
 	// {
 	// 	label: "News Feed",
 	// 	icon: (

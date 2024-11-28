@@ -1,13 +1,10 @@
 import React, { useEffect } from "react";
 import styles from "./styles.module.scss";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { logout } from "../../../../../../api/auth";
 import { useSelector } from "react-redux";
 
 function PopoverProfile() {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	const isAuthSuccess = useSelector((state) => state.auth.isAuthSuccess);
 	const authUser = useSelector((state) => state.auth.authUser);
 
@@ -16,10 +13,6 @@ function PopoverProfile() {
 			navigate("/login");
 		}
 	}, [isAuthSuccess, navigate]);
-
-	const handleConfirmLogOut = () => {
-		dispatch(logout());
-	};
 
 	return (
 		<div className={styles.modalInfoWrap}>

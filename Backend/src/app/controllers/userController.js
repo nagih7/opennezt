@@ -65,3 +65,8 @@ export async function deleteProject(req, res) {
     await userService.deleteProject(req.currentUser, req.body)
     res.jsonify('Xoá dự án thành công.')
 }
+
+export async function recuitTalents(req, res) {
+    const result = await userService.recuitTalents(req.query)
+    res.jsonify(result)
+}
