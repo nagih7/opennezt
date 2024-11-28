@@ -70,3 +70,8 @@ export async function recuitTalents(req, res) {
     const result = await userService.recuitTalents(req.query)
     res.jsonify(result)
 }
+
+export async function getDetailTalent(req, res) {
+    const result = await userService.getDetailTalent(req.params.email)
+    res.jsonify(result)
+}

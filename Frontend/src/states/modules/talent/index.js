@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { startRequest } from "../app";
 
 const talentSlice = createSlice({
 	name: "founder",
 	initialState: {
 		talents: {},
+		detailTalent: {},
 	},
 	reducers: {
 		// setTitle: (state) => ({
@@ -21,6 +23,17 @@ const talentSlice = createSlice({
 			...state,
 			talents: {},
 		}),
+		startRequestGetDetailTalent: (state) => ({
+			...state,
+		}),
+		startRequestGetDetailTalentSuccess: (state, action) => ({
+			...state,
+			detailTalent: action.payload.data,
+		}),
+		startRequestGetDetailTalentFail: (state) => ({
+			...state,
+			detailTalent: {},
+		}),
 	},
 });
 
@@ -28,6 +41,9 @@ export const {
 	startRequestRecruitTalents,
 	startRequestRecruitTalentsSuccess,
 	startRequestRecruitTalentsFail,
+	startRequestGetDetailTalent,
+	startRequestGetDetailTalentSuccess,
+	startRequestGetDetailTalentFail,
 } = talentSlice.actions;
 
 export default talentSlice.reducer;

@@ -3,6 +3,9 @@ import {
 	startRequestRecruitTalents,
 	startRequestRecruitTalentsSuccess,
 	startRequestRecruitTalentsFail,
+	startRequestGetDetailTalent,
+	startRequestGetDetailTalentSuccess,
+	startRequestGetDetailTalentFail,
 } from "../../states/modules/talent";
 
 export const recruitTalents =
@@ -23,3 +26,18 @@ export const recruitTalents =
 			getState,
 		});
 	};
+
+export const getDetailTalent = (email) => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: `users/detail-talent/${email}`,
+		actionTypes: [
+			startRequestGetDetailTalent,
+			startRequestGetDetailTalentSuccess,
+			startRequestGetDetailTalentFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
