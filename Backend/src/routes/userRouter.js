@@ -53,6 +53,8 @@ userRouter.get('/get-founder-profile', asyncHandler(userController.getFounderPro
 
 userRouter.put('/update-founder-profile', asyncHandler(userController.updateFounderProfile))
 
+userRouter.get('/recruit-talents', asyncHandler(userController.recuitTalents))
+
 // URL dynamic
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))
 

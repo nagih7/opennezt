@@ -99,3 +99,75 @@ export async function updateProject(user, requestBody) {
 export async function deleteProject(user, requestBody) {
     await Project.deleteOne({user_id: user._id, _id: requestBody._id})
 }
+
+export async function recuitTalents(requestRecuitTalents) {
+    const talents = await FounderProfile.aggregate([
+        {
+            $match: {
+                ...(requestRecuitTalents.expertise_area
+                    ? {
+                        industry: {
+                            $regex: requestRecuitTalents.expertise_area,
+                            $options: 'i',
+                        },
+                    }
+                    : {}),
+                ...(requestRecuitTalents.experience_level
+                    ? {
+                        experience_level: {
+                            $regex: requestRecuitTalents.experience_level,
+                            $options: 'i',
+                        },
+                    }
+                    : {}),
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user_data',
+            },
+        },
+
+        {$unwind: '$user_data'}, // Giải nén mảng 'user_data' (vì $lookup trả về mảng)
+        {
+            $match: {
+                ...(requestRecuitTalents.location
+                    ? {
+                        'user_data.city': {
+                            $regex: requestRecuitTalents.location,
+                            $options: 'i',
+                        },
+                    }
+                    : {}),
+                ...(requestRecuitTalents.language
+                    ? {
+                        'user_data.language': {
+                            $regex: requestRecuitTalents.language,
+                            $options: 'i',
+                        },
+                    }
+                    : {}),
+                'user_data.isActive': true,
+            },
+        },
+        {
+            $project: {
+                _id: 0,
+                experience_level: 1,
+                industry: 1,
+                user_data: {
+                    name: 1,
+                    email: 1,
+                    phone: 1,
+                    avatar: 1,
+                    linkedIn: 1,
+                    region: 1,
+                },
+            },
+        },
+    ])
+    return talents
+}
