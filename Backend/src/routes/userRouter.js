@@ -10,6 +10,8 @@ const userRouter = Router()
 
 userRouter.use(asyncHandler(requireAuthentication))
 
+userRouter.put('/update-background', asyncHandler(userController.updateBackground))
+
 userRouter.get(
     '/list-user',
     asyncHandler(validate(userRequest.readRoot)),

@@ -12,7 +12,7 @@ export async function verifyForgotPasswordToken(req, res, next) {
         if (allowedToken) {
             const {user_id} = verifyToken(token, TOKEN_TYPE.FORGOT_PASSWORD)
             const user = await User.findOne({_id: user_id})
-            if (user && user.isActive) {
+            if (user && user.is_active) {
                 req.currentUser = user
                 next()
                 return

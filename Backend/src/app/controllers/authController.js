@@ -6,9 +6,9 @@ import * as userService from '../services/userService'
 export async function login(req, res) {
     const validLogin = await authService.checkValidLogin(req.body)
 
-    if (validLogin && !validLogin.isActive) {
+    if (validLogin && !validLogin.is_active) {
         abort(403, 'Tài khoản chưa được xác thực.')
-    } else if (validLogin && validLogin.isActive) {
+    } else if (validLogin && validLogin.is_active) {
         // Set cookie
         res.cookie('access_token', authService.authToken(validLogin).access_token, {
             httpOnly: true,
