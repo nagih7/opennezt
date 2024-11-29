@@ -34,10 +34,11 @@ export async function resetPassword(req, res) {
 export async function createFounderProfile(req, res) {
     const isExist = await FounderProfile.findOne({user_id: req.currentUser._id})
     if (isExist) {
-        res.status(201).jsonify('Hồ sơ người sáng lập đã tồn tại.')
+        res.status(200).jsonify('Hồ sơ người sáng lập đã tồn tại.')
+    } else {
+        await userService.createFounderProfile(req.currentUser, req.body)
+        res.status(201).jsonify('Tạo hồ sơ người sáng lập thành công.')
     }
-    await userService.createFounderProfile(req.currentUser, req.body)
-    res.status(201).jsonify('Tạo hồ sơ người sáng lập thành công.')
 }
 
 export async function getFounderProfile(req, res) {
@@ -83,4 +84,19 @@ export async function getDetailTalent(req, res) {
 export async function updateBackground(req, res) {
     await userService.updateBackground(req.currentUser, req.body)
     res.status(201).jsonify('Cập nhật ảnh nền thành công.')
+}
+
+export async function checkSteps(req, res) {
+    const result = await userService.checkSteps(req.currentUser)
+    res.jsonify(result)
+}
+
+export async function inviteMember(req, res) {
+    const isExist = await userService.checkExistInvitation(req.currentUser, req.body)
+    if (isExist) {
+        res.status(200).jsonify('Lời mời thành viên đã tồn tại.')
+    } else {
+        await userService.inviteMember(req.currentUser, req.body)
+        res.status(201).jsonify('Mời thành viên thành công.')
+    }
 }

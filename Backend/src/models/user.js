@@ -60,11 +60,13 @@ const User = createModel(
             type: String,
             default: 'user',
             required: true,
+            enum: ['user', 'admin'],
         },
         is_active: {
             type: Boolean,
             required: true,
             default: false,
+            enum: [true, false],
         },
     },
     {

@@ -68,16 +68,16 @@ function AppLayout(props) {
 								</div>
 							}>
 							{/* <div className={styles.headerMainWrap}>
-							<div className={styles.titleWrap}>{titlePage}</div>
-							<div className={styles.breadcrumbWrap}>
-								<span className={`${styles.text}`}>Home</span>{" "}
-								<span className={styles.slash}>/</span>
-								<span
-									className={`${styles.text} ${styles.breadcrumbActive}`}>
-									Dashboard
-								</span>
-							</div>
-						</div> */}
+								<div className={styles.titleWrap}>{titlePage}</div>
+								<div className={styles.breadcrumbWrap}>
+									<span className={`${styles.text}`}>Home</span>{" "}
+									<span className={styles.slash}>/</span>
+									<span
+										className={`${styles.text} ${styles.breadcrumbActive}`}>
+										Dashboard
+									</span>
+								</div>
+							</div> */}
 							{children}
 						</Suspense>
 					</main>

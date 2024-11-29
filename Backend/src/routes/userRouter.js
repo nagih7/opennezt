@@ -12,6 +12,8 @@ userRouter.use(asyncHandler(requireAuthentication))
 
 userRouter.put('/update-background', asyncHandler(userController.updateBackground))
 
+userRouter.get('/check-steps', asyncHandler(userController.checkSteps))
+
 userRouter.get(
     '/list-user',
     asyncHandler(validate(userRequest.readRoot)),
@@ -55,6 +57,13 @@ userRouter.get(
 
     // asyncHandler(validate(userRequest.getDetailTalent)),
     asyncHandler(userController.getDetailTalent)
+)
+
+// Invite member
+userRouter.post(
+    '/invite-member',
+    asyncHandler(validate(userRequest.inviteMember)),
+    asyncHandler(userController.inviteMember)
 )
 
 // URL dynamic

@@ -27,40 +27,42 @@
 		.mainContentWrap {
 			height: calc(100% - (45px + 11px + 1.5rem));
 			background-color: $backgroundMain;
+			overflow-y: scroll;
+			overflow-x: hidden;
 
-			.headerMainWrap {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				margin-bottom: 20px;
-				.titleWrap {
-					font-size: 20px;
-					color: $colorBlack;
-				}
-				.breadcrumbWrap {
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					.text {
-						font-size: 13px;
-						color: $colorNote;
-						cursor: pointer;
-						transition: all 0.3s;
-						&:hover {
-							color: $colorActive;
-						}
-					}
-					.slash {
-						font-size: 13px;
-						color: $colorNote;
-						margin: 0 5px;
-					}
+			// .headerMainWrap {
+			// 	display: flex;
+			// 	justify-content: space-between;
+			// 	align-items: center;
+			// 	margin-bottom: 20px;
+			// 	.titleWrap {
+			// 		font-size: 20px;
+			// 		color: $colorBlack;
+			// 	}
+			// 	.breadcrumbWrap {
+			// 		display: flex;
+			// 		justify-content: center;
+			// 		align-items: center;
+			// 		.text {
+			// 			font-size: 13px;
+			// 			color: $colorNote;
+			// 			cursor: pointer;
+			// 			transition: all 0.3s;
+			// 			&:hover {
+			// 				color: $colorActive;
+			// 			}
+			// 		}
+			// 		.slash {
+			// 			font-size: 13px;
+			// 			color: $colorNote;
+			// 			margin: 0 5px;
+			// 		}
 
-					.breadcrumbActive {
-						color: $colorActive;
-					}
-				}
-			}
+			// 		.breadcrumbActive {
+			// 			color: $colorActive;
+			// 		}
+			// 	}
+			// }
 
 			&::-webkit-scrollbar {
 				width: 7px;
