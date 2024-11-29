@@ -28,4 +28,4 @@ package-lock.json
 /.idea
 
 # huỷ bỏ folder uploads
-/public/uploads
+# /public/uploads
