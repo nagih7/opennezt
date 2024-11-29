@@ -9,7 +9,7 @@ import { isValidate } from "../../../../utils/validate";
 import { handleCheckValidateConfirm } from "../../../../utils/helper";
 import { register } from "../../../../api/auth";
 import { useDispatch, useSelector } from "react-redux";
-
+import { toast } from "react-toastify";
 function Register() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -17,7 +17,7 @@ function Register() {
 		name: "",
 		email: "",
 		phone: "",
-		address: "",
+		
 		password: "",
 		confirmPassword: "",
 	});
@@ -25,7 +25,7 @@ function Register() {
 		name: "",
 		email: "",
 		phone: "",
-		address: "",
+		
 		password: "",
 		confirmPassword: "",
 	});
@@ -66,7 +66,18 @@ function Register() {
 		);
 		setErrorDataRegister(validate.dataError);
 		if (!validate.isError) {
-			dispatch(register(dataRegister));
+			dispatch(register(dataRegister))
+				.then((response) => {
+					
+					toast.success("Bạn đã đăng ký tài khoản thành công!");
+
+					setTimeout(() => {
+						navigate("/login");
+					}, 2000); 
+				})
+				.catch((error) => {
+					toast.error("Đăng ký không thành công. Vui lòng thử lại.");
+				});
 		}
 	};
 
@@ -109,17 +120,7 @@ function Register() {
 					/>
 				</div>
 
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Address *</div>
-					<InputMASQ
-						type={"text"}
-						placeholder={"Enter address..."}
-						onChange={(e) => handleChangeInput(e, "address")}
-						onBlur={() => validateBlur("address")}
-						value={dataRegister.address}
-						error={errorDataRegister.address}
-					/>
-				</div>
+				
 
 				<div className={styles.inputWrapper}>
 					<div className={styles.label}>Password *</div>
