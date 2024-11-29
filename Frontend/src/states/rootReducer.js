@@ -6,6 +6,7 @@ import aboutReducer from "./modules/about";
 import employeeReducer from "./modules/employee";
 import manageReducer from "./modules/manage";
 import founderReducer from "./modules/founder";
+import talentReducer from "./modules/talent";
 
 const rootReducer = {
 	app: appReducer,
@@ -16,6 +17,7 @@ const rootReducer = {
 	about: aboutReducer,
 	employee: employeeReducer,
 	founder: founderReducer,
+	talent: talentReducer,
 };
 
 export default rootReducer;

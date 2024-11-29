@@ -9,6 +9,6 @@ function* handleActions() {
 	//;
 }
 
-export default function* loadTalentSaga() {
+export default function* loadAboutYouSaga() {
 	yield all([fork(loadRouteData), fork(handleActions)]);
 }

@@ -53,10 +53,17 @@ userRouter.put('/update-founder-profile', asyncHandler(userController.updateFoun
 userRouter.get('/recruit-talents', asyncHandler(userController.recuitTalents))
 
 userRouter.get(
-    '/detail-talent/:email',
+    '/talent-details/:email',
 
-    // asyncHandler(validate(userRequest.getDetailTalent)),
-    asyncHandler(userController.getDetailTalent)
+    // asyncHandler(validate(userRequest.getTalentDetails)),
+    asyncHandler(userController.getTalentDetails)
+)
+
+// Invite member
+userRouter.post(
+    '/invite-member',
+    asyncHandler(validate(userRequest.inviteMember)),
+    asyncHandler(userController.inviteMember)
 )
 
 // Invite member
