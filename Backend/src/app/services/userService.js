@@ -134,6 +134,12 @@ export async function recuitTalents(requestRecuitTalents) {
             },
         },
         {
+            $unwind: {
+                path: '$user_data',
+                preserveNullAndEmptyArrays: false, // Nếu không muốn giữ lại các bản ghi không có user_data
+            },
+        },
+        {
             $match: {
                 ...(requestRecuitTalents.location
                     ? {
@@ -152,6 +158,17 @@ export async function recuitTalents(requestRecuitTalents) {
                     }
                     : {}),
                 'user_data.is_active': true,
+            },
+        },
+        {
+            $addFields: {
+                'user_data.avatar': {
+                    $cond: {
+                        if: {$ifNull: ['$user_data.avatar', false]}, // Kiểm tra nếu avatar tồn tại
+                        then: {$concat: [LINK_STATIC_URL, '$user_data.avatar']}, // Nối LINK_STATIC_URL với avatar
+                        else: '$user_data.avatar', // Nếu không có avatar, giữ nguyên
+                    },
+                },
             },
         },
         {
@@ -178,7 +195,7 @@ export async function recuitTalents(requestRecuitTalents) {
     return talents
 }
 
-export async function getDetailTalent(email) {
+export async function getTalentDetails(email) {
     const detailTalent = await User.aggregate([
         {$match: {email}},
         {
@@ -187,6 +204,30 @@ export async function getDetailTalent(email) {
                 localField: '_id',
                 foreignField: 'user_id',
                 as: 'talent_profile',
+            },
+        },
+        {
+            $unwind: {
+                path: '$talent_profile',
+                preserveNullAndEmptyArrays: false, // Nếu không muốn giữ lại các bản ghi không có founder_profiles
+            },
+        },
+        {
+            $addFields: {
+                avatar: {
+                    $cond: {
+                        if: {$ifNull: ['$avatar', false]}, // Kiểm tra nếu avatar tồn tại
+                        then: {$concat: [LINK_STATIC_URL, '$avatar']}, // Nối LINK_STATIC_URL với avatar
+                        else: '$avatar', // Nếu không có avatar, giữ nguyên
+                    },
+                },
+                background: {
+                    $cond: {
+                        if: {$ifNull: ['$background', false]}, // Kiểm tra nếu background tồn tại
+                        then: {$concat: [LINK_STATIC_URL, '$background']}, // Nối LINK_STATIC_URL với background
+                        else: '$background', // Nếu không có background, giữ nguyên
+                    },
+                },
             },
         },
         {

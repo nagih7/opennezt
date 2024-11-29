@@ -30,7 +30,7 @@ export const recruitTalents =
 export const getDetailTalent = (email) => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
-		apiPath: `users/detail-talent/${email}`,
+		apiPath: `users/talent-details/${email}`,
 		actionTypes: [
 			startRequestGetDetailTalent,
 			startRequestGetDetailTalentSuccess,

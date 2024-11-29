@@ -5,7 +5,7 @@ const talentSlice = createSlice({
 	name: "founder",
 	initialState: {
 		talents: {},
-		detailTalent: {},
+		talentDetails: {},
 	},
 	reducers: {
 		// setTitle: (state) => ({
@@ -28,11 +28,11 @@ const talentSlice = createSlice({
 		}),
 		startRequestGetDetailTalentSuccess: (state, action) => ({
 			...state,
-			detailTalent: action.payload.data,
+			talentDetails: action.payload.data,
 		}),
 		startRequestGetDetailTalentFail: (state) => ({
 			...state,
-			detailTalent: {},
+			talentDetails: {},
 		}),
 	},
 });

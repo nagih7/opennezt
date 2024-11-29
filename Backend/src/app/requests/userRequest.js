@@ -131,7 +131,7 @@ export const createProject = Joi.object({
     about_opennezt: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Về OpenNezt'),
 })
 
-export const getDetailTalent = Joi.object({
+export const getTalentDetails = Joi.object({
     email: Joi.string()
         .trim()
         .lowercase()

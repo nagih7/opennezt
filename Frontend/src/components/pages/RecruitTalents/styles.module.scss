@@ -1,179 +1,187 @@
 :root {
-    --color-white: #ffffff;
-    --color-black: #000000;
-    --color-primary: #3498db;
-    --color-dark: #2c3e50;
-    --color-light: #ecf0f1;
-    --color-danger: #e74c3c;
-    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    --card-padding: 1.5rem;
-    --card-border-radius: 0.5rem;
-    --border-radius-1: 0.25rem;
-    --border-radius-2: 0.3rem;
-    --hover-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+	--color-white: #ffffff;
+	--color-black: #000000;
+	--color-primary: #3498db;
+	--color-dark: #2c3e50;
+	--color-light: #ecf0f1;
+	--color-danger: #e74c3c;
+	--box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	--card-padding: 1.5rem;
+	--card-border-radius: 0.5rem;
+	--border-radius-1: 0.25rem;
+	--border-radius-2: 0.3rem;
+	--hover-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 .searchContainer {
-    background-color: var(--color-white);
-    padding: var(--card-padding);
-    border-radius: var(--card-border-radius);
-    box-shadow: var(--box-shadow);
-    margin-top: 2rem;
+	background-color: var(--color-white);
+	padding: var(--card-padding);
+	border-radius: var(--card-border-radius);
+	box-shadow: var(--box-shadow);
 }
 
 .searchInputs {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 1rem;
+	margin-bottom: 1.5rem;
 }
 
 .searchInputs input {
-    padding: 0.75rem;
-    border: 1px solid var(--color-light);
-    border-radius: var(--border-radius-1);
-    font-size: 1rem;
-    width: 100%;
+	padding: 0.75rem;
+	border: 1px solid var(--color-light);
+	border-radius: var(--border-radius-1);
+	font-size: 1rem;
+	width: 100%;
 }
 
 .searchButton {
-    background-color: var(--color-primary);
-    color: white;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: var(--border-radius-2);
-    font-size: 1.1rem;
-    cursor: pointer;
+	background-color: var(--color-primary);
+	color: white;
+	padding: 1rem 2rem;
+	border: none;
+	border-radius: var(--border-radius-2);
+	font-size: 1.1rem;
+	cursor: pointer;
 }
 
 .results {
-    margin-top: 2rem;
+	margin-top: 2rem;
 }
 
 .talentCardsContainer {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    overflow-y: auto;
-    max-height: 500px; 
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1.5rem;
+	overflow-y: auto;
+	max-height: 500px;
 }
 
 .talentCard {
-    background-color: var(--color-light);
-    padding: var(--card-padding);
-    border-radius: var(--card-border-radius);
-    box-shadow: var(--box-shadow);
-    text-align: center;
+	background-color: var(--color-light);
+	padding: var(--card-padding);
+	border-radius: var(--card-border-radius);
+	box-shadow: var(--box-shadow);
+	text-align: center;
 }
 
 .talentAvatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    margin-bottom: 1rem;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	margin-bottom: 1rem;
 }
 
 .viewDetailsButton {
-    background-color: var(--color-primary);
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: var(--border-radius-1);
-    cursor: pointer;
+	background-color: var(--color-primary);
+	color: white;
+	padding: 0.5rem 1rem;
+	border: none;
+	border-radius: var(--border-radius-1);
+	cursor: pointer;
 }
 
 .popup {
-    
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    padding: 1rem;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: none;
+	justify-content: center;
+	align-items: center;
+	z-index: 9999;
+	padding: 1rem;
 }
 
 .popupActive {
-    display: flex;
+	display: flex;
 }
 
 .popupContent {
-    background-color: var(--color-white);
-    padding: 2rem;
-    border-radius: var(--card-border-radius);
-    box-shadow: var(--box-shadow);
-    max-width: 800px; 
-    width: 100%;
-    text-align: left;
-    overflow-y: auto; 
-    max-height: 80vh; 
+	background-color: var(--color-white);
+	padding: 2rem;
+	border-radius: var(--card-border-radius);
+	box-shadow: var(--box-shadow);
+	max-width: 800px;
+	width: 100%;
+	text-align: left;
+	overflow-y: auto;
+	max-height: 80vh;
 }
 .popupContent::-webkit-scrollbar {
-    display: none; 
+	display: none;
 }
 .popupContent h3 {
-    margin-bottom: 1rem;
-    font-size: 1.6rem;
+	margin-bottom: 1rem;
+	font-size: 1.6rem;
 }
 
 .popupContent p {
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
+	margin-bottom: 1rem;
+	font-size: 1.1rem;
 }
 
 .popupContent ul {
-    list-style-type: none;
-    padding-left: 0;
+	list-style-type: none;
+	padding-left: 0;
 }
 
 .popupContent li {
-    margin-bottom: 1rem;
+	margin-bottom: 1rem;
 }
 
 .popupContent ul ul {
-    padding-left: 20px;
+	padding-left: 20px;
 }
 
 .popupContent div {
-    max-height: 60vh;
-    overflow-y: auto;
+	max-height: 60vh;
+	overflow-y: auto;
 }
 
 .closePopupButton {
-    background-color: var(--color-danger);
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: var(--border-radius-2);
-    cursor: pointer;
-    margin-top: 1rem;
+	background-color: var(--color-danger);
+	color: white;
+	padding: 0.5rem 1rem;
+	border: none;
+	border-radius: var(--border-radius-2);
+	cursor: pointer;
+	margin-top: 1rem;
 }
 .inputWrapper {
-    position: relative;
+	position: relative;
+	transition: all 0.3s ease;
 }
 
 .dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: white;
-    border: 1px solid var(--color-light);
-    border-radius: var(--border-radius-1);
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 10;
+	list-style: none;
+	padding: 0;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	background-color: white;
+	border: 1px solid var(--color-light);
+	border-radius: var(--border-radius-1);
+	width: 100%;
+	max-height: 200px;
+	overflow-y: auto;
+	transition: all 0.3s ease;
+	z-index: 10;
 }
 
 .dropdown li {
-    padding: 0.75rem;
-    cursor: pointer;
+	border-bottom: 1px solid var(--color-light);
+	padding: 0.75rem;
+	cursor: pointer;
+	transition: all 0.3s ease;
+
+	&:last-child {
+		border-bottom: none;
+	}
 }
 
 .dropdown li:hover {
-    background-color: var(--color-light);
+	background-color: var(--color-light);
 }
