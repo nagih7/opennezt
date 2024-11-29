@@ -49,7 +49,14 @@ function Home() {
 									</div>
 								)}
 								{stepState.project ? (
-									<div>Da co project</div>
+									<div
+									className={styles.stepWrap}
+									onClick={() => navigate("/project")}>
+									<div className={styles.stepContent}>
+										Redirect to project
+									</div>
+									<ChevronRightIcon className={styles.chevron} />
+								</div>
 								) : (
 									<div
 										className={styles.stepWrap}
