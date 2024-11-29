@@ -25,10 +25,12 @@ const authSlice = createSlice({
 		startRequestLoginSuccess: (state) => ({
 			...state,
 			isLoadingBtnLogin: false,
+			isAuthSuccess: true,
 		}),
 		startRequestLoginFail: (state) => ({
 			...state,
 			isLoadingBtnLogin: false,
+			isAuthSuccess: false,
 		}),
 		startRequestGetMe: (state) => ({
 			...state,
