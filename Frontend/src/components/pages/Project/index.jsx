@@ -8,7 +8,7 @@ function Project() {
 			_id: "6749e42fc1aa2813a0c6228d",
 			name: "My Startup Project",
 			related_industries: ["Technology", "Healthcare"],
-			background: "http://localhost:3456/background_projects/t11RRSyr5Dj61ZDuAuzcgK.jpeg",
+			background: "https://media.licdn.com/dms/image/v2/D4D12AQEcfvt6Va3vyg/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1658753534280?e=2147483647&v=beta&t=AWzelZsxN_Y1ukjNUdf2en0OrCfZs3Ia-2eB9h-dMLg",
 			stage: "Seed",
 			problem: "Lack of access to affordable healthcare",
 			solution: "An online platform that connects patients with doctors remotely.",
@@ -250,6 +250,7 @@ function Project() {
 							<div
 								key={project._id}
 								className={styles.projectItem}
+								style={{ backgroundImage: `url(${project.background})` }}
 								onClick={() => handleProjectClick(project)}>
 								<h4>{project.name}</h4>
 								<p>{project.problem}</p>
