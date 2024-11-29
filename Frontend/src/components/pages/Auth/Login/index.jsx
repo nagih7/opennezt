@@ -37,7 +37,7 @@ function Login() {
 
 	useEffect(() => {
 		if (isAuthSuccess && authorize === "admin") {
-			navigate("/");
+			navigate("/admin/manage");
 		} else if (isAuthSuccess && authorize === "user") {
 			navigate("/");
 		}

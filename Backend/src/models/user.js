@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import createModel from './base'
+import {required} from 'joi'
 
 const User = createModel(
     'User',
@@ -27,6 +28,7 @@ const User = createModel(
         phone: {
             type: String,
             default: '',
+            required: true,
         },
         avatar: {
             type: String,
@@ -47,6 +49,7 @@ const User = createModel(
         region: {
             type: String,
             default: '',
+            required: true,
         },
         city: {
             type: String,
@@ -55,6 +58,7 @@ const User = createModel(
         language: {
             type: String,
             default: 'vi',
+            required: true,
         },
         role: {
             type: String,

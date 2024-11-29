@@ -4,7 +4,6 @@ import { initialSaga } from "../states/modules/routing";
 import { hasPermission } from "../utils/helper";
 import { getMe } from "api/auth";
 import { getAuthToken } from "../utils/localStorage";
-import { getTotalUsers } from "api/manage";
 
 export const rootLoader = async (
 	{ request },
@@ -16,16 +15,14 @@ export const rootLoader = async (
 	if (url.pathname === "/profile") {
 		await store.dispatch(getMe());
 	}
-	if (url.pathname === "/admin/manage") {
-		await store.dispatch(getTotalUsers());
+	if (url.pathname === "/about") {
+		// await store.dispatch(getMe());
 	}
-	if (url.pathname === "/about-you") {
-		await store.dispatch(getMe());
-	}
-	let { auth } = store.getState();
+	var { auth } = store.getState();
 
 	if (!auth.isAuthSuccess && getAuthToken()) {
 		await store.dispatch(getMe());
+		auth = store.getState().auth;
 	}
 
 	if (isAuth) {
@@ -38,7 +35,7 @@ export const rootLoader = async (
 		}
 	} else {
 		if (auth.isAuthSuccess && auth.authorize === "admin") {
-			return redirect("/");
+			return redirect("/admin/manage");
 		} else if (auth.isAuthSuccess && auth.authorize === "user") {
 			return redirect("/");
 		}
