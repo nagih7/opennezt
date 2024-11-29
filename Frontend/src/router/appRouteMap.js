@@ -31,13 +31,13 @@ const appRouteMap = [
 	// 	permissions: ["newfeed_page"],
 	// },
 
-	{
-		label: "Founder",
-		icon: <AccountCircleIcon className="material-icons" />,
-		path: "/founder",
-		routeActive: ["/founder"],
-		permissions: ["founder_page"],
-	},
+	// {
+	// 	label: "Founder",
+	// 	icon: <AccountCircleIcon className="material-icons" />,
+	// 	path: "/founder",
+	// 	routeActive: ["/founder"],
+	// 	permissions: ["founder_page"],
+	// },
 	{
 		label: "Project",
 		icon: <FolderIcon className="material-icons" />,

@@ -1,0 +1,76 @@
+[33m66b406a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mhoanggxyuuki[m[33m, [m[1;31morigin/dev[m[33m)[m Merge pull request #20 from vuongmanhnghia/config-db
+[33m144b05c[m[33m ([m[1;31morigin/config-db[m[33m)[m update
+[33mc7435d3[m[33m ([m[1;32mmain[m[33m)[m Merge pull request #19 from vuongmanhnghia/config-db
+[33m535f6f6[m update
+[33mde870db[m Merge branch 'hoanggxyuuki' of https://github.com/vuongmanhnghia/OpenNezt into config-db
+[33m79aa684[m Merge pull request #18 from vuongmanhnghia/config-db
+[33ma7f88e6[m update
+[33me47f375[m[33m ([m[1;31morigin/hoanggxyuuki[m[33m)[m .
+[33ma4640bf[m Merge pull request #17 from vuongmanhnghia/config-db
+[33md49a660[m update
+[33med72ad8[m Merge pull request #16 from vuongmanhnghia/config-db
+[33m3b31277[m add background to collection users
+[33m622c6ac[m Merge pull request #15 from vuongmanhnghia/config-db
+[33mfdfbd7e[m add background to collection users
+[33mc6e7ddb[m Merge branch 'feature/recruit-talents' into dev
+[33m7229958[m feature recruit talent -v2-
+[33m576e0b3[m Merge pull request #14 from vuongmanhnghia/feature/recruit-talents
+[33ma55d03e[m[33m ([m[1;31morigin/feature/recruit-talents[m[33m)[m Merge branch 'dev' into feature/recruit-talents
+[33m999cf9f[m feature recruit talent -v1-
+[33me07207b[m Merge pull request #13 from vuongmanhnghia/feature/recruit-talents
+[33m177a525[m feature recruit talent -v1-
+[33m939ce2b[m Merge pull request #12 from vuongmanhnghia/layout
+[33ma82296b[m[33m ([m[1;31morigin/layout[m[33m)[m dynamic loading founder profile data
+[33m5225311[m update layout -v3-
+[33m8a42213[m Merge branch 'hoanggxyuuki' of https://github.com/vuongmanhnghia/OpenNezt into layout
+[33mb4d7191[m .
+[33mb4dcc00[m update layout -v2-
+[33m50eb09f[m .
+[33ma511354[m .
+[33m729f09a[m Merge branch 'layout' of https://github.com/vuongmanhnghia/OpenNezt into hoanggxyuuki
+[33m32cab67[m Merge branch 'hoanggxyuuki' of https://github.com/vuongmanhnghia/OpenNezt into layout
+[33mfb3b122[m Merge branch 'hoanggxyuuki' of https://github.com/vuongmanhnghia/OpenNezt into layout
+[33m919b209[m layout basic -v2-
+[33m25570d6[m done frontend mess
+[33m389a183[m .
+[33ma91a81b[m .
+[33ma690be4[m layout basic -v1-
+[33m07b14cc[m Merge branch 'hoanggxyuuki' of https://github.com/vuongmanhnghia/OpenNezt into layout
+[33m24b1b05[m delete folder page + layout
+[33ma5c7899[m Merge branch 'dev' of https://github.com/vuongmanhnghia/OpenNezt into dev
+[33m9370f22[m Merge branch 'main' of https://github.com/vuongmanhnghia/OpenNezt into hoanggxyuuki
+[33mde8e734[m process 50%
+[33mc930f2e[m Merge pull request #11 from vuongmanhnghia/feature/send-mail
+[33mfdf113a[m Merge pull request #11 from vuongmanhnghia/feature/send-mail
+[33m2eb340e[m[33m ([m[1;31morigin/feature/send-mail[m[33m)[m fix CORS
+[33m8a91209[m Merge pull request #9 from vuongmanhnghia/feature/send-mail
+[33me46f4a0[m feat(forgot-password): vefiry email and reset password
+[33m16db9d8[m feat(verify_email): vefiry email after register
+[33m220cfce[m[33m ([m[1;31morigin/feature/upload-pdf[m[33m)[m feat(upload): config upload file
+[33m3a5e03d[m Merge pull request #7 from vuongmanhnghia/config/app-layout
+[33m81b4a25[m config(appLayout): config app layout --v1--
+[33mbc5cc9e[m config(react): config react lazy
+[33m486f05e[m Merge pull request #6 from vuongmanhnghia/config-db
+[33m06d1839[m update(API): update CRUD user
+[33m6b2c6e1[m config(db): config collection project and CRUD
+[33mbcf6130[m config(db): config collection founder_profiles and CRU founder profile
+[33m8387ccd[m config(db): config collection access_log, messenger, project  --v1--
+[33m03e7fb5[m Merge pull request #5 from vuongmanhnghia/feature/authorize
+[33m20879ef[m[33m ([m[1;31morigin/feature/authorize[m[33m)[m update(layout): update layout
+[33m101a0da[m authorize + update(layout): update layout app
+[33m0abbe52[m feat(admin): getTotalUsers success (fe + be) + authorize
+[33mfdbe80e[m Merge pull request #4 from vuongmanhnghia/feature/config-db
+[33mfc0c829[m Merge branch 'dev' into feature/config-db
+[33med5d5e7[m config(database): add role to User collection + update account - Account admin  + admin@opennezt.com  + Admin.12345 - Account user  + user@opennezt.com  + Admin.12345
+[33mc1748cb[m Merge pull request #3 from vuongmanhnghia/feature/config-db
+[33m217ccba[m config(database): add role to User collection + update account - Account admin  + admin@opennezt.com  + 12345 - Account user  + user@opennezt.com  + 12345
+[33mdd9fbb8[m Merge pull request #2 from vuongmanhnghia/feat/get-total-users-tmp
+[33m7198b72[m Merge pull request #1 from vuongmanhnghia/feat/fetch-all-user-tmp
+[33m44a8689[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m update(frontend): folder arrangement
+[33m68b969a[m feat(admin): getTotalUsers(backend) --v1--
+[33ma401c61[m feat(admin): getAllUser(backend) --v1--
+[33m6f198d3[m update(backend): Rename files
+[33m1924268[m feat(auth): func logout + add jwt to cookie
+[33mbe82805[m core(base): be + fe
+[33m123d37e[m add .gitignore
+[33m415d4f7[m core(base): be + fe
