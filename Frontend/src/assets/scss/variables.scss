@@ -129,7 +129,7 @@ $colorRed: #c30326;
 $colorLine: #323a49;
 
 // Box
-$box-shadow: 0 2rem 3rem var(--color-light);
+$boxShadow: 0 2rem 3rem $colorLight;
 $backgroundNavItemActive: #848bc42e;
 $navItemAciive: #6c9bcf;
 

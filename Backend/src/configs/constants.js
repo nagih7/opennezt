@@ -174,6 +174,7 @@ export const JOI_DEFAULT_OPTIONS = {
         'any.unknown': 'Trường {#key} không được xác định.',
         'any.invalid': '{{#label}} không hợp lệ.',
         'any.exists': '{{#label}} đã tồn tại.',
+        'any.empty': '{{#label}} không tồn tại.',
     },
 }
 

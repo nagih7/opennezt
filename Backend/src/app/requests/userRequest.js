@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import {User} from '../../models'
+import {User, Project} from '../../models'
 import {MAX_STRING_SIZE, VALIDATE_PHONE_REGEX, MAX_AREAS_STRING_SIZE} from '@/configs'
 import {AsyncValidate, FileUpload} from '@/utils/classes'
 import {tryValidateOrDefault} from '@/utils/helpers'
@@ -145,4 +145,50 @@ export const getDetailTalent = Joi.object({
                     return user ? value : helpers.error('any.empty')
                 })
         ),
+})
+
+export const inviteMember = Joi.object({
+    email: Joi.string()
+        .trim()
+        .lowercase()
+        .email()
+        .required()
+        .label('Email')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const user = await User.findOne({email: value})
+                    return user ? value : helpers.error('any.empty')
+                })
+        ),
+    project_id: Joi.string()
+        .trim()
+        .required()
+        .label('ID dự án')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const project = await Project.findOne({
+                        _id: value,
+                    })
+                    return project ? value : helpers.error('any.empty')
+                })
+        ),
+
+    role_project: Joi.valid(
+        'founder',
+        'co-founder',
+        'talent',
+        'investor',
+        'advisor',
+        'mentor',
+        'Founder',
+        'Co-founder',
+        'Talent',
+        'Investor',
+        'Advisor',
+        'Mentor'
+    )
+        .required()
+        .label('Vai trò'),
 })

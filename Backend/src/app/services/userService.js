@@ -1,4 +1,4 @@
-import {User, FounderProfile, Project} from '@/models'
+import {User, FounderProfile, Project, Invitation} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
 
@@ -218,4 +218,46 @@ export async function updateBackground(user, requestBody) {
         user.background = requestBody.background.save('background_users')
     }
     await user.save()
+}
+
+export async function checkSteps(user) {
+    const founderProfile = await FounderProfile.findOne(
+        {user_id: user._id},
+        {user_id: 0, created_at: 0, updated_at: 0}
+    )
+    const project = await Project.findOne({user_id: user._id}, {user_id: 0, created_at: 0, updated_at: 0})
+
+    return {
+        founderProfile: founderProfile ? founderProfile : false,
+        project: project ? project : false,
+    }
+}
+
+export async function inviteMember(user, {email, project_id, role_project}) {
+    const receiver_user = await User.findOne({email}, {_id: 1, email: 1})
+    const invitation = new Invitation({
+        sender_id: user._id,
+        sender_email: user.email,
+        receiver_id: receiver_user._id,
+        receiver_email: receiver_user.email,
+        role_project,
+        project_id,
+    })
+
+    await invitation.save()
+}
+
+export async function checkExistInvitation(user, {email, project_id, role_project}) {
+    const isExist = await Invitation.findOne({
+        sender_id: user._id,
+        sender_email: user.email,
+        receiver_email: email,
+        project_id,
+        role_project,
+    })
+
+    if (isExist) {
+        return true
+    }
+    return false
 }
