@@ -14,7 +14,6 @@ function RecruitTalents() {
 	}); // Request recruit talents
 
 	const [detailTalent, setDetailTalent] = useState({}); // Detail talent
-
 	useEffect(() => {
 		store.dispatch(recruitTalents(requestRecruitTalents));
 		store.dispatch(getDetailTalent("vuongmanhnghia@gmail.com"));
@@ -22,6 +21,7 @@ function RecruitTalents() {
 
 	return (
 		<AppLayout>
+			
 			<div>Recruit Talents</div>
 		</AppLayout>
 	);
