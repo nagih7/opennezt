@@ -1,19 +1,26 @@
 import React from "react";
-import DashboardIcon from "@mui/icons-material/Dashboard";
+// import DashboardIcon from "@mui/icons-material/Dashboard";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PersonIcon from "@mui/icons-material/Person";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const manageRouteMap = [
+	// {
+	// 	label: "Dashboard",
+	// 	name: "Dashboard",
+	// 	icon: <DashboardIcon className="material-icons" />,
+	// 	path: "/",
+	// 	routeActive: ["/"],
+	// 	permissions: [""],
+	// },
 	{
-		label: "Dashboard",
-		name: "Dashboard",
-		icon: <DashboardIcon className="material-icons" />,
-		path: "/",
-		routeActive: ["/"],
-		permissions: [""],
+		label: "Admin",
+		name: "Admin",
+		icon: <AdminPanelSettingsIcon className="material-icons" />,
+		path: "/admin/manage",
+		routeActive: ["/admin/manage"],
+		permissions: ["manage_page"],
 	},
-
 	{
 		label: "User Management",
 		icon: <ManageAccountsIcon className="material-icons" />,
@@ -59,21 +66,13 @@ const manageRouteMap = [
 	// 		},
 	// 	],
 	// },
-	{
-		label: "About Me",
-		icon: <PersonIcon className="material-icons" />,
-		path: "/about",
-		routeActive: ["/about"],
-		permissions: ["about_page"],
-	},
-	{
-		label: "Admin",
-		name: "Admin",
-		icon: <AdminPanelSettingsIcon className="material-icons" />,
-		path: "/admin/manage",
-		routeActive: ["/admin/manage"],
-		permissions: ["manage_page"],
-	},
+	// {
+	// 	label: "About Me",
+	// 	icon: <PersonIcon className="material-icons" />,
+	// 	path: "/about",
+	// 	routeActive: ["/about"],
+	// 	permissions: ["about_page"],
+	// },
 ];
 
 export default manageRouteMap;
