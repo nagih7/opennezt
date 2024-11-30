@@ -56,8 +56,8 @@ const User = createModel(
             default: '',
         },
         language: {
-            type: String,
-            default: 'vi',
+            type: [String],
+            default: ['Vietnamese'],
             required: true,
         },
         role: {

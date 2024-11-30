@@ -61,17 +61,46 @@ const FounderProfile = createModel('Founder_Profile', 'founder_profiles', {
         ref: User,
         required: true,
     },
+    industry: {
+        type: [String],
+        required: true,
+    },
     experience_level: {
         type: String,
         required: true,
     },
-    industry: {
+    degree: {
         type: String,
         required: true,
+    },
+    certification: {
+        type: [String],
+        required: false,
     },
     areas_of_expertise: {
         type: AreasOfExpertise,
         required: true,
+    },
+    professional_summary: {
+        type: String,
+        required: true,
+    },
+    career_goals: {
+        type: String,
+        required: true,
+    },
+    offer: {
+        type: String,
+        required: true,
+    },
+    expectation: {
+        type: String,
+        required: true,
+    },
+    avalability: {
+        type: String,
+        required: true,
+        enum: ['Exploring', 'Full-time', 'Part-time', 'All-in', 'Freelance'],
     },
 })
 

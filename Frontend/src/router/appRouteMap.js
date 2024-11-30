@@ -23,6 +23,20 @@ const appRouteMap = [
 		routeActive: ["/about"],
 		permissions: ["about_page"],
 	},
+	{
+		label: "Project",
+		icon: <FolderIcon className="material-icons" />,
+		path: "/project",
+		routeActive: ["/project"],
+		permissions: ["project_page"],
+	},
+	{
+		label: "Recruit Talents",
+		icon: <PersonSearchIcon className="material-icons" />,
+		path: "/recruit-talents",
+		routeActive: ["/recruit-talents"],
+		permissions: ["recruit_talents_page"],
+	},
 	// {
 	// 	label: "New Feed",
 	// 	icon: <FeedIcon className="material-icons" />,
@@ -38,20 +52,7 @@ const appRouteMap = [
 	// 	routeActive: ["/founder"],
 	// 	permissions: ["founder_page"],
 	// },
-	{
-		label: "Project",
-		icon: <FolderIcon className="material-icons" />,
-		path: "/project",
-		routeActive: ["/project"],
-		permissions: ["project_page"],
-	},
-	{
-		label: "Recruit Talents",
-		icon: <PersonSearchIcon className="material-icons" />,
-		path: "/recruit-talents",
-		routeActive: ["/recruit-talents"],
-		permissions: ["recruit_talents_page"],
-	},
+
 	// {
 	// 	label: "Explore",
 	// 	icon: (
