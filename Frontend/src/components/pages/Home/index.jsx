@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";
 import { checkSteps } from "api/home";
 import { useSelector } from "react-redux";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useNavigate } from "react-router-dom";
+import StepBox from "./StepBox";
+import LazyLoading from "components/UI/LazyLoading";
 
 function Home() {
 	const navigate = useNavigate();
@@ -23,48 +25,24 @@ function Home() {
 						meets opportunity and collaboration sparks success
 					</div>
 					<div className={styles.homeStepWrap}>
-						{/* <div className={styles.homeStepHeader}>
-								Your next steps
-							</div> */}
 						<div className={styles.homeStepContentWrap}>
-							{stepState.founderProfile ? (
-								<div
-									className={styles.stepWrap}
-									onClick={() => navigate("/about")}>
-									<div className={styles.stepContent}>
-										Update your profile
-									</div>
-									<ChevronRightIcon className={styles.chevron} />
-								</div>
-							) : (
-								<div
-									className={styles.stepWrap}
-									onClick={() => navigate("/about")}>
-									<div className={styles.stepContent}>
-										Update your profile
-									</div>
-									<ChevronRightIcon className={styles.chevron} />
-								</div>
-							)}
-							{stepState.project ? (
-								<div
-									className={styles.stepWrap}
-									onClick={() => navigate("/project")}>
-									<div className={styles.stepContent}>
-										Redirect to project
-									</div>
-									<ChevronRightIcon className={styles.chevron} />
-								</div>
-							) : (
-								<div
-									className={styles.stepWrap}
-									onClick={() => navigate("/project")}>
-									<div className={styles.stepContent}>
-										Create your first project
-									</div>
-									<ChevronRightIcon className={styles.chevron} />
-								</div>
-							)}
+							<LazyLoading>
+								<StepBox
+									step={stepState.founderProfile}
+									textTrue="Update your profile"
+									textFalse="Update your profile"
+									path="/about"
+								/>
+							</LazyLoading>
+							<LazyLoading>
+								<StepBox
+									step={stepState.project}
+									textTrue="Redirect to project"
+									textFalse="Create your first project"
+									path="/project"
+								/>
+							</LazyLoading>
+
 							<div className={styles.stepWrap}>
 								<div className={styles.stepContent}>
 									Invite your Team

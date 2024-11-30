@@ -269,8 +269,8 @@ export async function checkSteps(user) {
     const project = await Project.findOne({user_id: user._id}, {user_id: 0, created_at: 0, updated_at: 0})
 
     return {
-        founderProfile: founderProfile ? founderProfile : false,
-        project: project ? project : false,
+        founderProfile: founderProfile ? true : false,
+        project: project ? true : false,
     }
 }
 
