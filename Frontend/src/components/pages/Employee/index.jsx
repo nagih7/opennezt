@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import AppLayout from "components/layouts/AppLayout";
 import styles from "./styles.module.scss";
 import TableCustom from "../../../components/UI/Table";
 import InputMASQ from "../../../components/UI/Input";
@@ -172,87 +171,85 @@ function Employee() {
 	};
 
 	return (
-		<AppLayout>
-			<div className={styles.userManagementWrap}>
-				<div className={styles.mainWrap}>
-					<div className={styles.headerMainWrap}>
-						<span className={styles.title}>
-							Total records ({paginationListEmployee.totalRecord})
-						</span>
-						<div className={styles.btnWrap}>
-							<ButtonMASQ
-								onClick={() => handleCreate()}
-								style={{
-									minWidth: "80px",
-									margin: "0",
-									border: "none",
-									padding: "8px 12px",
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-								}}
-								textBtn={"+ Create"}></ButtonMASQ>
-						</div>
+		<div className={styles.userManagementWrap}>
+			<div className={styles.mainWrap}>
+				<div className={styles.headerMainWrap}>
+					<span className={styles.title}>
+						Total records ({paginationListEmployee.totalRecord})
+					</span>
+					<div className={styles.btnWrap}>
+						<ButtonMASQ
+							onClick={() => handleCreate()}
+							style={{
+								minWidth: "80px",
+								margin: "0",
+								border: "none",
+								padding: "8px 12px",
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+							textBtn={"+ Create"}></ButtonMASQ>
 					</div>
+				</div>
 
-					<div className={styles.boxFilterWrap}>
-						<div className={styles.inputWrap}>
-							<InputMASQ
-								placeholder="Search by name, email or phone"
-								value={dataFilter.keySearch}
-								onChange={(e) => handleSearch(e)}
-							/>
-							<svg
-								width="12"
-								height="12"
-								viewBox="0 0 12 12"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg">
-								<g>
-									<path
-										d="M11.78 9.97 9.75 7.94c.473-.788.75-1.707.75-2.69A5.256 5.256 0 0 0 5.25 0 5.256 5.256 0 0 0 0 5.25a5.256 5.256 0 0 0 5.25 5.25c.984 0 1.902-.277 2.69-.75l2.03 2.03a.748.748 0 0 0 1.06 0l.75-.75a.749.749 0 0 0 0-1.06ZM5.25 9a3.75 3.75 0 1 1 0-7.5 3.75 3.75 0 0 1 0 7.5Z"
-										fill="#3D4667"
-									/>
-								</g>
-								<defs>
-									<clipPath id="a">
-										<path fill="#fff" d="M0 0h12v12H0z" />
-									</clipPath>
-								</defs>
-							</svg>
-						</div>
-						<BtnFilter
-							content={
-								<Filter
-									statusUser={dataFilter.status}
-									onChangeStatus={handleChangeStatus}
-								/>
-							}
+				<div className={styles.boxFilterWrap}>
+					<div className={styles.inputWrap}>
+						<InputMASQ
+							placeholder="Search by name, email or phone"
+							value={dataFilter.keySearch}
+							onChange={(e) => handleSearch(e)}
 						/>
+						<svg
+							width="12"
+							height="12"
+							viewBox="0 0 12 12"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg">
+							<g>
+								<path
+									d="M11.78 9.97 9.75 7.94c.473-.788.75-1.707.75-2.69A5.256 5.256 0 0 0 5.25 0 5.256 5.256 0 0 0 0 5.25a5.256 5.256 0 0 0 5.25 5.25c.984 0 1.902-.277 2.69-.75l2.03 2.03a.748.748 0 0 0 1.06 0l.75-.75a.749.749 0 0 0 0-1.06ZM5.25 9a3.75 3.75 0 1 1 0-7.5 3.75 3.75 0 0 1 0 7.5Z"
+									fill="#3D4667"
+								/>
+							</g>
+							<defs>
+								<clipPath id="a">
+									<path fill="#fff" d="M0 0h12v12H0z" />
+								</clipPath>
+							</defs>
+						</svg>
 					</div>
-
-					<TableCustom
-						loading={isLoadingTableEmployee}
-						columns={columns}
-						dataSource={employees}
-						rowKey={"lens_color_id"}
-						pagination={paginationListEmployee}
-						onChangeCurrentPage={changeCurrentPage}
-						onChange={onChange}
+					<BtnFilter
+						content={
+							<Filter
+								statusUser={dataFilter.status}
+								onChangeStatus={handleChangeStatus}
+							/>
+						}
 					/>
 				</div>
 
-				<CreateOrUpdate employee={employee} configModal={configModal} />
-
-				<ModalConfirm
-					isModalOpen={visibleModalDeleteEmployee}
-					title={`Delete ${employee.name}?`}
-					description={`Are you sure you want to delete ${employee.name}? Your action can not be undone.`}
-					onClose={() => dispatch(setVisibleModalDeleteEmployee(false))}
-					onConfirm={() => handleConfirmDeleteEmployee()}
+				<TableCustom
+					loading={isLoadingTableEmployee}
+					columns={columns}
+					dataSource={employees}
+					rowKey={"lens_color_id"}
+					pagination={paginationListEmployee}
+					onChangeCurrentPage={changeCurrentPage}
+					onChange={onChange}
 				/>
 			</div>
-		</AppLayout>
+
+			<CreateOrUpdate employee={employee} configModal={configModal} />
+
+			<ModalConfirm
+				isModalOpen={visibleModalDeleteEmployee}
+				title={`Delete ${employee.name}?`}
+				description={`Are you sure you want to delete ${employee.name}? Your action can not be undone.`}
+				onClose={() => dispatch(setVisibleModalDeleteEmployee(false))}
+				onConfirm={() => handleConfirmDeleteEmployee()}
+			/>
+		</div>
 	);
 }
 

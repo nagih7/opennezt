@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import AppLayout from "components/layouts/AppLayout";
 import styles from "./styles.module.scss";
 import { useSelector } from "react-redux";
 import store from "states/configureStore";
@@ -16,14 +15,10 @@ function About() {
 	}, []);
 
 	return (
-		<AppLayout>
-			<div className={styles.aboutContainer}>
-				{authUser && <ProfileCard authUser={authUser} />}
-				{founderProfile && (
-					<FounderProfile founderProfile={founderProfile} />
-				)}
-			</div>
-		</AppLayout>
+		<div className={styles.aboutContainer}>
+			{authUser && <ProfileCard authUser={authUser} />}
+			{founderProfile && <FounderProfile founderProfile={founderProfile} />}
+		</div>
 	);
 }
 

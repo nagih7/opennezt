@@ -1,6 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { rootLoader } from "./rootLoader";
+
+import AppLayout from "components/layouts/AppLayout";
+import AuthLayout from "components/layouts/AuthLayout";
+import LazyLoading from "components/UI/LazyLoading";
 
 const Login = React.lazy(() => import("../components/pages/Auth/Login"));
 const Register = React.lazy(() => import("../components/pages/Auth/Register"));
@@ -23,34 +27,58 @@ const RecruitTalents = React.lazy(() =>
 const router = createBrowserRouter([
 	{
 		path: "/login",
-		element: <Login />,
+		element: (
+			<AuthLayout title={"Welcome back"}>
+				<Login />
+			</AuthLayout>
+		),
 		loader: ({ request }) => rootLoader({ request }, false, "LOAD_AUTH_PAGE"),
 	},
 	{
 		path: "/register",
-		element: <Register />,
+		element: (
+			<AuthLayout title={"Register account"}>
+				<Register />
+			</AuthLayout>
+		),
 		loader: ({ request }) => rootLoader({ request }, false, "LOAD_AUTH_PAGE"),
 	},
 	{
 		path: "/forgot-password",
-		element: <ForgotPassword />,
+		element: (
+			<AuthLayout title={"Forgot password"}>
+				<ForgotPassword />
+			</AuthLayout>
+		),
 		loader: ({ request }) => rootLoader({ request }, false, "LOAD_AUTH_PAGE"),
 	},
 	{
 		path: "profile",
-		element: <Profile />,
+		element: (
+			<AppLayout>
+				<Profile />
+			</AppLayout>
+		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROFILE_PAGE"),
 	},
 	{
 		path: "admin/manage",
-		element: <Manage />,
+		element: (
+			<AppLayout>
+				<Manage />
+			</AppLayout>
+		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_MANAGE_PAGE"),
 	},
 	{
 		path: "/",
-		element: <Home />,
+		element: (
+			<AppLayout>
+				<Home />
+			</AppLayout>
+		),
 		loader: ({ request }) => rootLoader({ request }, true, "LOAD_HOME_PAGE"),
 	},
 	// {
@@ -61,7 +89,11 @@ const router = createBrowserRouter([
 	// },
 	{
 		path: "/about",
-		element: <About />,
+		element: (
+			<AppLayout>
+				<About />
+			</AppLayout>
+		),
 		loader: ({ request }) => rootLoader({ request }, true, "LOAD_ABOUT_PAGE"),
 		children: [
 			{
@@ -74,31 +106,51 @@ const router = createBrowserRouter([
 	},
 	{
 		path: "admin/user-management",
-		element: <Employee />,
+		element: (
+			<AppLayout>
+				<Employee />
+			</AppLayout>
+		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_EMPLOYEE_PAGE"),
 	},
 	{
 		path: "/new-feed",
-		element: <Newfeeds />,
+		element: (
+			<AppLayout>
+				<Newfeeds />
+			</AppLayout>
+		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_NEWFEED_PAGE"),
 	},
 	{
 		path: "/founder",
-		element: <Founder />,
+		element: (
+			<AppLayout>
+				<Founder />
+			</AppLayout>
+		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_FOUNDER_PAGE"),
 	},
 	{
 		path: "/project",
-		element: <Project />,
+		element: (
+			<AppLayout>
+				<Project />
+			</AppLayout>
+		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROJECT_PAGE"),
 	},
 	{
 		path: "/recruit-talents",
-		element: <RecruitTalents />,
+		element: (
+			<AppLayout>
+				<RecruitTalents />
+			</AppLayout>
+		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_RECRUIT_TALENTS_PAGE"),
 	},
