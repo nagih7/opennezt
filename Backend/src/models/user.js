@@ -49,7 +49,7 @@ const User = createModel(
         region: {
             type: String,
             default: '',
-            required: true,
+            required: false,
         },
         city: {
             type: String,
@@ -71,7 +71,7 @@ const User = createModel(
             required: true,
             default: false,
             enum: [true, false],
-        },
+        }
     },
     {
         toJSON: {

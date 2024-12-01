@@ -254,7 +254,7 @@ export async function getTalentDetails(email) {
         },
         {
             $project: {
-                _id: 0,
+                
                 password: 0,
                 role: 0,
                 is_active: 0,
