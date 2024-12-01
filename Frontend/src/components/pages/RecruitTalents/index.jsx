@@ -60,7 +60,7 @@ function RecruitTalents() {
       const token = localStorage.getItem('token'); REACT_APP_API_URL
       const ws = new WebSocket(`${process.env.REACT_APP_WS_URL}?token=${token}`);
       console.log(ws)
-      const response = await axios.post(`${process.env.REACT_APP_WS_URL}/chat/create-chat`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/chat/create-chat`, {
         userId,
         receiverId:talentId,
         message: mess,

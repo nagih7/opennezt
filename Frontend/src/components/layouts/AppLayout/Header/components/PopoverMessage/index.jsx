@@ -25,7 +25,7 @@ function ChatsPopover() {
   const fetchReceiverData = useCallback(async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_WS_URL}/chat/receiverIds/${getUserIdFromToken()}`,
+        `${process.env.REACT_APP_API_URL}/chat/receiverIds/${getUserIdFromToken()}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -40,7 +40,7 @@ function ChatsPopover() {
       setReceiverData(response.data);
       
       const response2 = await axios.get(
-        `${process.env.REACT_APP_WS_URL}/chat/receiverIds/${receivedid}`,
+        `${process.env.REACT_APP_API_URL}/chat/receiverIds/${receivedid}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -69,7 +69,7 @@ function ChatsPopover() {
   const createChat = async (senderId, receivedid, messageContent, date) => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_WS_URL}/chat/create-chat`,
+        `${process.env.REACT_APP_API_URL}/chat/create-chat`,
         { senderId, receiverId: receivedid, message: messageContent, date },
         {
           headers: {
