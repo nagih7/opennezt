@@ -3,9 +3,9 @@ import path from 'path'
 import serveFavicon from 'serve-favicon'
 import helmet from 'helmet'
 import multer from 'multer'
-import {APP_DEBUG, NODE_ENV, PUBLIC_DIR, VIEW_DIR} from './configs'
+import { APP_DEBUG, NODE_ENV, PUBLIC_DIR, VIEW_DIR } from './configs'
 
-import {jsonify, sendMail} from './handlers/responseHandler'
+import { jsonify, sendMail } from './handlers/responseHandler'
 import corsHandler from './handlers/corsHandler'
 import httpRequestHandler from './handlers/httpRequestHandler'
 import limiter from './handlers/rateLimitHandler'
@@ -14,18 +14,14 @@ import initLocalsHandler from './handlers/initLocalsHandler'
 import notFoundHandler from './handlers/notFoundHandler'
 import errorHandler from './handlers/errorHandler'
 import cookieParser from 'cookie-parser'
-// require('dotenv').config()
-// import routes
+
+import WebSocket from 'ws'
 import route from './routes'
 
 function createApp() {
-    // Init app
     const app = express()
 
-    // Config cookie-parser
     app.use(cookieParser())
-
-    // config response
     app.response.jsonify = jsonify
     app.response.sendMail = sendMail
 
@@ -43,22 +39,40 @@ function createApp() {
     app.use('/static', express.static(PUBLIC_DIR))
     app.use(helmet())
 
-    // Sử dụng expres parser để xử lý dữ liệu thành dạng json
     app.use(express.json())
-    app.use(express.urlencoded({extended: true}))
-    app.use(multer({storage: multer.memoryStorage()}).any())
+    app.use(express.urlencoded({ extended: true }))
+    app.use(multer({ storage: multer.memoryStorage() }).any())
     app.use(formDataHandler)
     app.use(initLocalsHandler)
 
     route(app)
 
-    // Not found handler
     app.use(notFoundHandler)
-
-    // Error handler
     app.use(errorHandler)
 
-    return app
+    const server = require('http').createServer(app)
+
+    const wss = new WebSocket.Server({ server })
+
+    wss.on('connection', (ws) => {
+        console.log('A new WebSocket client connected')
+
+        ws.on('message', (message) => {
+            console.log('received: %s', message)
+
+            wss.clients.forEach((client) => {
+                if (client !== ws && client.readyState === WebSocket.OPEN) {
+                    client.send(message)
+                }
+            })
+        })
+
+        ws.on('close', () => {
+            console.log('A WebSocket client disconnected')
+        })
+    })
+
+    return server
 }
 
 export default createApp

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import AppLayout from "components/layouts/AppLayout";
 import styles from "./styles.module.scss";
 import verify from "../../../assets/images/icon/verify.png";
 
@@ -79,68 +78,64 @@ function Founders() {
 	const currentStartup = startups[currentIndex];
 
 	return (
-		<AppLayout>
-			<div className={styles.aboutContainer}>
-				<div className={styles.bannerContainer}>
-					<div className={styles.banner}>
-						<div className={styles.background}>
-							<img src={currentStartup.logo} alt={currentStartup.name} />
-						</div>
-					</div>
-					<div className={styles.avatar}>
-						<img src={currentStartup.logo} alt="Startup Logo" />
-					</div>
-					<div className={styles.userInfo}>
-						<h1>
-							{currentStartup.name}
-							<img
-								src={verify}
-								alt="Verify"
-								className={styles.verifyIcon}
-							/>
-						</h1>
-						<p>{currentStartup.description}</p>
-						<p>
-							<strong>Location:</strong> {currentStartup.location}
-						</p>
-						<p>
-							<strong>Email:</strong> {currentStartup.contact.email}
-						</p>
-						<p>
-							<strong>Phone:</strong> {currentStartup.contact.phone}
-						</p>
-						<p>
-							<strong>Industry:</strong> {currentStartup.industry}
-						</p>
-						<p>
-							<strong>Experience Level:</strong>{" "}
-							{currentStartup.experience_level}
-						</p>
-						<h3>Areas of Expertise</h3>
-						<ul>
-							{Object.entries(currentStartup.areas_of_expertise).map(
-								([key, value]) => (
-									<li key={key}>
-										<strong>{key.replace(/_/g, " ")}</strong>:{" "}
-										{value.join(", ")}
-									</li>
-								)
-							)}
-						</ul>
-					</div>
-					<div className={styles.startupActions}>
-						<button
-							className={styles.connectButton}
-							onClick={handleConnect}>
-							Connect with Founder
-						</button>
-						<button className={styles.skipButton} onClick={handleSkip}>
-							Skip
-						</button>
+		<div className={styles.aboutContainer}>
+			<div className={styles.bannerContainer}>
+				<div className={styles.banner}>
+					<div className={styles.background}>
+						<img src={currentStartup.logo} alt={currentStartup.name} />
 					</div>
 				</div>
+				<div className={styles.avatar}>
+					<img src={currentStartup.logo} alt="Startup Logo" />
+				</div>
+				<div className={styles.userInfo}>
+					<h1>
+						{currentStartup.name}
+						<img
+							src={verify}
+							alt="Verify"
+							className={styles.verifyIcon}
+						/>
+					</h1>
+					<p>{currentStartup.description}</p>
+					<p>
+						<strong>Location:</strong> {currentStartup.location}
+					</p>
+					<p>
+						<strong>Email:</strong> {currentStartup.contact.email}
+					</p>
+					<p>
+						<strong>Phone:</strong> {currentStartup.contact.phone}
+					</p>
+					<p>
+						<strong>Industry:</strong> {currentStartup.industry}
+					</p>
+					<p>
+						<strong>Experience Level:</strong>{" "}
+						{currentStartup.experience_level}
+					</p>
+					<h3>Areas of Expertise</h3>
+					<ul>
+						{Object.entries(currentStartup.areas_of_expertise).map(
+							([key, value]) => (
+								<li key={key}>
+									<strong>{key.replace(/_/g, " ")}</strong>:{" "}
+									{value.join(", ")}
+								</li>
+							)
+						)}
+					</ul>
+				</div>
+				<div className={styles.startupActions}>
+					<button className={styles.connectButton} onClick={handleConnect}>
+						Connect with Founder
+					</button>
+					<button className={styles.skipButton} onClick={handleSkip}>
+						Skip
+					</button>
+				</div>
 			</div>
-		</AppLayout>
+		</div>
 	);
 }
 

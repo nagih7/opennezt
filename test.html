@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat Test</title>
+    <style>
+        #messages {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            padding: 10px;
+            overflow-y: scroll;
+            background-color: #f9f9f9;
+        }
+        #input-message {
+            width: 80%;
+            padding: 10px;
+        }
+        #send-button {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Chat Test</h1>
+    
+    <div id="messages"></div>
+    
+    <input type="text" id="input-message" placeholder="Type a message" />
+    <button id="send-button">Send</button>
+
+    <script>
+        // Tạo WebSocket kết nối
+        const socket = new WebSocket('ws://localhost:3456'); // Thay đổi cổng nếu cần
+
+        // Khi WebSocket kết nối thành công
+        socket.addEventListener('open', function (event) {
+            console.log('Connected to WebSocket server');
+        });
+
+        // Khi nhận được tin nhắn từ server
+        socket.addEventListener('message', function (event) {
+            const messageContainer = document.getElementById('messages');
+            const message = document.createElement('div');
+            message.textContent = `Received: ${event.data}`;
+            messageContainer.appendChild(message);
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        });
+
+        // Khi WebSocket gặp lỗi
+        socket.addEventListener('error', function (event) {
+            console.error('WebSocket error:', event);
+        });
+
+        // Khi WebSocket đóng kết nối
+        socket.addEventListener('close', function (event) {
+            console.log('WebSocket connection closed');
+        });
+
+        // Khi người dùng click nút "Send", gửi tin nhắn qua WebSocket
+        document.getElementById('send-button').addEventListener('click', function () {
+            const inputMessage = document.getElementById('input-message').value;
+            if (inputMessage.trim() !== '') {
+                socket.send(inputMessage); // Gửi tin nhắn đến server
+                const messageContainer = document.getElementById('messages');
+                const sentMessage = document.createElement('div');
+                sentMessage.textContent = `Sent: ${inputMessage}`;
+                messageContainer.appendChild(sentMessage);
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+                document.getElementById('input-message').value = ''; // Xóa input sau khi gửi
+            }
+        });
+    </script>
+</body>
+</html>

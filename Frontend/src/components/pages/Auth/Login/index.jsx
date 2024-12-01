@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import "./styles.scss";
-import AuthLayout from "../../../layouts/AuthLayout";
 import InputMASQ from "../../../../components/UI/Input";
 import _ from "lodash";
 import ButtonMASQ from "../../../../components/UI/Button";
@@ -37,7 +36,7 @@ function Login() {
 
 	useEffect(() => {
 		if (isAuthSuccess && authorize === "admin") {
-			navigate("/");
+			navigate("/admin/manage");
 		} else if (isAuthSuccess && authorize === "user") {
 			navigate("/");
 		}
@@ -82,78 +81,76 @@ function Login() {
 	};
 
 	return (
-		<AuthLayout title={"Welcome back"}>
-			<div className={styles.loginWrap}>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Email *</div>
-					<InputMASQ
-						type={"text"}
-						placeholder={"Enter email..."}
-						onChange={(e) => handleChangeInput(e, "email")}
-						onBlur={() => validateBlur("email")}
-						value={dataLogin.email}
-						error={errorDataLogin.email}
-					/>
-				</div>
-
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Password *</div>
-					<InputMASQ
-						type={"password"}
-						placeholder={"******"}
-						value={dataLogin.password}
-						onChange={(e) => handleChangeInput(e, "password")}
-						onBlur={() => validateBlur("password")}
-						onKeyDown={(e) => handleKeyDown(e)}
-						error={errorDataLogin.password}
-					/>
-				</div>
-
-				<div className={styles.btnUtilitiesWrap}>
-					<div className={`${styles.remember} input-checkbox-style`}>
-						<Checkbox
-							className={styles.checkBox}
-							checked={checkRemember}
-							onClick={(e) => handleClickCheckBox(e)}>
-							<span>Remember me</span>
-						</Checkbox>
-					</div>
-
-					<div
-						onClick={() => navigate("/forgot-password")}
-						className={styles.btnForgetPassword}>
-						Forgot password
-					</div>
-				</div>
-
-				<div className={styles.btnWrap}>
-					<ButtonMASQ
-						textBtn={"Login"}
-						loading={isLoadingBtnLogin}
-						onClick={() => handleConfirmLogin()}
-						disable={false}
-						style={{
-							display: "flex",
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-					/>
-				</div>
-
-				<div className={styles.btnSwitchWrap}>
-					<div className={styles.btnRegister}>
-						{"Don't have an account"}?{" "}
-						<span
-							className={styles.textRegister}
-							onClick={() => navigate("/register")}>
-							Signup now
-						</span>
-					</div>
-				</div>
-
-				<Social />
+		<div className={styles.loginWrap}>
+			<div className={styles.inputWrapper}>
+				<div className={styles.label}>Email *</div>
+				<InputMASQ
+					type={"text"}
+					placeholder={"Enter email..."}
+					onChange={(e) => handleChangeInput(e, "email")}
+					onBlur={() => validateBlur("email")}
+					value={dataLogin.email}
+					error={errorDataLogin.email}
+				/>
 			</div>
-		</AuthLayout>
+
+			<div className={styles.inputWrapper}>
+				<div className={styles.label}>Password *</div>
+				<InputMASQ
+					type={"password"}
+					placeholder={"******"}
+					value={dataLogin.password}
+					onChange={(e) => handleChangeInput(e, "password")}
+					onBlur={() => validateBlur("password")}
+					onKeyDown={(e) => handleKeyDown(e)}
+					error={errorDataLogin.password}
+				/>
+			</div>
+
+			<div className={styles.btnUtilitiesWrap}>
+				<div className={`${styles.remember} input-checkbox-style`}>
+					<Checkbox
+						className={styles.checkBox}
+						checked={checkRemember}
+						onClick={(e) => handleClickCheckBox(e)}>
+						<span>Remember me</span>
+					</Checkbox>
+				</div>
+
+				<div
+					onClick={() => navigate("/forgot-password")}
+					className={styles.btnForgetPassword}>
+					Forgot password
+				</div>
+			</div>
+
+			<div className={styles.btnWrap}>
+				<ButtonMASQ
+					textBtn={"Login"}
+					loading={isLoadingBtnLogin}
+					onClick={() => handleConfirmLogin()}
+					disable={false}
+					style={{
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+				/>
+			</div>
+
+			<div className={styles.btnSwitchWrap}>
+				<div className={styles.btnRegister}>
+					{"Don't have an account"}?{" "}
+					<span
+						className={styles.textRegister}
+						onClick={() => navigate("/register")}>
+						Signup now
+					</span>
+				</div>
+			</div>
+
+			<Social />
+		</div>
 	);
 }
 

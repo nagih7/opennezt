@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
-import AuthLayout from "../../../layouts/AuthLayout";
 import InputMASQ from "../../../../components/UI/Input";
 import _ from "lodash";
 import ButtonMASQ from "../../../../components/UI/Button";
@@ -47,15 +46,18 @@ function ForgotPassword() {
 		setErrorDataForgotPassword(validate.dataError);
 
 		if (!validate.isError) {
-			setLoading(true); 
+			setLoading(true);
 			try {
-				const response = await fetch('http://localhost:3456/auth/forgot-password', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({ email: dataForgotPassword.email }),
-				});
+				const response = await fetch(
+					"http://localhost:3456/auth/forgot-password",
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ email: dataForgotPassword.email }),
+					}
+				);
 
 				if (response.ok) {
 					const data = await response.json();
@@ -65,44 +67,41 @@ function ForgotPassword() {
 					alert(`Failed to send email: ${error.message}`);
 				}
 			} catch (error) {
-				
-				alert('Something went wrong. Please try again.');
+				alert("Something went wrong. Please try again.");
 			} finally {
-				setLoading(false); 
+				setLoading(false);
 			}
 		}
 	};
 
 	return (
-		<AuthLayout title={"Forgot password"}>
-			<div className={styles.forgotPasswordWrap}>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Email *</div>
-					<InputMASQ
-						type={"text"}
-						placeholder={"Enter email..."}
-						onChange={(e) => handleChangeInput(e, "email")}
-						onBlur={() => validateBlur("email")}
-						value={dataForgotPassword.email}
-						error={errorDataForgotPassword.email}
-					/>
-				</div>
-
-				<div className={styles.btnWrap}>
-					<ButtonMASQ
-						textBtn={"Send email"}
-						loading={loading} 
-						onClick={() => handleForgotPassword()}
-						disable={loading} 
-						style={{
-							display: "flex",
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-					/>
-				</div>
+		<div className={styles.forgotPasswordWrap}>
+			<div className={styles.inputWrapper}>
+				<div className={styles.label}>Email *</div>
+				<InputMASQ
+					type={"text"}
+					placeholder={"Enter email..."}
+					onChange={(e) => handleChangeInput(e, "email")}
+					onBlur={() => validateBlur("email")}
+					value={dataForgotPassword.email}
+					error={errorDataForgotPassword.email}
+				/>
 			</div>
-		</AuthLayout>
+
+			<div className={styles.btnWrap}>
+				<ButtonMASQ
+					textBtn={"Send email"}
+					loading={loading}
+					onClick={() => handleForgotPassword()}
+					disable={loading}
+					style={{
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+				/>
+			</div>
+		</div>
 	);
 }
 

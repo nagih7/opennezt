@@ -82,74 +82,129 @@
 }
 
 .popup {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: rgba(0, 0, 0, 0.5);
-	display: none;
-	justify-content: center;
-	align-items: center;
-	z-index: 9999;
-	padding: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 1rem;
+    transition: all 0.3s ease;
 }
 
 .popupActive {
-	display: flex;
+    display: flex;
 }
 
 .popupContent {
-	background-color: var(--color-white);
-	padding: 2rem;
-	border-radius: var(--card-border-radius);
-	box-shadow: var(--box-shadow);
-	max-width: 800px;
-	width: 100%;
-	text-align: left;
-	overflow-y: auto;
-	max-height: 80vh;
+    background-color: var(--color-white);
+    padding: 2rem;
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    max-width: 800px;
+    width: 100%;
+    text-align: left;
+    overflow-y: auto;
+    max-height: 80vh;
+    position: relative;
+    transition: all 0.3s ease;
 }
+
 .popupContent::-webkit-scrollbar {
-	display: none;
+    display: none;
 }
+
 .popupContent h3 {
-	margin-bottom: 1rem;
-	font-size: 1.6rem;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--color-dark);
 }
 
 .popupContent p {
-	margin-bottom: 1rem;
-	font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: var(--color-dark-variant);
 }
 
 .popupContent ul {
-	list-style-type: none;
-	padding-left: 0;
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 1rem;
 }
 
 .popupContent li {
-	margin-bottom: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: var(--color-dark-variant);
 }
 
 .popupContent ul ul {
-	padding-left: 20px;
+    padding-left: 20px;
 }
 
 .popupContent div {
-	max-height: 60vh;
-	overflow-y: auto;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.popupAvatar {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+	border: 2px solid #cdcdcd;
 }
 
 .closePopupButton {
-	background-color: var(--color-danger);
-	color: white;
-	padding: 0.5rem 1rem;
-	border: none;
-	border-radius: var(--border-radius-2);
-	cursor: pointer;
-	margin-top: 1rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: var(--color-danger);
+    color: var(--color-white);
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: var(--border-radius-1);
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
 }
+
+.closePopupButton:hover {
+    background-color: var(--color-dark);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.popupContent a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.popupContent a:hover {
+    text-decoration: underline;
+}
+
+.popupContent.empty {
+    text-align: center;
+}
+
+.popupContent.empty p {
+    font-size: 1.2rem;
+    color: var(--color-info-dark);
+}
+
+.popupContent li strong {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
 .inputWrapper {
 	position: relative;
 	transition: all 0.3s ease;

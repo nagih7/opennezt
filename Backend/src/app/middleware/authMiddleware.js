@@ -1,10 +1,11 @@
 import _ from 'lodash'
 import {tokenBlocklist} from '../services/authService'
 import {JsonWebTokenError, TokenExpiredError} from 'jsonwebtoken'
-import {abort, verifyToken} from '@/utils/helpers'
+import {abort, verifyToken,getToken} from '@/utils/helpers'
 import {TOKEN_TYPE} from '@/configs'
 import {User} from '@/models'
-
+import WebSocket from 'ws'
+import fs from 'fs'
 export async function verifyForgotPasswordToken(req, res, next) {
     const token = req.params.token
     try {
@@ -51,3 +52,9 @@ export async function verifyEmailToken(req, res, next) {
     }
     abort(403, 'Liên kết không hợp lệ.')
 }
+export async function authenticateWebSocket(ws, req, next) {
+   
+    
+}
+
+

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import AppLayout from "components/layouts/AppLayout";
+import React, { useState, useEffect, useCallback } from "react";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";
 import { getDetailTalent, recruitTalents } from "api/talent";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 function RecruitTalents() {
 	const [requestRecruitTalents, setRequestRecruitTalents] = useState({
@@ -13,9 +13,17 @@ function RecruitTalents() {
 		language: "",
 		page: 1,
 	});
+	const token = localStorage.getItem("token");
 
+	const getUserIdFromToken = useCallback(() => {
+		const decodedToken = JSON.parse(atob(token.split(".")[1]));
+		return decodedToken.data.user_id;
+	}, [token]);
+	const userId = getUserIdFromToken();
 	const talents = useSelector((state) => state.talent.talents);
+
 	const talentDetails = useSelector((state) => state.talent.talentDetails);
+	console.log(talentDetails);
 
 	const [dropdowns, setDropdowns] = useState({
 		expertise_area: false,
@@ -23,7 +31,6 @@ function RecruitTalents() {
 		location: false,
 		language: false,
 	});
-
 	const handleDropdownToggle = (field) => {
 		setDropdowns((prev) => ({ ...prev, [field]: !prev[field] }));
 	};
@@ -32,7 +39,6 @@ function RecruitTalents() {
 		setRequestRecruitTalents((prev) => ({ ...prev, [field]: value }));
 		setDropdowns((prev) => ({ ...prev, [field]: false }));
 	};
-
 	const [popupActive, setPopupActive] = useState(false);
 
 	const handleViewDetails = (email) => {
@@ -43,6 +49,41 @@ function RecruitTalents() {
 	const closePopup = () => {
 		setPopupActive(false);
 	};
+	const mess = "hi";
+	const date = new Date().toISOString();
+	const createChat = async (userId, talentId, mess, date) => {
+		try {
+			const token = localStorage.getItem("token");
+			const ws = new WebSocket(
+				`${process.env.REACT_APP_WS_URL}/chat?token=${token}`
+			);
+			console.log(ws);
+			const response = await axios.post(
+				`${process.env.REACT_APP_API_URL}/chat/create-chat`,
+				{
+					userId,
+					receiverId: talentId,
+					message: mess,
+					date: date,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			console.log(response.data.message);
+
+			ws.onopen = () => {
+				console.log("WebSocket connection established");
+			};
+			ws.onmessage = (message) => {
+				console.log("Received message:", message.data);
+			};
+		} catch (error) {
+			console.error("Error creating chat:", error);
+		}
+	};
 
 	const handleConfirmSearch = async (requestRecruitTalents) => {
 		console.log(requestRecruitTalents);
@@ -50,203 +91,231 @@ function RecruitTalents() {
 	};
 
 	return (
-		<AppLayout>
-			<div className={styles.searchContainer}>
-				<h2>Search for Talents</h2>
-				<div className={styles.searchInputs}>
-					<div className={styles.inputWrapper}>
-						<input
-							type="text"
-							name="expertise_area"
-							placeholder="Expertise Area"
-							value={requestRecruitTalents.expertise_area}
-							onFocus={() => handleDropdownToggle("expertise_area")}
-						/>
-						{dropdowns.expertise_area && (
-							<ul className={styles.dropdown}>
-								<li
-									onClick={() =>
-										handleSelect("expertise_area", "Marketing")
-									}>
-									Marketing
-								</li>
-								<li
-									onClick={() =>
-										handleSelect("expertise_area", "Technology")
-									}>
-									Technology
-								</li>
-								<li
-									onClick={() =>
-										handleSelect("expertise_area", "Operations")
-									}>
-									Operations
-								</li>
-							</ul>
-						)}
-					</div>
-					<div className={styles.inputWrapper}>
-						<input
-							type="text"
-							name="experience_level"
-							placeholder="Experience Level"
-							value={requestRecruitTalents.experience_level}
-							onFocus={() => handleDropdownToggle("experience_level")}
-						/>
-						{dropdowns.experience_level && (
-							<ul className={styles.dropdown}>
-								<li
-									onClick={() =>
-										handleSelect("experience_level", "Senior")
-									}>
-									Senior
-								</li>
-								<li
-									onClick={() =>
-										handleSelect("experience_level", "Junior")
-									}>
-									Junior
-								</li>
-							</ul>
-						)}
-					</div>
-					<div className={styles.inputWrapper}>
-						<input
-							type="text"
-							name="location"
-							placeholder="Location"
-							value={requestRecruitTalents.location}
-							onFocus={() => handleDropdownToggle("location")}
-						/>
-						{dropdowns.location && (
-							<ul className={styles.dropdown}>
-								<li
-									onClick={() => handleSelect("location", "Viet Nam")}>
-									Viet Nam
-								</li>
-								<li onClick={() => handleSelect("location", "USA")}>
-									USA
-								</li>
-							</ul>
-						)}
-					</div>
-					<div className={styles.inputWrapper}>
-						<input
-							type="text"
-							name="language"
-							placeholder="Language"
-							value={requestRecruitTalents.language}
-							onFocus={() => handleDropdownToggle("language")}
-						/>
-						{dropdowns.language && (
-							<ul className={styles.dropdown}>
-								<li
-									onClick={() =>
-										handleSelect("language", "Vietnamese")
-									}>
-									Vietnamese
-								</li>
-								<li onClick={() => handleSelect("language", "English")}>
-									English
-								</li>
-							</ul>
-						)}
-					</div>
-				</div>
-				<button
-					className={styles.searchButton}
-					onClick={() => handleConfirmSearch(requestRecruitTalents)}>
-					Search
-				</button>
-
-				<div className={styles.results}>
-					{talents && talents.length > 0 ? (
-						<div className={styles.talentCardsContainer}>
-							{talents.map((talent) => (
-								<div
-									key={talent.user_data.email}
-									className={styles.talentCard}>
-									<img
-										src={
-											talent.user_data.avatar || "default-avatar.png"
-										}
-										alt="Avatar"
-										className={styles.talentAvatar}
-									/>
-									<h3>{talent.user_data.name}</h3>
-									<p>{talent.user_data.email}</p>
-									<p>
-										{talent.experience_level} | {talent.industry}
-									</p>
-									<button
-										className={styles.viewDetailsButton}
-										onClick={() =>
-											handleViewDetails(talent.user_data.email)
-										}>
-										View Details
-									</button>
-								</div>
-							))}
-						</div>
-					) : (
-						<p>No talents found.</p>
+		<div className={styles.searchContainer}>
+			<h2>Search for Talents</h2>
+			<div className={styles.searchInputs}>
+				<div className={styles.inputWrapper}>
+					<input
+						type="text"
+						name="expertise_area"
+						placeholder="Expertise Area"
+						value={requestRecruitTalents.expertise_area}
+						onFocus={() => handleDropdownToggle("expertise_area")}
+					/>
+					{dropdowns.expertise_area && (
+						<ul className={styles.dropdown}>
+							<li
+								onClick={() =>
+									handleSelect("expertise_area", "Marketing")
+								}>
+								Marketing
+							</li>
+							<li
+								onClick={() =>
+									handleSelect("expertise_area", "Technology")
+								}>
+								Technology
+							</li>
+							<li
+								onClick={() =>
+									handleSelect("expertise_area", "Operations")
+								}>
+								Operations
+							</li>
+						</ul>
 					)}
 				</div>
+				<div className={styles.inputWrapper}>
+					<input
+						type="text"
+						name="experience_level"
+						placeholder="Experience Level"
+						value={requestRecruitTalents.experience_level}
+						onFocus={() => handleDropdownToggle("experience_level")}
+					/>
+					{dropdowns.experience_level && (
+						<ul className={styles.dropdown}>
+							<li
+								onClick={() =>
+									handleSelect("experience_level", "Senior")
+								}>
+								Senior
+							</li>
+							<li
+								onClick={() =>
+									handleSelect("experience_level", "Junior")
+								}>
+								Junior
+							</li>
+						</ul>
+					)}
+				</div>
+				<div className={styles.inputWrapper}>
+					<input
+						type="text"
+						name="location"
+						placeholder="Location"
+						value={requestRecruitTalents.location}
+						onFocus={() => handleDropdownToggle("location")}
+					/>
+					{dropdowns.location && (
+						<ul className={styles.dropdown}>
+							<li onClick={() => handleSelect("location", "Viet Nam")}>
+								Viet Nam
+							</li>
+							<li onClick={() => handleSelect("location", "USA")}>
+								USA
+							</li>
+						</ul>
+					)}
+				</div>
+				<div className={styles.inputWrapper}>
+					<input
+						type="text"
+						name="language"
+						placeholder="Language"
+						value={requestRecruitTalents.language}
+						onFocus={() => handleDropdownToggle("language")}
+					/>
+					{dropdowns.language && (
+						<ul className={styles.dropdown}>
+							<li onClick={() => handleSelect("language", "Vietnamese")}>
+								Vietnamese
+							</li>
+							<li onClick={() => handleSelect("language", "English")}>
+								English
+							</li>
+						</ul>
+					)}
+				</div>
+			</div>
+			<button
+				className={styles.searchButton}
+				onClick={() => handleConfirmSearch(requestRecruitTalents)}>
+				Search
+			</button>
 
-				{popupActive && talentDetails && (
-					<div className={`${styles.popup} ${styles.popupActive}`}>
-						<div className={styles.popupContent}>
-							<button
-								onClick={closePopup}
-								className={styles.closePopupButton}>
-								Close
-							</button>
-							<h3>{talentDetails.name}</h3>
-							<img
-								src={talentDetails.avatar || "default-avatar.png"}
-								alt="Avatar"
-								className={styles.popupAvatar}
-							/>
-							<p>
-								<strong>Email:</strong> {talentDetails.email}
-							</p>
-							<p>
-								<strong>Phone:</strong> {talentDetails.phone}
-							</p>
-							<p>
-								<strong>LinkedIn:</strong>{" "}
-								<a
-									href={talentDetails.linkedIn}
-									target="_blank"
-									rel="noopener noreferrer">
-									View LinkedIn
-								</a>
-							</p>
-							<p>
-								<strong>Region:</strong> {talentDetails.region}
-							</p>
-							<p>
-								<strong>Background:</strong> {talentDetails.background}
-							</p>
-							<p>
-								<strong>Areas of Expertise:</strong>
-							</p>
-							<ul>
-								{talentDetails.talent_profile.areas_of_expertise &&
-									Object.entries(
-										talentDetails.talent_profile.areas_of_expertise
-									).map(([category, skills]) => (
-										<li key={category}>
-											<strong>{category}:</strong>{" "}
-											{skills.join(", ")}
-										</li>
-									))}
-							</ul>
-						</div>
+			<div className={styles.results}>
+				{talents && talents.length > 0 ? (
+					<div className={styles.talentCardsContainer}>
+						{talents.map((talent) => (
+							<div
+								key={talent.user_data.email}
+								className={styles.talentCard}>
+								<img
+									src={talent.user_data.avatar || "default-avatar.png"}
+									alt="Avatar"
+									className={styles.talentAvatar}
+								/>
+								<h3>{talent.user_data.name}</h3>
+								<p>{talent.user_data.email}</p>
+								<p>
+									{talent.experience_level} | {talent.industry}
+								</p>
+								<button
+									className={styles.viewDetailsButton}
+									onClick={() =>
+										handleViewDetails(talent.user_data.email)
+									}>
+									View Details
+								</button>
+							</div>
+						))}
 					</div>
+				) : (
+					<p>No talents found.</p>
 				)}
 			</div>
-		</AppLayout>
+
+			{popupActive && talentDetails && (
+				<div
+					className={`${styles.popup} ${
+						popupActive ? styles.popupActive : ""
+					}`}
+					onClick={closePopup}>
+					<div
+						className={styles.popupContent}
+						onClick={(e) => e.stopPropagation()}>
+						<button
+							onClick={closePopup}
+							className={styles.closePopupButton}>
+							X
+						</button>
+
+						<img
+							src={talentDetails.avatar || "default-avatar.png"}
+							alt="Avatar"
+							className={styles.popupAvatar}
+						/>
+						<h3>{talentDetails.name}</h3>
+						<button
+							className={styles.messengerButton}
+							onClick={() =>
+								createChat(userId, talentDetails._id, mess, date)
+							}>
+							Messenger Now
+						</button>
+						<p>
+							<strong>Email:</strong> {talentDetails.email}
+						</p>
+						<p>
+							<strong>Phone:</strong> {talentDetails.phone}
+						</p>
+						<p>
+							<strong>LinkedIn:</strong>{" "}
+							<a
+								href={talentDetails.linkedIn}
+								target="_blank"
+								rel="noopener noreferrer">
+								View LinkedIn
+							</a>
+						</p>
+						<p>
+							<strong>Region:</strong> {talentDetails.region}
+						</p>
+
+						<img
+							src={talentDetails.avatar || "default-avatar.png"}
+							alt="Avatar"
+							className={styles.popupAvatar}
+						/>
+						<h3>{talentDetails.name}</h3>
+						<p>
+							<strong>Email:</strong> {talentDetails.email}
+						</p>
+						<p>
+							<strong>Phone:</strong> {talentDetails.phone}
+						</p>
+						<p>
+							<strong>LinkedIn:</strong>{" "}
+							<a
+								href={talentDetails.linkedIn}
+								target="_blank"
+								rel="noopener noreferrer">
+								View LinkedIn
+							</a>
+						</p>
+						<p>
+							<strong>Region:</strong> {talentDetails.region}
+						</p>
+
+						<p>
+							<strong>Areas of Expertise:</strong>
+						</p>
+						<ul>
+							{talentDetails.talent_profile?.areas_of_expertise &&
+								Object.entries(
+									talentDetails.talent_profile.areas_of_expertise
+								).map(([category, skills]) => (
+									<li key={category}>
+										<strong>{category}:</strong> {skills.join(", ")}
+									</li>
+								))}
+						</ul>
+					</div>
+				</div>
+			)}
+		</div>
 	);
 }
 

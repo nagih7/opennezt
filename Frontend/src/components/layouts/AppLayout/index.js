@@ -5,6 +5,7 @@ import Header from "./Header";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setLocation } from "../../../states/modules/app";
+import LazyLoading from "components/UI/LazyLoading";
 
 function AppLayout(props) {
 	const { children } = props;
@@ -78,7 +79,7 @@ function AppLayout(props) {
 									</span>
 								</div>
 							</div> */}
-							{children}
+							<LazyLoading>{children}</LazyLoading>
 						</Suspense>
 					</main>
 				</div>

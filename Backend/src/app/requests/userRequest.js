@@ -192,3 +192,55 @@ export const inviteMember = Joi.object({
         .required()
         .label('Vai trò'),
 })
+
+export const createFounderProfile = Joi.object({
+    industry: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Ngành nghề'),
+    experience_level: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Kinh nghiệm'),
+    degree: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Bằng cấp'),
+    certification: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Chứng chỉ'),
+    areas_of_expertise: Joi.object({
+        accounting_and_finance: Joi.array()
+            .items(Joi.string().trim().max(MAX_STRING_SIZE))
+            .required()
+            .label('Kế toán và tài chính'),
+        human_resource: Joi.array()
+            .items(Joi.string().trim().max(MAX_STRING_SIZE))
+            .required()
+            .label('Nhân sự'),
+        international: Joi.array()
+            .items(Joi.string().trim().max(MAX_STRING_SIZE))
+            .required()
+            .label('Quốc tế'),
+        law_and_legal: Joi.array()
+            .items(Joi.string().trim().max(MAX_STRING_SIZE))
+            .required()
+            .label('Pháp lý'),
+        management: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Quản lý'),
+        marketing: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Marketing'),
+        operations: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Hoạt động'),
+        sales: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Bán hàng'),
+        starting_up: Joi.array()
+            .items(Joi.string().trim().max(MAX_STRING_SIZE))
+            .required()
+            .label('Khởi nghiệp'),
+        sustainability: Joi.array()
+            .items(Joi.string().trim().max(MAX_STRING_SIZE))
+            .required()
+            .label('Bền vững'),
+        technology_and_internet: Joi.array()
+            .items(Joi.string().trim().max(MAX_STRING_SIZE))
+            .required()
+            .label('Công nghệ và Internet'),
+    }),
+    professional_summary: Joi.string()
+        .trim()
+        .max(MAX_AREAS_STRING_SIZE)
+        .required()
+        .label('Tóm tắt nghề nghiệp'),
+    career_goals: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Mục tiêu nghề nghiệp'),
+    offer: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Đề xuất'),
+    expectation: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Kỳ vọng'),
+    avalability: Joi.valid('Exploring', 'Full-time', 'Part-time', 'All-in', 'Freelance')
+        .required()
+        .label('Thời gian làm việc'),
+})

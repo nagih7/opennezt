@@ -90,7 +90,29 @@ export async function createProject(user, {pitch_deck, background, ...requestBod
 }
 
 export async function getProject(userId) {
-    const projects = await Project.find({user_id: userId})
+    const projects = await Project.aggregate([
+        {
+            $match: {user_id: userId},
+        },
+        {
+            $set: {
+                background: {
+                    $cond: {
+                        if: {$ifNull: ['$background', false]}, // Kiểm tra nếu background tồn tại
+                        then: {$concat: [LINK_STATIC_URL, '$background']}, // Nối LINK_STATIC_URL với background
+                        else: '$background', // Nếu không có background, giữ nguyên
+                    },
+                },
+                pitch_deck: {
+                    $cond: {
+                        if: {$ifNull: ['$pitch_deck', false]}, // Kiểm tra nếu pitch_deck tồn tại
+                        then: {$concat: [LINK_STATIC_URL, '$pitch_deck']}, // Nối LINK_STATIC_URL với pitch_deck
+                        else: '$pitch_deck', // Nếu không có pitch_deck, giữ nguyên
+                    },
+                },
+            },
+        },
+    ])
     return projects
 }
 
@@ -232,7 +254,7 @@ export async function getTalentDetails(email) {
         },
         {
             $project: {
-                _id: 0,
+                
                 password: 0,
                 role: 0,
                 is_active: 0,
@@ -269,8 +291,8 @@ export async function checkSteps(user) {
     const project = await Project.findOne({user_id: user._id}, {user_id: 0, created_at: 0, updated_at: 0})
 
     return {
-        founderProfile: founderProfile ? founderProfile : false,
-        project: project ? project : false,
+        founderProfile: founderProfile ? true : false,
+        project: project ? true : false,
     }
 }
 
