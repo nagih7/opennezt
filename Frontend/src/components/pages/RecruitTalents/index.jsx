@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useCallback } from "react";
 import AppLayout from "components/layouts/AppLayout";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";
 import { getDetailTalent, recruitTalents } from "api/talent";
 import { useSelector } from "react-redux";
+import axios from "axios";  
 
 function RecruitTalents() {
   const [requestRecruitTalents, setRequestRecruitTalents] = useState({
@@ -13,9 +14,17 @@ function RecruitTalents() {
     language: "",
     page: 1,
   });
+  const token = localStorage.getItem('token');
 
+  const getUserIdFromToken = useCallback(() => {
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    return decodedToken.data.user_id;
+  }, [token]);
+  const userId = getUserIdFromToken();
   const talents = useSelector((state) => state.talent.talents);
+
   const talentDetails = useSelector((state) => state.talent.talentDetails);
+  console.log(talentDetails);
 
   const [dropdowns, setDropdowns] = useState({
     expertise_area: false,
@@ -23,31 +32,71 @@ function RecruitTalents() {
     location: false,
     language: false,
   });
-
   const handleDropdownToggle = (field) => {
-    setDropdowns((prev) => ({ ...prev, [field]: !prev[field] }));
-  };
+		setDropdowns((prev) => ({ ...prev, [field]: !prev[field] }));
+	};
 
-  const handleSelect = (field, value) => {
-    setRequestRecruitTalents((prev) => ({ ...prev, [field]: value }));
-    setDropdowns((prev) => ({ ...prev, [field]: false }));
-  };
-
+	const handleSelect = (field, value) => {
+		setRequestRecruitTalents((prev) => ({ ...prev, [field]: value }));
+		setDropdowns((prev) => ({ ...prev, [field]: false }));
+	};
   const [popupActive, setPopupActive] = useState(false);
 
   const handleViewDetails = (email) => {
     store.dispatch(getDetailTalent(email));
     setPopupActive(true);
+   
+   
+  
   };
 
   const closePopup = () => {
     setPopupActive(false);
   };
+  const mess="hi"
+  const date = new Date().toISOString();
+  const createChat = async (userId,talentId,mess,date) => {
+    try {
+      const token = localStorage.getItem('token');
+      const ws = new WebSocket(`ws://localhost:3456/chat?token=${token}`);
+      console.log(ws)
+      const response = await axios.post("http://localhost:3456/chat/create-chat", {
+        userId,
+        receiverId:talentId,
+        message: mess,
+      date: date
+      },
+       {
+        headers: {
+            'Authorization': `Bearer ${token}` 
+        }
+    
+      });
+      console.log(response.data.message); 
+      
+      
+      
+      
+     
+      
+            ws.onopen = () => {
+        console.log('WebSocket connection established');
+      };
+      ws.onmessage = (message) => {
+        console.log('Received message:', message.data);
+      };
+    } catch (error) {
+      console.error("Error creating chat:", error);
+    }
+  };
 
   const handleConfirmSearch = async (requestRecruitTalents) => {
     console.log(requestRecruitTalents);
     await store.dispatch(recruitTalents(requestRecruitTalents));
+   
   };
+
+
 
   return (
     <AppLayout>
@@ -164,6 +213,7 @@ function RecruitTalents() {
                   >
                     View Details
                   </button>
+                  
                 </div>
               ))}
             </div>
@@ -193,6 +243,13 @@ function RecruitTalents() {
                 className={styles.popupAvatar}
               />
 			  <h3>{talentDetails.name}</h3>
+        <button
+                    className={styles.messengerButton}
+                   
+                    onClick={() => createChat(userId,talentDetails._id,mess,date)}  
+                  >
+                    Messenger Now
+                  </button>
               <p>
                 <strong>Email:</strong> {talentDetails.email}
               </p>

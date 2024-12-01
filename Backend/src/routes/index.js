@@ -2,15 +2,17 @@ import authRouter from './authRouter'
 import userRouter from './userRouter'
 import homeRouter from './homeRouter'
 import adminRouter from './adminRouter'
+import chatrouter from './chatRoutes.js'
 
 function route(app) {
-    app.use('/auth', authRouter)
-    app.use('/users', userRouter)
-    app.use('/home', homeRouter)
-    app.use('/manage', adminRouter)
-
+    app.use('/auth', authRouter)   // Dùng router cho các route liên quan đến auth
+    app.use('/users', userRouter)  // Dùng router cho các route liên quan đến người dùng
+    app.use('/home', homeRouter)   // Dùng router cho các route trang chủ
+    app.use('/manage', adminRouter) // Dùng router cho các route quản lý
+    app.use('/chat', chatrouter)   // Dùng router cho các route chat (bao gồm cả WebSocket route)
+    
     app.get('/', (req, res) => {
-        res.jsonify({
+        res.json({
             message: 'Welcome to OpenNezt API',
         })
     })

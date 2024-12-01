@@ -1,73 +1,203 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
 
 function ChatsPopover() {
-  const randomNames = [
-    "Giang Nguyen",
-    "Minh Tran",
-    "Huy Le",
-    "Lan Pham",
-    "Dung Hoang",
-    "Thao Nguyen",
-    "Phuong Tran",
-    "Linh Vu",
-    "Binh Nguyen",
-    "Nam Do",
-  ];
-
-  const randomMessages = [
-    "You: I’ve got a new idea",
-    "You: Let’s catch up later",
-    "You: Can you send me the file?",
-    "You: That’s awesome!",
-    "You: Sure, no problem",
-    "You: I’m on my way",
-    "You: Let me check",
-    "You: Call me back",
-    "You: Thanks a lot!",
-    "You: See you soon",
-  ];
-
-  function generateRandomChatData(count) {
-    const chatData = [];
-    for (let i = 0; i < count; i++) {
-      const name = randomNames[Math.floor(Math.random() * randomNames.length)];
-      const message =
-        randomMessages[Math.floor(Math.random() * randomMessages.length)];
-      const time = `${Math.floor(Math.random() * 60) + 1}m`;
-      const avatarColor = `hsl(${Math.random() * 360}, 70%, 80%)`;
-      chatData.push({ name, message, time, avatarColor });
-    }
-    return chatData;
-  }
-
-  const [chatData] = useState(generateRandomChatData(20));
+  const stepState = useSelector((state) => state.home.steps);
+  const [receiverData, setReceiverData] = useState([]);
+  const [receivedid, setReceivedid] = useState();
   const [searchQuery, setSearchQuery] = useState("");
   const [openChats, setOpenChats] = useState([]);
   const [minimizedChats, setMinimizedChats] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [receiverId, setReceiverId] = useState(null); 
+  const [message, setMessage] = useState(""); 
+  const [chatCreated, setChatCreated] = useState(false); 
+  const [messages, setMessages] = useState([]); 
+  const token = localStorage.getItem('token');
 
-  const filteredChatData = chatData.filter((chat) =>
-    chat.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const getUserIdFromToken = useCallback(() => {
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    return decodedToken.data.user_id;
+  }, [token]);
+
+  const fetchReceiverData = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3456/chat/receiverIds/${getUserIdFromToken()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const receivedid = response.data[0].userId;
+      console.log(receivedid);
+      const sendId = response.data[0].receiverId;
+      console.log(sendId);
+      setReceivedid(receivedid);
+      setReceiverData(response.data);
+      const response2 = await axios.get(
+        `http://localhost:3456/chat/receiverIds/${receivedid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const receivedid2 = response2.data[0].userId;
+      setReceivedid(receivedid2);
+      
+    } catch (error) {
+      console.error("Error fetching receiver data:", error);
+    }
+  }, [getUserIdFromToken, token]);
+
+  useEffect(() => {
+    fetchReceiverData();
+  }, [fetchReceiverData]);
+  useEffect(() => {
+    fetchReceiverData();
+    }, [fetchReceiverData]);
+  const filteredReceiverData = receiverData.filter((receiver) =>
+    receiver.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const openChatBox = (chat) => {
-    if (openChats.some((c) => c.name === chat.name)) return;
+  const createChat = async (senderId, receivedid, messageContent, date) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3456/chat/create-chat",
+        { senderId, receiverId: receivedid, message: messageContent, date },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Chat created successfully:", response.data);
+  
+      if (response.data.success) {
+        const chatHistory = response.data.chatHistory || [];
+        setMessages(chatHistory.map((msg) => ({
+          message: msg.message,
+          timestamp: msg.date,
+          isSender: msg.senderId === getUserIdFromToken(),
+        })));
+      }
+    } catch (error) {
+      console.error("Error creating chat:", error);
+    }
+  };
+  
+
+  const url_sock = `ws://localhost:3456/chat/${receivedid}`;
+  const initializeWebSocket = (receivedid) => {
+    const newSocket = new WebSocket(url_sock);
+    setSocket(newSocket);
+
+    newSocket.onmessage = (message) => {
+      if (message.data instanceof Blob) {
+        const reader = new FileReader();
+        reader.onload = function() {
+          try {
+            const data = JSON.parse(reader.result);
+            console.log("New message:", data);
+    
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              { ...data, isSender: data.senderId === getUserIdFromToken() },
+            ]);
+          } catch (error) {
+            console.error('Error parsing JSON:', error);
+          }
+        };
+        reader.readAsText(message.data);  
+      } else {
+        try {
+          const data = JSON.parse(message.data);
+          console.log("New message:", data);
+    
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { ...data, isSender: data.senderId === getUserIdFromToken() },
+          ]);
+        } catch (error) {
+          console.error('Error parsing JSON:', error);
+        }
+      }
+    };
+    
+
+    newSocket.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+  };
+
+  const sendMessage = () => {
+    if (!message) return; 
+
+    if (socket) {
+      const senderId = getUserIdFromToken();
+      const date = new Date().toISOString();
+
+      if (!chatCreated) {
+        createChat(senderId, receivedid, message, date);
+        setChatCreated(true); 
+      }
+
+      const messagePayload = {
+        senderId,
+        receiverId: receivedid,
+        message,
+        timestamp: date,
+      };
+      socket.send(JSON.stringify(messagePayload));
+
+      console.log("Message sent:", messagePayload);
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { senderId, message, timestamp: date, isSender: true },
+      ]);
+    }
+
+    setMessage("");
+  };
+
+  const openChatBox = (receiver) => {
+    setReceiverId(receiver._id); 
+
+    if (openChats.some((c) => c.username === receiver.username)) return;
 
     if (openChats.length >= 3) {
       const [removedChat, ...remainingChats] = openChats;
       setMinimizedChats([...minimizedChats, removedChat]);
-      setOpenChats([...remainingChats, chat]);
+      setOpenChats([...remainingChats, receiver]);
     } else {
-      setOpenChats([...openChats, chat]);
+      setOpenChats([...openChats, receiver]);
+    }
+
+    if (!socket) {
+      initializeWebSocket(receiver._id);
     }
   };
 
-  const closeChatBox = (name) => {
-    setOpenChats(openChats.filter((chat) => chat.name !== name));
+  const closeChatBox = (username) => {
+    setOpenChats(openChats.filter((chat) => chat.username !== username));
+
+    if (!chatCreated) {
+      const senderId = getUserIdFromToken();
+      const date = new Date().toISOString();
+      createChat(senderId, receivedid, "", date); 
+    }
+
+    setChatCreated(false);
   };
 
   const restoreMinimizedChat = (chat) => {
-    setMinimizedChats(minimizedChats.filter((c) => c.name !== chat.name));
+    setMinimizedChats(minimizedChats.filter((c) => c.username !== chat.username));
     openChatBox(chat);
   };
 
@@ -84,25 +214,21 @@ function ChatsPopover() {
         />
       </div>
       <div className={styles.chatListWrap}>
-        {filteredChatData.length > 0 ? (
-          filteredChatData.map((chat, index) => (
+        {filteredReceiverData.length > 0 ? (
+          filteredReceiverData.map((receiver, index) => (
             <div
               className={styles.chatItem}
               key={index}
-              onClick={() => openChatBox(chat)}
+              onClick={() => openChatBox(receiver)} 
             >
               <div
                 className={styles.avatar}
-                style={{ backgroundColor: chat.avatarColor }}
+                style={{ backgroundColor: receiver.avatarColor }}
               >
-                {chat.name[0]}
+                {receiver.username[0]} {}
               </div>
               <div className={styles.chatContent}>
-                <div className={styles.chatName}>{chat.name}</div>
-                <div className={styles.chatMessage}>
-                  {chat.message}{" "}
-                  <span className={styles.chatTime}>{chat.time}</span>
-                </div>
+                <div className={styles.chatName}>{receiver.username}</div>
               </div>
             </div>
           ))
@@ -114,23 +240,36 @@ function ChatsPopover() {
         {openChats.map((chat, index) => (
           <div className={styles.miniChatBox} key={index}>
             <div className={styles.miniChatHeader}>
-              <span>{chat.name}</span>
+              <span>{chat.username}</span>
               <button
-                onClick={() => closeChatBox(chat.name)}
+                onClick={() => closeChatBox(chat.username)}
                 className={styles.closeButton}
               >
                 X
               </button>
             </div>
             <div className={styles.miniChatBody}>
-              <p>{chat.message}</p>
+              {}
+              {messages.map((msg, idx) => (
+                <div
+                  key={idx}
+                  className={`${styles.message} ${msg.isSender ? styles.sent : styles.received}`}
+                >
+                  <span>{msg.message}</span>
+                </div>
+              ))}
             </div>
             <div className={styles.miniChatFooter}>
               <input
                 type="text"
                 placeholder="Type a message..."
                 className={styles.miniChatInput}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
               />
+              <button onClick={sendMessage} className={styles.sendButton}>
+                Send
+              </button>
             </div>
           </div>
         ))}
@@ -142,7 +281,7 @@ function ChatsPopover() {
               style={{ backgroundColor: chat.avatarColor }}
               onClick={() => restoreMinimizedChat(chat)}
             >
-              {chat.name[0]}
+              {chat.username[0]}
             </div>
           ))}
         </div>

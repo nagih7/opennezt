@@ -1,4 +1,5 @@
-import createModel, {ObjectId} from './base'
+// models/messenger.js
+import createModel, { ObjectId } from './base'
 
 const Messenger = createModel('Messenger', 'messengers', {
     senderId: {
