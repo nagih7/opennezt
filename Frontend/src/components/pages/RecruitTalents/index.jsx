@@ -57,10 +57,10 @@ function RecruitTalents() {
   const date = new Date().toISOString();
   const createChat = async (userId,talentId,mess,date) => {
     try {
-      const token = localStorage.getItem('token');
-      const ws = new WebSocket(`ws://localhost:3456/chat?token=${token}`);
+      const token = localStorage.getItem('token'); REACT_APP_API_URL
+      const ws = new WebSocket(`${process.env.REACT_APP_WS_URL}?token=${token}`);
       console.log(ws)
-      const response = await axios.post("http://localhost:3456/chat/create-chat", {
+      const response = await axios.post(`${process.env.REACT_APP_WS_URL}/chat/create-chat`, {
         userId,
         receiverId:talentId,
         message: mess,

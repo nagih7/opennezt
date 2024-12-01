@@ -25,7 +25,7 @@ function ChatsPopover() {
   const fetchReceiverData = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3456/chat/receiverIds/${getUserIdFromToken()}`,
+        `${process.env.REACT_APP_WS_URL}/chat/receiverIds/${getUserIdFromToken()}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -38,8 +38,9 @@ function ChatsPopover() {
       console.log(sendId);
       setReceivedid(receivedid);
       setReceiverData(response.data);
+      
       const response2 = await axios.get(
-        `http://localhost:3456/chat/receiverIds/${receivedid}`,
+        `${process.env.REACT_APP_WS_URL}/chat/receiverIds/${receivedid}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -68,7 +69,7 @@ function ChatsPopover() {
   const createChat = async (senderId, receivedid, messageContent, date) => {
     try {
       const response = await axios.post(
-        "http://localhost:3456/chat/create-chat",
+        `${process.env.REACT_APP_WS_URL}/chat/create-chat`,
         { senderId, receiverId: receivedid, message: messageContent, date },
         {
           headers: {
@@ -92,7 +93,7 @@ function ChatsPopover() {
   };
   
 
-  const url_sock = `ws://localhost:3456/chat/${receivedid}`;
+  const url_sock = `${process.env.REACT_APP_WS_URL}/${receivedid}`;
   const initializeWebSocket = (receivedid) => {
     const newSocket = new WebSocket(url_sock);
     setSocket(newSocket);
