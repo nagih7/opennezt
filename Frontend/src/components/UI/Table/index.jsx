@@ -4,7 +4,7 @@ import "./styles.scss";
 import { Pagination, Table } from "antd";
 import PropTypes from "prop-types";
 
-TableMASQ.prototype = {
+TableCustom.prototype = {
 	columns: PropTypes.array.isRequired,
 	dataSource: PropTypes.array.isRequired,
 	loading: PropTypes.bool.isRequired,
@@ -12,7 +12,7 @@ TableMASQ.prototype = {
 	onChange: PropTypes.func.isRequired,
 };
 
-TableMASQ.defaultProps = {
+TableCustom.defaultProps = {
 	columns: [],
 	dataSource: [],
 	loading: false,
@@ -20,7 +20,7 @@ TableMASQ.defaultProps = {
 	onChange: () => {},
 };
 
-function TableMASQ(props) {
+function TableCustom(props) {
 	let {
 		columns,
 		dataSource,
@@ -70,4 +70,4 @@ function TableMASQ(props) {
 	);
 }
 
-export default TableMASQ;
+export default TableCustom;

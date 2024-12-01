@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt'
 import createModel from './base'
-import {required} from 'joi'
 
 const User = createModel(
     'User',
@@ -71,7 +70,7 @@ const User = createModel(
             required: true,
             default: false,
             enum: [true, false],
-        }
+        },
     },
     {
         toJSON: {

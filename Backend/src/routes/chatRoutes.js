@@ -1,73 +1,74 @@
 import express from 'express'
 import expressWs from 'express-ws'
-import { saveMessage, getReceiverIds } from '../app/controllers/chatController.js'
+import {saveMessage, getReceiverIds} from '../app/controllers/chatController.js'
 import wss from '../app/socket/websocket.js'
 import Messenger from '../models/messenger.js'
-import jwt from 'jsonwebtoken' 
-import { abort, verifyToken, getToken } from '@/utils/helpers'
-import { TOKEN_TYPE } from '@/configs'
+import {verifyToken} from '@/utils/helpers'
+import {TOKEN_TYPE} from '@/configs'
 
 const app = express()
 const chatrouter = express.Router()
-expressWs(app) 
+expressWs(app)
 
 wss.clients = new Map()
 chatrouter.post('/create-chat', async (req, res) => {
     try {
-        const { receiverId, message } = req.body 
+        const {receiverId, message} = req.body
         const token = req.headers['authorization']?.split(' ')[1]
-        const { user_id } = verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
+        const {user_id} = verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
 
         const existingChat = await Messenger.findOne({
             $or: [
-                { senderId: user_id, receiverId: receiverId },
-                { senderId: receiverId, receiverId: user_id }
-            ]
+                {senderId: user_id, receiverId: receiverId},
+                {senderId: receiverId, receiverId: user_id},
+            ],
         })
 
         if (existingChat) {
             const chatHistory = await Messenger.find({
                 $or: [
-                    { senderId: user_id, receiverId: receiverId },
-                    { senderId: receiverId, receiverId: user_id }
-                ]
-            }).sort({ date: 1 })
+                    {senderId: user_id, receiverId: receiverId},
+                    {senderId: receiverId, receiverId: user_id},
+                ],
+            }).sort({date: 1})
 
             const newMessage = new Messenger({
                 senderId: user_id,
                 receiverId: receiverId,
-                message: message || "Hi! Let's continue chatting.", 
+                message: message || "Hi! Let's continue chatting.",
                 date: new Date().toISOString(),
             })
 
-            await newMessage.save() 
+            await newMessage.save()
 
-            const wsReceiver = wss.clients.get(receiverId) 
+            const wsReceiver = wss.clients.get(receiverId)
             if (wsReceiver) {
-                wsReceiver.send(JSON.stringify({
-                    senderId: user_id,
-                    message: message || "Hi! Let's continue chatting.",
-                    date: new Date().toISOString()
-                }))
+                wsReceiver.send(
+                    JSON.stringify({
+                        senderId: user_id,
+                        message: message || "Hi! Let's continue chatting.",
+                        date: new Date().toISOString(),
+                    })
+                )
             }
 
             return res.status(200).json({
                 success: true,
                 message: 'Chat exists, returning chat history and added new message',
-                chatHistory: chatHistory.map(chat => ({
+                chatHistory: chatHistory.map((chat) => ({
                     message: chat.message,
-                    date: chat.date
+                    date: chat.date,
                 })),
                 newMessage: {
                     message: newMessage.message,
-                    date: newMessage.date
-                }
+                    date: newMessage.date,
+                },
             })
         }
 
         const newChat = new Messenger({
             senderId: user_id,
-            receiverId: receiverId, 
+            receiverId: receiverId,
             message: "Hi! Let's start chatting.",
             date: new Date().toISOString(),
         })
@@ -76,30 +77,31 @@ chatrouter.post('/create-chat', async (req, res) => {
 
         await saveMessage(user_id, receiverId, "Hi! Let's start chatting.")
 
-        const wsReceiver = wss.clients.get(receiverId)  
+        const wsReceiver = wss.clients.get(receiverId)
         if (wsReceiver) {
-            wsReceiver.send(JSON.stringify({
-                senderId: user_id,
-                message: "Hi! Let's start chatting.",
-                date: new Date().toISOString()
-            }))
+            wsReceiver.send(
+                JSON.stringify({
+                    senderId: user_id,
+                    message: "Hi! Let's start chatting.",
+                    date: new Date().toISOString(),
+                })
+            )
         }
 
-        res.status(201).json({ message: 'Chat created successfully', chatId: newChat._id })
+        res.status(201).json({message: 'Chat created successfully', chatId: newChat._id})
     } catch (error) {
         console.error('Error creating chat:', error)
-        res.status(500).json({ message: 'Internal server error' })
+        res.status(500).json({message: 'Internal server error'})
     }
 })
 
-
 chatrouter.get('/receiverIds/:userId', async (req, res) => {
-    const { userId } = req.params
+    const {userId} = req.params
     try {
-        const receiverIds = await getReceiverIds(userId)  
+        const receiverIds = await getReceiverIds(userId)
         res.status(200).json(receiverIds)
     } catch (error) {
-        res.status(500).json({ message: 'Failed to get receiverIds' })
+        res.status(500).json({message: 'Failed to get receiverIds'})
     }
 })
 
@@ -119,13 +121,13 @@ app.ws('/chat', (ws, req) => {
 
     if (wss.clients.has(user_id)) {
         const existingSocket = wss.clients.get(user_id)
-        existingSocket.close()  
+        existingSocket.close()
     }
 
     wss.clients.set(user_id, ws)
     ws.on('message', async (message) => {
         try {
-            const { receiverId, content } = JSON.parse(message)
+            const {receiverId, content} = JSON.parse(message)
 
             if (!receiverId || !content) {
                 throw new Error('Invalid message data')
@@ -135,7 +137,7 @@ app.ws('/chat', (ws, req) => {
 
             const receiverSocket = wss.clients.get(receiverId)
             if (receiverSocket) {
-                receiverSocket.send(JSON.stringify({ senderId: user_id, message: content }))
+                receiverSocket.send(JSON.stringify({senderId: user_id, message: content}))
             } else {
                 console.log(`Receiver ${receiverId} is not connected. Message will be saved.`)
             }
@@ -151,7 +153,7 @@ app.ws('/chat', (ws, req) => {
 
     ws.on('error', (err) => {
         console.error('WebSocket error:', err)
-        wss.clients.delete(user_id)  
+        wss.clients.delete(user_id)
     })
 })
 
