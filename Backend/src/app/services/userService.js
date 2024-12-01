@@ -90,7 +90,29 @@ export async function createProject(user, {pitch_deck, background, ...requestBod
 }
 
 export async function getProject(userId) {
-    const projects = await Project.find({user_id: userId})
+    const projects = await Project.aggregate([
+        {
+            $match: {user_id: userId},
+        },
+        {
+            $set: {
+                background: {
+                    $cond: {
+                        if: {$ifNull: ['$background', false]}, // Kiểm tra nếu background tồn tại
+                        then: {$concat: [LINK_STATIC_URL, '$background']}, // Nối LINK_STATIC_URL với background
+                        else: '$background', // Nếu không có background, giữ nguyên
+                    },
+                },
+                pitch_deck: {
+                    $cond: {
+                        if: {$ifNull: ['$pitch_deck', false]}, // Kiểm tra nếu pitch_deck tồn tại
+                        then: {$concat: [LINK_STATIC_URL, '$pitch_deck']}, // Nối LINK_STATIC_URL với pitch_deck
+                        else: '$pitch_deck', // Nếu không có pitch_deck, giữ nguyên
+                    },
+                },
+            },
+        },
+    ])
     return projects
 }
 

@@ -28,16 +28,16 @@ userRouter.patch(
 )
 // Project
 userRouter.post(
-    '/create-project',
+    '/project',
     asyncHandler(validate(userRequest.createProject)),
     asyncHandler(userController.createProject)
 )
 
-userRouter.get('/get-project', asyncHandler(userController.getProject))
+userRouter.get('/projects', asyncHandler(userController.getProject))
 
-userRouter.put('/update-project', asyncHandler(userController.updateProject))
+userRouter.put('/project', asyncHandler(userController.updateProject))
 
-userRouter.delete('/delete-project', asyncHandler(userController.deleteProject))
+userRouter.delete('/project', asyncHandler(userController.deleteProject))
 
 // Founder Profile
 userRouter.post(
