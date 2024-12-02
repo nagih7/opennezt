@@ -11,12 +11,10 @@ function ChatsPopover() {
   const [openChats, setOpenChats] = useState([]);
   const [minimizedChats, setMinimizedChats] = useState([]);
   const [socket, setSocket] = useState(null);
-  const [receiverId, setReceiverId] = useState(null); 
-  const [message, setMessage] = useState(""); 
-  const [chatCreated, setChatCreated] = useState(false); 
-  const [messages, setMessages] = useState([]); 
+  const [receiverId, setReceiverId] = useState(null);
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
   const token = localStorage.getItem('token');
-
   const getUserIdFromToken = useCallback(() => {
     const decodedToken = JSON.parse(atob(token.split('.')[1]));
     return decodedToken.data.user_id;
@@ -33,24 +31,8 @@ function ChatsPopover() {
         }
       );
       const receivedid = response.data[0].userId;
-      console.log(receivedid);
-      const sendId = response.data[0].receiverId;
-      console.log(sendId);
       setReceivedid(receivedid);
       setReceiverData(response.data);
-      
-      const response2 = await axios.get(
-        `${process.env.REACT_APP_API_URL}/chat/receiverIds/${receivedid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const receivedid2 = response2.data[0].userId;
-      setReceivedid(receivedid2);
-      
     } catch (error) {
       console.error("Error fetching receiver data:", error);
     }
@@ -59,9 +41,7 @@ function ChatsPopover() {
   useEffect(() => {
     fetchReceiverData();
   }, [fetchReceiverData]);
-  useEffect(() => {
-    fetchReceiverData();
-    }, [fetchReceiverData]);
+
   const filteredReceiverData = receiverData.filter((receiver) =>
     receiver.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -77,8 +57,6 @@ function ChatsPopover() {
           },
         }
       );
-      console.log("Chat created successfully:", response.data);
-  
       if (response.data.success) {
         const chatHistory = response.data.chatHistory || [];
         setMessages(chatHistory.map((msg) => ({
@@ -91,7 +69,6 @@ function ChatsPopover() {
       console.error("Error creating chat:", error);
     }
   };
-  
 
   const url_sock = `${process.env.REACT_APP_WS_URL}/${receivedid}`;
   const initializeWebSocket = (receivedid) => {
@@ -104,71 +81,82 @@ function ChatsPopover() {
         reader.onload = function() {
           try {
             const data = JSON.parse(reader.result);
-            console.log("New message:", data);
-    
             setMessages((prevMessages) => [
               ...prevMessages,
               { ...data, isSender: data.senderId === getUserIdFromToken() },
             ]);
+            saveMessageToLocalStorage(data);
           } catch (error) {
             console.error('Error parsing JSON:', error);
           }
         };
-        reader.readAsText(message.data);  
+        reader.readAsText(message.data);
       } else {
         try {
           const data = JSON.parse(message.data);
-          console.log("New message:", data);
-    
           setMessages((prevMessages) => [
             ...prevMessages,
             { ...data, isSender: data.senderId === getUserIdFromToken() },
           ]);
+          saveMessageToLocalStorage(data);
         } catch (error) {
           console.error('Error parsing JSON:', error);
         }
       }
     };
-    
 
     newSocket.onclose = () => {
       console.log("WebSocket connection closed");
     };
   };
 
-  const sendMessage = () => {
-    if (!message) return; 
+  const saveMessageToLocalStorage = (message) => {
+    const storedMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+    storedMessages.push({ ...message, saved: false });
+    localStorage.setItem('chatMessages', JSON.stringify(storedMessages));
+  };
 
-    if (socket) {
-      const senderId = getUserIdFromToken();
-      const date = new Date().toISOString();
+  const sendMessage = async () => {
+    if (!message) return;
 
-      if (!chatCreated) {
-        createChat(senderId, receivedid, message, date);
-        setChatCreated(true); 
-      }
+    const senderId = getUserIdFromToken();
+    const date = new Date().toISOString();
 
-      const messagePayload = {
-        senderId,
-        receiverId: receivedid,
-        message,
-        timestamp: date,
-      };
+    const messagePayload = {
+      senderId,
+      receiverId: receivedid,
+      message,
+      timestamp: date,
+    };
+
+    if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify(messagePayload));
-
-      console.log("Message sent:", messagePayload);
-
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { senderId, message, timestamp: date, isSender: true },
-      ]);
+    } else {
+      saveMessageToLocalStorage(messagePayload);
+      try {
+        await axios.post(`${process.env.REACT_APP_API_URL}/chat/save-messages`, [messagePayload], {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const storedMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+        const updatedMessages = storedMessages.map(msg => msg.timestamp === messagePayload.timestamp ? { ...msg, saved: true } : msg);
+        localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
+      } catch (error) {
+        console.error('Error saving message:', error);
+      }
     }
+
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { senderId, message, timestamp: date, isSender: true },
+    ]);
 
     setMessage("");
   };
 
-  const openChatBox = (receiver) => {
-    setReceiverId(receiver._id); 
+  const openChatBox = async (receiver) => {
+    setReceiverId(receiver._id);
 
     if (openChats.some((c) => c.username === receiver.username)) return;
 
@@ -183,24 +171,60 @@ function ChatsPopover() {
     if (!socket) {
       initializeWebSocket(receiver._id);
     }
+
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/chat/get-chat-history/${getUserIdFromToken()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const localMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+      const combinedMessages = [
+        ...response.data.chatHistory.map((msg) => ({
+          message: msg.message,
+          timestamp: msg.date,
+          isSender: msg.senderId === getUserIdFromToken(),
+        })),
+        ...localMessages.filter(msg => !msg.saved)
+      ];
+      setMessages(combinedMessages);
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+    }
   };
 
   const closeChatBox = (username) => {
     setOpenChats(openChats.filter((chat) => chat.username !== username));
-
-    if (!chatCreated) {
-      const senderId = getUserIdFromToken();
-      const date = new Date().toISOString();
-      createChat(senderId, receivedid, "", date); 
-    }
-
-    setChatCreated(false);
   };
 
   const restoreMinimizedChat = (chat) => {
     setMinimizedChats(minimizedChats.filter((c) => c.username !== chat.username));
     openChatBox(chat);
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const storedMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+      const unsavedMessages = storedMessages.filter(msg => !msg.saved);
+      if (unsavedMessages.length > 0) {
+        axios.post(`${process.env.REACT_APP_API_URL}/chat/save-messages`, unsavedMessages, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }).then(() => {
+          const updatedMessages = storedMessages.map(msg => ({ ...msg, saved: true }));
+          localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
+        }).catch((error) => {
+          console.error('Error saving messages:', error);
+        });
+      }
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [token]);
 
   return (
     <div className={styles.chatPopoverWrap}>
@@ -220,13 +244,13 @@ function ChatsPopover() {
             <div
               className={styles.chatItem}
               key={index}
-              onClick={() => openChatBox(receiver)} 
+              onClick={() => openChatBox(receiver)}
             >
               <div
                 className={styles.avatar}
                 style={{ backgroundColor: receiver.avatarColor }}
               >
-                {receiver.username[0]} {}
+                {receiver.username[0]}
               </div>
               <div className={styles.chatContent}>
                 <div className={styles.chatName}>{receiver.username}</div>
@@ -250,7 +274,6 @@ function ChatsPopover() {
               </button>
             </div>
             <div className={styles.miniChatBody}>
-              {}
               {messages.map((msg, idx) => (
                 <div
                   key={idx}
