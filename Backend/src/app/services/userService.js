@@ -8,21 +8,48 @@ export async function create(requestBody) {
     return user
 }
 
-export async function filter({q, page, per_page, field, sort_order}) {
-    q = q ? {$regex: q, $options: 'i'} : null
+export async function filter({q, page, per_page, field, order}) {
+    q = q ? q : ''
+    order = order === '-1' ? -1 : 1
+    const matchStage = {
+        $match: {
+            $or: [{name: {$regex: q, $options: 'i'}}, {email: {$regex: q, $options: 'i'}}],
+        },
+    }
+
+    const sortStage = {
+        $sort: {[field]: order},
+    }
+    const skipStage = {
+        $skip: (page - 1) * per_page,
+    }
+    const limitStage = {
+        $limit: per_page,
+    }
+
+    const addSetStage = {
+        $set: {
+            avatar: {
+                $cond: {
+                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                    then: '$avatar',
+                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                },
+            },
+            background: {
+                $cond: {
+                    if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                    then: '$background',
+                    else: {$concat: [LINK_STATIC_URL, '$background']},
+                },
+            },
+        },
+    }
+    const users = await User.aggregate([matchStage, sortStage, skipStage, limitStage, addSetStage])
 
     const filter = {
         ...(q && {$or: [{name: q}, {email: q}, {phone: q}]}),
     }
-
-    const users = await User.find(filter)
-        .skip((page - 1) * per_page)
-        .limit(per_page)
-        .sort({[field]: sort_order})
-
-    users.forEach(function (user) {
-        user.avatar = user.avatar && LINK_STATIC_URL + user.avatar
-    })
 
     const total = await User.countDocuments(filter)
     return {total, page, per_page, users}
@@ -254,7 +281,6 @@ export async function getTalentDetails(email) {
         },
         {
             $project: {
-                
                 password: 0,
                 role: 0,
                 is_active: 0,

@@ -9,7 +9,7 @@ export const readRoot = Joi.object({
     page: tryValidateOrDefault(Joi.number().integer().min(1), 1),
     per_page: tryValidateOrDefault(Joi.number().integer().min(1).max(100), 20),
     field: tryValidateOrDefault(Joi.valid('created_at', 'name', 'email'), 'created_at'),
-    sort_order: tryValidateOrDefault(Joi.valid('asc', 'desc'), 'desc'),
+    order: tryValidateOrDefault(Joi.valid('1', '-1'), '-1'),
 })
 
 export const createItem = Joi.object({

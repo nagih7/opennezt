@@ -16,15 +16,33 @@ export const saveMessage = async (senderId, receiverId, messageContent) => {
 }
 export const getReceiverIds = async (userId) => {
     try {
-        const messages = await Messenger.find({
+        const senderIds = await Messenger.find({
             $or: [
                 { senderId: userId },
                 { receiverId: userId }
             ]
-        }).distinct('receiverId')  
-  
-        const filteredReceiverIds = messages.filter(id => id.toString() !== userId.toString())
-  
+        }).distinct('senderId')
+          
+        const receiverIds = await Messenger.find({
+            $or: [
+                { senderId: userId },
+                { receiverId: userId }
+            ]
+        }).distinct('receiverId')
+          
+        const distinctIds = [...new Set([...senderIds, ...receiverIds])]
+          
+        // console.log(distinctIds)
+          
+        // const messages = await Messenger.find({
+        //     $or: [
+        //         { senderId: userId },
+        //         { receiverId: userId }
+        //     ]
+        // }).distinct('receiverId')  
+        // console.log('Receiver Ids:', messages)
+        const filteredReceiverIds = distinctIds.filter(id => id.toString() !== userId.toString())
+        console.log('Filtered Receiver Ids:', filteredReceiverIds)
         if (filteredReceiverIds.length === 0) {
             return []
         }

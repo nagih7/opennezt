@@ -15,9 +15,9 @@ import {
 	setVisibleModalDeleteEmployee,
 } from "../../../states/modules/employee";
 import _ from "lodash";
-// import User from "../../../assets/images/user/6.jpg";
 import Filter from "./components/Filter";
 import BtnFilter from "../../UI/ButtonFilter";
+import AvatarDefault from "../../../assets/images/default/AvatarDefault.png";
 
 function Employee() {
 	const authUser = useSelector((state) => state.auth.authUser);
@@ -29,7 +29,11 @@ function Employee() {
 			render: (text, record) => (
 				<div className={styles.nameWrap}>
 					<div className={styles.imgWrap}>
-						{/* <img src={User} alt="" /> */}
+						{record.avatar ? (
+							<img src={record.avatar} alt="" />
+						) : (
+							<img src={AvatarDefault} alt="" />
+						)}
 					</div>
 					<span>{record.name}</span>
 				</div>
@@ -90,6 +94,7 @@ function Employee() {
 		},
 	];
 	const employees = useSelector((state) => state.employee.employees);
+
 	const isLoadingTableEmployee = useSelector(
 		(state) => state.employee.isLoadingTableEmployee
 	);
@@ -158,7 +163,7 @@ function Employee() {
 		if (sorter.order && sorter.field) {
 			setDataFilter({
 				...dataFilter,
-				order: sorter.order === "descend" ? "DESC" : "ASC",
+				order: sorter.order === "descend" ? -1 : 1,
 				column: sorter.field,
 			});
 		} else {
@@ -201,6 +206,7 @@ function Employee() {
 							onChange={(e) => handleSearch(e)}
 						/>
 						<svg
+							className={styles.iconSearch}
 							width="12"
 							height="12"
 							viewBox="0 0 12 12"
@@ -246,7 +252,7 @@ function Employee() {
 				isModalOpen={visibleModalDeleteEmployee}
 				title={`Delete ${employee.name}?`}
 				description={`Are you sure you want to delete ${employee.name}? Your action can not be undone.`}
-				onClose={() => dispatch(setVisibleModalDeleteEmployee(false))}
+				onClose={() => dispatch(setVisibleModalDeleteEmployee(true))}
 				onConfirm={() => handleConfirmDeleteEmployee()}
 			/>
 		</div>

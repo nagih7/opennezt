@@ -14,11 +14,7 @@ userRouter.put('/update-background', asyncHandler(userController.updateBackgroun
 
 userRouter.get('/check-steps', asyncHandler(userController.checkSteps))
 
-userRouter.get(
-    '/list-user',
-    asyncHandler(validate(userRequest.readRoot)),
-    asyncHandler(userController.readRoot)
-)
+userRouter.get('/users', asyncHandler(validate(userRequest.readRoot)), asyncHandler(userController.readRoot))
 
 userRouter.patch(
     '/reset-password',
