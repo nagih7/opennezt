@@ -62,7 +62,7 @@ const Project = createModel('Project', 'projects', {
         type: String,
         required: true,
     },
-    lading_page_url: {
+    landing_page_url: {
         type: String,
         required: false,
     },
