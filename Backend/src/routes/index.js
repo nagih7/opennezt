@@ -1,13 +1,15 @@
 import authRouter from './authRouter'
 import userRouter from './userRouter'
 import homeRouter from './homeRouter'
-import chatrouter from './chatRoutes.js'
+import chatrouter from './chatRoutes'
+import commonRouter from './commonRouter'
 
 function route(app) {
     app.use('/auth', authRouter) // Dùng router cho các route liên quan đến auth
     app.use('/users', userRouter) // Dùng router cho các route liên quan đến người dùng
     app.use('/home', homeRouter) // Dùng router cho các route trang chủ
     app.use('/chat', chatrouter) // Dùng router cho các route chat (bao gồm cả WebSocket route)
+    app.use('/common', commonRouter) // Dùng router cho các route chung
 
     app.get('/', (req, res) => {
         res.json({
