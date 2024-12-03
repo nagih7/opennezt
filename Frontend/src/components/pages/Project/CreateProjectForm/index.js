@@ -8,78 +8,74 @@ import FundingSourceBox from "./FundingSourceBox";
 const { Dragger } = Upload;
 const { TextArea } = Input;
 
-const CreateProjectForm = () => {
-	const [formData, setFormData] = useState({
-		name: "",
-		lading_page_url: "",
-		related_industries: [],
-		stage: "",
-		problem: "",
-		solution: "",
-		product_demo_url: "",
-		team_intro_url: "",
-		pitch_deck: "",
-		background: "",
-		statistics: "",
-		target_money: "",
-		target_audience: "",
-		competitors: "",
-		competitive_advantage: "",
-		why_now: "",
-		strategy: "",
-		milestones: "",
-		about_opennezt: "",
+const getBase64 = (file) =>
+	new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = () => resolve(reader.result);
+		reader.onerror = (error) => reject(error);
 	});
-	const [revenues, setRevenues] = useState([{ time: "", revenue: "" }]);
+
+const CreateProjectForm = (props) => {
+	const { formData, setFormData } = props;
+
 	const [pitchDesk, setPitchDesk] = useState([]);
 	const [backgroundStartUp, setBackgroundStartUp] = useState([]);
 	const [isHaveRevenue, setIsHaveRevenue] = useState(true);
-	const [fundingSources, setFundingSources] = useState({
-		friend_and_family: "",
-		grant: "",
-		angel: "",
-		venture_capital: "",
-		other: "",
-	});
 	const [previewOpen, setPreviewOpen] = useState(false);
 	const [previewImage, setPreviewImage] = useState("");
 
-	const pitchDeskState = {
-		name: "file",
-		multiple: false,
-		fileList: pitchDesk,
-		onChange(info) {
-			const { file } = info;
-			if (file.status === "done") {
-				message.success(`${file.name} file uploaded successfully.`);
-			}
-			// else if (file.status === "error") {
-			// 	message.error(`${file.name} file upload failed.`);
-			// }
-		},
-		beforeUpload(file) {
-			const isPDF = file.type === "application/pdf";
-			if (isPDF) {
-				setPitchDesk([file]);
-				message.success(`${file.name} file uploaded successfully.`);
-			} else {
-				message.error("Only PDF files are allowed!");
-				return isPDF;
-			}
-
-			return isPDF;
-		},
-
-		onDrop(e) {
-			console.log("Dropped files", e.dataTransfer.files);
-		},
-
-		onRemove() {
-			setPitchDesk([]);
-		},
+	// Pitch Desk
+	const onChangePitchDesk = ({ file: file }) => {
+		const { status } = file;
+		if (status !== "uploading") {
+			console.log(file, fileList);
+		}
+		if (status === "done") {
+			message.success(`${file.name} file uploaded successfully.`);
+		} else if (status === "error") {
+			message.error(`${file.name} file upload failed.`);
+		}
 	};
+	const onBeforeUploadPitchDesk = async (file) => {
+		const isPDF = file.type === "application/pdf";
+		if (isPDF) {
+			setPitchDesk([file]);
+			setFormData((prevState) => ({
+				...prevState,
+				pitch_deck: file,
+			}));
+		} else {
+			return isPDF;
+		}
+
+		return isPDF;
+	};
+
+	const onRemovePitchDesk = () => {
+		setPitchDesk([]);
+		setFormData((prevState) => ({
+			...prevState,
+			pitch_deck: {},
+		}));
+	};
+
+	// Background
 	const onChangeBackground = ({ fileList: newFileList }) => {
-		setBackgroundStartUp(newFileList);
+		if (newFileList[0].status !== "removed") {
+			setBackgroundStartUp(newFileList);
+			setFormData((prevState) => ({
+				...prevState,
+				background: newFileList[0].originFileObj,
+			}));
+		}
+	};
+	const onRemoveBackground = (file) => {
+		setBackgroundStartUp([]);
+		setFormData((prevState) => ({
+			...prevState,
+			background: {},
+		}));
 	};
 
 	const optionsIndustries = [
@@ -176,88 +172,71 @@ const CreateProjectForm = () => {
 		setIsHaveRevenue(!isHaveRevenue);
 	};
 
-	const onChangeDate = (date, dateString) => {
-		console.log(date, dateString);
+	const onChangeDate = (date, dateString, index) => {
+		const updatedRevenues = formData.revenues.map((revenue, i) => {
+			if (i === index) {
+				return { ...revenue, time: dateString };
+			}
+			return revenue;
+		});
+		setFormData((prevState) => ({
+			...prevState,
+			revenues: updatedRevenues,
+		}));
+	};
+
+	const onChangeRevenue = (event, id) => {
+		const { value } = event.target;
+		const updatedRevenues = formData.revenues.map((revenue, index) => {
+			if (index === id) {
+				return { ...revenue, revenue: value };
+			}
+			return revenue;
+		});
+		setFormData((prevState) => ({
+			...prevState,
+			revenues: updatedRevenues,
+		}));
 	};
 
 	const handleAddRevenue = () => {
-		setRevenues([...revenues, { time: "", revenue: "" }]);
+		setFormData((prevState) => ({
+			...prevState,
+			revenues: [...prevState.revenues, { time: "", revenue: "" }],
+		}));
 	};
 
 	const handleRemoveRevenue = (index) => {
-		const updatedRevenues = revenues.filter((_, i) => i !== index);
-		setRevenues(updatedRevenues);
+		const updatedRevenues = formData.revenues.filter(
+			(revenue, i) => i !== index
+		);
+		setFormData((prevState) => ({
+			...prevState,
+			revenues: updatedRevenues,
+		}));
 	};
 
 	const handleChangeFundingSource = (field, value) => {
-		setFundingSources({ ...fundingSources, [field]: value });
+		setFormData((prevState) => ({
+			...prevState,
+			funding_sources: {
+				...prevState.funding_sources,
+				[field]: value,
+			},
+		}));
 	};
 
 	const handlePreview = async (file) => {
 		if (!file.url && !file.preview) {
 			file.preview = await getBase64(file.originFileObj);
+			console.log("prevew:", file.preview);
 		}
 		setPreviewImage(file.url || file.preview);
 		setPreviewOpen(true);
 	};
 
-	const [pitchDeck, setPitchDeck] = useState(null);
-	const [backgroundImage, setBackgroundImage] = useState(null);
-
-	const handleRevenueChange = (index, field, value) => {
-		const updatedRevenues = [...revenues];
-		updatedRevenues[index][field] = value;
-		setRevenues(updatedRevenues);
-	};
-
-	const handlePitchDeckChange = (e) => {
-		const file = e.target.files[0];
-		if (file && file.type === "application/pdf") {
-			setPitchDeck(file);
-		} else {
-			alert("Please upload a PDF file.");
-		}
-	};
-
-	const handleBackgroundImageChange = (e) => {
-		const file = e.target.files[0];
-		if (file && file.type.startsWith("image/")) {
-			setBackgroundImage(URL.createObjectURL(file));
-		} else {
-			alert("Please upload a valid image file.");
-		}
-	};
-
-	const handleFormSubmit = (event) => {
-		console.log(event.target);
-		event.preventDefault();
-		const newProject = {
-			_id: "newId",
-			name: event.target.projectName.value,
-			related_industries: event.target.relatedIndustries.value.split(","),
-			stage: event.target.stage.value,
-			problem: event.target.problem.value,
-			solution: event.target.solution.value,
-			product_demo_url: event.target.productDemoURL.value,
-			team_intro_url: event.target.teamIntroURL.value,
-			pitch_deck: pitchDeck ? pitchDeck.name : null,
-			background: backgroundImage ? backgroundImage : null,
-			statistics: event.target.statistics.value,
-			target_money: event.target.targetMoney.value,
-			target_audience: event.target.targetAudience.value,
-			competitors: event.target.competitors.value,
-			competitive_advantage: event.target.competitiveAdvantage.value,
-			why_now: event.target.whyNow.value,
-			strategy: event.target.strategy.value,
-			milestones: event.target.milestones.value,
-			about_opennezt: event.target.aboutOpennezt.value,
-			revenues,
-			funding_sources: fundingSources,
-		};
-	};
-
 	return (
-		<form className={styles.createProjectForm} onSubmit={handleFormSubmit}>
+		<div className={styles.createProjectForm}>
 			<h2>Startup Details</h2>
 			<Input
 				value={formData.name}
@@ -346,7 +325,16 @@ const CreateProjectForm = () => {
 				autoSize
 				style={{ padding: "4px 11px" }}
 			/>
-			<Dragger {...pitchDeskState}>
+			<Dragger
+				name="file"
+				action="http://localhost:3456/common/check-upload-pitch-desk"
+				method="POST"
+				accept=".pdf"
+				multiple={false}
+				fileList={pitchDesk}
+				onChange={onChangePitchDesk}
+				beforeUpload={onBeforeUploadPitchDesk}
+				onRemove={onRemovePitchDesk}>
 				<p className="ant-upload-drag-icon">
 					<InboxOutlined />
 				</p>
@@ -381,14 +369,17 @@ const CreateProjectForm = () => {
 						gap: "0.5rem",
 						flexDirection: "column",
 					}}>
-					{revenues.map((revenue, index) => (
+					{formData.revenues.map((revenue, index) => (
 						<div key={index} style={{ display: "flex", gap: "0.5rem" }}>
 							<DatePicker
 								required
-								onChange={onChangeDate}
+								onChange={(date, dateString) =>
+									onChangeDate(date, dateString, index)
+								}
 								picker="month"
 							/>
 							<Input
+								onChange={(e) => onChangeRevenue(e, index)}
 								required
 								placeholder="Revenue"
 								style={{
@@ -437,31 +428,31 @@ const CreateProjectForm = () => {
 			<FundingSourceBox
 				fundingSourceName="Friend and Family"
 				foundingSourceTarget="friend_and_family"
-				fundingSourceCost={fundingSources.friend_and_family}
+				fundingSourceCost={formData.funding_sources.friend_and_family}
 				handleChangeFundingSource={handleChangeFundingSource}
 			/>
 			<FundingSourceBox
 				fundingSourceName="Grant"
 				foundingSourceTarget="grant"
-				fundingSourceCost={fundingSources.grant}
+				fundingSourceCost={formData.funding_sources.grant}
 				handleChangeFundingSource={handleChangeFundingSource}
 			/>
 			<FundingSourceBox
 				fundingSourceName="Angel"
 				foundingSourceTarget="angel"
-				fundingSourceCost={fundingSources.angel}
+				fundingSourceCost={formData.funding_sources.angel}
 				handleChangeFundingSource={handleChangeFundingSource}
 			/>
 			<FundingSourceBox
 				fundingSourceName="Venture Capital"
 				foundingSourceTarget="venture_capital"
-				fundingSourceCost={fundingSources.venture_capital}
+				fundingSourceCost={formData.funding_sources.venture_capital}
 				handleChangeFundingSource={handleChangeFundingSource}
 			/>
 			<FundingSourceBox
 				fundingSourceName="Other"
 				foundingSourceTarget="other"
-				fundingSourceCost={fundingSources.other}
+				fundingSourceCost={formData.funding_sources.other}
 				handleChangeFundingSource={handleChangeFundingSource}
 			/>
 			<h2>Startup Strategy</h2>
@@ -496,7 +487,7 @@ const CreateProjectForm = () => {
 				required
 				rows={4}
 				value={formData.competitive_advantage}
-				name="What is your competitive advantage?*"
+				name="competitive_advantage"
 				placeholder="What is your competitive advantage?*"
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
@@ -550,12 +541,17 @@ const CreateProjectForm = () => {
 				maxLength={500}
 			/>
 			<Upload
-				style={{ width: "100%" }}
+				action={
+					"http://localhost:3456/common/check-upload-background-startup"
+				}
+				method="POST"
+				accept=".jpg,.jpeg,.png"
 				listType="picture-card"
 				fileList={backgroundStartUp}
 				onPreview={handlePreview}
 				onChange={onChangeBackground}
-				maxCount={1}>
+				maxCount={1}
+				onRemove={onRemoveBackground}>
 				{backgroundStartUp.length < 5 && "+ Upload"}
 			</Upload>
 			{previewImage && (
@@ -571,7 +567,7 @@ const CreateProjectForm = () => {
 					src={previewImage}
 				/>
 			)}
-		</form>
+		</div>
 	);
 };
 
