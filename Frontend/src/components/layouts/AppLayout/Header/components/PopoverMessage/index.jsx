@@ -156,25 +156,27 @@ function ChatsPopover() {
   };
 
   const openChatBox = async (receiver) => {
-    setReceiverId(receiver._id);
+    console.log('Receiver:', receiver);
+    setReceiverId(receiver.userId);
+    console.log('Receiver ID:', receiver.userId);
 
     if (openChats.some((c) => c.username === receiver.username)) return;
-
-    if (openChats.length >= 3) {
+  
+    if (openChats.length >= 1) {
       const [removedChat, ...remainingChats] = openChats;
-      setMinimizedChats([...minimizedChats, removedChat]);
+      // setMinimizedChats([...minimizedChats, removedChat]);
       setOpenChats([...remainingChats, receiver]);
     } else {
       setOpenChats([...openChats, receiver]);
     }
-
+  
     if (!socket) {
-      initializeWebSocket(receiver._id);
+      initializeWebSocket(receiver.userId);
     }
-
+  
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/chat/get-chat-history/${getUserIdFromToken()}`,
+        `${process.env.REACT_APP_API_URL}/chat/get-chat-history/${receiver.userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -195,6 +197,7 @@ function ChatsPopover() {
       console.error("Error fetching chat history:", error);
     }
   };
+  
 
   const closeChatBox = (username) => {
     setOpenChats(openChats.filter((chat) => chat.username !== username));
@@ -221,7 +224,7 @@ function ChatsPopover() {
           console.error('Error saving messages:', error);
         });
       }
-    }, 60000);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [token]);

@@ -25,7 +25,7 @@ $backgroundHoverMain: rgba(108, 95, 252, 0.1);
     background-color: $secondaryColor;
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid $colorBorderDefault;
+    border-bottom: 1px solid $colorLine;
 
     h3 {
       margin: 0;
@@ -40,7 +40,7 @@ $backgroundHoverMain: rgba(108, 95, 252, 0.1);
       border: 1px solid $colorLine;
       border-radius: 20px;
       font-size: 14px;
-      background-color: $colorLight2;
+      background-color: $colorLight1;
       outline: none;
       color: $textColor;
 
@@ -119,120 +119,140 @@ $backgroundHoverMain: rgba(108, 95, 252, 0.1);
     }
   }
 }
+
 .miniChatBoxWrap {
-	position: fixed;
-	bottom: 10px;
-	right: 80px;
-	display: flex;
-	flex-direction: row;
-	gap: 10px;
-	flex-wrap: wrap;
-  
-	.miniChatBox {
-	  width: 350px; 
-	  background-color: $mainColor;
-	  border-radius: 8px;
-	  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-	  display: flex;
-	  flex-direction: column;
-	  overflow: hidden;
-		height: 400px;
-	  .miniChatHeader {
-		background-color: $secondaryAccent;
-		color: $colorWhite;
-		padding: 10px;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		
-		span {
-		  font-size: 16px;
-		  font-weight: bold;
-		}
-  
-		.closeButton {
-		  background: none;
-		  border: none;
-		  color: $colorWhite;
-		  font-size: 16px;
-		  cursor: pointer;
-  
-		  &:hover {
-			color: #ff4d4f;
-		  }
-		}
-	  }
-  
-	  .miniChatBody {
-		padding: 10px;
-		flex: 1;
-		overflow-y: auto;
-		font-size: 14px;
-		color: $textColor;
-	  }
-  
-	  .miniChatFooter {
-		padding: 10px;
-		border-top: 1px solid $colorLine;
-  
-		.miniChatInput {
-		  width: 100%;
-		  padding: 8px;
-		  border: 1px solid $colorLine;
-		  border-radius: 20px;
-		  font-size: 14px;
-		  outline: none;
-  
-		  &:focus {
-			border-color: $secondaryAccent;
-			box-shadow: 0 0 4px rgba($secondaryAccent, 0.6);
-		  }
-		}
-	  }
-	}
-  
-	.minimizedChatIcons {
-	  display: flex;
-	  flex-direction: column; 
-	  align-items: flex-end; 
-	  gap: 8px;
-	  position: fixed;
-	  bottom: 10px;
-	  right: 10px;
-  
-	  .minimizedChatIcon {
-		width: 50px;
-		height: 50px;
-		border-radius: 50%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		background-color: $secondaryColor;
-		color: $colorWhite;
-		font-size: 16px;
-		font-weight: bold;
-		cursor: pointer;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  
-		&:hover {
-		  background-color: $secondaryAccent;
-		}
-	  }
-	}
+  position: fixed;
+  bottom: 35px;
+  right: 80px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  .miniChatBox {
+    width: 350px; 
+    background-color: $mainColor;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 450px;
+
+    .miniChatHeader {
+      background-color: $secondaryAccent;
+      color: $colorWhite;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      span {
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .closeButton {
+        background: none;
+        border: none;
+        color: $colorWhite;
+        font-size: 16px;
+        cursor: pointer;
+
+        &:hover {
+          color: #ff4d4f;
+        }
+      }
+    }
+
+    .miniChatBody {
+      padding: 10px;
+      flex: 1;
+      overflow-y: auto;
+      font-size: 14px;
+      color: $textColor;
+    }
+
+    .miniChatFooter {
+      padding: 10px;
+      border-top: 1px solid $colorLine;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .miniChatInput {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid $colorLine;
+        border-radius: 20px;
+        font-size: 14px;
+        outline: none;
+
+        &:focus {
+          border-color: $secondaryAccent;
+          box-shadow: 0 0 4px rgba($secondaryAccent, 0.6);
+        }
+      }
+
+      .sendButton {
+        background-color: $secondaryAccent;
+        color: $colorWhite;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: darken($secondaryAccent, 10%);
+        }
+      }
+    }
   }
-  .message {
-    padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 8px;
+
+  .minimizedChatIcons {
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-end; 
+    gap: 8px;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+
+    .minimizedChatIcon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: $secondaryColor;
+      color: $colorWhite;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        background-color: $secondaryAccent;
+      }
+    }
   }
-  
-  .sent {
-    background-color: #dcf8c6; 
-    align-self: flex-end;
-  }
-  
-  .received {
-    background-color: #f1f0f0; 
-    align-self: flex-start;
-  }
-  
+}
+
+.message {
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+}
+
+.sent {
+  background-color: #dcf8c6; 
+  align-self: flex-end;
+}
+
+.received {
+  background-color: #f1f0f0; 
+  align-self: flex-start;
+}
