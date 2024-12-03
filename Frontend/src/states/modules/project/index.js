@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { startRequest } from "../app";
 
 const projectSlice = createSlice({
 	name: "ProJect",
@@ -6,6 +7,7 @@ const projectSlice = createSlice({
 	initialState: {
 		title: "",
 		loadingGetProjects: false,
+		loadingCreateNewProject: false,
 		projects: [],
 	},
 	reducers: {
@@ -26,6 +28,18 @@ const projectSlice = createSlice({
 			...state,
 			loadingGetProjects: false,
 		}),
+		startRequestCreateNewProject: (state) => ({
+			...state,
+			loadingCreateNewProject: true,
+		}),
+		startRequestCreateNewProjectSuccess: (state) => ({
+			...state,
+			loadingCreateNewProject: false,
+		}),
+		startRequestCreateNewProjectFail: (state) => ({
+			...state,
+			loadingCreateNewProject: false,
+		}),
 	},
 });
 
@@ -34,6 +48,9 @@ export const {
 	startRequestGetProjects,
 	startRequestGetProjectsSuccess,
 	startRequestGetProjectsFail,
+	startRequestCreateNewProject,
+	startRequestCreateNewProjectSuccess,
+	startRequestCreateNewProjectFail,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

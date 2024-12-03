@@ -1,19 +1,49 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";
-import { getProjects } from "api/project";
+import { getProjects, createNewProject } from "api/project";
 import { useSelector } from "react-redux";
 import CreateProjectForm from "./CreateProjectForm";
 import ProjectDetails from "components/common/ProjectDetails";
 import { Button, Modal } from "antd";
 
 function Project() {
-	const projects = useSelector((state) => state.project.projects);
-
 	useEffect(() => {
 		store.dispatch(getProjects());
 	}, []);
 
+	const [formData, setFormData] = useState({
+		name: "",
+		lading_page_url: "",
+		related_industries: [],
+		stage: "",
+		problem: "",
+		solution: "",
+		product_demo_url: "",
+		team_intro_url: "",
+		pitch_deck: {},
+		statistics: "",
+		revenues: [{ time: "", revenue: "" }],
+		funding_sources: {
+			friend_and_family: "",
+			grant: "",
+			angel: "",
+			venture_capital: "",
+			other: "",
+		},
+		target_money: "",
+		target_audience: "",
+		competitors: "",
+		competitive_advantage: "",
+		why_now: "",
+		strategy: "",
+		milestones: "",
+		about_opennezt: "",
+		background: {},
+	});
+	const { projects, loadingCreateNewProject } = useSelector(
+		(state) => state.project
+	);
 	const [projectDetails, setProjectDetails] = useState(null);
 
 	const handleProjectClick = (project) => {
@@ -27,26 +57,18 @@ function Project() {
 	const [loading, setLoading] = React.useState(true);
 	const showLoading = () => {
 		setOpenModalProjectDetails(false);
-		// setLoading(true);
-
-		// setTimeout(() => {
-		// 	setLoading(false);
-		// }, 2000);
 	};
 
 	// Modal for create project
 	const [openModalCreateProject, setOpenModalCreateProject] = useState(false);
-	const [confirmLoading, setConfirmLoading] = useState(false);
 	const showModalCreateProject = () => {
 		setOpenModalCreateProject(true);
 	};
-	const handleOk = () => {
-		setConfirmLoading(true);
-		setTimeout(() => {
-			setOpenModalCreateProject(false);
-			setConfirmLoading(false);
-		}, 2000);
+	const handleCreateProject = async () => {
+		console.log("formData", formData);
+		await store.dispatch(createNewProject(formData));
 	};
+
 	const handleCancel = () => {
 		setOpenModalCreateProject(false);
 	};
@@ -59,7 +81,7 @@ function Project() {
 					type="primary"
 					className={styles.btnCreate}
 					onClick={showModalCreateProject}>
-					Primary
+					Create new project
 				</Button>
 			</div>
 			<div className={styles.projectsList}>
@@ -80,12 +102,13 @@ function Project() {
 			</div>
 			<Modal
 				title=""
+				okText="Create"
 				open={openModalCreateProject}
-				onOk={handleOk}
-				confirmLoading={confirmLoading}
+				onOk={handleCreateProject}
+				confirmLoading={loadingCreateNewProject}
 				onCancel={handleCancel}
 				width={1000}>
-				<CreateProjectForm />
+				<CreateProjectForm formData={formData} setFormData={setFormData} />
 			</Modal>
 
 			<Modal

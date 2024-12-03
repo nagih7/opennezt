@@ -4,6 +4,9 @@ import {
 	startRequestGetProjects,
 	startRequestGetProjectsSuccess,
 	startRequestGetProjectsFail,
+	startRequestCreateNewProject,
+	startRequestCreateNewProjectSuccess,
+	startRequestCreateNewProjectFail,
 } from "../../states/modules/project";
 
 export const getProjects = () => async (dispatch, getState) => {
@@ -16,6 +19,21 @@ export const getProjects = () => async (dispatch, getState) => {
 			startRequestGetProjectsFail,
 		],
 		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+export const createNewProject = (data) => async (dispatch, getState) => {
+	return callApi({
+		method: "post",
+		apiPath: "users/project",
+		actionTypes: [
+			startRequestCreateNewProject,
+			startRequestCreateNewProjectSuccess,
+			startRequestCreateNewProjectFail,
+		],
+		variables: data,
 		dispatch,
 		getState,
 	});

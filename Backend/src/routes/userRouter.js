@@ -25,7 +25,7 @@ userRouter.patch(
 // Project
 userRouter.post(
     '/project',
-    asyncHandler(validate(userRequest.createProject)),
+    // asyncHandler(validate(userRequest.createProject)),
     asyncHandler(userController.createProject)
 )
 
