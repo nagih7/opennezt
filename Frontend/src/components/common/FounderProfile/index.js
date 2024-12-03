@@ -12,13 +12,13 @@ const FounderProfile = (props) => {
 				<ArrowDropDownIcon className={styles.dropDown} />
 			</h2>
 			<div className={styles.founderProfileBoxWrap}>
-				{founderProfile.industry && (
+				{founderProfile.professional_summary && (
 					<>
 						<h3>Professional Summary</h3>
 						<p>{founderProfile.professional_summary}</p>
 					</>
 				)}
-				{founderProfile.industry && (
+				{founderProfile.industry && founderProfile.industry.length > 0 && (
 					<>
 						<h3>Primary Industries</h3>
 						{founderProfile.industry.map((industry) => {

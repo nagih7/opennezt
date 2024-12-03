@@ -3,6 +3,9 @@ import {
 	startRequestRecruitTalents,
 	startRequestRecruitTalentsSuccess,
 	startRequestRecruitTalentsFail,
+	startRequestSkipTalent,
+	startRequestSkipTalentSuccess,
+	startRequestSkipTalentFail,
 	startRequestGetDetailTalent,
 	startRequestGetDetailTalentSuccess,
 	startRequestGetDetailTalentFail,
@@ -26,6 +29,22 @@ export const recruitTalents =
 			getState,
 		});
 	};
+
+export const skipTalent = (requestSkipTalent) => async (dispatch, getState) => {
+	requestSkipTalent = new URLSearchParams(requestSkipTalent).toString();
+	return callApi({
+		method: "get",
+		apiPath: `users/recruit-talents?${requestSkipTalent}`,
+		actionTypes: [
+			startRequestSkipTalent,
+			startRequestSkipTalentSuccess,
+			startRequestSkipTalentFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
 
 export const getDetailTalent = (email) => async (dispatch, getState) => {
 	return callApi({

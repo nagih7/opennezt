@@ -229,7 +229,6 @@ const CreateProjectForm = (props) => {
 	const handlePreview = async (file) => {
 		if (!file.url && !file.preview) {
 			file.preview = await getBase64(file.originFileObj);
-			console.log("prevew:", file.preview);
 		}
 		setPreviewImage(file.url || file.preview);
 		setPreviewOpen(true);
@@ -282,7 +281,6 @@ const CreateProjectForm = (props) => {
 				optionFilterProp="label"
 				onChange={(value) => handleOnChange(value, "stage")}
 				size="large"
-				// value={formData.stage}
 				style={{ width: "100%" }}
 				options={optionsStage}
 			/>

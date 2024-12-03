@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import {asyncHandler} from '@/utils/helpers'
+// import {asyncHandler} from '@/utils/helpers'
 import * as commonController from '../app/controllers/commonController'
 
 const commonRouter = Router()

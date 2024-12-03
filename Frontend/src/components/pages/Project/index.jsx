@@ -65,7 +65,6 @@ function Project() {
 		setOpenModalCreateProject(true);
 	};
 	const handleCreateProject = async () => {
-		console.log("formData", formData);
 		await store.dispatch(createNewProject(formData));
 	};
 

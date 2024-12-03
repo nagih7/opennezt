@@ -244,3 +244,13 @@ export const createFounderProfile = Joi.object({
         .required()
         .label('Thời gian làm việc'),
 })
+
+export const recuitTalents = Joi.object({
+    sector: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Ngành nghề'),
+    expertise_level: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Kinh nghiệm'),
+    education_level: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Bằng cấp'),
+    commitment: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Cam kết'),
+    location: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Địa điểm'),
+    language: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Ngôn ngữ'),
+    skip: Joi.number().integer().min(0).required().label('Bỏ qua'),
+})

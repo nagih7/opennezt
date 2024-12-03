@@ -1,6 +1,6 @@
 import express from 'express'
 import expressWs from 'express-ws'
-import {saveMessage, getReceiverIds} from '../app/controllers/chatController.js'
+import {getReceiverIds} from '../app/controllers/chatController.js'
 import wss from '../app/socket/websocket.js'
 import Messenger from '../models/messenger.js'
 import {verifyToken} from '@/utils/helpers'
@@ -15,15 +15,15 @@ chatrouter.get('/get-chat-history/:receiverId', async (req, res) => {
     try {
         const receiverId = req.params.receiverId
         const token = req.headers['authorization']?.split(' ')[1]
-        const { user_id } = verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
+        const {user_id} = verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
         console.log('id của họ là', receiverId, 'id của mình là', user_id)
 
         const chatHistory = await Messenger.find({
             $or: [
-                { senderId: user_id, receiverId: receiverId },
-                { senderId: receiverId, receiverId: user_id }
-            ]
-        }).sort({ date: 1 })
+                {senderId: user_id, receiverId: receiverId},
+                {senderId: receiverId, receiverId: user_id},
+            ],
+        }).sort({date: 1})
 
         return res.status(200).json({
             success: true,
@@ -36,7 +36,7 @@ chatrouter.get('/get-chat-history/:receiverId', async (req, res) => {
         })
     } catch (error) {
         console.error('Error fetching chat history:', error)
-        return res.status(500).json({ message: 'Internal server error' })
+        return res.status(500).json({message: 'Internal server error'})
     }
 })
 chatrouter.post('/create-chat', async (req, res) => {
@@ -205,8 +205,8 @@ app.ws('/chat', (ws, req) => {
 chatrouter.post('/save-messages', async (req, res) => {
     try {
         const messages = req.body
-        const token = req.headers['authorization']?.split(' ')[1]
-        const {user_id} = verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
+        // const token = req.headers['authorization']?.split(' ')[1]
+        // const {user_id} = verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
 
         for (const msg of messages) {
             const newMessage = new Messenger({
