@@ -33,7 +33,6 @@ const founderSlice = createSlice({
 		}),
 		startUpdateFounderProfileFail: (state) => ({
 			...state,
-			founderProfile: {},
 			loadingUpdateFounderProfile: false,
 		}),
 	},

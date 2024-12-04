@@ -47,8 +47,8 @@ export async function getFounderProfile(req, res) {
 }
 
 export async function updateFounderProfile(req, res) {
-    await userService.updateFounderProfile(req.currentUser, req.body)
-    res.status(201).jsonify('Cập nhật hồ sơ người sáng lập thành công.')
+    const result = await userService.updateFounderProfile(req.currentUser, req.body)
+    res.status(201).jsonify(result)
 }
 
 export async function createProject(req, res) {
