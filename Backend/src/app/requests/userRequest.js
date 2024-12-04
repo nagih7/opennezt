@@ -240,7 +240,7 @@ export const createFounderProfile = Joi.object({
     career_goals: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Mục tiêu nghề nghiệp'),
     offer: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Đề xuất'),
     expectation: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Kỳ vọng'),
-    avalability: Joi.valid('Exploring', 'Full-time', 'Part-time', 'All-in', 'Freelance')
+    availability: Joi.valid('Exploring', 'Full-time', 'Part-time', 'All-In', 'Freelance')
         .required()
         .label('Thời gian làm việc'),
 })

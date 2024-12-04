@@ -36,8 +36,8 @@ export async function createFounderProfile(req, res) {
     if (isExist) {
         res.status(200).jsonify('Hồ sơ người sáng lập đã tồn tại.')
     } else {
-        await userService.createFounderProfile(req.currentUser, req.body)
-        res.status(201).jsonify('Tạo hồ sơ người sáng lập thành công.')
+        const result = await userService.createFounderProfile(req.currentUser, req.body)
+        res.status(201).jsonify(result)
     }
 }
 

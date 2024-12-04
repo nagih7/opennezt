@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import PropTypes from "prop-types";
-import Logo from "assets/images/logo/OpenNezt_logo_default.png";
+import Logo from "assets/images/logo/OpenNezt_logo_black.png";
 import NavItem from "./components/NavItem";
 import manageRouteMap from "../../../../router/manageRouteMap";
 import appRouteMap from "router/appRouteMap";
 import { handleCheckRoute } from "../../../../utils/helper";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-// import { handleSetIsShowSideBar } from "../../../../states/modules/app";
 import { useSelector } from "react-redux";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { logout } from "../../../../api/auth";
+import store from "states/configureStore";
 
 SideBar.prototype = {
 	isShowSideBar: PropTypes.bool.isRequired,
@@ -29,7 +28,6 @@ function SideBar(props) {
 	const [topMenuSub, setTopMenuSub] = useState(0);
 	const location = useLocation();
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 
 	const authorize = useSelector((state) => state.auth.authorize);
 
@@ -58,8 +56,8 @@ function SideBar(props) {
 		setMenuSub([]);
 	};
 
-	const handleConfirmLogOut = () => {
-		dispatch(logout());
+	const handleConfirmLogOut = async () => {
+		await store.dispatch(logout());
 	};
 
 	return (

@@ -1,127 +1,207 @@
 import React, { useState } from "react";
-import styles from "./EditProfilePopup.module.scss";
+import styles from "./styles.module.scss";
+import ExpertiseBox from "./ExpertiseBox";
+import {
+	listSector,
+	listExperienceLevel,
+	listEducationLevel,
+	listCertification,
+	listAreaOfExpertise,
+	listCommitment,
+} from "../ListSelected";
+import { Select, Space, Input } from "antd";
+const { TextArea } = Input;
 
-function EditProfilePopup({ onClose }) {
-    const [formData, setFormData] = useState({
-        experience_level: "",
-        industry: [],
-        degree: "",
-        certification: [],
-        professional_summary: "",
-        career_goals: "",
-        offer: "",
-        expectation: "",
-        availability: "",
-        areas_of_expertise: {
-            accounting_and_finance: [],
-            human_resource: [],
-            international: [],
-            law_and_legal: [],
-            management: [],
-            marketing: [],
-            operations: [],
-            sales: [],
-            starting_up: [],
-            sustainability: [],
-            technology_and_internet: []
-        }
-    });
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-    const handleArrayChange = (e, field) => {
-        const { value } = e.target;
-        setFormData({ ...formData, [field]: value.split(",") });
-    };
-
-    const handleNestedArrayChange = (e, field, subfield) => {
-        const { value } = e.target;
-        setFormData({
-            ...formData,
-            areas_of_expertise: {
-                ...formData.areas_of_expertise,
-                [field]: value.split(",")
-            }
-        });
-    };
-
-    const token = localStorage.getItem('token');
-    const handleSubmit = async (e) => {
-        e.preventDefault(); 
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/users/update-founder-profile`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(formData)
-        });
-        if (response.ok) {
-            onClose();
-        } else {
-            console.error('Failed to update profile');
-        }
-    };
-
-    return (
-        <div className={styles.popupOverlay}>
-            <div className={styles.popupContent}>
-                <h2>Edit Profile</h2>
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        Experience Level:
-                        <input type="text" name="experience_level" value={formData.experience_level} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Industry:
-                        <input type="text" name="industry" value={formData.industry.join(",")} onChange={(e) => handleArrayChange(e, "industry")} />
-                    </label>
-                    <label>
-                        Degree:
-                        <input type="text" name="degree" value={formData.degree} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Certification:
-                        <input type="text" name="certification" value={formData.certification.join(",")} onChange={(e) => handleArrayChange(e, "certification")} />
-                    </label>
-                    <label>
-                        Professional Summary:
-                        <textarea name="professional_summary" value={formData.professional_summary} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Career Goals:
-                        <textarea name="career_goals" value={formData.career_goals} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Offer:
-                        <textarea name="offer" value={formData.offer} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Expectation:
-                        <textarea name="expectation" value={formData.expectation} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Availability:
-                        <input type="text" name="availability" value={formData.availability} onChange={handleChange} />
-                    </label>
-                    <h3>Areas of Expertise</h3>
-                    {Object.keys(formData.areas_of_expertise).map((key) => (
-                        <label key={key}>
-                            {key.replace(/_/g, " ")}:
-                            <input type="text" value={formData.areas_of_expertise[key].join(",")} onChange={(e) => handleNestedArrayChange(e, key)} />
-                        </label>
-                    ))}
-                    <div className={styles.buttonGroup}>
-                        <button type="submit">Save</button>
-                        <button type="button" onClick={onClose}>Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    );
-}
+const EditProfilePopup = ({ formData, onChange }) => {
+	return (
+		<div className={styles.popupOverlay}>
+			<h2>Expertise Background</h2>
+			<Select
+				value={formData.industry}
+				mode="multiple"
+				style={{
+					width: "100%",
+				}}
+				required
+				size="large"
+				placeholder="What is your primary industry*"
+				onChange={(value) => onChange(value, "industry")}
+				options={listSector}
+				optionRender={(listSector) => (
+					<Space>
+						<span role="img" aria-label={listSector.data.label}>
+							{listSector.data.emoji}
+						</span>
+						{listSector.data.desc}
+					</Space>
+				)}
+			/>
+			<Select
+				value={formData.experience_level}
+				required
+				showSearch
+				placeholder="What is your professional experience level?*"
+				optionFilterProp="label"
+				onChange={(value) => onChange(value, "experience_level")}
+				size="large"
+				style={{ width: "100%" }}
+				options={listExperienceLevel}
+			/>
+			<Select
+				value={formData.degree}
+				required
+				showSearch
+				placeholder="Which degrees do you hold?*"
+				optionFilterProp="label"
+				onChange={(value) => onChange(value, "degree")}
+				size="large"
+				style={{ width: "100%" }}
+				options={listEducationLevel}
+			/>
+			<Select
+				value={formData.certification}
+				mode="multiple"
+				style={{
+					width: "100%",
+				}}
+				required
+				size="large"
+				placeholder="Which certifications do you hold?*"
+				onChange={(value) => onChange(value, "certification")}
+				options={listCertification}
+				optionRender={(listCertification) => (
+					<Space>
+						<span role="img" aria-label={listCertification.data.label}>
+							{listCertification.data.emoji}
+						</span>
+						{listCertification.data.desc}
+					</Space>
+				)}
+			/>
+			<div className={styles.areaOfExpertiseWrap}>
+				<h4 style={{ margin: "0" }}>
+					Which areas of expertise do you contribute?*
+				</h4>
+				<ExpertiseBox
+					value={formData.areas_of_expertise.accounting_and_finance}
+					listValue={listAreaOfExpertise.Accounting_and_Finance}
+					onChange={onChange}
+					ExpertiseName="Accounting and Finance"
+					ExpertiseTarget="accounting_and_finance"
+				/>
+				<ExpertiseBox
+					value={formData.areas_of_expertise.human_resource}
+					listValue={listAreaOfExpertise.Human_Resources}
+					onChange={onChange}
+					ExpertiseName="Human Resources"
+					ExpertiseTarget="human_resource"
+				/>
+				<ExpertiseBox
+					value={formData.areas_of_expertise.international}
+					listValue={listAreaOfExpertise.International}
+					onChange={onChange}
+					ExpertiseName="International"
+					ExpertiseTarget="international"
+				/>
+				<ExpertiseBox
+					value={formData.areas_of_expertise.law_and_legal}
+					listValue={listAreaOfExpertise.Law_and_Legal}
+					onChange={onChange}
+					ExpertiseName="Law and Legal"
+					ExpertiseTarget="law_and_legal"
+				/>
+				<ExpertiseBox
+					value={formData.areas_of_expertise.management}
+					listValue={listAreaOfExpertise.Management}
+					onChange={onChange}
+					ExpertiseName="Management"
+					ExpertiseTarget="management"
+				/>
+				<ExpertiseBox
+					value={formData.areas_of_expertise.marketing}
+					listValue={listAreaOfExpertise.Marketing}
+					onChange={onChange}
+					ExpertiseName="Marketing"
+					ExpertiseTarget="marketing"
+				/>
+				<ExpertiseBox
+					value={formData.areas_of_expertise.operations}
+					listValue={listAreaOfExpertise.Operations}
+					onChange={onChange}
+					ExpertiseName="Operations"
+					ExpertiseTarget="operations"
+				/>
+				<ExpertiseBox
+					value={formData.areas_of_expertise.sales}
+					listValue={listAreaOfExpertise.Sales}
+					onChange={onChange}
+					ExpertiseName="Sales"
+					ExpertiseTarget="sales"
+				/>
+				<ExpertiseBox
+					value={formData.areas_of_expertise.starting_up}
+					listValue={listAreaOfExpertise.Starting_up}
+					onChange={onChange}
+					ExpertiseName="Starting Up"
+					ExpertiseTarget="starting_up"
+				/>
+				<ExpertiseBox
+					value={formData.areas_of_expertise.technology_and_internet}
+					listValue={listAreaOfExpertise.Technology_and_Internet}
+					onChange={onChange}
+					ExpertiseName="Technology and Internet"
+					ExpertiseTarget="technology_and_internet"
+				/>
+			</div>
+			<TextArea
+				rows={4}
+				required
+				value={formData.professional_summary}
+				name="professional_summary"
+				placeholder="Professional Summary*"
+				onChange={(e) => onChange(e)}
+				maxLength={500}
+			/>
+			<h2>Goals and Expectations</h2>
+			<TextArea
+				rows={4}
+				value={formData.career_goals}
+				name="career_goals"
+				placeholder="My career goals*"
+				onChange={(e) => onChange(e)}
+				maxLength={500}
+			/>
+			<TextArea
+				rows={4}
+				required
+				value={formData.offer}
+				name="offer"
+				placeholder="What I can offer*"
+				onChange={(e) => onChange(e)}
+				maxLength={500}
+			/>
+			<TextArea
+				required
+				rows={4}
+				value={formData.expectation}
+				name="expectation"
+				placeholder="My work expectation*"
+				onChange={(e) => onChange(e)}
+				maxLength={500}
+			/>
+			<Select
+				value={formData.availability}
+				required
+				showSearch
+				placeholder="How much time do you commit to your startup per week?*"
+				optionFilterProp="label"
+				onChange={(value) => onChange(value, "availability")}
+				size="large"
+				style={{ width: "100%" }}
+				options={listCommitment}
+			/>
+		</div>
+	);
+};
 
 export default EditProfilePopup;

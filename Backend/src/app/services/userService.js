@@ -89,6 +89,7 @@ export async function createFounderProfile(user, requestBody) {
     requestBody.user_id = user._id
     const founder = new FounderProfile(requestBody)
     await founder.save()
+    return founder
 }
 
 export async function getFounderProfile(userId) {

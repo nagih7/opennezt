@@ -7,44 +7,119 @@ import FounderProfile from "components/common/FounderProfile";
 import ProfileCard from "components/common/ProfileCard";
 import LazyLoading from "components/UI/LazyLoading";
 import EditProfilePopup from "components/common/EditProfilePopup";
+import { Modal } from "antd";
+import { updateFounderProfile } from "api/founder";
 
-function About() {
-    const authUser = useSelector((state) => state.auth.authUser);
-    const founderProfile = useSelector((state) => state.founder.founderProfile);
-    const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+const About = () => {
+	const [infoUpdateProfile, setInfoUpdateProfile] = useState({
+		experience_level: null,
+		industry: [],
+		degree: null,
+		certification: [],
+		professional_summary: "",
+		career_goals: "",
+		offer: "",
+		expectation: "",
+		availability: null,
+		areas_of_expertise: {
+			accounting_and_finance: [],
+			human_resource: [],
+			international: [],
+			law_and_legal: [],
+			management: [],
+			marketing: [],
+			operations: [],
+			sales: [],
+			starting_up: [],
+			sustainability: [],
+			technology_and_internet: [],
+		},
+	});
+	const authUser = useSelector((state) => state.auth.authUser);
+	const { founderProfile, loadingUpdateFounderProfile } = useSelector(
+		(state) => state.founder
+	);
+	const [modalUpdateFounderProfile, setModalUpdateFounderProfile] =
+		useState(false);
+	const [updatedFounderProfile, setUpdatedFounderProfile] = useState(false);
 
-    useEffect(() => {
-        store.dispatch(getFounderProfile());
-    }, []);
+	useEffect(() => {
+		store.dispatch(getFounderProfile());
+	}, []);
 
-    const handleEditClick = () => {
-        setIsEditPopupOpen(true);
-    };
+	const handleOpenModal = () => {
+		setModalUpdateFounderProfile(true);
+		if (founderProfile && !updatedFounderProfile) {
+			setInfoUpdateProfile(founderProfile);
+			setUpdatedFounderProfile(true);
+		}
+	};
 
-    const handleClosePopup = () => {
-        setIsEditPopupOpen(false);
-    };
+	const handleClosePopup = () => {
+		setModalUpdateFounderProfile(false);
+	};
 
-    return (
-        <div className={styles.aboutContainer}>
-            <LazyLoading>
-                <ProfileCard
-                    background={authUser.background}
-                    avatar={authUser.avatar}
-                    name={authUser.name}
-                    city={authUser.city}
-                    region={authUser.region}
-                    language={authUser.language}
-                    linkedIn={authUser.linkedIn}
-                />
-                <button onClick={handleEditClick} className={styles.editButton}>Edit</button>
-            </LazyLoading>
-            <LazyLoading>
-                <FounderProfile founderProfile={founderProfile} />
-            </LazyLoading>
-            {isEditPopupOpen && <EditProfilePopup onClose={handleClosePopup} />}
-        </div>
-    );
-}
+	const onChange = (event, nameSelect) => {
+		if (nameSelect && nameSelect.ExpertiseTarget) {
+			setInfoUpdateProfile((prevState) => ({
+				...prevState,
+				areas_of_expertise: {
+					...prevState.areas_of_expertise,
+					[nameSelect.ExpertiseTarget]: event,
+				},
+			}));
+		} else if (nameSelect) {
+			setInfoUpdateProfile((prevState) => ({
+				...prevState,
+				[nameSelect]: event,
+			}));
+		} else {
+			const { name, value } = event.target;
+			setInfoUpdateProfile((prevState) => ({
+				...prevState,
+				[name]: value,
+			}));
+		}
+	};
+
+	const handleUpdateProfile = async () => {
+		await store.dispatch(
+			updateFounderProfile(
+				infoUpdateProfile,
+				updatedFounderProfile ? "put" : "post"
+			)
+		);
+	};
+
+	return (
+		<div className={styles.aboutContainer}>
+			<LazyLoading>
+				<ProfileCard
+					authUser={authUser}
+					handleOpenModal={handleOpenModal}
+					loadingUpdateFounderProfile={loadingUpdateFounderProfile}
+				/>
+			</LazyLoading>
+			<LazyLoading>
+				{founderProfile && (
+					<FounderProfile founderProfile={founderProfile} />
+				)}
+			</LazyLoading>
+			<Modal
+				title=""
+				okText="Save"
+				open={modalUpdateFounderProfile}
+				onOk={handleUpdateProfile}
+				confirmLoading={false}
+				onCancel={handleClosePopup}
+				width={1000}>
+				<EditProfilePopup
+					formData={infoUpdateProfile}
+					onChange={onChange}
+				/>
+			</Modal>
+		</div>
+	);
+};
 
 export default About;

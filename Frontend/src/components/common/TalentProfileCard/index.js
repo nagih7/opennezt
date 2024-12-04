@@ -28,15 +28,16 @@ const TalentProfileCard = ({ talent, handleSkip }) => {
 						)}
 					</div>
 				</div>
-				<div className={styles.avatar}>
-					{talent.avatar ? (
-						<LazyLoadImage alt="User Avatar" src={talent.avatar} />
-					) : (
-						<LazyLoadImage alt="User Avatar" src={AvatarDefault} />
-					)}
-				</div>
+
 				<div className={styles.userInfoWrap}>
 					<div className={styles.userInfo}>
+						<div className={styles.avatar}>
+							{talent.avatar ? (
+								<LazyLoadImage alt="User Avatar" src={talent.avatar} />
+							) : (
+								<LazyLoadImage alt="User Avatar" src={AvatarDefault} />
+							)}
+						</div>
 						<h1>
 							{talent.name}
 							<LazyLoadImage
