@@ -47,7 +47,8 @@ function EditProfilePopup({ onClose }) {
             }
         });
     };
-    const token=localStorage.getItem('token');
+
+    const token = localStorage.getItem('token');
     const handleSubmit = async (e) => {
         e.preventDefault(); 
         const response = await fetch(`${process.env.REACT_APP_API_URL}/users/update-founder-profile`, {
@@ -55,7 +56,7 @@ function EditProfilePopup({ onClose }) {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
-			},
+            },
             body: JSON.stringify(formData)
         });
         if (response.ok) {
@@ -113,8 +114,10 @@ function EditProfilePopup({ onClose }) {
                             <input type="text" value={formData.areas_of_expertise[key].join(",")} onChange={(e) => handleNestedArrayChange(e, key)} />
                         </label>
                     ))}
-                    <button type="submit">Save</button>
-                    <button type="button" onClick={onClose}>Cancel</button>
+                    <div className={styles.buttonGroup}>
+                        <button type="submit">Save</button>
+                        <button type="button" onClick={onClose}>Cancel</button>
+                    </div>
                 </form>
             </div>
         </div>
