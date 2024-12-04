@@ -1,27 +1,43 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { startRequest } from "../app";
 
 const talentSlice = createSlice({
 	name: "founder",
 	initialState: {
+		loadingRecruitTalents: false,
+		loadingSkipTalent: false,
 		talents: {},
 		talentDetails: {},
 	},
 	reducers: {
-		// setTitle: (state) => ({
-		// 	...state,
-		// 	title: "title",
-		// }),
 		startRequestRecruitTalents: (state) => ({
 			...state,
+			loadingRecruitTalents: true,
+			talents: {},
 		}),
 		startRequestRecruitTalentsSuccess: (state, action) => ({
 			...state,
 			talents: action.payload.data,
+			loadingRecruitTalents: false,
 		}),
 		startRequestRecruitTalentsFail: (state) => ({
 			...state,
 			talents: {},
+			loadingRecruitTalents: false,
+		}),
+		startRequestSkipTalent: (state) => ({
+			...state,
+			loadingSkipTalent: true,
+			talents: {},
+		}),
+		startRequestSkipTalentSuccess: (state, action) => ({
+			...state,
+			talents: action.payload.data,
+			loadingSkipTalent: false,
+		}),
+		startRequestSkipTalentFail: (state) => ({
+			...state,
+			talents: {},
+			loadingSkipTalent: false,
 		}),
 		startRequestGetDetailTalent: (state) => ({
 			...state,
@@ -41,6 +57,9 @@ export const {
 	startRequestRecruitTalents,
 	startRequestRecruitTalentsSuccess,
 	startRequestRecruitTalentsFail,
+	startRequestSkipTalent,
+	startRequestSkipTalentSuccess,
+	startRequestSkipTalentFail,
 	startRequestGetDetailTalent,
 	startRequestGetDetailTalentSuccess,
 	startRequestGetDetailTalentFail,

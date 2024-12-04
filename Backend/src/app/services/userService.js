@@ -125,16 +125,16 @@ export async function getProject(userId) {
             $set: {
                 background: {
                     $cond: {
-                        if: {$ifNull: ['$background', false]}, // Kiểm tra nếu background tồn tại
-                        then: {$concat: [LINK_STATIC_URL, '$background']}, // Nối LINK_STATIC_URL với background
-                        else: '$background', // Nếu không có background, giữ nguyên
+                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        then: '$background',
+                        else: {$concat: [LINK_STATIC_URL, '$background']},
                     },
                 },
                 pitch_deck: {
                     $cond: {
-                        if: {$ifNull: ['$pitch_deck', false]}, // Kiểm tra nếu pitch_deck tồn tại
-                        then: {$concat: [LINK_STATIC_URL, '$pitch_deck']}, // Nối LINK_STATIC_URL với pitch_deck
-                        else: '$pitch_deck', // Nếu không có pitch_deck, giữ nguyên
+                        if: {$eq: [{$ifNull: ['$pitch_deck', '']}, '']},
+                        then: '$pitch_deck',
+                        else: {$concat: [LINK_STATIC_URL, '$pitch_deck']},
                     },
                 },
             },
@@ -154,11 +154,12 @@ export async function deleteProject(user, requestBody) {
 }
 
 export async function recuitTalents(requestRecuitTalents) {
+    console.log(requestRecuitTalents)
     const query = {}
     // Thêm điều kiện cho query
-    if (requestRecuitTalents.expertise_area) {
+    if (requestRecuitTalents.sector) {
         query.industry = {
-            $regex: requestRecuitTalents.expertise_area,
+            $regex: requestRecuitTalents.sector,
             $options: 'i',
         }
     }
@@ -169,6 +170,21 @@ export async function recuitTalents(requestRecuitTalents) {
             $options: 'i',
         }
     }
+
+    if (requestRecuitTalents.education_level) {
+        query.education_level = {
+            $regex: requestRecuitTalents.education_level,
+            $options: 'i',
+        }
+    }
+
+    if (requestRecuitTalents.commitment) {
+        query.commitment = {
+            $regex: requestRecuitTalents.commitment,
+            $options: 'i',
+        }
+    }
+    console.log(query)
 
     const talents = await FounderProfile.aggregate([
         {
@@ -213,35 +229,45 @@ export async function recuitTalents(requestRecuitTalents) {
             $addFields: {
                 'user_data.avatar': {
                     $cond: {
-                        if: {$ifNull: ['$user_data.avatar', false]}, // Kiểm tra nếu avatar tồn tại
-                        then: {$concat: [LINK_STATIC_URL, '$user_data.avatar']}, // Nối LINK_STATIC_URL với avatar
-                        else: '$user_data.avatar', // Nếu không có avatar, giữ nguyên
+                        if: {$eq: [{$ifNull: ['$user_data.avatar', '']}, '']},
+                        then: '$user_data.avatar',
+                        else: {$concat: [LINK_STATIC_URL, '$user_data.avatar']},
+                    },
+                },
+                'user_data.background': {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$user_data.background', '']}, '']},
+                        then: '$user_data.background',
+                        else: {$concat: [LINK_STATIC_URL, '$user_data.background']},
                     },
                 },
             },
         },
         {
-            $skip: (requestRecuitTalents.page - 1) * 10,
+            $skip: requestRecuitTalents.skip,
         },
         {
-            $limit: 10,
+            $limit: 1,
         },
         {
             $project: {
                 _id: 0,
-                experience_level: 1,
-                industry: 1,
+                user_id: 0,
+                created_at: 0,
+                updated_at: 0,
                 user_data: {
-                    name: 1,
-                    email: 1,
-                    avatar: 1,
-                    linkedIn: 1,
-                    region: 1,
+                    _id: 0,
+                    password: 0,
+                    role: 0,
+                    is_active: 0,
+                    created_at: 0,
+                    updated_at: 0,
+                    phone: 0,
                 },
             },
         },
     ])
-    return talents
+    return talents.length > 0 ? talents[0] : null
 }
 
 export async function getTalentDetails(email) {

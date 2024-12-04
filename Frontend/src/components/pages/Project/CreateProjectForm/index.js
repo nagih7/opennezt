@@ -282,7 +282,6 @@ const CreateProjectForm = (props) => {
 				optionFilterProp="label"
 				onChange={(value) => handleOnChange(value, "stage")}
 				size="large"
-				// value={formData.stage}
 				style={{ width: "100%" }}
 				options={optionsStage}
 			/>

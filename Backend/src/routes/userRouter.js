@@ -46,7 +46,11 @@ userRouter.get('/get-founder-profile', asyncHandler(userController.getFounderPro
 
 userRouter.put('/update-founder-profile', asyncHandler(userController.updateFounderProfile))
 
-userRouter.get('/recruit-talents', asyncHandler(userController.recuitTalents))
+userRouter.get(
+    '/recruit-talents',
+    asyncHandler(validate(userRequest.recuitTalents)),
+    asyncHandler(userController.recuitTalents)
+)
 
 userRouter.get(
     '/talent-details/:email',

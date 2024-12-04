@@ -1,18 +1,52 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";
-import { getDetailTalent, recruitTalents } from "api/talent";
-import { useSelector } from "react-redux";
+import { recruitTalents, skipTalent } from "api/talent";
 import axios from "axios";
+import RecruitWrap from "./RecuitWrap";
+import TalentProfile from "components/common/TalentProfile";
+import { useSelector } from "react-redux";
+import { set } from "lodash";
 
 function RecruitTalents() {
-	const [requestRecruitTalents, setRequestRecruitTalents] = useState({
-		expertise_area: "",
-		experience_level: "",
+	const { talents, loadingRecruitTalents } = useSelector(
+		(state) => state.talent
+	);
+	const [formRecruitTalents, setFormRecruitTalents] = useState({
+		sector: "",
+		expertise_level: "",
+		education_level: "",
+		commitment: "",
 		location: "",
 		language: "",
-		page: 1,
 	});
+	const [skip, setSkip] = useState(0);
+	const handleOnChange = (event, nameSelect) => {
+		if (nameSelect) {
+			setFormRecruitTalents((prevState) => ({
+				...prevState,
+				[nameSelect]: event,
+			}));
+		} else {
+			const { name, value } = event.target;
+			setFormRecruitTalents((prevState) => ({
+				...prevState,
+				[name]: value,
+			}));
+		}
+	};
+	const handleConfirmRecruitTalents = async () => {
+		await store.dispatch(recruitTalents({ ...formRecruitTalents, skip: 0 }));
+		setSkip(0);
+	};
+
+	const handleSkip = async () => {
+		setSkip((prevState) => prevState + 1);
+		await store.dispatch(
+			skipTalent({ ...formRecruitTalents, skip: skip + 1 })
+		);
+	};
+
 	const token = localStorage.getItem("token");
 
 	const getUserIdFromToken = useCallback(() => {
@@ -20,35 +54,7 @@ function RecruitTalents() {
 		return decodedToken.data.user_id;
 	}, [token]);
 	const userId = getUserIdFromToken();
-	const talents = useSelector((state) => state.talent.talents);
 
-	const talentDetails = useSelector((state) => state.talent.talentDetails);
-	console.log(talentDetails);
-
-	const [dropdowns, setDropdowns] = useState({
-		expertise_area: false,
-		experience_level: false,
-		location: false,
-		language: false,
-	});
-	const handleDropdownToggle = (field) => {
-		setDropdowns((prev) => ({ ...prev, [field]: !prev[field] }));
-	};
-
-	const handleSelect = (field, value) => {
-		setRequestRecruitTalents((prev) => ({ ...prev, [field]: value }));
-		setDropdowns((prev) => ({ ...prev, [field]: false }));
-	};
-	const [popupActive, setPopupActive] = useState(false);
-
-	const handleViewDetails = (email) => {
-		store.dispatch(getDetailTalent(email));
-		setPopupActive(true);
-	};
-
-	const closePopup = () => {
-		setPopupActive(false);
-	};
 	const mess = "hi";
 	const date = new Date().toISOString();
 	const createChat = async (userId, talentId, mess, date) => {
@@ -85,236 +91,14 @@ function RecruitTalents() {
 		}
 	};
 
-	const handleConfirmSearch = async (requestRecruitTalents) => {
-		console.log(requestRecruitTalents);
-		await store.dispatch(recruitTalents(requestRecruitTalents));
-	};
-
 	return (
 		<div className={styles.searchContainer}>
-			<h2>Search for Talents</h2>
-			<div className={styles.searchInputs}>
-				<div className={styles.inputWrapper}>
-					<input
-						type="text"
-						name="expertise_area"
-						placeholder="Expertise Area"
-						value={requestRecruitTalents.expertise_area}
-						onFocus={() => handleDropdownToggle("expertise_area")}
-					/>
-					{dropdowns.expertise_area && (
-						<ul className={styles.dropdown}>
-							<li
-								onClick={() =>
-									handleSelect("expertise_area", "Marketing")
-								}>
-								Marketing
-							</li>
-							<li
-								onClick={() =>
-									handleSelect("expertise_area", "Technology")
-								}>
-								Technology
-							</li>
-							<li
-								onClick={() =>
-									handleSelect("expertise_area", "Operations")
-								}>
-								Operations
-							</li>
-						</ul>
-					)}
-				</div>
-				<div className={styles.inputWrapper}>
-					<input
-						type="text"
-						name="experience_level"
-						placeholder="Experience Level"
-						value={requestRecruitTalents.experience_level}
-						onFocus={() => handleDropdownToggle("experience_level")}
-					/>
-					{dropdowns.experience_level && (
-						<ul className={styles.dropdown}>
-							<li
-								onClick={() =>
-									handleSelect("experience_level", "Senior")
-								}>
-								Senior
-							</li>
-							<li
-								onClick={() =>
-									handleSelect("experience_level", "Junior")
-								}>
-								Junior
-							</li>
-						</ul>
-					)}
-				</div>
-				<div className={styles.inputWrapper}>
-					<input
-						type="text"
-						name="location"
-						placeholder="Location"
-						value={requestRecruitTalents.location}
-						onFocus={() => handleDropdownToggle("location")}
-					/>
-					{dropdowns.location && (
-						<ul className={styles.dropdown}>
-							<li onClick={() => handleSelect("location", "Viet Nam")}>
-								Viet Nam
-							</li>
-							<li onClick={() => handleSelect("location", "USA")}>
-								USA
-							</li>
-						</ul>
-					)}
-				</div>
-				<div className={styles.inputWrapper}>
-					<input
-						type="text"
-						name="language"
-						placeholder="Language"
-						value={requestRecruitTalents.language}
-						onFocus={() => handleDropdownToggle("language")}
-					/>
-					{dropdowns.language && (
-						<ul className={styles.dropdown}>
-							<li onClick={() => handleSelect("language", "Vietnamese")}>
-								Vietnamese
-							</li>
-							<li onClick={() => handleSelect("language", "English")}>
-								English
-							</li>
-						</ul>
-					)}
-				</div>
-			</div>
-			<button
-				className={styles.searchButton}
-				onClick={() => handleConfirmSearch(requestRecruitTalents)}>
-				Search
-			</button>
-
-			<div className={styles.results}>
-				{talents && talents.length > 0 ? (
-					<div className={styles.talentCardsContainer}>
-						{talents.map((talent) => (
-							<div
-								key={talent.user_data.email}
-								className={styles.talentCard}>
-								<img
-									src={talent.user_data.avatar || "default-avatar.png"}
-									alt="Avatar"
-									className={styles.talentAvatar}
-								/>
-								<h3>{talent.user_data.name}</h3>
-								<p>{talent.user_data.email}</p>
-								<p>
-									{talent.experience_level} | {talent.industry}
-								</p>
-								<button
-									className={styles.viewDetailsButton}
-									onClick={() =>
-										handleViewDetails(talent.user_data.email)
-									}>
-									View Details
-								</button>
-							</div>
-						))}
-					</div>
-				) : (
-					<p>No talents found.</p>
-				)}
-			</div>
-
-			{popupActive && talentDetails && (
-				<div
-					className={`${styles.popup} ${
-						popupActive ? styles.popupActive : ""
-					}`}
-					onClick={closePopup}>
-					<div
-						className={styles.popupContent}
-						onClick={(e) => e.stopPropagation()}>
-						<button
-							onClick={closePopup}
-							className={styles.closePopupButton}>
-							X
-						</button>
-
-						<img
-							src={talentDetails.avatar || "default-avatar.png"}
-							alt="Avatar"
-							className={styles.popupAvatar}
-						/>
-						<h3>{talentDetails.name}</h3>
-						<button
-							className={styles.messengerButton}
-							onClick={() =>
-								createChat(userId, talentDetails._id, mess, date)
-							}>
-							Messenger Now
-						</button>
-						<p>
-							<strong>Email:</strong> {talentDetails.email}
-						</p>
-						<p>
-							<strong>Phone:</strong> {talentDetails.phone}
-						</p>
-						<p>
-							<strong>LinkedIn:</strong>{" "}
-							<a
-								href={talentDetails.linkedIn}
-								target="_blank"
-								rel="noopener noreferrer">
-								View LinkedIn
-							</a>
-						</p>
-						<p>
-							<strong>Region:</strong> {talentDetails.region}
-						</p>
-
-						<img
-							src={talentDetails.avatar || "default-avatar.png"}
-							alt="Avatar"
-							className={styles.popupAvatar}
-						/>
-						<h3>{talentDetails.name}</h3>
-						<p>
-							<strong>Email:</strong> {talentDetails.email}
-						</p>
-						<p>
-							<strong>Phone:</strong> {talentDetails.phone}
-						</p>
-						<p>
-							<strong>LinkedIn:</strong>{" "}
-							<a
-								href={talentDetails.linkedIn}
-								target="_blank"
-								rel="noopener noreferrer">
-								View LinkedIn
-							</a>
-						</p>
-						<p>
-							<strong>Region:</strong> {talentDetails.region}
-						</p>
-
-						<p>
-							<strong>Areas of Expertise:</strong>
-						</p>
-						<ul>
-							{talentDetails.talent_profile?.areas_of_expertise &&
-								Object.entries(
-									talentDetails.talent_profile.areas_of_expertise
-								).map(([category, skills]) => (
-									<li key={category}>
-										<strong>{category}:</strong> {skills.join(", ")}
-									</li>
-								))}
-						</ul>
-					</div>
-				</div>
-			)}
+			<RecruitWrap
+				handleOnChange={handleOnChange}
+				handleConfirmRecruitTalents={handleConfirmRecruitTalents}
+				loadingRecruitTalents={loadingRecruitTalents}
+			/>
+			<TalentProfile talent={talents} handleSkip={handleSkip} />
 		</div>
 	);
 }

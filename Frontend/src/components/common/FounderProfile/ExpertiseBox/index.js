@@ -2,7 +2,6 @@ import React from "react";
 
 const ExpertiseBox = (props) => {
 	const { expertise, key } = props;
-	console.log("key", key);
 
 	return (
 		<>
