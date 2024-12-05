@@ -1,4 +1,4 @@
-import {User, FounderProfile, Project, Invitation} from '@/models'
+import {User, FounderProfile, Project, Invitation, ObjectId} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
 
@@ -156,7 +156,6 @@ export async function deleteProject(user, requestBody) {
 }
 
 export async function recuitTalents(requestRecuitTalents) {
-    console.log(requestRecuitTalents)
     const query = {}
     // Thêm điều kiện cho query
     if (requestRecuitTalents.sector) {
@@ -246,35 +245,33 @@ export async function recuitTalents(requestRecuitTalents) {
             },
         },
         {
-            $skip: requestRecuitTalents.skip,
+            $skip: (requestRecuitTalents.page - 1) * requestRecuitTalents.per_page,
         },
         {
-            $limit: 1,
+            $limit: requestRecuitTalents.per_page,
         },
         {
             $project: {
                 _id: 0,
-                user_id: 0,
-                created_at: 0,
-                updated_at: 0,
+                industry: 1,
+                experience_level: 1,
                 user_data: {
-                    _id: 0,
-                    password: 0,
-                    role: 0,
-                    is_active: 0,
-                    created_at: 0,
-                    updated_at: 0,
-                    phone: 0,
+                    _id: 1,
+                    avatar: 1,
+                    name: 1,
+                    region: 1,
+                    city: 1,
+                    language: 1,
                 },
             },
         },
     ])
-    return talents.length > 0 ? talents[0] : null
+    return talents
 }
 
-export async function getTalentDetails(email) {
+export async function getTalentDetails(id) {
     const detailTalent = await User.aggregate([
-        {$match: {email}},
+        {$match: {_id: new ObjectId(id)}},
         {
             $lookup: {
                 from: 'founder_profiles',

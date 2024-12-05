@@ -53,7 +53,7 @@ userRouter.get(
 )
 
 userRouter.get(
-    '/talent-details/:email',
+    '/talent-details/:id',
 
     // asyncHandler(validate(userRequest.getTalentDetails)),
     asyncHandler(userController.getTalentDetails)

@@ -252,5 +252,6 @@ export const recuitTalents = Joi.object({
     commitment: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Cam kết'),
     location: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Địa điểm'),
     language: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Ngôn ngữ'),
-    skip: Joi.number().integer().min(0).required().label('Bỏ qua'),
+    page: Joi.number().integer().min(1).required().label('Trang'),
+    per_page: Joi.number().integer().min(1).max(100).required().label('Số lượng'),
 })

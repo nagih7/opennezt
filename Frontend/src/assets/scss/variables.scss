@@ -8,6 +8,8 @@ $colorActive: #6c9bcf;
 $colorNote: #76839a;
 $backgroundHoverMain: #2a303d;
 
+$colorWhiteHover: #fcfcfe;
+
 $colorError: #e74c3c;
 
 $colorBlue: #1a85f8;
@@ -129,7 +131,8 @@ $colorRed: #c30326;
 $colorLine: #323a49;
 
 // Box
-$boxShadow: 0 2rem 3rem $colorLight;
+$boxShadow: 0 0rem 2rem $colorLight;
+$boxShadowHover: 0 0rem 0rem $colorLight1;
 $backgroundNavItemActive: #848bc42e;
 $navItemAciive: #6c9bcf;
 

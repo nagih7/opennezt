@@ -66,9 +66,9 @@ const TalentProfileCard = ({ talent, handleSkip }) => {
 							loading={true}
 							// onClick={() => enterLoading(0)}
 						>
-							Send Message
+							Send Request
 						</Button>
-						<Button
+						{/* <Button
 							style={{
 								backgroundColor: "#767676",
 								color: "#fff",
@@ -78,7 +78,7 @@ const TalentProfileCard = ({ talent, handleSkip }) => {
 							loading={loadingSkipTalent}
 							onClick={handleSkip}>
 							Skip for Now
-						</Button>
+						</Button> */}
 					</div>
 				</div>
 			</div>

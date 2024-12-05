@@ -2,9 +2,8 @@ import React from "react";
 import styles from "./styles.module.scss";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-const FounderProfile = (props) => {
-	const { founderProfile } = props;
-
+const FounderProfile = ({ founderProfile }) => {
+	console.log("founderProfile", founderProfile);
 	return (
 		<div className={styles.founderProfileWrap}>
 			<h2>
