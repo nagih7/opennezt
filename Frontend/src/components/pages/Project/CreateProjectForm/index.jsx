@@ -5,6 +5,7 @@ import { InboxOutlined } from "@ant-design/icons";
 import { message, Upload, Switch, DatePicker, Button, Image } from "antd";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import FundingSourceBox from "./FundingSourceBox";
+import { listSector, listStage } from "components/common/ListSelected";
 const { Dragger } = Upload;
 const { TextArea } = Input;
 
@@ -77,81 +78,6 @@ const CreateProjectForm = (props) => {
 			background: {},
 		}));
 	};
-
-	const optionsIndustries = [
-		{
-			label: "Infomation Technology",
-			value: "Infomation Technology",
-			// emoji: "IT",
-			// desc: "China (中国)",
-		},
-		{
-			label: "Healthcare",
-			value: "Healthcare",
-		},
-		{
-			label: "Consumer Staples",
-			value: "Consumer Staples",
-		},
-		{
-			label: "Material",
-			value: "Material",
-		},
-		{
-			label: "Communication Services",
-			value: "Communication Services",
-		},
-		{
-			label: "Industrials",
-			value: "Industrials",
-		},
-		{
-			label: "Financials",
-			value: "Financials",
-		},
-		{
-			label: "Consumer Discretionary",
-			value: "Consumer Discretionary",
-		},
-		{
-			label: "Utilities",
-			value: "Utilities",
-		},
-		{
-			label: "Real Esates",
-			value: "Real Esates",
-		},
-	];
-	const optionsStage = [
-		{
-			label: "Idea Stage",
-			value: "Idea Stage",
-		},
-		{
-			label: "Pre-seed Stage",
-			value: "Pre-seed Stage",
-		},
-		{
-			label: "Seed Stage",
-			value: "Seed Stage",
-		},
-		{
-			label: "Early Stage",
-			value: "Early Stage",
-		},
-		{
-			label: "Growth Stage",
-			value: "Growth Stage",
-		},
-		{
-			label: "Expansion Stage",
-			value: "Expansion Stage",
-		},
-		{
-			label: "Mature Stage",
-			value: "Mature Stage",
-		},
-	];
 
 	const handleOnChange = (event, nameSelect) => {
 		if (nameSelect) {
@@ -265,13 +191,13 @@ const CreateProjectForm = (props) => {
 				size="large"
 				placeholder="Which industries are relevant to your company?*"
 				onChange={(value) => handleOnChange(value, "related_industries")}
-				options={optionsIndustries}
-				optionRender={(optionsIndustries) => (
+				options={listSector}
+				optionRender={(listSector) => (
 					<Space>
-						<span role="img" aria-label={optionsIndustries.data.label}>
-							{optionsIndustries.data.emoji}
+						<span role="img" aria-label={listSector.data.label}>
+							{listSector.data.emoji}
 						</span>
-						{optionsIndustries.data.desc}
+						{listSector.data.desc}
 					</Space>
 				)}
 			/>
@@ -283,7 +209,7 @@ const CreateProjectForm = (props) => {
 				onChange={(value) => handleOnChange(value, "stage")}
 				size="large"
 				style={{ width: "100%" }}
-				options={optionsStage}
+				options={listStage}
 			/>
 			<TextArea
 				rows={4}

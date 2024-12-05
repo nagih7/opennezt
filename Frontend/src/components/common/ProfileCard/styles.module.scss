@@ -56,8 +56,8 @@
 			border-radius: 50%;
 			border: 3px solid var(--color-white);
 			overflow: hidden;
-			margin-left: 88px;
-			margin-top: -6%;
+			margin-left: 66px;
+			margin-top: -8%;
 
 			img {
 				width: 100%;
@@ -66,44 +66,55 @@
 			}
 		}
 
-		.userInfo {
-			background-color: var(--color-white);
+		.userInfoWrap {
+			position: relative;
+			display: flex;
+			justify-content: space-between;
+			width: 100%;
 			padding: var(--card-padding);
 			border-radius: var(--card-border-radius);
 			box-shadow: var(--box-shadow);
 			margin-top: -45px;
+			.userInfo {
+				h1 {
+					font-size: 2rem;
+					font-weight: bold;
+					// display: flex;
+					align-items: center;
+					justify-content: space-between;
 
-			h1 {
-				font-size: 2rem;
-				font-weight: bold;
-				// display: flex;
-				align-items: center;
-				justify-content: space-between;
+					.verifyIcon {
+						margin-left: 10px;
+						width: 30px;
+						height: 30px;
+						position: relative;
+					}
+				}
 
-				.verifyIcon {
-					margin-left: 10px;
-					width: 30px;
-					height: 30px;
-					position: relative;
-					top: 5px;
+				p {
+					margin: 5px 0;
+					color: var(--color-dark-variant);
+				}
+
+				a {
+					display: inline-block;
+					margin-top: 10px;
+					color: var(--color-primary);
+					text-decoration: none;
+					font-weight: bold;
+
+					&:hover {
+						text-decoration: underline;
+					}
 				}
 			}
-
-			p {
-				margin: 5px 0;
-				color: var(--color-dark-variant);
-			}
-
-			a {
-				display: inline-block;
-				margin-top: 10px;
-				color: var(--color-primary);
-				text-decoration: none;
-				font-weight: bold;
-
-				&:hover {
-					text-decoration: underline;
-				}
+			.userActions {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				padding: 1.8rem;
+				display: flex;
+				gap: 1rem;
 			}
 		}
 	}

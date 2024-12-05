@@ -4,6 +4,7 @@ const founderSlice = createSlice({
 	name: "founder",
 	initialState: {
 		founderProfile: {},
+		loadingUpdateFounderProfile: false,
 	},
 	reducers: {
 		// setTitle: (state) => ({
@@ -21,6 +22,19 @@ const founderSlice = createSlice({
 			...state,
 			founderProfile: {},
 		}),
+		startUpdateFounderProfile: (state) => ({
+			...state,
+			loadingUpdateFounderProfile: true,
+		}),
+		startUpdateFounderProfileSuccess: (state, action) => ({
+			...state,
+			founderProfile: action.payload.data,
+			loadingUpdateFounderProfile: false,
+		}),
+		startUpdateFounderProfileFail: (state) => ({
+			...state,
+			loadingUpdateFounderProfile: false,
+		}),
 	},
 });
 
@@ -28,6 +42,9 @@ export const {
 	startRequestGetFounderProfile,
 	startRequestGetFounderProfileSuccess,
 	startRequestGetFounderProfileFail,
+	startUpdateFounderProfile,
+	startUpdateFounderProfileSuccess,
+	startUpdateFounderProfileFail,
 } = founderSlice.actions;
 
 export default founderSlice.reducer;

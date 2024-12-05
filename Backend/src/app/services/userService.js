@@ -89,6 +89,7 @@ export async function createFounderProfile(user, requestBody) {
     requestBody.user_id = user._id
     const founder = new FounderProfile(requestBody)
     await founder.save()
+    return founder
 }
 
 export async function getFounderProfile(userId) {
@@ -100,6 +101,7 @@ export async function updateFounderProfile(user, requestBody) {
     const founder = await FounderProfile.findOne({user_id: user._id})
     founder.set(requestBody)
     await founder.save()
+    return founder
 }
 
 export async function createProject(user, {pitch_deck, background, ...requestBody}) {

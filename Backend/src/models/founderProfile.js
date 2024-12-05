@@ -97,10 +97,10 @@ const FounderProfile = createModel('Founder_Profile', 'founder_profiles', {
         type: String,
         required: true,
     },
-    avalability: {
+    availability: {
         type: String,
         required: true,
-        enum: ['Exploring', 'Full-time', 'Part-time', 'All-in', 'Freelance'],
+        enum: ['Exploring', 'Full-time', 'Part-time', 'All-In', 'Freelance'],
     },
 })
 
