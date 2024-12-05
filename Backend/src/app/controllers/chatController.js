@@ -17,52 +17,43 @@ export const saveMessage = async (senderId, receiverId, messageContent) => {
 export const getReceiverIds = async (userId) => {
     try {
         const senderIds = await Messenger.find({
-            $or: [
-                { senderId: userId },
-                { receiverId: userId }
-            ]
+            $or: [{senderId: userId}, {receiverId: userId}],
         }).distinct('senderId')
-          
+
         const receiverIds = await Messenger.find({
-            $or: [
-                { senderId: userId },
-                { receiverId: userId }
-            ]
+            $or: [{senderId: userId}, {receiverId: userId}],
         }).distinct('receiverId')
-          
+
         const distinctIds = [...new Set([...senderIds, ...receiverIds])]
-          
+
         // console.log(distinctIds)
-          
+
         // const messages = await Messenger.find({
         //     $or: [
         //         { senderId: userId },
         //         { receiverId: userId }
         //     ]
-        // }).distinct('receiverId')  
+        // }).distinct('receiverId')
         // console.log('Receiver Ids:', messages)
-        const filteredReceiverIds = distinctIds.filter(id => id.toString() !== userId.toString())
-        console.log('Filtered Receiver Ids:', filteredReceiverIds)
+        const filteredReceiverIds = distinctIds.filter((id) => id.toString() !== userId.toString())
         if (filteredReceiverIds.length === 0) {
             return []
         }
-  
+
         const users = await User.find({
-            _id: { $in: filteredReceiverIds }
+            _id: {$in: filteredReceiverIds},
         })
-  
-        return users.map(user => {
+
+        return users.map((user) => {
             return {
                 receiverId: userId,
                 userId: user._id,
                 username: user.name,
-                avatar: user.avatar
+                avatar: user.avatar,
             }
         })
-  
     } catch (error) {
         console.error('Error getting receiver names:', error)
         throw error
     }
 }
-  

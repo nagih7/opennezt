@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
+import CloseIcon from "@mui/icons-material/Close";
 
 function ChatsPopover() {
 	const stepState = useSelector((state) => state.home.steps);
@@ -176,9 +177,7 @@ function ChatsPopover() {
 	};
 
 	const openChatBox = async (receiver) => {
-		console.log("Receiver:", receiver);
 		setReceiverId(receiver.userId);
-		console.log("Receiver ID:", receiver.userId);
 
 		if (openChats.some((c) => c.username === receiver.username)) return;
 
@@ -266,6 +265,12 @@ function ChatsPopover() {
 		return () => clearInterval(interval);
 	}, [token]);
 
+	const handleEnterKey = (event) => {
+		if (event.key === "Enter") {
+			sendMessage();
+		}
+	};
+
 	return (
 		<div className={styles.chatPopoverWrap}>
 			<div className={styles.headerWrap}>
@@ -309,22 +314,23 @@ function ChatsPopover() {
 							<button
 								onClick={() => closeChatBox(chat.username)}
 								className={styles.closeButton}>
-								X
+								<CloseIcon />
 							</button>
 						</div>
 						<div className={styles.miniChatBody}>
 							{messages.map((msg, idx) => (
 								<div
 									key={idx}
-									className={`${styles.message} ${
+									className={`${styles.messageWrap} ${
 										msg.isSender ? styles.sent : styles.received
 									}`}>
-									<span>{msg.message}</span>
+									<span className={styles.message}>{msg.message}</span>
 								</div>
 							))}
 						</div>
 						<div className={styles.miniChatFooter}>
 							<input
+								onKeyDown={handleEnterKey}
 								type="text"
 								placeholder="Type a message..."
 								className={styles.miniChatInput}
