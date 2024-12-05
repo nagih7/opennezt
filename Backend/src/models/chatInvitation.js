@@ -1,26 +1,23 @@
-// models/messenger.js
 import createModel, {ObjectId} from './base'
 import User from './user'
 
-const Messenger = createModel('Messenger', 'messengers', {
-    senderId: {
+const ChatInvitation = createModel('ChatInvitation', 'chat_invitations', {
+    sender_id: {
         type: ObjectId,
         required: true,
         ref: User,
     },
-    receiverId: {
+    receiver_id: {
         type: ObjectId,
         required: true,
         ref: User,
     },
-    message: {
+    status: {
         type: String,
         required: true,
-    },
-    date: {
-        type: String,
-        required: true,
+        enum: ['pending', 'accepted', 'rejected'],
+        default: 'pending',
     },
 })
 
-export default Messenger
+export default ChatInvitation

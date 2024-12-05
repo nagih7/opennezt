@@ -1,4 +1,7 @@
 @import "../../../assets/scss/variables.scss";
 
 .talentProfileWrap {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
 }

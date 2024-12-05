@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";
 import { recruitTalents, skipTalent, getTalentDetails } from "api/talent";
+import { getChatInvitation } from "api/chat";
 import RecruitWrap from "./RecuitWrap";
 import TalentProfile from "components/common/TalentProfile";
 import { useSelector } from "react-redux";
@@ -53,6 +54,7 @@ function RecruitTalents() {
 
 	const handleGetDetailTalent = async (id) => {
 		await store.dispatch(getTalentDetails(id));
+		await store.dispatch(getChatInvitation(id));
 		setModalTalentDetails(true);
 	};
 

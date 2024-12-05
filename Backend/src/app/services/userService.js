@@ -185,7 +185,6 @@ export async function recuitTalents(requestRecuitTalents) {
             $options: 'i',
         }
     }
-    console.log(query)
 
     const talents = await FounderProfile.aggregate([
         {
@@ -290,16 +289,16 @@ export async function getTalentDetails(id) {
             $addFields: {
                 avatar: {
                     $cond: {
-                        if: {$ifNull: ['$avatar', false]}, // Kiểm tra nếu avatar tồn tại
-                        then: {$concat: [LINK_STATIC_URL, '$avatar']}, // Nối LINK_STATIC_URL với avatar
-                        else: '$avatar', // Nếu không có avatar, giữ nguyên
+                        if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                        then: '$avatar',
+                        else: {$concat: [LINK_STATIC_URL, '$avatar']},
                     },
                 },
                 background: {
                     $cond: {
-                        if: {$ifNull: ['$background', false]}, // Kiểm tra nếu background tồn tại
-                        then: {$concat: [LINK_STATIC_URL, '$background']}, // Nối LINK_STATIC_URL với background
-                        else: '$background', // Nếu không có background, giữ nguyên
+                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        then: '$background',
+                        else: {$concat: [LINK_STATIC_URL, '$background']},
                     },
                 },
             },

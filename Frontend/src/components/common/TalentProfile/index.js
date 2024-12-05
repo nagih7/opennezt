@@ -5,7 +5,6 @@ import FounderProfile from "../FounderProfile";
 
 function TalentProfile({ talent, handleSkip }) {
 	const { talent_profile, ...user_data } = talent;
-	console.log("talent_profile", talent_profile);
 	return (
 		<div className={styles.talentProfileWrap}>
 			{talent && (
