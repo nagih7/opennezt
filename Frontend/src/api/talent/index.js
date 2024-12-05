@@ -46,10 +46,10 @@ export const skipTalent = (requestSkipTalent) => async (dispatch, getState) => {
 	});
 };
 
-export const getDetailTalent = (email) => async (dispatch, getState) => {
+export const getTalentDetails = (id) => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
-		apiPath: `users/talent-details/${email}`,
+		apiPath: `users/talent-details/${id}`,
 		actionTypes: [
 			startRequestGetDetailTalent,
 			startRequestGetDetailTalentSuccess,

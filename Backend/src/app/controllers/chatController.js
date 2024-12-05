@@ -1,5 +1,7 @@
 import Messenger from '../../models/messenger.js'
 import User from '../../models/user.js'
+import * as chatService from '../services/chatService.js'
+
 export const saveMessage = async (senderId, receiverId, messageContent) => {
     try {
         const newMessage = new Messenger({
@@ -14,6 +16,7 @@ export const saveMessage = async (senderId, receiverId, messageContent) => {
         console.error('Error saving message:', error)
     }
 }
+
 export const getReceiverIds = async (userId) => {
     try {
         const senderIds = await Messenger.find({
@@ -56,4 +59,19 @@ export const getReceiverIds = async (userId) => {
         console.error('Error getting receiver names:', error)
         throw error
     }
+}
+
+export async function chatInvitation(req, res) {
+    await chatService.chatInvitation(req.currentUser, req.body)
+    res.status(201).jsonify('Mời trò chuyện thành công.')
+}
+
+export async function getChatInvitations(req, res) {
+    const invitations = await chatService.getChatInvitations(req.currentUser)
+    res.status(200).json(invitations)
+}
+
+export async function getChatInvitation(req, res) {
+    const invitation = await chatService.getChatInvitation(req.currentUser, req.params.receiver_id)
+    res.status(200).json(invitation)
 }

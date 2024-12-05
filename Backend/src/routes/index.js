@@ -3,6 +3,7 @@ import userRouter from './userRouter'
 import homeRouter from './homeRouter'
 import chatrouter from './chatRoutes'
 import commonRouter from './commonRouter'
+import LandingPageRouter from './subscribe.js'
 
 function route(app) {
     app.use('/auth', authRouter) // Dùng router cho các route liên quan đến auth
@@ -10,7 +11,7 @@ function route(app) {
     app.use('/home', homeRouter) // Dùng router cho các route trang chủ
     app.use('/chat', chatrouter) // Dùng router cho các route chat (bao gồm cả WebSocket route)
     app.use('/common', commonRouter) // Dùng router cho các route chung
-
+    app.use('/subscribe', LandingPageRouter)
     app.get('/', (req, res) => {
         res.json({
             message: 'Welcome to OpenNezt API',

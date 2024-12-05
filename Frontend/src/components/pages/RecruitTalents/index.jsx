@@ -1,15 +1,16 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";
-import { recruitTalents, skipTalent } from "api/talent";
-import axios from "axios";
+import { recruitTalents, skipTalent, getTalentDetails } from "api/talent";
+import { getChatInvitation } from "api/chat";
 import RecruitWrap from "./RecuitWrap";
 import TalentProfile from "components/common/TalentProfile";
 import { useSelector } from "react-redux";
-import { set } from "lodash";
+import ListTalents from "./ListTalents";
+import { Modal } from "antd";
 
 function RecruitTalents() {
-	const { talents, loadingRecruitTalents } = useSelector(
+	const { talents, loadingRecruitTalents, talentDetails } = useSelector(
 		(state) => state.talent
 	);
 	const [formRecruitTalents, setFormRecruitTalents] = useState({
@@ -19,8 +20,12 @@ function RecruitTalents() {
 		commitment: "",
 		location: "",
 		language: "",
+		page: 1,
+		per_page: 10,
 	});
 	const [skip, setSkip] = useState(0);
+	const [modalTalentDetails, setModalTalentDetails] = useState(false);
+
 	const handleOnChange = (event, nameSelect) => {
 		if (nameSelect) {
 			setFormRecruitTalents((prevState) => ({
@@ -47,49 +52,59 @@ function RecruitTalents() {
 		);
 	};
 
-	const token = localStorage.getItem("token");
-
-	const getUserIdFromToken = useCallback(() => {
-		const decodedToken = JSON.parse(atob(token.split(".")[1]));
-		return decodedToken.data.user_id;
-	}, [token]);
-	const userId = getUserIdFromToken();
-
-	const mess = "hi";
-	const date = new Date().toISOString();
-	const createChat = async (userId, talentId, mess, date) => {
-		try {
-			const token = localStorage.getItem("token");
-			const ws = new WebSocket(
-				`${process.env.REACT_APP_WS_URL}/chat?token=${token}`
-			);
-			console.log(ws);
-			const response = await axios.post(
-				`${process.env.REACT_APP_API_URL}/chat/create-chat`,
-				{
-					userId,
-					receiverId: talentId,
-					message: mess,
-					date: date,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-			console.log(response.data.message);
-
-			ws.onopen = () => {
-				console.log("WebSocket connection established");
-			};
-			ws.onmessage = (message) => {
-				console.log("Received message:", message.data);
-			};
-		} catch (error) {
-			console.error("Error creating chat:", error);
-		}
+	const handleGetDetailTalent = async (id) => {
+		await store.dispatch(getTalentDetails(id));
+		await store.dispatch(getChatInvitation(id));
+		setModalTalentDetails(true);
 	};
+
+	const handleClosePopup = () => {
+		setModalTalentDetails(false);
+	};
+
+	// const token = localStorage.getItem("token");
+
+	// const getUserIdFromToken = useCallback(() => {
+	// 	const decodedToken = JSON.parse(atob(token.split(".")[1]));
+	// 	return decodedToken.data.user_id;
+	// }, [token]);
+	// const userId = getUserIdFromToken();
+
+	// const mess = "hi";
+	// const date = new Date().toISOString();
+	// const createChat = async (userId, talentId, mess, date) => {
+	// 	try {
+	// 		const token = localStorage.getItem("token");
+	// 		const ws = new WebSocket(
+	// 			`${process.env.REACT_APP_WS_URL}/chat?token=${token}`
+	// 		);
+	// 		console.log(ws);
+	// 		const response = await axios.post(
+	// 			`${process.env.REACT_APP_API_URL}/chat/create-chat`,
+	// 			{
+	// 				userId,
+	// 				receiverId: talentId,
+	// 				message: mess,
+	// 				date: date,
+	// 			},
+	// 			{
+	// 				headers: {
+	// 					Authorization: `Bearer ${token}`,
+	// 				},
+	// 			}
+	// 		);
+	// 		console.log(response.data.message);
+
+	// 		ws.onopen = () => {
+	// 			console.log("WebSocket connection established");
+	// 		};
+	// 		ws.onmessage = (message) => {
+	// 			console.log("Received message:", message.data);
+	// 		};
+	// 	} catch (error) {
+	// 		console.error("Error creating chat:", error);
+	// 	}
+	// };
 
 	return (
 		<div className={styles.searchContainer}>
@@ -98,7 +113,21 @@ function RecruitTalents() {
 				handleConfirmRecruitTalents={handleConfirmRecruitTalents}
 				loadingRecruitTalents={loadingRecruitTalents}
 			/>
-			<TalentProfile talent={talents} handleSkip={handleSkip} />
+			<ListTalents
+				talents={talents}
+				handleGetDetailTalent={handleGetDetailTalent}
+			/>
+
+			<Modal
+				title=""
+				okText="OK"
+				open={modalTalentDetails}
+				onOk={handleClosePopup}
+				confirmLoading={false}
+				onCancel={handleClosePopup}
+				width={1000}>
+				<TalentProfile talent={talentDetails} handleSkip={handleSkip} />
+			</Modal>
 		</div>
 	);
 }

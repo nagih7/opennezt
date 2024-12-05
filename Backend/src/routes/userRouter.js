@@ -52,12 +52,7 @@ userRouter.get(
     asyncHandler(userController.recuitTalents)
 )
 
-userRouter.get(
-    '/talent-details/:email',
-
-    // asyncHandler(validate(userRequest.getTalentDetails)),
-    asyncHandler(userController.getTalentDetails)
-)
+userRouter.get('/talent-details/:id', asyncHandler(userController.getTalentDetails))
 
 // Invite member
 userRouter.post(

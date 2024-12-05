@@ -2,11 +2,11 @@
 
 .talentProfileCardWrap {
 	background-color: $colorBackground;
-	border-radius: $borderRadius $borderRadius 0 0;
-	padding: 1.8rem;
+	border-radius: $borderRadius;
+	// padding: 1.8rem;
 	.bannerContainer {
-		background-color: white;
-		border-radius: 2rem;
+		background-color: $colorBackground;
+		border-radius: $borderRadius;
 		padding: 2rem;
 
 		.banner {

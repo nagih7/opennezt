@@ -1,17 +1,24 @@
-import express from 'express'
+import express, {Router} from 'express'
+import {asyncHandler, verifyToken} from '@/utils/helpers'
+import validate from '@/app/middleware/common/validate'
+import requireAuthentication from '@/app/middleware/common/require-authentication'
+import * as chatRequest from '../app/requests/chatRequest'
+import * as chatController from '../app/controllers/chatController'
 import expressWs from 'express-ws'
-import {getReceiverIds} from '../app/controllers/chatController.js'
 import wss from '../app/socket/websocket.js'
 import Messenger from '../models/messenger.js'
-import {verifyToken} from '@/utils/helpers'
+
 import {TOKEN_TYPE} from '@/configs'
 
 const app = express()
-const chatrouter = express.Router()
 expressWs(app)
-
 wss.clients = new Map()
-chatrouter.get('/get-chat-history/:receiverId', async (req, res) => {
+
+const chatRouter = Router()
+
+chatRouter.use(asyncHandler(requireAuthentication))
+
+chatRouter.get('/get-chat-history/:receiverId', async (req, res) => {
     try {
         const receiverId = req.params.receiverId
         const token = req.headers['authorization']?.split(' ')[1]
@@ -39,7 +46,8 @@ chatrouter.get('/get-chat-history/:receiverId', async (req, res) => {
         return res.status(500).json({message: 'Internal server error'})
     }
 })
-chatrouter.post('/create-chat', async (req, res) => {
+
+chatRouter.post('/create-chat', async (req, res) => {
     try {
         const {receiverId, message} = req.body
         const token = req.headers['authorization']?.split(' ')[1]
@@ -115,10 +123,10 @@ chatrouter.post('/create-chat', async (req, res) => {
     }
 })
 
-chatrouter.get('/receiverIds/:userId', async (req, res) => {
+chatRouter.get('/receiverIds/:userId', async (req, res) => {
     const {userId} = req.params
     try {
-        const receiverIds = await getReceiverIds(userId)
+        const receiverIds = await chatController.getReceiverIds(userId)
         res.status(200).json(receiverIds)
     } catch (error) {
         res.status(500).json({message: 'Failed to get receiverIds'})
@@ -202,7 +210,7 @@ app.ws('/chat', (ws, req) => {
     })
 })
 
-chatrouter.post('/save-messages', async (req, res) => {
+chatRouter.post('/save-messages', async (req, res) => {
     try {
         const messages = req.body
         // const token = req.headers['authorization']?.split(' ')[1]
@@ -225,4 +233,14 @@ chatrouter.post('/save-messages', async (req, res) => {
     }
 })
 
-export default chatrouter
+chatRouter.post(
+    '/chat-invitation',
+    asyncHandler(validate(chatRequest.chatInvitation)),
+    asyncHandler(chatController.chatInvitation)
+)
+
+chatRouter.get('/chat-invitations', asyncHandler(chatController.getChatInvitations))
+
+chatRouter.get('/chat-invitation/:receiver_id', asyncHandler(chatController.getChatInvitation))
+
+export default chatRouter

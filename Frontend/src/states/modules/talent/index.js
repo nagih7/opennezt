@@ -4,15 +4,16 @@ const talentSlice = createSlice({
 	name: "founder",
 	initialState: {
 		loadingRecruitTalents: false,
+		loadingGetTalentDetails: false,
 		loadingSkipTalent: false,
-		talents: {},
+		talents: [],
 		talentDetails: {},
 	},
 	reducers: {
 		startRequestRecruitTalents: (state) => ({
 			...state,
 			loadingRecruitTalents: true,
-			talents: {},
+			talents: [],
 		}),
 		startRequestRecruitTalentsSuccess: (state, action) => ({
 			...state,
@@ -21,7 +22,7 @@ const talentSlice = createSlice({
 		}),
 		startRequestRecruitTalentsFail: (state) => ({
 			...state,
-			talents: {},
+			talents: [],
 			loadingRecruitTalents: false,
 		}),
 		startRequestSkipTalent: (state) => ({
@@ -41,14 +42,17 @@ const talentSlice = createSlice({
 		}),
 		startRequestGetDetailTalent: (state) => ({
 			...state,
+			loadingGetTalentDetails: true,
 		}),
 		startRequestGetDetailTalentSuccess: (state, action) => ({
 			...state,
 			talentDetails: action.payload.data,
+			loadingGetTalentDetails: false,
 		}),
 		startRequestGetDetailTalentFail: (state) => ({
 			...state,
 			talentDetails: {},
+			loadingGetTalentDetails: false,
 		}),
 	},
 });

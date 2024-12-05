@@ -40,8 +40,8 @@ assert(!_.isEmpty(APP_URL_API), assertMsg('APP_URL_API'))
 export const APP_URL_CLIENT = process.env.APP_URL_CLIENT
 assert(!_.isEmpty(APP_URL_CLIENT), assertMsg('APP_URL_CLIENT'))
 
-export const APP_URL_LOCAL = process.env.APP_URL_LOCAL
-assert(!_.isEmpty(APP_URL_LOCAL), assertMsg('APP_URL_LOCAL'))
+// export const APP_URL_LOCAL = process.env.APP_URL_LOCAL
+// assert(!_.isEmpty(APP_URL_LOCAL), assertMsg('APP_URL_LOCAL'))
 
 export const APP_URL_AUTH = process.env.APP_URL_AUTH
 assert(!_.isEmpty(APP_URL_AUTH), assertMsg('APP_URL_AUTH'))
@@ -63,19 +63,12 @@ assert(!_.isEmpty(VERIFY_EMAIL_EXPIRE_IN), assertMsg('VERIFY_EMAIL_EXPIRE_IN'))
 export const REQUESTS_LIMIT_PER_MINUTE = parseInt(process.env.REQUESTS_LIMIT_PER_MINUTE, 10) || 1000
 
 export const LINK_STATIC_URL = `${APP_URL_API}/static/`
-export const LINK_RESET_PASSWORD_URL = `${APP_URL_LOCAL}/${APP_URL_AUTH}/reset-password`
-export const LINK_VERIFY_EMAIL_URL = `${APP_URL_LOCAL}/${APP_URL_AUTH}/verify-email`
+export const LINK_RESET_PASSWORD_URL = `${APP_URL_API}/${APP_URL_AUTH}/reset-password`
+export const LINK_VERIFY_EMAIL_URL = `${APP_URL_API}/${APP_URL_AUTH}/verify-email`
 
 assert(!_.isEmpty(process.env.DB_HOST), assertMsg('DB_HOST'))
 assert(!_.isEmpty(process.env.DB_NAME), assertMsg('DB_NAME'))
 assert(!_.isEmpty(process.env.DB_AUTH_SOURCE), assertMsg('DB_AUTH_SOURCE'))
-
-// export const DATABASE_URI =
-//     'mongodb' +
-//     (process.env.DB_PORT ? '' : '+srv') +
-//     '://' +
-//     process.env.DB_HOST +
-//     (process.env.DB_PORT ? ':' + process.env.DB_PORT : '')
 
 export const DATABASE_URI =
     'mongodb+srv://' +

@@ -6,9 +6,18 @@ import BackgroundDefault from "../../../assets/images/default/BackgroundDefault.
 import verify from "../../../assets/images/icon/verify.png";
 import { Button } from "antd";
 import { useSelector } from "react-redux";
+import store from "states/configureStore";
+import { requestChatInvitation } from "../../../api/chat";
 
-const TalentProfileCard = ({ talent, handleSkip }) => {
-	const { loadingSkipTalent } = useSelector((state) => state.talent);
+const TalentProfileCard = ({ talent }) => {
+	const { loadingRequestChatInvitation, chatInvitation } = useSelector(
+		(state) => state.chat
+	);
+
+	const handleRequestChatInvitation = async (receiver_id) => {
+		console.log("Request Chat Invitation:", receiver_id);
+		await store.dispatch(requestChatInvitation(receiver_id));
+	};
 
 	return (
 		<div className={styles.talentProfileCardWrap}>
@@ -58,27 +67,40 @@ const TalentProfileCard = ({ talent, handleSkip }) => {
 						</a>
 					</div>
 					<div className={styles.userActions}>
-						<Button
-							style={{
-								borderRadius: "0.5rem",
-							}}
-							type="primary"
-							loading={true}
-							// onClick={() => enterLoading(0)}
-						>
-							Send Message
-						</Button>
-						<Button
-							style={{
-								backgroundColor: "#767676",
-								color: "#fff",
-								borderRadius: "0.5rem",
-							}}
-							type="primary"
-							loading={loadingSkipTalent}
-							onClick={handleSkip}>
-							Skip for Now
-						</Button>
+						{chatInvitation === "pending" ? (
+							<Button
+								style={{
+									borderRadius: "0.5rem",
+									backgroundColor: "green",
+								}}
+								type="primary"
+								loading={loadingRequestChatInvitation}
+								// onClick={() => handleRequestChatInvitation(talent._id)}
+							>
+								Requested
+							</Button>
+						) : chatInvitation === "accepted" ? (
+							<Button
+								style={{
+									borderRadius: "0.5rem",
+								}}
+								type="primary"
+								loading={loadingRequestChatInvitation}
+								// onClick={() => handleRequestChatInvitation(talent._id)}
+							>
+								Chat Now
+							</Button>
+						) : (
+							<Button
+								style={{
+									borderRadius: "0.5rem",
+								}}
+								type="primary"
+								loading={loadingRequestChatInvitation}
+								onClick={() => handleRequestChatInvitation(talent._id)}>
+								Send Request
+							</Button>
+						)}
 					</div>
 				</div>
 			</div>
