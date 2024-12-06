@@ -109,6 +109,7 @@ export async function createProject(user, {pitch_deck, background, ...requestBod
     project.user_id = user._id
 
     await project.save()
+    return project._id
 }
 
 export async function getProject(userId) {

@@ -35,9 +35,19 @@ userRouter.patch(
 // Project
 userRouter.post(
     '/project',
-    // asyncHandler(validate(userRequest.createProject)),
+    asyncHandler(validate(userRequest.createProject)),
     asyncHandler(userController.createProject)
 )
+
+userRouter.put('/pitch-deck-project', (req, res) => {
+    console.log('pitch-deck-project', req.body)
+    res.json('success')
+})
+
+userRouter.put('/background-project', (req, res) => {
+    console.log('background-project', req.body)
+    res.json('success')
+})
 
 userRouter.get('/projects', asyncHandler(userController.getProject))
 

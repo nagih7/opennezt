@@ -6,78 +6,96 @@ import { message, Upload, Switch, DatePicker, Button, Image } from "antd";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import FundingSourceBox from "./FundingSourceBox";
 import { listSector, listStage } from "components/common/ListSelected";
+import axios from "axios";
 const { Dragger } = Upload;
 const { TextArea } = Input;
 const baseUrlApi = process.env.REACT_APP_API_URL;
 
-const getBase64 = (file) =>
-	new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = () => resolve(reader.result);
-		reader.onerror = (error) => reject(error);
-	});
+// const getBase64 = (file) =>
+// 	new Promise((resolve, reject) => {
+// 		const reader = new FileReader();
+// 		reader.readAsDataURL(file);
+// 		reader.onload = () => resolve(reader.result);
+// 		reader.onerror = (error) => reject(error);
+// 	});
 
 const CreateProjectForm = (props) => {
-	const { formData, setFormData } = props;
+	const { formProject, setFormData, setPitchDeck, setBackground } = props;
 
-	const [pitchDesk, setPitchDesk] = useState([]);
-	const [backgroundStartUp, setBackgroundStartUp] = useState([]);
+	const [listPitchDeck, setListPitchDeck] = useState([]);
+	const [listBackground, setListBackground] = useState([]);
 	const [isHaveRevenue, setIsHaveRevenue] = useState(true);
-	const [previewOpen, setPreviewOpen] = useState(false);
-	const [previewImage, setPreviewImage] = useState("");
 
-	// Pitch Desk
-	const onChangePitchDesk = ({ file: file }) => {
-		const { status } = file;
-		if (status !== "uploading") {
-			console.log(file, fileList);
-		}
-		if (status === "done") {
-			message.success(`${file.name} file uploaded successfully.`);
-		} else if (status === "error") {
-			message.error(`${file.name} file upload failed.`);
-		}
+	const propsPitchDeck = {
+		name: "file",
+		multiple: false,
+		accept: ".pdf",
+		fileList: listPitchDeck,
+		customRequest: async ({ file, onSuccess, onError }) => {
+			const formData = new FormData();
+			formData.append("pitch_deck", file);
+			const result = await axios.post(
+				`${baseUrlApi}/common/check-upload-pitch-deck`,
+				formData
+			);
+			if (result.data.success) {
+				setPitchDeck(formData);
+				onSuccess(result.data);
+			} else {
+				onError(new Error("Upload failed"));
+			}
+		},
+		onChange(info) {
+			const { status } = info.file;
+			if (status !== "uploading") {
+				console.log(info.file, info.fileList);
+			}
+			if (status === "done") {
+				message.success(`${info.file.name} file uploaded successfully.`);
+			} else if (status === "error") {
+				message.error(`${info.file.name} file upload failed.`);
+			}
+			setListPitchDeck([info.file]);
+		},
+		onDrop(e) {
+			console.log("Dropped files", e.dataTransfer.files);
+		},
 	};
-	const onBeforeUploadPitchDesk = async (file) => {
-		const isPDF = file.type === "application/pdf";
-		if (isPDF) {
-			setPitchDesk([file]);
-			setFormData((prevState) => ({
-				...prevState,
-				pitch_deck: file,
-			}));
-		} else {
-			return isPDF;
-		}
 
-		return isPDF;
-	};
-
-	const onRemovePitchDesk = () => {
-		setPitchDesk([]);
-		setFormData((prevState) => ({
-			...prevState,
-			pitch_deck: {},
-		}));
-	};
-
-	// Background
-	const onChangeBackground = ({ fileList: newFileList }) => {
-		if (newFileList[0].status !== "removed") {
-			setBackgroundStartUp(newFileList);
-			setFormData((prevState) => ({
-				...prevState,
-				background: newFileList[0].originFileObj,
-			}));
-		}
-	};
-	const onRemoveBackground = (file) => {
-		setBackgroundStartUp([]);
-		setFormData((prevState) => ({
-			...prevState,
-			background: {},
-		}));
+	const propsBackground = {
+		name: "file",
+		multiple: false,
+		accept: ".png,.jpg,.jpeg",
+		fileList: listBackground,
+		customRequest: async ({ file, onSuccess, onError }) => {
+			const formData = new FormData();
+			formData.append("background", file);
+			const result = await axios.post(
+				`${baseUrlApi}/common/check-upload-background-startup`,
+				formData
+			);
+			if (result.data.success) {
+				setBackground(formData);
+				onSuccess(result.data);
+			} else {
+				onError(new Error("Upload failed"));
+			}
+		},
+		onChange(info) {
+			const { status } = info.file;
+			if (status !== "uploading") {
+				console.log(info.file, info.fileList);
+			}
+			if (status === "done") {
+				message.success(`${info.file.name} file uploaded successfully.`);
+			} else if (status === "error") {
+				message.error(`${info.file.name} file upload failed.`);
+			}
+			setListBackground([info.file]);
+		},
+		onDrop(e) {
+			console.log("Dropped files", e.dataTransfer.files);
+		},
 	};
 
 	const handleOnChange = (event, nameSelect) => {
@@ -100,7 +118,7 @@ const CreateProjectForm = (props) => {
 	};
 
 	const onChangeDate = (date, dateString, index) => {
-		const updatedRevenues = formData.revenues.map((revenue, i) => {
+		const updatedRevenues = formProject.revenues.map((revenue, i) => {
 			if (i === index) {
 				return { ...revenue, time: dateString };
 			}
@@ -114,7 +132,7 @@ const CreateProjectForm = (props) => {
 
 	const onChangeRevenue = (event, id) => {
 		const { value } = event.target;
-		const updatedRevenues = formData.revenues.map((revenue, index) => {
+		const updatedRevenues = formProject.revenues.map((revenue, index) => {
 			if (index === id) {
 				return { ...revenue, revenue: value };
 			}
@@ -134,7 +152,7 @@ const CreateProjectForm = (props) => {
 	};
 
 	const handleRemoveRevenue = (index) => {
-		const updatedRevenues = formData.revenues.filter(
+		const updatedRevenues = formProject.revenues.filter(
 			(revenue, i) => i !== index
 		);
 		setFormData((prevState) => ({
@@ -153,19 +171,11 @@ const CreateProjectForm = (props) => {
 		}));
 	};
 
-	const handlePreview = async (file) => {
-		if (!file.url && !file.preview) {
-			file.preview = await getBase64(file.originFileObj);
-		}
-		setPreviewImage(file.url || file.preview);
-		setPreviewOpen(true);
-	};
-
 	return (
 		<div className={styles.createProjectForm}>
 			<h2>Startup Details</h2>
 			<Input
-				value={formData.name}
+				value={formProject.name}
 				name="name"
 				placeholder="Startup name*"
 				onChange={(e) => handleOnChange(e)}
@@ -174,7 +184,7 @@ const CreateProjectForm = (props) => {
 				style={{ padding: "4px 11px" }}
 			/>
 			<Input
-				value={formData.lading_page_url}
+				value={formProject.lading_page_url}
 				name="lading_page_url"
 				placeholder="Landing page URL"
 				onChange={(e) => handleOnChange(e)}
@@ -182,7 +192,7 @@ const CreateProjectForm = (props) => {
 				style={{ padding: "4px 11px" }}
 			/>
 			<Select
-				value={formData.related_industries}
+				value={formProject.related_industries}
 				mode="multiple"
 				style={{
 					width: "100%",
@@ -213,7 +223,7 @@ const CreateProjectForm = (props) => {
 			/>
 			<TextArea
 				rows={4}
-				value={formData.problem}
+				value={formProject.problem}
 				name="problem"
 				placeholder="Describe the problem*"
 				onChange={(e) => handleOnChange(e)}
@@ -226,7 +236,7 @@ const CreateProjectForm = (props) => {
 			</p> */}
 			<TextArea
 				rows={4}
-				value={formData.solution}
+				value={formProject.solution}
 				name="solution"
 				placeholder="What is your company going to make to solve this problem?*"
 				onChange={(e) => handleOnChange(e)}
@@ -235,7 +245,7 @@ const CreateProjectForm = (props) => {
 			/>
 			{/* <p>Please describe your product and what it does or will do.</p> */}
 			<Input
-				value={formData.product_demo_url}
+				value={formProject.product_demo_url}
 				name="product_demo_url"
 				placeholder="Product Demo Video URL"
 				onChange={(e) => handleOnChange(e)}
@@ -243,23 +253,14 @@ const CreateProjectForm = (props) => {
 				style={{ padding: "4px 11px" }}
 			/>
 			<Input
-				value={formData.team_intro_url}
+				value={formProject.team_intro_url}
 				name="team_intro_url"
 				placeholder="Team Introduction Video (~2 minutes) URL"
 				onChange={(e) => handleOnChange(e)}
 				autoSize
 				style={{ padding: "4px 11px" }}
 			/>
-			<Dragger
-				name="file"
-				action={`${baseUrlApi}/common/check-upload-pitch-desk`}
-				method="POST"
-				accept=".pdf"
-				multiple={false}
-				fileList={pitchDesk}
-				onChange={onChangePitchDesk}
-				beforeUpload={onBeforeUploadPitchDesk}
-				onRemove={onRemovePitchDesk}>
+			<Dragger {...propsPitchDeck}>
 				<p className="ant-upload-drag-icon">
 					<InboxOutlined />
 				</p>
@@ -267,13 +268,13 @@ const CreateProjectForm = (props) => {
 					Upload your pitch deck here or drag and drop it
 				</p>
 				<p className="ant-upload-hint">
-					Accepted file format: PDF. Max size of 50MB
+					Accepted file format: PDF. Max size of 10MB
 				</p>
 			</Dragger>
 			<h2>Startup Progress</h2>
 			<TextArea
 				rows={4}
-				value={formData.statistics}
+				value={formProject.statistics}
 				name="statistics"
 				placeholder="Please share any traction metrics you have*"
 				onChange={(e) => handleOnChange(e)}
@@ -294,7 +295,7 @@ const CreateProjectForm = (props) => {
 						gap: "0.5rem",
 						flexDirection: "column",
 					}}>
-					{formData.revenues.map((revenue, index) => (
+					{formProject.revenues.map((revenue, index) => (
 						<div key={index} style={{ display: "flex", gap: "0.5rem" }}>
 							<DatePicker
 								required
@@ -353,38 +354,38 @@ const CreateProjectForm = (props) => {
 			<FundingSourceBox
 				fundingSourceName="Friend and Family"
 				foundingSourceTarget="friend_and_family"
-				fundingSourceCost={formData.funding_sources.friend_and_family}
+				fundingSourceCost={formProject.funding_sources.friend_and_family}
 				handleChangeFundingSource={handleChangeFundingSource}
 			/>
 			<FundingSourceBox
 				fundingSourceName="Grant"
 				foundingSourceTarget="grant"
-				fundingSourceCost={formData.funding_sources.grant}
+				fundingSourceCost={formProject.funding_sources.grant}
 				handleChangeFundingSource={handleChangeFundingSource}
 			/>
 			<FundingSourceBox
 				fundingSourceName="Angel"
 				foundingSourceTarget="angel"
-				fundingSourceCost={formData.funding_sources.angel}
+				fundingSourceCost={formProject.funding_sources.angel}
 				handleChangeFundingSource={handleChangeFundingSource}
 			/>
 			<FundingSourceBox
 				fundingSourceName="Venture Capital"
 				foundingSourceTarget="venture_capital"
-				fundingSourceCost={formData.funding_sources.venture_capital}
+				fundingSourceCost={formProject.funding_sources.venture_capital}
 				handleChangeFundingSource={handleChangeFundingSource}
 			/>
 			<FundingSourceBox
 				fundingSourceName="Other"
 				foundingSourceTarget="other"
-				fundingSourceCost={formData.funding_sources.other}
+				fundingSourceCost={formProject.funding_sources.other}
 				handleChangeFundingSource={handleChangeFundingSource}
 			/>
 			<h2>Startup Strategy</h2>
 			<TextArea
 				required
 				rows={4}
-				value={formData.target_money}
+				value={formProject.target_money}
 				name="target_money"
 				placeholder="How do (or will) you make money? How much could you make?*"
 				onChange={(e) => handleOnChange(e)}
@@ -393,7 +394,7 @@ const CreateProjectForm = (props) => {
 			<TextArea
 				required
 				rows={4}
-				value={formData.target_audience}
+				value={formProject.target_audience}
 				name="target_audience"
 				placeholder="Who is your target audience?*"
 				onChange={(e) => handleOnChange(e)}
@@ -402,7 +403,7 @@ const CreateProjectForm = (props) => {
 			<TextArea
 				required
 				rows={4}
-				value={formData.competitors}
+				value={formProject.competitors}
 				name="competitors"
 				placeholder="Who are your competitors or might become your competitors?*"
 				onChange={(e) => handleOnChange(e)}
@@ -411,7 +412,7 @@ const CreateProjectForm = (props) => {
 			<TextArea
 				required
 				rows={4}
-				value={formData.competitive_advantage}
+				value={formProject.competitive_advantage}
 				name="competitive_advantage"
 				placeholder="What is your competitive advantage?*"
 				onChange={(e) => handleOnChange(e)}
@@ -420,7 +421,7 @@ const CreateProjectForm = (props) => {
 			<TextArea
 				required
 				rows={4}
-				value={formData.why_now}
+				value={formProject.why_now}
 				name="why_now"
 				placeholder="Why is now the right timing for your startup?*"
 				onChange={(e) => handleOnChange(e)}
@@ -433,7 +434,7 @@ const CreateProjectForm = (props) => {
 			<TextArea
 				required
 				rows={4}
-				value={formData.strategy}
+				value={formProject.strategy}
 				name="strategy"
 				placeholder="What is your customer acquisition strategy?*"
 				onChange={(e) => handleOnChange(e)}
@@ -446,7 +447,7 @@ const CreateProjectForm = (props) => {
 			<TextArea
 				required
 				rows={4}
-				value={formData.milestones}
+				value={formProject.milestones}
 				name="milestones"
 				placeholder="What are your next major company milestones?*"
 				onChange={(e) => handleOnChange(e)}
@@ -459,39 +460,23 @@ const CreateProjectForm = (props) => {
 			<TextArea
 				required
 				rows={4}
-				value={formData.about_opennezt}
+				value={formProject.about_opennezt}
 				name="about_opennezt"
 				placeholder="How did you hear about OpenNezt?*"
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
 			/>
-			<Upload
-				action={
-					"http://localhost:3456/common/check-upload-background-startup"
-				}
-				method="POST"
-				accept=".jpg,.jpeg,.png"
-				listType="picture-card"
-				fileList={backgroundStartUp}
-				onPreview={handlePreview}
-				onChange={onChangeBackground}
-				maxCount={1}
-				onRemove={onRemoveBackground}>
-				{backgroundStartUp.length < 5 && "+ Upload"}
-			</Upload>
-			{previewImage && (
-				<Image
-					wrapperStyle={{
-						display: "none",
-					}}
-					preview={{
-						visible: previewOpen,
-						onVisibleChange: (visible) => setPreviewOpen(visible),
-						afterOpenChange: (visible) => !visible && setPreviewImage(""),
-					}}
-					src={previewImage}
-				/>
-			)}
+			<Dragger {...propsBackground}>
+				<p className="ant-upload-drag-icon">
+					<InboxOutlined />
+				</p>
+				<p className="ant-upload-text">
+					Upload your background here or drag and drop it
+				</p>
+				<p className="ant-upload-hint">
+					Accepted file format: PNG, JPG, JPEG. Max size of 10MB
+				</p>
+			</Dragger>
 		</div>
 	);
 };

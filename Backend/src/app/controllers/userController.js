@@ -52,8 +52,10 @@ export async function updateFounderProfile(req, res) {
 }
 
 export async function createProject(req, res) {
-    await userService.createProject(req.currentUser, req.body)
-    res.status(201).jsonify('Tạo dự án thành công.')
+    console.log('createProject', req.body.pitch_deck)
+    const result = await userService.createProject(req.currentUser, req.body)
+    // res.status(201).jsonify('Tạo dự án thành công.')
+    res.status(201).jsonify(result)
 }
 
 export async function getProject(req, res) {
