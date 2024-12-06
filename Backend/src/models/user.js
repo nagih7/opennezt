@@ -42,7 +42,7 @@ const User = createModel(
             type: String,
             default: '',
         },
-        linkedIn: {
+        linkedin: {
             type: String,
             default: '',
         },

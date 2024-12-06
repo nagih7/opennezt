@@ -10,7 +10,17 @@ const userRouter = Router()
 
 userRouter.use(asyncHandler(requireAuthentication))
 
-userRouter.put('/update-background', asyncHandler(userController.updateBackground))
+userRouter.put(
+    '/avatar',
+    asyncHandler(validate(userRequest.updateAvatar)),
+    asyncHandler(userController.updateAvatar)
+)
+
+userRouter.put(
+    '/background',
+    asyncHandler(validate(userRequest.updateBackground)),
+    asyncHandler(userController.updateBackground)
+)
 
 userRouter.get('/check-steps', asyncHandler(userController.checkSteps))
 

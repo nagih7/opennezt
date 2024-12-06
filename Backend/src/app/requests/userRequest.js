@@ -73,19 +73,20 @@ export const updateItem = Joi.object({
                     return !user ? value : helpers.error('any.exists')
                 })
         ),
-    linkedIn: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('LinkedIn'),
+    linkedin: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('LinkedIn'),
+    facebook: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Facebook'),
     region: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Khu vực'),
     city: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Thành phố'),
-    avatar: Joi.object({
-        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
-            .required()
-            .label('Định dạng ảnh'),
-    })
-        .unknown(true)
-        .instance(FileUpload)
-        .allow('')
-        .label('Ảnh đại diện'),
-    language: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Ngôn ngữ'),
+    // avatar: Joi.object({
+    //     mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
+    //         .required()
+    //         .label('Định dạng ảnh'),
+    // })
+    //     .unknown(true)
+    //     .instance(FileUpload)
+    //     .allow('')
+    //     .label('Ảnh đại diện'),
+    language: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Ngôn ngữ'),
 })
 
 export const resetPassword = Joi.object({
@@ -263,4 +264,28 @@ export const recuitTalents = Joi.object({
     language: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Ngôn ngữ'),
     page: Joi.number().integer().min(1).required().label('Trang'),
     per_page: Joi.number().integer().min(1).max(100).required().label('Số lượng'),
+})
+
+export const updateAvatar = Joi.object({
+    avatar: Joi.object({
+        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
+            .required()
+            .label('Định dạng ảnh'),
+    })
+        .unknown(true)
+        .instance(FileUpload)
+        .required()
+        .label('Ảnh đại diện'),
+})
+
+export const updateBackground = Joi.object({
+    background: Joi.object({
+        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
+            .required()
+            .label('Định dạng ảnh'),
+    })
+        .unknown(true)
+        .instance(FileUpload)
+        .required()
+        .label('Ảnh nền'),
 })

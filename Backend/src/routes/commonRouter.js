@@ -7,4 +7,6 @@ commonRouter.post('/check-upload-background-startup', commonController.checkUplo
 
 commonRouter.post('/check-upload-pitch-desk', commonController.checkUploadPitchDesk)
 
+commonRouter.put('/check-upload-avatar', commonController.checkUploadAvatar)
+
 export default commonRouter
