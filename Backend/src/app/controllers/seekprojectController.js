@@ -13,7 +13,7 @@ export async function handleRequestsProject(req, res) {
 
         res.status(200).json({ message: 'Yêu cầu đã được gửi thành công' })
     } catch (error) {
-        res.status(400).json({ message: error.message })
+        res.status(400).json({ message: 'Bạn đã tham gia project này rồi' })
     }
 }
 
