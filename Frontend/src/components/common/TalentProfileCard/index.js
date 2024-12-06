@@ -60,7 +60,7 @@ const TalentProfileCard = ({ talent }) => {
 						</p>
 						<p>{talent.language}</p>
 						<a
-							href={talent.linkedIn}
+							href={talent.linkedin}
 							target="_blank"
 							rel="noopener noreferrer">
 							LinkedIn Profile

@@ -8,6 +8,7 @@ import FundingSourceBox from "./FundingSourceBox";
 import { listSector, listStage } from "components/common/ListSelected";
 const { Dragger } = Upload;
 const { TextArea } = Input;
+const baseUrlApi = process.env.REACT_APP_API_URL;
 
 const getBase64 = (file) =>
 	new Promise((resolve, reject) => {
@@ -251,7 +252,7 @@ const CreateProjectForm = (props) => {
 			/>
 			<Dragger
 				name="file"
-				action="http://localhost:3456/common/check-upload-pitch-desk"
+				action={`${baseUrlApi}/common/check-upload-pitch-desk`}
 				method="POST"
 				accept=".pdf"
 				multiple={false}

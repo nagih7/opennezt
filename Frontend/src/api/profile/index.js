@@ -1,27 +1,67 @@
 import callApi from "../callApi";
 import {
-  changePassword, changePasswordFail, changePasswordSuccess,
-  updateInfoUser, updateInfoUserFail, updateInfoUserSuccess
+	changePassword,
+	changePasswordFail,
+	changePasswordSuccess,
+	updateInfoUser,
+	updateInfoUserFail,
+	updateInfoUserSuccess,
+	changeAvatarUser,
+	changeAvatarUserSuccess,
+	changeAvatarUserFail,
+	changeBackgroundUser,
+	changeBackgroundUserSuccess,
+	changeBackgroundUserFail,
 } from "../../states/modules/profile";
 
-export const handleUpdateInfoUser = (data) => async (dispatch, getState) => {
-  return callApi({
-    method: 'post',
-    apiPath: `update-self`,
-    actionTypes: [updateInfoUser, updateInfoUserSuccess, updateInfoUserFail],
-    variables: data,
-    dispatch,
-    getState
-  })
-}
+export const updateUser = (data) => async (dispatch, getState) => {
+	return callApi({
+		method: "put",
+		apiPath: `/users`,
+		actionTypes: [updateInfoUser, updateInfoUserSuccess, updateInfoUserFail],
+		variables: data,
+		dispatch,
+		getState,
+	});
+};
 
 export const handleChangePassword = (data) => async (dispatch, getState) => {
-  return callApi({
-    method: 'post',
-    apiPath: `change-password`,
-    actionTypes: [changePassword, changePasswordSuccess, changePasswordFail],
-    variables: data,
-    dispatch,
-    getState
-  })
-}
+	return callApi({
+		method: "post",
+		apiPath: `change-password`,
+		actionTypes: [changePassword, changePasswordSuccess, changePasswordFail],
+		variables: data,
+		dispatch,
+		getState,
+	});
+};
+
+export const changeAvatar = (formData) => async (dispatch, getState) => {
+	return callApi({
+		method: "put",
+		apiPath: `/users/avatar`,
+		actionTypes: [
+			changeAvatarUser,
+			changeAvatarUserSuccess,
+			changeAvatarUserFail,
+		],
+		variables: formData,
+		dispatch,
+		getState,
+	});
+};
+
+export const changeBackground = (formData) => async (dispatch, getState) => {
+	return callApi({
+		method: "put",
+		apiPath: `/users/background`,
+		actionTypes: [
+			changeBackgroundUser,
+			changeBackgroundUserSuccess,
+			changeBackgroundUserFail,
+		],
+		variables: formData,
+		dispatch,
+		getState,
+	});
+};

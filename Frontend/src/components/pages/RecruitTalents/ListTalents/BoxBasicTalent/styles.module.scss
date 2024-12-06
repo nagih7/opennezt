@@ -51,11 +51,19 @@
 			font-size: 13px;
 			text-align: center;
 			color: $colorActive;
+
+			span {
+				font-weight: 600;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				text-overflow: ellipsis; /* Thêm dấu ba chấm khi tràn */
+				overflow: hidden;
+			}
 		}
 
 		.actionsTalent {
 			position: absolute;
-			bottom: 1.5rem;
+			bottom: 1rem;
 		}
 	}
 }

@@ -1,140 +1,190 @@
 @import "src/assets/scss/variables";
 
 .profileWrap {
-  .profileItem {
-    background: #fff;
-    border-radius: 16px;
-    padding: 0;
-    margin-bottom: 20px;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+	.profileItem {
+		background: #fff;
+		border-radius: 16px;
+		padding: 0;
+		margin-bottom: 20px;
+		box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05);
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.1);
-    }
+		&:hover {
+			box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.1);
+		}
 
-    .informationWrap {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      border-block-end: 1px solid $colorBorderDefault;
-      padding: 15px;
-      background: rgba(242, 244, 247, 0.7);
+		.informationWrap {
+			position: relative;
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			border-block-end: 1px solid $colorBorderDefault;
+			background: rgba(242, 244, 247, 0.7);
 
-      .avatarWrap {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        overflow: hidden;
-        cursor: pointer;
-        position: relative;
-        color: $colorBlack;
-        margin-bottom: 10px;
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+			.backgroundWrap {
+				position: relative;
+				user-select: none;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 100%;
+				height: 100%;
+				max-height: 300px;
+				overflow: hidden;
+				border-radius: 16px 16px 0 0;
 
-        .btnChangeAvatar {
-          width: 100%;
-          height: 20px;
-          bottom: 0;
-          background: rgba(242, 244, 247, 0.9);
-          position: absolute;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          opacity: 0;
-          transition: all 0.3s ease;
-        }
+				img {
+					filter: brightness(0.7);
+					width: 100%;
+					height: auto;
+					object-fit: contain;
+				}
 
-        &:hover .btnChangeAvatar {
-          opacity: 1;
-        }
+				.buttonChangeBackground {
+					position: absolute;
+					bottom: 1rem;
+					right: 1.5rem;
+					background-color: #fff;
+					padding: 0.5rem 1rem;
+					border-radius: 0.5rem;
+					cursor: pointer;
+					box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      }
+					&:hover {
+						background-color: #f2f4f7;
+					}
 
-      .infoWrap {
-        margin-left: 15px;
+					.btnWrap {
+						margin-left: 0.5rem;
+						width: 10rem;
+						height: 2rem;
+					}
+				}
+			}
 
-        .name {
-          font-size: 18px;
-          margin-bottom: 5px;
-          color: $colorBlack;
-          font-weight: bold;
-        }
+			.infomationContent {
+				position: absolute;
+				bottom: 0.5rem;
+				left: 1rem;
 
-        .bod {
-          font-size: 14px;
-          color: $colorNote;
-        }
+				.avatarWrap {
+					margin-left: 1rem;
+					user-select: none;
+					width: 80px;
+					height: 80px;
+					border-radius: 50%;
+					overflow: hidden;
+					cursor: pointer;
+					position: relative;
+					color: $colorBlack;
+					margin-bottom: 10px;
+					box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 
-        .btnWrap {
-          margin-top: 10px;
-          button {
-            padding: 10px 20px;
-            font-size: 14px;
-            color: $colorWhite;
-            background: #fff;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+					.btnChangeAvatar {
+						width: 100%;
+						height: 20px;
+						bottom: 0;
+						background: rgba(242, 244, 247, 0.9);
+						position: absolute;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						opacity: 0;
+						transition: all 0.3s ease;
+					}
 
-            &:hover {
-              background: darken(#fff, 10%);
-            }
-          }
-        }
-      }
-    }
+					&:hover .btnChangeAvatar {
+						opacity: 1;
+					}
 
-    .tabWrap {
-      padding: 10px;
-      border-top: 1px solid $colorBorderDefault;
-      background: $colorWhite;
-      border-radius: 0 0 16px 16px;
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+					}
+				}
+				.infoWrap {
+					margin-left: 15px;
+					text-shadow: $boxShadow;
 
-      .ant-tabs-nav {
-        margin-bottom: 0;
+					.name {
+						font-size: 18px;
+						margin-bottom: 5px;
+						color: $colorWhite;
+						font-weight: bold;
+					}
 
-        .ant-tabs-tab {
-          font-size: 14px;
-          color: $colorBlack;
+					.bod {
+						font-size: 14px;
+						color: $colorActivateFilter;
+					}
 
-          &.ant-tabs-tab-active .ant-tabs-tab-btn {
-            color: #fff;
-            font-weight: bold;
-          }
-        }
+					.btnWrap {
+						margin-top: 10px;
+						button {
+							padding: 10px 20px;
+							font-size: 14px;
+							color: $colorWhite;
+							background: #fff;
+							border-radius: 8px;
+							border: none;
+							cursor: pointer;
+							transition: background-color 0.3s ease;
 
-        .ant-tabs-ink-bar {
-          background: #fff;
-        }
-      }
-    }
+							&:hover {
+								background: darken(#fff, 10%);
+							}
+						}
+					}
+				}
+			}
+		}
 
-    .tab-custom {
-      .ant-tabs {
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+		.tabWrap {
+			display: flex;
+			justify-content: space-between;
+			padding: 10px;
+			border-top: 1px solid $colorBorderDefault;
+			background: $colorWhite;
+			border-radius: 0 0 16px 16px;
 
-        .ant-tabs-tab {
-          padding: 10px 20px;
+			.ant-tabs-nav {
+				margin-bottom: 0;
 
-          &:hover {
-            background: rgba(242, 244, 247, 0.5);
-          }
-        }
+				.ant-tabs-tab {
+					font-size: 14px;
+					color: $colorBlack;
 
-        .ant-tabs-tab-active {
-          background: rgba(242, 244, 247, 0.7);
-        }
-      }
-    }
-  }
+					&.ant-tabs-tab-active .ant-tabs-tab-btn {
+						color: #fff;
+						font-weight: bold;
+					}
+				}
+
+				.ant-tabs-ink-bar {
+					background: #fff;
+				}
+			}
+		}
+
+		.tab-custom {
+			.ant-tabs {
+				border-radius: 8px;
+				overflow: hidden;
+				box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+
+				.ant-tabs-tab {
+					padding: 10px 20px;
+
+					&:hover {
+						background: rgba(242, 244, 247, 0.5);
+					}
+				}
+
+				.ant-tabs-tab-active {
+					background: rgba(242, 244, 247, 0.7);
+				}
+			}
+		}
+	}
 }

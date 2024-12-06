@@ -55,6 +55,21 @@ export const listLocation = [
 	{ label: "India", value: "India" },
 ];
 
+export const listCity = [
+	{ label: "Ho Chi Minh", value: "Ho Chi Minh" },
+	{ label: "Ha Noi", value: "Ha Noi" },
+	{ label: "Da Nang", value: "Da Nang" },
+	{ label: "Can Tho", value: "Can Tho" },
+	{ label: "Hai Phong", value: "Hai Phong" },
+	{ label: "Vung Tau", value: "Vung Tau" },
+	{ label: "Nha Trang", value: "Nha Trang" },
+	{ label: "Da Lat", value: "Da Lat" },
+	{ label: "Hue", value: "Hue" },
+	{ label: "Quang Ninh", value: "Quang Ninh" },
+	{ label: "Phu Quoc", value: "Phu Quoc" },
+	{ label: "Hoi An", value: "Hoi An" },
+];
+
 export const listLanguage = [
 	{ label: "Vietnamese", value: "Vietnamese" },
 	{ label: "English", value: "English" },
