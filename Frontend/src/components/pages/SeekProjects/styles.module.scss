@@ -1,0 +1,25 @@
+:root {
+	--color-white: #ffffff;
+	--color-black: #000000;
+	--color-primary: #3498db;
+	--color-dark: #2c3e50;
+	--color-light: #ecf0f1;
+	--color-danger: #e74c3c;
+	--box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	--card-padding: 1.5rem;
+	--card-border-radius: 0.5rem;
+	--border-radius-1: 0.25rem;
+	--border-radius-2: 0.3rem;
+	--hover-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.searchContainer {
+	height: 100%;
+	background-color: var(--color-white);
+	padding: var(--card-padding);
+	border-radius: var(--card-border-radius);
+	box-shadow: var(--box-shadow);
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}

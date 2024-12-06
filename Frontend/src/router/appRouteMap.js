@@ -5,7 +5,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FolderIcon from "@mui/icons-material/Folder";
 import PersonIcon from "@mui/icons-material/Person";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
-
+import PageviewIcon from '@mui/icons-material/Pageview';
 const appRouteMap = [
 	{
 		label: "Dashboard",
@@ -36,6 +36,13 @@ const appRouteMap = [
 		path: "/recruit-talents",
 		routeActive: ["/recruit-talents"],
 		permissions: ["recruit_talents_page"],
+	},
+	{
+		label: "Seek Projects",
+		icon: <PageviewIcon className="material-icons" />,
+		path: "/seek-projects",
+		routeActive: ["/seek-projects"],
+		permissions: ["seek_projects_page"],
 	},
 	// {
 	// 	label: "New Feed",
