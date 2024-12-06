@@ -7,14 +7,14 @@ const User = createModel(
     {
         name: {
             type: String,
-            required: true,
+            required: false,
         },
         email: {
             type: String,
             trim: true,
             lowercase: true,
             unique: true,
-            required: true,
+            required: false,
         },
         password: {
             type: String,
@@ -27,11 +27,12 @@ const User = createModel(
         phone: {
             type: String,
             default: '',
-            required: true,
+            required: false,
         },
         avatar: {
             type: String,
             default: '',
+            required: false,
         },
         background: {
             type: String,

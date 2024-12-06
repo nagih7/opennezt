@@ -51,9 +51,9 @@ const ProfileCard = (props) => {
 						<p>
 							{authUser.city}, {authUser.region}
 						</p>
-						<p>{authUser.language}</p>
+						<p>{authUser.language.join(", ")}</p>
 						<a
-							href={authUser.linkedIn}
+							href={authUser.linkedin}
 							target="_blank"
 							rel="noopener noreferrer">
 							LinkedIn Profile

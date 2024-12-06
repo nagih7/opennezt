@@ -16,7 +16,6 @@ function Register() {
 		name: "",
 		email: "",
 		phone: "",
-
 		password: "",
 		confirmPassword: "",
 	});
@@ -24,7 +23,6 @@ function Register() {
 		name: "",
 		email: "",
 		phone: "",
-
 		password: "",
 		confirmPassword: "",
 	});

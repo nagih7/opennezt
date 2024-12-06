@@ -1,9 +1,10 @@
-@import "src/assets/scss/variables";
+@import "../../../../../../assets/scss/variables.scss";
 
 .modalInfoWrap {
 	min-width: 177px;
-	background-color: $mainColor;
+	background-color: #f3f4f6;
 	border-radius: 4px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
 	&::before {
 		position: absolute;
@@ -14,7 +15,7 @@
 		right: 20px;
 		border-top-left-radius: 1px;
 		border-top-right-radius: 1px;
-		background-color: $mainColor;
+		background-color: #f3f4f6;
 		transform: rotateZ(45deg);
 	}
 
@@ -24,10 +25,10 @@
 		align-items: center;
 		flex-direction: column;
 		padding: 13px;
-		border-block-end: 1px solid $colorBorderDefault;
+		border-block-end: 2px solid $colorBorderDefault;
 		.name {
 			font-size: 14px;
-			color: $colorWhite;
+			color: $textColor;
 			font-weight: 600;
 		}
 		.role {
@@ -49,19 +50,17 @@
 				font-weight: 500;
 				font-size: 14px;
 				transition: all 0.3s;
-				color: $colorLight1;
+				color: $textColor;
 				display: flex;
 				justify-content: flex-start;
 				align-items: center;
-				border-block-end: 1px solid $colorLine;
 
 				.text {
 					margin-left: 10px;
 				}
 
 				&:hover {
-					color: $colorActive;
-					background: $backgroundHoverMain;
+					background: rgba($secondaryAccent, 0.1);
 				}
 			}
 		}

@@ -76,6 +76,15 @@ export const updateItem = Joi.object({
     linkedIn: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('LinkedIn'),
     region: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Khu vực'),
     city: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Thành phố'),
+    avatar: Joi.object({
+        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
+            .required()
+            .label('Định dạng ảnh'),
+    })
+        .unknown(true)
+        .instance(FileUpload)
+        .allow('')
+        .label('Ảnh đại diện'),
     language: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Ngôn ngữ'),
 })
 

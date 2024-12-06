@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./styles.module.scss";
-import Logo from "../../../../../../../assets/images/logo/logo_sidebar.png";
+import Logo from "../../../../../../../assets/images/logo/OpenNezt_icon.png";
 
 function ListOrder() {
 	return (
