@@ -8,7 +8,6 @@ import loadNewfeedSaga from "../states/modules/newfeeds/saga";
 import loadfounderSaga from "../states/modules/founder/saga";
 import loadProjectSaga from "../states/modules/project/saga";
 import loadTalentSaga from "../states/modules/talent/saga";
-import loadSeekProjectSaga from "../states/modules/seekproject/saga";
 export const ROUTE_SAGAS = [];
 
 ROUTE_SAGAS["LOAD_AUTH_PAGE"] = loadAuthSaga;
@@ -21,4 +20,3 @@ ROUTE_SAGAS["LOAD_NEWFEED_PAGE"] = loadNewfeedSaga;
 ROUTE_SAGAS["LOAD_FOUNDER_PAGE"] = loadfounderSaga;
 ROUTE_SAGAS["LOAD_PROJECT_PAGE"] = loadProjectSaga;
 ROUTE_SAGAS["LOAD_RECRUIT_TALETNS_PAGE"] = loadTalentSaga;
-ROUTE_SAGAS["LOAD_SEEK_PROJECT_PAGE"] = loadSeekProjectSaga;

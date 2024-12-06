@@ -1,14 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { startRequest } from "../app";
 
 const projectSlice = createSlice({
 	name: "ProJect",
 
 	initialState: {
 		title: "",
+		projects: [],
+		projectsBySeek: [],
 		loadingGetProjects: false,
 		loadingCreateNewProject: false,
-		projects: [],
+		loadingSeekProjects: false,
 	},
 	reducers: {
 		setTitle: (state) => ({
@@ -40,6 +41,35 @@ const projectSlice = createSlice({
 			...state,
 			loadingCreateNewProject: false,
 		}),
+
+		// Seek project
+		startRequestSeekProjects: (state) => ({
+			...state,
+			loadingSeekProjects: true,
+		}),
+		startRequestSeekProjectsSuccess: (state, action) => ({
+			...state,
+			projectsBySeek: action.payload.data,
+			loadingSeekProjects: false,
+		}),
+		startRequestSeekProjectsFail: (state) => ({
+			...state,
+			projectsBySeek: [],
+			loadingSeekProjects: false,
+		}),
+		startRequestCreateProject: (state) => ({
+			...state,
+			loading: true,
+		}),
+		startRequestCreateProjectSuccess: (state, action) => ({
+			...state,
+			projectsBySeek: [...state.projects, action.payload.data],
+			loading: false,
+		}),
+		startRequestCreateProjectFail: (state) => ({
+			...state,
+			loading: false,
+		}),
 	},
 });
 
@@ -51,6 +81,12 @@ export const {
 	startRequestCreateNewProject,
 	startRequestCreateNewProjectSuccess,
 	startRequestCreateNewProjectFail,
+	startRequestSeekProjects,
+	startRequestSeekProjectsSuccess,
+	startRequestSeekProjectsFail,
+	startRequestCreateProject,
+	startRequestCreateProjectSuccess,
+	startRequestCreateProjectFail,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;
