@@ -30,7 +30,6 @@ export const register = Joi.object({
         .label('Email')
         .custom(
             (value, helpers) =>
-                // Kiểm tra xem email đã tồn tại trong hệ thống chưa
                 new AsyncValidate(value, async function () {
                     const user = await User.findOne({email: value})
                     return !user ? value : helpers.error('any.exists')
@@ -59,15 +58,15 @@ export const register = Joi.object({
                     return !user ? value : helpers.error('any.exists')
                 })
         ),
-    avatar: Joi.object({
-        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
-            .required()
-            .label('Định dạng ảnh'),
-    })
-        .unknown(true)
-        .instance(FileUpload)
-        .allow('')
-        .label('Ảnh đại diện'),
+    // avatar: Joi.object({
+    //     mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
+    //         .required()
+    //         .label('Định dạng ảnh'),
+    // })
+    //     .unknown(true)
+    //     .instance(FileUpload)
+    //     .allow('')
+    //     .label('Ảnh đại diện'),
 })
 
 export const updateProfile = Joi.object({

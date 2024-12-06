@@ -61,15 +61,8 @@ export async function details(userId) {
     return user
 }
 
-export async function update(user, {name, email, phone, avatar, linkedIn, region, city, language}) {
-    user.name = name ? name : user.name
-    user.email = email ? email : user.email
-    user.phone = phone ? phone : user.phone
-    user.avatar = avatar ? avatar : user.avatar
-    user.linkedIn = linkedIn ? linkedIn : user.linkedIn
-    user.region = region ? region : user.region
-    user.city = city ? city : user.city
-    user.language = language ? language : user.language
+export async function update(user, requestBody) {
+    user.set(requestBody)
     await user.save()
 }
 
@@ -329,6 +322,16 @@ export async function updateBackground(user, requestBody) {
             FileUpload.remove(user.background)
         }
         user.background = requestBody.background.save('background_users')
+    }
+    await user.save()
+}
+
+export async function updateAvatar(user, requestBody) {
+    if (requestBody.avatar instanceof FileUpload) {
+        if (user.avatar) {
+            FileUpload.remove(user.avatar)
+        }
+        user.avatar = requestBody.avatar.save('avatars')
     }
     await user.save()
 }

@@ -86,6 +86,11 @@ export async function updateBackground(req, res) {
     res.status(201).jsonify('Cập nhật ảnh nền thành công.')
 }
 
+export async function updateAvatar(req, res) {
+    await userService.updateAvatar(req.currentUser, req.body)
+    res.status(201).jsonify('Cập nhật ảnh đại diện thành công.')
+}
+
 export async function checkSteps(req, res) {
     const result = await userService.checkSteps(req.currentUser)
     res.jsonify(result)
