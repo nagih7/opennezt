@@ -1,95 +1,89 @@
-import React, { useState, useEffect, useCallback } from "react";
-import store from "states/configureStore";
-import { useSelector } from "react-redux";
+import React, { useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import styles from "./styles.module.scss";
-import { seekProjects } from "api/project";
+import { getMatchingProjects, seekProjects } from "api/project";
 
 function SeekProjects() {
-	// const dispatch = useDispatch();
-	const [email, setEmail] = useState("");
-	const [projectId, setProjectId] = useState("");
-	const [roleProject, setRoleProject] = useState("");
-	const [founderId, setFounderId] = useState("");
-	const { projectsBySeek, loadingSeekProjects } = useSelector(
-		(state) => state.project
-	);
+    const dispatch = useDispatch();
+    const authUser = useSelector((state) => state.auth.authUser);
+    console.log("authUser", authUser);
+    const { projectsBySeek } = useSelector((state) => {
+        console.log("State project:", state.project);
+        return state.project;
+    });
+    const loading = useSelector((state) => state.project.loadingSeekProjects);
 
-	const handleRequestProject = async () => {
-		await store.dispatch(
-			seekProjects({
-				email,
-				project_id: projectId,
-				role_project: roleProject,
-			})
-		);
-	};
+    useEffect(() => {}, [projectsBySeek, loading]);
 
-	// const handleGetMatchingProjects = useCallback(() => {
-	// 	dispatch(getMatchingProjects(founderId));
-	// }, [dispatch, founderId]);
+    const handleGetMatchingProjects = useCallback(() => {
+        dispatch(getMatchingProjects());
+    }, [dispatch]);
 
-	// useEffect(() => {
-	// 	if (founderId) {
-	// 		handleGetMatchingProjects();
-	// 	}
-	// }, [founderId, handleGetMatchingProjects]);
+    useEffect(() => {
+        handleGetMatchingProjects();
+    }, [handleGetMatchingProjects]);
 
-	return (
-		<div className={styles.searchContainer}>
-			<h1>Seek Projects</h1>
-			<div>
-				<h2>Request Project</h2>
-				<input
-					type="email"
-					placeholder="Email"
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-				/>
-				<input
-					type="text"
-					placeholder="Project ID"
-					value={projectId}
-					onChange={(e) => setProjectId(e.target.value)}
-				/>
-				<input
-					type="text"
-					placeholder="Role Project"
-					value={roleProject}
-					onChange={(e) => setRoleProject(e.target.value)}
-				/>
-				<button
-					onClick={handleRequestProject}
-					disabled={loadingSeekProjects}>
-					Request Project
-				</button>
-			</div>
-			<div>
-				<h2>Get Matching Projects</h2>
-				<input
-					type="text"
-					placeholder="Founder ID"
-					value={founderId}
-					onChange={(e) => setFounderId(e.target.value)}
-				/>
-				<button
-					// onClick={handleGetMatchingProjects}
-					disabled={loadingSeekProjects}>
-					Get Matching Projects
-				</button>
-				{loadingSeekProjects && <p>Loading...</p>}
-				<ul>
-					{projectsBySeek &&
-						projectsBySeek.map((project) => (
-							<li key={project._id}>
-								<h3>{project.name}</h3>
-								<p>{project.problem}</p>
-								<p>{project.solution}</p>
-							</li>
-						))}
-				</ul>
-			</div>
-		</div>
-	);
+    const handleRequestToJoin = async (projectId) => {
+        const requestProjectData = {
+            email: authUser.email,
+            project_id: projectId,
+            role_project: "talent"
+        };
+        try {
+            const response = await dispatch(seekProjects(requestProjectData));
+            if (response.payload && response.payload.status === 200) {
+                toast.success(response.payload.message);
+            } else if (response.payload && response.payload.status === 400) {
+                toast.error(response.payload.message);
+            }
+        } catch (error) {
+            toast.error("Request to join failed.");
+        }
+    };
+
+    return (
+        <div className={styles.searchContainer}>
+            <ToastContainer />
+            <h1>Seek Projects</h1>
+            <div>
+                <h2>Matching Projects</h2>
+                {loading ? (
+                    <p>Loading...</p>
+                ) : (
+                    <div className={styles.projectsList}>
+                        {projectsBySeek &&
+                            projectsBySeek.map((project) => (
+                                <div key={project._id} className={styles.projectCard}>
+                                    <div className={styles.projectImage}>
+                                        <img src={project.background} alt={project.name} />
+                                    </div>
+                                    <div className={styles.projectContent}>
+                                        <h3 className={styles.projectName}>{project.name}</h3>
+                                        <p className={styles.projectProblem}>
+                                            <strong>Problem:</strong> {project.problem}
+                                        </p>
+                                        <p className={styles.projectSolution}>
+                                            <strong>Solution:</strong> {project.solution}
+                                        </p>
+                                        <p className={styles.projectUpdatedAt}>
+                                            <strong>Updated At:</strong> {new Date(project.updated_at).toLocaleDateString()}
+                                        </p>
+                                        <button
+                                            className={styles.requestButton}
+                                            onClick={() => handleRequestToJoin(project._id)}
+                                        >
+                                            Request to Join
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
 }
 
 export default SeekProjects;

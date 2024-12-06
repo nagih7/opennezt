@@ -55,11 +55,15 @@ const projectSlice = createSlice({
 			...state,
 			loadingSeekProjects: true,
 		}),
-		startRequestSeekProjectsSuccess: (state, action) => ({
+		
+		startRequestSeekProjectsSuccess: (state, action) => {
+			console.log("Action payload:", action.payload);
+			return {
 			...state,
-			projectsBySeek: action.payload.data,
+			projectsBySeek: action.payload.projects,
 			loadingSeekProjects: false,
-		}),
+			}
+		},
 		startRequestSeekProjectsFail: (state) => ({
 			...state,
 			projectsBySeek: [],
