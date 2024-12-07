@@ -7,9 +7,11 @@ const projectSlice = createSlice({
 		title: "",
 		projects: [],
 		projectsBySeek: [],
+		resultCreateProject: false,
 		loadingGetProjects: false,
 		loadingCreateNewProject: false,
 		loadingSeekProjects: false,
+		loadingUpdatePitchDeck: false,
 	},
 	reducers: {
 		setTitle: (state) => ({
@@ -32,14 +34,17 @@ const projectSlice = createSlice({
 		startRequestCreateNewProject: (state) => ({
 			...state,
 			loadingCreateNewProject: true,
+			resultCreateProject: false,
 		}),
-		startRequestCreateNewProjectSuccess: (state) => ({
+		startRequestCreateNewProjectSuccess: (state, action) => ({
 			...state,
 			loadingCreateNewProject: false,
+			resultCreateProject: true,
 		}),
 		startRequestCreateNewProjectFail: (state) => ({
 			...state,
 			loadingCreateNewProject: false,
+			resultCreateProject: false,
 		}),
 
 		// Seek project
@@ -47,14 +52,14 @@ const projectSlice = createSlice({
 			...state,
 			loadingSeekProjects: true,
 		}),
-		
+
 		startRequestSeekProjectsSuccess: (state, action) => {
 			console.log("Action payload:", action.payload);
 			return {
-			...state,
-			projectsBySeek: action.payload.projects,
-			loadingSeekProjects: false,
-			}
+				...state,
+				projectsBySeek: action.payload.projects,
+				loadingSeekProjects: false,
+			};
 		},
 		startRequestSeekProjectsFail: (state) => ({
 			...state,
@@ -74,6 +79,7 @@ const projectSlice = createSlice({
 			...state,
 			loading: false,
 		}),
+		// Update project
 	},
 });
 

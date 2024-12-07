@@ -1,24 +1,23 @@
 import {FileUpload} from '@/utils/classes'
-import {LINK_STATIC_URL} from '@/configs'
 
-export function checkUploadBackgroundStartup(file) {
-    if (file instanceof FileUpload) {
-        return file
+export function checkUploadBackgroundStartup(requestBody) {
+    if (requestBody.background instanceof FileUpload) {
+        return true
     }
     return false
 }
 
-export function checkUploadPitchDesk(file) {
-    if (file instanceof FileUpload) {
-        return file
+export function checkUploadPitchDesk(requestBody) {
+    if (requestBody.pitch_deck instanceof FileUpload) {
+        return true
     }
     return false
 }
 
-export function checkUploadAvatar(avatar) {
-    if (avatar instanceof FileUpload) {
+export function checkUploadAvatar(requestBody) {
+    if (requestBody.avatar instanceof FileUpload) {
         // save to path
-        return LINK_STATIC_URL + avatar.save('avatars')
+        return true
     }
     return false
 }
