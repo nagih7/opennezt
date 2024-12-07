@@ -1,5 +1,5 @@
 import {User, FounderProfile, Project, Invitation, ObjectId} from '@/models'
-import {FileUpload} from '@/utils/classes'
+import {FileUpload, DecodeBase64} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
 
 export async function create(requestBody) {
@@ -109,7 +109,6 @@ export async function createProject(user, {pitch_deck, background, ...requestBod
     project.user_id = user._id
 
     await project.save()
-    return project._id
 }
 
 export async function getProject(userId) {

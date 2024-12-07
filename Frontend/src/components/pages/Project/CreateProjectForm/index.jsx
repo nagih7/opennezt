@@ -11,16 +11,16 @@ const { Dragger } = Upload;
 const { TextArea } = Input;
 const baseUrlApi = process.env.REACT_APP_API_URL;
 
-// const getBase64 = (file) =>
-// 	new Promise((resolve, reject) => {
-// 		const reader = new FileReader();
-// 		reader.readAsDataURL(file);
-// 		reader.onload = () => resolve(reader.result);
-// 		reader.onerror = (error) => reject(error);
-// 	});
+const getBase64 = (file) =>
+	new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = () => resolve(reader.result);
+		reader.onerror = (error) => reject(error);
+	});
 
 const CreateProjectForm = (props) => {
-	const { formProject, setFormData, setPitchDeck, setBackground } = props;
+	const { formProject, setFormData } = props;
 
 	const [listPitchDeck, setListPitchDeck] = useState([]);
 	const [listBackground, setListBackground] = useState([]);
@@ -39,7 +39,12 @@ const CreateProjectForm = (props) => {
 				formData
 			);
 			if (result.data.success) {
-				setPitchDeck(formData);
+				// convert file to base64
+				const base64 = await getBase64(file);
+				setFormData((prevState) => ({
+					...prevState,
+					pitch_deck: { file: base64, name: file.name },
+				}));
 				onSuccess(result.data);
 			} else {
 				onError(new Error("Upload failed"));
@@ -75,7 +80,12 @@ const CreateProjectForm = (props) => {
 				formData
 			);
 			if (result.data.success) {
-				setBackground(formData);
+				// convert file to base64
+				const base64 = await getBase64(file);
+				setFormData((prevState) => ({
+					...prevState,
+					background: { file: base64, name: file.name },
+				}));
 				onSuccess(result.data);
 			} else {
 				onError(new Error("Upload failed"));

@@ -22,7 +22,7 @@ function Project() {
 		solution: "",
 		product_demo_url: "",
 		team_intro_url: "",
-		pitch_desk: "",
+		pitch_deck: {},
 		statistics: "",
 		revenues: [{ time: "", revenue: "" }],
 		funding_sources: {
@@ -40,17 +40,11 @@ function Project() {
 		strategy: "",
 		milestones: "",
 		about_opennezt: "",
-		background: "",
+		background: {},
 	});
-	const [pitchDeck, setPitchDeck] = useState({});
-	const [background, setBackground] = useState([]);
 
-	const {
-		projects,
-		loadingCreateNewProject,
-		resultCreateProject,
-		projectCreationId,
-	} = useSelector((state) => state.project);
+	const { projects, loadingCreateNewProject, resultCreateProject } =
+		useSelector((state) => state.project);
 	const [projectDetails, setProjectDetails] = useState(null);
 
 	const handleProjectClick = (project) => {
@@ -58,7 +52,6 @@ function Project() {
 		setOpenModalProjectDetails(true);
 	};
 
-	// Modal for project details
 	const [openModalProjectDetails, setOpenModalProjectDetails] =
 		React.useState(false);
 	const [loading, setLoading] = React.useState(true);
@@ -66,36 +59,20 @@ function Project() {
 		setOpenModalProjectDetails(false);
 	};
 
-	// Modal for create project
 	const [openModalCreateProject, setOpenModalCreateProject] = useState(false);
 	const showModalCreateProject = () => {
 		setOpenModalCreateProject(true);
 	};
 	const handleCreateProject = async () => {
+		console.log(formProject);
 		await store.dispatch(createNewProject(formProject));
-		if (resultCreateProject === false) {
-			message.error("Vui lòng nhập đủ thông tin");
+		if (resultCreateProject) {
+			message.success("Create project successfully");
+			setOpenModalCreateProject(false);
+			store.dispatch(getProjects());
 		} else {
-			console.log("Create project success");
-			await updatePitchDeck();
-			await updateBackground();
+			message.error("Create project failed");
 		}
-	};
-
-	const updatePitchDeck = async () => {
-		pitchDeck.append("project_id", projectCreationId);
-		await axios.put(
-			"http://localhost:3456/users/pitch-deck-project",
-			pitchDeck
-		);
-	};
-
-	const updateBackground = async () => {
-		background.append("project_id", projectCreationId);
-		await axios.put(
-			"http://localhost:3456/users/background-project",
-			background
-		);
 	};
 
 	const handleCancel = () => {
@@ -140,10 +117,6 @@ function Project() {
 				<CreateProjectForm
 					formProject={formProject}
 					setFormData={setFormData}
-					pitchDeck={pitchDeck}
-					setPitchDeck={setPitchDeck}
-					background={background}
-					setBackground={setBackground}
 				/>
 			</Modal>
 

@@ -103,9 +103,16 @@ export const createProject = Joi.object({
     stage: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Giai đoạn'),
     problem: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Vấn đề'),
     solution: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Giải pháp'),
-    // project_demo_url được bỏ trống
     project_demo_url: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('URL demo sản phẩm'),
     team_intro_url: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('URL giới thiệu nhóm'),
+    // pitch_deck định dạng FileUpload
+    pitch_deck: Joi.object({
+        mimetype: Joi.valid('application/pdf').required().label('Định dạng tệp'),
+    })
+        .unknown(true)
+        .instance(FileUpload)
+        .allow('', {})
+        .label('Pitch deck'),
     statistics: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Thống kê'),
     revenues: Joi.array().items(
         Joi.object({
@@ -132,6 +139,16 @@ export const createProject = Joi.object({
     strategy: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Chiến lược'),
     milestones: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Các mốc thời gian'),
     about_opennezt: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Về OpenNezt'),
+    // background định dạng FileUpload
+    background: Joi.object({
+        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
+            .required()
+            .label('Định dạng ảnh'),
+    })
+        .unknown(true)
+        .instance(FileUpload)
+        .allow('', {})
+        .label('Ảnh nền'),
 })
 
 export const getTalentDetails = Joi.object({
