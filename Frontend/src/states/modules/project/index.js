@@ -6,9 +6,8 @@ const projectSlice = createSlice({
 	initialState: {
 		title: "",
 		projects: [],
-		projectCreationId: {},
 		projectsBySeek: [],
-		resultCreateProject: true,
+		resultCreateProject: false,
 		loadingGetProjects: false,
 		loadingCreateNewProject: false,
 		loadingSeekProjects: false,
@@ -35,19 +34,17 @@ const projectSlice = createSlice({
 		startRequestCreateNewProject: (state) => ({
 			...state,
 			loadingCreateNewProject: true,
-			resultCreateProject: true,
+			resultCreateProject: false,
 		}),
 		startRequestCreateNewProjectSuccess: (state, action) => ({
 			...state,
 			loadingCreateNewProject: false,
 			resultCreateProject: true,
-			projectCreationId: action.payload.data,
 		}),
 		startRequestCreateNewProjectFail: (state) => ({
 			...state,
 			loadingCreateNewProject: false,
 			resultCreateProject: false,
-			projectCreationId: {},
 		}),
 
 		// Seek project
@@ -55,14 +52,14 @@ const projectSlice = createSlice({
 			...state,
 			loadingSeekProjects: true,
 		}),
-		
+
 		startRequestSeekProjectsSuccess: (state, action) => {
 			console.log("Action payload:", action.payload);
 			return {
-			...state,
-			projectsBySeek: action.payload.projects,
-			loadingSeekProjects: false,
-			}
+				...state,
+				projectsBySeek: action.payload.projects,
+				loadingSeekProjects: false,
+			};
 		},
 		startRequestSeekProjectsFail: (state) => ({
 			...state,

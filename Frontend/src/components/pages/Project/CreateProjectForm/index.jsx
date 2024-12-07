@@ -24,7 +24,7 @@ const CreateProjectForm = (props) => {
 
 	const [listPitchDeck, setListPitchDeck] = useState([]);
 	const [listBackground, setListBackground] = useState([]);
-	const [isHaveRevenue, setIsHaveRevenue] = useState(true);
+	const [isHaveRevenue, setIsHaveRevenue] = useState(false);
 
 	const propsPitchDeck = {
 		name: "file",
@@ -123,7 +123,19 @@ const CreateProjectForm = (props) => {
 		}
 	};
 
-	const onChangeSwitch = () => {
+	const onChangeSwitch = async () => {
+		if (isHaveRevenue) {
+			await setFormData((prevState) => ({
+				...prevState,
+				revenues: [],
+			}));
+		}
+		if (!isHaveRevenue) {
+			await setFormData((prevState) => ({
+				...prevState,
+				revenues: [{ time: "", revenue: "" }],
+			}));
+		}
 		setIsHaveRevenue(!isHaveRevenue);
 	};
 
@@ -222,6 +234,7 @@ const CreateProjectForm = (props) => {
 				)}
 			/>
 			<Select
+				value={formProject.stage}
 				required
 				showSearch
 				placeholder="What stage of development is your startup currently in?*"
@@ -293,7 +306,7 @@ const CreateProjectForm = (props) => {
 			<div>
 				Do you have revenue?*
 				<Switch
-					defaultChecked
+					defaultChecked={false}
 					onChange={onChangeSwitch}
 					style={{ marginLeft: "1rem" }}
 				/>
@@ -308,6 +321,7 @@ const CreateProjectForm = (props) => {
 					{formProject.revenues.map((revenue, index) => (
 						<div key={index} style={{ display: "flex", gap: "0.5rem" }}>
 							<DatePicker
+								placeholder="Select month*"
 								required
 								onChange={(date, dateString) =>
 									onChangeDate(date, dateString, index)
@@ -317,7 +331,7 @@ const CreateProjectForm = (props) => {
 							<Input
 								onChange={(e) => onChangeRevenue(e, index)}
 								required
-								placeholder="Revenue"
+								placeholder="Revenue*"
 								style={{
 									padding: "0 0.5rem",
 									width: "auto",

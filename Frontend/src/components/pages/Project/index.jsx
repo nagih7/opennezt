@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import CreateProjectForm from "./CreateProjectForm";
 import ProjectDetails from "components/common/ProjectDetails";
 import { Button, message, Modal } from "antd";
-import axios from "axios";
 
 function Project() {
 	useEffect(() => {
@@ -17,14 +16,14 @@ function Project() {
 		name: "",
 		lading_page_url: "",
 		related_industries: [],
-		stage: "",
+		stage: null,
 		problem: "",
 		solution: "",
 		product_demo_url: "",
 		team_intro_url: "",
 		pitch_deck: {},
 		statistics: "",
-		revenues: [{ time: "", revenue: "" }],
+		revenues: [],
 		funding_sources: {
 			friend_and_family: "",
 			grant: "",
@@ -42,6 +41,38 @@ function Project() {
 		about_opennezt: "",
 		background: {},
 	});
+
+	const setDefaultForm = async () => {
+		await setFormData({
+			name: "",
+			lading_page_url: "",
+			related_industries: [],
+			stage: null,
+			problem: "",
+			solution: "",
+			product_demo_url: "",
+			team_intro_url: "",
+			pitch_deck: {},
+			statistics: "",
+			revenues: [],
+			funding_sources: {
+				friend_and_family: "",
+				grant: "",
+				angel: "",
+				venture_capital: "",
+				other: "",
+			},
+			target_money: "",
+			target_audience: "",
+			competitors: "",
+			competitive_advantage: "",
+			why_now: "",
+			strategy: "",
+			milestones: "",
+			about_opennezt: "",
+			background: {},
+		});
+	};
 
 	const { projects, loadingCreateNewProject, resultCreateProject } =
 		useSelector((state) => state.project);
@@ -67,9 +98,10 @@ function Project() {
 		console.log(formProject);
 		await store.dispatch(createNewProject(formProject));
 		if (resultCreateProject) {
-			message.success("Create project successfully");
 			setOpenModalCreateProject(false);
-			store.dispatch(getProjects());
+			message.success("Create project successfully");
+			await setDefaultForm();
+			await store.dispatch(getProjects());
 		} else {
 			message.error("Create project failed");
 		}
@@ -77,6 +109,7 @@ function Project() {
 
 	const handleCancel = () => {
 		setOpenModalCreateProject(false);
+		setDefaultForm();
 	};
 
 	return (

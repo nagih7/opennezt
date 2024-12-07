@@ -1,5 +1,5 @@
 import {User, FounderProfile, Project, Invitation, ObjectId} from '@/models'
-import {FileUpload, DecodeBase64} from '@/utils/classes'
+import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
 
 export async function create(requestBody) {
