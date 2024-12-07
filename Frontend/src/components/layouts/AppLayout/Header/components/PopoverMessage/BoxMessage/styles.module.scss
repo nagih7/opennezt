@@ -1,0 +1,29 @@
+@import "../../../../../../../assets/scss/variables.scss";
+
+.boxMessageWrap {
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+	font-size: 14px;
+	color: $textColor;
+
+	.messageWrap {
+		padding: 0.5rem 1rem;
+		margin-bottom: 5px;
+		border-radius: 1.5rem;
+		display: flex;
+		max-width: 250px;
+		font-size: 14px;
+	}
+
+	.sent {
+		background-color: #dcf8c6;
+		align-self: flex-end;
+	}
+
+	.received {
+		background-color: #f1f0f0;
+		align-self: flex-start;
+	}
+}

@@ -27,8 +27,8 @@ export const updateUser = (data) => async (dispatch, getState) => {
 
 export const handleChangePassword = (data) => async (dispatch, getState) => {
 	return callApi({
-		method: "post",
-		apiPath: `change-password`,
+		method: "patch",
+		apiPath: `/auth/change-password`,
 		actionTypes: [changePassword, changePasswordSuccess, changePasswordFail],
 		variables: data,
 		dispatch,

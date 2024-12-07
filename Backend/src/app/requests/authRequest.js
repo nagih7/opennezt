@@ -116,7 +116,7 @@ export const updateProfile = Joi.object({
 })
 
 export const changePassword = Joi.object({
-    password: Joi.string()
+    current_password: Joi.string()
         .required()
         .label('Mật khẩu cũ')
         .custom(
@@ -127,7 +127,7 @@ export const changePassword = Joi.object({
                         : helpers.message('{#label} không chính xác.')
                 )
         ),
-    new_password: Joi.string()
+    password: Joi.string()
         .min(6)
         .max(MAX_STRING_SIZE)
         .pattern(VALIDATE_PASSWORD_REGEX)
@@ -143,6 +143,11 @@ export const changePassword = Joi.object({
                 ? helpers.message('{{#label}} không được trùng với mật khẩu cũ.')
                 : value
         }),
+    password_confirmation: Joi.string()
+        .required()
+        .valid(Joi.ref('password'))
+        .label('Xác nhận mật khẩu')
+        .messages({'any.only': '{{#label}} không trùng với mật khẩu mới.'}),
 })
 
 export const forgotPassword = Joi.object({
