@@ -162,20 +162,29 @@ app.ws('/chat', (ws, req) => {
 
     ws.on('message', async (message) => {
         try {
-            const {receiverId, content} = JSON.parse(message)
 
             if (!receiverId || !content) {
                 throw new Error('Invalid message data')
             }
-
-            console.log('Received message:', {receiverId, content})
-
+            const { senderId, receiverId } = JSON.parse(message)
+            const content = JSON.parse(message).message
+        
+            
             const newMessage = new Messenger({
+                senderId: senderId, 
+                receiverId: receiverId,
+                message: content,
+                date: new Date().toISOString(),
+            })
+            console.log('Creating2 new message object with:', {
                 senderId: user_id,
                 receiverId: receiverId,
                 message: content,
                 date: new Date().toISOString(),
             })
+            console.log('Received message:', {receiverId, content})
+
+           
 
             console.log('Saving message to database:', newMessage)
 
