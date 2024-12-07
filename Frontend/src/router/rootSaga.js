@@ -8,7 +8,6 @@ import loadNewfeedSaga from "../states/modules/newfeeds/saga";
 import loadfounderSaga from "../states/modules/founder/saga";
 import loadProjectSaga from "../states/modules/project/saga";
 import loadTalentSaga from "../states/modules/talent/saga";
-
 export const ROUTE_SAGAS = [];
 
 ROUTE_SAGAS["LOAD_AUTH_PAGE"] = loadAuthSaga;

@@ -51,3 +51,31 @@ export async function verifyEmailToken(req, res, next) {
     abort(403, 'Liên kết không hợp lệ.')
 }
 export async function authenticateWebSocket(ws, req, next) {}
+export async function authMiddleware(req, res, next) {
+    if (!req.headers['authorization']) {
+        return res.status(401).json({message: 'Không có token'})
+    }
+    const token2 = req.headers['authorization']
+   
+    const token=token2.split(' ')[1]
+    // console.log(token)
+    if (!token) {
+        return res.status(401).json({ message: 'Không có token' })
+    }
+    
+    try {
+        const decoded = verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
+        
+        const user = await User.findOne({ _id: decoded.user_id })
+        if (!user) {
+            return res.status(401).json({ message: 'User không tồn tại' })
+        }
+        req.user = user
+        next()
+    } catch (error) {
+        if (error instanceof JsonWebTokenError) {
+            return res.status(401).json({ message: 'Token không hợp lệ' })
+        }
+        next(error)
+    }
+}

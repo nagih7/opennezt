@@ -7,6 +7,12 @@ import {
 	startRequestCreateNewProject,
 	startRequestCreateNewProjectSuccess,
 	startRequestCreateNewProjectFail,
+	startRequestSeekProjects,
+	startRequestSeekProjectsSuccess,
+	startRequestSeekProjectsFail,
+	startRequestCreateProject,
+	startRequestCreateProjectSuccess,
+	startRequestCreateProjectFail,
 } from "../../states/modules/project";
 
 export const getProjects = () => async (dispatch, getState) => {
@@ -38,3 +44,35 @@ export const createNewProject = (data) => async (dispatch, getState) => {
 		getState,
 	});
 };
+
+export const seekProjects = (requestProjectData) => async (dispatch, getState) => {
+	return callApi({
+	  method: "post",
+	  apiPath: `seek/requests-project`,
+	  actionTypes: [
+		startRequestCreateProject,
+		startRequestCreateProjectSuccess,
+		startRequestCreateProjectFail,
+	  ],
+	  variables: requestProjectData,
+	  dispatch,
+	  getState,
+	});
+  };
+  
+  export const getMatchingProjects = () => async (dispatch, getState) => {
+	
+
+	return callApi({
+	  method: "get",
+	  apiPath: `seek/founder/matching-projects`,
+	  actionTypes: [
+		startRequestSeekProjects,
+		startRequestSeekProjectsSuccess,
+		startRequestSeekProjectsFail,
+	  ],
+	  variables: {},
+	  dispatch,
+	  getState,
+	});
+  };

@@ -20,6 +20,7 @@ const rootReducer = {
 	talent: talentReducer,
 	project: projectReducer,
 	chat: chatReducer,
+    
 };
 
 export default rootReducer;

@@ -21,23 +21,23 @@ const FundingSource = new Schema(
     {
         friend_and_family: {
             type: String,
-            required: true,
+            required: false,
         },
         grant: {
             type: String,
-            required: true,
+            required: false,
         },
         angel: {
             type: String,
-            required: true,
+            required: false,
         },
         venture_capital: {
             type: String,
-            required: true,
+            required: false,
         },
         other: {
             type: String,
-            required: true,
+            required: false,
         },
     },
     {
@@ -60,7 +60,7 @@ const Project = createModel('Project', 'projects', {
     },
     background: {
         type: String,
-        required: true,
+        required: false,
     },
     landing_page_url: {
         type: String,
@@ -84,11 +84,11 @@ const Project = createModel('Project', 'projects', {
     },
     product_demo_url: {
         type: String,
-        required: true,
+        required: false,
     },
     team_intro_url: {
         type: String,
-        required: true,
+        required: false,
     },
     pitch_deck: {
         type: String,
@@ -100,7 +100,7 @@ const Project = createModel('Project', 'projects', {
     },
     revenues: {
         type: [Revernue],
-        required: true,
+        required: false,
     },
     funding_sources: {
         type: FundingSource,

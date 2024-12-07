@@ -23,6 +23,7 @@ const Project = React.lazy(() => import("../components/pages/Project"));
 const RecruitTalents = React.lazy(() =>
 	import("../components/pages/RecruitTalents")
 );
+const SeekProjects = React.lazy(() => import("../components/pages/SeekProjects"));
 
 const router = createBrowserRouter([
 	{
@@ -153,6 +154,16 @@ const router = createBrowserRouter([
 		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_RECRUIT_TALENTS_PAGE"),
+	},
+	{
+		path: "/seek-projects",
+		element: (
+			<AppLayout>
+				<SeekProjects />
+			</AppLayout>
+		),
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_SEEK_PROJECT_PAGE"),
 	},
 ]);
 
