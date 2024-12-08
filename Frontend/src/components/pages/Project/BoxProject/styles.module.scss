@@ -1,0 +1,39 @@
+@import "../../../../assets/scss/variables.scss";
+
+.boxProjectWrap {
+	padding: 1rem;
+	background-color: $colorWhite;
+	border-radius: $borderRadius;
+	box-shadow: $boxShadowDark;
+	cursor: pointer;
+	transition: all 0.2s linear;
+	height: 16rem;
+
+	&:hover {
+		box-shadow: $boxShadowHover;
+		transform: scale(1.01);
+	}
+
+	.backgroundProject {
+		width: 100%;
+		width: 25rem;
+		height: 100%;
+		max-height: 8rem;
+		object-fit: cover;
+		border-radius: $borderRadius;
+	}
+
+	.projectInfo {
+		h3 {
+			margin: 0;
+			margin-top: 0.5rem;
+			font-weight: 700 !important;
+		}
+	}
+
+	p {
+		font-size: 16px;
+		color: $colorBlack;
+		margin: 0.5rem 0;
+	}
+}

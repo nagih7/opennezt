@@ -1,7 +1,7 @@
 import { Spin } from "antd";
 import React, { Suspense } from "react";
 
-const LazyLoading = ({ children }) => {
+const LazyLoadingMedium = ({ children }) => {
 	return (
 		<Suspense
 			fallback={
@@ -16,7 +16,7 @@ const LazyLoading = ({ children }) => {
 						alignItems: "center",
 					}}
 					tip="Loading"
-					size="large"
+					size="medium"
 				/>
 			}>
 			{children}
@@ -24,4 +24,4 @@ const LazyLoading = ({ children }) => {
 	);
 };
 
-export default LazyLoading;
+export default LazyLoadingMedium;

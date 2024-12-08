@@ -58,15 +58,17 @@ export async function handleGetMatchingProjects(req, res) {
     try {
         const user = req.user
         const projects = await getMatchingProjects(user._id)
+        
         res.status(200).json({ projects })
     } catch (error) {
         res.status(400).json({ message: error.message })
     }
 }
 export async function handleSearchProjects(req, res) {
+    const user = req.user
     try {
         const { industry, name } = req.query
-        const projects = await searchProjects({ industry, name })
+        const projects = await searchProjects({ industry, name,user })
         res.status(200).json({ projects })
     } catch (error) {
         res.status(400).json({ message: error.message })

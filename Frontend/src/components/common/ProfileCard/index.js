@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import verify from "../../../assets/images/icon/verify.png";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -7,17 +7,17 @@ import AvatarDefault from "../../../assets/images/default/AvatarDefault.png";
 import { Button } from "antd";
 
 const ProfileCard = (props) => {
-	const { authUser, handleOpenModal, loadingUpdateFounderProfile } = props;
+	const { user, handleOpenModal, loadingUpdateFounderProfile } = props;
 
 	return (
 		<div className={styles.profileCardWrap}>
 			<div className={styles.bannerContainer}>
 				<div className={styles.banner}>
 					<div className={styles.background}>
-						{authUser.background ? (
+						{user.background ? (
 							<LazyLoadImage
 								alt="User Background"
-								src={authUser.background}
+								src={user.background}
 							/>
 						) : (
 							<LazyLoadImage
@@ -31,17 +31,14 @@ const ProfileCard = (props) => {
 				<div className={styles.userInfoWrap}>
 					<div className={styles.userInfo}>
 						<div className={styles.avatar}>
-							{authUser.avatar ? (
-								<LazyLoadImage
-									alt="User Avatar"
-									src={authUser.avatar}
-								/>
+							{user.avatar ? (
+								<LazyLoadImage alt="User Avatar" src={user.avatar} />
 							) : (
 								<LazyLoadImage alt="User Avatar" src={AvatarDefault} />
 							)}
 						</div>
 						<h1>
-							{authUser.name}
+							{user.name}
 							<LazyLoadImage
 								alt="Verify"
 								src={verify}
@@ -49,11 +46,11 @@ const ProfileCard = (props) => {
 							/>
 						</h1>
 						<p>
-							{authUser.city}, {authUser.region}
+							{user.city}, {user.region}
 						</p>
-						<p>{authUser.language.join(", ")}</p>
+						<p>{user.language.join(", ")}</p>
 						<a
-							href={authUser.linkedin}
+							href={user.linkedin}
 							target="_blank"
 							rel="noopener noreferrer">
 							LinkedIn Profile

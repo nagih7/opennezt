@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setLocation } from "../../../states/modules/app";
+import LazyLoading from "components/UI/LazyLoading";
 
 AuthLayout.propTypes = {
 	title: PropTypes.string.isRequired,
@@ -42,7 +43,7 @@ function AuthLayout(props) {
 							<span className={styles.title}>{title}</span>
 						</div>
 					</div>
-					{children}
+					<LazyLoading>{children}</LazyLoading>
 				</div>
 			</div>
 		</div>

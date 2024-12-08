@@ -51,7 +51,7 @@ export async function updateProfile(req, res) {
 }
 
 export async function changePassword(req, res) {
-    await userService.resetPassword(req.currentUser, req.body.new_password)
+    await userService.resetPassword(req.currentUser, req.body.password)
     res.status(201).jsonify('Cập nhật mật khẩu thành công.')
 }
 

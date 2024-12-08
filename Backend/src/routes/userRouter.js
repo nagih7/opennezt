@@ -40,17 +40,9 @@ userRouter.post(
     asyncHandler(userController.createProject)
 )
 
-// userRouter.put('/pitch-deck-project', (req, res) => {
-//     console.log('pitch-deck-project', req.body)
-//     res.json('success')
-// })
+userRouter.get('/projects', asyncHandler(userController.getProjects))
 
-// userRouter.put('/background-project', (req, res) => {
-//     console.log('background-project', req.body)
-//     res.json('success')
-// })
-
-userRouter.get('/projects', asyncHandler(userController.getProject))
+userRouter.get('/project/:id', asyncHandler(userController.getProject))
 
 userRouter.put('/project', asyncHandler(userController.updateProject))
 

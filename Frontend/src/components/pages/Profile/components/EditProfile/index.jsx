@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
-import InputMASQ from "../../../../../components/UI/Input";
 import ButtonMASQ from "../../../../../components/UI/Button";
-import SelectMASQ from "../../../../../components/UI/Select";
-import { Col, List, Row } from "antd";
+import { Col, Row } from "antd";
 import _ from "lodash";
 import { isValidate } from "../../../../../utils/validate";
 import { useDispatch, useSelector } from "react-redux";
 import { handleCheckValidateConfirm } from "../../../../../utils/helper";
-import { handleChangePassword, updateUser } from "../../../../../api/profile";
+import { updateUser } from "../../../../../api/profile";
 import { Select, Space, Input } from "antd";
-import {
-	setErrorChangePassword,
-	setErrorInfoUser,
-} from "../../../../../states/modules/profile";
+import { setErrorInfoUser } from "../../../../../states/modules/profile";
 import {
 	listLanguage,
 	listLocation,
@@ -36,17 +31,6 @@ function EditProfile() {
 		(state) => state.profile.loadingBtnUpdateInfoUser
 	);
 	const authUser = useSelector((state) => state.auth.authUser);
-	const [dataChangePassword, setDataChangePassword] = useState({
-		currentPassword: "",
-		password: "",
-		confirmPassword: "",
-	});
-	const errorChangePassword = useSelector(
-		(state) => state.profile.errorChangePassword
-	);
-	const loadingBtnChangePassword = useSelector(
-		(state) => state.profile.loadingBtnChangePassword
-	);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -60,29 +44,14 @@ function EditProfile() {
 			facebook: authUser.facebook,
 			linkedin: authUser.linkedin,
 		});
-		setDataChangePassword({
-			currentPassword: "",
-			password: "",
-			confirmPassword: "",
-		});
 	}, [authUser]);
 
 	const handleChangeInput = (valueInput, type, typeForm) => {
 		let value = valueInput.target.value;
-		let dataCloneDeep =
-			typeForm === "FORM_CHANGE_PASSWORD"
-				? dataChangePassword
-				: dataInfoUser;
+		let dataCloneDeep = dataInfoUser;
 		let data = _.cloneDeep(dataCloneDeep);
 		data[type] = value;
-		switch (typeForm) {
-			case "FORM_CHANGE_PASSWORD":
-				setDataChangePassword(data);
-				break;
-			default:
-				setDataInfoUser(data);
-				break;
-		}
+		setDataInfoUser(data);
 	};
 
 	const onChange = (event, nameSelect) => {
@@ -108,24 +77,11 @@ function EditProfile() {
 		}
 	};
 
-	const validateBlur = (type, typeForm) => {
-		let data =
-			typeForm === "FORM_CHANGE_PASSWORD"
-				? dataChangePassword
-				: dataInfoUser;
-		let error =
-			typeForm === "FORM_CHANGE_PASSWORD"
-				? errorChangePassword
-				: errorInfoUser;
+	const validateBlur = (type) => {
+		let data = dataInfoUser;
+		let error = errorInfoUser;
 		let validate = isValidate(data, type, error);
-		switch (typeForm) {
-			case "FORM_CHANGE_PASSWORD":
-				dispatch(setErrorChangePassword(validate.error));
-				break;
-			default:
-				dispatch(setErrorInfoUser(validate.error));
-				break;
-		}
+		dispatch(setErrorInfoUser(validate.error));
 		return validate.isError;
 	};
 
@@ -135,23 +91,6 @@ function EditProfile() {
 		dispatch(setErrorInfoUser(validate.dataError));
 		if (!validate.isError) {
 			dispatch(updateUser(dataInfoUser));
-		}
-	};
-
-	const handleConfirmChangePassword = () => {
-		let dataValidate = dataChangePassword;
-		let data = new FormData();
-		data.append(`current_password`, dataChangePassword.currentPassword);
-		data.append(`password`, dataChangePassword.password);
-		data.append(`password_confirmation`, dataChangePassword.confirmPassword);
-
-		let validate = handleCheckValidateConfirm(
-			dataValidate,
-			errorChangePassword
-		);
-		dispatch(setErrorChangePassword(validate.dataError));
-		if (!validate.isError) {
-			dispatch(handleChangePassword(data));
 		}
 	};
 
@@ -243,6 +182,7 @@ function EditProfile() {
 							<div className={styles.inputWrap}>
 								<div className={styles.label}>Region *</div>
 								<Select
+									value={dataInfoUser.region}
 									required
 									showSearch
 									placeholder="Select region..."
@@ -299,99 +239,6 @@ function EditProfile() {
 						</div>
 					</div>
 				</Col>
-
-				{/* <Col span={12}>
-					<div className={`${styles.personalInformation}`}>
-						<div className={styles.headerWrap}>
-							<div className={styles.label}>Change Password</div>
-						</div>
-						<div className={styles.mainWrap}>
-							<div className={styles.inputWrapper}>
-								<div className={styles.label}>Current password *</div>
-								<InputMASQ
-									type={"password"}
-									placeholder={"Enter current password..."}
-									onChange={(e) =>
-										handleChangeInput(
-											e,
-											"currentPassword",
-											"FORM_CHANGE_PASSWORD"
-										)
-									}
-									onBlur={() =>
-										validateBlur(
-											"currentPassword",
-											"FORM_CHANGE_PASSWORD"
-										)
-									}
-									value={dataChangePassword.currentPassword}
-									error={errorChangePassword.currentPassword}
-								/>
-							</div>
-
-							<div className={styles.inputWrapper}>
-								<div className={styles.label}>New password *</div>
-								<InputMASQ
-									type={"password"}
-									placeholder={"Enter new password..."}
-									onChange={(e) =>
-										handleChangeInput(
-											e,
-											"password",
-											"FORM_CHANGE_PASSWORD"
-										)
-									}
-									onBlur={() =>
-										validateBlur("password", "FORM_CHANGE_PASSWORD")
-									}
-									value={dataChangePassword.password}
-									error={errorChangePassword.password}
-								/>
-							</div>
-
-							<div className={styles.inputWrapper}>
-								<div className={styles.label}>
-									Confirm new password *
-								</div>
-								<InputMASQ
-									type={"password"}
-									placeholder={"Enter confirm new password..."}
-									onChange={(e) =>
-										handleChangeInput(
-											e,
-											"confirmPassword",
-											"FORM_CHANGE_PASSWORD"
-										)
-									}
-									onBlur={() =>
-										validateBlur(
-											"confirmPassword",
-											"FORM_CHANGE_PASSWORD"
-										)
-									}
-									value={dataChangePassword.confirmPassword}
-									error={errorChangePassword.confirmPassword}
-								/>
-							</div>
-						</div>
-
-						<div className={styles.btnWrap}>
-							<ButtonMASQ
-								onClick={() => handleConfirmChangePassword()}
-								loading={loadingBtnChangePassword}
-								style={{
-									minWidth: "80px",
-									margin: "0",
-									border: "none",
-									padding: "8px 12px",
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-								}}
-								textBtn={"Save"}></ButtonMASQ>
-						</div>
-					</div>
-				</Col> */}
 			</Row>
 			<div className={styles.btnWrap}>
 				<ButtonMASQ

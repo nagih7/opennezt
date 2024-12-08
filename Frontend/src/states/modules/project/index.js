@@ -6,9 +6,11 @@ const projectSlice = createSlice({
 	initialState: {
 		title: "",
 		projects: [],
+		projectDetails: {},
 		projectsBySeek: [],
 		resultCreateProject: false,
 		loadingGetProjects: false,
+		loadingGetProjectDetails: false,
 		loadingCreateNewProject: false,
 		loadingSeekProjects: false,
 		loadingUpdatePitchDeck: false,
@@ -46,6 +48,20 @@ const projectSlice = createSlice({
 			loadingCreateNewProject: false,
 			resultCreateProject: false,
 		}),
+		startGetProjectDetails: (state) => ({
+			...state,
+			loadingGetProjectDetails: true,
+		}),
+		startGetProjectDetailsSuccess: (state, action) => ({
+			...state,
+			loadingGetProjectDetails: false,
+			projectDetails: action.payload.data,
+		}),
+		startGetProjectDetailsFail: (state) => ({
+			...state,
+			loadingGetProjectDetails: false,
+			projectDetails: {},
+		}),
 
 		// Seek project
 		startRequestSeekProjects: (state) => ({
@@ -53,14 +69,11 @@ const projectSlice = createSlice({
 			loadingSeekProjects: true,
 		}),
 
-		startRequestSeekProjectsSuccess: (state, action) => {
-			console.log("Action payload:", action.payload);
-			return {
-				...state,
-				projectsBySeek: action.payload.projects,
-				loadingSeekProjects: false,
-			};
-		},
+		startRequestSeekProjectsSuccess: (state, action) => ({
+			...state,
+			projectsBySeek: action.payload.projects,
+			loadingSeekProjects: false,
+		}),
 		startRequestSeekProjectsFail: (state) => ({
 			...state,
 			projectsBySeek: [],
@@ -79,7 +92,20 @@ const projectSlice = createSlice({
 			...state,
 			loading: false,
 		}),
-		// Update project
+		startRequestSearchProjects : (state) => ({
+			...state,
+			loadingSearchProjects: true,
+		}),
+		startRequestSearchProjectsSuccess : (state, action) => ({
+			...state,
+			projectsBySeek: action.payload.projects,
+			loadingSearchProjects: false,
+		}),
+		startRequestSearchProjectsFail : (state) => ({
+			...state,
+			projectsBySeek: [],
+			loadingSearchProjects: false,
+		}),
 	},
 });
 
@@ -91,12 +117,18 @@ export const {
 	startRequestCreateNewProject,
 	startRequestCreateNewProjectSuccess,
 	startRequestCreateNewProjectFail,
+	startGetProjectDetails,
+	startGetProjectDetailsSuccess,
+	startGetProjectDetailsFail,
 	startRequestSeekProjects,
 	startRequestSeekProjectsSuccess,
 	startRequestSeekProjectsFail,
 	startRequestCreateProject,
 	startRequestCreateProjectSuccess,
 	startRequestCreateProjectFail,
+	startRequestSearchProjects,
+	startRequestSearchProjectsSuccess,
+	startRequestSearchProjectsFail,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

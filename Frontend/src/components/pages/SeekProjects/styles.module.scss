@@ -1,3 +1,4 @@
+
 :root {
 	--color-white: #ffffff;
 	--color-black: #000000;
@@ -13,86 +14,116 @@
 	--hover-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 .searchContainer {
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: var(--border-radius-2);
+    // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.searchForm {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px; 
+    margin: 2rem auto;
+    padding: 0.5rem 1rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.searchInput {
+    flex: 1;
+    margin-right: 1rem; 
+    border-radius: 3px;
+}
+.searchSelect{
+    flex: 1;
+    margin-right: 1rem; 
+    .ant-select-selector {
+        border-radius: 10px !important;
+    }
+}
+.searchButton {
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #0056b3;
+    }
+}
+
+.projectsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
+}
 
-    h1 {
-        font-size: 2rem;
-        color: var(--color-primary);
+.projectItem {
+    background-color: #f6f6f9;
+    border-radius: 2rem;
+    // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+}
+
+.projectImage img {
+    width: 100%;
+    height: auto;
+}
+
+
+
+.projectName {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+.projectContent {
+    padding: 1rem;
+
+h3.projectName,
+    p.projectProblem,
+    p.projectSolution {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
     }
 
-    .projectsList {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2rem;
-        justify-content: center;
-    }
-
-    .projectCard {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background-color: var(--color-white);
-        width: 300px;
-        height: auto;
-        max-height: 20rem;
-        box-shadow: var(--box-shadow);
-        padding: var(--card-padding);
-        gap: 1rem;
-        border-radius: var(--card-border-radius);
-
-        .projectImage {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            overflow: hidden;
-            border: 3px solid var(--color-primary);
-
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-        }
-
-        .projectContent {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-
-            .projectName {
-                font-size: 1.5rem;
-                font-weight: bold;
-                text-align: center;
-            }
-
-            .projectProblem,
-            .projectSolution,
-            .projectUpdatedAt {
-                font-size: 1rem;
-                text-align: center;
-            }
-
-            .requestButton {
-                margin-top: 1rem;
-                padding: 0.5rem 1rem;
-                background-color: var(--color-primary);
-                color: var(--color-white);
-                border: none;
-                border-radius: var(--border-radius-1);
-                cursor: pointer;
-                transition: background-color 0.3s;
-
-                &:hover {
-                    background-color: var(--color-dark);
-                }
-            }
+    &.expanded {
+        h3.projectName,
+        p.projectProblem,
+        p.projectSolution {
+            white-space: normal;
+            text-overflow: clip;
         }
     }
+}
+.requestButton {
+    padding: 0.5rem 1rem;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--border-radius-1);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: darken(#3498db, 10%);
+    }
+}
+.hiddenOption {
+    display: none;
 }
