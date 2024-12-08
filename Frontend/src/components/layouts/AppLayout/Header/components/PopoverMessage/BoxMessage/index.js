@@ -18,7 +18,7 @@ const BoxMessage = ({ messages }) => {
 					className={`${styles.messageWrap} ${
 						msg.isSender ? styles.sent : styles.received
 					}`}>
-					<span className={styles.message}>{msg.message}</span>
+					<span className={styles.message}>{msg.content}</span>
 				</div>
 			))}
 		</div>

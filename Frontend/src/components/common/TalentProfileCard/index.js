@@ -7,10 +7,10 @@ import verify from "../../../assets/images/icon/verify.png";
 import { Button } from "antd";
 import { useSelector } from "react-redux";
 import store from "states/configureStore";
-// import { useSocket } from "../SocketContext";
+import { useSocket } from "../SocketContext";
 import { requestChatInvitation } from "../../../api/chat";
 const TalentProfileCard = ({ talent }) => {
-	// const socket = useSocket();
+	const socket = useSocket();
 	const { loadingRequestChatInvitation, chatInvitation } = useSelector(
 		(state) => state.chat
 	);
@@ -22,7 +22,7 @@ const TalentProfileCard = ({ talent }) => {
 
 	const handleInvite = (receiver_id) => {
 		// Gửi yêu cầu 'invite' lên server khi user nhấn nút
-		// socket.emit("invite", { receiver_id });
+		socket.emit("invite", receiver_id);
 	};
 
 	return (

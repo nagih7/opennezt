@@ -4,17 +4,20 @@ import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
 import CloseIcon from "@mui/icons-material/Close";
 import BoxMessage from "./BoxMessage";
+import { useSocket } from "components/common/SocketContext";
 
 function ChatsPopover() {
+	const socket = useSocket();
+
 	const stepState = useSelector((state) => state.home.steps);
 	const [receiverData, setReceiverData] = useState([]);
 	const [receivedid, setReceivedid] = useState();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [openChats, setOpenChats] = useState([]);
 	const [minimizedChats, setMinimizedChats] = useState([]);
-	const [socket, setSocket] = useState(null);
-	const [receiverId, setReceiverId] = useState(null);
-	const [message, setMessage] = useState("");
+	// const [socket, setSocket] = useState(null);
+	const [receiver_id, setReceiverId] = useState(null);
+	const [content, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
 	const token = localStorage.getItem("token");
 	const getUserIdFromToken = useCallback(() => {
@@ -50,11 +53,16 @@ function ChatsPopover() {
 		receiver.username.toLowerCase().includes(searchQuery.toLowerCase())
 	);
 
-	const createChat = async (senderId, receivedid, messageContent, date) => {
+	const createChat = async (sender_id, receivedid, messageContent, date) => {
 		try {
 			const response = await axios.post(
 				`${process.env.REACT_APP_API_URL}/chat/create-chat`,
-				{ senderId, receiverId: receivedid, message: messageContent, date },
+				{
+					sender_id,
+					receiver_id: receivedid,
+					content: messageContent,
+					date,
+				},
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -65,9 +73,9 @@ function ChatsPopover() {
 				const chatHistory = response.data.chatHistory || [];
 				setMessages(
 					chatHistory.map((msg) => ({
-						message: msg.message,
+						content: msg.content,
 						timestamp: msg.date,
-						isSender: msg.senderId === getUserIdFromToken(),
+						isSender: msg.sender_id === getUserIdFromToken(),
 					}))
 				);
 			}
@@ -76,68 +84,70 @@ function ChatsPopover() {
 		}
 	};
 
-	const url_sock = `ws://localhost:3456/${receivedid}`;
-	console.log("url_sock", url_sock);
-	const initializeWebSocket = (receivedid) => {
-		const newSocket = new WebSocket(url_sock);
-		setSocket(newSocket);
+	// const url_sock = `ws://localhost:3456/${receivedid}`;
+	// console.log("url_sock", url_sock);
+	// const initializeWebSocket = (receivedid) => {
+	// 	const newSocket = new WebSocket(url_sock);
+	// 	setSocket(newSocket);
 
-		newSocket.onmessage = (message) => {
-			if (message.data instanceof Blob) {
-				const reader = new FileReader();
-				reader.onload = function () {
-					try {
-						const data = JSON.parse(reader.result);
-						setMessages((prevMessages) => [
-							...prevMessages,
-							{
-								...data,
-								isSender: data.senderId === getUserIdFromToken(),
-							},
-						]);
-					} catch (error) {
-						console.error("Error parsing JSON:", error);
-					}
-				};
-				reader.readAsText(message.data);
-			} else {
-				try {
-					const data = JSON.parse(message.data);
-					setMessages((prevMessages) => [
-						...prevMessages,
-						{ ...data, isSender: data.senderId === getUserIdFromToken() },
-					]);
-				} catch (error) {
-					console.error("Error parsing JSON:", error);
-				}
-			}
-		};
+	// 	newSocket.onmessage = (content) => {
+	// 		if (content.data instanceof Blob) {
+	// 			const reader = new FileReader();
+	// 			reader.onload = function () {
+	// 				try {
+	// 					const data = JSON.parse(reader.result);
+	// 					setMessages((prevMessages) => [
+	// 						...prevMessages,
+	// 						{
+	// 							...data,
+	// 							isSender: data.senderId === getUserIdFromToken(),
+	// 						},
+	// 					]);
+	// 				} catch (error) {
+	// 					console.error("Error parsing JSON:", error);
+	// 				}
+	// 			};
+	// 			reader.readAsText(content.data);
+	// 		} else {
+	// 			try {
+	// 				const data = JSON.parse(content.data);
+	// 				setMessages((prevMessages) => [
+	// 					...prevMessages,
+	// 					{ ...data, isSender: data.senderId === getUserIdFromToken() },
+	// 				]);
+	// 			} catch (error) {
+	// 				console.error("Error parsing JSON:", error);
+	// 			}
+	// 		}
+	// 	};
 
-		newSocket.onclose = () => {
-			console.log("WebSocket connection closed");
-		};
-	};
+	// 	newSocket.onclose = () => {
+	// 		console.log("WebSocket connection closed");
+	// 	};
+	// };
 
 	const sendMessage = () => {
-		if (!message) return;
+		if (!content) return;
 
-		const senderId = getUserIdFromToken();
+		const sender_id = getUserIdFromToken();
 		const date = new Date().toISOString();
 
 		const messagePayload = {
-			senderId,
-			receiverId: receivedid,
-			message,
+			sender_id,
+			receiver_id: receivedid,
+			content: content,
 			timestamp: date,
 		};
 
-		if (socket && socket.readyState === WebSocket.OPEN) {
-			socket.send(JSON.stringify(messagePayload));
-		}
+		socket.emit("message", messagePayload);
+
+		// if (socket && socket.readyState === WebSocket.OPEN) {
+		// 	socket.send(JSON.stringify(messagePayload));
+		// }
 
 		setMessages((prevMessages) => [
 			...prevMessages,
-			{ senderId, message, timestamp: date, isSender: true },
+			{ sender_id, content, timestamp: date, isSender: true },
 		]);
 
 		setMessage("");
@@ -155,9 +165,9 @@ function ChatsPopover() {
 			setOpenChats([...openChats, receiver]);
 		}
 
-		if (!socket) {
-			initializeWebSocket(receiver.userId);
-		}
+		// if (!socket) {
+		// 	initializeWebSocket(receiver.userId);
+		// }
 
 		try {
 			const response = await axios.get(
@@ -169,9 +179,9 @@ function ChatsPopover() {
 				}
 			);
 			const combinedMessages = response.data.chatHistory.map((msg) => ({
-				message: msg.message,
+				content: msg.content,
 				timestamp: msg.date,
-				isSender: msg.senderId === getUserIdFromToken(),
+				isSender: msg.sender_id === getUserIdFromToken(),
 			}));
 			setMessages(combinedMessages);
 		} catch (error) {
@@ -255,7 +265,7 @@ function ChatsPopover() {
 								type="text"
 								placeholder="Type a message..."
 								className={styles.miniChatInput}
-								value={message}
+								value={content}
 								onChange={(e) => setMessage(e.target.value)}
 							/>
 							<button

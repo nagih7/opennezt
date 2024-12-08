@@ -1,4 +1,4 @@
-import {ChatInvitation, ObjectId} from '@/models'
+import {ChatInvitation, Messenger, ObjectId} from '@/models'
 
 export async function chatInvitation(user, requestBody) {
     const invitation = new ChatInvitation({
@@ -22,4 +22,14 @@ export async function getChatInvitation(user, receiver_id) {
         status: {$ne: 'rejected'},
     }).select('status -_id')
     return invitation
+}
+
+export async function saveMessage(messages) {
+    const newMessage = new Messenger({
+        sender_id: messages.sender_id,
+        receiver_id: messages.receiver_id,
+        content: messages.content,
+        date: new Date().toISOString(),
+    })
+    await newMessage.save()
 }
