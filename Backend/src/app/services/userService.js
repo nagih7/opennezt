@@ -111,7 +111,7 @@ export async function createProject(user, {pitch_deck, background, ...requestBod
     await project.save()
 }
 
-export async function getProject(userId) {
+export async function getProjects(userId) {
     const projects = await Project.aggregate([
         {
             $match: {user_id: userId},
@@ -125,17 +125,33 @@ export async function getProject(userId) {
                         else: {$concat: [LINK_STATIC_URL, '$background']},
                     },
                 },
-                pitch_deck: {
-                    $cond: {
-                        if: {$eq: [{$ifNull: ['$pitch_deck', '']}, '']},
-                        then: '$pitch_deck',
-                        else: {$concat: [LINK_STATIC_URL, '$pitch_deck']},
-                    },
-                },
+            },
+        },
+        {
+            $sort: {created_at: -1},
+        },
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+                related_industries: 1,
+                stage: 1,
+                background: 1,
             },
         },
     ])
     return projects
+}
+
+export async function getProject(userId, projectId) {
+    const project = await Project.findOne({user_id: userId, _id: projectId})
+    if (project.background) {
+        project.background = project.background && LINK_STATIC_URL + project.background
+    }
+    if (project.pitch_deck) {
+        project.pitch_deck = project.pitch_deck && LINK_STATIC_URL + project.pitch_deck
+    }
+    return project
 }
 
 export async function updateProject(user, requestBody) {

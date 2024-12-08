@@ -3,10 +3,10 @@ import styles from "./styles.module.scss";
 import store from "states/configureStore";
 import { checkSteps } from "api/home";
 import { useSelector } from "react-redux";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useNavigate } from "react-router-dom";
-import StepBox from "./StepBox";
 import LazyLoading from "components/UI/LazyLoading";
+
+const StepBox = React.lazy(() => import("./StepBox"));
 
 function Home() {
 	const navigate = useNavigate();
@@ -43,22 +43,24 @@ function Home() {
 								/>
 							</LazyLoading>
 
-							<div className={styles.stepWrap}>
-								<div className={styles.stepContent}>
-									Invite your Team
-								</div>
-								<ChevronRightIcon className={styles.chevron} />
-							</div>
-							<div className={styles.recruitStepWrap}>
-								<div className={styles.recruitStepHeader}>
-									99 talents in your queue meet your requirement
-								</div>
-								<div
-									className={styles.recruitStepButton}
-									onClick={() => navigate("/recruit-talents")}>
-									Recuit now
-								</div>
-							</div>
+							<LazyLoading>
+								<StepBox
+									step={true}
+									textTrue="Invite your Team"
+									textFalse="Invite your Team"
+									path="/recruit-talents"
+								/>
+							</LazyLoading>
+						</div>
+					</div>
+					<div className={styles.recruitStepWrap}>
+						<div className={styles.recruitStepHeader}>
+							99 talents in your queue meet your requirement
+						</div>
+						<div
+							className={styles.recruitStepButton}
+							onClick={() => navigate("/recruit-talents")}>
+							Recuit now
 						</div>
 					</div>
 				</div>

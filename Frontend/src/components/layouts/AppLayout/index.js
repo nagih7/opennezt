@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense } from "react";
+import React, { useEffect } from "react";
 import styles from "./styles.module.scss";
 import SideBar from "./SiderBar";
 import Header from "./Header";
@@ -51,36 +51,7 @@ function AppLayout(props) {
 					}`}>
 					<Header />
 					<main className={styles.mainContentWrap}>
-						<Suspense
-							fallback={
-								<div
-									style={{
-										display: "flex",
-										justifyContent: "center",
-										alignItems: "center",
-										height: "100vh",
-										backgroundColor: "#f6f6f9",
-									}}>
-									<img
-										src="https://i.pinimg.com/originals/71/3a/32/713a3272124cc57ba9e9fb7f59e9ab3b.gif"
-										alt="Loading..."
-										style={{ width: "150px", height: "150px" }}
-									/>
-								</div>
-							}>
-							{/* <div className={styles.headerMainWrap}>
-								<div className={styles.titleWrap}>{titlePage}</div>
-								<div className={styles.breadcrumbWrap}>
-									<span className={`${styles.text}`}>Home</span>{" "}
-									<span className={styles.slash}>/</span>
-									<span
-										className={`${styles.text} ${styles.breadcrumbActive}`}>
-										Dashboard
-									</span>
-								</div>
-							</div> */}
-							<LazyLoading>{children}</LazyLoading>
-						</Suspense>
+						<LazyLoading>{children}</LazyLoading>
 					</main>
 				</div>
 			</div>

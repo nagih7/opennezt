@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";
-import { getProjects, createNewProject } from "api/project";
+import { getProjects, createNewProject, getProjectDetails } from "api/project";
 import { useSelector } from "react-redux";
 import CreateProjectForm from "./CreateProjectForm";
-import ProjectDetails from "components/common/ProjectDetails";
 import { Button, message, Modal } from "antd";
+import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+
+const BoxProject = React.lazy(() => import("./BoxProject"));
+const ProjectDetails = React.lazy(() => import("../../common/ProjectDetails"));
 
 function Project() {
 	useEffect(() => {
@@ -42,8 +45,8 @@ function Project() {
 		background: {},
 	});
 
-	const setDefaultForm = async () => {
-		await setFormData({
+	const setDefaultForm = () => {
+		setFormData({
 			name: "",
 			lading_page_url: "",
 			related_industries: [],
@@ -74,33 +77,34 @@ function Project() {
 		});
 	};
 
-	const { projects, loadingCreateNewProject, resultCreateProject } =
-		useSelector((state) => state.project);
-	const [projectDetails, setProjectDetails] = useState(null);
+	const {
+		projects,
+		loadingCreateNewProject,
+		resultCreateProject,
+		projectDetails,
+		loadingGetProjectDetails,
+	} = useSelector((state) => state.project);
 
-	const handleProjectClick = (project) => {
-		setProjectDetails(project);
+	const handleOpenModalDetails = async (project_id) => {
+		await store.dispatch(getProjectDetails(project_id));
 		setOpenModalProjectDetails(true);
 	};
 
 	const [openModalProjectDetails, setOpenModalProjectDetails] =
-		React.useState(false);
-	const [loading, setLoading] = React.useState(true);
+		useState(false);
+
 	const showLoading = () => {
 		setOpenModalProjectDetails(false);
 	};
 
 	const [openModalCreateProject, setOpenModalCreateProject] = useState(false);
-	const showModalCreateProject = () => {
-		setOpenModalCreateProject(true);
-	};
+
 	const handleCreateProject = async () => {
-		console.log(formProject);
 		await store.dispatch(createNewProject(formProject));
 		if (resultCreateProject) {
 			setOpenModalCreateProject(false);
 			message.success("Create project successfully");
-			await setDefaultForm();
+			setDefaultForm();
 			await store.dispatch(getProjects());
 		} else {
 			message.error("Create project failed");
@@ -119,26 +123,24 @@ function Project() {
 				<Button
 					type="primary"
 					className={styles.btnCreate}
-					onClick={showModalCreateProject}>
+					onClick={() => setOpenModalCreateProject(true)}>
 					Create new project
 				</Button>
 			</div>
 			<div className={styles.projectsList}>
-				{projects &&
-					projects.length > 0 &&
-					projects.map((project) => (
-						<div
-							key={project._id}
-							className={styles.projectItem}
-							style={{
-								backgroundImage: `url(${project.background})`,
-							}}
-							onClick={() => handleProjectClick(project)}>
-							<h4>{project.name}</h4>
-							<p>{project.problem}</p>
-						</div>
-					))}
+				<LazyLoadingMedium>
+					{projects &&
+						projects.length > 0 &&
+						projects.map((project, index) => (
+							<BoxProject
+								project={project}
+								key={index}
+								openModalDetails={handleOpenModalDetails}
+							/>
+						))}
+				</LazyLoadingMedium>
 			</div>
+
 			<Modal
 				title=""
 				okText="Create"
@@ -153,19 +155,20 @@ function Project() {
 				/>
 			</Modal>
 
-			<Modal
-				title=""
-				loading={loading}
-				open={openModalProjectDetails}
-				onCancel={() => setOpenModalProjectDetails(false)}
-				width={1280}
-				footer={
-					<Button type="primary" onClick={showLoading}>
-						Close
-					</Button>
-				}>
-				<ProjectDetails projectDetails={projectDetails} />
-			</Modal>
+			<LazyLoadingMedium>
+				<Modal
+					title=""
+					open={openModalProjectDetails}
+					onCancel={() => setOpenModalProjectDetails(false)}
+					width={1280}
+					footer={
+						<Button type="primary" onClick={showLoading}>
+							Close
+						</Button>
+					}>
+					<ProjectDetails projectDetails={projectDetails} />
+				</Modal>
+			</LazyLoadingMedium>
 		</div>
 	);
 }

@@ -1,7 +1,11 @@
 @import "../../../assets/scss/variables.scss";
 
 .homeWrap {
+	height: 100%;
 	.homeContentWrap {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
 		.homeHeader {
 			font-size: 1.5rem;
 			color: #4c4c4c;
@@ -63,46 +67,45 @@
 						text-align: center;
 					}
 				}
+			}
+		}
+		.recruitStepWrap {
+			background-color: white;
+			width: 100%;
+			border-radius: 1rem;
+			display: flex;
+			flex-grow: 1;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			margin-top: 3rem;
+			box-shadow: $boxShadow;
+			gap: 1rem;
 
-				.recruitStepWrap {
-					background-color: white;
-					width: 100%;
-					height: 300px;
-					border-radius: 1rem;
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-					justify-content: center;
-					margin-top: 3rem;
-					box-shadow: $boxShadow;
-					gap: 1rem;
+			.recruitStepHeader {
+				font-size: 1.5rem;
+				color: #4c4c4c;
+				font-weight: 600;
+				line-height: 40px;
+			}
 
-					.recruitStepHeader {
-						font-size: 1.5rem;
-						color: #4c4c4c;
-						font-weight: 600;
-						line-height: 40px;
-					}
+			.recruitStepButton {
+				width: 200px;
+				height: 50px;
+				background-color: $backgroundMain;
+				border-radius: 1rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: $colorBackgroundButtonCancel;
+				font-size: 1.5rem;
+				font-weight: 600;
+				line-height: 30px;
+				cursor: pointer;
+				transition: all 0.3s ease;
 
-					.recruitStepButton {
-						width: 200px;
-						height: 50px;
-						background-color: $backgroundMain;
-						border-radius: 1rem;
-						display: flex;
-						align-items: center;
-						justify-content: center;
-						color: $colorBackgroundButtonCancel;
-						font-size: 1.5rem;
-						font-weight: 600;
-						line-height: 30px;
-						cursor: pointer;
-						transition: all 0.3s ease;
-
-						&:hover {
-							transform: translateY(-5px);
-						}
-					}
+				&:hover {
+					transform: translateY(-5px);
 				}
 			}
 		}

@@ -13,6 +13,9 @@ import {
 	startRequestCreateProject,
 	startRequestCreateProjectSuccess,
 	startRequestCreateProjectFail,
+	startGetProjectDetails,
+	startGetProjectDetailsSuccess,
+	startGetProjectDetailsFail,
 } from "../../states/modules/project";
 
 export const getProjects = () => async (dispatch, getState) => {
@@ -45,34 +48,48 @@ export const createNewProject = (data) => async (dispatch, getState) => {
 	});
 };
 
-export const seekProjects = (requestProjectData) => async (dispatch, getState) => {
+export const getProjectDetails = (projectId) => async (dispatch, getState) => {
 	return callApi({
-	  method: "post",
-	  apiPath: `seek/requests-project`,
-	  actionTypes: [
-		startRequestCreateProject,
-		startRequestCreateProjectSuccess,
-		startRequestCreateProjectFail,
-	  ],
-	  variables: requestProjectData,
-	  dispatch,
-	  getState,
+		method: "get",
+		apiPath: `users/project/${projectId}`,
+		actionTypes: [
+			startGetProjectDetails,
+			startGetProjectDetailsSuccess,
+			startGetProjectDetailsFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
 	});
-  };
-  
-  export const getMatchingProjects = () => async (dispatch, getState) => {
-	
+};
 
+export const seekProjects =
+	(requestProjectData) => async (dispatch, getState) => {
+		return callApi({
+			method: "post",
+			apiPath: `seek/requests-project`,
+			actionTypes: [
+				startRequestCreateProject,
+				startRequestCreateProjectSuccess,
+				startRequestCreateProjectFail,
+			],
+			variables: requestProjectData,
+			dispatch,
+			getState,
+		});
+	};
+
+export const getMatchingProjects = () => async (dispatch, getState) => {
 	return callApi({
-	  method: "get",
-	  apiPath: `seek/founder/matching-projects`,
-	  actionTypes: [
-		startRequestSeekProjects,
-		startRequestSeekProjectsSuccess,
-		startRequestSeekProjectsFail,
-	  ],
-	  variables: {},
-	  dispatch,
-	  getState,
+		method: "get",
+		apiPath: `seek/founder/matching-projects`,
+		actionTypes: [
+			startRequestSeekProjects,
+			startRequestSeekProjectsSuccess,
+			startRequestSeekProjectsFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
 	});
-  };
+};

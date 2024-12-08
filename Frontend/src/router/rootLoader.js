@@ -15,9 +15,6 @@ export const rootLoader = async (
 	if (url.pathname === "/profile") {
 		await store.dispatch(getMe());
 	}
-	if (url.pathname === "/about") {
-		// await store.dispatch(getMe());
-	}
 	var { auth } = store.getState();
 
 	if (!auth.isAuthSuccess && getAuthToken()) {

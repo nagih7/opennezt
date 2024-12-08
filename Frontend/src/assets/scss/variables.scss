@@ -132,7 +132,8 @@ $colorLine: #323a49;
 
 // Box
 $boxShadow: 0 0rem 2rem $colorLight;
-$boxShadowDark: 0 0rem 2rem $colorDark1;
+$boxShadow1: 0 1rem 1rem $colorLight1;
+$boxShadowDark: 0 0rem 1rem $colorNote;
 $boxShadowHover: 0 0rem 0rem $colorLight1;
 $backgroundNavItemActive: #848bc42e;
 $navItemAciive: #6c9bcf;
@@ -144,6 +145,7 @@ $colorNavbar: #7d8da1;
 // Border
 $colorBorder: #d2d6e5;
 $borderRadius: 0.5rem;
+$borderRadius1: 1rem;
 
 // Text
 $textColor: #374151;
