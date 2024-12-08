@@ -4,7 +4,7 @@ import serveFavicon from 'serve-favicon'
 import helmet from 'helmet'
 import multer from 'multer'
 import {APP_DEBUG, NODE_ENV, PUBLIC_DIR, VIEW_DIR} from './configs'
-
+import Messenger from './models/messenger'
 import {jsonify, sendMail} from './handlers/responseHandler'
 import corsHandler from './handlers/corsHandler'
 import httpRequestHandler from './handlers/httpRequestHandler'
@@ -57,9 +57,26 @@ function createApp() {
     wss.on('connection', (ws) => {
         console.log('A new WebSocket client connected')
 
-        ws.on('message', (message) => {
+        ws.on('message', async (message) => {
             console.log('received: %s', message)
-
+            const { senderId, receiverId } = JSON.parse(message)
+            const content = JSON.parse(message).message
+        
+            
+            const newMessage = new Messenger({
+                senderId: senderId, 
+                receiverId: receiverId,
+                message: content,
+                date: new Date().toISOString(),
+            })
+            try {
+                console.log('Saving message to database:', newMessage)
+                await newMessage.save()
+                console.log('Message saved successfully:', newMessage)
+            }
+            catch (error) {
+                console.error('Error handling message:', error)
+            }
             wss.clients.forEach((client) => {
                 if (client !== ws && client.readyState === WebSocket.OPEN) {
                     client.send(message)

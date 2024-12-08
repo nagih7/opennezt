@@ -7,14 +7,14 @@ import ButtonMASQ from "../../../../components/UI/Button";
 import { useNavigate } from "react-router-dom";
 import { isValidate } from "../../../../utils/validate";
 import { handleCheckValidateConfirm } from "../../../../utils/helper";
-import { useDispatch, useSelector } from "react-redux";
-import { Checkbox } from "antd";
+import { useSelector } from "react-redux";
+import store from "states/configureStore";
+import { Checkbox, message } from "antd";
 import Social from "./components/Social";
 import { login } from "../../../../api/auth";
 
 function Login() {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	const [dataLogin, setDataLogin] = useState({
 		email: "",
 		password: "",
@@ -27,8 +27,7 @@ function Login() {
 	const isLoadingBtnLogin = useSelector(
 		(state) => state.auth.isLoadingBtnLogin
 	);
-	const isAuthSuccess = useSelector((state) => state.auth.isAuthSuccess);
-	const authorize = useSelector((state) => state.auth.authorize);
+	const { isAuthSuccess, authorize } = useSelector((state) => state.auth);
 
 	useEffect(() => {
 		handleResetError();
@@ -62,11 +61,11 @@ function Login() {
 		return validate.isError;
 	};
 
-	const handleConfirmLogin = () => {
+	const handleConfirmLogin = async () => {
 		let validate = handleCheckValidateConfirm(dataLogin, errorDataLogin);
 		setErrorDataLogin(validate.dataError);
 		if (!validate.isError) {
-			dispatch(login(dataLogin));
+			await store.dispatch(login(dataLogin));
 		}
 	};
 

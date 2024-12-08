@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { message } from "antd";
 
 const authSlice = createSlice({
 	name: "auth",
@@ -22,16 +23,22 @@ const authSlice = createSlice({
 			...state,
 			isLoadingBtnLogin: true,
 		}),
-		startRequestLoginSuccess: (state) => ({
-			...state,
-			isLoadingBtnLogin: false,
-			isAuthSuccess: true,
-		}),
-		startRequestLoginFail: (state) => ({
-			...state,
-			isLoadingBtnLogin: false,
-			isAuthSuccess: false,
-		}),
+		startRequestLoginSuccess: (state) => {
+			message.success("Đăng nhập thành công!");
+			return {
+				...state,
+				isLoadingBtnLogin: false,
+				isAuthSuccess: true,
+			};
+		},
+		startRequestLoginFail: (state, action) => {
+			message.error(action.payload.data.message);
+			return {
+				...state,
+				isLoadingBtnLogin: false,
+				isAuthSuccess: false,
+			};
+		},
 		startRequestGetMe: (state) => ({
 			...state,
 		}),

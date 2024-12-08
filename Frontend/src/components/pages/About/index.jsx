@@ -3,12 +3,15 @@ import styles from "./styles.module.scss";
 import { useSelector } from "react-redux";
 import store from "states/configureStore";
 import { getFounderProfile } from "api/founder";
-import FounderProfile from "components/common/FounderProfile";
-import ProfileCard from "components/common/ProfileCard";
 import LazyLoading from "components/UI/LazyLoading";
 import EditProfilePopup from "components/common/EditProfilePopup";
 import { Modal } from "antd";
 import { updateFounderProfile } from "api/founder";
+
+const ProfileCard = React.lazy(() => import("components/common/ProfileCard"));
+const FounderProfile = React.lazy(() =>
+	import("components/common/FounderProfile")
+);
 
 const About = () => {
 	const [infoUpdateProfile, setInfoUpdateProfile] = useState({
@@ -39,6 +42,7 @@ const About = () => {
 	const { founderProfile, loadingUpdateFounderProfile } = useSelector(
 		(state) => state.founder
 	);
+
 	const [modalUpdateFounderProfile, setModalUpdateFounderProfile] =
 		useState(false);
 	const [updatedFounderProfile, setUpdatedFounderProfile] = useState(false);
@@ -93,13 +97,15 @@ const About = () => {
 
 	return (
 		<div className={styles.aboutContainer}>
-			<LazyLoading>
-				<ProfileCard
-					authUser={authUser}
-					handleOpenModal={handleOpenModal}
-					loadingUpdateFounderProfile={loadingUpdateFounderProfile}
-				/>
-			</LazyLoading>
+			{authUser && authUser.name && (
+				<LazyLoading>
+					<ProfileCard
+						user={authUser}
+						handleOpenModal={handleOpenModal}
+						loadingUpdateFounderProfile={loadingUpdateFounderProfile}
+					/>
+				</LazyLoading>
+			)}
 			<LazyLoading>
 				{founderProfile && (
 					<FounderProfile founderProfile={founderProfile} />

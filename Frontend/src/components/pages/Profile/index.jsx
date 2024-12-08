@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import EditProfile from "./components/EditProfile";
+import ChangePassword from "./components/ChangePassword";
 import store from "states/configureStore";
-import Order from "./components/Order";
 import { useSelector } from "react-redux";
 import { changeAvatar, changeBackground } from "api/profile";
 import { Upload, Col, Row, Tabs, message } from "antd";
@@ -23,10 +23,10 @@ function Profile() {
 			key: "1",
 			label: "Edit profile",
 		},
-		// {
-		// 	key: "2",
-		// 	label: "Order",
-		// },
+		{
+			key: "2",
+			label: "Change password",
+		},
 	];
 
 	useEffect(() => {
@@ -132,13 +132,13 @@ function Profile() {
 					""
 				)}
 
-				{/* {keyTable === "2" ? (
+				{keyTable === "2" ? (
 					<Col span={24}>
-						<Order />
+						<ChangePassword />
 					</Col>
 				) : (
 					""
-				)} */}
+				)}
 			</Row>
 		</div>
 	);

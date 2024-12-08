@@ -164,34 +164,6 @@ $backgroundHoverMain: rgba(108, 95, 252, 0.1);
 				}
 			}
 
-			.miniChatBody {
-				padding: 10px;
-				display: flex;
-				flex-direction: column;
-				overflow-y: auto;
-				font-size: 14px;
-				color: $textColor;
-
-				.messageWrap {
-					padding: 0.5rem 1rem;
-					margin-bottom: 5px;
-					border-radius: 1.5rem;
-					display: flex;
-					max-width: 250px;
-					font-size: 14px;
-				}
-
-				.sent {
-					background-color: #dcf8c6;
-					align-self: flex-end;
-				}
-
-				.received {
-					background-color: #f1f0f0;
-					align-self: flex-start;
-				}
-			}
-
 			.miniChatFooter {
 				padding: 1rem;
 				border-top: 1px solid $colorLine;

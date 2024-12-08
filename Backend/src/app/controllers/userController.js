@@ -56,8 +56,13 @@ export async function createProject(req, res) {
     res.status(201).jsonify('Tạo dự án thành công.')
 }
 
+export async function getProjects(req, res) {
+    const result = await userService.getProjects(req.currentUser._id)
+    res.jsonify(result)
+}
+
 export async function getProject(req, res) {
-    const result = await userService.getProject(req.currentUser._id)
+    const result = await userService.getProject(req.currentUser._id, req.params.id)
     res.jsonify(result)
 }
 

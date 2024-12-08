@@ -3,6 +3,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
 import CloseIcon from "@mui/icons-material/Close";
+import BoxMessage from "./BoxMessage";
 
 function ChatsPopover() {
 	const stepState = useSelector((state) => state.home.steps);
@@ -75,7 +76,8 @@ function ChatsPopover() {
 		}
 	};
 
-	const url_sock = `${process.env.REACT_APP_WS_URL}/${receivedid}`;
+	const url_sock = `ws://localhost:3456/${receivedid}`;
+	console.log("url_sock", url_sock);
 	const initializeWebSocket = (receivedid) => {
 		const newSocket = new WebSocket(url_sock);
 		setSocket(newSocket);
@@ -93,7 +95,6 @@ function ChatsPopover() {
 								isSender: data.senderId === getUserIdFromToken(),
 							},
 						]);
-						saveMessageToLocalStorage(data);
 					} catch (error) {
 						console.error("Error parsing JSON:", error);
 					}
@@ -106,7 +107,6 @@ function ChatsPopover() {
 						...prevMessages,
 						{ ...data, isSender: data.senderId === getUserIdFromToken() },
 					]);
-					saveMessageToLocalStorage(data);
 				} catch (error) {
 					console.error("Error parsing JSON:", error);
 				}
@@ -118,14 +118,7 @@ function ChatsPopover() {
 		};
 	};
 
-	const saveMessageToLocalStorage = (message) => {
-		const storedMessages =
-			JSON.parse(localStorage.getItem("chatMessages")) || [];
-		storedMessages.push({ ...message, saved: false });
-		localStorage.setItem("chatMessages", JSON.stringify(storedMessages));
-	};
-
-	const sendMessage = async () => {
+	const sendMessage = () => {
 		if (!message) return;
 
 		const senderId = getUserIdFromToken();
@@ -140,32 +133,6 @@ function ChatsPopover() {
 
 		if (socket && socket.readyState === WebSocket.OPEN) {
 			socket.send(JSON.stringify(messagePayload));
-		} else {
-			saveMessageToLocalStorage(messagePayload);
-			try {
-				await axios.post(
-					`${process.env.REACT_APP_API_URL}/chat/save-messages`,
-					[messagePayload],
-					{
-						headers: {
-							Authorization: `Bearer ${token}`,
-						},
-					}
-				);
-				const storedMessages =
-					JSON.parse(localStorage.getItem("chatMessages")) || [];
-				const updatedMessages = storedMessages.map((msg) =>
-					msg.timestamp === messagePayload.timestamp
-						? { ...msg, saved: true }
-						: msg
-				);
-				localStorage.setItem(
-					"chatMessages",
-					JSON.stringify(updatedMessages)
-				);
-			} catch (error) {
-				console.error("Error saving message:", error);
-			}
 		}
 
 		setMessages((prevMessages) => [
@@ -183,7 +150,6 @@ function ChatsPopover() {
 
 		if (openChats.length >= 1) {
 			const [removedChat, ...remainingChats] = openChats;
-			// setMinimizedChats([...minimizedChats, removedChat]);
 			setOpenChats([...remainingChats, receiver]);
 		} else {
 			setOpenChats([...openChats, receiver]);
@@ -202,16 +168,11 @@ function ChatsPopover() {
 					},
 				}
 			);
-			const localMessages =
-				JSON.parse(localStorage.getItem("chatMessages")) || [];
-			const combinedMessages = [
-				...response.data.chatHistory.map((msg) => ({
-					message: msg.message,
-					timestamp: msg.date,
-					isSender: msg.senderId === getUserIdFromToken(),
-				})),
-				...localMessages.filter((msg) => !msg.saved),
-			];
+			const combinedMessages = response.data.chatHistory.map((msg) => ({
+				message: msg.message,
+				timestamp: msg.date,
+				isSender: msg.senderId === getUserIdFromToken(),
+			}));
 			setMessages(combinedMessages);
 		} catch (error) {
 			console.error("Error fetching chat history:", error);
@@ -229,46 +190,15 @@ function ChatsPopover() {
 		openChatBox(chat);
 	};
 
-	useEffect(() => {
-		const interval = setInterval(() => {
-			console.log("Checking for unsaved messages...");
-			const storedMessages =
-				JSON.parse(localStorage.getItem("chatMessages")) || [];
-			const unsavedMessages = storedMessages.filter((msg) => !msg.saved);
-			if (unsavedMessages.length > 0) {
-				axios
-					.post(
-						`${process.env.REACT_APP_API_URL}/chat/save-messages`,
-						unsavedMessages,
-						{
-							headers: {
-								Authorization: `Bearer ${token}`,
-							},
-						}
-					)
-					.then(() => {
-						const updatedMessages = storedMessages.map((msg) => ({
-							...msg,
-							saved: true,
-						}));
-						localStorage.setItem(
-							"chatMessages",
-							JSON.stringify(updatedMessages)
-						);
-					})
-					.catch((error) => {
-						console.error("Error saving messages:", error);
-					});
-			}
-		}, 10000);
-
-		return () => clearInterval(interval);
-	}, [token]);
-
 	const handleEnterKey = (event) => {
 		if (event.key === "Enter") {
 			sendMessage();
 		}
+	};
+
+	const scrollToBottom = () => {
+		const element = document.querySelector(".miniChatBody"); // ID của phần tử muốn cuộn
+		element.scrollTop = element.scrollHeight;
 	};
 
 	return (
@@ -317,19 +247,10 @@ function ChatsPopover() {
 								<CloseIcon />
 							</button>
 						</div>
-						<div className={styles.miniChatBody}>
-							{messages.map((msg, idx) => (
-								<div
-									key={idx}
-									className={`${styles.messageWrap} ${
-										msg.isSender ? styles.sent : styles.received
-									}`}>
-									<span className={styles.message}>{msg.message}</span>
-								</div>
-							))}
-						</div>
+						<BoxMessage messages={messages} />
 						<div className={styles.miniChatFooter}>
 							<input
+								onClick={scrollToBottom}
 								onKeyDown={handleEnterKey}
 								type="text"
 								placeholder="Type a message..."

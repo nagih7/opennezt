@@ -3,7 +3,7 @@
 .inputWrap {
 	input {
 		border: 1px solid $colorBorderInput;
-		border-radius: 3px;
+		border-radius: 8px;
 
 		&:hover,
 		&:focus {
@@ -23,7 +23,7 @@
 
 	input {
 		border: 1px solid $colorBorderInput;
-		border-radius: 3px;
+		border-radius: 8px;
 		padding: 4px 11px 4px 22px;
 
 		&:hover,
@@ -43,7 +43,7 @@
 	position: relative;
 	input {
 		border: 1px solid $colorBorderInput;
-		border-radius: 3px;
+		border-radius: 8px;
 		padding: 4px 22px 4px 11px;
 
 		&:hover,
