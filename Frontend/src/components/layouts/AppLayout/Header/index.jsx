@@ -10,13 +10,26 @@ import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useSelector } from "react-redux";
+// import { useSocket } from "components/common/SocketContext";
 
 const Header = () => {
 	// const [isShowThemeLight, setIsShowThemeLight] = useState(true);
-
 	// State để lưu trạng thái fullscreen
 	const [isFullScreen, setIsFullScreen] = useState(false);
 	const authUser = useSelector((state) => state.auth.authUser);
+
+	// const socket = useSocket();
+
+	// useEffect(() => {
+	// 	if (socket) {
+	// 		socket.on("join_confirmation", (data) => {
+	// 			console.log("Join Confirmation:", data.message);
+	// 		});
+	// 		return () => {
+	// 			socket.off("join_confirmation");
+	// 		};
+	// 	}
+	// }, [socket]);
 
 	useEffect(() => {
 		const handleFullScreenChange = () => {

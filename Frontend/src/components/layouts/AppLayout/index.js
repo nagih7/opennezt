@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setLocation } from "../../../states/modules/app";
 import LazyLoading from "components/UI/LazyLoading";
+import { SocketProvider } from "components/common/SocketContext";
 
 function AppLayout(props) {
 	const { children } = props;
@@ -38,6 +39,7 @@ function AppLayout(props) {
 	}, [location, navigate, dispatch]);
 
 	return (
+		// <SocketProvider>
 		<div className={`${styles.boxMainLayout}`}>
 			<div className={styles.mainLayoutWrap}>
 				<SideBar
@@ -56,6 +58,7 @@ function AppLayout(props) {
 				</div>
 			</div>
 		</div>
+		// </SocketProvider>
 	);
 }
 
