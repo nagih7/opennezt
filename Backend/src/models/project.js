@@ -82,7 +82,7 @@ const Project = createModel('Project', 'projects', {
         type: String,
         required: true,
     },
-    product_demo_url: {
+    project_demo_url: {
         type: String,
         required: false,
     },

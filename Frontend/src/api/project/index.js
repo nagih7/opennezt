@@ -22,6 +22,12 @@ import {
 	startRequestProjectDetails,
 	startRequestProjectDetailsSuccess,
 	startRequestProjectDetailsFail,
+	startRequestUpdateProject,
+	startRequestUpdateProjectSuccess,
+	startRequestUpdateProjectFail,
+	startRequestDeleteProject,
+	startRequestDeleteProjectSuccess,
+	startRequestDeleteProjectFail,
 } from "../../states/modules/project";
 
 export const getProjects = () => async (dispatch, getState) => {
@@ -132,3 +138,33 @@ export const getrequestsProjectDetails =
 			getState,
 		});
 	};
+
+export const updateProject = (data) => async (dispatch, getState) => {
+	return callApi({
+		method: "put",
+		apiPath: "users/project",
+		actionTypes: [
+			startRequestUpdateProject,
+			startRequestUpdateProjectSuccess,
+			startRequestUpdateProjectFail,
+		],
+		variables: data,
+		dispatch,
+		getState,
+	});
+};
+
+export const deleteProject = (projectId) => async (dispatch, getState) => {
+	return callApi({
+		method: "delete",
+		apiPath: "users/project",
+		actionTypes: [
+			startRequestDeleteProject,
+			startRequestDeleteProjectSuccess,
+			startRequestDeleteProjectFail,
+		],
+		variables: { projectId },
+		dispatch,
+		getState,
+	});
+};

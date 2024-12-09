@@ -67,8 +67,9 @@ export async function getProject(req, res) {
 }
 
 export async function updateProject(req, res) {
-    await userService.updateProject(req.currentUser, req.body)
-    res.status(201).jsonify('Cập nhật dự án thành công.')
+    const result = await userService.updateProject(req.currentUser, req.body)
+    // res.status(200).jsonify('Cập nhật dự án thành công.')
+    res.status(200).jsonify(result)
 }
 
 export async function deleteProject(req, res) {
@@ -88,12 +89,12 @@ export async function getTalentDetails(req, res) {
 
 export async function updateBackground(req, res) {
     await userService.updateBackground(req.currentUser, req.body)
-    res.status(201).jsonify('Cập nhật ảnh nền thành công.')
+    res.status(200).jsonify('Cập nhật ảnh nền thành công.')
 }
 
 export async function updateAvatar(req, res) {
     await userService.updateAvatar(req.currentUser, req.body)
-    res.status(201).jsonify('Cập nhật ảnh đại diện thành công.')
+    res.status(200).jsonify('Cập nhật ảnh đại diện thành công.')
 }
 
 export async function checkSteps(req, res) {

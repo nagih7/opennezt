@@ -1,12 +1,17 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import BackgroundDefault from "assets/images/default/BackgroundDefault.jpg";
 
 const ProjectCard = ({ projectDetails }) => {
 	return (
 		<div className={styles.projectCardWrap}>
 			<LazyLoadImage
-				src={projectDetails.background}
+				src={
+					projectDetails.background
+						? projectDetails.background
+						: BackgroundDefault
+				}
 				alt="Project"
 				className={styles.backgroundProject}
 			/>

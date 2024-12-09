@@ -125,10 +125,9 @@ const Header = () => {
 				</Popover>
 
 				<div
+					onClick={() => showChatList()}
 					className={`${styles.itemHeaderRight} ${styles.messageAnimationWrap}`}>
-					<div
-						onClick={() => showChatList()}
-						className={`${styles.iconWrap}`}>
+					<div className={`${styles.iconWrap}`}>
 						<ChatBubbleOutlineIcon />
 					</div>
 					<div
