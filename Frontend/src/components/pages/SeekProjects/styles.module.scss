@@ -110,7 +110,12 @@ h3.projectName,
         }
     }
 }
-.requestButton {
+.buttonContainer {
+    display: flex;
+    gap: 1rem; 
+    margin-top: 1rem; 
+    .requestButton {
+        flex: 1; 
     padding: 0.5rem 1rem;
     background-color: var(--color-primary);
     color: var(--color-white);
@@ -118,12 +123,31 @@ h3.projectName,
     border-radius: var(--border-radius-1);
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
 
     &:hover {
         background-color: darken(#3498db, 10%);
+        transform: translateY(-2px);
+    }
+    }
+    .viewButton {
+        flex: 1; 
+    padding: 0.5rem 1rem;
+    background-color: #74d33d;
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--border-radius-1);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        background-color: darken(#74d33d, 10%);
+        transform: translateY(-2px);
+    }
     }
 }
+
 .hiddenOption {
     display: none;
 }

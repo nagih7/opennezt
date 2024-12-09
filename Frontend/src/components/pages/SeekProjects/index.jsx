@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import styles from "./styles.module.scss";
-import { getMatchingProjects, searchProjects, seekProjects } from "api/project";
+import { getMatchingProjects, searchProjects, seekProjects, getrequestsProjectDetails } from "api/project";
 import {listSector} from "components/common/ListSelected";
 import { Select, Button,Input } from 'antd';
 const { Option } = Select;
-
+import ProjectDetailsModal from "./ProjectDetailsModal/ProjectDetailsModal";
 function SeekProjects() {
     const dispatch = useDispatch();
     const authUser = useSelector((state) => state.auth.authUser);
@@ -18,7 +18,8 @@ function SeekProjects() {
     const [name, setName] = useState("");
     const [searchedProjects, setSearchedProjects] = useState([]);
     const [expandedProjectId, setExpandedProjectId] = useState(null);
-
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedProject, setSelectedProject] = useState(null);
     const industries = listSector.map(sector => sector.label);
     const handleGetMatchingProjects = useCallback(() => {
         dispatch(getMatchingProjects());
@@ -60,6 +61,26 @@ function SeekProjects() {
     const toggleExpand = (projectId) => {
         setExpandedProjectId(expandedProjectId === projectId ? null : projectId);
     };
+    
+    
+    const handleViewDetails = async (projectId) => {
+        try {
+          const response = await dispatch(getrequestsProjectDetails({ 
+            project_id: projectId 
+          }));
+      
+          if (response?.data && typeof response.data === 'object') {
+            setSelectedProject(response.data);
+            setIsModalVisible(true);
+            console.log("Project details:", response.data);
+          } else {
+            throw new Error('Invalid project data received');
+          }
+        } catch (error) {
+          console.error('Error fetching project details:', error);
+          toast.error('Failed to fetch project details');
+        }
+      };
     return (
          <div className={styles.searchContainer}>
             <ToastContainer />
@@ -111,18 +132,33 @@ function SeekProjects() {
                                 <p className={styles.projectUpdatedAt}>
                                     <strong>Updated At:</strong> {new Date(project.updated_at).toLocaleDateString()}
                                 </p>
+                                <div className={styles.buttonContainer}>
+
+                                <button
+                                    className={styles.viewButton}
+                                    onClick={() => handleViewDetails(project._id)}
+                                >
+                                    View Detail
+                                </button>
+                               
                                 <button
                                     className={styles.requestButton}
                                     onClick={() => handleRequestToJoin(project._id)}
                                 >
                                     Request to Join
                                 </button>
+                                </div>
                             </div>
                         </div>
                         )
                     ))
                 )}
             </div>
+            <ProjectDetailsModal 
+                                    isVisible={isModalVisible}
+                                    onClose={() => setIsModalVisible(false)}
+                                    projectDetails={selectedProject}
+                                    />
         </div>
     );
 }

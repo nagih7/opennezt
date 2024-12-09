@@ -1,4 +1,4 @@
-import { requestsProject, checkExistRequests, searchProjects, getIndustryByFounderId, getRelatedIndustriesByProjectId, getMatchingProjects } from '../services/seekprojectService'
+import { requestsProject, getProjectDetails, checkExistRequests, searchProjects, getIndustryByFounderId, getRelatedIndustriesByProjectId, getMatchingProjects } from '../services/seekprojectService'
 
 export async function handleRequestsProject(req, res) {
     try {
@@ -72,5 +72,21 @@ export async function handleSearchProjects(req, res) {
         res.status(200).json({ projects })
     } catch (error) {
         res.status(400).json({ message: error.message })
+    }
+}
+export async function handleGetProjectDetails(req, res) {
+    try {
+        const user = req.user
+        const projectData = req.body
+
+        if (!user) {
+            return res.status(400).json({ message: 'User not authenticated' })
+        }
+
+        const projectDetails = await getProjectDetails(projectData, user)
+        res.status(200).json(projectDetails)
+
+    } catch (error) {
+        res.status(404).json({ message: error.message })
     }
 }

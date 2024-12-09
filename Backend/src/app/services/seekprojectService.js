@@ -146,3 +146,55 @@ export async function searchProjects({ industry, name, user }) {
 
     return projects
 }
+export async function getProjectDetails(data, user) {
+    try {
+        const user_id = user._id.toString()
+        const { project_id } = data
+        
+        if (!project_id) {
+            throw new Error('Project ID is required')
+        }
+        
+        const project = await Project.findOne(
+            { 
+                _id: project_id,
+                user_id: { $ne: user_id }
+            },
+            {
+                
+                name :1,
+                background:1,
+                related_industries:1,
+                stage:1,
+                problem:1,
+                solution:1,
+                team_intro_url:1,
+                pitch_deck:1,
+                statistics:1,
+
+                revenues:1,
+                funding_sources:1,
+                target_money:1,
+                target_audience:1,
+                competitors:1,
+                competitive_advantage:1,
+                why_now:1,
+                strategy:1,
+                milestones:1,
+                about_opennezt:1
+            }
+        )
+
+        if (!project) {
+            throw new Error('Project not found or unauthorized')
+        }
+
+        const projectData = project.toObject()
+        projectData.background = projectData.background ? LINK_STATIC_URL + projectData.background : projectData.background
+
+        return projectData
+
+    } catch (error) {
+        throw new Error(error.message || 'Error fetching project details')
+    }
+}

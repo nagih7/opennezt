@@ -106,6 +106,20 @@ const projectSlice = createSlice({
 			projectsBySeek: [],
 			loadingSearchProjects: false,
 		}),
+		startRequestProjectDetails: (state) => ({
+			...state,
+			loadingProjectDetails: true,
+		  }),
+		  startRequestProjectDetailsSuccess: (state, action) => ({
+			...state,
+			projectDetails: action.payload,
+			loadingProjectDetails: false,
+		  }),
+		  startRequestProjectDetailsFail: (state) => ({
+			...state,
+			projectDetails: null,
+			loadingProjectDetails: false,
+		  }),
 	},
 });
 
@@ -129,6 +143,9 @@ export const {
 	startRequestSearchProjects,
 	startRequestSearchProjectsSuccess,
 	startRequestSearchProjectsFail,
+	startRequestProjectDetails,
+	startRequestProjectDetailsSuccess,
+	startRequestProjectDetailsFail,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

@@ -19,6 +19,9 @@ import {
 	startRequestSearchProjects,
 	startRequestSearchProjectsSuccess,
 	startRequestSearchProjectsFail,
+	startRequestProjectDetails,
+	startRequestProjectDetailsSuccess,
+	startRequestProjectDetailsFail,
 } from "../../states/modules/project";
 
 export const getProjects = () => async (dispatch, getState) => {
@@ -113,3 +116,17 @@ export const searchProjects = (industry, name) => async (dispatch, getState) => 
         getState,
     });
 };
+export const getrequestsProjectDetails = (projectData) => async (dispatch, getState) => {
+	return SeekProject({
+	  method: "post", 
+	  apiPath: `seek/project-details`,
+	  actionTypes: [
+		startRequestProjectDetails, 
+		startRequestProjectDetailsSuccess,
+		startRequestProjectDetailsFail,
+	  ],
+	  variables: projectData, 
+	  dispatch,
+	  getState,
+	});
+  };
