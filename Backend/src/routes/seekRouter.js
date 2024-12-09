@@ -1,5 +1,5 @@
 import express from 'express'
-import { handleRequestsProject, handleCheckExistRequests, handleSearchProjects ,handleGetIndustryByFounderId, handleGetRelatedIndustriesByProjectId, handleGetMatchingProjects } from '../app/controllers/seekprojectController'
+import { handleRequestsProject,handleGetProjectDetails, handleCheckExistRequests, handleSearchProjects ,handleGetIndustryByFounderId, handleGetRelatedIndustriesByProjectId, handleGetMatchingProjects } from '../app/controllers/seekprojectController'
 import { authMiddleware } from '@/app/middleware/authMiddleware'
 
 const router = express.Router()
@@ -10,5 +10,5 @@ router.get('/founder/:founder_id/industry', authMiddleware, handleGetIndustryByF
 router.get('/project/:project_id/related-industries', authMiddleware, handleGetRelatedIndustriesByProjectId)
 router.get('/founder/matching-projects', authMiddleware, handleGetMatchingProjects)
 router.get('/search-projects',authMiddleware, handleSearchProjects)
-
+router.post('/project-details',authMiddleware, handleGetProjectDetails)
 export default router

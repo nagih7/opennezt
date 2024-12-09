@@ -1,10 +1,10 @@
 import { User, FounderProfile, Project, SeekProject } from '@/models'
+import { LINK_STATIC_URL} from '@/configs'
 
 export async function requestsProject(user, { email, project_id, role_project }) {
     const receiver_user = await User.findOne({ email }, { _id: 1, email: 1 })
     
     const user_id = user._id.toString()
-    // const user_id = '672d77c4a98a959cb514c853'
     const sender_profile = await FounderProfile.findOne({ user_id: user_id })
 
     
@@ -87,22 +87,37 @@ export async function getRelatedIndustriesByProjectId(project_id) {
 export async function getMatchingProjects(user) {
     const user_id = user._id.toString()
     console.log(user_id)
-    const founder_profile = await FounderProfile.findOne({ user_id: user_id }, { industry: 1 })
+    
+    const founder_profile = await FounderProfile.findOne(
+        { user_id: user_id }, 
+        { industry: 1 }
+    )
+    
     if (!founder_profile) {
         throw new Error('Hãy cập nhật thông tin chi tiết trong about')
     }
 
-    const matchingProjects = new Set()
-    const industries = founder_profile.industry
+    const projects = await Project.find(
+        { 
+            related_industries: { $in: founder_profile.industry },
+            user_id: { $ne: user_id }
+        },
+        { 
+            problem: 1, 
+            solution: 1, 
+            background: 1, 
+            updated_at: 1, 
+            name: 1 
+        }
+    )
 
-    for (const industry of industries) {
-        const projects = await Project.find({ related_industries: industry }, { problem: 1, solution: 1 , background: 1, updated_at:1, name:1 })
-        projects.forEach(project => matchingProjects.add(project))
-    }
-
-    return Array.from(matchingProjects)
+    return projects.map(project => ({
+        ...project.toObject(),
+        background: project.background ? LINK_STATIC_URL + project.background : project.background
+    }))
 }
-export async function searchProjects({ industry, name }) {
+export async function searchProjects({ industry, name, user }) {
+    const user_id = user._id.toString()
     const query = {}
 
     if (industry) {
@@ -110,9 +125,76 @@ export async function searchProjects({ industry, name }) {
     }
 
     if (name) {
-        query.name = { $regex: name, $options: 'i' } 
+        query.name = { $regex: name, $options: 'i' }
     }
 
-    const projects = await Project.find(query, { problem: 1, solution: 1, name: 1, related_industries: 1 })
+    query.user_id = { $ne: user_id }
+
+    const projects = await Project.find(query, { 
+        problem: 1, 
+        solution: 1, 
+        name: 1, 
+        related_industries: 1, 
+        background: 1, 
+        updated_at: 1, 
+        user_id: 1 
+    })
+
+    projects.forEach(project => {
+        project.background = project.background ? LINK_STATIC_URL + project.background : project.background
+    })
+
     return projects
+}
+export async function getProjectDetails(data, user) {
+    try {
+        const user_id = user._id.toString()
+        const { project_id } = data
+        
+        if (!project_id) {
+            throw new Error('Project ID is required')
+        }
+        
+        const project = await Project.findOne(
+            { 
+                _id: project_id,
+                user_id: { $ne: user_id }
+            },
+            {
+                
+                name :1,
+                background:1,
+                related_industries:1,
+                stage:1,
+                problem:1,
+                solution:1,
+                team_intro_url:1,
+                pitch_deck:1,
+                statistics:1,
+
+                revenues:1,
+                funding_sources:1,
+                target_money:1,
+                target_audience:1,
+                competitors:1,
+                competitive_advantage:1,
+                why_now:1,
+                strategy:1,
+                milestones:1,
+                about_opennezt:1
+            }
+        )
+
+        if (!project) {
+            throw new Error('Project not found or unauthorized')
+        }
+
+        const projectData = project.toObject()
+        projectData.background = projectData.background ? LINK_STATIC_URL + projectData.background : projectData.background
+
+        return projectData
+
+    } catch (error) {
+        throw new Error(error.message || 'Error fetching project details')
+    }
 }

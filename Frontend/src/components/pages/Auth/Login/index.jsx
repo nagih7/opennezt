@@ -28,6 +28,7 @@ function Login() {
 		(state) => state.auth.isLoadingBtnLogin
 	);
 	const { isAuthSuccess, authorize } = useSelector((state) => state.auth);
+
 	useEffect(() => {
 		handleResetError();
 	}, [dataLogin]);

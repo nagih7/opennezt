@@ -92,7 +92,34 @@ const projectSlice = createSlice({
 			...state,
 			loading: false,
 		}),
-		// Update project
+		startRequestSearchProjects : (state) => ({
+			...state,
+			loadingSearchProjects: true,
+		}),
+		startRequestSearchProjectsSuccess : (state, action) => ({
+			...state,
+			projectsBySeek: action.payload.projects,
+			loadingSearchProjects: false,
+		}),
+		startRequestSearchProjectsFail : (state) => ({
+			...state,
+			projectsBySeek: [],
+			loadingSearchProjects: false,
+		}),
+		startRequestProjectDetails: (state) => ({
+			...state,
+			loadingProjectDetails: true,
+		  }),
+		  startRequestProjectDetailsSuccess: (state, action) => ({
+			...state,
+			projectDetails: action.payload,
+			loadingProjectDetails: false,
+		  }),
+		  startRequestProjectDetailsFail: (state) => ({
+			...state,
+			projectDetails: null,
+			loadingProjectDetails: false,
+		  }),
 	},
 });
 
@@ -113,6 +140,12 @@ export const {
 	startRequestCreateProject,
 	startRequestCreateProjectSuccess,
 	startRequestCreateProjectFail,
+	startRequestSearchProjects,
+	startRequestSearchProjectsSuccess,
+	startRequestSearchProjectsFail,
+	startRequestProjectDetails,
+	startRequestProjectDetailsSuccess,
+	startRequestProjectDetailsFail,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;
