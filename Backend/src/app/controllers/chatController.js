@@ -3,11 +3,23 @@ import User from '../../models/user.js'
 import * as chatService from '../services/chatService.js'
 import {userSockets} from '@/routes/socket/index.js'
 
-export const saveMessage = async (data, io) => {
-    await chatService.saveMessage(data)
-    const receiverSocketId = userSockets[data.receiver_id]
+export async function getChatList(req, res) {
+    const chatList = await chatService.getChatList(req.currentUser)
+    res.status(200).jsonify(chatList)
+}
+
+export async function getChatHistory(req, res) {
+    const chatHistory = await chatService.getChatHistory(req.currentUser, req.params.receiver_id)
+    res.status(200).jsonify(chatHistory)
+}
+
+export const saveMessage = async (data, io, socketId) => {
+    const result = await chatService.saveMessage(data, socketId)
+    const receiverSocketId = Object.keys(userSockets).find(
+        (socketId) => userSockets[socketId] === data.receiver_id
+    )
     if (receiverSocketId) {
-        io.to(receiverSocketId).emit('message', data)
+        io.to(receiverSocketId).emit('message', result)
     }
 }
 

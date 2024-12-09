@@ -10,12 +10,16 @@ const socketRoutes = (io) => {
         console.log('User connected')
         socket.on('login', async (token) => {
             const {user_id} = await verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
-            userSockets[user_id] = socket.id
+            userSockets[socket.id] = user_id
         }),
         notificationRouter(socket)
         chatRouter(socket, io)
 
         socket.on('disconnect', () => {
+            const user_id = userSockets[socket.id]
+            if (user_id) {
+                delete userSockets[socket.id]
+            }
             console.log('User disconnected')
         })
     })

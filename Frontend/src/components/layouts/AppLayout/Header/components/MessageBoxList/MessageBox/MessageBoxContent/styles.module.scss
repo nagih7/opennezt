@@ -1,9 +1,11 @@
-@import "../../../../../../../assets/scss/variables.scss";
+@import "../../../../../../../../assets/scss/variables.scss";
 
 .boxMessageWrap {
+	background-color: $secondaryColor;
 	padding: 10px;
 	display: flex;
 	flex-direction: column;
+	flex-grow: 1;
 	overflow-y: auto;
 	font-size: 14px;
 	color: $textColor;

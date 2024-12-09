@@ -1,4 +1,87 @@
-import {ChatInvitation, Messenger, ObjectId} from '@/models'
+import {ChatInvitation, Messenger, ObjectId, User} from '@/models'
+import {userSockets} from '@/routes/socket'
+
+export async function getChatList(user) {
+    const chatList = await Messenger.aggregate([
+        // Bước 1: Lọc tin nhắn ngay từ đầu
+        {
+            $match: {
+                $or: [{sender_id: user._id}, {receiver_id: user._id}],
+            },
+        },
+        // Bước 2: Lấy danh sách người tham gia
+        {
+            $project: {
+                participants: {$cond: [{$eq: ['$sender_id', user._id]}, '$receiver_id', '$sender_id']},
+            },
+        },
+        // Bước 3: Chỉ lấy các user_id duy nhất
+        {
+            $group: {
+                _id: null,
+                uniqueParticipants: {$addToSet: '$participants'},
+            },
+        },
+        // Bước 4: Lọc lại các user_id không phải của người dùng hiện tại
+        {
+            $match: {
+                uniqueParticipants: {$ne: user._id},
+            },
+        },
+        // Bước 5: Lookup vào collection User để lấy thông tin
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'uniqueParticipants',
+                foreignField: '_id',
+                as: 'users',
+            },
+        },
+        // Bước 6: Chỉ lấy các trường cần thiết
+        {
+            $project: {
+                chatList: {
+                    $map: {
+                        input: '$users',
+                        as: 'user',
+                        in: {
+                            receiver_id: '$$user._id',
+                            username: '$$user.name',
+                            avatar: '$$user.avatar',
+                        },
+                    },
+                },
+            },
+        },
+        // Bước 7: Flatten kết quả
+        {
+            $unwind: '$chatList',
+        },
+        {
+            $replaceRoot: {
+                newRoot: '$chatList',
+            },
+        },
+    ])
+
+    return chatList
+}
+
+export async function getChatHistory(user, receiver_id) {
+    const result = {
+        messages: [],
+        receiver_id: receiver_id,
+    }
+    const messages = await Messenger.find({
+        $or: [
+            {sender_id: user._id, receiver_id: new ObjectId(receiver_id)},
+            {sender_id: new ObjectId(receiver_id), receiver_id: user._id},
+        ],
+    }).sort({date: 1})
+    result.messages = messages
+
+    return result
+}
 
 export async function chatInvitation(user, requestBody) {
     const invitation = new ChatInvitation({
@@ -24,12 +107,13 @@ export async function getChatInvitation(user, receiver_id) {
     return invitation
 }
 
-export async function saveMessage(messages) {
-    const newMessage = new Messenger({
-        sender_id: messages.sender_id,
+export async function saveMessage(messages, socketId) {
+    const message = new Messenger({
+        sender_id: userSockets[socketId],
         receiver_id: messages.receiver_id,
         content: messages.content,
         date: new Date().toISOString(),
     })
-    await newMessage.save()
+    await message.save()
+    return message
 }

@@ -1,22 +1,23 @@
-import express, {Router} from 'express'
-import {asyncHandler, verifyToken} from '@/utils/helpers'
-import validate from '@/app/middleware/common/validate'
-import requireAuthentication from '@/app/middleware/common/require-authentication'
-import * as chatRequest from '../app/requests/chatRequest'
-import * as chatController from '../app/controllers/chatController'
+import express from 'express'
 import expressWs from 'express-ws'
 import wss from '../app/socket/websocket.js'
 import Messenger from '../models/messenger.js'
-
 import {TOKEN_TYPE} from '@/configs'
-
-const app = express()
-expressWs(app)
-wss.clients = new Map()
+// New
+import {Router} from 'express'
+import {verifyToken, asyncHandler} from '@/utils/helpers'
+import requireAuthentication from '@/app/middleware/common/require-authentication'
+import validate from '@/app/middleware/common/validate'
+import * as chatRequest from '../app/requests/chatRequest'
+import * as chatController from '../app/controllers/chatController'
 
 const chatRouter = Router()
 
 chatRouter.use(asyncHandler(requireAuthentication))
+
+chatRouter.get('/chat-list', asyncHandler(chatController.getChatList))
+
+chatRouter.get('/chat-history/:receiver_id', asyncHandler(chatController.getChatHistory))
 
 chatRouter.get('/get-chat-history/:receiver_id', async (req, res) => {
     try {
@@ -45,6 +46,10 @@ chatRouter.get('/get-chat-history/:receiver_id', async (req, res) => {
         return res.status(500).json({message: 'Internal server error'})
     }
 })
+
+const app = express()
+expressWs(app)
+wss.clients = new Map()
 
 chatRouter.post('/create-chat', async (req, res) => {
     try {

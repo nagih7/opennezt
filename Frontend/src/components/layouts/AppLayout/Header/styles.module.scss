@@ -201,6 +201,16 @@
 				}
 			}
 		}
+
+		.chatListWrap {
+			opacity: 0;
+			// visibility: hidden;
+			transition: all 0.1s linear;
+		}
+
+		.visible {
+			opacity: 1;
+		}
 	}
 }
 

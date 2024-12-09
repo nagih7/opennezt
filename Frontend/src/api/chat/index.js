@@ -3,10 +3,46 @@ import {
 	startRequestChatInvitation,
 	startRequestChatInvitationSuccess,
 	startRequestChatInvitationFail,
+	startRequestGetChatHistory,
+	startRequestGetChatHistorySuccess,
+	startRequestGetChatHistoryFail,
 	startRequestGetChatInvitation,
 	startRequestGetChatInvitationSuccess,
 	startRequestGetChatInvitationFail,
+	startRequestGetChatList,
+	startRequestGetChatListSuccess,
+	startRequestGetChatListFail,
 } from "../../states/modules/chat";
+
+export const getChatList = () => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: `chat/chat-list`,
+		actionTypes: [
+			startRequestGetChatList,
+			startRequestGetChatListSuccess,
+			startRequestGetChatListFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+export const getChatHistory = (receiver_id) => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: `chat/chat-history/${receiver_id}`,
+		actionTypes: [
+			startRequestGetChatHistory,
+			startRequestGetChatHistorySuccess,
+			startRequestGetChatHistoryFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
 
 export const requestChatInvitation =
 	(receiver_id) => async (dispatch, getState) => {
