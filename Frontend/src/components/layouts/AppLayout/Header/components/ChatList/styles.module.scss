@@ -1,4 +1,5 @@
 @import "src/assets/scss/variables";
+
 $mainColor: #ffffff;
 $secondaryColor: #f3f4f6;
 $secondaryAccent: #6d5dfc;
@@ -11,16 +12,35 @@ $colorLine: #e5e7eb;
 $backgroundHoverMain: rgba(108, 95, 252, 0.1);
 
 .chatPopoverWrap {
+	position: absolute;
+	top: 3.5rem;
+	right: 0;
 	background-color: $mainColor;
 	border-radius: 8px;
 	min-width: 320px;
 	max-width: 400px;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-	overflow: hidden;
+	// overflow: hidden;
 	color: $colorLight1;
 	font-family: "Arial", sans-serif;
+	box-shadow: $boxShadowDark;
+
+	&::before {
+		position: absolute;
+		content: "";
+		height: 12px;
+		width: 12px;
+		top: -6px;
+		right: 20px;
+		border-top-left-radius: 1px;
+		border-top-right-radius: 1px;
+		background-color: #f3f4f6;
+		transform: rotateZ(45deg);
+	}
 
 	.headerWrap {
+		border-radius: 8px 8px 0 0;
+		position: relative;
 		padding: 16px;
 		background-color: $secondaryColor;
 		display: flex;
@@ -55,6 +75,7 @@ $backgroundHoverMain: rgba(108, 95, 252, 0.1);
 		max-height: 400px;
 		overflow-y: auto;
 		background-color: $colorLight1;
+		border-radius: 0 0 8px 8px;
 
 		.chatItem {
 			display: flex;

@@ -3,17 +3,17 @@ import createModel, {ObjectId} from './base'
 import User from './user'
 
 const Messenger = createModel('Messenger', 'messengers', {
-    senderId: {
+    sender_id: {
         type: ObjectId,
         required: true,
         ref: User,
     },
-    receiverId: {
+    receiver_id: {
         type: ObjectId,
         required: true,
         ref: User,
     },
-    message: {
+    content: {
         type: String,
         required: true,
     },

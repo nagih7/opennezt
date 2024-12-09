@@ -1,43 +1,39 @@
 import Messenger from '../../models/messenger.js'
 import User from '../../models/user.js'
 import * as chatService from '../services/chatService.js'
+import {userSockets} from '@/routes/socket/index.js'
 
-export const saveMessage = async (senderId, receiverId, messageContent) => {
-    try {
-        const newMessage = new Messenger({
-            senderId,
-            receiverId,
-            message: messageContent,
-            date: new Date().toISOString(),
-        })
-        await newMessage.save()
-        console.log('Message saved successfully.')
-    } catch (error) {
-        console.error('Error saving message:', error)
+export async function getChatList(req, res) {
+    const chatList = await chatService.getChatList(req.currentUser)
+    res.status(200).jsonify(chatList)
+}
+
+export async function getChatHistory(req, res) {
+    const chatHistory = await chatService.getChatHistory(req.currentUser, req.params.receiver_id)
+    res.status(200).jsonify(chatHistory)
+}
+
+export const saveMessage = async (data, io, socketId) => {
+    const result = await chatService.saveMessage(data, socketId)
+    const receiverSocketId = Object.keys(userSockets).find(
+        (socketId) => userSockets[socketId] === data.receiver_id
+    )
+    if (receiverSocketId) {
+        io.to(receiverSocketId).emit('message', result)
     }
 }
 
 export const getReceiverIds = async (userId) => {
     try {
         const senderIds = await Messenger.find({
-            $or: [{senderId: userId}, {receiverId: userId}],
-        }).distinct('senderId')
+            $or: [{sender_id: userId}, {receiver_id: userId}],
+        }).distinct('sender_id')
 
         const receiverIds = await Messenger.find({
-            $or: [{senderId: userId}, {receiverId: userId}],
-        }).distinct('receiverId')
+            $or: [{sender_id: userId}, {receiver_id: userId}],
+        }).distinct('receiver_id')
 
         const distinctIds = [...new Set([...senderIds, ...receiverIds])]
-
-        // console.log(distinctIds)
-
-        // const messages = await Messenger.find({
-        //     $or: [
-        //         { senderId: userId },
-        //         { receiverId: userId }
-        //     ]
-        // }).distinct('receiverId')
-        // console.log('Receiver Ids:', messages)
         const filteredReceiverIds = distinctIds.filter((id) => id.toString() !== userId.toString())
         if (filteredReceiverIds.length === 0) {
             return []
@@ -49,7 +45,7 @@ export const getReceiverIds = async (userId) => {
 
         return users.map((user) => {
             return {
-                receiverId: userId,
+                receiver_id: userId,
                 userId: user._id,
                 username: user.name,
                 avatar: user.avatar,

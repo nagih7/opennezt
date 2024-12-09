@@ -7,11 +7,14 @@ import router from "./router/route";
 import { Provider } from "react-redux";
 import store from "./states/configureStore";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { SocketProvider } from "components/common/SocketContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<Provider store={store}>
-		<RouterProvider router={router} />
+		<SocketProvider>
+			<RouterProvider router={router} />
+		</SocketProvider>
 	</Provider>
 );
 

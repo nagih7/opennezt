@@ -1,22 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import "./styles.scss";
 import { Popover } from "antd";
 import contentInfo from "./components/PopoverProfile";
 import contentNotification from "./components/PopoverNotification";
-import contentMessage from "./components/PopoverMessage";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useSelector } from "react-redux";
+import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+import { getChatList } from "api/chat";
+import store from "states/configureStore";
+
+const ChatList = React.lazy(() => import("./components/ChatList"));
+const MessageBoxList = React.lazy(() => import("./components/MessageBoxList"));
 
 const Header = () => {
 	// const [isShowThemeLight, setIsShowThemeLight] = useState(true);
-
-	// State để lưu trạng thái fullscreen
 	const [isFullScreen, setIsFullScreen] = useState(false);
+	const [isShowChatList, setIsShowChatList] = useState(false);
+	const [chatBoxList, setChatBoxList] = useState([]);
 	const authUser = useSelector((state) => state.auth.authUser);
+	const showChatList = () => {
+		setIsShowChatList(!isShowChatList);
+	};
+
+	useEffect(() => {
+		store.dispatch(getChatList());
+	}, []);
 
 	useEffect(() => {
 		const handleFullScreenChange = () => {
@@ -75,6 +87,18 @@ const Header = () => {
 		}
 	};
 
+	const handleSetChatBoxList = useCallback((chatBox) => {
+		setChatBoxList((prev) => {
+			const index = prev.findIndex(
+				(chat) => chat.username === chatBox.username
+			);
+			if (index !== -1) {
+				return prev;
+			}
+			return [...prev, { ...chatBox, messages: [] }];
+		});
+	}, []);
+
 	return (
 		<header className={styles.headerWrap}>
 			<div className={styles.headerLeftWrap}></div>
@@ -100,19 +124,31 @@ const Header = () => {
 					</div>
 				</Popover>
 
-				<Popover
-					className={`popover-info-wrap`}
-					placement="bottomRight"
-					content={contentMessage}
-					trigger="click">
+				<div
+					className={`${styles.itemHeaderRight} ${styles.messageAnimationWrap}`}>
 					<div
-						className={`${styles.itemHeaderRight} ${styles.messageAnimationWrap}`}>
-						<div className={`${styles.iconWrap}`}>
-							<ChatBubbleOutlineIcon />
-						</div>
+						onClick={() => showChatList()}
+						className={`${styles.iconWrap}`}>
+						<ChatBubbleOutlineIcon />
 					</div>
-				</Popover>
-
+					<div
+						className={`${styles.chatListWrap} ${
+							isShowChatList ? styles.visible : ""
+						}`}>
+						<LazyLoadingMedium>
+							<ChatList
+								chatBoxList={chatBoxList}
+								handleSetChatBoxList={handleSetChatBoxList}
+							/>
+						</LazyLoadingMedium>
+					</div>
+				</div>
+				<LazyLoadingMedium>
+					<MessageBoxList
+						chatBoxList={chatBoxList}
+						setChatBoxList={setChatBoxList}
+					/>
+				</LazyLoadingMedium>
 				<div className={`${styles.itemHeaderRight}`}>
 					<Popover
 						className={`popover-info-wrap`}

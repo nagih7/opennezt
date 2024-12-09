@@ -5,7 +5,7 @@ import {cache, LOGIN_EXPIRE_IN, LINK_STATIC_URL, TOKEN_TYPE, VERIFY_EMAIL_EXPIRE
 import {FileUpload} from '@/utils/classes'
 import {generateToken} from '@/utils/helpers'
 
-export const tokenBlocklist = cache.create('token-block-list')
+export const tokenBlocklist = cache.create('t   oken-block-list')
 
 export async function checkValidLogin({email, password}) {
     const user = await User.findOne({email: email})
