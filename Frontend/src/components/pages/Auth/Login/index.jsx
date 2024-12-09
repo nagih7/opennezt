@@ -12,11 +12,8 @@ import store from "states/configureStore";
 import { Checkbox, message } from "antd";
 import Social from "./components/Social";
 import { login } from "../../../../api/auth";
-import { useSocket } from "components/common/SocketContext";
 
 function Login() {
-	const socket = useSocket();
-
 	const navigate = useNavigate();
 	const [dataLogin, setDataLogin] = useState({
 		email: "",
@@ -31,23 +28,19 @@ function Login() {
 		(state) => state.auth.isLoadingBtnLogin
 	);
 	const { isAuthSuccess, authorize } = useSelector((state) => state.auth);
-
 	useEffect(() => {
 		handleResetError();
 	}, [dataLogin]);
 
 	useEffect(() => {
 		if (isAuthSuccess) {
-			let token = localStorage.getItem("token");
-			socket.emit("login", token);
-
 			if (authorize === "admin") {
 				navigate("/admin/manage");
 			} else if (authorize === "user") {
 				navigate("/");
 			}
 		}
-	}, [isAuthSuccess, authorize, navigate, socket]);
+	}, [isAuthSuccess, authorize, navigate]);
 
 	const handleResetError = () => {
 		setErrorDataLogin({

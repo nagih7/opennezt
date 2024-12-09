@@ -6,12 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setLocation } from "../../../states/modules/app";
 import LazyLoading from "components/UI/LazyLoading";
+import { useSocket } from "components/common/SocketContext";
 
 function AppLayout(props) {
+	const socket = useSocket();
 	const { children } = props;
 	const isShowSideBar = useSelector((state) => state.app.isShowSideBar);
 	const isThemeLight = useSelector((state) => state.app.isThemeLight);
-	const isAuthSuccess = useSelector((state) => state.auth.isAuthSuccess);
+	const { isAuthSuccess } = useSelector((state) => state.auth);
 
 	// const titlePage = useSelector((state) => state.app.title);
 	const location = useSelector((state) => state.app.location);
@@ -21,8 +23,11 @@ function AppLayout(props) {
 	useEffect(() => {
 		if (!isAuthSuccess) {
 			navigate("/login");
+		} else {
+			let token = localStorage.getItem("token");
+			socket.emit("login", token);
 		}
-	}, [isAuthSuccess, navigate]);
+	}, [isAuthSuccess, navigate, socket]);
 
 	useEffect(() => {
 		if (location.pathName !== location.prevPathName) {
