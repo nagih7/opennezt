@@ -1,13 +1,14 @@
 @import "../../../../assets/scss/variables.scss";
 
 .boxProjectWrap {
+	width: 30rem;
 	padding: 1rem;
 	background-color: $colorWhite;
 	border-radius: $borderRadius;
 	box-shadow: $boxShadowDark;
 	cursor: pointer;
 	transition: all 0.2s linear;
-	height: 16rem;
+	height: 18rem;
 
 	&:hover {
 		box-shadow: $boxShadowHover;
@@ -16,24 +17,34 @@
 
 	.backgroundProject {
 		width: 100%;
-		width: 25rem;
 		height: 100%;
-		max-height: 8rem;
+		max-height: 9rem;
 		object-fit: cover;
 		border-radius: $borderRadius;
 	}
 
 	.projectInfo {
+		width: 100%;
 		h3 {
 			margin: 0;
-			margin-top: 0.5rem;
+			margin-top: 1rem;
 			font-weight: 700 !important;
+			white-space: nowrap; /* Ngăn không cho văn bản xuống dòng */
+			overflow: hidden; /* Ẩn phần văn bản vượt quá chiều rộng */
+			text-overflow: ellipsis;
 		}
 	}
 
 	p {
+		width: 100%;
 		font-size: 16px;
 		color: $colorBlack;
 		margin: 0.5rem 0;
+		-webkit-box-orient: vertical !important;
+		-webkit-line-clamp: 2 !important;
+		text-overflow: ellipsis !important; /* Thêm dấu ba chấm khi tràn */
+		overflow: hidden !important;
+		white-space: "nowrap" !important;
+		width: 300px;
 	}
 }

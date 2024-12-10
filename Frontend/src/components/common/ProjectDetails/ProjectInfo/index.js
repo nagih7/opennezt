@@ -27,7 +27,7 @@ const ProjectInfo = ({ projectDetails }) => {
 			<div className={styles.projectInfoBoxWrap}>
 				<p>{projectDetails.expertise_request}</p>
 			</div> */}
-			{(projectDetails.product_demo_url ||
+			{(projectDetails.project_demo_url ||
 				projectDetails.team_intro_url ||
 				projectDetails.pitch_deck) && (
 				<>
@@ -36,11 +36,11 @@ const ProjectInfo = ({ projectDetails }) => {
 						<ArrowDropDownIcon className={styles.dropDown} />
 					</h2>
 					<div className={styles.projectInfoBoxWrap}>
-						{projectDetails.product_demo_url && (
+						{projectDetails.project_demo_url && (
 							<>
 								<h3>Product Demo</h3>
 								<a
-									href={projectDetails.product_demo_url}
+									href={projectDetails.project_demo_url}
 									target="_blank"
 									rel="noopener noreferrer">
 									Watch Demo

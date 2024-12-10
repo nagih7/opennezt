@@ -1,112 +1,118 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import { Input, Select, Space } from "antd";
-import { InboxOutlined } from "@ant-design/icons";
-import { message, Upload, Switch, DatePicker, Button } from "antd";
+// import { InboxOutlined } from "@ant-design/icons";
+import { Switch, DatePicker, Button } from "antd";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import FundingSourceBox from "./FundingSourceBox";
 import { listSector, listStage } from "components/common/ListSelected";
-import axios from "axios";
-const { Dragger } = Upload;
+import moment from "moment";
+// const { Dragger } = Upload;
 const { TextArea } = Input;
-const baseUrlApi = process.env.REACT_APP_API_URL;
+// const baseUrlApi = process.env.REACT_APP_API_URL;
 
-const getBase64 = (file) =>
-	new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = () => resolve(reader.result);
-		reader.onerror = (error) => reject(error);
-	});
+// const getBase64 = (file) =>
+// 	new Promise((resolve, reject) => {
+// 		const reader = new FileReader();
+// 		reader.readAsDataURL(file);
+// 		reader.onload = () => resolve(reader.result);
+// 		reader.onerror = (error) => reject(error);
+// 	});
 
-const CreateProjectForm = (props) => {
+const UpdateProjectForm = (props) => {
 	const { formProject, setFormData } = props;
 
-	const [listPitchDeck, setListPitchDeck] = useState([]);
-	const [listBackground, setListBackground] = useState([]);
+	// const [listPitchDeck, setListPitchDeck] = useState([]);
+	// const [listBackground, setListBackground] = useState([]);
 	const [isHaveRevenue, setIsHaveRevenue] = useState(false);
 
-	const propsPitchDeck = {
-		name: "file",
-		multiple: false,
-		accept: ".pdf",
-		fileList: listPitchDeck,
-		customRequest: async ({ file, onSuccess, onError }) => {
-			const formData = new FormData();
-			formData.append("pitch_deck", file);
-			const result = await axios.post(
-				`${baseUrlApi}/common/check-upload-pitch-deck`,
-				formData
-			);
-			if (result.data.success) {
-				// convert file to base64
-				const base64 = await getBase64(file);
-				setFormData((prevState) => ({
-					...prevState,
-					pitch_deck: { file: base64, name: file.name },
-				}));
-				onSuccess(result.data);
-			} else {
-				onError(new Error("Upload failed"));
-			}
-		},
-		onChange(info) {
-			const { status } = info.file;
-			if (status !== "uploading") {
-				console.log(info.file, info.fileList);
-			}
-			if (status === "done") {
-				message.success(`${info.file.name} file uploaded successfully.`);
-			} else if (status === "error") {
-				message.error(`${info.file.name} file upload failed.`);
-			}
-			setListPitchDeck([info.file]);
-		},
-		onDrop(e) {
-			console.log("Dropped files", e.dataTransfer.files);
-		},
-	};
+	useEffect(() => {
+		if (formProject.revenues && formProject.revenues.length > 0) {
+			setIsHaveRevenue(true);
+		}
+	}, [formProject.revenues, setFormData]);
 
-	const propsBackground = {
-		name: "file",
-		multiple: false,
-		accept: ".png,.jpg,.jpeg",
-		fileList: listBackground,
-		customRequest: async ({ file, onSuccess, onError }) => {
-			const formData = new FormData();
-			formData.append("background", file);
-			const result = await axios.post(
-				`${baseUrlApi}/common/check-upload-background-startup`,
-				formData
-			);
-			if (result.data.success) {
-				// convert file to base64
-				const base64 = await getBase64(file);
-				setFormData((prevState) => ({
-					...prevState,
-					background: { file: base64, name: file.name },
-				}));
-				onSuccess(result.data);
-			} else {
-				onError(new Error("Upload failed"));
-			}
-		},
-		onChange(info) {
-			const { status } = info.file;
-			if (status !== "uploading") {
-				console.log(info.file, info.fileList);
-			}
-			if (status === "done") {
-				message.success(`${info.file.name} file uploaded successfully.`);
-			} else if (status === "error") {
-				message.error(`${info.file.name} file upload failed.`);
-			}
-			setListBackground([info.file]);
-		},
-		onDrop(e) {
-			console.log("Dropped files", e.dataTransfer.files);
-		},
-	};
+	// const propsPitchDeck = {
+	// 	name: "file",
+	// 	multiple: false,
+	// 	accept: ".pdf",
+	// 	fileList: listPitchDeck,
+	// 	customRequest: async ({ file, onSuccess, onError }) => {
+	// 		const formData = new FormData();
+	// 		formData.append("pitch_deck", file);
+	// 		const result = await axios.post(
+	// 			`${baseUrlApi}/common/check-upload-pitch-deck`,
+	// 			formData
+	// 		);
+	// 		if (result.data.success) {
+	// 			// convert file to base64
+	// 			const base64 = await getBase64(file);
+	// 			setFormData((prevState) => ({
+	// 				...prevState,
+	// 				pitch_deck: { file: base64, name: file.name },
+	// 			}));
+	// 			onSuccess(result.data);
+	// 		} else {
+	// 			onError(new Error("Upload failed"));
+	// 		}
+	// 	},
+	// 	onChange(info) {
+	// 		const { status } = info.file;
+	// 		if (status !== "uploading") {
+	// 			console.log(info.file, info.fileList);
+	// 		}
+	// 		if (status === "done") {
+	// 			message.success(`${info.file.name} file uploaded successfully.`);
+	// 		} else if (status === "error") {
+	// 			message.error(`${info.file.name} file upload failed.`);
+	// 		}
+	// 		setListPitchDeck([info.file]);
+	// 	},
+	// 	onDrop(e) {
+	// 		console.log("Dropped files", e.dataTransfer.files);
+	// 	},
+	// };
+
+	// const propsBackground = {
+	// 	name: "file",
+	// 	multiple: false,
+	// 	accept: ".png,.jpg,.jpeg",
+	// 	fileList: listBackground,
+	// 	customRequest: async ({ file, onSuccess, onError }) => {
+	// 		const formData = new FormData();
+	// 		formData.append("background", file);
+	// 		const result = await axios.post(
+	// 			`${baseUrlApi}/common/check-upload-background-startup`,
+	// 			formData
+	// 		);
+	// 		if (result.data.success) {
+	// 			// convert file to base64
+	// 			const base64 = await getBase64(file);
+	// 			setFormData((prevState) => ({
+	// 				...prevState,
+	// 				background: { file: base64, name: file.name },
+	// 			}));
+	// 			onSuccess(result.data);
+	// 		} else {
+	// 			onError(new Error("Upload failed"));
+	// 		}
+	// 	},
+	// 	onChange(info) {
+	// 		const { status } = info.file;
+	// 		if (status !== "uploading") {
+	// 			console.log(info.file, info.fileList);
+	// 		}
+	// 		if (status === "done") {
+	// 			message.success(`${info.file.name} file uploaded successfully.`);
+	// 		} else if (status === "error") {
+	// 			message.error(`${info.file.name} file upload failed.`);
+	// 		}
+	// 		setListBackground([info.file]);
+	// 	},
+	// 	onDrop(e) {
+	// 		console.log("Dropped files", e.dataTransfer.files);
+	// 	},
+	// };
 
 	const handleOnChange = (event, nameSelect) => {
 		if (nameSelect) {
@@ -268,8 +274,8 @@ const CreateProjectForm = (props) => {
 			/>
 			{/* <p>Please describe your product and what it does or will do.</p> */}
 			<Input
-				value={formProject.product_demo_url}
-				name="product_demo_url"
+				value={formProject.project_demo_url}
+				name="project_demo_url"
 				placeholder="Product Demo Video URL"
 				onChange={(e) => handleOnChange(e)}
 				autoSize
@@ -283,7 +289,7 @@ const CreateProjectForm = (props) => {
 				autoSize
 				style={{ padding: "4px 11px" }}
 			/>
-			<Dragger {...propsPitchDeck}>
+			{/* <Dragger {...propsPitchDeck}>
 				<p className="ant-upload-drag-icon">
 					<InboxOutlined />
 				</p>
@@ -293,7 +299,7 @@ const CreateProjectForm = (props) => {
 				<p className="ant-upload-hint">
 					Accepted file format: PDF. Max size of 10MB
 				</p>
-			</Dragger>
+			</Dragger> */}
 			<h2>Startup Progress</h2>
 			<TextArea
 				rows={4}
@@ -321,6 +327,7 @@ const CreateProjectForm = (props) => {
 					{formProject.revenues.map((revenue, index) => (
 						<div key={index} style={{ display: "flex", gap: "0.5rem" }}>
 							<DatePicker
+								value={revenue.time ? moment(revenue.time) : null}
 								placeholder="Select month*"
 								required
 								onChange={(date, dateString) =>
@@ -329,6 +336,7 @@ const CreateProjectForm = (props) => {
 								picker="month"
 							/>
 							<Input
+								value={revenue.revenue}
 								onChange={(e) => onChangeRevenue(e, index)}
 								required
 								placeholder="Revenue*"
@@ -481,7 +489,7 @@ const CreateProjectForm = (props) => {
 				What are your next features, or what are you learning to let you
 				know you’re on the right path with your business?
 			</p>
-			<TextArea
+			{/* <TextArea
 				required
 				rows={4}
 				value={formProject.about_opennezt}
@@ -489,8 +497,8 @@ const CreateProjectForm = (props) => {
 				placeholder="How did you hear about OpenNezt?*"
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
-			/>
-			<Dragger {...propsBackground}>
+			/> */}
+			{/* <Dragger {...propsBackground}>
 				<p className="ant-upload-drag-icon">
 					<InboxOutlined />
 				</p>
@@ -500,9 +508,9 @@ const CreateProjectForm = (props) => {
 				<p className="ant-upload-hint">
 					Accepted file format: PNG, JPG, JPEG. Max size of 10MB
 				</p>
-			</Dragger>
+			</Dragger> */}
 		</div>
 	);
 };
 
-export default CreateProjectForm;
+export default UpdateProjectForm;

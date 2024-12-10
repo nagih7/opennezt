@@ -204,12 +204,13 @@
 
 		.chatListWrap {
 			opacity: 0;
-			// visibility: hidden;
+			visibility: hidden;
 			transition: all 0.1s linear;
 		}
 
 		.visible {
 			opacity: 1;
+			visibility: visible;
 		}
 	}
 }

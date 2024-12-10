@@ -155,13 +155,34 @@ export async function getProject(userId, projectId) {
 }
 
 export async function updateProject(user, requestBody) {
+    console.log(requestBody)
+    if (requestBody.background) {
+        // xoá LINK_STATIC_URL nếu tồn tại
+        if (requestBody.background.includes(LINK_STATIC_URL)) {
+            requestBody.background = requestBody.background.replace(LINK_STATIC_URL, '')
+        }
+    }
+    if (requestBody.pitch_deck) {
+        // xoá LINK_STATIC_URL nếu tồn tại
+        if (requestBody.pitch_deck.includes(LINK_STATIC_URL)) {
+            requestBody.pitch_deck = requestBody.pitch_deck.replace(LINK_STATIC_URL, '')
+        }
+    }
     const project = await Project.findOne({user_id: user._id, _id: requestBody._id})
     project.set(requestBody)
     await project.save()
+
+    if (project.background) {
+        project.background = project.background && LINK_STATIC_URL + project.background
+    }
+    if (project.pitch_deck) {
+        project.pitch_deck = project.pitch_deck && LINK_STATIC_URL + project.pitch_deck
+    }
+    return project
 }
 
 export async function deleteProject(user, requestBody) {
-    await Project.deleteOne({user_id: user._id, _id: requestBody._id})
+    await Project.deleteOne({user_id: user._id, _id: requestBody.projectId})
 }
 
 export async function recuitTalents(requestRecuitTalents) {

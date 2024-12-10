@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { message } from "antd";
 
 const projectSlice = createSlice({
 	name: "ProJect",
@@ -8,12 +9,15 @@ const projectSlice = createSlice({
 		projects: [],
 		projectDetails: {},
 		projectsBySeek: [],
-		resultCreateProject: false,
+		resultCreateProject: null,
 		loadingGetProjects: false,
 		loadingGetProjectDetails: false,
 		loadingCreateNewProject: false,
 		loadingSeekProjects: false,
 		loadingUpdatePitchDeck: false,
+		loadingUpdateProject: false,
+		resultUpdateProject: null,
+		loadingDeleteProject: false,
 	},
 	reducers: {
 		setTitle: (state) => ({
@@ -36,18 +40,24 @@ const projectSlice = createSlice({
 		startRequestCreateNewProject: (state) => ({
 			...state,
 			loadingCreateNewProject: true,
-			resultCreateProject: false,
+			resultCreateProject: null,
 		}),
-		startRequestCreateNewProjectSuccess: (state, action) => ({
-			...state,
-			loadingCreateNewProject: false,
-			resultCreateProject: true,
-		}),
-		startRequestCreateNewProjectFail: (state) => ({
-			...state,
-			loadingCreateNewProject: false,
-			resultCreateProject: false,
-		}),
+		startRequestCreateNewProjectSuccess: (state, action) => {
+			message.success("Create project successfully");
+			return {
+				...state,
+				loadingCreateNewProject: false,
+				resultCreateProject: true,
+			};
+		},
+		startRequestCreateNewProjectFail: (state) => {
+			message.error("Create project failed");
+			return {
+				...state,
+				loadingCreateNewProject: false,
+				resultCreateProject: false,
+			};
+		},
 		startGetProjectDetails: (state) => ({
 			...state,
 			loadingGetProjectDetails: true,
@@ -92,7 +102,74 @@ const projectSlice = createSlice({
 			...state,
 			loading: false,
 		}),
-		// Update project
+		startRequestSearchProjects: (state) => ({
+			...state,
+			loadingSearchProjects: true,
+		}),
+		startRequestSearchProjectsSuccess: (state, action) => ({
+			...state,
+			projectsBySeek: action.payload.projects,
+			loadingSearchProjects: false,
+		}),
+		startRequestSearchProjectsFail: (state) => ({
+			...state,
+			projectsBySeek: [],
+			loadingSearchProjects: false,
+		}),
+		startRequestProjectDetails: (state) => ({
+			...state,
+			loadingProjectDetails: true,
+		}),
+		startRequestProjectDetailsSuccess: (state, action) => ({
+			...state,
+			projectDetails: action.payload,
+			loadingProjectDetails: false,
+		}),
+		startRequestProjectDetailsFail: (state) => ({
+			...state,
+			projectDetails: null,
+			loadingProjectDetails: false,
+		}),
+		startRequestUpdateProject: (state) => ({
+			...state,
+			loadingUpdateProject: true,
+			resultUpdateProject: null,
+		}),
+		startRequestUpdateProjectSuccess: (state, action) => {
+			message.success("Update project successfully");
+			return {
+				...state,
+				loadingUpdateProject: false,
+				projectDetails: action.payload.data,
+				resultUpdateProject: true,
+			};
+		},
+		startRequestUpdateProjectFail: (state) => {
+			message.error("Update project failed");
+			return {
+				...state,
+				loadingUpdateProject: false,
+				resultUpdateProject: false,
+			};
+		},
+		startRequestDeleteProject: (state) => ({
+			...state,
+			loadingDeleteProject: true,
+		}),
+		startRequestDeleteProjectSuccess: (state) => {
+			message.success("Delete project successfully");
+			return {
+				...state,
+				loadingDeleteProject: false,
+			};
+		},
+		startRequestDeleteProjectFail: (state) => {
+			message.error("Delete project failed");
+			return {
+				...state,
+				loadingDeleteProject: false,
+			};
+		},
 	},
 });
 
@@ -113,6 +190,18 @@ export const {
 	startRequestCreateProject,
 	startRequestCreateProjectSuccess,
 	startRequestCreateProjectFail,
+	startRequestSearchProjects,
+	startRequestSearchProjectsSuccess,
+	startRequestSearchProjectsFail,
+	startRequestProjectDetails,
+	startRequestProjectDetailsSuccess,
+	startRequestProjectDetailsFail,
+	startRequestUpdateProject,
+	startRequestUpdateProjectSuccess,
+	startRequestUpdateProjectFail,
+	startRequestDeleteProject,
+	startRequestDeleteProjectSuccess,
+	startRequestDeleteProjectFail,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;
