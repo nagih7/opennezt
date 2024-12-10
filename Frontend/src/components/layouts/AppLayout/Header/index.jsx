@@ -117,6 +117,7 @@ const Header = () => {
 					content={contentNotification}
 					trigger="click">
 					<div
+						onClick={() => setIsShowChatList(false)}
 						className={`${styles.itemHeaderRight} ${styles.notificationAnimationWrap}`}>
 						<div className={`${styles.iconWrap}`}>
 							<NotificationsIcon />

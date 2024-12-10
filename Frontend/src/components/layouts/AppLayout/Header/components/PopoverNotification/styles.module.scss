@@ -3,8 +3,9 @@
 .modalNotificationWrap {
 	min-width: 250px;
 	max-width: 400px;
-	background-color: $mainColor;
+	background-color: $backgroundMain;
 	border-radius: 4px;
+	box-shadow: $boxShadowDark;
 
 	&::before {
 		position: absolute;
@@ -15,17 +16,17 @@
 		right: 15px;
 		border-top-left-radius: 1px;
 		border-top-right-radius: 1px;
-		background-color: $mainColor;
+		background-color: $backgroundMain;
 		transform: rotateZ(45deg);
 	}
 
 	.headerWrap {
-		color: $colorWhite;
+		color: $colorBlack;
 		display: flex;
 		align-items: flex-start;
 		flex-direction: column;
 		padding: 13px;
-		border-block-end: 1px solid $colorBorderDefault;
+		border-block-end: 1px solid $colorLineLight;
 		font-weight: 600;
 	}
 
@@ -42,11 +43,11 @@
 				font-weight: 500;
 				font-size: 14px;
 				transition: all 0.3s;
-				color: $colorLight1;
+				color: $colorBlack;
 				display: flex;
 				justify-content: flex-start;
 				align-items: center;
-				border-block-end: 1px solid $colorLine;
+				border-block-end: 1px solid $colorLineLight;
 				.iconWrap {
 					min-width: 40px;
 					height: 40px;
@@ -67,7 +68,7 @@
 				}
 
 				&:hover {
-					background: $backgroundHoverMain;
+					background: rgba($secondaryAccent, 0.1);
 				}
 			}
 		}
@@ -82,7 +83,7 @@
 		transition: all 0.3s;
 		color: $colorNote;
 		&:hover {
-			background: $backgroundHoverMain;
+			background: rgba($secondaryAccent, 0.3);
 		}
 	}
 }
