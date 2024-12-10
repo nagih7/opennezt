@@ -9,11 +9,12 @@ import { isValidate } from "../../../../utils/validate";
 import { handleCheckValidateConfirm } from "../../../../utils/helper";
 import { useSelector } from "react-redux";
 import store from "states/configureStore";
-import { Checkbox, message } from "antd";
+import { Checkbox } from "antd";
 import Social from "./components/Social";
 import { login } from "../../../../api/auth";
+import Logo from "../../../../assets/images/logo/OpenNezt_icon_black.png";
 
-function Login() {
+const Login = () => {
 	const navigate = useNavigate();
 	const [dataLogin, setDataLogin] = useState({
 		email: "",
@@ -83,76 +84,84 @@ function Login() {
 
 	return (
 		<div className={styles.loginWrap}>
-			<div className={styles.inputWrapper}>
-				<div className={styles.label}>Email *</div>
-				<InputMASQ
-					type={"text"}
-					placeholder={"Enter email..."}
-					onChange={(e) => handleChangeInput(e, "email")}
-					onBlur={() => validateBlur("email")}
-					value={dataLogin.email}
-					error={errorDataLogin.email}
-				/>
+			<div className={styles.loginHeaderWrap}>
+				<div className={styles.logo}>
+					<img src={Logo} alt="logo" />
+				</div>
+				<h1 className={styles.title}>Login</h1>
 			</div>
-
-			<div className={styles.inputWrapper}>
-				<div className={styles.label}>Password *</div>
-				<InputMASQ
-					type={"password"}
-					placeholder={"******"}
-					value={dataLogin.password}
-					onChange={(e) => handleChangeInput(e, "password")}
-					onBlur={() => validateBlur("password")}
-					onKeyDown={(e) => handleKeyDown(e)}
-					error={errorDataLogin.password}
-				/>
-			</div>
-
-			<div className={styles.btnUtilitiesWrap}>
-				<div className={`${styles.remember} input-checkbox-style`}>
-					<Checkbox
-						className={styles.checkBox}
-						checked={checkRemember}
-						onClick={(e) => handleClickCheckBox(e)}>
-						<span>Remember me</span>
-					</Checkbox>
+			<div className={styles.loginContent}>
+				<div className={styles.inputWrapper}>
+					<div className={styles.label}>Email *</div>
+					<InputMASQ
+						type={"text"}
+						placeholder={"Enter email..."}
+						onChange={(e) => handleChangeInput(e, "email")}
+						onBlur={() => validateBlur("email")}
+						value={dataLogin.email}
+						error={errorDataLogin.email}
+					/>
 				</div>
 
-				<div
-					onClick={() => navigate("/forgot-password")}
-					className={styles.btnForgetPassword}>
-					Forgot password
+				<div className={styles.inputWrapper}>
+					<div className={styles.label}>Password *</div>
+					<InputMASQ
+						type={"password"}
+						placeholder={"******"}
+						value={dataLogin.password}
+						onChange={(e) => handleChangeInput(e, "password")}
+						onBlur={() => validateBlur("password")}
+						onKeyDown={(e) => handleKeyDown(e)}
+						error={errorDataLogin.password}
+					/>
 				</div>
-			</div>
 
-			<div className={styles.btnWrap}>
-				<ButtonMASQ
-					textBtn={"Login"}
-					loading={isLoadingBtnLogin}
-					onClick={() => handleConfirmLogin()}
-					disable={false}
-					style={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-					}}
-				/>
-			</div>
+				<div className={styles.btnUtilitiesWrap}>
+					<div className={`${styles.remember} input-checkbox-style`}>
+						<Checkbox
+							className={styles.checkBox}
+							checked={checkRemember}
+							onClick={(e) => handleClickCheckBox(e)}>
+							<span>Remember me</span>
+						</Checkbox>
+					</div>
 
-			<div className={styles.btnSwitchWrap}>
-				<div className={styles.btnRegister}>
-					{"Don't have an account"}?{" "}
-					<span
-						className={styles.textRegister}
-						onClick={() => navigate("/register")}>
-						Signup now
-					</span>
+					<div
+						onClick={() => navigate("/forgot-password")}
+						className={styles.btnForgetPassword}>
+						Forgot password
+					</div>
 				</div>
-			</div>
 
-			<Social />
+				<div className={styles.btnWrap}>
+					<ButtonMASQ
+						textBtn={"Login"}
+						loading={isLoadingBtnLogin}
+						onClick={() => handleConfirmLogin()}
+						disable={false}
+						style={{
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					/>
+				</div>
+
+				<div className={styles.btnSwitchWrap}>
+					<div className={styles.btnRegister}>
+						{"Don't have an account"}?{" "}
+						<span
+							className={styles.textRegister}
+							onClick={() => navigate("/register")}>
+							Signup now
+						</span>
+					</div>
+				</div>
+
+				<Social />
+			</div>
 		</div>
 	);
-}
+};
 
 export default Login;

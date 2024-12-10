@@ -9,7 +9,9 @@ import { handleCheckValidateConfirm } from "../../../../utils/helper";
 import { register } from "../../../../api/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-function Register() {
+import Logo from "../../../../assets/images/logo/OpenNezt_icon_black.png";
+
+const Register = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [dataRegister, setDataRegister] = useState({
@@ -79,90 +81,98 @@ function Register() {
 
 	return (
 		<div className={styles.registerWrap}>
-			<div className={styles.inputWrapper}>
-				<div className={styles.label}>Name *</div>
-				<InputMASQ
-					type={"text"}
-					placeholder={"Enter name..."}
-					onChange={(e) => handleChangeInput(e, "name")}
-					onBlur={() => validateBlur("name")}
-					value={dataRegister.name}
-					error={errorDataRegister.name}
-				/>
+			<div className={styles.registerHeaderWrap}>
+				<div className={styles.logo}>
+					<img src={Logo} alt="logo" />
+				</div>
+				<h1 className={styles.title}>Register</h1>
 			</div>
+			<div className={styles.registerContent}>
+				<div className={styles.inputWrapper}>
+					<div className={styles.label}>Name *</div>
+					<InputMASQ
+						type={"text"}
+						placeholder={"Enter name..."}
+						onChange={(e) => handleChangeInput(e, "name")}
+						onBlur={() => validateBlur("name")}
+						value={dataRegister.name}
+						error={errorDataRegister.name}
+					/>
+				</div>
 
-			<div className={styles.inputWrapper}>
-				<div className={styles.label}>Email *</div>
-				<InputMASQ
-					type={"text"}
-					placeholder={"Enter email..."}
-					onChange={(e) => handleChangeInput(e, "email")}
-					onBlur={() => validateBlur("email")}
-					value={dataRegister.email}
-					error={errorDataRegister.email}
-				/>
-			</div>
+				<div className={styles.inputWrapper}>
+					<div className={styles.label}>Email *</div>
+					<InputMASQ
+						type={"text"}
+						placeholder={"Enter email..."}
+						onChange={(e) => handleChangeInput(e, "email")}
+						onBlur={() => validateBlur("email")}
+						value={dataRegister.email}
+						error={errorDataRegister.email}
+					/>
+				</div>
 
-			<div className={styles.inputWrapper}>
-				<div className={styles.label}>Phone *</div>
-				<InputMASQ
-					type={"text"}
-					placeholder={"Enter phone..."}
-					onChange={(e) => handleChangeInput(e, "phone")}
-					onBlur={() => validateBlur("phone")}
-					value={dataRegister.phone}
-					error={errorDataRegister.phone}
-				/>
-			</div>
+				<div className={styles.inputWrapper}>
+					<div className={styles.label}>Phone *</div>
+					<InputMASQ
+						type={"text"}
+						placeholder={"Enter phone..."}
+						onChange={(e) => handleChangeInput(e, "phone")}
+						onBlur={() => validateBlur("phone")}
+						value={dataRegister.phone}
+						error={errorDataRegister.phone}
+					/>
+				</div>
 
-			<div className={styles.inputWrapper}>
-				<div className={styles.label}>Password *</div>
-				<InputMASQ
-					type={"password"}
-					placeholder={"******"}
-					value={dataRegister.password}
-					onChange={(e) => handleChangeInput(e, "password")}
-					onBlur={() => validateBlur("password")}
-					error={errorDataRegister.password}
-				/>
-			</div>
+				<div className={styles.inputWrapper}>
+					<div className={styles.label}>Password *</div>
+					<InputMASQ
+						type={"password"}
+						placeholder={"******"}
+						value={dataRegister.password}
+						onChange={(e) => handleChangeInput(e, "password")}
+						onBlur={() => validateBlur("password")}
+						error={errorDataRegister.password}
+					/>
+				</div>
 
-			<div className={styles.inputWrapper}>
-				<div className={styles.label}>Confirm password *</div>
-				<InputMASQ
-					type={"password"}
-					placeholder={"******"}
-					value={dataRegister.confirmPassword}
-					onChange={(e) => handleChangeInput(e, "confirmPassword")}
-					onBlur={() => validateBlur("confirmPassword")}
-					error={errorDataRegister.confirmPassword}
-				/>
-			</div>
+				<div className={styles.inputWrapper}>
+					<div className={styles.label}>Confirm password *</div>
+					<InputMASQ
+						type={"password"}
+						placeholder={"******"}
+						value={dataRegister.confirmPassword}
+						onChange={(e) => handleChangeInput(e, "confirmPassword")}
+						onBlur={() => validateBlur("confirmPassword")}
+						error={errorDataRegister.confirmPassword}
+					/>
+				</div>
 
-			<div className={styles.btnWrap}>
-				<ButtonMASQ
-					textBtn={"Register"}
-					loading={isLoadingBtnRegister}
-					onClick={() => handleConfirmRegister()}
-					disable={false}
-					style={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-					}}
-				/>
-			</div>
+				<div className={styles.btnWrap}>
+					<ButtonMASQ
+						textBtn={"Register"}
+						loading={isLoadingBtnRegister}
+						onClick={() => handleConfirmRegister()}
+						disable={false}
+						style={{
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					/>
+				</div>
 
-			<div className={styles.btnSwitchWrap}>
-				<div
-					onClick={() => navigate("/login")}
-					className={styles.btnRegister}>
-					Already have an account,{" "}
-					<span className={styles.text}>login</span>
+				<div className={styles.btnSwitchWrap}>
+					<div
+						onClick={() => navigate("/login")}
+						className={styles.btnRegister}>
+						Already have an account,{" "}
+						<span className={styles.text}>login</span>
+					</div>
 				</div>
 			</div>
 		</div>
 	);
-}
+};
 
 export default Register;

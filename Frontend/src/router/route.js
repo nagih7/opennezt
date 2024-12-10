@@ -1,11 +1,11 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { rootLoader } from "./rootLoader";
 
 import AppLayout from "components/layouts/AppLayout";
 import AuthLayout from "components/layouts/AuthLayout";
-import LazyLoading from "components/UI/LazyLoading";
 
+// const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import("../components/pages/Auth/Login"));
 const Register = React.lazy(() => import("../components/pages/Auth/Register"));
 const ForgotPassword = React.lazy(() =>
@@ -23,13 +23,23 @@ const Project = React.lazy(() => import("../components/pages/Project"));
 const RecruitTalents = React.lazy(() =>
 	import("../components/pages/RecruitTalents")
 );
-const SeekProjects = React.lazy(() => import("../components/pages/SeekProjects"));
+const SeekProjects = React.lazy(() =>
+	import("../components/pages/SeekProjects")
+);
 
 const router = createBrowserRouter([
+	// {
+	// 	path: "/auth",
+	// 	element: (
+	// 		<AuthLayout>
+	// 			<AuthPage />
+	// 		</AuthLayout>
+	// 	),
+	// },
 	{
 		path: "/login",
 		element: (
-			<AuthLayout title={"Welcome back"}>
+			<AuthLayout title={"Welcome back"} path="login">
 				<Login />
 			</AuthLayout>
 		),
@@ -38,7 +48,7 @@ const router = createBrowserRouter([
 	{
 		path: "/register",
 		element: (
-			<AuthLayout title={"Register account"}>
+			<AuthLayout title={"Register account"} path="register">
 				<Register />
 			</AuthLayout>
 		),
@@ -82,12 +92,6 @@ const router = createBrowserRouter([
 		),
 		loader: ({ request }) => rootLoader({ request }, true, "LOAD_HOME_PAGE"),
 	},
-	// {
-	// 	path: "/about-you",
-	// 	element: <AboutYou />,
-	// 	loader: ({ request }) =>
-	// 		rootLoader({ request }, true, "LOAD_ABOUT_YOU_PAGE"),
-	// },
 	{
 		path: "/about",
 		element: (

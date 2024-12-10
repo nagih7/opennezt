@@ -149,7 +149,9 @@ const Header = () => {
 						setChatBoxList={setChatBoxList}
 					/>
 				</LazyLoadingMedium>
-				<div className={`${styles.itemHeaderRight}`}>
+				<div
+					onClick={() => setIsShowChatList(false)}
+					className={`${styles.itemHeaderRight}`}>
 					<Popover
 						className={`popover-info-wrap`}
 						placement="bottomRight"
