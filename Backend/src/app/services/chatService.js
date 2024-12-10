@@ -1,4 +1,4 @@
-import {ChatInvitation, Messenger, ObjectId, User} from '@/models'
+import {ChatInvitation, Messenger, ObjectId} from '@/models'
 import {userSockets} from '@/routes/socket'
 
 export async function getChatList(user) {
@@ -83,10 +83,12 @@ export async function getChatHistory(user, receiver_id) {
     return result
 }
 
-export async function chatInvitation(user, requestBody) {
+export async function createChatInvitation(user, requestBody) {
     const invitation = new ChatInvitation({
         sender_id: user._id,
+        sender_name: user.name,
         receiver_id: new ObjectId(requestBody.receiver_id),
+        receiver_name: requestBody.receiver_name,
     })
 
     await invitation.save()
@@ -97,14 +99,13 @@ export async function getChatInvitations(user) {
     return invitations
 }
 
-export async function getChatInvitation(user, receiver_id) {
+export async function getChatInvitationByReceiverId(user, receiver_id) {
     const invitation = await ChatInvitation.findOne({
         sender_id: user._id,
         receiver_id: new ObjectId(receiver_id),
-        // status !== 'rejected',
         status: {$ne: 'rejected'},
     }).select('status -_id')
-    return invitation
+    return invitation ? invitation : {status: 'pending'}
 }
 
 export async function saveMessage(messages, socketId) {

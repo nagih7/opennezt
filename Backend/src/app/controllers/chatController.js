@@ -57,8 +57,8 @@ export const getReceiverIds = async (userId) => {
     }
 }
 
-export async function chatInvitation(req, res) {
-    await chatService.chatInvitation(req.currentUser, req.body)
+export async function createChatInvitation(req, res) {
+    await chatService.createChatInvitation(req.currentUser, req.body)
     res.status(201).jsonify('Mời trò chuyện thành công.')
 }
 
@@ -67,7 +67,10 @@ export async function getChatInvitations(req, res) {
     res.status(200).json(invitations)
 }
 
-export async function getChatInvitation(req, res) {
-    const invitation = await chatService.getChatInvitation(req.currentUser, req.params.receiver_id)
-    res.status(200).json(invitation)
+export async function getChatInvitationByReceiverId(req, res) {
+    const invitation = await chatService.getChatInvitationByReceiverId(
+        req.currentUser,
+        req.params.receiver_id
+    )
+    res.status(200).jsonify(invitation)
 }

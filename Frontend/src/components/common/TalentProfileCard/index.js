@@ -15,9 +15,9 @@ const TalentProfileCard = ({ talent }) => {
 		(state) => state.chat
 	);
 
-	const handleRequestChatInvitation = async (receiver_id) => {
-		console.log("Request Chat Invitation:", receiver_id);
-		await store.dispatch(requestChatInvitation(receiver_id));
+	const handleRequestChatInvitation = async (receiver_id, receiver_name) => {
+		console.log("Request Chat Invitation:", receiver_id, receiver_name);
+		await store.dispatch(requestChatInvitation(receiver_id, receiver_name));
 	};
 
 	const handleInvite = (receiver_id) => {
@@ -73,7 +73,7 @@ const TalentProfileCard = ({ talent }) => {
 						</a>
 					</div>
 					<div className={styles.userActions}>
-						{chatInvitation === "pending" ? (
+						{chatInvitation === "waiting" ? (
 							<Button
 								style={{
 									borderRadius: "0.5rem",
@@ -100,7 +100,9 @@ const TalentProfileCard = ({ talent }) => {
 								}}
 								type="primary"
 								loading={loadingRequestChatInvitation}
-								onClick={() => handleRequestChatInvitation(talent._id)}>
+								onClick={() =>
+									handleRequestChatInvitation(talent._id, talent.name)
+								}>
 								Send Request
 							</Button>
 						)}

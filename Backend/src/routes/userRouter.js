@@ -81,6 +81,8 @@ userRouter.post(
     asyncHandler(userController.inviteMember)
 )
 
+userRouter.get('/notifications', asyncHandler(userController.getNotifications))
+
 // URL dynamic
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))
 

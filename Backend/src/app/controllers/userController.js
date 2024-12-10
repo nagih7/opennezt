@@ -78,7 +78,7 @@ export async function deleteProject(req, res) {
 }
 
 export async function recuitTalents(req, res) {
-    const result = await userService.recuitTalents(req.query)
+    const result = await userService.recuitTalents(req.currentUser, req.query)
     res.jsonify(result)
 }
 
@@ -110,4 +110,9 @@ export async function inviteMember(req, res) {
         await userService.inviteMember(req.currentUser, req.body)
         res.status(201).jsonify('Mời thành viên thành công.')
     }
+}
+
+export async function getNotifications(req, res) {
+    const result = await userService.getNotifications(req.currentUser)
+    res.jsonify(result)
 }

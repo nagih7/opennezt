@@ -45,7 +45,7 @@ export const getChatHistory = (receiver_id) => async (dispatch, getState) => {
 };
 
 export const requestChatInvitation =
-	(receiver_id) => async (dispatch, getState) => {
+	(receiver_id, receiver_name) => async (dispatch, getState) => {
 		return callApi({
 			method: "post",
 			apiPath: `chat/chat-invitation`,
@@ -54,7 +54,7 @@ export const requestChatInvitation =
 				startRequestChatInvitationSuccess,
 				startRequestChatInvitationFail,
 			],
-			variables: { receiver_id },
+			variables: { receiver_id, receiver_name },
 			dispatch,
 			getState,
 		});

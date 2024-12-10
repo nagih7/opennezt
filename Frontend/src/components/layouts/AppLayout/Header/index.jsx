@@ -11,6 +11,7 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useSelector } from "react-redux";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 import { getChatList } from "api/chat";
+import { getNotifications } from "api/notification";
 import store from "states/configureStore";
 
 const ChatList = React.lazy(() => import("./components/ChatList"));
@@ -28,6 +29,7 @@ const Header = () => {
 
 	useEffect(() => {
 		store.dispatch(getChatList());
+		store.dispatch(getNotifications());
 	}, []);
 
 	useEffect(() => {
