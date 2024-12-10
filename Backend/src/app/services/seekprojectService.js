@@ -2,18 +2,19 @@ import { User, FounderProfile, Project, SeekProject } from '@/models'
 import { LINK_STATIC_URL} from '@/configs'
 
 export async function requestsProject(user, { email, project_id, role_project }) {
-    const receiver_user = await User.findOne({ email }, { _id: 1, email: 1 })
-    
+    const user_receiver = await Project.findOne({ _id: project_id }, { user_id: 1 })
+    const id_receiver= user_receiver.user_id.toString()
+    const receiver_user = await User.findOne({ _id :id_receiver }, { _id: 1, email: 1 })
     const user_id = user._id.toString()
     const sender_profile = await FounderProfile.findOne({ user_id: user_id })
 
-    
+   
     const project = await Project.findOne({ _id: project_id })
     if (!receiver_user) {
         throw new Error('Không có thông tin chủ project')
 
     }
-    if (!sender_profile ) {
+    if (sender_profile === null ) {
         throw new Error('Bạn chưa cập nhật thông tin chi tiết')
     }
     if (!project) {
@@ -22,11 +23,12 @@ export async function requestsProject(user, { email, project_id, role_project })
 
     const isExist = await SeekProject.findOne({
         sender_id: user._id,
-        sender_email: user.email,
-        receiver_email: email,
+        sender_email: email,
+        receiver_email: receiver_user.email,
         project_id,
         
     })
+    
 
     if (isExist) {
         throw new Error('Bạn đã gửi request ')
@@ -196,5 +198,86 @@ export async function getProjectDetails(data, user) {
 
     } catch (error) {
         throw new Error(error.message || 'Error fetching project details')
+    }
+}
+export async function getPendingProjects(email) {
+    try {
+        if (!email) {
+            throw new Error('Missing required parameters')
+        }
+
+        const pendingRequests = await SeekProject.find({
+            receiver_email: email,
+            status: 'pending'
+        })
+
+        if (!pendingRequests || pendingRequests.length === 0) {
+            throw new Error('No pending requests found')
+        }
+
+        const projectIds = pendingRequests.map(request => request.project_id)
+
+        const projects = await Project.find(
+            { _id: { $in: projectIds } },
+            { name: 1 }
+        )
+
+        const projectMap = projects.reduce((acc, project) => {
+            acc[project._id.toString()] = project.name
+            return acc
+        }, {})
+
+        const enrichedRequests = pendingRequests.map(request => ({
+            ...request.toObject(),
+            project_name: projectMap[request.project_id.toString()] || 'Unknown Project'
+        }))
+
+        return enrichedRequests
+
+    } catch (error) {
+        throw new Error(error.message || 'Error fetching pending requests')
+    }
+}
+
+export async function updateRequestStatus(request_id, status) {
+    try {
+        console.log('Received parameters:', { request_id, status }) 
+
+        if (!request_id) {
+            throw new Error('Request ID is required')
+        }
+
+        if (!status || !['accepted', 'rejected'].includes(status)) {
+            throw new Error('Invalid status. Must be either accepted or rejected')
+        }
+
+        console.log('Searching for request_id:', request_id)
+
+        const existingRequest = await SeekProject.findOne({ 
+            project_id: request_id,
+            status: 'pending'
+        })
+        
+        console.log('Existing request:', existingRequest)
+        
+        if (!existingRequest) {
+            throw new Error('Request not found')
+        }
+
+        const updatedRequest = await SeekProject.findOneAndUpdate(
+            { project_id: request_id },
+            { 
+                status: status, 
+                updated_at: new Date()
+            },
+            { new: true }
+        )
+
+        console.log('Updated request:', updatedRequest) 
+        return updatedRequest
+
+    } catch (error) {
+        console.error('Error in updateRequestStatus:', error)
+        throw error
     }
 }

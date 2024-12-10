@@ -6,6 +6,7 @@ import FolderIcon from "@mui/icons-material/Folder";
 import PersonIcon from "@mui/icons-material/Person";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import PageviewIcon from '@mui/icons-material/Pageview';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
 const appRouteMap = [
 	{
 		label: "Dashboard",
@@ -43,6 +44,13 @@ const appRouteMap = [
 		path: "/seek-projects",
 		routeActive: ["/seek-projects"],
 		permissions: ["seek_projects_page"],
+	},
+	{
+		label: "Projects Shared",
+		icon: <FolderSharedIcon className="material-icons" />,
+		path: "/project-notifications",
+		routeActive: ["/project-notifications"],
+		permissions: ["project_notifications_page"],
 	},
 	// {
 	// 	label: "New Feed",

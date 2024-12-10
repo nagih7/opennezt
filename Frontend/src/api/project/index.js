@@ -22,6 +22,12 @@ import {
 	startRequestProjectDetails,
 	startRequestProjectDetailsSuccess,
 	startRequestProjectDetailsFail,
+	startGetPendingProjects,
+  startGetPendingProjectsSuccess,
+  startGetPendingProjectsFail,
+  startUpdateRequestStatus,
+  startUpdateRequestStatusSuccess,
+  startUpdateRequestStatusFail,
 } from "../../states/modules/project";
 
 export const getProjects = () => async (dispatch, getState) => {
@@ -130,3 +136,35 @@ export const getrequestsProjectDetails = (projectData) => async (dispatch, getSt
 	  getState,
 	});
   };
+  export const getPendingProjects = (data) => async (dispatch, getState) => {
+	return callApi({
+	  method: "post",
+	  apiPath: `seek/pending-projects`,
+	  actionTypes: [
+		startGetPendingProjects,
+		startGetPendingProjectsSuccess,
+		startGetPendingProjectsFail,
+	  ],
+	  variables: data,
+	  dispatch,
+	  getState,
+	});
+  };
+  
+  export const updateRequestStatus = (requestData) => async (dispatch, getState) => {
+    return callApi({
+        method: "put",
+        apiPath: `seek/update-request-status`,
+        actionTypes: [
+            startUpdateRequestStatus,
+            startUpdateRequestStatusSuccess,
+            startUpdateRequestStatusFail,
+        ],
+        variables: {
+            request_id: requestData.request_id,
+            status: requestData.status
+        },
+        dispatch,
+        getState,
+    });
+};

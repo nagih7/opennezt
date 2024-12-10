@@ -1,4 +1,4 @@
-import { requestsProject, getProjectDetails, checkExistRequests, searchProjects, getIndustryByFounderId, getRelatedIndustriesByProjectId, getMatchingProjects } from '../services/seekprojectService'
+import { requestsProject, getPendingProjects, updateRequestStatus, getProjectDetails, checkExistRequests, searchProjects, getIndustryByFounderId, getRelatedIndustriesByProjectId, getMatchingProjects } from '../services/seekprojectService'
 
 export async function handleRequestsProject(req, res) {
     try {
@@ -12,8 +12,19 @@ export async function handleRequestsProject(req, res) {
         await requestsProject(user, { email, project_id, role_project })
 
         res.status(200).json({ message: 'Yêu cầu đã được gửi thành công' })
-    } catch (error) {
-        res.status(400).json({ message: 'Bạn đã tham gia project này rồi' })
+    }  catch (error) {
+        switch(error.message) {
+            case 'Không có thông tin chủ project':
+                return res.status(404).json({ message: error.message })
+            case 'Bạn chưa cập nhật thông tin chi tiết':
+                return res.status(400).json({ message: error.message })
+            case 'Không có thông tin dự án':
+                return res.status(404).json({ message: error.message })
+            case 'Bạn đã tham gia project này rồi':
+                return res.status(400).json({ message: error.message })
+            default:
+                return res.status(500).json({ message: 'Bạn đã gửi yêu cầu tham gia rồi' })
+        }
     }
 }
 
@@ -88,5 +99,90 @@ export async function handleGetProjectDetails(req, res) {
 
     } catch (error) {
         res.status(404).json({ message: error.message })
+    }
+}
+export async function handleGetPendingProjects(req, res) {
+    try {
+        const { email } = req.body
+
+        if ( !email) {
+            return res.status(400).json({ 
+                success: false,
+                message: 'Project email are required' 
+            })
+        }
+
+        const pendingRequests = await getPendingProjects(email)
+        
+        return res.status(200).json({
+            success: true,
+            data: pendingRequests
+        })
+
+    } catch (error) {
+        switch(error.message) {
+            case 'Missing required parameters':
+                return res.status(400).json({
+                    success: false, 
+                    message: error.message 
+                })
+            case 'No pending requests found':
+                return res.status(404).json({
+                    success: false, 
+                    message: error.message 
+                })
+            default:
+                return res.status(500).json({
+                    success: false, 
+                    message: 'Error fetching pending requests' 
+                })
+        }
+    }
+}
+
+export async function handleUpdateRequestStatus(req, res) {
+    try {
+        const { request_id, status } = req.body
+
+        if (!request_id) {
+            return res.status(400).json({
+                success: false,
+                message: 'Request ID is required'
+            })
+        }
+
+        if (!status || !['accepted', 'rejected'].includes(status)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid status. Must be either accepted or rejected'
+            })
+        }
+
+        const updatedRequest = await updateRequestStatus(request_id, status)
+
+        return res.status(200).json({
+            success: true,
+            data: updatedRequest
+        })
+
+    } catch (error) {
+        switch(error.message) {
+            case 'Request ID is required':
+            case 'Invalid status. Must be either accepted or rejected':
+                return res.status(400).json({
+                    success: false,
+                    message: error.message
+                })
+            case 'Request not found':
+                return res.status(404).json({
+                    success: false,
+                    message: error.message
+                })
+            default:
+                return res.status(500).json({
+                    success: false,
+                    message: 'Error updating request status'
+                })
+        }
     }
 }
