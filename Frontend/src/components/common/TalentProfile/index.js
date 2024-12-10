@@ -1,20 +1,26 @@
 import React from "react";
 import styles from "./styles.module.scss";
-import TalentProfileCard from "../TalentProfileCard";
-import FounderProfile from "../FounderProfile";
+import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+
+const TalentProfileCard = React.lazy(() => import("../TalentProfileCard"));
+const FounderProfile = React.lazy(() => import("../FounderProfile"));
 
 function TalentProfile({ talent, handleSkip }) {
 	const { talent_profile, ...user_data } = talent;
 	return (
 		<div className={styles.talentProfileWrap}>
 			{talent && (
-				<TalentProfileCard talent={user_data} handleSkip={handleSkip} />
+				<LazyLoadingMedium>
+					<TalentProfileCard talent={user_data} handleSkip={handleSkip} />
+				</LazyLoadingMedium>
 			)}
 			{talent_profile &&
 				talent_profile.industry &&
 				talent_profile.industry && (
 					<div className={styles.talentDetailsWrap}>
-						<FounderProfile founderProfile={talent_profile} />
+						<LazyLoadingMedium>
+							<FounderProfile founderProfile={talent_profile} />
+						</LazyLoadingMedium>
 					</div>
 				)}
 		</div>

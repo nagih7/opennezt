@@ -8,6 +8,7 @@ import founderReducer from "./modules/founder";
 import talentReducer from "./modules/talent";
 import projectReducer from "./modules/project";
 import chatReducer from "./modules/chat";
+import notificationReducer from "./modules/notification";
 
 const rootReducer = {
 	app: appReducer,
@@ -20,7 +21,7 @@ const rootReducer = {
 	talent: talentReducer,
 	project: projectReducer,
 	chat: chatReducer,
-    
+	notification: notificationReducer,
 };
 
 export default rootReducer;

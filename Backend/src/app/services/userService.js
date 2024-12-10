@@ -1,4 +1,4 @@
-import {User, FounderProfile, Project, Invitation, ObjectId} from '@/models'
+import {User, FounderProfile, Project, Invitation, ObjectId, ChatInvitation} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
 
@@ -185,30 +185,26 @@ export async function deleteProject(user, requestBody) {
     await Project.deleteOne({user_id: user._id, _id: requestBody.projectId})
 }
 
-export async function recuitTalents(requestRecuitTalents) {
+export async function recuitTalents(user, requestRecuitTalents) {
     const query = {}
-    // Thêm điều kiện cho query
     if (requestRecuitTalents.sector) {
         query.industry = {
             $regex: requestRecuitTalents.sector,
             $options: 'i',
         }
     }
-
     if (requestRecuitTalents.experience_level) {
         query.experience_level = {
             $regex: requestRecuitTalents.experience_level,
             $options: 'i',
         }
     }
-
     if (requestRecuitTalents.education_level) {
         query.education_level = {
             $regex: requestRecuitTalents.education_level,
             $options: 'i',
         }
     }
-
     if (requestRecuitTalents.commitment) {
         query.commitment = {
             $regex: requestRecuitTalents.commitment,
@@ -253,6 +249,7 @@ export async function recuitTalents(requestRecuitTalents) {
                     }
                     : {}),
                 'user_data.is_active': true,
+                'user_data._id': {$ne: user._id},
             },
         },
         {
@@ -413,4 +410,28 @@ export async function checkExistInvitation(user, {email, project_id, role_projec
         return true
     }
     return false
+}
+
+// NOTIFICATIONS
+export async function getNotifications(user) {
+    const chatInvitations = await ChatInvitation.aggregate([
+        {
+            $match: {receiver_id: user._id},
+        },
+
+        {
+            $addFields: {
+                type: 'chat_invitation',
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+                type: 1,
+                sender_id: 1,
+                sender_name: 1,
+            },
+        },
+    ])
+    return chatInvitations
 }

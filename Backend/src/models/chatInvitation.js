@@ -7,16 +7,24 @@ const ChatInvitation = createModel('ChatInvitation', 'chat_invitations', {
         required: true,
         ref: User,
     },
+    sender_name: {
+        type: String,
+        required: true,
+    },
     receiver_id: {
         type: ObjectId,
         required: true,
         ref: User,
     },
+    receiver_name: {
+        type: String,
+        required: true,
+    },
     status: {
         type: String,
         required: true,
-        enum: ['pending', 'accepted', 'rejected'],
-        default: 'pending',
+        enum: ['pending', 'waiting', 'accepted', 'rejected'],
+        default: 'waiting',
     },
 })
 

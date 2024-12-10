@@ -49,7 +49,7 @@ const chatSlice = createSlice({
 		startRequestChatInvitationSuccess: (state) => ({
 			...state,
 			loadingRequestChatInvitation: false,
-			chatInvitation: "pending",
+			chatInvitation: "waiting",
 		}),
 
 		startRequestChatInvitationFail: (state) => ({
@@ -64,7 +64,7 @@ const chatSlice = createSlice({
 		startRequestGetChatInvitationSuccess: (state, action) => ({
 			...state,
 			loadingGetChatInvitation: false,
-			chatInvitation: action.payload.status,
+			chatInvitation: action.payload.data.status,
 		}),
 		startRequestGetChatInvitationFail: (state) => ({
 			...state,

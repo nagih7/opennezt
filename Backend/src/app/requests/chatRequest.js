@@ -3,7 +3,7 @@ import {User, ObjectId} from '../../models'
 // import {MAX_STRING_SIZE, VALIDATE_PHONE_REGEX, MAX_AREAS_STRING_SIZE} from '@/configs'
 import {AsyncValidate} from '@/utils/classes'
 
-export const chatInvitation = Joi.object({
+export const createChatInvitation = Joi.object({
     receiver_id: Joi.string()
         .trim()
         .required()
@@ -15,4 +15,6 @@ export const chatInvitation = Joi.object({
                     return user ? value : helpers.error('any.empty')
                 })
         ),
+
+    receiver_name: Joi.string().trim().required().label('Tên người nhận'),
 })

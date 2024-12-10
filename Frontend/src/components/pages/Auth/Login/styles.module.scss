@@ -1,58 +1,89 @@
 @import "../../../../assets/scss/variables";
 
 .loginWrap {
-	width: 100%;
-	padding: 30px 20px 30px;
-	.inputWrapper {
-		margin-bottom: 18px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 2rem;
 
-		.label {
-			display: block;
-			font-weight: 500;
-			font-size: 14px;
-			line-height: 20px;
-			color: $colorBlack;
-			margin-bottom: 4px;
-		}
+	.loginHeaderWrap {
+		width: 100%;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		position: relative;
 
-		.error {
-			display: block;
-			color: $colorError;
-			font-weight: 500;
-		}
-	}
+		.logo {
+			height: 2.5rem;
 
-	.btnUtilitiesWrap {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 10px;
-		.remember {
-			.checkBox {
-				display: flex;
-				align-items: center;
-				font-size: 16px;
+			img {
+				height: 100%;
 			}
 		}
 
-		.btnForgetPassword {
-			cursor: pointer;
-			text-decoration: underline;
+		.title {
+			font-size: 3rem !important;
+			margin-top: 6rem;
+			text-align: center;
 		}
 	}
 
-	.btnWrap {
-		margin-bottom: 15px;
-	}
+	.loginContent {
+		width: 100%;
 
-	.btnSwitchWrap {
-		display: flex;
-		justify-content: center;
-		.btnRegister {
-			text-align: center;
-			.textRegister {
+		.inputWrapper {
+			margin-bottom: 1rem;
+			width: 370px;
+
+			.label {
+				display: block;
+				font-weight: 500;
+				font-size: 14px;
+				line-height: 20px;
+				color: $colorBlack;
+				margin-bottom: 4px;
+			}
+
+			.error {
+				display: block;
+				color: $colorError;
+				font-weight: 500;
+			}
+		}
+
+		.btnUtilitiesWrap {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 10px;
+			.remember {
+				.checkBox {
+					display: flex;
+					align-items: center;
+					font-size: 16px;
+				}
+			}
+
+			.btnForgetPassword {
 				cursor: pointer;
 				text-decoration: underline;
+			}
+		}
+
+		.btnWrap {
+			margin-bottom: 15px;
+		}
+
+		.btnSwitchWrap {
+			display: flex;
+			justify-content: center;
+			.btnRegister {
+				text-align: center;
+				.textRegister {
+					cursor: pointer;
+					text-decoration: underline;
+				}
 			}
 		}
 	}
