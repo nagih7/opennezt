@@ -58,6 +58,7 @@ function SideBar(props) {
 
 	const handleConfirmLogOut = async () => {
 		await store.dispatch(logout());
+		window.location.reload();
 	};
 
 	return (
