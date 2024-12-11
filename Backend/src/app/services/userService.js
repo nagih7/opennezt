@@ -438,3 +438,28 @@ export async function getNotifications(user) {
     ])
     return chatInvitations
 }
+export async function getIdByEmail(emailData) {
+    try {
+        const email = typeof emailData === 'object' ? emailData.email : emailData
+
+        if (!email || typeof email !== 'string') {
+            throw new Error('Invalid email format')
+        }
+
+        const user = await User.findOne({ email })
+        
+        if (!user) {
+            throw new Error('User not found')
+        }
+
+        return {
+            success: true,
+            data: user._id
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: error.message
+        }
+    }
+}

@@ -112,10 +112,10 @@ export const getMatchingProjects = () => async (dispatch, getState) => {
 	});
 };
 export const searchProjects =
-	(industry, name) => async (dispatch, getState) => {
+	(industry,stage, name) => async (dispatch, getState) => {
 		return callApi({
 			method: "get",
-			apiPath: `seek/search-projects?industry=${industry}&name=${name}`,
+			apiPath: `seek/search-projects?industry=${industry}&stage=${stage}&name=${name}`,
 			headers: {
 				Authorization: `Bearer ${getState().auth.token}`,
 			},

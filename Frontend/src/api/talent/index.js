@@ -1,4 +1,6 @@
 import callApi from "api/callApi";
+import SeekProject from "api/seekprojectapi";
+
 import {
 	startRequestRecruitTalents,
 	startRequestRecruitTalentsSuccess,
@@ -47,7 +49,7 @@ export const skipTalent = (requestSkipTalent) => async (dispatch, getState) => {
 };
 
 export const getTalentDetails = (id) => async (dispatch, getState) => {
-	return callApi({
+	return SeekProject({
 		method: "get",
 		apiPath: `users/talent-details/${id}`,
 		actionTypes: [

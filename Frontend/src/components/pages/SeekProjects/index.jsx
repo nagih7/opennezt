@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import styles from "./styles.module.scss";
 import { getMatchingProjects, searchProjects, seekProjects, getrequestsProjectDetails } from "api/project";
-import {listSector} from "components/common/ListSelected";
+import {listSector, listStage} from "components/common/ListSelected";
 import { Select, Button,Input } from 'antd';
 const { Option } = Select;
 import ProjectDetailsModal from "./ProjectDetailsModal/ProjectDetailsModal";
@@ -13,7 +13,7 @@ function SeekProjects() {
     const authUser = useSelector((state) => state.auth.authUser);
     const { projectsBySeek } = useSelector((state) => state.project);
     const loading = useSelector((state) => state.project.loadingSeekProjects);
-
+    const [stage, setStage] = useState("");
     const [industry, setIndustry] = useState("");
     const [name, setName] = useState("");
     const [searchedProjects, setSearchedProjects] = useState([]);
@@ -45,7 +45,6 @@ function SeekProjects() {
                 handleGetMatchingProjects();
             } 
         } catch (error) {
-            console.error("Error requesting to join project:", error);
             if (error.status === 400) {
                 toast.error(error.data.message);
         }
@@ -61,7 +60,7 @@ function SeekProjects() {
 
     const handleSearchProjects = async (e) => {
         e.preventDefault();
-        const result = await dispatch(searchProjects(industry, name));
+        const result = await dispatch(searchProjects(industry,stage, name));
         console.log("result", result);
         setSearchedProjects(result.data); 
     };
@@ -100,6 +99,19 @@ function SeekProjects() {
                     style={{ width: '100%', marginRight: '2rem' }}
                 >
                     {listSector.map((sector) => (
+                        <Option key={sector.value} value={sector.value}>
+                            {sector.label}
+                        </Option>
+                    ))}
+                </Select>
+                <Select
+                    value={stage}
+                    onChange={(value) => setStage(value)}
+                    className={styles.searchSelect}
+                    placeholder="Select Stage"
+                    style={{ width: '100%', marginRight: '2rem' }}
+                >
+                    {listStage.map((sector) => (
                         <Option key={sector.value} value={sector.value}>
                             {sector.label}
                         </Option>

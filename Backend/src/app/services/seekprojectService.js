@@ -110,14 +110,16 @@ export async function getMatchingProjects(user) {
         background: project.background ? LINK_STATIC_URL + project.background : project.background,
     }))
 }
-export async function searchProjects({industry, name, user}) {
+export async function searchProjects({industry, stage, name, user}) {
     const user_id = user._id.toString()
     const query = {}
 
     if (industry) {
         query.related_industries = industry
     }
-
+    if (stage) {
+        query.stage = stage
+    }
     if (name) {
         query.name = {$regex: name, $options: 'i'}
     }
@@ -200,7 +202,7 @@ export async function getPendingProjects(email) {
 
         const pendingRequests = await SeekProject.find({
             receiver_email: email,
-            status: 'pending',
+            
         })
 
         if (!pendingRequests || pendingRequests.length === 0) {

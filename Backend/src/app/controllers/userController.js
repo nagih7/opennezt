@@ -116,3 +116,7 @@ export async function getNotifications(req, res) {
     const result = await userService.getNotifications(req.currentUser)
     res.jsonify(result)
 }
+export async function getIdByEmail(req, res) {
+    const result = await userService.getIdByEmail(req.body)
+    res.jsonify(result)
+}
