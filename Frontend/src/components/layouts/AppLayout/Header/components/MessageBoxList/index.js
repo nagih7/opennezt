@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 import { useSelector } from "react-redux";
@@ -9,16 +9,22 @@ const MessageBox = React.lazy(() => import("./MessageBox"));
 const MessageBoxList = ({ chatBoxList, setChatBoxList }) => {
 	const socket = useSocket();
 
+	const [newMessage, setNewMessage] = useState([]);
+	const [hasReceived, setHasReceived] = useState(false);
+
 	useEffect(() => {
-		socket.on("message", (message) => {
-			setNewMessage(message);
-		});
+		const handleMessage = (message) => {
+			if (!hasReceived) {
+				setNewMessage(message);
+				setHasReceived(true);
+			}
+		};
+		socket.on("message", handleMessage);
+
 		return () => {
 			socket.off("message");
 		};
-	}, [socket]);
-
-	const [newMessage, setNewMessage] = useState([]);
+	}, [socket, hasReceived]);
 
 	const { chatHistory, loadingGetChatHistory } = useSelector(
 		(state) => state.chat
@@ -29,8 +35,11 @@ const MessageBoxList = ({ chatBoxList, setChatBoxList }) => {
 				chatBox.messages = chatHistory.messages;
 			}
 		});
-		// setChatList(chatBoxList);
 	}
+
+	const handleAckNewMessage = useCallback(() => {
+		setNewMessage([]);
+	}, []);
 
 	const sendMessage = (message) => {
 		socket.emit("message", message);
@@ -53,6 +62,7 @@ const MessageBoxList = ({ chatBoxList, setChatBoxList }) => {
 							closeChatBox={closeChatBox}
 							sendMessage={sendMessage}
 							newMessage={newMessage}
+							handleAckNewMessage={handleAckNewMessage}
 						/>
 					</LazyLoadingMedium>
 				))}

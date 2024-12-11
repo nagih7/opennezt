@@ -2,10 +2,17 @@ import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 import CloseIcon from "@mui/icons-material/Close";
+import AvatarDefault from "assets/images/default/AvatarDefault.png";
 
 const MessageBoxContent = React.lazy(() => import("./MessageBoxContent"));
 
-const MessageBox = ({ chatBox, closeChatBox, sendMessage, newMessage }) => {
+const MessageBox = ({
+	chatBox,
+	closeChatBox,
+	sendMessage,
+	newMessage,
+	handleAckNewMessage,
+}) => {
 	const [content, setContent] = useState("");
 	const [messages, setMessages] = useState([]);
 
@@ -16,8 +23,9 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage, newMessage }) => {
 	useEffect(() => {
 		if (newMessage.sender_id === chatBox.receiver_id) {
 			setMessages((prevMessages) => [...prevMessages, newMessage]);
+			handleAckNewMessage();
 		}
-	}, [newMessage, chatBox.receiver_id]);
+	}, [newMessage, chatBox.receiver_id, handleAckNewMessage]);
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -56,7 +64,15 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage, newMessage }) => {
 	return (
 		<div className={styles.messageBoxWrap}>
 			<div className={styles.miniChatHeader}>
-				<span>{chatBox.username}</span>
+				<div className={styles.miniChatHeaderContent}>
+					<div className={styles.avatar}>
+						<img
+							src={chatBox.avatar ? chatBox.avatar : AvatarDefault}
+							alt="avatar"
+						/>
+					</div>
+					<span>{chatBox.username}</span>
+				</div>
 				<button
 					onClick={() => closeChatBox(chatBox.receiver_id)}
 					className={styles.closeButton}>

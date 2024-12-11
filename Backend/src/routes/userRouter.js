@@ -101,5 +101,5 @@ userRouter.put(
     asyncHandler(validate(userRequest.updateItem)),
     asyncHandler(userController.updateItem)
 )
-
+userRouter.post('/getid-byemail', asyncHandler(userController.getIdByEmail))
 export default userRouter

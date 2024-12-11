@@ -3,16 +3,13 @@ import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
 import { getChatHistory } from "api/chat";
 import store from "states/configureStore";
+import AvatarDefault from "assets/images/default/AvatarDefault.png";
 
 const ChatList = ({ handleSetChatBoxList }) => {
 	const { chatList } = useSelector((state) => state.chat);
 
 	const [searchQuery, setSearchQuery] = useState("");
 	const [minimizedChats, setMinimizedChats] = useState([]);
-
-	// const filteredReceiverData = receiverData.filter((receiver) =>
-	// 	receiver.username.toLowerCase().includes(searchQuery.toLowerCase())
-	// );
 
 	const openChatBox = async (user) => {
 		await store.dispatch(getChatHistory(user.receiver_id));
@@ -45,10 +42,11 @@ const ChatList = ({ handleSetChatBoxList }) => {
 							className={styles.chatItem}
 							key={index}
 							onClick={() => openChatBox(user)}>
-							<div
-								className={styles.avatar}
-								style={{ backgroundColor: user.avatarColor }}>
-								{user.username[0]}
+							<div className={styles.avatar}>
+								<img
+									src={user.avatar ? user.avatar : AvatarDefault}
+									alt="avatar"
+								/>
 							</div>
 							<div className={styles.chatContent}>
 								<div className={styles.chatName}>{user.username}</div>

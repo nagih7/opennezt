@@ -28,6 +28,12 @@ import {
 	startRequestDeleteProject,
 	startRequestDeleteProjectSuccess,
 	startRequestDeleteProjectFail,
+	startGetPendingProjects,
+	startGetPendingProjectsSuccess,
+	startGetPendingProjectsFail,
+	startUpdateRequestStatus,
+	startUpdateRequestStatusSuccess,
+	startUpdateRequestStatusFail,
 } from "../../states/modules/project";
 
 export const getProjects = () => async (dispatch, getState) => {
@@ -106,10 +112,10 @@ export const getMatchingProjects = () => async (dispatch, getState) => {
 	});
 };
 export const searchProjects =
-	(industry, name) => async (dispatch, getState) => {
+	(industry,stage, name) => async (dispatch, getState) => {
 		return callApi({
 			method: "get",
-			apiPath: `seek/search-projects?industry=${industry}&name=${name}`,
+			apiPath: `seek/search-projects?industry=${industry}&stage=${stage}&name=${name}`,
 			headers: {
 				Authorization: `Bearer ${getState().auth.token}`,
 			},
@@ -168,3 +174,37 @@ export const deleteProject = (projectId) => async (dispatch, getState) => {
 		getState,
 	});
 };
+
+export const getPendingProjects = (data) => async (dispatch, getState) => {
+	return callApi({
+		method: "post",
+		apiPath: `seek/pending-projects`,
+		actionTypes: [
+			startGetPendingProjects,
+			startGetPendingProjectsSuccess,
+			startGetPendingProjectsFail,
+		],
+		variables: data,
+		dispatch,
+		getState,
+	});
+};
+
+export const updateRequestStatus =
+	(requestData) => async (dispatch, getState) => {
+		return callApi({
+			method: "put",
+			apiPath: `seek/update-request-status`,
+			actionTypes: [
+				startUpdateRequestStatus,
+				startUpdateRequestStatusSuccess,
+				startUpdateRequestStatusFail,
+			],
+			variables: {
+				request_id: requestData.request_id,
+				status: requestData.status,
+			},
+			dispatch,
+			getState,
+		});
+	};

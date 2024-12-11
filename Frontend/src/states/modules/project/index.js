@@ -170,6 +170,35 @@ const projectSlice = createSlice({
 				loadingDeleteProject: false,
 			};
 		},
+		startGetPendingProjects: (state) => ({
+			...state,
+			loadingPendingProjects: true,
+		}),
+		startGetPendingProjectsSuccess: (state, action) => ({
+			...state,
+			pendingProjects: action.payload.data,
+			loadingPendingProjects: false,
+		}),
+		startGetPendingProjectsFail: (state) => ({
+			...state,
+			pendingProjects: [],
+			loadingPendingProjects: false,
+		}),
+
+		startUpdateRequestStatus: (state) => ({
+			...state,
+			loadingUpdateStatus: true,
+		}),
+		startUpdateRequestStatusSuccess: (state, action) => ({
+			...state,
+			updatedRequest: action.payload.data,
+			loadingUpdateStatus: false,
+		}),
+		startUpdateRequestStatusFail: (state) => ({
+			...state,
+			updatedRequest: null,
+			loadingUpdateStatus: false,
+		}),
 	},
 });
 
@@ -202,6 +231,12 @@ export const {
 	startRequestDeleteProject,
 	startRequestDeleteProjectSuccess,
 	startRequestDeleteProjectFail,
+	startGetPendingProjects,
+	startGetPendingProjectsSuccess,
+	startGetPendingProjectsFail,
+	startUpdateRequestStatus,
+	startUpdateRequestStatusSuccess,
+	startUpdateRequestStatusFail,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;
