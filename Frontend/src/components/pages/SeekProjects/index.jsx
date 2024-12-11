@@ -48,7 +48,14 @@ function SeekProjects() {
             console.error("Error requesting to join project:", error);
             if (error.status === 400) {
                 toast.error(error.data.message);
-        }}
+        }
+        if (error.status === 404) {
+            toast.error(error.data.message);
+    }
+    if (error.status === 500) {
+        toast.error(error.data.message);
+}
+    }
     };
     
 
