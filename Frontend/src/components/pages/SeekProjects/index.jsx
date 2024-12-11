@@ -62,11 +62,57 @@ function SeekProjects() {
 			}
 		}
 	};
-
+    const getButtonProps = (status,projectId) => {
+        switch (status) {
+          case 'pending':
+            return {
+              children: 'Requested',
+              disabled: true,
+              type: 'default',
+              style: { 
+                backgroundColor: '#52c41a',
+                color: 'white',
+                cursor: 'not-allowed'
+              }
+            };
+          case 'accepted':
+            return {
+              children: 'Accepted',
+              disabled: true,
+              type: 'primary',
+              style: { 
+                backgroundColor: '#1677ff',
+                cursor: 'not-allowed',
+                color: 'white'
+              }
+            };
+          case 'blocked':
+            return {
+              children: 'Blocked',
+              disabled: true,
+              type: 'primary',
+              danger: true,
+              style: { 
+                backgroundColor: '#ff4d4f',
+                cursor: 'not-allowed',
+                color: 'white'
+              }
+            };
+          default:
+            return {
+              children: 'Request to Join',
+              type: 'primary',
+              style: {
+                backgroundColor: '#2ccdc6',
+                color: 'white'
+                },
+              onClick: () => handleRequestToJoin(projectId)
+            };
+        }
+      };
 	const handleSearchProjects = async (e) => {
 		e.preventDefault();
 		const result = await dispatch(searchProjects(industry, stage, name));
-		console.log("result", result);
 		setSearchedProjects(result.data);
 	};
 	const toggleExpand = (projectId) => {
@@ -84,7 +130,6 @@ function SeekProjects() {
 			if (response?.data && typeof response.data === "object") {
 				setSelectedProject(response.data);
 				setIsModalVisible(true);
-				console.log("Project details:", response.data);
 			} else {
 				throw new Error("Invalid project data received");
 			}
@@ -202,13 +247,7 @@ function SeekProjects() {
 												View Detail
 											</button>
 
-											<button
-												className={styles.requestButton}
-												onClick={() =>
-													handleRequestToJoin(project._id)
-												}>
-												Request to Join
-											</button>
+											<Button {...getButtonProps(project.status, project._id)} />
 										</div>
 									</div>
 								</div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Table, Tag, Button, message, Modal } from "antd"; 
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined,StopOutlined  } from "@ant-design/icons";
 import styles from "./styles.module.scss";
 import { getPendingProjects, updateRequestStatus, getProjectDetails } from "api/project";
 import {getIdByEmail} from "api/profile";
@@ -140,6 +140,9 @@ function NotificationProject() {
                     case 'rejected':
                         color = 'red';
                         break;
+                        case 'blocked':
+                        color = 'red';
+                        break;
                     default:
                         color = 'gray';
                 }
@@ -167,6 +170,15 @@ function NotificationProject() {
                         disabled={record.status !== 'pending'}
                     >
                         Reject
+                    </Button>
+                    <Button 
+                        type="default" 
+                        danger
+                        icon={<StopOutlined />}
+                        onClick={() => handleUpdateStatus(record, 'blocked')}    
+                        disabled={record.status !== 'pending'}
+                    >
+                        Block
                     </Button>
                 </div>
             ),

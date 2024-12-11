@@ -159,7 +159,7 @@ export async function handleUpdateRequestStatus(req, res) {
             })
         }
 
-        if (!status || !['accepted', 'rejected'].includes(status)) {
+        if (!status || !['accepted', 'rejected','blocked'].includes(status)) {
             return res.status(400).json({
                 success: false,
                 message: 'Invalid status. Must be either accepted or rejected',

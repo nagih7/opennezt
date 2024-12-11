@@ -138,7 +138,7 @@
 	.viewButton {
 		flex: 1;
 		padding: 0.5rem 1rem;
-		background-color: #74d33d;
+		background-color: #faad14;
 		color: var(--color-white);
 		border: none;
 		border-radius: var(--border-radius-1);
@@ -147,7 +147,7 @@
 		transition: all 0.3s ease;
 
 		&:hover {
-			background-color: darken(#74d33d, 10%);
+			background-color: darken(#e09c12, 10%);
 			transform: translateY(-2px);
 		}
 	}

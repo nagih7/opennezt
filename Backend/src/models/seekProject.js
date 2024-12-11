@@ -41,7 +41,7 @@ const SeekProject = createModel(
         status: {
             type: String,
             default: 'pending',
-            enum: ['pending', 'accepted', 'rejected', 'expired'],
+            enum: ['pending', 'accepted', 'rejected', 'expired','blocked'],
         },
 
         token: {
