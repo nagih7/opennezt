@@ -44,21 +44,21 @@
 				padding: 12px 15px;
 				border-block-end: 1px solid $colorLineLight;
 				width: 25rem;
+				cursor: pointer;
 
 				.notificationContent {
 					width: 100%;
-					cursor: pointer;
 					font-weight: 500;
 					font-size: 14px;
 					transition: all 0.3s;
 					color: $colorBlack;
-					display: flex;
+					display: flex !important;
 					flex-wrap: nowrap;
 					align-items: center;
 
 					.iconWrap {
-						height: 40px;
-						width: 40px;
+						height: 3rem;
+						min-width: 3rem;
 						display: flex;
 						justify-content: center;
 						align-items: center;
@@ -71,6 +71,7 @@
 					.contentWrap {
 						margin-left: 10px;
 						display: flex;
+						flex-direction: column;
 						flex-grow: 1;
 						.date {
 							font-size: 12px;
