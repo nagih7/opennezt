@@ -430,6 +430,7 @@ export async function getNotifications(user) {
                 type: 1,
                 sender_id: 1,
                 sender_name: 1,
+                created_at: 1,
             },
         },
     ])
