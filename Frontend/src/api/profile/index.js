@@ -1,4 +1,6 @@
 import callApi from "../callApi";
+import SeekProject from "api/seekprojectapi";
+
 import {
 	changePassword,
 	changePasswordFail,
@@ -12,6 +14,9 @@ import {
 	changeBackgroundUser,
 	changeBackgroundUserSuccess,
 	changeBackgroundUserFail,
+	getIdByEmailUser,
+	getIdByEmailUserSuccess,
+	getIdByEmailUserFail
 } from "../../states/modules/profile";
 
 export const updateUser = (data) => async (dispatch, getState) => {
@@ -63,5 +68,17 @@ export const changeBackground = (formData) => async (dispatch, getState) => {
 		variables: formData,
 		dispatch,
 		getState,
+	});
+};
+export const getIdByEmail = (email) => async (dispatch, getState) => {
+    console.log('Calling getIdByEmail with email:', email);
+    
+   return SeekProject({
+	method: "post",
+	apiPath: `/users/getid-byemail`,
+	actionTypes: [getIdByEmailUser, getIdByEmailUserSuccess, getIdByEmailUserFail],
+	variables: { email },
+	dispatch,
+	getState,
 	});
 };
