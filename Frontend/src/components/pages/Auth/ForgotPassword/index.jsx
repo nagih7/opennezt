@@ -4,7 +4,10 @@ import InputMASQ from "../../../../components/UI/Input";
 import _ from "lodash";
 import ButtonMASQ from "../../../../components/UI/Button";
 import { isValidate } from "../../../../utils/validate";
-import { handleCheckValidateConfirm } from "../../../../utils/helper";
+import { forgotPassword } from "../../../../api/auth";
+import store from "states/configureStore";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function ForgotPassword() {
 	const [dataForgotPassword, setDataForgotPassword] = useState({ email: "" });
@@ -12,6 +15,16 @@ function ForgotPassword() {
 		email: "",
 	});
 	const [loading, setLoading] = useState(false);
+
+	const navigate = useNavigate();
+
+	const { isSuccessForgotPassword } = useSelector((state) => state.auth);
+
+	useEffect(() => {
+		if (isSuccessForgotPassword) {
+			navigate("/login");
+		}
+	}, [isSuccessForgotPassword, navigate]);
 
 	useEffect(() => {
 		handleResetError();
@@ -39,39 +52,8 @@ function ForgotPassword() {
 	};
 
 	const handleForgotPassword = async () => {
-		let validate = handleCheckValidateConfirm(
-			dataForgotPassword,
-			errorDataForgotPassword
-		);
-		setErrorDataForgotPassword(validate.dataError);
-
-		if (!validate.isError) {
-			setLoading(true);
-			try {
-				const response = await fetch(
-					"http://localhost:3456/auth/forgot-password",
-					{
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({ email: dataForgotPassword.email }),
-					}
-				);
-
-				if (response.ok) {
-					const data = await response.json();
-					alert(`${data.message}`);
-				} else {
-					const error = await response.json();
-					alert(`Failed to send email: ${error.message}`);
-				}
-			} catch (error) {
-				alert("Something went wrong. Please try again.");
-			} finally {
-				setLoading(false);
-			}
-		}
+		const { email } = dataForgotPassword;
+		await store.dispatch(forgotPassword(email));
 	};
 
 	return (
@@ -100,6 +82,14 @@ function ForgotPassword() {
 						alignItems: "center",
 					}}
 				/>
+			</div>
+			<div className={styles.btnSwitchWrap}>
+				<div
+					onClick={() => navigate("/login")}
+					className={styles.btnRegister}>
+					Already have an account,{" "}
+					<span className={styles.text}>login</span>
+				</div>
 			</div>
 		</div>
 	);

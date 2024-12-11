@@ -17,6 +17,7 @@ const authSlice = createSlice({
 		},
 		isLoadingBtnLogin: false,
 		isLoadingBtnRegister: false,
+		isSuccessForgotPassword: false,
 	},
 	reducers: {
 		startRequestLogin: (state) => ({
@@ -77,6 +78,24 @@ const authSlice = createSlice({
 		startRequestLogoutFail: (state) => ({
 			...state,
 		}),
+		startRequestForgotPassword: (state) => ({
+			...state,
+			isSuccessForgotPassword: false,
+		}),
+		startRequestForgotPasswordSuccess: (state, action) => {
+			message.success(action.payload.message);
+			return {
+				...state,
+				isSuccessForgotPassword: true,
+			};
+		},
+		startRequestForgotPasswordFail: (state, action) => {
+			message.error(action.payload.data.detail.email);
+			return {
+				...state,
+				isSuccessForgotPassword: false,
+			};
+		},
 	},
 });
 
@@ -93,6 +112,9 @@ export const {
 	startRequestLogout,
 	startRequestLogoutSuccess,
 	startRequestLogoutFail,
+	startRequestForgotPassword,
+	startRequestForgotPasswordSuccess,
+	startRequestForgotPasswordFail,
 } = authSlice.actions;
 
 export default authSlice.reducer;

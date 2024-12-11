@@ -1,7 +1,7 @@
 @import "../../../../assets/scss/variables";
 
 .forgotPasswordWrap {
-	width: 100%;
+	width: 25rem;
 	padding: 30px 20px 30px;
 	.inputWrapper {
 		margin-bottom: 18px;
@@ -34,9 +34,11 @@
 		display: flex;
 		justify-content: center;
 		.btnRegister {
-			cursor: pointer;
-			text-decoration: underline;
 			text-align: center;
+			.text {
+				cursor: pointer;
+				text-decoration: underline;
+			}
 		}
 	}
 }

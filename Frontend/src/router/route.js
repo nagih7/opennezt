@@ -60,7 +60,7 @@ const router = createBrowserRouter([
 	{
 		path: "/forgot-password",
 		element: (
-			<AuthLayout title={"Forgot password"}>
+			<AuthLayout title={"Forgot password"} path="forgot-password">
 				<ForgotPassword />
 			</AuthLayout>
 		),

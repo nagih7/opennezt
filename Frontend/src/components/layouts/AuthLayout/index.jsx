@@ -81,6 +81,26 @@ function AuthLayout(props) {
 							<LazyLoading>{children}</LazyLoading>
 						</>
 					)}
+					{path === "forgot-password" && (
+						<>
+							<LazyLoading>{children}</LazyLoading>
+							<div className={styles.bannerWrap}>
+								<div className={styles.banner}>
+									<img src={banner} alt="banner" />
+								</div>
+								<div className={styles.bannerContent}>
+									<h3 className={styles.authSlogan}>
+										Connecting Visionaries, Building Futures
+									</h3>
+									<p className={styles.authDescription}>
+										OpenNezt is a platform that connects founders with
+										talented individuals, enabling easy collaboration
+										to build strong teams and bring ideas to life.
+									</p>
+								</div>
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 		</div>
