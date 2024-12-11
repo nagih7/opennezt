@@ -80,7 +80,7 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage, newMessage }) => {
 					onChange={(e) => setContent(e.target.value)}
 				/>
 				<button
-					onClick={() => sendMessage(chatBox.receiver_id)}
+					onClick={() => handleSendMessage(chatBox.receiver_id)}
 					className={styles.sendButton}>
 					Send
 				</button>
