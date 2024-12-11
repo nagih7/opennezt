@@ -62,7 +62,7 @@ export async function getProjects(req, res) {
 }
 
 export async function getProject(req, res) {
-    const result = await userService.getProject(req.currentUser._id, req.params.id)
+    const result = await userService.getProject(req.params.id)
     res.jsonify(result)
 }
 

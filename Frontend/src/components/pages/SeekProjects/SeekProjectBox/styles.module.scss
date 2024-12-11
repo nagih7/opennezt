@@ -12,60 +12,8 @@
 	--border-radius-2: 0.3rem;
 	--hover-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
-.searchContainer {
-	padding: 2rem;
-	background-color: #f9f9f9;
-	border-radius: var(--border-radius-2);
-	// box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
 
-.searchForm {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
-	max-width: 800px;
-	margin: 2rem auto;
-	padding: 0.5rem 1rem;
-	background-color: #fff;
-	border: 1px solid #ddd;
-	border-radius: 25px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.searchInput {
-	flex: 1;
-	margin-right: 1rem;
-	border-radius: 3px;
-}
-.searchSelect {
-	flex: 1;
-	margin-right: 1rem;
-	.ant-select-selector {
-		border-radius: 10px !important;
-	}
-}
-.searchButton {
-	padding: 0.5rem 1rem;
-	background-color: #007bff;
-	color: #fff;
-	border: none;
-	border-radius: 25px;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
-
-	&:hover {
-		background-color: #0056b3;
-	}
-}
-
-.projectsList {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-	gap: 2rem;
-}
-
-.projectItem {
+.seekProjectBoxWrap {
 	background-color: #f6f6f9;
 	border-radius: 2rem;
 	// box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

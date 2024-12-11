@@ -81,54 +81,13 @@ const projectSlice = createSlice({
 
 		startRequestSeekProjectsSuccess: (state, action) => ({
 			...state,
-			projectsBySeek: action.payload.projects,
+			projectsBySeek: action.payload.data,
 			loadingSeekProjects: false,
 		}),
 		startRequestSeekProjectsFail: (state) => ({
 			...state,
 			projectsBySeek: [],
 			loadingSeekProjects: false,
-		}),
-		startRequestCreateProject: (state) => ({
-			...state,
-			loading: true,
-		}),
-		startRequestCreateProjectSuccess: (state, action) => ({
-			...state,
-			projectsBySeek: [...state.projects, action.payload.data],
-			loading: false,
-		}),
-		startRequestCreateProjectFail: (state) => ({
-			...state,
-			loading: false,
-		}),
-		startRequestSearchProjects: (state) => ({
-			...state,
-			loadingSearchProjects: true,
-		}),
-		startRequestSearchProjectsSuccess: (state, action) => ({
-			...state,
-			projectsBySeek: action.payload.projects,
-			loadingSearchProjects: false,
-		}),
-		startRequestSearchProjectsFail: (state) => ({
-			...state,
-			projectsBySeek: [],
-			loadingSearchProjects: false,
-		}),
-		startRequestProjectDetails: (state) => ({
-			...state,
-			loadingProjectDetails: true,
-		}),
-		startRequestProjectDetailsSuccess: (state, action) => ({
-			...state,
-			projectDetails: action.payload,
-			loadingProjectDetails: false,
-		}),
-		startRequestProjectDetailsFail: (state) => ({
-			...state,
-			projectDetails: null,
-			loadingProjectDetails: false,
 		}),
 		startRequestUpdateProject: (state) => ({
 			...state,
@@ -199,6 +158,18 @@ const projectSlice = createSlice({
 			updatedRequest: null,
 			loadingUpdateStatus: false,
 		}),
+		startRequestJoinProject: (state) => ({
+			...state,
+			loadingJoinProject: true,
+		}),
+		startRequestJoinProjectSuccess: (state) => ({
+			...state,
+			loadingJoinProject: false,
+		}),
+		startRequestJoinProjectFail: (state) => ({
+			...state,
+			loadingJoinProject: false,
+		}),
 	},
 });
 
@@ -216,15 +187,6 @@ export const {
 	startRequestSeekProjects,
 	startRequestSeekProjectsSuccess,
 	startRequestSeekProjectsFail,
-	startRequestCreateProject,
-	startRequestCreateProjectSuccess,
-	startRequestCreateProjectFail,
-	startRequestSearchProjects,
-	startRequestSearchProjectsSuccess,
-	startRequestSearchProjectsFail,
-	startRequestProjectDetails,
-	startRequestProjectDetailsSuccess,
-	startRequestProjectDetailsFail,
 	startRequestUpdateProject,
 	startRequestUpdateProjectSuccess,
 	startRequestUpdateProjectFail,
@@ -237,6 +199,9 @@ export const {
 	startUpdateRequestStatus,
 	startUpdateRequestStatusSuccess,
 	startUpdateRequestStatusFail,
+	startRequestJoinProject,
+	startRequestJoinProjectSuccess,
+	startRequestJoinProjectFail,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

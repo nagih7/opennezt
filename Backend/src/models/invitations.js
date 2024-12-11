@@ -33,7 +33,7 @@ const Invitation = createModel(
             ref: Project,
             required: true,
         },
-        role_project: {
+        role: {
             type: String,
             required: true,
             lowercase: true,

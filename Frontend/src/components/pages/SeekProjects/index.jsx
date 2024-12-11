@@ -1,228 +1,146 @@
-import React, { useEffect, useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
-import {
-	getMatchingProjects,
-	searchProjects,
-	seekProjects,
-	getrequestsProjectDetails,
-} from "api/project";
+import { useSelector } from "react-redux";
+import store from "states/configureStore";
 import { listSector, listStage } from "components/common/ListSelected";
+import {
+	seekProjects,
+	getProjectDetails,
+	requestToJoinProject,
+} from "api/project";
 import { Select, Button, Input } from "antd";
-const { Option } = Select;
-import ProjectDetailsModal from "./ProjectDetailsModal/ProjectDetailsModal";
-import BackgroundDefault from "assets/images/default/BackgroundDefault.jpg";
 
-function SeekProjects() {
-	const dispatch = useDispatch();
-	const authUser = useSelector((state) => state.auth.authUser);
-	const { projectsBySeek } = useSelector((state) => state.project);
-	const loading = useSelector((state) => state.project.loadingSeekProjects);
-	const [stage, setStage] = useState("");
-	const [industry, setIndustry] = useState("");
-	const [name, setName] = useState("");
-	const [searchedProjects, setSearchedProjects] = useState([]);
+import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+
+const SeekProjectBox = React.lazy(() => import("./SeekProjectBox"));
+const ProjectDetailsModal = React.lazy(() =>
+	import("./ProjectDetailsModal/ProjectDetailsModal")
+);
+
+const SeekProjects = () => {
+	const { projectsBySeek, projectDetails } = useSelector(
+		(state) => state.project
+	);
+
+	const [formSeekProjects, setFormSeekProjects] = useState({
+		industry: null,
+		stage: null,
+		name: null,
+	});
+
 	const [expandedProjectId, setExpandedProjectId] = useState(null);
 	const [isModalVisible, setIsModalVisible] = useState(false);
-	const [selectedProject, setSelectedProject] = useState(null);
-	const industries = listSector.map((sector) => sector.label);
-	const handleGetMatchingProjects = useCallback(() => {
-		dispatch(getMatchingProjects());
-	}, [dispatch]);
 
 	useEffect(() => {
-		handleGetMatchingProjects();
-	}, [handleGetMatchingProjects]);
+		store.dispatch(seekProjects());
+	}, []);
 
-	const handleRequestToJoin = async (projectId) => {
+	const handleRequestToJoin = async (projectId, owner_id) => {
 		const requestProjectData = {
-			email: authUser.email,
 			project_id: projectId,
-			role_project: "talent",
+			role: "talent",
+			owner_id,
 		};
 
-		try {
-			const response = await dispatch(seekProjects(requestProjectData));
-
-			if (response && response.status === 200) {
-				toast.success(response.data.message);
-				handleGetMatchingProjects();
-			}
-		} catch (error) {
-			if (error.status === 400) {
-				toast.error(error.data.message);
-			}
-			if (error.status === 404) {
-				toast.error(error.data.message);
-			}
-			if (error.status === 500) {
-				toast.error(error.data.message);
-			}
-		}
+		await store.dispatch(requestToJoinProject(requestProjectData));
 	};
 
-	const handleSearchProjects = async (e) => {
-		e.preventDefault();
-		const result = await dispatch(searchProjects(industry, stage, name));
-		console.log("result", result);
-		setSearchedProjects(result.data);
+	const handleSeekProjects = async (e) => {
+		await store.dispatch(seekProjects(formSeekProjects));
 	};
 	const toggleExpand = (projectId) => {
 		setExpandedProjectId(expandedProjectId === projectId ? null : projectId);
 	};
 
-	const handleViewDetails = async (projectId) => {
-		try {
-			const response = await dispatch(
-				getrequestsProjectDetails({
-					project_id: projectId,
-				})
-			);
-
-			if (response?.data && typeof response.data === "object") {
-				setSelectedProject(response.data);
-				setIsModalVisible(true);
-				console.log("Project details:", response.data);
-			} else {
-				throw new Error("Invalid project data received");
-			}
-		} catch (error) {
-			console.error("Error fetching project details:", error);
-			toast.error("Failed to fetch project details");
+	const onChange = (event, nameSelect) => {
+		if (nameSelect) {
+			setFormSeekProjects((prevState) => ({
+				...prevState,
+				[nameSelect]: event,
+			}));
+		} else {
+			const { name, value } = event.target;
+			setFormSeekProjects((prevState) => ({
+				...prevState,
+				[name]: value,
+			}));
 		}
 	};
+
+	const handleKeyDown = (event) => {
+		if (event.key === "Enter") {
+			handleSeekProjects();
+		}
+	};
+
+	const handleViewDetails = async (projectId) => {
+		await store.dispatch(getProjectDetails(projectId));
+		setIsModalVisible(true);
+	};
+
 	return (
 		<div className={styles.searchContainer}>
-			<ToastContainer />
-			<form onSubmit={handleSearchProjects} className={styles.searchForm}>
+			<div className={styles.searchForm}>
 				<Select
-					value={industry}
-					onChange={(value) => setIndustry(value)}
+					name="industry"
+					value={formSeekProjects.industry}
+					onChange={(e) => onChange(e, "industry")}
 					className={styles.searchSelect}
 					placeholder="Select Industry"
-					style={{ width: "100%", marginRight: "2rem" }}>
-					{listSector.map((sector) => (
-						<Option key={sector.value} value={sector.value}>
-							{sector.label}
-						</Option>
-					))}
-				</Select>
+					style={{ width: "100%", marginRight: "2rem" }}
+					options={listSector}
+				/>
 				<Select
-					value={stage}
-					onChange={(value) => setStage(value)}
+					value={formSeekProjects.stage}
+					onChange={(e) => onChange(e, "stage")}
 					className={styles.searchSelect}
 					placeholder="Select Stage"
-					style={{ width: "100%", marginRight: "2rem" }}>
-					{listStage.map((sector) => (
-						<Option key={sector.value} value={sector.value}>
-							{sector.label}
-						</Option>
-					))}
-				</Select>
+					style={{ width: "100%", marginRight: "2rem" }}
+					options={listStage}
+				/>
 				<Input
 					type="text"
 					placeholder="Project Name"
-					value={name}
-					onChange={(e) => setName(e.target.value)}
+					value={formSeekProjects.name}
+					onChange={onChange}
 					className={styles.searchInput}
 					style={{ flex: 1 }}
+					name="name"
 				/>
 				<Button
+					onClick={handleSeekProjects}
+					onKeyDown={(e) => handleKeyDown(e)}
 					type="primary"
 					htmlType="submit"
 					className={styles.searchButton}>
 					Search
 				</Button>
-			</form>
+			</div>
 
 			<div className={styles.projectsList}>
-				{loading ? (
-					<img
-						alt="Loading Search Results"
-						width="732"
-						height="558"
-						data-id="6288970"
-						data-animated-url="https://cdn.dribbble.com/users/220043/screenshots/6288970/dttr_loaderricerca_ac_ver1.gif"
-						skip_resize="true"
-						sizes="(max-width: 919px) 100vw, max(768px, 98vh)"
-						src="https://cdn.dribbble.com/users/220043/screenshots/6288970/dttr_loaderricerca_ac_ver1.gif"></img>
-				) : (
-					(searchedProjects.length > 0
-						? searchedProjects
-						: projectsBySeek
-					).map(
-						(project) =>
-							project && (
-								<div key={project._id} className={styles.projectItem}>
-									<div className={styles.projectImage}>
-										<img
-											src={
-												project.background
-													? project.background
-													: BackgroundDefault
-											}
-											alt={project.name}
-										/>
-									</div>
-									<div
-										className={`${styles.projectContent} ${
-											expandedProjectId === project._id
-												? styles.expanded
-												: ""
-										}`}>
-										<h3
-											className={styles.projectName}
-											onClick={() => toggleExpand(project._id)}>
-											{project.name}
-										</h3>
-										<p
-											className={styles.projectProblem}
-											onClick={() => toggleExpand(project._id)}>
-											<strong>Problem:</strong> {project.problem}
-										</p>
-										<p
-											className={styles.projectSolution}
-											onClick={() => toggleExpand(project._id)}>
-											<strong>Solution:</strong> {project.solution}
-										</p>
-										<p className={styles.projectUpdatedAt}>
-											<strong>Updated At:</strong>{" "}
-											{new Date(
-												project.updated_at
-											).toLocaleDateString()}
-										</p>
-										<div className={styles.buttonContainer}>
-											<button
-												className={styles.viewButton}
-												onClick={() =>
-													handleViewDetails(project._id)
-												}>
-												View Detail
-											</button>
-
-											<button
-												className={styles.requestButton}
-												onClick={() =>
-													handleRequestToJoin(project._id)
-												}>
-												Request to Join
-											</button>
-										</div>
-									</div>
-								</div>
-							)
-					)
-				)}
+				{projectsBySeek &&
+					projectsBySeek.length > 0 &&
+					projectsBySeek.map((project, index) => (
+						<LazyLoadingMedium key={index}>
+							<SeekProjectBox
+								project={project}
+								handleViewDetails={handleViewDetails}
+								handleRequestToJoin={handleRequestToJoin}
+							/>
+						</LazyLoadingMedium>
+					))}
 			</div>
-			<ProjectDetailsModal
-				isVisible={isModalVisible}
-				onClose={() => setIsModalVisible(false)}
-				projectDetails={selectedProject}
-			/>
+			{projectDetails.name && (
+				<LazyLoadingMedium>
+					<ProjectDetailsModal
+						isVisible={isModalVisible}
+						onClose={() => setIsModalVisible(false)}
+						projectDetails={projectDetails}
+					/>
+				</LazyLoadingMedium>
+			)}
 		</div>
 	);
-}
+};
 
 export default SeekProjects;

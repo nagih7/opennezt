@@ -1,9 +1,9 @@
 import createModel, {ObjectId} from './base'
 import User from './user'
 import Project from './project'
-const SeekProject = createModel(
-    'SeekProject',
-    'seek_projects',
+const ProjectRequest = createModel(
+    'ProjectRequest',
+    'project_requests',
     {
         sender_id: {
             type: ObjectId,
@@ -15,15 +15,13 @@ const SeekProject = createModel(
             ref: User,
             required: true,
         },
-        sender_email: {
+        sender_name: {
             type: String,
-            trim: true,
             lowercase: true,
             required: true,
         },
-        receiver_email: {
+        receiver_name: {
             type: String,
-            trim: true,
             lowercase: true,
             required: true,
         },
@@ -32,7 +30,7 @@ const SeekProject = createModel(
             ref: Project,
             required: true,
         },
-        role_project: {
+        role: {
             type: String,
             required: true,
             lowercase: true,
@@ -41,7 +39,7 @@ const SeekProject = createModel(
         status: {
             type: String,
             default: 'pending',
-            enum: ['pending', 'accepted', 'rejected', 'expired'],
+            enum: ['pending', 'waiting', 'accepted', 'rejected', 'expired', 'blocked'],
         },
 
         token: {
@@ -54,4 +52,4 @@ const SeekProject = createModel(
     }
 )
 
-export default SeekProject
+export default ProjectRequest

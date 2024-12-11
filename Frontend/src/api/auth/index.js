@@ -12,6 +12,9 @@ import {
 	startRequestLogout,
 	startRequestLogoutSuccess,
 	startRequestLogoutFail,
+	startRequestForgotPassword,
+	startRequestForgotPasswordSuccess,
+	startRequestForgotPasswordFail,
 } from "../../states/modules/auth";
 
 export const login = (data) => async (dispatch, getState) => {
@@ -78,6 +81,23 @@ export const logout = () => async (dispatch, getState) => {
 			startRequestLogoutFail,
 		],
 		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+export const forgotPassword = (email) => async (dispatch, getState) => {
+	return callApi({
+		method: "post",
+		apiPath: `auth/forgot-password`,
+		actionTypes: [
+			startRequestForgotPassword,
+			startRequestForgotPasswordSuccess,
+			startRequestForgotPasswordFail,
+		],
+		variables: {
+			email: email,
+		},
 		dispatch,
 		getState,
 	});

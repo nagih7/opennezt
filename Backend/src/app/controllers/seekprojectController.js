@@ -17,9 +17,9 @@ export async function handleRequestsProject(req, res) {
             throw new Error('User không hợp lệ')
         }
 
-        const {email, project_id, role_project} = req.body
+        const {email, project_id, role} = req.body
 
-        await requestsProject(user, {email, project_id, role_project})
+        await requestsProject(user, {email, project_id, role})
 
         res.status(200).json({message: 'Yêu cầu đã được gửi thành công'})
     } catch (error) {
@@ -45,9 +45,9 @@ export async function handleCheckExistRequests(req, res) {
             throw new Error('User không hợp lệ')
         }
 
-        const {email, project_id, role_project} = req.body
+        const {email, project_id, role} = req.body
 
-        const exists = await checkExistRequests(user, {email, project_id, role_project})
+        const exists = await checkExistRequests(user, {email, project_id, role})
 
         res.status(200).json({exists})
     } catch (error) {
@@ -159,7 +159,7 @@ export async function handleUpdateRequestStatus(req, res) {
             })
         }
 
-        if (!status || !['accepted', 'rejected'].includes(status)) {
+        if (!status || !['accepted', 'rejected', 'blocked'].includes(status)) {
             return res.status(400).json({
                 success: false,
                 message: 'Invalid status. Must be either accepted or rejected',
