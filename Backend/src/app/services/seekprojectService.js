@@ -1,7 +1,7 @@
-import {User, FounderProfile, Project, SeekProject} from '@/models'
+import {User, FounderProfile, Project, ProjectRequest} from '@/models'
 import {LINK_STATIC_URL} from '@/configs'
 
-export async function requestsProject(user, {email, project_id, role_project}) {
+export async function requestsProject(user, {email, project_id, role}) {
     const user_receiver = await Project.findOne({_id: project_id}, {user_id: 1})
     const id_receiver = user_receiver.user_id.toString()
     const receiver_user = await User.findOne({_id: id_receiver}, {_id: 1, email: 1})
@@ -14,13 +14,13 @@ export async function requestsProject(user, {email, project_id, role_project}) {
     if (sender_profile === null) {
         throw new Error('Bạn chưa cập nhật thông tin chi tiết')
     }
-    
+
     const project = await Project.findOne({_id: project_id})
     if (!project) {
         throw new Error('Không có thông tin dự án')
     }
 
-    const existingRequest = await SeekProject.findOne({
+    const existingRequest = await ProjectRequest.findOne({
         sender_id: user._id,
         sender_email: email,
         receiver_email: receiver_user.email,
@@ -29,14 +29,14 @@ export async function requestsProject(user, {email, project_id, role_project}) {
 
     if (existingRequest) {
         if (existingRequest.status === 'rejected') {
-            await SeekProject.updateOne(
-                { _id: existingRequest._id },
-                { 
-                    $set: { 
+            await ProjectRequest.updateOne(
+                {_id: existingRequest._id},
+                {
+                    $set: {
                         status: 'pending',
-                        role_project: role_project,
-                        updatedAt: new Date()
-                    }
+                        role: role,
+                        updatedAt: new Date(),
+                    },
                 }
             )
             return
@@ -44,20 +44,20 @@ export async function requestsProject(user, {email, project_id, role_project}) {
         throw new Error('Bạn đã gửi request')
     }
 
-    const seek = new SeekProject({
+    const seek = new ProjectRequest({
         sender_id: user._id,
         sender_email: user.email,
         receiver_id: receiver_user._id,
         receiver_email: receiver_user.email,
-        role_project,
+        role,
         project_id,
-        status: 'pending'
+        status: 'pending',
     })
 
     await seek.save()
 }
 
-export async function checkExistRequests(user, {email, project_id, role_project}) {
+export async function checkExistRequests(user, {email, project_id, role}) {
     const sender_profile = await FounderProfile.findOne({user_id: user._id})
     const project = await Project.findOne({_id: project_id})
 
@@ -65,13 +65,12 @@ export async function checkExistRequests(user, {email, project_id, role_project}
         throw new Error('Dữ liệu không hợp lệ')
     }
 
-    const isExist = await SeekProject.findOne({
+    const isExist = await ProjectRequest.findOne({
         sender_id: user._id,
         sender_email: user.email,
         receiver_email: email,
         project_id,
-        role_project,
-        
+        role,
     })
 
     if (isExist) {
@@ -98,10 +97,7 @@ export async function getRelatedIndustriesByProjectId(project_id) {
 }
 
 export async function getMatchingProjects(user_id) {
-    const founder_profile = await FounderProfile.findOne(
-        { user_id }, 
-        { industry: 1 }
-    )
+    const founder_profile = await FounderProfile.findOne({user_id}, {industry: 1})
 
     if (!founder_profile) {
         throw new Error('Hãy cập nhật thông tin chi tiết trong about')
@@ -109,8 +105,8 @@ export async function getMatchingProjects(user_id) {
 
     const projects = await Project.find(
         {
-            related_industries: { $in: founder_profile.industry },
-            user_id: { $ne: user_id },
+            related_industries: {$in: founder_profile.industry},
+            user_id: {$ne: user_id},
         },
         {
             problem: 1,
@@ -124,22 +120,25 @@ export async function getMatchingProjects(user_id) {
 
     const projectsWithStatus = await Promise.all(
         projects.map(async (project) => {
-            const seekProject = await SeekProject.findOne({
-                project_id: project._id,
-                sender_id: user_id
-            }, {
-                status: 1,
-                role_project: 1
-            })
+            const seekProject = await ProjectRequest.findOne(
+                {
+                    project_id: project._id,
+                    sender_id: user_id,
+                },
+                {
+                    status: 1,
+                    role: 1,
+                }
+            )
 
             const projectObj = project.toObject()
             return {
                 ...projectObj,
-                background: projectObj.background ? 
-                    LINK_STATIC_URL + projectObj.background : 
-                    projectObj.background,
+                background: projectObj.background
+                    ? LINK_STATIC_URL + projectObj.background
+                    : projectObj.background,
                 status: seekProject ? seekProject.status : null,
-                role_project: seekProject ? seekProject.role_project : null
+                role: seekProject ? seekProject.role : null,
             }
         })
     )
@@ -169,22 +168,25 @@ export async function searchProjects({industry, stage, name, user}) {
     const projectsWithStatus = await Promise.all(
         projects.map(async (project) => {
             const projectObj = project.toObject()
-            
-            const seekProject = await SeekProject.findOne({
-                project_id: project._id,
-                sender_id: user_id
-            }, {
-                status: 1,
-                role_project: 1
-            })
+
+            const seekProject = await ProjectRequest.findOne(
+                {
+                    project_id: project._id,
+                    sender_id: user_id,
+                },
+                {
+                    status: 1,
+                    role: 1,
+                }
+            )
 
             return {
                 ...projectObj,
-                background: projectObj.background ? 
-                    LINK_STATIC_URL + projectObj.background : 
-                    projectObj.background,
+                background: projectObj.background
+                    ? LINK_STATIC_URL + projectObj.background
+                    : projectObj.background,
                 status: seekProject ? seekProject.status : null,
-                role_project: seekProject ? seekProject.role_project : null
+                role: seekProject ? seekProject.role : null,
             }
         })
     )
@@ -249,9 +251,8 @@ export async function getPendingProjects(email) {
             throw new Error('Missing required parameters')
         }
 
-        const pendingRequests = await SeekProject.find({
+        const pendingRequests = await ProjectRequest.find({
             receiver_email: email,
-            
         })
 
         if (!pendingRequests || pendingRequests.length === 0) {
@@ -286,13 +287,13 @@ export async function updateRequestStatus(request_id, status) {
             throw new Error('Request ID is required')
         }
 
-        if (!status || !['accepted', 'rejected','blocked'].includes(status)) {
+        if (!status || !['accepted', 'rejected', 'blocked'].includes(status)) {
             throw new Error('Invalid status. Must be either accepted or rejected')
         }
 
         console.log('Searching for request_id:', request_id)
 
-        const existingRequest = await SeekProject.findOne({
+        const existingRequest = await ProjectRequest.findOne({
             project_id: request_id,
             status: 'pending',
         })

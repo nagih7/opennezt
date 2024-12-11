@@ -144,8 +144,11 @@ export async function getProjects(userId) {
     return projects
 }
 
-export async function getProject(userId, projectId) {
-    const project = await Project.findOne({user_id: userId, _id: projectId})
+export async function getProject(projectId) {
+    const project = await Project.findOne({_id: new ObjectId(projectId)})
+    if (!project) {
+        return status('Not Found')
+    }
     if (project.background) {
         project.background = project.background && LINK_STATIC_URL + project.background
     }
@@ -384,27 +387,27 @@ export async function checkSteps(user) {
     }
 }
 
-export async function inviteMember(user, {email, project_id, role_project}) {
+export async function inviteMember(user, {email, project_id, role}) {
     const receiver_user = await User.findOne({email}, {_id: 1, email: 1})
     const invitation = new Invitation({
         sender_id: user._id,
         sender_email: user.email,
         receiver_id: receiver_user._id,
         receiver_email: receiver_user.email,
-        role_project,
+        role,
         project_id,
     })
 
     await invitation.save()
 }
 
-export async function checkExistInvitation(user, {email, project_id, role_project}) {
+export async function checkExistInvitation(user, {email, project_id, role}) {
     const isExist = await Invitation.findOne({
         sender_id: user._id,
         sender_email: user.email,
         receiver_email: email,
         project_id,
-        role_project,
+        role,
     })
 
     if (isExist) {
@@ -446,20 +449,20 @@ export async function getIdByEmail(emailData) {
             throw new Error('Invalid email format')
         }
 
-        const user = await User.findOne({ email })
-        
+        const user = await User.findOne({email})
+
         if (!user) {
             throw new Error('User not found')
         }
 
         return {
             success: true,
-            data: user._id
+            data: user._id,
         }
     } catch (error) {
         return {
             success: false,
-            message: error.message
+            message: error.message,
         }
     }
 }

@@ -114,8 +114,8 @@ function NotificationProject() {
         },
         {
             title: 'Role',
-            dataIndex: 'role_project',
-            key: 'role_project',
+            dataIndex: 'role',
+            key: 'role',
             render: (role) => <Tag color="blue">{role.toUpperCase()}</Tag>,
         },
         {

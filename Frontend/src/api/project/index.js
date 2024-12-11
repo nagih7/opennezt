@@ -1,5 +1,4 @@
 import callApi from "api/callApi";
-import SeekProject from "api/seekprojectapi";
 import {
 	startRequestGetProjects,
 	startRequestGetProjectsSuccess,
@@ -10,18 +9,9 @@ import {
 	startRequestSeekProjects,
 	startRequestSeekProjectsSuccess,
 	startRequestSeekProjectsFail,
-	startRequestCreateProject,
-	startRequestCreateProjectSuccess,
-	startRequestCreateProjectFail,
 	startGetProjectDetails,
 	startGetProjectDetailsSuccess,
 	startGetProjectDetailsFail,
-	startRequestSearchProjects,
-	startRequestSearchProjectsSuccess,
-	startRequestSearchProjectsFail,
-	startRequestProjectDetails,
-	startRequestProjectDetailsSuccess,
-	startRequestProjectDetailsFail,
 	startRequestUpdateProject,
 	startRequestUpdateProjectSuccess,
 	startRequestUpdateProjectFail,
@@ -34,6 +24,9 @@ import {
 	startUpdateRequestStatus,
 	startUpdateRequestStatusSuccess,
 	startUpdateRequestStatusFail,
+	startRequestJoinProject,
+	startRequestJoinProjectSuccess,
+	startRequestJoinProjectFail,
 } from "../../states/modules/project";
 
 export const getProjects = () => async (dispatch, getState) => {
@@ -81,15 +74,15 @@ export const getProjectDetails = (projectId) => async (dispatch, getState) => {
 	});
 };
 
-export const seekProjects =
+export const requestToJoinProject =
 	(requestProjectData) => async (dispatch, getState) => {
-		return SeekProject({
+		return callApi({
 			method: "post",
-			apiPath: `seek/requests-project`,
+			apiPath: `project/request-to-join`,
 			actionTypes: [
-				startRequestCreateProject,
-				startRequestCreateProjectSuccess,
-				startRequestCreateProjectFail,
+				startRequestJoinProject,
+				startRequestJoinProjectSuccess,
+				startRequestJoinProjectFail,
 			],
 			variables: requestProjectData,
 			dispatch,
@@ -97,10 +90,12 @@ export const seekProjects =
 		});
 	};
 
-export const getMatchingProjects = () => async (dispatch, getState) => {
+export const seekProjects = (data) => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
-		apiPath: `seek/founder/matching-projects`,
+		apiPath: data
+			? `project/seek-projects?industry=${data.industry}&stage=${data.stage}&name=${data.name}`
+			: `project/seek-projects`,
 		actionTypes: [
 			startRequestSeekProjects,
 			startRequestSeekProjectsSuccess,
@@ -111,8 +106,9 @@ export const getMatchingProjects = () => async (dispatch, getState) => {
 		getState,
 	});
 };
+
 export const searchProjects =
-	(industry,stage, name) => async (dispatch, getState) => {
+	(industry, stage, name) => async (dispatch, getState) => {
 		return callApi({
 			method: "get",
 			apiPath: `seek/search-projects?industry=${industry}&stage=${stage}&name=${name}`,
@@ -120,26 +116,11 @@ export const searchProjects =
 				Authorization: `Bearer ${getState().auth.token}`,
 			},
 			actionTypes: [
-				startRequestSearchProjects,
-				startRequestSearchProjectsSuccess,
-				startRequestSearchProjectsFail,
+				startRequestSeekProjects,
+				startRequestSeekProjectsSuccess,
+				startRequestSeekProjectsFail,
 			],
 			variables: {},
-			dispatch,
-			getState,
-		});
-	};
-export const getrequestsProjectDetails =
-	(projectData) => async (dispatch, getState) => {
-		return SeekProject({
-			method: "post",
-			apiPath: `seek/project-details`,
-			actionTypes: [
-				startRequestProjectDetails,
-				startRequestProjectDetailsSuccess,
-				startRequestProjectDetailsFail,
-			],
-			variables: projectData,
 			dispatch,
 			getState,
 		});

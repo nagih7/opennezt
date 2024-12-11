@@ -195,7 +195,7 @@ export const inviteMember = Joi.object({
                 })
         ),
 
-    role_project: Joi.valid(
+    role: Joi.valid(
         'founder',
         'co-founder',
         'talent',

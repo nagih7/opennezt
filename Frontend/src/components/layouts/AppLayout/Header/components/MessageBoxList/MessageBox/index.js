@@ -89,7 +89,6 @@ const MessageBox = ({
 				<input
 					onKeyDown={(e) => handleEnterKey(e, chatBox.receiver_id)}
 					type="text"
-					b
 					placeholder="Type a message..."
 					className={styles.miniChatInput}
 					value={content}
