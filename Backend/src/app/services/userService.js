@@ -1,6 +1,7 @@
 import {User, FounderProfile, Project, Invitation, ObjectId, ChatInvitation} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
+import status from 'statuses'
 
 export async function create(requestBody) {
     const user = new User(requestBody)
@@ -431,6 +432,7 @@ export async function getNotifications(user) {
                 sender_id: 1,
                 sender_name: 1,
                 created_at: 1,
+                status: 1,
             },
         },
     ])
