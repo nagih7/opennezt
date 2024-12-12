@@ -10,31 +10,96 @@ const userRouter = Router()
 
 userRouter.use(asyncHandler(requireAuthentication))
 
-userRouter.get('/', asyncHandler(validate(userRequest.readRoot)), asyncHandler(userController.readRoot))
-
-userRouter.get('/:id', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))
-
-userRouter.post('/', asyncHandler(validate(userRequest.createItem)), asyncHandler(userController.createItem))
-
 userRouter.put(
-    '/:id',
-    asyncHandler(userMiddleware.checkUserId),
-    asyncHandler(validate(userRequest.updateItem)),
-    asyncHandler(userController.updateItem)
+    '/avatar',
+    asyncHandler(validate(userRequest.updateAvatar)),
+    asyncHandler(userController.updateAvatar)
 )
 
+userRouter.put(
+    '/background',
+    asyncHandler(validate(userRequest.updateBackground)),
+    asyncHandler(userController.updateBackground)
+)
+
+userRouter.get('/check-steps', asyncHandler(userController.checkSteps))
+
+userRouter.get('/users', asyncHandler(validate(userRequest.readRoot)), asyncHandler(userController.readRoot))
+
+userRouter.patch(
+    '/reset-password',
+    asyncHandler(userMiddleware.checkUserId),
+    asyncHandler(validate(userRequest.resetPassword)),
+    asyncHandler(userController.resetPassword)
+)
+// Project
+userRouter.post(
+    '/project',
+    asyncHandler(userMiddleware.validateProject),
+    asyncHandler(validate(userRequest.createProject)),
+    asyncHandler(userController.createProject)
+)
+
+userRouter.get('/projects', asyncHandler(userController.getProjects))
+
+userRouter.get('/project/:id', asyncHandler(userController.getProject))
+
+userRouter.put('/project', asyncHandler(userController.updateProject))
+
+userRouter.delete('/project', asyncHandler(userController.deleteProject))
+
+// Founder Profile
+userRouter.post(
+    '/founder-profile',
+    asyncHandler(validate(userRequest.createFounderProfile)),
+    asyncHandler(userController.createFounderProfile)
+)
+
+userRouter.get('/get-founder-profile', asyncHandler(userController.getFounderProfile))
+
+userRouter.put('/founder-profile', asyncHandler(userController.updateFounderProfile))
+
+userRouter.get(
+    '/recruit-talents',
+    asyncHandler(validate(userRequest.recuitTalents)),
+    asyncHandler(userController.recuitTalents)
+)
+
+userRouter.get('/talent-details/:id', asyncHandler(userController.getTalentDetails))
+
+// Invite member
+userRouter.post(
+    '/invite-member',
+    asyncHandler(validate(userRequest.inviteMember)),
+    asyncHandler(userController.inviteMember)
+)
+
+// Invite member
+userRouter.post(
+    '/invite-member',
+    asyncHandler(validate(userRequest.inviteMember)),
+    asyncHandler(userController.inviteMember)
+)
+
+userRouter.get('/notifications', asyncHandler(userController.getNotifications))
+
+// URL dynamic
+userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))
+
 userRouter.delete(
-    '/:id',
+    '/',
     asyncHandler(userMiddleware.checkUserId),
     userMiddleware.checkCanDeleteUser,
     asyncHandler(userController.removeItem)
 )
 
-userRouter.patch(
-    '/:id/reset-password',
-    asyncHandler(userMiddleware.checkUserId),
-    asyncHandler(validate(userRequest.resetPassword)),
-    asyncHandler(userController.resetPassword)
-)
+userRouter.post('/', asyncHandler(validate(userRequest.createItem)), asyncHandler(userController.createItem))
 
+userRouter.put(
+    '/',
+    asyncHandler(userMiddleware.checkUserId),
+    asyncHandler(validate(userRequest.updateItem)),
+    asyncHandler(userController.updateItem)
+)
+userRouter.post('/getid-byemail', asyncHandler(userController.getIdByEmail))
 export default userRouter

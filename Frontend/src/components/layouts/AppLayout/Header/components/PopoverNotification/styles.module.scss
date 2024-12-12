@@ -1,0 +1,110 @@
+@import "src/assets/scss/variables";
+
+.modalNotificationWrap {
+	min-width: 250px;
+	max-width: 400px;
+	background-color: $backgroundMain;
+	border-radius: 4px;
+	box-shadow: $boxShadowDark;
+
+	&::before {
+		position: absolute;
+		content: "";
+		height: 12px;
+		width: 12px;
+		top: -6px;
+		right: 15px;
+		border-top-left-radius: 1px;
+		border-top-right-radius: 1px;
+		background-color: $backgroundMain;
+		transform: rotateZ(45deg);
+	}
+
+	.headerWrap {
+		color: $colorBlack;
+		display: flex;
+		align-items: flex-start;
+		flex-direction: column;
+		padding: 13px;
+		border-block-end: 1px solid $colorLineLight;
+		font-weight: 600;
+	}
+
+	.mainModalInfoWrap {
+		.menuInfoWrap {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			border: 10px;
+
+			.itemInfoWrap {
+				display: flex;
+				gap: 1rem;
+				flex-direction: column;
+				padding: 12px 15px;
+				border-block-end: 1px solid $colorLineLight;
+				width: 25rem;
+				cursor: pointer;
+
+				.notificationContent {
+					width: 100%;
+					font-weight: 500;
+					font-size: 14px;
+					transition: all 0.3s;
+					color: $colorBlack;
+					display: flex !important;
+					flex-wrap: nowrap;
+					align-items: center;
+
+					.iconWrap {
+						height: 3rem;
+						min-width: 3rem;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						border-radius: 50%;
+						background: rgb(108, 95, 252);
+						box-shadow: 0 5px 10px rgba(108, 95, 252, 0.3);
+						color: $colorWhite;
+					}
+
+					.contentWrap {
+						margin-left: 10px;
+						display: flex;
+						flex-direction: column;
+						flex-grow: 1;
+						.date {
+							font-size: 12px;
+							color: $colorNote;
+						}
+					}
+				}
+
+				.actionsWrap {
+					display: flex;
+					justify-content: flex-end;
+					gap: 1rem;
+					padding-right: 1rem;
+					width: 100%;
+				}
+
+				&:hover {
+					background: rgba($secondaryAccent, 0.1);
+				}
+			}
+		}
+	}
+
+	.footerWrap {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 13px;
+		cursor: pointer;
+		transition: all 0.3s;
+		color: $colorNote;
+		&:hover {
+			background: rgba($secondaryAccent, 0.3);
+		}
+	}
+}

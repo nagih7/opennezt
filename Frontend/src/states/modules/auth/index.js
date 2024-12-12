@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { message } from "antd";
 
 const authSlice = createSlice({
 	name: "auth",
 	initialState: {
 		isAuthSuccess: false,
+		authorize: "user",
 		authUser: {},
 		errorRegister: {
 			name: "",
@@ -15,20 +17,29 @@ const authSlice = createSlice({
 		},
 		isLoadingBtnLogin: false,
 		isLoadingBtnRegister: false,
+		isSuccessForgotPassword: false,
 	},
 	reducers: {
 		startRequestLogin: (state) => ({
 			...state,
 			isLoadingBtnLogin: true,
 		}),
-		startRequestLoginSuccess: (state) => ({
-			...state,
-			isLoadingBtnLogin: false,
-		}),
-		startRequestLoginFail: (state) => ({
-			...state,
-			isLoadingBtnLogin: false,
-		}),
+		startRequestLoginSuccess: (state) => {
+			message.success("Đăng nhập thành công!");
+			return {
+				...state,
+				isLoadingBtnLogin: false,
+				isAuthSuccess: true,
+			};
+		},
+		startRequestLoginFail: (state, action) => {
+			message.error(action.payload.data.message);
+			return {
+				...state,
+				isLoadingBtnLogin: false,
+				isAuthSuccess: false,
+			};
+		},
 		startRequestGetMe: (state) => ({
 			...state,
 		}),
@@ -36,11 +47,13 @@ const authSlice = createSlice({
 			...state,
 			isAuthSuccess: true,
 			authUser: action.payload.data,
+			authorize: action.payload.data.role,
 		}),
 		startRequestGetMeFail: (state) => ({
 			...state,
 			isAuthSuccess: false,
 			authUser: {},
+			authorize: "user",
 		}),
 		startRequestRegister: (state) => ({
 			...state,
@@ -65,6 +78,24 @@ const authSlice = createSlice({
 		startRequestLogoutFail: (state) => ({
 			...state,
 		}),
+		startRequestForgotPassword: (state) => ({
+			...state,
+			isSuccessForgotPassword: false,
+		}),
+		startRequestForgotPasswordSuccess: (state, action) => {
+			message.success(action.payload.message);
+			return {
+				...state,
+				isSuccessForgotPassword: true,
+			};
+		},
+		startRequestForgotPasswordFail: (state, action) => {
+			message.error(action.payload.data.detail.email);
+			return {
+				...state,
+				isSuccessForgotPassword: false,
+			};
+		},
 	},
 });
 
@@ -81,6 +112,9 @@ export const {
 	startRequestLogout,
 	startRequestLogoutSuccess,
 	startRequestLogoutFail,
+	startRequestForgotPassword,
+	startRequestForgotPasswordSuccess,
+	startRequestForgotPasswordFail,
 } = authSlice.actions;
 
 export default authSlice.reducer;

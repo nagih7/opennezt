@@ -1,11 +1,11 @@
 import moment from 'moment'
 import jwt from 'jsonwebtoken'
 import {User} from '@/models'
-import {cache, LOGIN_EXPIRE_IN, LINK_STATIC_URL, TOKEN_TYPE} from '@/configs'
+import {cache, LOGIN_EXPIRE_IN, LINK_STATIC_URL, TOKEN_TYPE, VERIFY_EMAIL_EXPIRE_IN} from '@/configs'
 import {FileUpload} from '@/utils/classes'
 import {generateToken} from '@/utils/helpers'
 
-export const tokenBlocklist = cache.create('token-block-list')
+export const tokenBlocklist = cache.create('t   oken-block-list')
 
 export async function checkValidLogin({email, password}) {
     const user = await User.findOne({email: email})
@@ -38,11 +38,18 @@ export function authToken(user) {
 
 export async function register({avatar, ...requestBody}) {
     if (avatar instanceof FileUpload) {
-        requestBody.avatar = avatar.save()
+        requestBody.avatar = avatar.save('avatars')
     }
 
     const user = new User(requestBody)
-    return await user.save()
+    await user.save()
+
+    return generateToken({user_id: user._id}, TOKEN_TYPE.VERIFY_EMAIL, VERIFY_EMAIL_EXPIRE_IN)
+}
+
+export async function verifyEmail(currentUser) {
+    currentUser.is_active = true
+    await currentUser.save()
 }
 
 export async function blockToken(token) {
@@ -55,6 +62,7 @@ export async function blockToken(token) {
 export async function profile(userId) {
     const user = await User.findOne({_id: userId})
     user.avatar = user.avatar && LINK_STATIC_URL + user.avatar
+    user.background = user.background && LINK_STATIC_URL + user.background
     return user
 }
 

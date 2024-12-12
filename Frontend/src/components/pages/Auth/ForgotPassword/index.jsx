@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
-import AuthLayout from "../../../layouts/AuthLayout";
 import InputMASQ from "../../../../components/UI/Input";
 import _ from "lodash";
 import ButtonMASQ from "../../../../components/UI/Button";
 import { isValidate } from "../../../../utils/validate";
-import { handleCheckValidateConfirm } from "../../../../utils/helper";
+import { forgotPassword } from "../../../../api/auth";
+import store from "states/configureStore";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function ForgotPassword() {
 	const [dataForgotPassword, setDataForgotPassword] = useState({ email: "" });
 	const [errorDataForgotPassword, setErrorDataForgotPassword] = useState({
 		email: "",
 	});
+	const [loading, setLoading] = useState(false);
+
+	const navigate = useNavigate();
+
+	const { isSuccessForgotPassword } = useSelector((state) => state.auth);
+
+	useEffect(() => {
+		if (isSuccessForgotPassword) {
+			navigate("/login");
+		}
+	}, [isSuccessForgotPassword, navigate]);
 
 	useEffect(() => {
 		handleResetError();
@@ -38,47 +51,47 @@ function ForgotPassword() {
 		return validate.isError;
 	};
 
-	const handleConfirmLogin = () => {
-		let validate = handleCheckValidateConfirm(
-			dataForgotPassword,
-			errorDataForgotPassword
-		);
-		setErrorDataForgotPassword(validate.dataError);
-		if (!validate.isError) {
-			alert("Login");
-		}
+	const handleForgotPassword = async () => {
+		const { email } = dataForgotPassword;
+		await store.dispatch(forgotPassword(email));
 	};
 
 	return (
-		<AuthLayout title={"Forgot password"}>
-			<div className={styles.forgotPasswordWrap}>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Email *</div>
-					<InputMASQ
-						type={"text"}
-						placeholder={"Enter email..."}
-						onChange={(e) => handleChangeInput(e, "email")}
-						onBlur={() => validateBlur("email")}
-						value={dataForgotPassword.email}
-						error={errorDataForgotPassword.email}
-					/>
-				</div>
+		<div className={styles.forgotPasswordWrap}>
+			<div className={styles.inputWrapper}>
+				<div className={styles.label}>Email *</div>
+				<InputMASQ
+					type={"text"}
+					placeholder={"Enter email..."}
+					onChange={(e) => handleChangeInput(e, "email")}
+					onBlur={() => validateBlur("email")}
+					value={dataForgotPassword.email}
+					error={errorDataForgotPassword.email}
+				/>
+			</div>
 
-				<div className={styles.btnWrap}>
-					<ButtonMASQ
-						textBtn={"Send email"}
-						loading={false}
-						onClick={() => handleConfirmLogin()}
-						disable={false}
-						style={{
-							display: "flex",
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-					/>
+			<div className={styles.btnWrap}>
+				<ButtonMASQ
+					textBtn={"Send email"}
+					loading={loading}
+					onClick={() => handleForgotPassword()}
+					disable={loading}
+					style={{
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+				/>
+			</div>
+			<div className={styles.btnSwitchWrap}>
+				<div
+					onClick={() => navigate("/login")}
+					className={styles.btnRegister}>
+					Already have an account,{" "}
+					<span className={styles.text}>login</span>
 				</div>
 			</div>
-		</AuthLayout>
+		</div>
 	);
 }
 

@@ -1,25 +1,142 @@
-import createModel from './base'
+import createModel, {ObjectId} from './base'
+import {Schema} from 'mongoose'
 
-const Project = createModel('Project', 'Projects', {
-    title: {
+const Revernue = new Schema(
+    {
+        time: {
+            type: Date,
+            required: true,
+        },
+        revenue: {
+            type: String,
+            required: true,
+        },
+    },
+    {
+        _id: false,
+    }
+)
+
+const FundingSource = new Schema(
+    {
+        friend_and_family: {
+            type: String,
+            required: false,
+        },
+        grant: {
+            type: String,
+            required: false,
+        },
+        angel: {
+            type: String,
+            required: false,
+        },
+        venture_capital: {
+            type: String,
+            required: false,
+        },
+        other: {
+            type: String,
+            required: false,
+        },
+    },
+    {
+        _id: false,
+    }
+)
+
+const Project = createModel('Project', 'projects', {
+    user_id: {
+        type: ObjectId,
+        required: true,
+    },
+    name: {
         type: String,
         required: true,
     },
-    description: {
+    logo: {
+        type: String,
+        required: false,
+    },
+    background: {
+        type: String,
+        required: false,
+    },
+    landing_page_url: {
+        type: String,
+        required: false,
+    },
+    related_industries: {
+        type: [String],
+        required: true,
+    },
+    stage: {
         type: String,
         required: true,
     },
-    image: {
+    problem: {
         type: String,
-        default: '',
+        required: true,
     },
-    category: {
+    solution: {
         type: String,
-        default: '',
+        required: true,
     },
-    link: {
+    project_demo_url: {
         type: String,
-        default: '',
+        required: false,
+    },
+    team_intro_url: {
+        type: String,
+        required: false,
+    },
+    pitch_deck: {
+        type: String,
+        required: false,
+    },
+    statistics: {
+        type: String,
+        required: true,
+    },
+    revenues: {
+        type: [Revernue],
+        required: false,
+    },
+    funding_sources: {
+        type: FundingSource,
+        required: false,
+    },
+    target_money: {
+        type: String,
+        required: true,
+    },
+    target_audience: {
+        type: String,
+        required: true,
+    },
+    competitors: {
+        type: String,
+        required: true,
+    },
+    competitive_advantage: {
+        type: String,
+        required: true,
+    },
+    why_now: {
+        type: String,
+        required: true,
+    },
+    strategy: {
+        type: String,
+        required: true,
+    },
+    milestones: {
+        type: String,
+        required: true,
+    },
+    about_opennezt: {
+        type: String,
+        required: true,
     },
 })
 

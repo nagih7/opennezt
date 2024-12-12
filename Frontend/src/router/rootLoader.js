@@ -2,7 +2,7 @@ import { redirect } from "react-router-dom";
 import store from "../states/configureStore";
 import { initialSaga } from "../states/modules/routing";
 import { hasPermission } from "../utils/helper";
-import { getMe } from "../api/auth";
+import { getMe } from "api/auth";
 import { getAuthToken } from "../utils/localStorage";
 
 export const rootLoader = async (
@@ -15,10 +15,11 @@ export const rootLoader = async (
 	if (url.pathname === "/profile") {
 		await store.dispatch(getMe());
 	}
-	let { auth } = store.getState();
+	var { auth } = store.getState();
 
 	if (!auth.isAuthSuccess && getAuthToken()) {
 		await store.dispatch(getMe());
+		auth = store.getState().auth;
 	}
 
 	if (isAuth) {
@@ -30,9 +31,12 @@ export const rootLoader = async (
 			return redirect("/403");
 		}
 	} else {
-		if (auth.isAuthSuccess) {
+		if (auth.isAuthSuccess && auth.authorize === "admin") {
+			return redirect("/admin/manage");
+		} else if (auth.isAuthSuccess && auth.authorize === "user") {
 			return redirect("/");
 		}
+		// return redirect("/");
 	}
 
 	if (saga) {

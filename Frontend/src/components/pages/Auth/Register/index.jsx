@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
-import AuthLayout from "../../../layouts/AuthLayout";
 import InputMASQ from "../../../../components/UI/Input";
 import _ from "lodash";
 import ButtonMASQ from "../../../../components/UI/Button";
@@ -9,15 +8,16 @@ import { isValidate } from "../../../../utils/validate";
 import { handleCheckValidateConfirm } from "../../../../utils/helper";
 import { register } from "../../../../api/auth";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import Logo from "../../../../assets/images/logo/OpenNezt_icon_black.png";
 
-function Register() {
+const Register = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [dataRegister, setDataRegister] = useState({
 		name: "",
 		email: "",
 		phone: "",
-		address: "",
 		password: "",
 		confirmPassword: "",
 	});
@@ -25,7 +25,6 @@ function Register() {
 		name: "",
 		email: "",
 		phone: "",
-		address: "",
 		password: "",
 		confirmPassword: "",
 	});
@@ -66,13 +65,29 @@ function Register() {
 		);
 		setErrorDataRegister(validate.dataError);
 		if (!validate.isError) {
-			dispatch(register(dataRegister));
+			dispatch(register(dataRegister))
+				.then((response) => {
+					toast.success("Bạn đã đăng ký tài khoản thành công!");
+
+					setTimeout(() => {
+						navigate("/login");
+					}, 2000);
+				})
+				.catch((error) => {
+					toast.error("Đăng ký không thành công. Vui lòng thử lại.");
+				});
 		}
 	};
 
 	return (
-		<AuthLayout title={"Register account"}>
-			<div className={styles.registerWrap}>
+		<div className={styles.registerWrap}>
+			<div className={styles.registerHeaderWrap}>
+				<div className={styles.logo}>
+					<img src={Logo} alt="logo" />
+				</div>
+				<h1 className={styles.title}>Register</h1>
+			</div>
+			<div className={styles.registerContent}>
 				<div className={styles.inputWrapper}>
 					<div className={styles.label}>Name *</div>
 					<InputMASQ
@@ -106,18 +121,6 @@ function Register() {
 						onBlur={() => validateBlur("phone")}
 						value={dataRegister.phone}
 						error={errorDataRegister.phone}
-					/>
-				</div>
-
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Address *</div>
-					<InputMASQ
-						type={"text"}
-						placeholder={"Enter address..."}
-						onChange={(e) => handleChangeInput(e, "address")}
-						onBlur={() => validateBlur("address")}
-						value={dataRegister.address}
-						error={errorDataRegister.address}
 					/>
 				</div>
 
@@ -168,8 +171,8 @@ function Register() {
 					</div>
 				</div>
 			</div>
-		</AuthLayout>
+		</div>
 	);
-}
+};
 
 export default Register;

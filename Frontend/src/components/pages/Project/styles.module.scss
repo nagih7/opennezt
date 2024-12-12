@@ -1,0 +1,51 @@
+@import "../../../assets/scss/variables.scss";
+
+.projectContainer {
+	background-color: $colorWhite;
+	height: 100%;
+	border-radius: $borderRadius;
+	padding: 1.8rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.8rem;
+
+	.projectHeader {
+		background-color: $colorBackground;
+		border-radius: $borderRadius;
+		padding: 1rem 1.8rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		box-shadow: $boxShadow1;
+
+		h2 {
+			font-size: 24px;
+			font-weight: bold;
+		}
+
+		.btnCreate {
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			font-size: 14px;
+
+			&:hover {
+				background-color: darken(#6c9bcf, 10%);
+			}
+		}
+	}
+
+	.projectsList {
+		background-color: $backgroundMain;
+		border-radius: $borderRadius;
+		box-shadow: $boxShadow1;
+		padding: 1.8rem;
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		flex-grow: 1;
+		gap: 20px;
+	}
+}

@@ -1,51 +1,113 @@
-@import "src/assets/scss/variables";
+@import "../../../assets/scss/variables.scss";
 
-.dashboardWrap {
-  .overviewWrap {
-    .itemWrap {
-      background: $colorWhite;
-      padding: 20px;
-      border-radius: 4px;
-      height: 100%;
-      .personalWrap {
-        .labelWrap {
-          font-size: 13px;
-          margin-bottom: 10px;
-        }
-        .numberWrap {
-          font-size: 28px;
-          color: $colorBlack;
-          font-weight: 600;
-          margin-bottom: 10px;
-        }
-        .dateUpdate {
-          font-size: 12px;
-          color: $colorNote
-        }
-      }
+.homeWrap {
+	height: 100%;
+	.homeContentWrap {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		.homeHeader {
+			font-size: 1.5rem;
+			color: #4c4c4c;
+			font-weight: 600;
+			line-height: 40px;
+			margin-bottom: 1.2rem;
+		}
 
-      .iconWrap {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-      }
+		.homeStepWrap {
+			.homeStepHeader {
+				font-size: 1.5rem;
+				color: #ff1010;
+				font-weight: 600;
+				line-height: 40px;
+			}
 
-      .iconUser {
-        color: rgb(5, 195, 251);
-      }
+			.homeStepContentWrap {
+				display: flex;
+				flex-direction: column;
+				gap: 1.5rem;
 
-      .iconChart1 {
-        color: #ec82ef;
-      }
+				.stepWrap {
+					background-color: white;
+					height: 100px;
+					border-radius: 1rem;
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					box-shadow: $boxShadow;
+					cursor: pointer;
+					transition: all 0.3s ease;
 
-      .iconChart2 {
-        color: #f7b731;
-      }
+					&:hover {
+						transform: translateY(-5px);
+					}
 
-      .iconMoney {
-        color: rgb(78, 204, 72);
-      }
-    }
-  }
+					.stepHeader {
+						font-size: 1.2rem;
+						color: #4c4c4c;
+						font-weight: 600;
+						line-height: 40px;
+					}
+
+					.stepContent {
+						margin-left: 2rem;
+						font-size: 1.5rem;
+						color: #4c4c4c;
+						font-weight: 600;
+						line-height: 30px;
+						text-align: center;
+					}
+
+					.chevron {
+						margin-right: 1rem;
+						font-size: 3rem;
+						color: #4c4c4c;
+						font-weight: 600;
+						line-height: 30px;
+						text-align: center;
+					}
+				}
+			}
+		}
+		.recruitStepWrap {
+			background-color: white;
+			width: 100%;
+			border-radius: 1rem;
+			display: flex;
+			flex-grow: 1;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			margin-top: 3rem;
+			box-shadow: $boxShadow;
+			gap: 1rem;
+
+			.recruitStepHeader {
+				font-size: 1.5rem;
+				color: #4c4c4c;
+				font-weight: 600;
+				line-height: 40px;
+			}
+
+			.recruitStepButton {
+				width: 200px;
+				height: 50px;
+				background-color: $backgroundMain;
+				border-radius: 1rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: $colorBackgroundButtonCancel;
+				font-size: 1.5rem;
+				font-weight: 600;
+				line-height: 30px;
+				cursor: pointer;
+				transition: all 0.3s ease;
+
+				&:hover {
+					transform: translateY(-5px);
+				}
+			}
+		}
+	}
 }

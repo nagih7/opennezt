@@ -7,14 +7,14 @@ const User = createModel(
     {
         name: {
             type: String,
-            required: true,
+            required: false,
         },
         email: {
             type: String,
             trim: true,
             lowercase: true,
             unique: true,
-            required: true,
+            required: false,
         },
         password: {
             type: String,
@@ -27,10 +27,50 @@ const User = createModel(
         phone: {
             type: String,
             default: '',
+            required: false,
         },
         avatar: {
             type: String,
             default: '',
+            required: false,
+        },
+        background: {
+            type: String,
+            default: '',
+        },
+        facebook: {
+            type: String,
+            default: '',
+        },
+        linkedin: {
+            type: String,
+            default: '',
+        },
+        region: {
+            type: String,
+            default: '',
+            required: false,
+        },
+        city: {
+            type: String,
+            default: '',
+        },
+        language: {
+            type: [String],
+            default: ['Vietnamese'],
+            required: true,
+        },
+        role: {
+            type: String,
+            default: 'user',
+            required: true,
+            enum: ['user', 'admin'],
+        },
+        is_active: {
+            type: Boolean,
+            required: true,
+            default: false,
+            enum: [true, false],
         },
     },
     {
@@ -38,7 +78,7 @@ const User = createModel(
             virtuals: false,
             transform(doc, ret) {
                 // eslint-disable-next-line no-unused-vars
-                const {password, ...result} = ret
+                const {_id, password, is_active, created_at, updated_at, ...result} = ret
                 return result
             },
         },

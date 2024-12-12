@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import "./styles.scss";
-import AuthLayout from "../../../layouts/AuthLayout";
 import InputMASQ from "../../../../components/UI/Input";
 import _ from "lodash";
 import ButtonMASQ from "../../../../components/UI/Button";
 import { useNavigate } from "react-router-dom";
 import { isValidate } from "../../../../utils/validate";
 import { handleCheckValidateConfirm } from "../../../../utils/helper";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import store from "states/configureStore";
 import { Checkbox } from "antd";
 import Social from "./components/Social";
 import { login } from "../../../../api/auth";
+import Logo from "../../../../assets/images/logo/OpenNezt_icon_black.png";
 
-function Login() {
+const Login = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	const [dataLogin, setDataLogin] = useState({
 		email: "",
 		password: "",
@@ -28,7 +28,7 @@ function Login() {
 	const isLoadingBtnLogin = useSelector(
 		(state) => state.auth.isLoadingBtnLogin
 	);
-	const isAuthSuccess = useSelector((state) => state.auth.isAuthSuccess);
+	const { isAuthSuccess, authorize } = useSelector((state) => state.auth);
 
 	useEffect(() => {
 		handleResetError();
@@ -36,9 +36,13 @@ function Login() {
 
 	useEffect(() => {
 		if (isAuthSuccess) {
-			navigate("/");
+			if (authorize === "admin") {
+				navigate("/admin/manage");
+			} else if (authorize === "user") {
+				navigate("/");
+			}
 		}
-	}, [isAuthSuccess, navigate]);
+	}, [isAuthSuccess, authorize, navigate]);
 
 	const handleResetError = () => {
 		setErrorDataLogin({
@@ -60,11 +64,11 @@ function Login() {
 		return validate.isError;
 	};
 
-	const handleConfirmLogin = () => {
+	const handleConfirmLogin = async () => {
 		let validate = handleCheckValidateConfirm(dataLogin, errorDataLogin);
 		setErrorDataLogin(validate.dataError);
 		if (!validate.isError) {
-			dispatch(login(dataLogin));
+			await store.dispatch(login(dataLogin));
 		}
 	};
 
@@ -79,8 +83,14 @@ function Login() {
 	};
 
 	return (
-		<AuthLayout title={"Welcome back"}>
-			<div className={styles.loginWrap}>
+		<div className={styles.loginWrap}>
+			<div className={styles.loginHeaderWrap}>
+				<div className={styles.logo}>
+					<img src={Logo} alt="logo" />
+				</div>
+				<h1 className={styles.title}>Login</h1>
+			</div>
+			<div className={styles.loginContent}>
 				<div className={styles.inputWrapper}>
 					<div className={styles.label}>Email *</div>
 					<InputMASQ
@@ -150,8 +160,8 @@ function Login() {
 
 				<Social />
 			</div>
-		</AuthLayout>
+		</div>
 	);
-}
+};
 
 export default Login;

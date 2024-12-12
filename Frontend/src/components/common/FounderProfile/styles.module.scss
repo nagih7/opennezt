@@ -1,0 +1,65 @@
+@import "../../../assets/scss/variables.scss";
+
+:root {
+	--color-white: #fff;
+	--color-dark: #363949;
+	--color-light: rgba(132, 139, 200, 0.18);
+	--color-dark-variant: #677483;
+	--card-padding: 1.8rem;
+	--box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+.founderProfileWrap {
+	h2 {
+		margin-top: 2rem;
+		position: relative;
+		margin-left: 2rem;
+
+		&:first-child {
+			margin-top: 0;
+		}
+
+		.dropDown {
+			position: absolute;
+			font-size: 2rem;
+		}
+	}
+	.founderProfileBoxWrap {
+		background-color: var(--color-white);
+		padding: var(--card-padding);
+		border-radius: 2rem;
+		box-shadow: $boxShadow;
+
+		// &:last-child {
+		// 	box-shadow: none;
+		// }
+
+		h3 {
+			margin: 1rem 0 0.5rem 0;
+			font-weight: 600;
+
+			&:first-child {
+				margin-top: 0;
+			}
+		}
+
+		p {
+			margin: 5px 0;
+			color: var(--color-dark-variant);
+		}
+
+		ul {
+			list-style: none;
+			padding: 0;
+
+			li {
+				margin-bottom: 10px;
+
+				strong {
+					font-weight: bold;
+					color: var(--color-dark);
+				}
+			}
+		}
+	}
+}

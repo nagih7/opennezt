@@ -1,17 +1,27 @@
-import appReducer from './modules/app';
-import authReducer from './modules/auth';
-import profileReducer from './modules/profile';
-import homeReducer from './modules/home';
-import aboutReducer from './modules/about';
-import employeeReducer from './modules/employee';
+import appReducer from "./modules/app";
+import authReducer from "./modules/auth";
+import profileReducer from "./modules/profile";
+import homeReducer from "./modules/home";
+import employeeReducer from "./modules/employee";
+import manageReducer from "./modules/manage";
+import founderReducer from "./modules/founder";
+import talentReducer from "./modules/talent";
+import projectReducer from "./modules/project";
+import chatReducer from "./modules/chat";
+import notificationReducer from "./modules/notification";
 
 const rootReducer = {
-  app: appReducer,
-  auth: authReducer,
-  profile: profileReducer,
-  home: homeReducer,
-  about: aboutReducer,
-  employee: employeeReducer,
-}
+	app: appReducer,
+	auth: authReducer,
+	manage: manageReducer,
+	profile: profileReducer,
+	home: homeReducer,
+	employee: employeeReducer,
+	founder: founderReducer,
+	talent: talentReducer,
+	project: projectReducer,
+	chat: chatReducer,
+	notification: notificationReducer,
+};
 
-export default rootReducer
+export default rootReducer;

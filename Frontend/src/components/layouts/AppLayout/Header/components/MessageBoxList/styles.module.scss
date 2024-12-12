@@ -1,0 +1,11 @@
+@import "../../../../../../assets/scss/variables.scss";
+
+.messageBoxListWrap {
+	position: fixed;
+	bottom: 35px;
+	right: 80px;
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	flex-wrap: wrap;
+}
