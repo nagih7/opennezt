@@ -7,13 +7,12 @@ import { useNavigate } from "react-router-dom";
 import { isValidate } from "../../../../utils/validate";
 import { handleCheckValidateConfirm } from "../../../../utils/helper";
 import { register } from "../../../../api/auth";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import store from "states/configureStore";
 import Logo from "../../../../assets/images/logo/OpenNezt_icon_black.png";
 
 const Register = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	const [dataRegister, setDataRegister] = useState({
 		name: "",
 		email: "",
@@ -28,9 +27,15 @@ const Register = () => {
 		password: "",
 		confirmPassword: "",
 	});
-	const isLoadingBtnRegister = useSelector(
-		(state) => state.auth.isLoadingBtnRegister
+	const { isLoadingBtnRegister, resultRegister } = useSelector(
+		(state) => state.auth
 	);
+
+	useEffect(() => {
+		if (resultRegister) {
+			navigate("/login");
+		}
+	}, [resultRegister, navigate]);
 
 	useEffect(() => {
 		handleResetError();
@@ -65,17 +70,7 @@ const Register = () => {
 		);
 		setErrorDataRegister(validate.dataError);
 		if (!validate.isError) {
-			dispatch(register(dataRegister))
-				.then((response) => {
-					toast.success("Bạn đã đăng ký tài khoản thành công!");
-
-					setTimeout(() => {
-						navigate("/login");
-					}, 2000);
-				})
-				.catch((error) => {
-					toast.error("Đăng ký không thành công. Vui lòng thử lại.");
-				});
+			store.dispatch(register(dataRegister));
 		}
 	};
 

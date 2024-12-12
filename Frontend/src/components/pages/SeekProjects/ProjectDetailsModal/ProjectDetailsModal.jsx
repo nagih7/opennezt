@@ -7,8 +7,12 @@ import {
 	AimOutlined,
 } from "@ant-design/icons";
 import styles from "./styles.module.scss";
+import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 
 const { Title, Text, Paragraph } = Typography;
+const MemberBox = React.lazy(() =>
+	import("../../../common/ProjectDetails/ProjectInfo/MemberBox")
+);
 
 const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 	const {
@@ -26,6 +30,8 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 		competitive_advantage,
 		why_now,
 		strategy,
+		owner,
+		members,
 	} = projectDetails;
 
 	return (
@@ -85,6 +91,25 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 											<Paragraph>{statistics}</Paragraph>
 										</div>
 									</Col>
+								</Row>
+							</Card>
+						</Col>
+						<Col span={24}>
+							<Card className={styles.section}>
+								<Title level={4} icon={<DollarCircleOutlined />}>
+									Team Infomation
+								</Title>
+								<Row gutter={[16, 16]}>
+									<LazyLoadingMedium>
+										<MemberBox member={owner} />
+									</LazyLoadingMedium>
+									{members &&
+										members.length > 0 &&
+										members.map((member, index) => (
+											<LazyLoadingMedium key={index}>
+												<MemberBox member={member} />
+											</LazyLoadingMedium>
+										))}
 								</Row>
 							</Card>
 						</Col>

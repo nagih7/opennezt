@@ -39,9 +39,11 @@ const About = () => {
 		},
 	});
 	const authUser = useSelector((state) => state.auth.authUser);
-	const { founderProfile, loadingUpdateFounderProfile } = useSelector(
-		(state) => state.founder
-	);
+	const {
+		founderProfile,
+		loadingUpdateFounderProfile,
+		resultUpdateFounderProfile,
+	} = useSelector((state) => state.founder);
 
 	const [modalUpdateFounderProfile, setModalUpdateFounderProfile] =
 		useState(false);
@@ -50,6 +52,12 @@ const About = () => {
 	useEffect(() => {
 		store.dispatch(getFounderProfile());
 	}, []);
+
+	useEffect(() => {
+		if (resultUpdateFounderProfile) {
+			setModalUpdateFounderProfile(false);
+		}
+	}, [resultUpdateFounderProfile]);
 
 	const handleOpenModal = () => {
 		setModalUpdateFounderProfile(true);

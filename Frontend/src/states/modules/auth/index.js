@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { message } from "antd";
+import { result } from "lodash";
 
 const authSlice = createSlice({
 	name: "auth",
@@ -15,6 +16,7 @@ const authSlice = createSlice({
 			password: "",
 			confirmPassword: "",
 		},
+		resultRegister: false,
 		isLoadingBtnLogin: false,
 		isLoadingBtnRegister: false,
 		isSuccessForgotPassword: false,
@@ -58,15 +60,30 @@ const authSlice = createSlice({
 		startRequestRegister: (state) => ({
 			...state,
 			isLoadingBtnRegister: true,
+			resultRegister: false,
 		}),
-		startRequestRegisterSuccess: (state) => ({
-			...state,
-			isLoadingBtnRegister: false,
-		}),
-		startRequestRegisterFail: (state) => ({
-			...state,
-			isLoadingBtnRegister: false,
-		}),
+		startRequestRegisterSuccess: (state, action) => {
+			message.success(action.payload.message);
+			return {
+				...state,
+				isLoadingBtnRegister: false,
+				resultRegister: true,
+			};
+		},
+		startRequestRegisterFail: (state, action) => {
+			const error =
+				action.payload.data.detail.name ||
+				action.payload.data.detail.email ||
+				action.payload.data.detail.phone ||
+				action.payload.data.detail.password ||
+				action.payload.data.detail.confirmPassword;
+			message.error(error);
+			return {
+				...state,
+				isLoadingBtnRegister: false,
+				resultRegister: false,
+			};
+		},
 		startRequestLogout: (state) => ({
 			...state,
 		}),
