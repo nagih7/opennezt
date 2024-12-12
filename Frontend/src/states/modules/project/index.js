@@ -9,6 +9,7 @@ const projectSlice = createSlice({
 		projects: [],
 		projectDetails: {},
 		projectsBySeek: [],
+		pendingRequests: [],
 		resultCreateProject: null,
 		loadingGetProjects: false,
 		loadingGetProjectDetails: false,
@@ -135,12 +136,12 @@ const projectSlice = createSlice({
 		}),
 		startGetPendingProjectsSuccess: (state, action) => ({
 			...state,
-			pendingProjects: action.payload.data,
+			pendingRequests: action.payload.data,
 			loadingPendingProjects: false,
 		}),
 		startGetPendingProjectsFail: (state) => ({
 			...state,
-			pendingProjects: [],
+			pendingRequests: [],
 			loadingPendingProjects: false,
 		}),
 

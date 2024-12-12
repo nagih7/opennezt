@@ -30,6 +30,10 @@ const ProjectRequest = createModel(
             ref: Project,
             required: true,
         },
+        project_name: {
+            type: String,
+            required: true,
+        },
         role: {
             type: String,
             required: true,

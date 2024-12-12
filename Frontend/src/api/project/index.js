@@ -156,26 +156,26 @@ export const deleteProject = (projectId) => async (dispatch, getState) => {
 	});
 };
 
-export const getPendingProjects = (data) => async (dispatch, getState) => {
+export const getPendingProjects = () => async (dispatch, getState) => {
 	return callApi({
-		method: "post",
-		apiPath: `seek/pending-projects`,
+		method: "get",
+		apiPath: `project/request-to-join`,
 		actionTypes: [
 			startGetPendingProjects,
 			startGetPendingProjectsSuccess,
 			startGetPendingProjectsFail,
 		],
-		variables: data,
+		variables: {},
 		dispatch,
 		getState,
 	});
 };
 
-export const updateRequestStatus =
+export const responseRequestToJoinProject =
 	(requestData) => async (dispatch, getState) => {
 		return callApi({
 			method: "put",
-			apiPath: `seek/update-request-status`,
+			apiPath: `project/response-request`,
 			actionTypes: [
 				startUpdateRequestStatus,
 				startUpdateRequestStatusSuccess,

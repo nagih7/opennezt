@@ -50,10 +50,16 @@ export async function seekProjects(userId, requestQuery) {
     } else {
         const {industry, stage, name} = requestQuery
         const query = {}
-        if (industry) query.related_industries = industry
-        if (stage) query.stage = stage
-        if (name) query.name = {$regex: name, $options: 'i'}
-        query.user_id = {$ne: userId}
+        if (industry && industry !== 'null') {
+            query.related_industries = industry
+        }
+        if (stage && stage !== 'null') {
+            query.stage = stage
+        }
+        if (name && name !== 'null') {
+            query.name = {$regex: name, $options: 'i'}
+            query.user_id = {$ne: userId}
+        }
 
         const projects = await Project.aggregate([
             {
@@ -101,7 +107,7 @@ export async function seekProjects(userId, requestQuery) {
 }
 
 export async function requestToJoinProject(user, requestProjectData) {
-    const {project_id, owner_id, role} = requestProjectData
+    const {project_id, project_name, owner_id, role} = requestProjectData
     const owner = await User.findOne({_id: owner_id}, {name: 1})
 
     const existingRequest = await ProjectRequest.findOne({
@@ -128,6 +134,7 @@ export async function requestToJoinProject(user, requestProjectData) {
 
     const newRequest = new ProjectRequest({
         sender_id: user._id,
+        project_name: project_name,
         sender_name: user.name,
         receiver_id: owner_id,
         receiver_name: owner.name,
@@ -137,4 +144,14 @@ export async function requestToJoinProject(user, requestProjectData) {
     })
 
     await newRequest.save()
+}
+
+export async function getRequestsToJoinProject(userId) {
+    const requests = await ProjectRequest.find({receiver_id: userId})
+    return requests
+}
+
+export async function responseRequest(requestData) {
+    const {request_id, status} = requestData
+    await ProjectRequest.updateOne({_id: request_id}, {status})
 }
