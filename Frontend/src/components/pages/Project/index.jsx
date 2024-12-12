@@ -115,6 +115,7 @@ function Project() {
 
 	useEffect(() => {
 		if (resultCreateProject === true) {
+			setDefaultForm();
 			store.dispatch(getProjects());
 			setOpenModalCreateProject(false);
 			setDefaultForm();
