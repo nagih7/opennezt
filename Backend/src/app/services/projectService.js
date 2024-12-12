@@ -17,6 +17,13 @@ export async function seekProjects(userId, requestQuery) {
                     localField: '_id',
                     foreignField: 'project_id',
                     as: 'project_request',
+                    pipeline: [
+                        {
+                            $match: {
+                                sender_id: userId,
+                            },
+                        },
+                    ],
                 },
             },
             {
@@ -49,7 +56,7 @@ export async function seekProjects(userId, requestQuery) {
         return projects
     } else {
         const {industry, stage, name} = requestQuery
-        const query = {}
+        const query = {user_id: {$ne: userId}}
         if (industry && industry !== 'null') {
             query.related_industries = industry
         }
@@ -71,6 +78,13 @@ export async function seekProjects(userId, requestQuery) {
                     localField: '_id',
                     foreignField: 'project_id',
                     as: 'project_request',
+                    pipeline: [
+                        {
+                            $match: {
+                                sender_id: userId,
+                            },
+                        },
+                    ],
                 },
             },
 

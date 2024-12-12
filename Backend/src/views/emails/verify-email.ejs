@@ -1,9 +1,25 @@
 <%- include('./partials/header') %>
-<br />
-Xin chào <%= name %>, <br />
-Chúng tôi nhận được yêu cầu đăng ký tài khoản từ bạn! <br /><br />
-Nếu bạn không thực hiện yêu cầu này thì vui lòng bỏ qua email này. <br /><br />
-Nếu đúng là vậy, vui lòng nhấp vào liên kết này để xác thực tài khoản của bạn: <br />
-<a href="<%= linkVerifyEmail %>"><%= linkVerifyEmail %></a>
-<br /><br />
+<div style="text-align: center; font-family: Arial, sans-serif; padding: 20px;">
+    <p style="font-size: 16px; color: #333;">Xin chào <%= name %>,</p>
+    <p style="font-size: 14px; color: #666; line-height: 1.5;">
+        Chúng tôi nhận được yêu cầu đăng ký tài khoản từ bạn!<br>
+        Nếu bạn không thực hiện yêu cầu này thì vui lòng bỏ qua email này.
+    </p>
+    <p style="font-size: 14px; color: #666;">
+        Nếu đúng là vậy, vui lòng nhấp vào nút bên dưới để xác thực tài khoản của bạn:
+    </p>
+    <div style="margin: 30px 0;">
+        <a href="<%= linkVerifyEmail %>" 
+           style="background-color: #1890ff; 
+                  color: white; 
+                  padding: 12px 24px; 
+                  text-decoration: none; 
+                  border-radius: 4px;
+                  font-size: 16px;
+                  display: inline-block;
+                  margin: 0 auto;">
+            Xác thực tài khoản
+        </a>
+    </div>
+</div>
 <%- include('./partials/footer') %>

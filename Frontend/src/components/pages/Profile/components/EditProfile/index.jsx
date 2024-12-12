@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import ButtonMASQ from "../../../../../components/UI/Button";
 import { Col, Row } from "antd";
 import _ from "lodash";
+import store from "states/configureStore";
 import { isValidate } from "../../../../../utils/validate";
 import { useDispatch, useSelector } from "react-redux";
 import { handleCheckValidateConfirm } from "../../../../../utils/helper";
@@ -31,7 +32,6 @@ function EditProfile() {
 		(state) => state.profile.loadingBtnUpdateInfoUser
 	);
 	const authUser = useSelector((state) => state.auth.authUser);
-	const dispatch = useDispatch();
 
 	useEffect(() => {
 		setDataInfoUser({
@@ -77,20 +77,20 @@ function EditProfile() {
 		}
 	};
 
-	const validateBlur = (type) => {
+	const validateBlur = async (type) => {
 		let data = dataInfoUser;
 		let error = errorInfoUser;
 		let validate = isValidate(data, type, error);
-		dispatch(setErrorInfoUser(validate.error));
+		await store.dispatch(setErrorInfoUser(validate.error));
 		return validate.isError;
 	};
 
-	const handleConfirmSaveInfoUser = () => {
+	const handleConfirmSaveInfoUser = async () => {
 		let dataValidate = dataInfoUser;
 		let validate = handleCheckValidateConfirm(dataValidate, errorInfoUser);
-		dispatch(setErrorInfoUser(validate.dataError));
+		await store.dispatch(setErrorInfoUser(validate.dataError));
 		if (!validate.isError) {
-			dispatch(updateUser(dataInfoUser));
+			store.dispatch(updateUser(dataInfoUser));
 		}
 	};
 

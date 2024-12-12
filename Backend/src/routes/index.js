@@ -4,7 +4,6 @@ import homeRouter from './homeRouter'
 import chatrouter from './chatRouter'
 import commonRouter from './commonRouter'
 import LandingPageRouter from './subscribe.js'
-import SeekProjectRouter from './seekRouter'
 import notificationRouter from './notificationRouter'
 import projectRouter from './projectRouter'
 
@@ -15,7 +14,6 @@ function route(app) {
     app.use('/chat', chatrouter)
     app.use('/common', commonRouter)
     app.use('/subscribe', LandingPageRouter)
-    app.use('/seek', SeekProjectRouter)
     app.use('/notification', notificationRouter)
     app.use('/project', projectRouter)
 

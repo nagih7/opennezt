@@ -20,15 +20,15 @@ function* handleActions() {
 		yield put(getMe());
 	});
 
-	yield takeLatest(startRequestRegisterSuccess, function* () {
-		getNotification("success", "Register success");
-		yield put(setLocation({ pathName: "/login" }));
-	});
+	// yield takeLatest(startRequestRegisterSuccess, function* () {
+	// 	getNotification("success", "Register success. Please verify by email!");
+	// 	yield put(setLocation({ pathName: "/login" }));
+	// });
 
-	yield takeLatest(startRequestRegisterFail, function* () {
-		getNotification("error", "Register fail");
-		yield;
-	});
+	// yield takeLatest(startRequestRegisterFail, function* () {
+	// 	getNotification("error", "Register fail");
+	// 	yield;
+	// });
 }
 
 export default function* loadAuthSaga() {
