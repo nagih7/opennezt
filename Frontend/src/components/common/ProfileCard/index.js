@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styles from "./styles.module.scss";
 import verify from "../../../assets/images/icon/verify.png";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -46,15 +46,25 @@ const ProfileCard = (props) => {
 							/>
 						</h1>
 						<p>
-							{user.city}, {user.region}
+							{user.city && user.region
+								? `${user.city}, ${user.region}`
+								: user.city && user.region
+								? `${user.city}, ${user.region}`
+								: user.city
+								? `${user.city}`
+								: user.region
+								? `${user.region}`
+								: ""}
 						</p>
 						<p>{user.language.join(", ")}</p>
-						<a
-							href={user.linkedin}
-							target="_blank"
-							rel="noopener noreferrer">
-							LinkedIn Profile
-						</a>
+						{user.linkedin && (
+							<a
+								href={user.linkedin}
+								target="_blank"
+								rel="noopener noreferrer">
+								LinkedIn Profile
+							</a>
+						)}
 					</div>
 					<div className={styles.userActions}>
 						<Button

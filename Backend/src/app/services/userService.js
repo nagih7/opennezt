@@ -1,4 +1,4 @@
-import {User, FounderProfile, Project, Invitation, ObjectId, ChatInvitation} from '@/models'
+import {User, FounderProfile, Project, Invitation, ObjectId, ChatInvitation, ProjectRequest} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
 import status from 'statuses'
@@ -145,17 +145,127 @@ export async function getProjects(userId) {
 }
 
 export async function getProject(projectId) {
-    const project = await Project.findOne({_id: new ObjectId(projectId)})
-    if (!project) {
-        return status('Not Found')
-    }
-    if (project.background) {
-        project.background = project.background && LINK_STATIC_URL + project.background
-    }
-    if (project.pitch_deck) {
-        project.pitch_deck = project.pitch_deck && LINK_STATIC_URL + project.pitch_deck
-    }
-    return project
+    const projectDetails = await Project.aggregate([
+        {
+            $match: {_id: new ObjectId(projectId)},
+        },
+        {
+            $lookup: {
+                from: 'project_requests',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'project_requests',
+                pipeline: [
+                    {
+                        $match: {
+                            status: 'accepted',
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            sender_id: 1,
+                            sender_name: 1,
+                            role: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'owner',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            // email: 1,
+                            avatar: 1,
+                        },
+                    },
+                    {
+                        $limit: 1,
+                    },
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$owner',
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'project_requests.sender_id',
+                foreignField: '_id',
+                as: 'members',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            // email: 1,
+                            avatar: 1,
+                        },
+                    },
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                background: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        then: '$background',
+                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                    },
+                },
+                pitch_deck: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$pitch_deck', '']}, '']},
+                        then: '$pitch_deck',
+                        else: {$concat: [LINK_STATIC_URL, '$pitch_deck']},
+                    },
+                },
+            },
+        },
+
+        {
+            $project: {
+                project_requests: 0,
+            },
+        },
+        {
+            $limit: 1,
+        },
+    ])
+
+    return projectDetails[0]
 }
 
 export async function updateProject(user, requestBody) {

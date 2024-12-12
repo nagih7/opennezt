@@ -72,17 +72,14 @@ const profileSlice = createSlice({
 			...state,
 		}),
 		getIdByEmailUser: (state) => ({
-            ...state,
-           
-        }),
-        getIdByEmailUserSuccess: (state) => ({
-            ...state,
-          
-        }),
-        getIdByEmailUserFail: (state) => ({
-            ...state,
-        
-        })
+			...state,
+		}),
+		getIdByEmailUserSuccess: (state) => ({
+			...state,
+		}),
+		getIdByEmailUserFail: (state) => ({
+			...state,
+		}),
 	},
 });
 
@@ -103,7 +100,7 @@ export const {
 	changeBackgroundUserFail,
 	getIdByEmailUser,
 	getIdByEmailUserSuccess,
-	getIdByEmailUserFail
+	getIdByEmailUserFail,
 } = profileSlice.actions;
 
 export default profileSlice.reducer;

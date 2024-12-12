@@ -67,4 +67,15 @@
 			}
 		}
 	}
+
+	.projectInfoBoxWrapMember {
+		background-color: var(--color-white);
+		padding: 1rem 2rem;
+		border-radius: $borderRadius;
+		box-shadow: $boxShadow;
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
+		justify-content: space-around;
+	}
 }

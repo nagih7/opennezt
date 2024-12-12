@@ -107,25 +107,6 @@ export const seekProjects = (data) => async (dispatch, getState) => {
 	});
 };
 
-export const searchProjects =
-	(industry, stage, name) => async (dispatch, getState) => {
-		return callApi({
-			method: "get",
-			apiPath: `seek/search-projects?industry=${industry}&stage=${stage}&name=${name}`,
-			headers: {
-				Authorization: `Bearer ${getState().auth.token}`,
-			},
-			actionTypes: [
-				startRequestSeekProjects,
-				startRequestSeekProjectsSuccess,
-				startRequestSeekProjectsFail,
-			],
-			variables: {},
-			dispatch,
-			getState,
-		});
-	};
-
 export const updateProject = (data) => async (dispatch, getState) => {
 	return callApi({
 		method: "put",
