@@ -1,6 +1,7 @@
 import {LINK_STATIC_URL} from '@/configs'
 import {ChatInvitation, Messenger, ObjectId} from '@/models'
 import {userSockets} from '@/routes/socket'
+import {create, update} from 'lodash'
 
 export async function getChatList(user) {
     // const chatList = await Messenger.aggregate([
@@ -77,6 +78,8 @@ export async function getChatList(user) {
                 participants: {
                     $cond: [{$eq: ['$sender_id', user._id]}, '$receiver_id', '$sender_id'],
                 },
+                created_at: 1,
+                updated_at: 1,
             },
         },
         {
@@ -98,6 +101,7 @@ export async function getChatList(user) {
                 as: 'users',
             },
         },
+
         {
             $project: {
                 chatList: {
@@ -114,6 +118,8 @@ export async function getChatList(user) {
                                     else: {$concat: [LINK_STATIC_URL, '$$user.avatar']},
                                 },
                             },
+                            created_at: '$$user.created_at',
+                            updated_at: '$$user.updated_at',
                         },
                     },
                 },
@@ -126,6 +132,9 @@ export async function getChatList(user) {
             $replaceRoot: {
                 newRoot: '$chatList',
             },
+        },
+        {
+            $sort: {updated_at: -1},
         },
     ])
 

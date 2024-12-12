@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { message } from "antd";
 
 const profileSlice = createSlice({
 	name: "profile",
@@ -30,14 +31,20 @@ const profileSlice = createSlice({
 			...state,
 			loadingBtnUpdateInfoUser: true,
 		}),
-		updateInfoUserSuccess: (state) => ({
-			...state,
-			loadingBtnUpdateInfoUser: false,
-		}),
-		updateInfoUserFail: (state) => ({
-			...state,
-			loadingBtnUpdateInfoUser: false,
-		}),
+		updateInfoUserSuccess: (state, action) => {
+			message.success(action.payload.message);
+			return {
+				...state,
+				loadingBtnUpdateInfoUser: false,
+			};
+		},
+		updateInfoUserFail: (state, action) => {
+			message.error(action.payload.message);
+			return {
+				...state,
+				loadingBtnUpdateInfoUser: false,
+			};
+		},
 		changePassword: (state) => ({
 			...state,
 			loadingBtnChangePassword: true,

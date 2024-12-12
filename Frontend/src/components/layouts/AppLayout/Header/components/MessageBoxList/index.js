@@ -10,21 +10,17 @@ const MessageBoxList = ({ chatBoxList, setChatBoxList }) => {
 	const socket = useSocket();
 
 	const [newMessage, setNewMessage] = useState([]);
-	const [hasReceived, setHasReceived] = useState(false);
 
 	useEffect(() => {
 		const handleMessage = (message) => {
-			if (!hasReceived) {
-				setNewMessage(message);
-				setHasReceived(true);
-			}
+			setNewMessage(message);
 		};
 		socket.on("message", handleMessage);
 
 		return () => {
 			socket.off("message");
 		};
-	}, [socket, hasReceived]);
+	}, [socket]);
 
 	const { chatHistory, loadingGetChatHistory } = useSelector(
 		(state) => state.chat
@@ -41,8 +37,8 @@ const MessageBoxList = ({ chatBoxList, setChatBoxList }) => {
 		setNewMessage([]);
 	}, []);
 
-	const sendMessage = (message) => {
-		socket.emit("message", message);
+	const sendMessage = async (message) => {
+		await socket.emit("message", message);
 	};
 
 	const closeChatBox = (receiver_id) => {

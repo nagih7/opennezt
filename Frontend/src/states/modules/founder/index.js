@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { message } from "antd";
 
 const founderSlice = createSlice({
 	name: "founder",
 	initialState: {
 		founderProfile: {},
 		loadingUpdateFounderProfile: false,
+		resultUpdateFounderProfile: false,
 	},
 	reducers: {
 		// setTitle: (state) => ({
@@ -25,16 +27,25 @@ const founderSlice = createSlice({
 		startUpdateFounderProfile: (state) => ({
 			...state,
 			loadingUpdateFounderProfile: true,
+			resultUpdateFounderProfile: false,
 		}),
-		startUpdateFounderProfileSuccess: (state, action) => ({
-			...state,
-			founderProfile: action.payload.data,
-			loadingUpdateFounderProfile: false,
-		}),
-		startUpdateFounderProfileFail: (state) => ({
-			...state,
-			loadingUpdateFounderProfile: false,
-		}),
+		startUpdateFounderProfileSuccess: (state, action) => {
+			message.success("Cập nhật thông tin thành công");
+			return {
+				...state,
+				founderProfile: action.payload.data,
+				loadingUpdateFounderProfile: false,
+				resultUpdateFounderProfile: true,
+			};
+		},
+		startUpdateFounderProfileFail: (state) => {
+			message.error("Cập nhật thông tin thất bại");
+			return {
+				...state,
+				loadingUpdateFounderProfile: false,
+				resultUpdateFounderProfile: false,
+			};
+		},
 	},
 });
 
