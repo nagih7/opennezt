@@ -285,14 +285,6 @@ export async function updateProject(user, requestBody) {
     const project = await Project.findOne({user_id: user._id, _id: requestBody._id})
     project.set(requestBody)
     await project.save()
-
-    if (project.background) {
-        project.background = project.background && LINK_STATIC_URL + project.background
-    }
-    if (project.pitch_deck) {
-        project.pitch_deck = project.pitch_deck && LINK_STATIC_URL + project.pitch_deck
-    }
-    return project
 }
 
 export async function deleteProject(user, requestBody) {

@@ -144,6 +144,8 @@ function Project() {
 
 	const handleUpdateProject = async () => {
 		await store.dispatch(updateProject(formProject));
+		await store.dispatch(getProjectDetails(projectDetails._id));
+		await store.dispatch(getProjects());
 	};
 
 	useEffect(() => {

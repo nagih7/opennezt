@@ -95,7 +95,7 @@ export const resetPassword = Joi.object({
 
 export const createProject = Joi.object({
     name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Tên dự án'),
-    landing_page_url: Joi.string().trim().max(MAX_STRING_SIZE).label('URL landing page'),
+    landing_page_url: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('URL landing page'),
     related_industries: Joi.array()
         .items(Joi.string().trim().max(MAX_STRING_SIZE))
         .required()

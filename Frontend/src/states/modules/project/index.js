@@ -100,7 +100,6 @@ const projectSlice = createSlice({
 			return {
 				...state,
 				loadingUpdateProject: false,
-				projectDetails: action.payload.data,
 				resultUpdateProject: true,
 			};
 		},
