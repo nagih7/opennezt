@@ -17,12 +17,10 @@ const ProjectRequest = createModel(
         },
         sender_name: {
             type: String,
-            lowercase: true,
             required: true,
         },
         receiver_name: {
             type: String,
-            lowercase: true,
             required: true,
         },
         project_id: {

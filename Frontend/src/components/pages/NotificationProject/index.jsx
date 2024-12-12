@@ -51,6 +51,7 @@ function NotificationProject() {
 
 	const handleOpenTalentDetails = async (email) => {
 		await store.dispatch(getTalentDetails(email));
+		setOpenModalTalentDetails(true);
 	};
 
 	const columns = [

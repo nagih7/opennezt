@@ -1,6 +1,9 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+
+const MemberBox = React.lazy(() => import("./MemberBox"));
 
 const ProjectInfo = ({ projectDetails }) => {
 	return (
@@ -73,11 +76,21 @@ const ProjectInfo = ({ projectDetails }) => {
 				</>
 			)}
 
-			{/* <h2>
+			<h2>
 				Team Infomation
 				<ArrowDropDownIcon className={styles.dropDown} />
 			</h2>
-			<div className={styles.projectInfoBoxWrap}></div> */}
+			<div className={styles.projectInfoBoxWrapMember}>
+				<LazyLoadingMedium>
+					<MemberBox member={projectDetails.owner} />
+				</LazyLoadingMedium>
+				{projectDetails.members.map((member, index) => (
+					<LazyLoadingMedium key={index}>
+						<MemberBox member={member} />
+					</LazyLoadingMedium>
+				))}
+			</div>
+
 			<h2>
 				Startup Progress <ArrowDropDownIcon className={styles.dropDown} />
 			</h2>

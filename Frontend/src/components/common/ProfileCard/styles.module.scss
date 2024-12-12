@@ -29,7 +29,7 @@
 		padding: 2rem;
 
 		.banner {
-			height: auto;
+			height: 300px;
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -38,7 +38,7 @@
 
 			.background {
 				width: 100%;
-				max-height: 300px;
+				height: 100%;
 				overflow: hidden;
 				img {
 					width: 100%;

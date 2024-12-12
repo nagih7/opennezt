@@ -21,7 +21,7 @@ function* handleActions() {
 	});
 
 	yield takeLatest(startRequestRegisterSuccess, function* () {
-		getNotification("success", "Register success");
+		getNotification("success", "Register success. Please verify by email!");
 		yield put(setLocation({ pathName: "/login" }));
 	});
 
