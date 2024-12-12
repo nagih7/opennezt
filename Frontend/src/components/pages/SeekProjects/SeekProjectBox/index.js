@@ -16,11 +16,15 @@ const SeekProjectBox = ({
 		}
 	}, [project.project_request]);
 
-	const handleRequestToJoinChildren = async (projectId, ownerId) => {
+	const handleRequestToJoinChildren = async (
+		projectId,
+		projectName,
+		ownerId
+	) => {
 		if (statusRequest === "waiting") {
 			return;
 		}
-		await handleRequestToJoin(projectId, ownerId);
+		await handleRequestToJoin(projectId, projectName, ownerId);
 		setStatusRequest("waiting");
 	};
 
@@ -69,7 +73,11 @@ const SeekProjectBox = ({
 						color: "white",
 					},
 					onClick: () =>
-						handleRequestToJoinChildren(projectId, project.user_id),
+						handleRequestToJoinChildren(
+							projectId,
+							project.name,
+							project.user_id
+						),
 				};
 		}
 	};

@@ -17,4 +17,8 @@ projectRouter.post(
     asyncHandler(projectController.requestToJoinProject)
 )
 
+projectRouter.get('/request-to-join', asyncHandler(projectController.getRequestsToJoinProject))
+
+projectRouter.put('/response-request', asyncHandler(projectController.responseRequest))
+
 export default projectRouter

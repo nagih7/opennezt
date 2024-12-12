@@ -35,11 +35,12 @@ const SeekProjects = () => {
 		store.dispatch(seekProjects());
 	}, []);
 
-	const handleRequestToJoin = async (projectId, owner_id) => {
+	const handleRequestToJoin = async (project_id, project_name, owner_id) => {
 		const requestProjectData = {
-			project_id: projectId,
-			role: "talent",
+			project_id,
+			project_name,
 			owner_id,
+			role: "talent",
 		};
 
 		await store.dispatch(requestToJoinProject(requestProjectData));
