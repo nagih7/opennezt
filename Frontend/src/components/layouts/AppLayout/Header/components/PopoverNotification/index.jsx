@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./styles.module.scss";
 import { useSelector } from "react-redux";
 import moment from "moment";
@@ -10,6 +10,10 @@ import { getChatList } from "api/chat";
 
 function PopoverNotification() {
 	const { notifications } = useSelector((state) => state.notification);
+
+	useEffect(() => {
+		store.dispatch(getNotifications());
+	}, []);
 
 	const handleUpdateChatInvitation = async (notification_id, status) => {
 		await store.dispatch(updateChatInvitation({ notification_id, status }));

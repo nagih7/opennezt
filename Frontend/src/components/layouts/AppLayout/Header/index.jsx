@@ -10,9 +10,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useSelector } from "react-redux";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
-import { getChatList } from "api/chat";
-import { getNotifications } from "api/notification";
 import store from "states/configureStore";
+import { getChatList } from "api/chat";
 
 const ChatList = React.lazy(() => import("./components/ChatList"));
 const MessageBoxList = React.lazy(() => import("./components/MessageBoxList"));
@@ -24,13 +23,11 @@ const Header = () => {
 	const [chatBoxList, setChatBoxList] = useState([]);
 	const authUser = useSelector((state) => state.auth.authUser);
 	const showChatList = () => {
+		if (!isShowChatList) {
+			store.dispatch(getChatList());
+		}
 		setIsShowChatList(!isShowChatList);
 	};
-
-	useEffect(() => {
-		store.dispatch(getChatList());
-		store.dispatch(getNotifications());
-	}, []);
 
 	useEffect(() => {
 		const handleFullScreenChange = () => {

@@ -5,8 +5,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import FolderIcon from "@mui/icons-material/Folder";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import PageviewIcon from '@mui/icons-material/Pageview';
-import FolderSharedIcon from '@mui/icons-material/FolderShared';
+import PageviewIcon from "@mui/icons-material/Pageview";
+import FolderSharedIcon from "@mui/icons-material/FolderShared";
 
 const manageRouteMap = [
 	{
@@ -62,7 +62,7 @@ const manageRouteMap = [
 		permissions: ["seek_projects_page"],
 	},
 	{
-		label: "Projects Shared",
+		label: "Project's Requests",
 		icon: <FolderSharedIcon className="material-icons" />,
 		path: "/project-notifications",
 		routeActive: ["/project-notifications"],

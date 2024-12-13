@@ -22,7 +22,11 @@ const BoxBasicTalent = ({ talent, handleGetDetailTalent }) => {
 				</div>
 				<div className={styles.moreInfoTalent}>
 					<div>
-						{talent.user_data.region}, {talent.user_data.city}
+						{talent.user_data.region
+							? talent.user_data.region + ", "
+							: ""}{" "}
+						{talent.user_data.city ? talent.user_data.city : ""}
+						{/* {talent.user_data.region}, {talent.user_data.city} */}
 					</div>
 					<div>{talent.user_data.language.join(", ")}</div>
 				</div>

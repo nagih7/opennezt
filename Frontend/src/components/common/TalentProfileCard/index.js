@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styles from "./styles.module.scss";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import AvatarDefault from "../../../assets/images/default/AvatarDefault.png";
-import BackgroundDefault from "../../../assets/images/default/BackgroundDefault.jpg";
+import BackgroundDefault from "../../../assets/images/default/BackgroundDefault.png";
 import verify from "../../../assets/images/icon/verify.png";
 import { Button } from "antd";
 import { useSelector } from "react-redux";
@@ -62,7 +62,15 @@ const TalentProfileCard = ({ talent }) => {
 							/>
 						</h1>
 						<p>
-							{talent.city}, {talent.region}
+							{talent.city && talent.region
+								? `${talent.city}, ${talent.region}`
+								: talent.city && talent.region
+								? `${talent.city}, ${talent.region}`
+								: talent.city
+								? `${talent.city}`
+								: talent.region
+								? `${talent.region}`
+								: ""}
 						</p>
 						<p>{talent.language}</p>
 						<a

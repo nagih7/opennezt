@@ -8,7 +8,7 @@ import { changeAvatar, changeBackground } from "api/profile";
 import { Upload, Col, Row, Tabs, message } from "antd";
 import { max } from "lodash";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
-import BackgroundDefault from "assets/images/default/BackgroundDefault.jpg";
+import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 // import Order from "./components/Order";
@@ -107,9 +107,9 @@ function Profile() {
 								</div>
 								<div className={styles.infoWrap}>
 									<div className={styles.name}>{authUser.name}</div>
-									<div className={styles.bod}>
+									{/* <div className={styles.bod}>
 										Member Since: November 2020
-									</div>
+									</div> */}
 									<div className={styles.btnWrap}></div>
 								</div>
 							</div>
