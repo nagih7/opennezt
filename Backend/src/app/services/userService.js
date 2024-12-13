@@ -293,6 +293,7 @@ export async function deleteProject(user, requestBody) {
 
 export async function recuitTalents(user, requestRecuitTalents) {
     const query = {}
+    console.log(requestRecuitTalents)
     if (requestRecuitTalents.sector) {
         query.industry = {
             $regex: requestRecuitTalents.sector,
@@ -306,13 +307,13 @@ export async function recuitTalents(user, requestRecuitTalents) {
         }
     }
     if (requestRecuitTalents.education_level) {
-        query.education_level = {
+        query.degree = {
             $regex: requestRecuitTalents.education_level,
             $options: 'i',
         }
     }
     if (requestRecuitTalents.commitment) {
-        query.commitment = {
+        query.availability = {
             $regex: requestRecuitTalents.commitment,
             $options: 'i',
         }
@@ -340,7 +341,7 @@ export async function recuitTalents(user, requestRecuitTalents) {
             $match: {
                 ...(requestRecuitTalents.location
                     ? {
-                        'user_data.city': {
+                        'user_data.region': {
                             $regex: requestRecuitTalents.location,
                             $options: 'i',
                         },

@@ -267,7 +267,7 @@ export const createFounderProfile = Joi.object({
 
 export const recuitTalents = Joi.object({
     sector: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Ngành nghề'),
-    expertise_level: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Kinh nghiệm'),
+    experience_level: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Kinh nghiệm'),
     education_level: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Bằng cấp'),
     commitment: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Cam kết'),
     location: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Địa điểm'),

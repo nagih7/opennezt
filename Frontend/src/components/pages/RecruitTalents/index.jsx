@@ -19,7 +19,7 @@ function RecruitTalents() {
 	);
 	const [formRecruitTalents, setFormRecruitTalents] = useState({
 		sector: "",
-		expertise_level: "",
+		experience_level: "",
 		education_level: "",
 		commitment: "",
 		location: "",
