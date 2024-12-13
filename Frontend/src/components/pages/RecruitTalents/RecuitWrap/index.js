@@ -41,7 +41,7 @@ const RecruitWrap = ({
 							.includes(input.toLowerCase())
 					}
 					options={listExperienceLevel}
-					onChange={(e) => handleOnChange(e, "expertise_level")}
+					onChange={(e) => handleOnChange(e, "experience_level")}
 				/>
 				<Select
 					style={{ width: "13rem" }}
