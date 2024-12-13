@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import { Button } from "antd";
-import BackgroundDefault from "assets/images/default/BackgroundDefault.jpg";
+import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
 
 const SeekProjectBox = ({
 	project,

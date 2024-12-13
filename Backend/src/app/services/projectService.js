@@ -39,6 +39,9 @@ export async function seekProjects(userId, requestQuery) {
                 },
             },
             {
+                $limit: 10,
+            },
+            {
                 $project: {
                     user_id: 1,
                     problem: 1,
@@ -161,7 +164,7 @@ export async function requestToJoinProject(user, requestProjectData) {
 }
 
 export async function getRequestsToJoinProject(userId) {
-    const requests = await ProjectRequest.find({receiver_id: userId})
+    const requests = await ProjectRequest.find({receiver_id: userId}).sort({updatedAt: -1})
     return requests
 }
 

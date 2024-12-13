@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import BackgroundDefault from "assets/images/default/BackgroundDefault.jpg";
+import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
 
 const BoxProject = ({ project, openModalDetails }) => {
 	return (

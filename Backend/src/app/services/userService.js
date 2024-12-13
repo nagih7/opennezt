@@ -540,6 +540,9 @@ export async function getNotifications(user) {
                 status: 1,
             },
         },
+        {
+            $sort: {created_at: -1},
+        },
     ])
     return chatInvitations
 }

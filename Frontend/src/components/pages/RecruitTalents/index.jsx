@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";
 import { recruitTalents, skipTalent, getTalentDetails } from "api/talent";
@@ -29,6 +29,15 @@ function RecruitTalents() {
 	});
 	const [skip, setSkip] = useState(0);
 	const [modalTalentDetails, setModalTalentDetails] = useState(false);
+
+	// useEffect(() => {
+	// 	store.dispatch(
+	// 		recruitTalents({
+	// 			page: 1,
+	// 			per_page: 10,
+	// 		})
+	// 	);
+	// }, []);
 
 	const handleOnChange = (event, nameSelect) => {
 		if (nameSelect) {

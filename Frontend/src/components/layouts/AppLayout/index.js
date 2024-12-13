@@ -7,6 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { setLocation } from "../../../states/modules/app";
 import LazyLoading from "components/UI/LazyLoading";
 import { useSocket } from "components/common/SocketContext";
+import { getChatList } from "api/chat";
+import { getNotifications } from "api/notification";
+import store from "states/configureStore";
 
 function AppLayout(props) {
 	const socket = useSocket();
@@ -28,6 +31,11 @@ function AppLayout(props) {
 			socket.emit("login", token);
 		}
 	}, [isAuthSuccess, navigate, socket]);
+
+	useEffect(() => {
+		store.dispatch(getChatList());
+		store.dispatch(getNotifications());
+	}, []);
 
 	useEffect(() => {
 		if (location.pathName !== location.prevPathName) {
