@@ -1,5 +1,6 @@
 import {LINK_STATIC_URL} from '@/configs'
 import {Project, FounderProfile, ProjectRequest, User} from '@/models'
+import {FileUpload} from '@/utils/classes'
 
 export async function seekProjects(userId, requestQuery) {
     if (!requestQuery) {
@@ -171,4 +172,15 @@ export async function getRequestsToJoinProject(userId) {
 export async function responseRequest(requestData) {
     const {request_id, status} = requestData
     await ProjectRequest.updateOne({_id: request_id}, {status})
+}
+
+export async function updateBackground(user, requestBody) {
+    if (requestBody.background instanceof FileUpload) {
+        const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+        if (project.background) {
+            FileUpload.remove(project.background)
+        }
+        project.background = requestBody.background.save('background_projects')
+        await project.save()
+    }
 }
