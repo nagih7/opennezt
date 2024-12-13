@@ -6,7 +6,6 @@ import store from "states/configureStore";
 import { useSelector } from "react-redux";
 import { changeAvatar, changeBackground } from "api/profile";
 import { Upload, Col, Row, Tabs, message } from "antd";
-import { max } from "lodash";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
 import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";

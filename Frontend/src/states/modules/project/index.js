@@ -170,6 +170,26 @@ const projectSlice = createSlice({
 			...state,
 			loadingJoinProject: false,
 		}),
+		startRequestUpdateBackground: (state) => ({
+			...state,
+			loadingUpdateBackground: true,
+		}),
+
+		startRequestUpdateBackgroundSuccess: (state, action) => {
+			message.success("Update background successfully");
+			return {
+				...state,
+				loadingUpdateBackground: false,
+			};
+		},
+
+		startRequestUpdateBackgroundFail: (state) => {
+			message.error("Update background failed");
+			return {
+				...state,
+				loadingUpdateBackground: false,
+			};
+		},
 	},
 });
 
@@ -202,6 +222,9 @@ export const {
 	startRequestJoinProject,
 	startRequestJoinProjectSuccess,
 	startRequestJoinProjectFail,
+	startRequestUpdateBackground,
+	startRequestUpdateBackgroundSuccess,
+	startRequestUpdateBackgroundFail,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;
