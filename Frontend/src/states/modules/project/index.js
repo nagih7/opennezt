@@ -158,18 +158,6 @@ const projectSlice = createSlice({
 			updatedRequest: null,
 			loadingUpdateStatus: false,
 		}),
-		startRequestJoinProject: (state) => ({
-			...state,
-			loadingJoinProject: true,
-		}),
-		startRequestJoinProjectSuccess: (state) => ({
-			...state,
-			loadingJoinProject: false,
-		}),
-		startRequestJoinProjectFail: (state) => ({
-			...state,
-			loadingJoinProject: false,
-		}),
 		startRequestUpdateBackground: (state) => ({
 			...state,
 			loadingUpdateBackground: true,
@@ -219,9 +207,6 @@ export const {
 	startUpdateRequestStatus,
 	startUpdateRequestStatusSuccess,
 	startUpdateRequestStatusFail,
-	startRequestJoinProject,
-	startRequestJoinProjectSuccess,
-	startRequestJoinProjectFail,
 	startRequestUpdateBackground,
 	startRequestUpdateBackgroundSuccess,
 	startRequestUpdateBackgroundFail,

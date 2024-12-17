@@ -27,6 +27,15 @@ const notificationSlice = createSlice({
 		startRequestUpdateChatInvitationFail: (state) => ({
 			...state,
 		}),
+		startRequestMessage: (state) => ({
+			...state,
+		}),
+		startRequestMessageSuccess: (state) => ({
+			...state,
+		}),
+		startRequestMessageFail: (state) => ({
+			...state,
+		}),
 	},
 });
 
@@ -37,6 +46,9 @@ export const {
 	startRequestUpdateChatInvitation,
 	startRequestUpdateChatInvitationSuccess,
 	startRequestUpdateChatInvitationFail,
+	startRequestMessage,
+	startRequestMessageSuccess,
+	startRequestMessageFail,
 } = notificationSlice.actions;
 
 export default notificationSlice.reducer;

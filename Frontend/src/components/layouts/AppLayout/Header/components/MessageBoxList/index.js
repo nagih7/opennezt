@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 import { useSelector } from "react-redux";
-import { useSocket } from "components/common/SocketContext";
+import { useSocket } from "context/SocketContext";
 
 const MessageBox = React.lazy(() => import("./MessageBox"));
 

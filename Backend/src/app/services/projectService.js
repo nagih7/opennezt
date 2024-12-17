@@ -1,5 +1,5 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {Project, FounderProfile, ProjectRequest, User} from '@/models'
+import {Project, FounderProfile, ProjectRequest} from '@/models'
 import {FileUpload} from '@/utils/classes'
 
 export async function seekProjects(userId, requestQuery) {
@@ -122,46 +122,6 @@ export async function seekProjects(userId, requestQuery) {
 
         return projects
     }
-}
-
-export async function requestToJoinProject(user, requestProjectData) {
-    const {project_id, project_name, owner_id, role} = requestProjectData
-    const owner = await User.findOne({_id: owner_id}, {name: 1})
-
-    const existingRequest = await ProjectRequest.findOne({
-        sender_id: user._id,
-        receiver_id: owner_id,
-        project_id,
-    })
-
-    if (existingRequest) {
-        if (existingRequest.status === 'rejected') {
-            await ProjectRequest.updateOne(
-                {_id: existingRequest._id},
-                {
-                    $set: {
-                        status: 'waiting',
-                        role: role,
-                        updatedAt: new Date(),
-                    },
-                }
-            )
-            return
-        }
-    }
-
-    const newRequest = new ProjectRequest({
-        sender_id: user._id,
-        project_name: project_name,
-        sender_name: user.name,
-        receiver_id: owner_id,
-        receiver_name: owner.name,
-        role,
-        project_id,
-        status: 'waiting',
-    })
-
-    await newRequest.save()
 }
 
 export async function getRequestsToJoinProject(userId) {

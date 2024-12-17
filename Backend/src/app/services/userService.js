@@ -340,19 +340,19 @@ export async function recuitTalents(user, requestRecuitTalents) {
             $match: {
                 ...(requestRecuitTalents.location
                     ? {
-                          'user_data.region': {
-                              $regex: requestRecuitTalents.location,
-                              $options: 'i',
-                          },
-                      }
+                        'user_data.region': {
+                            $regex: requestRecuitTalents.location,
+                            $options: 'i',
+                        },
+                    }
                     : {}),
                 ...(requestRecuitTalents.language
                     ? {
-                          'user_data.language': {
-                              $regex: requestRecuitTalents.language,
-                              $options: 'i',
-                          },
-                      }
+                        'user_data.language': {
+                            $regex: requestRecuitTalents.language,
+                            $options: 'i',
+                        },
+                    }
                     : {}),
                 'user_data.is_active': true,
                 'user_data._id': {$ne: user._id},

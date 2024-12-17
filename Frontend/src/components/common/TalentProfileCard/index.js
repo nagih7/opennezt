@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./styles.module.scss";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import AvatarDefault from "../../../assets/images/default/AvatarDefault.png";
@@ -7,7 +7,7 @@ import verify from "../../../assets/images/icon/verify.png";
 import { Button } from "antd";
 import { useSelector } from "react-redux";
 import store from "states/configureStore";
-import { useSocket } from "../SocketContext";
+import { useSocket } from "context/SocketContext";
 import { requestChatInvitation } from "../../../api/chat";
 const TalentProfileCard = ({ talent }) => {
 	const socket = useSocket();

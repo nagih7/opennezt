@@ -6,8 +6,15 @@ import commonRouter from './commonRouter'
 import LandingPageRouter from './subscribe.js'
 import notificationRouter from './notificationRouter'
 import projectRouter from './projectRouter'
+import socketRoutes from './socket'
 
-function route(app) {
+function route(app, io) {
+    socketRoutes(io)
+    app.use((req, res, next) => {
+        req.io = io
+        next()
+    })
+
     app.use('/auth', authRouter)
     app.use('/users', userRouter)
     app.use('/home', homeRouter)

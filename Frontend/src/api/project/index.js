@@ -24,9 +24,6 @@ import {
 	startUpdateRequestStatus,
 	startUpdateRequestStatusSuccess,
 	startUpdateRequestStatusFail,
-	startRequestJoinProject,
-	startRequestJoinProjectSuccess,
-	startRequestJoinProjectFail,
 	startRequestUpdateBackground,
 	startRequestUpdateBackgroundSuccess,
 	startRequestUpdateBackgroundFail,
@@ -76,22 +73,6 @@ export const getProjectDetails = (projectId) => async (dispatch, getState) => {
 		getState,
 	});
 };
-
-export const requestToJoinProject =
-	(requestProjectData) => async (dispatch, getState) => {
-		return callApi({
-			method: "post",
-			apiPath: `project/request-to-join`,
-			actionTypes: [
-				startRequestJoinProject,
-				startRequestJoinProjectSuccess,
-				startRequestJoinProjectFail,
-			],
-			variables: requestProjectData,
-			dispatch,
-			getState,
-		});
-	};
 
 export const seekProjects = (data) => async (dispatch, getState) => {
 	return callApi({

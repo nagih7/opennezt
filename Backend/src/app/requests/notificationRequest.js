@@ -1,7 +1,7 @@
-import Joi from 'joi'
 import {MAX_STRING_SIZE} from '@/configs'
-import {AsyncValidate} from '@/utils/classes'
 import {User} from '@/models'
+import {AsyncValidate} from '@/utils/classes'
+import Joi from 'joi'
 
 export const requestMessage = Joi.object({
     user_id: Joi.string()

@@ -6,6 +6,9 @@ import {
 	startRequestUpdateChatInvitation,
 	startRequestUpdateChatInvitationSuccess,
 	startRequestUpdateChatInvitationFail,
+	startRequestMessage,
+	startRequestMessageSuccess,
+	startRequestMessageFail,
 } from "states/modules/notification";
 
 export const getNotifications = () => async (dispatch, getState) => {
@@ -37,3 +40,19 @@ export const updateChatInvitation = (data) => async (dispatch, getState) => {
 		getState,
 	});
 };
+
+export const requestMessage =
+	(requestMessageData) => async (dispatch, getState) => {
+		return callApi({
+			method: "post",
+			apiPath: `notification/request-message`,
+			actionTypes: [
+				startRequestMessage,
+				startRequestMessageSuccess,
+				startRequestMessageFail,
+			],
+			variables: requestMessageData,
+			dispatch,
+			getState,
+		});
+	};
