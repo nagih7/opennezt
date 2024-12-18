@@ -22,12 +22,6 @@ const Header = () => {
 	const [isShowChatList, setIsShowChatList] = useState(false);
 	const [chatBoxList, setChatBoxList] = useState([]);
 	const authUser = useSelector((state) => state.auth.authUser);
-	const showChatList = () => {
-		if (!isShowChatList) {
-			store.dispatch(getChatList());
-		}
-		setIsShowChatList(!isShowChatList);
-	};
 
 	useEffect(() => {
 		const handleFullScreenChange = () => {
@@ -88,15 +82,20 @@ const Header = () => {
 
 	const handleSetChatBoxList = useCallback((chatBox) => {
 		setChatBoxList((prev) => {
-			const index = prev.findIndex(
-				(chat) => chat.username === chatBox.username
-			);
+			const index = prev.findIndex((chat) => chat._id === chatBox._id);
 			if (index !== -1) {
 				return prev;
 			}
 			return [...prev, { ...chatBox, messages: [] }];
 		});
 	}, []);
+
+	const showChatList = () => {
+		if (!isShowChatList) {
+			store.dispatch(getChatList());
+		}
+		setIsShowChatList(!isShowChatList);
+	};
 
 	return (
 		<header className={styles.headerWrap}>
@@ -135,10 +134,7 @@ const Header = () => {
 							isShowChatList ? styles.visible : ""
 						}`}>
 						<LazyLoadingMedium>
-							<ChatList
-								chatBoxList={chatBoxList}
-								handleSetChatBoxList={handleSetChatBoxList}
-							/>
+							<ChatList handleSetChatBoxList={handleSetChatBoxList} />
 						</LazyLoadingMedium>
 					</div>
 				</div>

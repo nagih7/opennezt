@@ -1,36 +1,36 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {ChatInvitation, Messenger, ObjectId} from '@/models'
+import {ChatInvitation, Messenger, ObjectId, Friend} from '@/models'
 import {userSockets} from '@/routes/socket'
 import {create, update} from 'lodash'
 
 export async function getChatList(user) {
-    // const chatList = await Messenger.aggregate([
-    //     // Bước 1: Lọc tin nhắn ngay từ đầu
+    // const chatList = await ChatInvitation.aggregate([
     //     {
     //         $match: {
     //             $or: [{sender_id: user._id}, {receiver_id: user._id}],
+    //             status: 'accepted',
     //         },
     //     },
-    //     // Bước 2: Lấy danh sách người tham gia
     //     {
     //         $project: {
-    //             participants: {$cond: [{$eq: ['$sender_id', user._id]}, '$receiver_id', '$sender_id']},
+    //             participants: {
+    //                 $cond: [{$eq: ['$sender_id', user._id]}, '$receiver_id', '$sender_id'],
+    //             },
+    //             created_at: 1,
+    //             updated_at: 1,
     //         },
     //     },
-    //     // Bước 3: Chỉ lấy các user_id duy nhất
     //     {
     //         $group: {
     //             _id: null,
     //             uniqueParticipants: {$addToSet: '$participants'},
     //         },
     //     },
-    //     // Bước 4: Lọc lại các user_id không phải của người dùng hiện tại
     //     {
     //         $match: {
     //             uniqueParticipants: {$ne: user._id},
     //         },
     //     },
-    //     // Bước 5: Lookup vào collection User để lấy thông tin
     //     {
     //         $lookup: {
     //             from: 'users',
@@ -39,7 +39,7 @@ export async function getChatList(user) {
     //             as: 'users',
     //         },
     //     },
-    //     // Bước 6: Chỉ lấy các trường cần thiết
+
     //     {
     //         $project: {
     //             chatList: {
@@ -49,13 +49,20 @@ export async function getChatList(user) {
     //                     in: {
     //                         receiver_id: '$$user._id',
     //                         username: '$$user.name',
-    //                         avatar: '$$user.avatar',
+    //                         avatar: {
+    //                             $cond: {
+    //                                 if: {$eq: [{$ifNull: ['$$user.avatar', '']}, '']},
+    //                                 then: '$$user.avatar',
+    //                                 else: {$concat: [LINK_STATIC_URL, '$$user.avatar']},
+    //                             },
+    //                         },
+    //                         created_at: '$$user.created_at',
+    //                         updated_at: '$$user.updated_at',
     //                     },
     //                 },
     //             },
     //         },
     //     },
-    //     // Bước 7: Flatten kết quả
     //     {
     //         $unwind: '$chatList',
     //     },
@@ -64,92 +71,58 @@ export async function getChatList(user) {
     //             newRoot: '$chatList',
     //         },
     //     },
+    //     {
+    //         $sort: {updated_at: -1},
+    //     },
     // ])
-
-    const chatList = await ChatInvitation.aggregate([
+    const chatList = await Friend.aggregate([
         {
             $match: {
-                $or: [{sender_id: user._id}, {receiver_id: user._id}],
-                status: 'accepted',
-            },
-        },
-        {
-            $project: {
-                participants: {
-                    $cond: [{$eq: ['$sender_id', user._id]}, '$receiver_id', '$sender_id'],
-                },
-                created_at: 1,
-                updated_at: 1,
-            },
-        },
-        {
-            $group: {
-                _id: null,
-                uniqueParticipants: {$addToSet: '$participants'},
-            },
-        },
-        {
-            $match: {
-                uniqueParticipants: {$ne: user._id},
+                user_id: user._id,
             },
         },
         {
             $lookup: {
                 from: 'users',
-                localField: 'uniqueParticipants',
+                localField: 'friend_id',
                 foreignField: '_id',
-                as: 'users',
+                as: 'friend',
             },
         },
-
+        {
+            $unwind: '$friend',
+        },
         {
             $project: {
-                chatList: {
-                    $map: {
-                        input: '$users',
-                        as: 'user',
-                        in: {
-                            receiver_id: '$$user._id',
-                            username: '$$user.name',
-                            avatar: {
-                                $cond: {
-                                    if: {$eq: [{$ifNull: ['$$user.avatar', '']}, '']},
-                                    then: '$$user.avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$$user.avatar']},
-                                },
-                            },
-                            created_at: '$$user.created_at',
-                            updated_at: '$$user.updated_at',
-                        },
+                // _id: 0,
+                user_id: '$friend._id',
+                user_name: '$friend.name',
+                user_avatar: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$friend.avatar', '']}, '']},
+                        then: '$friend.avatar',
+                        else: {$concat: [LINK_STATIC_URL, '$friend.avatar']},
                     },
                 },
             },
         },
         {
-            $unwind: '$chatList',
-        },
-        {
-            $replaceRoot: {
-                newRoot: '$chatList',
-            },
-        },
-        {
-            $sort: {updated_at: -1},
+            $sort: {last_message_at: -1},
         },
     ])
 
     return chatList
 }
 
-export async function getChatHistory(user, receiver_id) {
+export async function getChatHistory(user, user_id) {
     const result = {
         messages: [],
-        receiver_id: receiver_id,
+        receiver_id: user_id,
     }
     const messages = await Messenger.find({
         $or: [
-            {sender_id: user._id, receiver_id: new ObjectId(receiver_id)},
-            {sender_id: new ObjectId(receiver_id), receiver_id: user._id},
+            {sender_id: user._id, receiver_id: new ObjectId(user_id)},
+            {sender_id: new ObjectId(user_id), receiver_id: user._id},
         ],
     }).sort({date: 1})
     result.messages = messages
@@ -161,7 +134,7 @@ export async function createChatInvitation(user, requestBody) {
     const invitation = new ChatInvitation({
         sender_id: user._id,
         sender_name: user.name,
-        receiver_id: new ObjectId(requestBody.receiver_id),
+        user_id: new ObjectId(requestBody.user_id),
         receiver_name: requestBody.receiver_name,
     })
 

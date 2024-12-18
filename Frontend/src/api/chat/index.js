@@ -29,10 +29,10 @@ export const getChatList = () => async (dispatch, getState) => {
 	});
 };
 
-export const getChatHistory = (receiver_id) => async (dispatch, getState) => {
+export const getChatHistory = (user_id) => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
-		apiPath: `chat/chat-history/${receiver_id}`,
+		apiPath: `chat/chat-history/${user_id}`,
 		actionTypes: [
 			startRequestGetChatHistory,
 			startRequestGetChatHistorySuccess,

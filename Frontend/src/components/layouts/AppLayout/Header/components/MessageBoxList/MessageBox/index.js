@@ -3,43 +3,38 @@ import styles from "./styles.module.scss";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 import CloseIcon from "@mui/icons-material/Close";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
+import { getChatHistory } from "api/chat";
+import { useSocket } from "context/SocketContext";
+import { useSelector } from "react-redux";
+import store from "states/configureStore";
 
 const MessageBoxContent = React.lazy(() => import("./MessageBoxContent"));
 
-const MessageBox = ({
-	chatBox,
-	closeChatBox,
-	sendMessage,
-	newMessage,
-	handleAckNewMessage,
-}) => {
+const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
+	const socket = useSocket();
+
+	const { loadingGetChatHistory } = useSelector((state) => state.chat);
+
 	const [content, setContent] = useState("");
-	const [messages, setMessages] = useState([]);
+	const [newMessage, setNewMessage] = useState([]);
 
 	useEffect(() => {
-		setMessages(chatBox.messages);
+		store.dispatch(getChatHistory(chatBox.user_id));
+	}, [chatBox.user_id]);
+
+	useEffect(() => {
+		setNewMessage(chatBox.messages);
 	}, [chatBox.messages]);
 
 	useEffect(() => {
-		if (newMessage.sender_id === chatBox.receiver_id) {
-			setMessages((prevMessages) => [...prevMessages, newMessage]);
-			handleAckNewMessage();
-		}
-	}, [newMessage, chatBox.receiver_id, handleAckNewMessage]);
-
-	useEffect(() => {
-		const handleScroll = () => {
-			if (window.scrollY === 0) {
-				console.log("Thanh scroll đã ở đầu trang");
-			}
-		};
-
-		window.addEventListener("scroll", handleScroll);
+		socket.on("message", (message) => {
+			store.dispatch(getChatHistory(message.sender_id));
+		});
 
 		return () => {
-			window.removeEventListener("scroll", handleScroll);
+			socket.off("message");
 		};
-	}, []);
+	}, [socket]);
 
 	const handleEnterKey = (event, receiver_id) => {
 		if (event.key === "Enter") {
@@ -56,7 +51,7 @@ const MessageBox = ({
 			timestamp: date,
 		};
 		sendMessage(message);
-		setMessages([...messages, message]);
+		store.dispatch(getChatHistory(receiver_id));
 
 		setContent("");
 	};
@@ -67,27 +62,33 @@ const MessageBox = ({
 				<div className={styles.miniChatHeaderContent}>
 					<div className={styles.avatar}>
 						<img
-							src={chatBox.avatar ? chatBox.avatar : AvatarDefault}
+							src={
+								chatBox.user_avatar
+									? chatBox.user_avatar
+									: AvatarDefault
+							}
 							alt="avatar"
 						/>
 					</div>
-					<span>{chatBox.username}</span>
+					<span>{chatBox.user_name}</span>
 				</div>
 				<button
-					onClick={() => closeChatBox(chatBox.receiver_id)}
+					onClick={() => closeChatBox(chatBox.user_id)}
 					className={styles.closeButton}>
 					<CloseIcon />
 				</button>
 			</div>
-			<LazyLoadingMedium>
-				<MessageBoxContent
-					messages={messages}
-					receiver_id={chatBox.receiver_id}
-				/>
-			</LazyLoadingMedium>
+			<div className={styles.miniChatContent}>
+				<LazyLoadingMedium>
+					<MessageBoxContent
+						messages={newMessage}
+						receiver_id={chatBox.user_id}
+					/>
+				</LazyLoadingMedium>
+			</div>
 			<div className={styles.miniChatFooter}>
 				<input
-					onKeyDown={(e) => handleEnterKey(e, chatBox.receiver_id)}
+					onKeyDown={(e) => handleEnterKey(e, chatBox.user_id)}
 					type="text"
 					placeholder="Type a message..."
 					className={styles.miniChatInput}
@@ -95,7 +96,7 @@ const MessageBox = ({
 					onChange={(e) => setContent(e.target.value)}
 				/>
 				<button
-					onClick={() => handleSendMessage(chatBox.receiver_id)}
+					onClick={() => handleSendMessage(chatBox.user_id)}
 					className={styles.sendButton}>
 					Send
 				</button>

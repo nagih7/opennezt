@@ -12,7 +12,7 @@ chatRouter.use(asyncHandler(requireAuthentication))
 
 chatRouter.get('/chat-list', asyncHandler(chatController.getChatList))
 
-chatRouter.get('/chat-history/:receiver_id', asyncHandler(chatController.getChatHistory))
+chatRouter.get('/chat-history/:user_id', asyncHandler(chatController.getChatHistory))
 
 chatRouter.get('/receiverIds/:userId', async (req, res) => {
     const {userId} = req.params

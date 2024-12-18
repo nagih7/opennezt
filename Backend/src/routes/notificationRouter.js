@@ -9,12 +9,18 @@ const notificationRouter = Router()
 
 notificationRouter.use(asyncHandler(requireAuthentication))
 
-notificationRouter.put('/chat-invitation', asyncHandler(notificationController.updateChatInvitation))
+notificationRouter.put(
+    '/reply',
+    asyncHandler(validate(notificationRequest.replyNotification)),
+    asyncHandler(notificationController.replyNotification)
+)
 
 notificationRouter.post(
     '/request-message',
     asyncHandler(validate(notificationRequest.requestMessage)),
     asyncHandler(notificationController.requestMessage)
 )
+
+notificationRouter.get('/', asyncHandler(notificationController.getNotifications))
 
 export default notificationRouter

@@ -62,11 +62,11 @@ const manageRouteMap = [
 		permissions: ["seek_projects_page"],
 	},
 	{
-		label: "Project's Requests",
+		label: "Notification Management",
 		icon: <FolderSharedIcon className="material-icons" />,
-		path: "/project-notifications",
-		routeActive: ["/project-notifications"],
-		permissions: ["project_notifications_page"],
+		path: "/notification-management",
+		routeActive: ["/notification-management"],
+		permissions: ["notification_management_page"],
 	},
 ];
 

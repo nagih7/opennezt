@@ -9,7 +9,7 @@ export async function getChatList(req, res) {
 }
 
 export async function getChatHistory(req, res) {
-    const chatHistory = await chatService.getChatHistory(req.currentUser, req.params.receiver_id)
+    const chatHistory = await chatService.getChatHistory(req.currentUser, req.params.user_id)
     res.status(200).jsonify(chatHistory)
 }
 

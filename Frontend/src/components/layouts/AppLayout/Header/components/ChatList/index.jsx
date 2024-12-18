@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
-import { getChatHistory } from "api/chat";
-import store from "states/configureStore";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
 
 const ChatList = ({ handleSetChatBoxList }) => {
@@ -12,7 +10,6 @@ const ChatList = ({ handleSetChatBoxList }) => {
 	const [minimizedChats, setMinimizedChats] = useState([]);
 
 	const openChatBox = async (user) => {
-		await store.dispatch(getChatHistory(user.receiver_id));
 		await handleSetChatBoxList(user);
 	};
 
@@ -44,12 +41,16 @@ const ChatList = ({ handleSetChatBoxList }) => {
 							onClick={() => openChatBox(user)}>
 							<div className={styles.avatar}>
 								<img
-									src={user.avatar ? user.avatar : AvatarDefault}
+									src={
+										user.user_avatar
+											? user.user_avatar
+											: AvatarDefault
+									}
 									alt="avatar"
 								/>
 							</div>
 							<div className={styles.chatContent}>
-								<div className={styles.chatName}>{user.username}</div>
+								<div className={styles.chatName}>{user.user_name}</div>
 							</div>
 						</div>
 					))

@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { getChatList } from "api/chat";
 import { getNotifications } from "api/notification";
 import { setLocation } from "states/modules/app";
-import { use } from "react";
 
 export const AppContext = React.createContext();
 
@@ -28,7 +27,6 @@ export const AppProvider = ({ children }) => {
 
 	useEffect(() => {
 		socket.on("new_notification", () => {
-			console.log("new_notification");
 			dispatch(getNotifications());
 		});
 	}, [socket, dispatch]);

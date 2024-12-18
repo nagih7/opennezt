@@ -1,7 +1,5 @@
 import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import FeedIcon from "@mui/icons-material/Feed";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FolderIcon from "@mui/icons-material/Folder";
 import PersonIcon from "@mui/icons-material/Person";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
@@ -46,11 +44,11 @@ const appRouteMap = [
 		permissions: ["seek_projects_page"],
 	},
 	{
-		label: "Project's Requests",
+		label: "Notification Management",
 		icon: <FolderSharedIcon className="material-icons" />,
-		path: "/project-notifications",
-		routeActive: ["/project-notifications"],
-		permissions: ["project_notifications_page"],
+		path: "/notification-management",
+		routeActive: ["/notification-management"],
+		permissions: ["notification_management_page"],
 	},
 	// {
 	// 	label: "New Feed",
