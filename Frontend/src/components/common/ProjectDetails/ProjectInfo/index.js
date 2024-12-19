@@ -84,11 +84,12 @@ const ProjectInfo = ({ projectDetails }) => {
 				<LazyLoadingMedium>
 					<MemberBox member={projectDetails.owner} />
 				</LazyLoadingMedium>
-				{projectDetails.members.map((member, index) => (
-					<LazyLoadingMedium key={index}>
-						<MemberBox member={member} />
-					</LazyLoadingMedium>
-				))}
+				{projectDetails.members &&
+					projectDetails.members.map((member, index) => (
+						<LazyLoadingMedium key={index}>
+							<MemberBox member={member} />
+						</LazyLoadingMedium>
+					))}
 			</div>
 
 			<h2>

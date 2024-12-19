@@ -67,9 +67,9 @@ export async function getProject(req, res) {
 }
 
 export async function updateProject(req, res) {
-    const result = await userService.updateProject(req.currentUser, req.body)
+    await userService.updateProject(req.currentUser, req.body)
     // res.status(200).jsonify('Cập nhật dự án thành công.')
-    res.status(200).jsonify(result)
+    res.status(200).jsonify('Cập nhật dự án thành công.')
 }
 
 export async function deleteProject(req, res) {

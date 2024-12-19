@@ -11,14 +11,10 @@ projectRouter.use(asyncHandler(requireAuthentication))
 
 projectRouter.get('/seek-projects', asyncHandler(projectController.seekProjects))
 
-projectRouter.post(
-    '/request-to-join',
-    asyncHandler(validate(projectRequest.requestToJoinProject)),
-    asyncHandler(projectController.requestToJoinProject)
-)
-
 projectRouter.get('/request-to-join', asyncHandler(projectController.getRequestsToJoinProject))
 
 projectRouter.put('/response-request', asyncHandler(projectController.responseRequest))
+
+projectRouter.put('/background', asyncHandler(projectController.updateBackground))
 
 export default projectRouter

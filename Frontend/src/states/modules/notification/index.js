@@ -18,13 +18,22 @@ const notificationSlice = createSlice({
 			...state,
 			loadingGetNotifications: false,
 		}),
-		startRequestUpdateChatInvitation: (state) => ({
+		startRequestReplyNotification: (state) => ({
 			...state,
 		}),
-		startRequestUpdateChatInvitationSuccess: (state) => ({
+		startRequestReplyNotificationSuccess: (state) => ({
 			...state,
 		}),
-		startRequestUpdateChatInvitationFail: (state) => ({
+		startRequestReplyNotificationFail: (state) => ({
+			...state,
+		}),
+		startRequestMessage: (state) => ({
+			...state,
+		}),
+		startRequestMessageSuccess: (state) => ({
+			...state,
+		}),
+		startRequestMessageFail: (state) => ({
 			...state,
 		}),
 	},
@@ -34,9 +43,12 @@ export const {
 	startRequestGetNotifications,
 	startRequestGetNotificationsSuccess,
 	startRequestGetNotificationsFail,
-	startRequestUpdateChatInvitation,
-	startRequestUpdateChatInvitationSuccess,
-	startRequestUpdateChatInvitationFail,
+	startRequestReplyNotification,
+	startRequestReplyNotificationSuccess,
+	startRequestReplyNotificationFail,
+	startRequestMessage,
+	startRequestMessageSuccess,
+	startRequestMessageFail,
 } = notificationSlice.actions;
 
 export default notificationSlice.reducer;

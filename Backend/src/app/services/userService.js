@@ -285,14 +285,6 @@ export async function updateProject(user, requestBody) {
     const project = await Project.findOne({user_id: user._id, _id: requestBody._id})
     project.set(requestBody)
     await project.save()
-
-    if (project.background) {
-        project.background = project.background && LINK_STATIC_URL + project.background
-    }
-    if (project.pitch_deck) {
-        project.pitch_deck = project.pitch_deck && LINK_STATIC_URL + project.pitch_deck
-    }
-    return project
 }
 
 export async function deleteProject(user, requestBody) {
@@ -314,13 +306,13 @@ export async function recuitTalents(user, requestRecuitTalents) {
         }
     }
     if (requestRecuitTalents.education_level) {
-        query.education_level = {
+        query.degree = {
             $regex: requestRecuitTalents.education_level,
             $options: 'i',
         }
     }
     if (requestRecuitTalents.commitment) {
-        query.commitment = {
+        query.availability = {
             $regex: requestRecuitTalents.commitment,
             $options: 'i',
         }
@@ -348,7 +340,7 @@ export async function recuitTalents(user, requestRecuitTalents) {
             $match: {
                 ...(requestRecuitTalents.location
                     ? {
-                        'user_data.city': {
+                        'user_data.region': {
                             $regex: requestRecuitTalents.location,
                             $options: 'i',
                         },
@@ -547,6 +539,9 @@ export async function getNotifications(user) {
                 created_at: 1,
                 status: 1,
             },
+        },
+        {
+            $sort: {created_at: -1},
         },
     ])
     return chatInvitations

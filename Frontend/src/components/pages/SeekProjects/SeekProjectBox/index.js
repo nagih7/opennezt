@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import { Button } from "antd";
-import BackgroundDefault from "assets/images/default/BackgroundDefault.jpg";
+import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
+import { requestMessage } from "api/notification";
+import store from "states/configureStore";
+import { useSelector } from "react-redux";
 
-const SeekProjectBox = ({
-	project,
-	handleViewDetails,
-	handleRequestToJoin,
-}) => {
+const SeekProjectBox = ({ project, handleViewDetails }) => {
 	const [statusRequest, setStatusRequest] = useState(null);
+
+	const { authUser } = useSelector((state) => state.auth);
 
 	useEffect(() => {
 		if (project.project_request) {
@@ -16,15 +17,24 @@ const SeekProjectBox = ({
 		}
 	}, [project.project_request]);
 
-	const handleRequestToJoinChildren = async (
-		projectId,
-		projectName,
-		ownerId
+	const handleSendRequestMessage = async (
+		project_id,
+		project_name,
+		user_id
 	) => {
 		if (statusRequest === "waiting") {
 			return;
 		}
-		await handleRequestToJoin(projectId, projectName, ownerId);
+		const requestMessageForm = {
+			user_id: user_id,
+			source_name: authUser.name,
+			metadata: {
+				project_id: project_id,
+				project_name,
+			},
+		};
+
+		await store.dispatch(requestMessage(requestMessageForm));
 		setStatusRequest("waiting");
 	};
 
@@ -66,14 +76,14 @@ const SeekProjectBox = ({
 				};
 			default:
 				return {
-					children: "Request to Join",
+					children: "Send Request Message",
 					type: "primary",
 					style: {
 						backgroundColor: "#2ccdc6",
 						color: "white",
 					},
 					onClick: () =>
-						handleRequestToJoinChildren(
+						handleSendRequestMessage(
 							projectId,
 							project.name,
 							project.user_id

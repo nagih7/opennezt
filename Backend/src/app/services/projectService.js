@@ -1,5 +1,6 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {Project, FounderProfile, ProjectRequest, User} from '@/models'
+import {Project, FounderProfile, ProjectRequest} from '@/models'
+import {FileUpload} from '@/utils/classes'
 
 export async function seekProjects(userId, requestQuery) {
     if (!requestQuery) {
@@ -13,14 +14,15 @@ export async function seekProjects(userId, requestQuery) {
             },
             {
                 $lookup: {
-                    from: 'project_requests',
+                    from: 'notifications_feed',
                     localField: '_id',
-                    foreignField: 'project_id',
-                    as: 'project_request',
+                    foreignField: 'source_id',
+                    as: 'friend_request',
                     pipeline: [
                         {
                             $match: {
-                                sender_id: userId,
+                                source_id: userId,
+                                type: 'friend_request',
                             },
                         },
                     ],
@@ -35,8 +37,11 @@ export async function seekProjects(userId, requestQuery) {
                             else: {$concat: [LINK_STATIC_URL, '$background']},
                         },
                     },
-                    project_request: {$arrayElemAt: ['$project_request', 0]},
+                    friend_request: {$arrayElemAt: ['$friend_request', 0]},
                 },
+            },
+            {
+                $limit: 10,
             },
             {
                 $project: {
@@ -47,9 +52,7 @@ export async function seekProjects(userId, requestQuery) {
                     updated_at: 1,
                     name: 1,
                     _id: 1,
-                    project_request: {
-                        status: 1,
-                    },
+                    friend_request: 1,
                 },
             },
         ])
@@ -74,14 +77,15 @@ export async function seekProjects(userId, requestQuery) {
             },
             {
                 $lookup: {
-                    from: 'project_requests',
+                    from: 'notifications_feed',
                     localField: '_id',
-                    foreignField: 'project_id',
-                    as: 'project_request',
+                    foreignField: 'source_id',
+                    as: 'friend_request',
                     pipeline: [
                         {
                             $match: {
-                                sender_id: userId,
+                                source_id: userId,
+                                type: 'friend_request',
                             },
                         },
                     ],
@@ -97,7 +101,7 @@ export async function seekProjects(userId, requestQuery) {
                             else: {$concat: [LINK_STATIC_URL, '$background']},
                         },
                     },
-                    project_request: {$arrayElemAt: ['$project_request', 0]},
+                    friend_request: {$arrayElemAt: ['$friend_request', 0]},
                 },
             },
             {
@@ -109,9 +113,7 @@ export async function seekProjects(userId, requestQuery) {
                     updated_at: 1,
                     name: 1,
                     _id: 1,
-                    project_request: {
-                        status: 1,
-                    },
+                    friend_request: 1,
                 },
             },
         ])
@@ -120,52 +122,23 @@ export async function seekProjects(userId, requestQuery) {
     }
 }
 
-export async function requestToJoinProject(user, requestProjectData) {
-    const {project_id, project_name, owner_id, role} = requestProjectData
-    const owner = await User.findOne({_id: owner_id}, {name: 1})
-
-    const existingRequest = await ProjectRequest.findOne({
-        sender_id: user._id,
-        receiver_id: owner_id,
-        project_id,
-    })
-
-    if (existingRequest) {
-        if (existingRequest.status === 'rejected') {
-            await ProjectRequest.updateOne(
-                {_id: existingRequest._id},
-                {
-                    $set: {
-                        status: 'waiting',
-                        role: role,
-                        updatedAt: new Date(),
-                    },
-                }
-            )
-            return
-        }
-    }
-
-    const newRequest = new ProjectRequest({
-        sender_id: user._id,
-        project_name: project_name,
-        sender_name: user.name,
-        receiver_id: owner_id,
-        receiver_name: owner.name,
-        role,
-        project_id,
-        status: 'waiting',
-    })
-
-    await newRequest.save()
-}
-
 export async function getRequestsToJoinProject(userId) {
-    const requests = await ProjectRequest.find({receiver_id: userId})
+    const requests = await ProjectRequest.find({receiver_id: userId}).sort({updatedAt: -1})
     return requests
 }
 
 export async function responseRequest(requestData) {
     const {request_id, status} = requestData
     await ProjectRequest.updateOne({_id: request_id}, {status})
+}
+
+export async function updateBackground(user, requestBody) {
+    if (requestBody.background instanceof FileUpload) {
+        const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+        if (project.background) {
+            FileUpload.remove(project.background)
+        }
+        project.background = requestBody.background.save('background_projects')
+        await project.save()
+    }
 }

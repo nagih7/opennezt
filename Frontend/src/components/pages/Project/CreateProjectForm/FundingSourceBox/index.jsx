@@ -1,5 +1,6 @@
 import React from "react";
 import { Input } from "antd";
+import styles from "./styles.module.scss";
 
 const FundingSourceBox = ({
 	fundingSourceName,
@@ -13,7 +14,7 @@ const FundingSourceBox = ({
 				{fundingSourceName}
 			</span>
 			<Input
-				style={{ padding: "0 0.5rem", width: "auto" }}
+				className={styles.inputCreate}
 				value={fundingSourceCost}
 				onChange={(e) =>
 					handleChangeFundingSource(foundingSourceTarget, e.target.value)

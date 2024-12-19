@@ -31,7 +31,7 @@ export async function register(req, res) {
 
 export async function verifyEmail(req, res) {
     await authService.verifyEmail(req.currentUser)
-    res.jsonify('Xác thực tài khoản thành công.')
+    res.redirect(`${process.env.APP_URL_CLIENT}`)
 }
 
 export async function logout(req, res) {
@@ -75,5 +75,5 @@ export async function requestResetPassword(req, res) {
 export async function resetPassword(req, res) {
     await userService.resetPassword(req.currentUser, req.body.new_password)
     await authService.blockToken(req.params.token)
-    res.status(201).jsonify('Cập nhật mật khẩu thành công.')
+    res.redirect(`${process.env.APP_URL_CLIENT}`)
 }

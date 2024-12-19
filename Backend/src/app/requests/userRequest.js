@@ -95,7 +95,7 @@ export const resetPassword = Joi.object({
 
 export const createProject = Joi.object({
     name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Tên dự án'),
-    landing_page_url: Joi.string().trim().max(MAX_STRING_SIZE).label('URL landing page'),
+    landing_page_url: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('URL landing page'),
     related_industries: Joi.array()
         .items(Joi.string().trim().max(MAX_STRING_SIZE))
         .required()
@@ -267,7 +267,7 @@ export const createFounderProfile = Joi.object({
 
 export const recuitTalents = Joi.object({
     sector: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Ngành nghề'),
-    expertise_level: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Kinh nghiệm'),
+    experience_level: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Kinh nghiệm'),
     education_level: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Bằng cấp'),
     commitment: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Cam kết'),
     location: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Địa điểm'),

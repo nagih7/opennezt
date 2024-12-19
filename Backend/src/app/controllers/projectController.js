@@ -5,11 +5,6 @@ export async function seekProjects(req, res) {
     res.jsonify(result)
 }
 
-export async function requestToJoinProject(req, res) {
-    await projectService.requestToJoinProject(req.currentUser, req.body)
-    res.status(201).jsonify('Yêu cầu tham gia dự án thành công.')
-}
-
 export async function getRequestsToJoinProject(req, res) {
     const result = await projectService.getRequestsToJoinProject(req.currentUser._id)
     res.jsonify(result)
@@ -18,4 +13,9 @@ export async function getRequestsToJoinProject(req, res) {
 export async function responseRequest(req, res) {
     await projectService.responseRequest(req.body)
     res.status(200).jsonify('Phản hồi yêu cầu thành công.')
+}
+
+export async function updateBackground(req, res) {
+    await projectService.updateBackground(req.currentUser, req.body)
+    res.status(200).jsonify('Cập nhật nền dự án thành công.')
 }

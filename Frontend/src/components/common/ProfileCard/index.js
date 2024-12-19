@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./styles.module.scss";
 import verify from "../../../assets/images/icon/verify.png";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import BackgroundDefault from "../../../assets/images/default/BackgroundDefault.jpg";
+import BackgroundDefault from "../../../assets/images/default/BackgroundDefault.png";
 import AvatarDefault from "../../../assets/images/default/AvatarDefault.png";
 import { Button } from "antd";
 

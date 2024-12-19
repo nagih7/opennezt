@@ -19,7 +19,7 @@ import Filter from "./components/Filter";
 import BtnFilter from "../../UI/ButtonFilter";
 import AvatarDefault from "../../../assets/images/default/AvatarDefault.png";
 
-function Employee() {
+function UserManagement() {
 	const authUser = useSelector((state) => state.auth.authUser);
 	const columns = [
 		{
@@ -259,4 +259,4 @@ function Employee() {
 	);
 }
 
-export default Employee;
+export default UserManagement;

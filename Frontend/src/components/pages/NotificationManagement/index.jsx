@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Table, Tag, Button, message, Modal } from "antd";
+import { Table, Tag, Button, Modal } from "antd";
 import { CheckOutlined, CloseOutlined, StopOutlined } from "@ant-design/icons";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";

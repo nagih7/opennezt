@@ -3,11 +3,7 @@ import styles from "./styles.module.scss";
 import { useSelector } from "react-redux";
 import store from "states/configureStore";
 import { listSector, listStage } from "components/common/ListSelected";
-import {
-	seekProjects,
-	getProjectDetails,
-	requestToJoinProject,
-} from "api/project";
+import { seekProjects, getProjectDetails } from "api/project";
 import { Select, Button, Input } from "antd";
 
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
@@ -34,17 +30,6 @@ const SeekProjects = () => {
 	useEffect(() => {
 		store.dispatch(seekProjects());
 	}, []);
-
-	const handleRequestToJoin = async (project_id, project_name, owner_id) => {
-		const requestProjectData = {
-			project_id,
-			project_name,
-			owner_id,
-			role: "talent",
-		};
-
-		await store.dispatch(requestToJoinProject(requestProjectData));
-	};
 
 	const handleSeekProjects = async (e) => {
 		await store.dispatch(seekProjects(formSeekProjects));
@@ -126,7 +111,6 @@ const SeekProjects = () => {
 							<SeekProjectBox
 								project={project}
 								handleViewDetails={handleViewDetails}
-								handleRequestToJoin={handleRequestToJoin}
 							/>
 						</LazyLoadingMedium>
 					))}

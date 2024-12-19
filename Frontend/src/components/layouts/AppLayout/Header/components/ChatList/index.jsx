@@ -1,26 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
-import { getChatHistory } from "api/chat";
-import store from "states/configureStore";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
+import { getChatList } from "api/chat";
+import store from "states/configureStore";
 
-const ChatList = ({ handleSetChatBoxList }) => {
+const ChatList = ({ handleSetChatBoxList, setIsShowChatList }) => {
 	const { chatList } = useSelector((state) => state.chat);
 
+	// const [minimizedChats, setMinimizedChats] = useState([]);
 	const [searchQuery, setSearchQuery] = useState("");
-	const [minimizedChats, setMinimizedChats] = useState([]);
+	const [debouncedTerm, setDebouncedTerm] = useState("");
 
 	const openChatBox = async (user) => {
-		await store.dispatch(getChatHistory(user.receiver_id));
 		await handleSetChatBoxList(user);
+		setIsShowChatList(false);
 	};
 
-	const restoreMinimizedChat = (chat) => {
-		setMinimizedChats(
-			minimizedChats.filter((c) => c.username !== chat.username)
-		);
-		openChatBox(chat);
+	// minimize chat box
+	// const restoreMinimizedChat = (chat) => {
+	// 	setMinimizedChats(
+	// 		minimizedChats.filter((c) => c.username !== chat.username)
+	// 	);
+	// 	openChatBox(chat);
+	// };
+
+	useEffect(() => {
+		const handler = setTimeout(() => {
+			setDebouncedTerm(searchQuery);
+		}, 500);
+
+		return () => {
+			clearTimeout(handler);
+		};
+	}, [searchQuery]);
+
+	useEffect(() => {
+		store.dispatch(getChatList(debouncedTerm));
+	}, [debouncedTerm]);
+
+	const handleSearchQuery = (value) => {
+		setSearchQuery(value);
 	};
 
 	return (
@@ -32,7 +52,7 @@ const ChatList = ({ handleSetChatBoxList }) => {
 					placeholder="Search people"
 					className={styles.searchInput}
 					value={searchQuery}
-					onChange={(e) => setSearchQuery(e.target.value)}
+					onChange={(e) => handleSearchQuery(e.target.value)}
 				/>
 			</div>
 			<div className={styles.chatListWrap}>
@@ -44,12 +64,16 @@ const ChatList = ({ handleSetChatBoxList }) => {
 							onClick={() => openChatBox(user)}>
 							<div className={styles.avatar}>
 								<img
-									src={user.avatar ? user.avatar : AvatarDefault}
+									src={
+										user.user_avatar
+											? user.user_avatar
+											: AvatarDefault
+									}
 									alt="avatar"
 								/>
 							</div>
 							<div className={styles.chatContent}>
-								<div className={styles.chatName}>{user.username}</div>
+								<div className={styles.chatName}>{user.user_name}</div>
 							</div>
 						</div>
 					))
@@ -57,7 +81,7 @@ const ChatList = ({ handleSetChatBoxList }) => {
 					<div className={styles.noResult}>No chats found</div>
 				)}
 			</div>
-			<div className={styles.miniChatBoxWrap}>
+			{/* <div className={styles.miniChatBoxWrap}>
 				<div className={styles.minimizedChatIcons}>
 					{minimizedChats.map((chat, index) => (
 						<div
@@ -69,7 +93,7 @@ const ChatList = ({ handleSetChatBoxList }) => {
 						</div>
 					))}
 				</div>
-			</div>
+			</div> */}
 		</div>
 	);
 };

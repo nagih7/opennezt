@@ -5,10 +5,11 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	margin: 0 0.5rem;
 
 	.memberBoxAvatar {
 		width: 10rem;
-		height: 100%;
+		height: 10rem;
 		border-radius: 50%;
 		overflow: hidden;
 

@@ -50,7 +50,6 @@ function Project() {
 		why_now: "",
 		strategy: "",
 		milestones: "",
-		about_opennezt: "",
 		background: {},
 	});
 
@@ -81,7 +80,6 @@ function Project() {
 			why_now: "",
 			strategy: "",
 			milestones: "",
-			about_opennezt: "",
 			background: {},
 		});
 	};
@@ -115,6 +113,7 @@ function Project() {
 
 	useEffect(() => {
 		if (resultCreateProject === true) {
+			setDefaultForm();
 			store.dispatch(getProjects());
 			setOpenModalCreateProject(false);
 			setDefaultForm();
@@ -144,6 +143,8 @@ function Project() {
 
 	const handleUpdateProject = async () => {
 		await store.dispatch(updateProject(formProject));
+		await store.dispatch(getProjectDetails(projectDetails._id));
+		await store.dispatch(getProjects());
 	};
 
 	useEffect(() => {

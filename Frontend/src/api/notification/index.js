@@ -3,15 +3,18 @@ import {
 	startRequestGetNotifications,
 	startRequestGetNotificationsSuccess,
 	startRequestGetNotificationsFail,
-	startRequestUpdateChatInvitation,
-	startRequestUpdateChatInvitationSuccess,
-	startRequestUpdateChatInvitationFail,
+	startRequestReplyNotification,
+	startRequestReplyNotificationSuccess,
+	startRequestReplyNotificationFail,
+	startRequestMessage,
+	startRequestMessageSuccess,
+	startRequestMessageFail,
 } from "states/modules/notification";
 
 export const getNotifications = () => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
-		apiPath: "users/notifications",
+		apiPath: "notification",
 		actionTypes: [
 			startRequestGetNotifications,
 			startRequestGetNotificationsSuccess,
@@ -23,17 +26,33 @@ export const getNotifications = () => async (dispatch, getState) => {
 	});
 };
 
-export const updateChatInvitation = (data) => async (dispatch, getState) => {
+export const replyNotification = (data) => async (dispatch, getState) => {
 	return callApi({
 		method: "put",
-		apiPath: "notification/chat-invitation",
+		apiPath: "notification/reply",
 		actionTypes: [
-			startRequestUpdateChatInvitation,
-			startRequestUpdateChatInvitationSuccess,
-			startRequestUpdateChatInvitationFail,
+			startRequestReplyNotification,
+			startRequestReplyNotificationSuccess,
+			startRequestReplyNotificationFail,
 		],
 		variables: data,
 		dispatch,
 		getState,
 	});
 };
+
+export const requestMessage =
+	(requestMessageData) => async (dispatch, getState) => {
+		return callApi({
+			method: "post",
+			apiPath: `notification/request-message`,
+			actionTypes: [
+				startRequestMessage,
+				startRequestMessageSuccess,
+				startRequestMessageFail,
+			],
+			variables: requestMessageData,
+			dispatch,
+			getState,
+		});
+	};
