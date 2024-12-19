@@ -37,6 +37,7 @@ $color-primary: #6c9bcf;
 	background: var(--color-white);
 	padding: 1.8rem;
 	border-radius: 2rem;
+	box-shadow: $boxShadow;
 
 	.mainWrap {
 		display: flex;
@@ -76,17 +77,19 @@ $color-primary: #6c9bcf;
 		}
 
 		.boxFilterWrap {
-			margin-bottom: 0.2rem;
 			display: flex;
 			justify-content: flex-start;
+			align-items: center;
 			width: 100%;
 
 			.inputWrap {
 				width: 100%;
+				flex-direction: column;
 				position: relative;
 				margin-right: 1rem;
 
 				input {
+					height: 100%;
 					border: 1px solid var(--color-light);
 					border-radius: var(--border-radius-1);
 					padding: 0.8rem 1rem;

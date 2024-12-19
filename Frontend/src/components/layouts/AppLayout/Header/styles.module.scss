@@ -140,8 +140,13 @@
 				}
 			}
 		}
+
 		.itemChangeTheme {
 			padding: 10px 8px;
+		}
+
+		.popover {
+			position: relative;
 		}
 
 		.notificationAnimationWrap {
@@ -174,7 +179,6 @@
 		}
 
 		.messageAnimationWrap {
-			position: relative;
 			transition: all 0.3s;
 			&::before {
 				content: "";

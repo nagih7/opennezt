@@ -29,6 +29,10 @@ body {
 	&:focus {
 		box-shadow: none;
 	}
+
+	&::placeholder {
+		color: $colorPlaceholder !important;
+	}
 }
 
 .ant-input-disabled {
@@ -318,4 +322,8 @@ h3 {
 h4 {
 	font-size: 1.25rem !important;
 	font-weight: 600 !important;
+}
+
+.ant-select-selection-placeholder {
+	color: $colorPlaceholder !important;
 }

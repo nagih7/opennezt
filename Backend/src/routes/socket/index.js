@@ -11,7 +11,6 @@ const socketRoutes = (io) => {
         socket.on('login', async (token) => {
             const {user_id} = await verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
             userSockets[socket.id] = user_id
-            console.log('userSockets', userSockets)
         }),
         notificationRouter(socket)
         chatRouter(socket, io)

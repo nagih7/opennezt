@@ -4,7 +4,7 @@ import * as chatService from '../services/chatService.js'
 import {userSockets} from '@/routes/socket/index.js'
 
 export async function getChatList(req, res) {
-    const chatList = await chatService.getChatList(req.currentUser)
+    const chatList = await chatService.getChatList(req.currentUser, req.query.value)
     res.status(200).jsonify(chatList)
 }
 

@@ -1,9 +1,8 @@
 import {LINK_STATIC_URL} from '@/configs'
 import {ChatInvitation, Messenger, ObjectId, Friend} from '@/models'
 import {userSockets} from '@/routes/socket'
-import {create, update} from 'lodash'
 
-export async function getChatList(user) {
+export async function getChatList(user, input_value) {
     // const chatList = await ChatInvitation.aggregate([
     //     {
     //         $match: {
@@ -75,6 +74,9 @@ export async function getChatList(user) {
     //         $sort: {updated_at: -1},
     //     },
     // ])
+    if (!input_value || input_value === 'undefined' || input_value === null) {
+        input_value = ''
+    }
     const chatList = await Friend.aggregate([
         {
             $match: {
@@ -87,6 +89,19 @@ export async function getChatList(user) {
                 localField: 'friend_id',
                 foreignField: '_id',
                 as: 'friend',
+                pipeline: [
+                    {
+                        $match: {
+                            name: {$regex: input_value, $options: 'i'},
+                        },
+                    },
+                    {
+                        $project: {
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
             },
         },
         {

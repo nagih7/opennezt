@@ -14,14 +14,15 @@ export async function seekProjects(userId, requestQuery) {
             },
             {
                 $lookup: {
-                    from: 'project_requests',
+                    from: 'notifications_feed',
                     localField: '_id',
-                    foreignField: 'project_id',
-                    as: 'project_request',
+                    foreignField: 'source_id',
+                    as: 'friend_request',
                     pipeline: [
                         {
                             $match: {
-                                sender_id: userId,
+                                source_id: userId,
+                                type: 'friend_request',
                             },
                         },
                     ],
@@ -36,7 +37,7 @@ export async function seekProjects(userId, requestQuery) {
                             else: {$concat: [LINK_STATIC_URL, '$background']},
                         },
                     },
-                    project_request: {$arrayElemAt: ['$project_request', 0]},
+                    friend_request: {$arrayElemAt: ['$friend_request', 0]},
                 },
             },
             {
@@ -51,9 +52,7 @@ export async function seekProjects(userId, requestQuery) {
                     updated_at: 1,
                     name: 1,
                     _id: 1,
-                    project_request: {
-                        status: 1,
-                    },
+                    friend_request: 1,
                 },
             },
         ])
@@ -78,14 +77,15 @@ export async function seekProjects(userId, requestQuery) {
             },
             {
                 $lookup: {
-                    from: 'project_requests',
+                    from: 'notifications_feed',
                     localField: '_id',
-                    foreignField: 'project_id',
-                    as: 'project_request',
+                    foreignField: 'source_id',
+                    as: 'friend_request',
                     pipeline: [
                         {
                             $match: {
-                                sender_id: userId,
+                                source_id: userId,
+                                type: 'friend_request',
                             },
                         },
                     ],
@@ -101,7 +101,7 @@ export async function seekProjects(userId, requestQuery) {
                             else: {$concat: [LINK_STATIC_URL, '$background']},
                         },
                     },
-                    project_request: {$arrayElemAt: ['$project_request', 0]},
+                    friend_request: {$arrayElemAt: ['$friend_request', 0]},
                 },
             },
             {
@@ -113,9 +113,7 @@ export async function seekProjects(userId, requestQuery) {
                     updated_at: 1,
                     name: 1,
                     _id: 1,
-                    project_request: {
-                        status: 1,
-                    },
+                    friend_request: 1,
                 },
             },
         ])

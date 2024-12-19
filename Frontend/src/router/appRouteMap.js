@@ -44,7 +44,7 @@ const appRouteMap = [
 		permissions: ["seek_projects_page"],
 	},
 	{
-		label: "Notification Management",
+		label: "Notifications",
 		icon: <FolderSharedIcon className="material-icons" />,
 		path: "/notification-management",
 		routeActive: ["/notification-management"],

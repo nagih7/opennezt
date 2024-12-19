@@ -50,7 +50,6 @@ function Project() {
 		why_now: "",
 		strategy: "",
 		milestones: "",
-		about_opennezt: "",
 		background: {},
 	});
 
@@ -81,7 +80,6 @@ function Project() {
 			why_now: "",
 			strategy: "",
 			milestones: "",
-			about_opennezt: "",
 			background: {},
 		});
 	};

@@ -459,7 +459,7 @@ const UpdateProjectForm = (props) => {
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
 			/>
-			<p style={{ marginTop: "0" }}>
+			<p style={{ marginTop: "0", color: "#666", fontSize: "0.8rem" }}>
 				What trends, changes in the market, new laws, policies, or
 				technologies signal this as an opportune time for your startup?
 			</p>
@@ -472,7 +472,7 @@ const UpdateProjectForm = (props) => {
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
 			/>
-			<p style={{ marginTop: "0" }}>
+			<p style={{ marginTop: "0", color: "#666", fontSize: "0.8rem" }}>
 				How will you get your first (or next) 10, 100, 1,000, or 10,000
 				customers?
 			</p>
@@ -485,7 +485,7 @@ const UpdateProjectForm = (props) => {
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
 			/>
-			<p style={{ marginTop: "0" }}>
+			<p style={{ marginTop: "0", color: "#666", fontSize: "0.8rem" }}>
 				What are your next features, or what are you learning to let you
 				know you’re on the right path with your business?
 			</p>

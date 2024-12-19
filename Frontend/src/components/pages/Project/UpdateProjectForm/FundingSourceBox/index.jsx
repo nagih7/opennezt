@@ -13,7 +13,7 @@ const FundingSourceBox = ({
 				{fundingSourceName}
 			</span>
 			<Input
-				style={{ padding: "0 0.5rem", width: "auto" }}
+				style={{ padding: "0 0.5rem", width: "auto", color: "#949698" }}
 				value={fundingSourceCost}
 				onChange={(e) =>
 					handleChangeFundingSource(foundingSourceTarget, e.target.value)

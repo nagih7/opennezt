@@ -14,7 +14,9 @@ const ForgotPassword = React.lazy(() =>
 const Profile = React.lazy(() => import("../components/pages/Profile"));
 const Manage = React.lazy(() => import("../components/pages/Manage"));
 const Home = React.lazy(() => import("../components/pages/Home"));
-const Employee = React.lazy(() => import("../components/pages/Employee"));
+const UserManagement = React.lazy(() =>
+	import("../components/pages/UserManagement")
+);
 const About = React.lazy(() => import("../components/pages/About"));
 // const AboutYou = React.lazy(() => import("../components/pages/AboutYou"));
 const Newfeeds = React.lazy(() => import("../components/pages/Newfeeds"));
@@ -107,7 +109,7 @@ const router = createBrowserRouter([
 		path: "admin/user-management",
 		element: (
 			<AppLayout>
-				<Employee />
+				<UserManagement />
 			</AppLayout>
 		),
 		loader: ({ request }) =>

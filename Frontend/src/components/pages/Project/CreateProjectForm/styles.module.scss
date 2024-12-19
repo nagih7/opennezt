@@ -26,6 +26,23 @@
 	border-radius: var(--card-border-radius);
 	box-shadow: var(--box-shadow);
 
+	.inputCreate {
+		padding: 4px 11px !important;
+		&::placeholder {
+			color: #949698 !important;
+		}
+	}
+
+	.selectCreate {
+		width: 100% !important;
+
+		.ant-select-selector {
+			.ant-select-selection-placeholder {
+				color: #949698 !important;
+			}
+		}
+	}
+
 	label {
 		font-size: 14px;
 		color: var(--color-dark);
