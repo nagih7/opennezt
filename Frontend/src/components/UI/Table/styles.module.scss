@@ -1,16 +1,21 @@
 .tableWrap {
-  .table {
-    margin-bottom: 17px;
-  }
+	height: 300px;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
 
-  .paginationWrap {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-    .textPagination {
-      font-size: 15px;
-    }
-  }
+	.table {
+		margin-bottom: 17px;
+	}
+
+	.paginationWrap {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 5px;
+		.textPagination {
+			font-size: 15px;
+		}
+	}
 }

@@ -34,6 +34,9 @@ $color-primary: #6c9bcf;
 @import "src/assets/scss/variables";
 
 .userManagementWrap {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
 	background: var(--color-white);
 	padding: 1.8rem;
 	border-radius: 2rem;
@@ -43,6 +46,8 @@ $color-primary: #6c9bcf;
 		display: flex;
 		flex-direction: column;
 		gap: 1.8rem;
+		height: 100%;
+
 		.headerMainWrap {
 			display: flex;
 			justify-content: space-between;

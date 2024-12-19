@@ -76,16 +76,22 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 											<Text strong>Problem</Text>
 											<Paragraph>{problem}</Paragraph>
 										</div>
-										<div className={styles.infoItem}>
-											<Text strong>Solution</Text>
-											<Paragraph>{solution}</Paragraph>
-										</div>
 									</Col>
 									<Col span={12}>
 										<div className={styles.infoItem}>
 											<Text strong>Target Audience</Text>
 											<Paragraph>{target_audience}</Paragraph>
 										</div>
+									</Col>
+								</Row>
+								<Row gutter={[24, 24]}>
+									<Col span={12}>
+										<div className={styles.infoItem}>
+											<Text strong>Solution</Text>
+											<Paragraph>{solution}</Paragraph>
+										</div>
+									</Col>
+									<Col span={12}>
 										<div className={styles.infoItem}>
 											<Text strong>Statistics</Text>
 											<Paragraph>{statistics}</Paragraph>
@@ -157,16 +163,22 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 											<Text strong>Competitors</Text>
 											<Paragraph>{competitors}</Paragraph>
 										</div>
-										<div className={styles.infoItem}>
-											<Text strong>Competitive Advantage</Text>
-											<Paragraph>{competitive_advantage}</Paragraph>
-										</div>
 									</Col>
 									<Col span={12}>
 										<div className={styles.infoItem}>
 											<Text strong>Strategy</Text>
 											<Paragraph>{strategy}</Paragraph>
 										</div>
+									</Col>
+								</Row>
+								<Row gutter={[24, 24]}>
+									<Col span={12}>
+										<div className={styles.infoItem}>
+											<Text strong>Competitive Advantage</Text>
+											<Paragraph>{competitive_advantage}</Paragraph>
+										</div>
+									</Col>
+									<Col span={12}>
 										<div className={styles.infoItem}>
 											<Text strong>Why Now</Text>
 											<Paragraph>{why_now}</Paragraph>

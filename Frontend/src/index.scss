@@ -327,3 +327,34 @@ h4 {
 .ant-select-selection-placeholder {
 	color: $colorPlaceholder !important;
 }
+
+// table
+.ant-table-wrapper {
+	height: 100%;
+
+	.ant-spin-nested-loading {
+		height: 100%;
+
+		.ant-spin-container {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+
+			.ant-table {
+				display: flex;
+				flex-direction: column;
+				flex-grow: 1;
+				height: 100%;
+
+				.ant-table-container {
+					height: 100%;
+
+					.ant-table-body {
+						overflow-y: auto !important;
+						height: 100%; /* Chiều cao nội dung bảng chiếm 100% */
+					}
+				}
+			}
+		}
+	}
+}

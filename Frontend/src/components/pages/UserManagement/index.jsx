@@ -62,7 +62,7 @@ function UserManagement() {
 			key: "action",
 			fixed: "right",
 			align: "center",
-			width: "80px",
+			width: "10rem",
 			render: (text, record) => (
 				<>
 					{authUser.id !== record.id ? (
@@ -197,7 +197,6 @@ function UserManagement() {
 							textBtn={"+ Create"}></ButtonMASQ>
 					</div>
 				</div>
-
 				<div className={styles.boxFilterWrap}>
 					<div className={styles.inputWrap}>
 						<InputMASQ
@@ -234,7 +233,6 @@ function UserManagement() {
 						}
 					/>
 				</div>
-
 				<TableCustom
 					loading={isLoadingTableEmployee}
 					columns={columns}
