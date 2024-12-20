@@ -1,0 +1,11 @@
+@import "assets/scss/variables.scss";
+
+.projectsWrap {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	margin: 1rem;
+	padding: 1rem;
+	background-color: $backgroundMain;
+	border-radius: $borderRadius;
+}

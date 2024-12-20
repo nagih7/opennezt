@@ -9,7 +9,7 @@ const projectSlice = createSlice({
 		projects: [],
 		projectDetails: {},
 		projectsBySeek: [],
-		pendingRequests: [],
+		projectInvitations: [],
 		resultCreateProject: null,
 		loadingGetProjects: false,
 		loadingGetProjectDetails: false,
@@ -19,6 +19,7 @@ const projectSlice = createSlice({
 		loadingUpdateProject: false,
 		resultUpdateProject: null,
 		loadingDeleteProject: false,
+		loadingGetProjectInvitations: false,
 	},
 	reducers: {
 		setTitle: (state) => ({
@@ -129,21 +130,6 @@ const projectSlice = createSlice({
 				loadingDeleteProject: false,
 			};
 		},
-		startGetPendingProjects: (state) => ({
-			...state,
-			loadingPendingProjects: true,
-		}),
-		startGetPendingProjectsSuccess: (state, action) => ({
-			...state,
-			pendingRequests: action.payload.data,
-			loadingPendingProjects: false,
-		}),
-		startGetPendingProjectsFail: (state) => ({
-			...state,
-			pendingRequests: [],
-			loadingPendingProjects: false,
-		}),
-
 		startUpdateRequestStatus: (state) => ({
 			...state,
 			loadingUpdateStatus: true,
@@ -178,6 +164,20 @@ const projectSlice = createSlice({
 				loadingUpdateBackground: false,
 			};
 		},
+		startRequestGetProjectInvitations: (state) => ({
+			...state,
+			loadingGetProjectInvitations: true,
+		}),
+		startRequestGetProjectInvitationsSuccess: (state, action) => ({
+			...state,
+			loadingGetProjectInvitations: false,
+			projectInvitations: action.payload.data,
+		}),
+		startRequestGetProjectInvitationsFail: (state) => ({
+			...state,
+			loadingGetProjectInvitations: false,
+			projectInvitations: [],
+		}),
 	},
 });
 
@@ -201,15 +201,15 @@ export const {
 	startRequestDeleteProject,
 	startRequestDeleteProjectSuccess,
 	startRequestDeleteProjectFail,
-	startGetPendingProjects,
-	startGetPendingProjectsSuccess,
-	startGetPendingProjectsFail,
 	startUpdateRequestStatus,
 	startUpdateRequestStatusSuccess,
 	startUpdateRequestStatusFail,
 	startRequestUpdateBackground,
 	startRequestUpdateBackgroundSuccess,
 	startRequestUpdateBackgroundFail,
+	startRequestGetProjectInvitations,
+	startRequestGetProjectInvitationsSuccess,
+	startRequestGetProjectInvitationsFail,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

@@ -7,9 +7,12 @@ import { CheckOutlined, CloseOutlined } from "@mui/icons-material";
 import store from "states/configureStore";
 import { replyNotification, getNotifications } from "api/notification";
 import { getChatList } from "api/chat";
+import { useNavigate } from "react-router-dom";
 
 function PopoverNotification() {
 	const { notifications } = useSelector((state) => state.notification);
+
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		store.dispatch(getNotifications());
@@ -23,6 +26,10 @@ function PopoverNotification() {
 		if (status === "accepted") {
 			await store.dispatch(getChatList());
 		}
+	};
+
+	const handleNavigateToNotification = () => {
+		navigate("/notification-management");
 	};
 
 	return (
@@ -49,12 +56,10 @@ function PopoverNotification() {
 										</svg>
 									</div>
 									<div className={styles.contentWrap}>
-										{notification.type === "friend_request" && (
-											<div>
-												<b>{notification.metadata.source_name}</b>{" "}
-												{notification.message}
-											</div>
-										)}
+										<div>
+											<b>{notification.metadata.source_name}</b>{" "}
+											{notification.message}
+										</div>
 
 										<span className={styles.date}>
 											{moment(notification.created_at).fromNow()}
@@ -102,7 +107,11 @@ function PopoverNotification() {
 						))}
 				</ul>
 			</div>
-			<div className={styles.footerWrap}>View all notification</div>
+			<div
+				className={styles.footerWrap}
+				onClick={() => handleNavigateToNotification()}>
+				View all notification
+			</div>
 		</div>
 	);
 }

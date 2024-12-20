@@ -1,5 +1,7 @@
+import {ref} from 'joi'
 import createModel, {ObjectId} from './base'
 import {Schema} from 'mongoose'
+import {create} from 'lodash'
 
 const Revernue = new Schema(
     {
@@ -45,6 +47,26 @@ const FundingSource = new Schema(
     }
 )
 
+const Metadata = new Schema({
+    members: [
+        {
+            user_id: {
+                type: ObjectId,
+                required: true,
+                ref: 'User',
+            },
+            role: {
+                type: String,
+                required: true,
+            },
+            join_at: {
+                type: Date,
+                required: true,
+            },
+        },
+    ],
+})
+
 const Project = createModel('Project', 'projects', {
     user_id: {
         type: ObjectId,
@@ -62,10 +84,6 @@ const Project = createModel('Project', 'projects', {
         type: String,
         required: false,
     },
-    landing_page_url: {
-        type: String,
-        required: false,
-    },
     related_industries: {
         type: [String],
         required: true,
@@ -74,13 +92,21 @@ const Project = createModel('Project', 'projects', {
         type: String,
         required: true,
     },
+    metadata: {
+        type: [Metadata],
+        required: true,
+    },
+    landing_page_url: {
+        type: String,
+        required: false,
+    },
     problem: {
         type: String,
-        required: true,
+        required: false,
     },
     solution: {
         type: String,
-        required: true,
+        required: false,
     },
     project_demo_url: {
         type: String,
@@ -96,7 +122,7 @@ const Project = createModel('Project', 'projects', {
     },
     statistics: {
         type: String,
-        required: true,
+        required: false,
     },
     revenues: {
         type: [Revernue],
@@ -108,35 +134,31 @@ const Project = createModel('Project', 'projects', {
     },
     target_money: {
         type: String,
-        required: true,
+        required: false,
     },
     target_audience: {
         type: String,
-        required: true,
+        required: false,
     },
     competitors: {
         type: String,
-        required: true,
+        required: false,
     },
     competitive_advantage: {
         type: String,
-        required: true,
+        required: false,
     },
     why_now: {
         type: String,
-        required: true,
+        required: false,
     },
     strategy: {
         type: String,
-        required: true,
+        required: false,
     },
     milestones: {
         type: String,
-        required: true,
-    },
-    about_opennezt: {
-        type: String,
-        required: true,
+        required: false,
     },
 })
 

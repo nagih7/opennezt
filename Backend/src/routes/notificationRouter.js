@@ -9,6 +9,12 @@ const notificationRouter = Router()
 
 notificationRouter.use(asyncHandler(requireAuthentication))
 
+notificationRouter.get(
+    '/notifications',
+    asyncHandler(validate(notificationRequest.readRoot)),
+    asyncHandler(notificationController.readRoot)
+)
+
 notificationRouter.put(
     '/reply',
     asyncHandler(validate(notificationRequest.replyNotification)),
@@ -20,6 +26,14 @@ notificationRouter.post(
     asyncHandler(validate(notificationRequest.requestMessage)),
     asyncHandler(notificationController.requestMessage)
 )
+
+notificationRouter.post(
+    '/project-invitation',
+    asyncHandler(validate(notificationRequest.projectInvitation)),
+    asyncHandler(notificationController.projectInvitation)
+)
+
+notificationRouter.get('/total-friends', asyncHandler(notificationController.getTotalFriends))
 
 notificationRouter.get('/', asyncHandler(notificationController.getNotifications))
 

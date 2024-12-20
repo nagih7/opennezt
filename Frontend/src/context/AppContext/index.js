@@ -45,7 +45,6 @@ export const AppProvider = ({ children }) => {
 	}, [location, navigate, dispatch]);
 
 	useEffect(() => {
-		console.log("Log");
 		dispatch(getChatList());
 		dispatch(getNotifications());
 	}, [dispatch]);

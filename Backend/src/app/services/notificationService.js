@@ -1,6 +1,47 @@
 import {NotificationFeed, Friend} from '@/models'
 import {userSockets} from '@/routes/socket'
 
+export async function filter(user, {q, page, per_page, order}) {
+    console.log('q', q, 'page', page, 'per_page', per_page, 'order', order)
+    q = q ? q : ''
+    order = order === '-1' ? -1 : 1
+    const matchStage = {
+        $match: {
+            user_id: user._id,
+            $or: [{type: {$regex: q, $options: 'i'}}],
+        },
+    }
+
+    // const sortStage = {
+    //     $sort: {[field]: order},
+    // }
+    const skipStage = {
+        $skip: (page - 1) * per_page,
+    }
+    const limitStage = {
+        $limit: per_page,
+    }
+    const orderStage = {
+        $sort: {created_at: order},
+    }
+
+    const notifications = await NotificationFeed.aggregate([
+        matchStage,
+        // sortStage,
+        skipStage,
+        limitStage,
+        // addSetStage,
+        orderStage,
+    ])
+
+    // const filter = {
+    //     ...(q && {$or: [{name: q}, {email: q}, {phone: q}]}),
+    // }
+
+    const total = await NotificationFeed.countDocuments({user_id: user._id})
+    return {total, page, per_page, notifications}
+}
+
 export async function getNotifications(user) {
     const notifications = await NotificationFeed.aggregate([
         {
@@ -72,7 +113,33 @@ export async function requestMessage(user, requestBody, io) {
         metadata: {
             ...metadata,
             source_name: source_name,
-            project_name: metadata.project_name,
+            status: 'waiting',
+            avatar: user.avatar ? user.avatar : '',
+        },
+    })
+
+    await notification.save()
+    const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === user_id)
+
+    io.to(userSocketId).emit('new_notification')
+}
+
+export async function getTotalFriends(user) {
+    const totalFriends = await Friend.countDocuments({user_id: user._id})
+    return totalFriends
+}
+
+export async function projectInvitation(user, requestBody, io) {
+    const {project_id, user_id} = requestBody
+    console.log('user_id', user_id)
+    const notification = new NotificationFeed({
+        user_id: user_id,
+        source_id: user._id,
+        type: 'project_invitation',
+        message: 'invited you to join the project',
+        metadata: {
+            project_id: project_id,
+            source_name: user.name,
             status: 'waiting',
             avatar: user.avatar ? user.avatar : '',
         },

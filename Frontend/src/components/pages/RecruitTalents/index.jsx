@@ -92,6 +92,7 @@ function RecruitTalents() {
 			</LazyLoadingMedium>
 
 			<Modal
+				footer={null}
 				title=""
 				okText="OK"
 				open={modalTalentDetails}

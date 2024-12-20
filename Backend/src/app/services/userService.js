@@ -415,7 +415,7 @@ export async function getTalentDetails(id) {
         {
             $unwind: {
                 path: '$talent_profile',
-                preserveNullAndEmptyArrays: false, // Nếu không muốn giữ lại các bản ghi không có founder_profiles
+                preserveNullAndEmptyArrays: true, // Nếu không muốn giữ lại các bản ghi không có founder_profiles
             },
         },
         {

@@ -1,107 +1,92 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Table, Tag, Button, Modal, Row, Col } from "antd";
-import { CheckOutlined, CloseOutlined, StopOutlined } from "@ant-design/icons";
+import { Tag, Button, Modal, Row, Col } from "antd";
+import TableCustom from "components/UI/Table";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";
 import { getTalentDetails } from "api/talent";
 import moment from "moment";
 import {
-	getPendingProjects,
-	responseRequestToJoinProject,
-	getProjectDetails,
-} from "api/project";
+	getNotifications,
+	getTotalFriends,
+	readRoot,
+	replyNotification,
+} from "api/notification";
 
 const TalentProfile = React.lazy(() =>
 	import("components/common/TalentProfile")
 );
 
-const ProjectDetails = React.lazy(() => import("../../common/ProjectDetails"));
-
 function NotificationProject() {
 	const [openModalTalentDetails, setOpenModalTalentDetails] = useState(false);
-	const [openModalProjectDetails, setOpenModalProjectDetails] =
-		useState(false);
-
-	const { pendingRequests, projectDetails } = useSelector(
-		(state) => state.project
-	);
+	const [dataFilter, setDataFilter] = useState({
+		page: 1,
+		perPage: 10,
+		order: null,
+	});
 
 	const { talentDetails, loadingGetTalentDetails } = useSelector(
 		(state) => state.talent
 	);
+	const { notifications, totalFriends, paginationListNotification } =
+		useSelector((state) => state.notification);
 
 	useEffect(() => {
-		store.dispatch(getPendingProjects());
-	}, []);
+		store.dispatch(readRoot(dataFilter));
+		store.dispatch(getTotalFriends());
+	}, [dataFilter]);
 
-	const handleOpenModalDetails = async (project_id) => {
-		await store.dispatch(getProjectDetails(project_id));
-		setOpenModalProjectDetails(true);
-	};
-
-	const handleUpdateStatus = async (record, status) => {
-		await store.dispatch(
-			responseRequestToJoinProject({
-				request_id: record._id,
-				status,
-			})
-		);
-		await store.dispatch(getPendingProjects());
-	};
-
-	const handleOpenTalentDetails = async (email) => {
-		await store.dispatch(getTalentDetails(email));
+	const handleOpenTalentDetails = async (user_id) => {
+		await store.dispatch(getTalentDetails(user_id));
 		setOpenModalTalentDetails(true);
+	};
+
+	const handleReplyNotification = async (notification_id, type, status) => {
+		await store.dispatch(
+			replyNotification({ notification_id, type, status })
+		);
+		await store.dispatch(getNotifications());
+		if (status === "accepted") {
+			await store.dispatch(getChatList());
+		}
 	};
 
 	const columns = [
 		{
-			title: "Project Name",
-			dataIndex: "project_name",
-			key: "project_name",
-			render: (text, record) => (
-				<Button
-					type="link"
-					onClick={() => handleOpenModalDetails(record.project_id)}
-					style={{ padding: 0, height: "auto" }}>
-					{text}
-				</Button>
-			),
-		},
-		{
 			title: "Requested By",
-			dataIndex: "sender_name",
-			key: "sender_name",
-			render: (name, record) => (
+			dataIndex: "metadata",
+			key: "source_name",
+			render: (metadata, record) => (
 				<Button
 					type="link"
-					onClick={() => handleOpenTalentDetails(record.sender_id)}
+					onClick={() => handleOpenTalentDetails(record.source_id)}
 					style={{ padding: 0, height: "auto" }}>
-					{name}
+					{metadata.source_name}
 				</Button>
 			),
 		},
 		{
-			title: "Role",
-			dataIndex: "role",
-			key: "role",
-			render: (role) => <Tag color="blue">{role.toUpperCase()}</Tag>,
+			title: "Type",
+			dataIndex: "type",
+			key: "type",
+			// width: "10rem",
+			render: (type, record) => <div>{type.toUpperCase()}</div>,
 		},
 		{
 			title: "Requested At",
-			dataIndex: "createdAt",
-			key: "createdAt",
+			dataIndex: "created_at",
+			key: "created_at",
 			render: (date) => moment(date).fromNow(),
 		},
 		{
 			title: "Status",
-			dataIndex: "status",
+			dataIndex: "metadata",
 			key: "status",
 
-			render: (status) => {
+			render: (metadata) => {
 				let color;
-				switch (status) {
+				switch (metadata.status) {
 					case "waiting":
 						color = "gold";
 						break;
@@ -117,7 +102,11 @@ function NotificationProject() {
 					default:
 						color = "gray";
 				}
-				return <Tag color={color}>{status.toUpperCase()}</Tag>;
+				return (
+					<Tag color={color}>
+						{metadata.status ? metadata.status.toUpperCase() : ""}
+					</Tag>
+				);
 			},
 		},
 		{
@@ -125,36 +114,56 @@ function NotificationProject() {
 			key: "actions",
 			fixed: "right",
 			align: "center",
-			width: "10rem",
+			width: "15rem",
 			render: (_, record) => (
 				<div className={styles.actionButtons}>
 					<Button
 						type="primary"
 						icon={<CheckOutlined />}
-						onClick={() => handleUpdateStatus(record, "accepted")}
-						disabled={record.status !== "waiting"}>
+						onClick={() =>
+							handleReplyNotification(
+								record._id,
+								record.type,
+								"accepted"
+							)
+						}
+						disabled={record.metadata.status !== "waiting"}>
 						Accept
 					</Button>
 					<Button
 						type="default"
 						danger
 						icon={<CloseOutlined />}
-						onClick={() => handleUpdateStatus(record, "rejected")}
-						disabled={record.status !== "waiting"}>
+						onClick={() =>
+							handleReplyNotification(
+								record._id,
+								record.type,
+								"rejected"
+							)
+						}
+						disabled={record.metadata.status !== "waiting"}>
 						Reject
-					</Button>
-					<Button
-						type="default"
-						danger
-						icon={<StopOutlined />}
-						onClick={() => handleUpdateStatus(record, "blocked")}
-						disabled={record.status !== "waiting"}>
-						Block
 					</Button>
 				</div>
 			),
 		},
 	];
+
+	const changeCurrentPage = (page) => {
+		setDataFilter({ ...dataFilter, page: page });
+	};
+
+	const onChange = (pagination, filters, sorter) => {
+		if (sorter.order && sorter.field) {
+			setDataFilter({
+				...dataFilter,
+				order: sorter.order === "descend" ? -1 : 1,
+				column: sorter.field,
+			});
+		} else {
+			setDataFilter({ ...dataFilter, order: null, column: null });
+		}
+	};
 
 	return (
 		<div className={styles.notificationsWrap}>
@@ -166,7 +175,9 @@ function NotificationProject() {
 								<Col xs={12} sm={12} md={12} lg={12} xl={12}>
 									<div className={styles.friendsWrap}>
 										<div className={styles.labelWrap}>Friends</div>
-										<div className={styles.numberWrap}>{100}</div>
+										<div className={styles.numberWrap}>
+											{totalFriends}
+										</div>
 										<div className={styles.dateUpdate}>last week</div>
 									</div>
 								</Col>
@@ -192,24 +203,18 @@ function NotificationProject() {
 				</Row>
 			</div>
 			<div className={styles.notificationsTableWrap}>
-				<Table
-					columns={columns}
-					dataSource={pendingRequests}
+				<TableCustom
 					loading={loadingGetTalentDetails}
+					columns={columns}
+					dataSource={notifications}
 					rowKey="_id"
-					pagination={{ pageSize: 10 }}
+					pagination={paginationListNotification}
+					onChangeCurrentPage={changeCurrentPage}
+					onChange={onChange}
 				/>
 			</div>
 			<Modal
-				title=""
-				open={openModalProjectDetails}
-				onCancel={() => setOpenModalProjectDetails(false)}
-				width={1280}>
-				<React.Suspense fallback={<div>Loading...</div>}>
-					<ProjectDetails projectDetails={projectDetails} />
-				</React.Suspense>
-			</Modal>
-			<Modal
+				footer={null}
 				title=""
 				open={openModalTalentDetails}
 				onCancel={() => setOpenModalTalentDetails(false)}

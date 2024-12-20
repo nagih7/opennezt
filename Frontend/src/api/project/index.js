@@ -18,15 +18,15 @@ import {
 	startRequestDeleteProject,
 	startRequestDeleteProjectSuccess,
 	startRequestDeleteProjectFail,
-	startGetPendingProjects,
-	startGetPendingProjectsSuccess,
-	startGetPendingProjectsFail,
 	startUpdateRequestStatus,
 	startUpdateRequestStatusSuccess,
 	startUpdateRequestStatusFail,
 	startRequestUpdateBackground,
 	startRequestUpdateBackgroundSuccess,
 	startRequestUpdateBackgroundFail,
+	startRequestGetProjectInvitations,
+	startRequestGetProjectInvitationsSuccess,
+	startRequestGetProjectInvitationsFail,
 } from "../../states/modules/project";
 
 export const getProjects = () => async (dispatch, getState) => {
@@ -121,21 +121,6 @@ export const deleteProject = (projectId) => async (dispatch, getState) => {
 	});
 };
 
-export const getPendingProjects = () => async (dispatch, getState) => {
-	return callApi({
-		method: "get",
-		apiPath: `project/request-to-join`,
-		actionTypes: [
-			startGetPendingProjects,
-			startGetPendingProjectsSuccess,
-			startGetPendingProjectsFail,
-		],
-		variables: {},
-		dispatch,
-		getState,
-	});
-};
-
 export const responseRequestToJoinProject =
 	(requestData) => async (dispatch, getState) => {
 		return callApi({
@@ -170,3 +155,18 @@ export const updateBackgroundProject =
 			getState,
 		});
 	};
+
+export const getProjectInvitations = () => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: "project/invitations",
+		actionTypes: [
+			startRequestGetProjectInvitations,
+			startRequestGetProjectInvitationsSuccess,
+			startRequestGetProjectInvitationsFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
