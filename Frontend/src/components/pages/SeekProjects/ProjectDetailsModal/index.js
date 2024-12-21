@@ -72,7 +72,9 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 							))}
 						</Space>
 						<Space size={8} wrap>
-							<Tag color="green" icon={<RocketOutlined />}>
+							<Tag
+								color="green"
+								icon={<RocketOutlined style={{ height: "0.5rem	" }} />}>
 								{projectDetails.stage}
 							</Tag>
 						</Space>

@@ -5,24 +5,24 @@ const founderSlice = createSlice({
 	name: "founder",
 	initialState: {
 		founderProfile: {},
+		loadingGetFounderProfile: false,
 		loadingUpdateFounderProfile: false,
 		resultUpdateFounderProfile: false,
 	},
 	reducers: {
-		// setTitle: (state) => ({
-		// 	...state,
-		// 	title: "title",
-		// }),
 		startRequestGetFounderProfile: (state) => ({
 			...state,
+			loadingGetFounderProfile: true,
 		}),
 		startRequestGetFounderProfileSuccess: (state, action) => ({
 			...state,
 			founderProfile: action.payload.data,
+			loadingGetFounderProfile: false,
 		}),
 		startRequestGetFounderProfileFail: (state) => ({
 			...state,
 			founderProfile: {},
+			loadingGetFounderProfile: false,
 		}),
 		startUpdateFounderProfile: (state) => ({
 			...state,

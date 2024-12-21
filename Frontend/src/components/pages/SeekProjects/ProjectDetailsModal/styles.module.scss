@@ -9,7 +9,7 @@
 
 .projectHeader {
 	position: relative;
-	height: 240px;
+	height: 20rem;
 	border-radius: 12px;
 	overflow: hidden;
 	box-shadow: $boxShadowDark;
@@ -56,32 +56,32 @@
 				color: #1890ff;
 			}
 		}
-	}
-}
 
-.infoItem {
-	margin-bottom: 20px;
+		.infoItem {
+			margin-bottom: 20px;
 
-	strong {
-		display: block;
-		margin-bottom: 8px;
-		color: #1f1f1f;
-	}
+			strong {
+				display: block;
+				margin-bottom: 8px;
+				color: #1f1f1f;
+			}
 
-	.ant-typography {
-		margin-bottom: 0;
-	}
-}
+			.ant-typography {
+				margin-bottom: 0;
+			}
+		}
 
-.fundingCard {
-	text-align: center;
-	height: 100%;
+		.fundingCard {
+			text-align: center;
+			height: 100%;
 
-	.amount {
-		display: block;
-		margin-top: 8px;
-		font-size: 20px;
-		color: #1890ff;
-		font-weight: 600;
+			.amount {
+				display: block;
+				margin-top: 8px;
+				font-size: 20px;
+				color: #1890ff;
+				font-weight: 600;
+			}
+		}
 	}
 }

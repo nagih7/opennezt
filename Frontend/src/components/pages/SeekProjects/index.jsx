@@ -10,9 +10,7 @@ import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 import { getRequestAddFriend } from "api/notification";
 
 const SeekProjectBox = React.lazy(() => import("./SeekProjectBox"));
-const ProjectDetailsModal = React.lazy(() =>
-	import("./ProjectDetailsModal/ProjectDetailsModal")
-);
+const ProjectDetailsModal = React.lazy(() => import("./ProjectDetailsModal"));
 
 const SeekProjects = () => {
 	const { projectsBySeek, projectDetails } = useSelector(

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styles from "./styles.module.scss";
-import store from "states/configureStore";
 import {
 	getProjects,
 	createNewProject,
@@ -8,22 +7,23 @@ import {
 	updateProject,
 	deleteProject,
 } from "api/project";
-import { useSelector } from "react-redux";
-import { Button, message, Modal } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { Button, Modal } from "antd";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+import BoxProject from "./BoxProject";
+import ProjectDetails from "../../common/ProjectDetails";
+import ProjectsSkeleton from "components/skeleton/ProjectsSkeleton";
 
 const CreateProjectForm = React.lazy(() => import("./CreateProjectForm"));
-const BoxProject = React.lazy(() => import("./BoxProject"));
-const ProjectDetails = React.lazy(() => import("../../common/ProjectDetails"));
 const UpdateProjectForm = React.lazy(() => import("./UpdateProjectForm"));
 
 function Project() {
-	useEffect(() => {
-		store.dispatch(getProjects());
-	}, []);
+	const dispatch = useDispatch();
 
 	const [openModalUpdateProject, setOpenModalUpdateProject] = useState(false);
 	const [openModalCreateProject, setOpenModalCreateProject] = useState(false);
+	const [openModalProjectDetails, setOpenModalProjectDetails] =
+		useState(false);
 	const [formProject, setFormData] = useState({
 		name: "",
 		landing_page_url: "",
@@ -52,6 +52,10 @@ function Project() {
 		milestones: "",
 		background: {},
 	});
+
+	useEffect(() => {
+		dispatch(getProjects());
+	}, [dispatch]);
 
 	const setDefaultForm = () => {
 		setFormData({
@@ -89,36 +93,32 @@ function Project() {
 		loadingCreateNewProject,
 		resultCreateProject,
 		projectDetails,
-		// loadingGetProjectDetails,
 		loadingUpdateProject,
 		resultUpdateProject,
 		loadingDeleteProject,
+		loadingGetProjects,
 	} = useSelector((state) => state.project);
 
-	const handleOpenModalDetails = async (project_id) => {
-		await store.dispatch(getProjectDetails(project_id));
-		setOpenModalProjectDetails(true);
-	};
-
-	const [openModalProjectDetails, setOpenModalProjectDetails] =
-		useState(false);
-
-	const showLoading = () => {
-		setOpenModalProjectDetails(false);
-	};
+	const handleOpenModalDetails = useCallback(
+		(project_id) => {
+			setOpenModalProjectDetails(true);
+			dispatch(getProjectDetails(project_id));
+		},
+		[dispatch]
+	);
 
 	const handleCreateProject = async () => {
-		await store.dispatch(createNewProject(formProject));
+		dispatch(createNewProject(formProject));
 	};
 
 	useEffect(() => {
 		if (resultCreateProject === true) {
 			setDefaultForm();
-			store.dispatch(getProjects());
+			dispatch(getProjects());
 			setOpenModalCreateProject(false);
 			setDefaultForm();
 		}
-	}, [resultCreateProject]);
+	}, [resultCreateProject, dispatch]);
 
 	const handleCancel = () => {
 		setOpenModalCreateProject(false);
@@ -136,15 +136,15 @@ function Project() {
 	};
 
 	const handleDeleteProject = async (project_id) => {
-		await store.dispatch(deleteProject(project_id));
-		await store.dispatch(getProjects());
+		dispatch(deleteProject(project_id));
+		dispatch(getProjects());
 		setOpenModalProjectDetails(false);
 	};
 
 	const handleUpdateProject = async () => {
-		await store.dispatch(updateProject(formProject));
-		await store.dispatch(getProjectDetails(projectDetails._id));
-		await store.dispatch(getProjects());
+		dispatch(updateProject(formProject));
+		dispatch(getProjectDetails(projectDetails._id));
+		dispatch(getProjects());
 	};
 
 	useEffect(() => {
@@ -153,8 +153,6 @@ function Project() {
 			setDefaultForm();
 		}
 	}, [resultUpdateProject]);
-
-	const confirmLoading = false;
 
 	return (
 		<div className={styles.projectContainer}>
@@ -168,17 +166,19 @@ function Project() {
 				</Button>
 			</div>
 			<div className={styles.projectsList}>
-				<LazyLoadingMedium>
-					{projects &&
-						projects.length > 0 &&
-						projects.map((project, index) => (
-							<BoxProject
-								project={project}
-								key={index}
-								openModalDetails={handleOpenModalDetails}
-							/>
-						))}
-				</LazyLoadingMedium>
+				{loadingGetProjects ? (
+					<ProjectsSkeleton boxs={6} />
+				) : (
+					projects &&
+					projects.length > 0 &&
+					projects.map((project, index) => (
+						<BoxProject
+							project={project}
+							key={index}
+							openModalDetails={handleOpenModalDetails}
+						/>
+					))
+				)}
 			</div>
 
 			<Modal
@@ -196,7 +196,6 @@ function Project() {
 					/>
 				</LazyLoadingMedium>
 			</Modal>
-
 			<Modal
 				title=""
 				open={openModalProjectDetails}
@@ -207,7 +206,7 @@ function Project() {
 						<Button
 							type="primary"
 							onClick={handleOpenModalUpdateProject}
-							loading={confirmLoading}>
+							loading={false}>
 							Update
 						</Button>
 						<Button
@@ -219,11 +218,8 @@ function Project() {
 						</Button>
 					</>
 				}>
-				<LazyLoadingMedium>
-					<ProjectDetails projectDetails={projectDetails} />
-				</LazyLoadingMedium>
+				<ProjectDetails />
 			</Modal>
-
 			<Modal
 				title=""
 				okText="Update now"

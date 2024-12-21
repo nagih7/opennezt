@@ -18,9 +18,7 @@ const UserManagement = React.lazy(() =>
 	import("../components/pages/UserManagement")
 );
 const About = React.lazy(() => import("../components/pages/About"));
-// const AboutYou = React.lazy(() => import("../components/pages/AboutYou"));
 const Newfeeds = React.lazy(() => import("../components/pages/Newfeeds"));
-const Founder = React.lazy(() => import("../components/pages/Founder"));
 const Project = React.lazy(() => import("../components/pages/Project"));
 const RecruitTalents = React.lazy(() =>
 	import("../components/pages/RecruitTalents")
@@ -125,16 +123,7 @@ const router = createBrowserRouter([
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_NEWFEED_PAGE"),
 	},
-	{
-		path: "/founder",
-		element: (
-			<AppLayout>
-				<Founder />
-			</AppLayout>
-		),
-		loader: ({ request }) =>
-			rootLoader({ request }, true, "LOAD_FOUNDER_PAGE"),
-	},
+
 	{
 		path: "/project",
 		element: (

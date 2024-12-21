@@ -1,8 +1,11 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { useSelector } from "react-redux";
 
-const FounderProfile = ({ founderProfile }) => {
+const FounderProfile = () => {
+	const { founderProfile } = useSelector((state) => state.founder);
+
 	return (
 		<div className={styles.founderProfileWrap}>
 			<h2>

@@ -4,13 +4,12 @@ import store from "states/configureStore";
 import { checkSteps } from "api/home";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import LazyLoading from "components/UI/LazyLoading";
-
-const StepBox = React.lazy(() => import("./StepBox"));
+import StepBoxSkeleton from "components/skeleton/StepBoxSkeleton";
+import StepBox from "./StepBox";
 
 function Home() {
 	const navigate = useNavigate();
-	const stepState = useSelector((state) => state.home.steps);
+	const { steps, loadingCheckSteps } = useSelector((state) => state.home);
 
 	useEffect(() => {
 		store.dispatch(checkSteps());
@@ -23,34 +22,39 @@ function Home() {
 					<div className={styles.homeHeader}>
 						<b>Hello!</b> Welcome to <b>OpenNezt</b>, where innovation
 						meets opportunity and collaboration sparks success
-					</div>
+					</div>{" "}
 					<div className={styles.homeStepWrap}>
 						<div className={styles.homeStepContentWrap}>
-							<LazyLoading>
+							{loadingCheckSteps ? (
+								<StepBoxSkeleton />
+							) : (
 								<StepBox
-									step={stepState.founderProfile}
+									step={steps.founderProfile}
 									textTrue="Update your profile"
 									textFalse="Update your profile"
 									path="/about"
 								/>
-							</LazyLoading>
-							<LazyLoading>
+							)}
+							{loadingCheckSteps ? (
+								<StepBoxSkeleton />
+							) : (
 								<StepBox
-									step={stepState.project}
+									step={steps.project}
 									textTrue="Redirect to project"
 									textFalse="Create your first project"
 									path="/project"
 								/>
-							</LazyLoading>
-
-							<LazyLoading>
+							)}
+							{loadingCheckSteps ? (
+								<StepBoxSkeleton />
+							) : (
 								<StepBox
 									step={true}
 									textTrue="Invite your Team"
 									textFalse="Invite your Team"
 									path="/recruit-talents"
 								/>
-							</LazyLoading>
+							)}
 						</div>
 					</div>
 					<div className={styles.recruitStepWrap}>

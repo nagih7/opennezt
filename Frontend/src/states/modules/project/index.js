@@ -7,7 +7,7 @@ const projectSlice = createSlice({
 	initialState: {
 		title: "",
 		projects: [],
-		projectDetails: {},
+		projectDetails: null,
 		projectsBySeek: [],
 		projectInvitations: [],
 		resultCreateProject: null,
@@ -72,7 +72,7 @@ const projectSlice = createSlice({
 		startGetProjectDetailsFail: (state) => ({
 			...state,
 			loadingGetProjectDetails: false,
-			projectDetails: {},
+			projectDetails: null,
 		}),
 
 		// Seek project

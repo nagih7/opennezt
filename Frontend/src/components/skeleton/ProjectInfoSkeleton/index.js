@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./styles.module.scss";
-import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
-import { useSelector } from "react-redux";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { Card, Col, Row, Typography } from "antd";
 const { Title, Text, Paragraph } = Typography;
 import {
@@ -10,13 +10,9 @@ import {
 	AimOutlined,
 } from "@ant-design/icons";
 
-const MemberBox = React.lazy(() => import("./MemberBox"));
-
-const ProjectInfo = () => {
-	const { projectDetails } = useSelector((state) => state.project);
-
+const ProjectInfoSkeleton = () => {
 	return (
-		<div className={styles.projectInfoWrap}>
+		<div className={styles.projectCardSkeletonWrap}>
 			<Row gutter={[24, 24]}>
 				<Col span={24}>
 					<Card className={styles.section}>
@@ -28,9 +24,7 @@ const ProjectInfo = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Problem</Text>
 									<Paragraph>
-										{projectDetails.problem
-											? projectDetails.problem
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -38,9 +32,7 @@ const ProjectInfo = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Target Audience</Text>
 									<Paragraph>
-										{projectDetails.target_audience
-											? projectDetails.target_audience
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -50,9 +42,7 @@ const ProjectInfo = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Solution</Text>
 									<Paragraph>
-										{projectDetails.solution
-											? projectDetails.solution
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -60,9 +50,7 @@ const ProjectInfo = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Statistics</Text>
 									<Paragraph>
-										{projectDetails.statistics
-											? projectDetails.statistics
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -74,18 +62,8 @@ const ProjectInfo = () => {
 						<Title level={4} icon={<DollarCircleOutlined />}>
 							Team Infomation
 						</Title>
-						<Row gutter={[16, 16]}>
-							<LazyLoadingMedium>
-								<MemberBox member={projectDetails.owner} />
-							</LazyLoadingMedium>
-							{projectDetails.members &&
-								projectDetails.members.length > 0 &&
-								projectDetails.members.map((member, index) => (
-									<LazyLoadingMedium key={index}>
-										<MemberBox member={member} />
-									</LazyLoadingMedium>
-								))}
-						</Row>
+						<Skeleton height={"10rem"} />
+						<Skeleton />
 					</Card>
 				</Col>
 
@@ -95,27 +73,25 @@ const ProjectInfo = () => {
 							Funding Information
 						</Title>
 						<Row gutter={[16, 16]}>
-							{Object.entries(projectDetails.funding_sources).map(
-								([source, amount]) => (
-									<Col span={8} key={source}>
+							{Array(5)
+								.fill(0)
+								.map((_, i) => (
+									<Col span={8} key={i}>
 										<Card className={styles.fundingCard}>
 											<Text strong>
-												{source.replace(/_/g, " ").toUpperCase()}
+												<Skeleton height={"1.5rem"} />
 											</Text>
 											<Text className={styles.amount}>
-												${amount ? amount : "0"}
+												<Skeleton height={"2rem"} />
 											</Text>
 										</Card>
 									</Col>
-								)
-							)}
+								))}
 							<Col span={24}>
 								<div className={styles.infoItem}>
 									<Text strong>Target Money</Text>
 									<Paragraph>
-										{projectDetails.target_money
-											? projectDetails.target_money
-											: "..."}
+										<Skeleton />
 									</Paragraph>
 								</div>
 							</Col>
@@ -133,9 +109,7 @@ const ProjectInfo = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Competitors</Text>
 									<Paragraph>
-										{projectDetails.competitors
-											? projectDetails.competitors
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -143,9 +117,7 @@ const ProjectInfo = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Strategy</Text>
 									<Paragraph>
-										{projectDetails.strategy
-											? projectDetails.strategy
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -155,9 +127,7 @@ const ProjectInfo = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Competitive Advantage</Text>
 									<Paragraph>
-										{projectDetails.competitive_advantage
-											? projectDetails.competitive_advantage
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -165,9 +135,7 @@ const ProjectInfo = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Why Now</Text>
 									<Paragraph>
-										{projectDetails.why_now
-											? projectDetails.why_now
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -179,4 +147,4 @@ const ProjectInfo = () => {
 	);
 };
 
-export default ProjectInfo;
+export default ProjectInfoSkeleton;

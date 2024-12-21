@@ -5,6 +5,7 @@ import Header from "./Header";
 import { useSelector } from "react-redux";
 import LazyLoading from "components/UI/LazyLoading";
 import { AppProvider } from "context/AppContext";
+// import { SkeletonTheme } from "react-loading-skeleton";
 
 function AppLayout(props) {
 	const { children } = props;
@@ -15,6 +16,7 @@ function AppLayout(props) {
 
 	return (
 		<AppProvider>
+			{/* <SkeletonTheme baseColor="#ddd" highlightColor="#999"> */}
 			<div className={`${styles.boxMainLayout}`}>
 				<div className={styles.mainLayoutWrap}>
 					<SideBar
@@ -35,6 +37,7 @@ function AppLayout(props) {
 					</div>
 				</div>
 			</div>
+			{/* </SkeletonTheme> */}
 		</AppProvider>
 	);
 }
