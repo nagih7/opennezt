@@ -42,9 +42,10 @@ export async function seekProjects(userId, requestQuery) {
         },
         {
             $project: {
-                problem: 1,
-                solution: 1,
+                related_industries: 1,
+                stage: 1,
                 background: 1,
+                user_id: 1,
                 created_at: 1,
                 name: 1,
                 _id: 1,
@@ -116,6 +117,5 @@ export async function getInvitations(userId, user_id) {
             },
         },
     ])
-    console.log(invitations)
     return invitations
 }

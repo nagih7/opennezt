@@ -7,6 +7,7 @@ import { seekProjects, getProjectDetails } from "api/project";
 import { Select, Button, Input } from "antd";
 
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+import { getRequestAddFriend } from "api/notification";
 
 const SeekProjectBox = React.lazy(() => import("./SeekProjectBox"));
 const ProjectDetailsModal = React.lazy(() =>
@@ -24,7 +25,6 @@ const SeekProjects = () => {
 		name: null,
 	});
 
-	const [expandedProjectId, setExpandedProjectId] = useState(null);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	useEffect(() => {
@@ -33,9 +33,6 @@ const SeekProjects = () => {
 
 	const handleSeekProjects = async (e) => {
 		await store.dispatch(seekProjects(formSeekProjects));
-	};
-	const toggleExpand = (projectId) => {
-		setExpandedProjectId(expandedProjectId === projectId ? null : projectId);
 	};
 
 	const onChange = (event, nameSelect) => {
@@ -59,9 +56,10 @@ const SeekProjects = () => {
 		}
 	};
 
-	const handleViewDetails = async (projectId) => {
-		await store.dispatch(getProjectDetails(projectId));
+	const handleViewDetails = async (projectId, userId) => {
 		setIsModalVisible(true);
+		await store.dispatch(getProjectDetails(projectId));
+		await store.dispatch(getRequestAddFriend(userId));
 	};
 
 	return (
@@ -115,7 +113,7 @@ const SeekProjects = () => {
 						</LazyLoadingMedium>
 					))}
 			</div>
-			{projectDetails.name && (
+			{projectDetails && projectDetails.name && (
 				<LazyLoadingMedium>
 					<ProjectDetailsModal
 						isVisible={isModalVisible}

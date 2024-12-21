@@ -18,6 +18,9 @@ import {
 	startRequestProjectInvitation,
 	startRequestProjectInvitationSuccess,
 	startRequestProjectInvitationFail,
+	startRequestGetRequestAddFriend,
+	startRequestGetRequestAddFriendSuccess,
+	startRequestGetRequestAddFriendFail,
 } from "states/modules/notification";
 
 export const getNotifications = () => async (dispatch, getState) => {
@@ -50,11 +53,11 @@ export const replyNotification = (data) => async (dispatch, getState) => {
 	});
 };
 
-export const requestMessage =
+export const sendRequestAddFriend =
 	(requestMessageData) => async (dispatch, getState) => {
 		return callApi({
 			method: "post",
-			apiPath: `notification/request-message`,
+			apiPath: `notification/request-add-friend`,
 			actionTypes: [
 				startRequestMessage,
 				startRequestMessageSuccess,
@@ -65,6 +68,21 @@ export const requestMessage =
 			getState,
 		});
 	};
+
+export const getRequestAddFriend = (user_id) => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: `notification/request-add-friend/${user_id}`,
+		actionTypes: [
+			startRequestGetRequestAddFriend,
+			startRequestGetRequestAddFriendSuccess,
+			startRequestGetRequestAddFriendFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
 
 export const getTotalFriends = () => async (dispatch, getState) => {
 	return callApi({

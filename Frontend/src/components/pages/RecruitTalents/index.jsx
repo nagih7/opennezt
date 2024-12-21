@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";
 import { recruitTalents, skipTalent, getTalentDetails } from "api/talent";
-import { getChatInvitation } from "api/chat";
 import { useSelector } from "react-redux";
 import { Modal } from "antd";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+import { getRequestAddFriend } from "api/notification";
 
 const RecruitWrap = React.lazy(() => import("./RecuitWrap"));
 const ListTalents = React.lazy(() => import("./ListTalents"));
@@ -66,9 +66,9 @@ function RecruitTalents() {
 	};
 
 	const handleGetDetailTalent = async (id) => {
-		await store.dispatch(getTalentDetails(id));
-		await store.dispatch(getChatInvitation(id));
 		setModalTalentDetails(true);
+		await store.dispatch(getTalentDetails(id));
+		await store.dispatch(getRequestAddFriend(id));
 	};
 
 	const handleClosePopup = () => {

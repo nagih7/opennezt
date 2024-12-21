@@ -151,29 +151,6 @@ export async function getProject(projectId) {
         },
         {
             $lookup: {
-                from: 'project_requests',
-                localField: '_id',
-                foreignField: 'project_id',
-                as: 'project_requests',
-                pipeline: [
-                    {
-                        $match: {
-                            status: 'accepted',
-                        },
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                            sender_id: 1,
-                            sender_name: 1,
-                            role: 1,
-                        },
-                    },
-                ],
-            },
-        },
-        {
-            $lookup: {
                 from: 'users',
                 localField: 'user_id',
                 foreignField: '_id',
@@ -208,35 +185,6 @@ export async function getProject(projectId) {
             $unwind: '$owner',
         },
         {
-            $lookup: {
-                from: 'users',
-                localField: 'project_requests.sender_id',
-                foreignField: '_id',
-                as: 'members',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 1,
-                            name: 1,
-                            // email: 1,
-                            avatar: 1,
-                        },
-                    },
-                    {
-                        $addFields: {
-                            avatar: {
-                                $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
-                                    then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
-                                },
-                            },
-                        },
-                    },
-                ],
-            },
-        },
-        {
             $addFields: {
                 background: {
                     $cond: {
@@ -254,7 +202,6 @@ export async function getProject(projectId) {
                 },
             },
         },
-
         {
             $project: {
                 project_requests: 0,

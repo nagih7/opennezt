@@ -47,14 +47,4 @@ chatRouter.post('/save-messages', async (req, res) => {
     }
 })
 
-chatRouter.post(
-    '/chat-invitation',
-    asyncHandler(validate(chatRequest.createChatInvitation)),
-    asyncHandler(chatController.createChatInvitation)
-)
-
-chatRouter.get('/chat-invitations', asyncHandler(chatController.getChatInvitations))
-
-chatRouter.get('/chat-invitation/:receiver_id', asyncHandler(chatController.getChatInvitationByReceiverId))
-
 export default chatRouter

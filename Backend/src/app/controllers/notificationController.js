@@ -15,8 +15,8 @@ export async function replyNotification(req, res) {
     res.jsonify('Reply notification successfully.')
 }
 
-export async function requestMessage(req, res) {
-    await notificationService.requestMessage(req.currentUser, req.body, req.io)
+export async function requestAddFriend(req, res) {
+    await notificationService.requestAddFriend(req.currentUser, req.body, req.io)
     res.status(201).jsonify('Request message successfully.')
 }
 
@@ -28,4 +28,10 @@ export async function getTotalFriends(req, res) {
 export async function projectInvitation(req, res) {
     await notificationService.projectInvitation(req.currentUser, req.body, req.io)
     res.status(201).jsonify('Project invitation successfully.')
+}
+
+// Get request add friend
+export async function getRequestAddFriend(req, res) {
+    const result = await notificationService.getRequestAddFriend(req.currentUser, req.params.user_id)
+    res.jsonify(result)
 }

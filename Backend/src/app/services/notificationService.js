@@ -119,8 +119,8 @@ export async function replyProjectInvitation(notification_id, status) {
     await notification.save()
 }
 
-export async function requestMessage(user, requestBody, io) {
-    const {user_id, source_name, metadata} = requestBody
+export async function requestAddFriend(user, requestBody, io) {
+    const {user_id, metadata} = requestBody
 
     const notification = new NotificationFeed({
         user_id: user_id,
@@ -129,7 +129,7 @@ export async function requestMessage(user, requestBody, io) {
         message: 'sent you a friend request',
         metadata: {
             ...metadata,
-            source_name: source_name,
+            source_name: user.name,
             status: 'waiting',
             avatar: user.avatar ? user.avatar : '',
         },
@@ -165,4 +165,17 @@ export async function projectInvitation(user, requestBody, io) {
     const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === user_id)
 
     io.to(userSocketId).emit('new_notification')
+}
+
+// Get request add friend
+export async function getRequestAddFriend(user, user_id) {
+    const request = await NotificationFeed.findOne({
+        $or: [
+            {user_id: user_id, source_id: user._id},
+            {user_id: user._id, source_id: user_id},
+        ],
+        type: 'friend_request',
+    })
+
+    return request
 }

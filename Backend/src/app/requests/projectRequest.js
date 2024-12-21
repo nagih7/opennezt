@@ -3,7 +3,7 @@ import {MAX_STRING_SIZE} from '@/configs'
 import {AsyncValidate} from '@/utils/classes'
 import {User} from '@/models'
 
-export const requestMessage = Joi.object({
+export const requestAddFriend = Joi.object({
     user_id: Joi.string()
         .required()
         .label('User_ID')

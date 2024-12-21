@@ -156,17 +156,18 @@ export const updateBackgroundProject =
 		});
 	};
 
-export const getProjectInvitations = (id) => async (dispatch, getState) => {
-	return callApi({
-		method: "get",
-		apiPath: `project/invitations/${id}`,
-		actionTypes: [
-			startRequestGetProjectInvitations,
-			startRequestGetProjectInvitationsSuccess,
-			startRequestGetProjectInvitationsFail,
-		],
-		variables: {},
-		dispatch,
-		getState,
-	});
-};
+export const getProjectInvitations =
+	(user_id) => async (dispatch, getState) => {
+		return callApi({
+			method: "get",
+			apiPath: `project/invitations/${user_id}`,
+			actionTypes: [
+				startRequestGetProjectInvitations,
+				startRequestGetProjectInvitationsSuccess,
+				startRequestGetProjectInvitationsFail,
+			],
+			variables: {},
+			dispatch,
+			getState,
+		});
+	};

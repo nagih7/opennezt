@@ -9,30 +9,41 @@ const notificationRouter = Router()
 
 notificationRouter.use(asyncHandler(requireAuthentication))
 
+// Get notifications
 notificationRouter.get(
     '/notifications',
     asyncHandler(validate(notificationRequest.readRoot)),
     asyncHandler(notificationController.readRoot)
 )
 
+// Reply notification
 notificationRouter.put(
     '/reply',
     asyncHandler(validate(notificationRequest.replyNotification)),
     asyncHandler(notificationController.replyNotification)
 )
 
+// Request add friend
 notificationRouter.post(
-    '/request-message',
-    asyncHandler(validate(notificationRequest.requestMessage)),
-    asyncHandler(notificationController.requestMessage)
+    '/request-add-friend',
+    asyncHandler(validate(notificationRequest.requestAddFriend)),
+    asyncHandler(notificationController.requestAddFriend)
 )
 
+// Request project invitation
 notificationRouter.post(
     '/project-invitation',
     asyncHandler(validate(notificationRequest.projectInvitation)),
     asyncHandler(notificationController.projectInvitation)
 )
 
+// Get request add friend
+notificationRouter.get(
+    '/request-add-friend/:user_id',
+    asyncHandler(notificationController.getRequestAddFriend)
+)
+
+// Get total friends
 notificationRouter.get('/total-friends', asyncHandler(notificationController.getTotalFriends))
 
 notificationRouter.get('/', asyncHandler(notificationController.getNotifications))

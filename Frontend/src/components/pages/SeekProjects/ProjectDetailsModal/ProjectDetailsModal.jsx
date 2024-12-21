@@ -6,8 +6,13 @@ import {
 	RocketOutlined,
 	AimOutlined,
 } from "@ant-design/icons";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import styles from "./styles.module.scss";
+import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+import { useSelector } from "react-redux";
+import { getRequestAddFriend, sendRequestAddFriend } from "api/notification";
+import store from "states/configureStore";
 
 const { Title, Text, Paragraph } = Typography;
 const MemberBox = React.lazy(() =>
@@ -15,51 +20,62 @@ const MemberBox = React.lazy(() =>
 );
 
 const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
-	const {
-		name,
-		background,
-		related_industries,
-		stage,
-		problem,
-		solution,
-		statistics,
-		funding_sources,
-		target_money,
-		target_audience,
-		competitors,
-		competitive_advantage,
-		why_now,
-		strategy,
-		owner,
-		members,
-	} = projectDetails;
+	const { requestAddFriend, loadingSendRequestAddFriend } = useSelector(
+		(state) => state.notification
+	);
+
+	const handleRequestAddFriend = async (user_id) => {
+		const requestMessageForm = {
+			user_id: user_id,
+			metadata: {},
+		};
+		await store.dispatch(sendRequestAddFriend(requestMessageForm));
+		await store.dispatch(getRequestAddFriend(user_id));
+	};
 
 	return (
 		<Modal
 			open={isVisible}
 			onCancel={onClose}
+			onOk={() => handleRequestAddFriend(projectDetails.user_id)}
 			width={1200}
-			footer={null}
+			confirmLoading={loadingSendRequestAddFriend}
+			okButtonProps={{
+				disabled: requestAddFriend,
+			}}
+			okText={
+				<div
+					style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+					<PersonAddIcon />
+					Add friend
+				</div>
+			}
 			className={styles.projectModal}>
 			<div className={styles.modalContent}>
 				<div className={styles.projectHeader}>
 					<img
-						src={background}
-						alt={name}
+						src={
+							projectDetails.background
+								? projectDetails.background
+								: BackgroundDefault
+						}
+						alt={projectDetails.name}
 						className={styles.headerImage}
 					/>
 					<div className={styles.headerOverlay}>
-						<Title level={2}>{name}</Title>
+						<Title level={2}>{projectDetails.name}</Title>
 						<Space size={8} wrap>
-							{related_industries?.map((industry) => (
+							{projectDetails.related_industries?.map((industry) => (
 								<Tag key={industry} color="blue">
 									{industry}
 								</Tag>
 							))}
 						</Space>
-						<Tag color="green" icon={<RocketOutlined />}>
-							{stage}
-						</Tag>
+						<Space size={8} wrap>
+							<Tag color="green" icon={<RocketOutlined />}>
+								{projectDetails.stage}
+							</Tag>
+						</Space>
 					</div>
 				</div>
 
@@ -74,13 +90,15 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 									<Col span={12}>
 										<div className={styles.infoItem}>
 											<Text strong>Problem</Text>
-											<Paragraph>{problem}</Paragraph>
+											<Paragraph>{projectDetails.problem}</Paragraph>
 										</div>
 									</Col>
 									<Col span={12}>
 										<div className={styles.infoItem}>
 											<Text strong>Target Audience</Text>
-											<Paragraph>{target_audience}</Paragraph>
+											<Paragraph>
+												{projectDetails.target_audience}
+											</Paragraph>
 										</div>
 									</Col>
 								</Row>
@@ -88,13 +106,17 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 									<Col span={12}>
 										<div className={styles.infoItem}>
 											<Text strong>Solution</Text>
-											<Paragraph>{solution}</Paragraph>
+											<Paragraph>
+												{projectDetails.solution}
+											</Paragraph>
 										</div>
 									</Col>
 									<Col span={12}>
 										<div className={styles.infoItem}>
 											<Text strong>Statistics</Text>
-											<Paragraph>{statistics}</Paragraph>
+											<Paragraph>
+												{projectDetails.statistics}
+											</Paragraph>
 										</div>
 									</Col>
 								</Row>
@@ -107,11 +129,11 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 								</Title>
 								<Row gutter={[16, 16]}>
 									<LazyLoadingMedium>
-										<MemberBox member={owner} />
+										<MemberBox member={projectDetails.owner} />
 									</LazyLoadingMedium>
-									{members &&
-										members.length > 0 &&
-										members.map((member, index) => (
+									{projectDetails.members &&
+										projectDetails.members.length > 0 &&
+										projectDetails.members.map((member, index) => (
 											<LazyLoadingMedium key={index}>
 												<MemberBox member={member} />
 											</LazyLoadingMedium>
@@ -126,7 +148,7 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 									Funding Information
 								</Title>
 								<Row gutter={[16, 16]}>
-									{Object.entries(funding_sources).map(
+									{Object.entries(projectDetails.funding_sources).map(
 										([source, amount]) => (
 											<Col span={8} key={source}>
 												<Card className={styles.fundingCard}>
@@ -145,7 +167,9 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 									<Col span={24}>
 										<div className={styles.infoItem}>
 											<Text strong>Target Money</Text>
-											<Paragraph>{target_money}</Paragraph>
+											<Paragraph>
+												{projectDetails.target_money}
+											</Paragraph>
 										</div>
 									</Col>
 								</Row>
@@ -161,13 +185,17 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 									<Col span={12}>
 										<div className={styles.infoItem}>
 											<Text strong>Competitors</Text>
-											<Paragraph>{competitors}</Paragraph>
+											<Paragraph>
+												{projectDetails.competitors}
+											</Paragraph>
 										</div>
 									</Col>
 									<Col span={12}>
 										<div className={styles.infoItem}>
 											<Text strong>Strategy</Text>
-											<Paragraph>{strategy}</Paragraph>
+											<Paragraph>
+												{projectDetails.strategy}
+											</Paragraph>
 										</div>
 									</Col>
 								</Row>
@@ -175,13 +203,15 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 									<Col span={12}>
 										<div className={styles.infoItem}>
 											<Text strong>Competitive Advantage</Text>
-											<Paragraph>{competitive_advantage}</Paragraph>
+											<Paragraph>
+												{projectDetails.competitive_advantage}
+											</Paragraph>
 										</div>
 									</Col>
 									<Col span={12}>
 										<div className={styles.infoItem}>
 											<Text strong>Why Now</Text>
-											<Paragraph>{why_now}</Paragraph>
+											<Paragraph>{projectDetails.why_now}</Paragraph>
 										</div>
 									</Col>
 								</Row>

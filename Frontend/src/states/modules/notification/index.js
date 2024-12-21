@@ -1,8 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { message } from "antd";
+
 const notificationSlice = createSlice({
 	name: "notification",
 	initialState: {
 		notifications: [],
+		requestAddFriend: {},
 		paginationListNotification: {
 			currentPage: 1,
 			perPage: 10,
@@ -12,6 +15,8 @@ const notificationSlice = createSlice({
 		totalFriends: 0,
 		loadingGetNotifications: false,
 		loadingProjectInvitation: false,
+		loadingSendRequestAddFriend: false,
+		loadingGetRequestAddFriend: false,
 	},
 	reducers: {
 		startRequestReadRoot: (state) => ({
@@ -55,13 +60,22 @@ const notificationSlice = createSlice({
 		}),
 		startRequestMessage: (state) => ({
 			...state,
+			loadingSendRequestAddFriend: true,
 		}),
-		startRequestMessageSuccess: (state) => ({
-			...state,
-		}),
-		startRequestMessageFail: (state) => ({
-			...state,
-		}),
+		startRequestMessageSuccess: (state) => {
+			message.success("Friend request sent successfully");
+			return {
+				...state,
+				loadingSendRequestAddFriend: false,
+			};
+		},
+		startRequestMessageFail: (state) => {
+			message.error("Friend request sent failed");
+			return {
+				...state,
+				loadingSendRequestAddFriend: false,
+			};
+		},
 		startRequestGetTotalFriends: (state) => ({
 			...state,
 		}),
@@ -86,6 +100,19 @@ const notificationSlice = createSlice({
 			...state,
 			loadingProjectInvitation: false,
 		}),
+		startRequestGetRequestAddFriend: (state) => ({
+			...state,
+			loadingGetRequestAddFriend: true,
+		}),
+		startRequestGetRequestAddFriendSuccess: (state, action) => ({
+			...state,
+			requestAddFriend: action.payload.data,
+			loadingGetRequestAddFriend: false,
+		}),
+		startRequestGetRequestAddFriendFail: (state) => ({
+			...state,
+			loadingGetRequestAddFriend: false,
+		}),
 	},
 });
 
@@ -108,6 +135,9 @@ export const {
 	startRequestProjectInvitation,
 	startRequestProjectInvitationSuccess,
 	startRequestProjectInvitationFail,
+	startRequestGetRequestAddFriend,
+	startRequestGetRequestAddFriendSuccess,
+	startRequestGetRequestAddFriendFail,
 } = notificationSlice.actions;
 
 export default notificationSlice.reducer;

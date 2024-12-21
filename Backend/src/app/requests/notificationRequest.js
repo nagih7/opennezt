@@ -11,7 +11,7 @@ export const readRoot = Joi.object({
     order: tryValidateOrDefault(Joi.valid('1', '-1'), '-1'),
 })
 
-export const requestMessage = Joi.object({
+export const requestAddFriend = Joi.object({
     user_id: Joi.string()
         .required()
         .label('User_ID')
@@ -22,13 +22,7 @@ export const requestMessage = Joi.object({
                     return user ? value : helpers.error('any.empty')
                 })
         ),
-
-    source_name: Joi.string().max(MAX_STRING_SIZE).required().label('Source Name'),
-
-    metadata: Joi.object({
-        project_id: Joi.string().required().label('Project ID'),
-        project_name: Joi.string().required().label('Project Name'),
-    }).required(),
+    metadata: Joi.object().label('Metadata'),
 })
 
 export const replyNotification = Joi.object({

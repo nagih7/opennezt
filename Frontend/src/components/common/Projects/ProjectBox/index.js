@@ -5,7 +5,6 @@ import store from "states/configureStore";
 import { sendProjectInvitation } from "api/notification";
 import { Button, Modal } from "antd";
 import { useSelector } from "react-redux";
-import { getProjectInvitations } from "api/project";
 
 const ProjectBox = ({ project, inviteeId }) => {
 	const [projectIdInvitation, setProjectIdInvitation] = useState("");

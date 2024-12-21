@@ -145,31 +145,6 @@ export async function getChatHistory(user, user_id) {
     return result
 }
 
-export async function createChatInvitation(user, requestBody) {
-    const invitation = new ChatInvitation({
-        sender_id: user._id,
-        sender_name: user.name,
-        user_id: new ObjectId(requestBody.user_id),
-        receiver_name: requestBody.receiver_name,
-    })
-
-    await invitation.save()
-}
-
-export async function getChatInvitations(user, user_id) {
-    const invitations = await ChatInvitation.find({receiver_id: user._id})
-    return invitations
-}
-
-export async function getChatInvitationByReceiverId(user, receiver_id) {
-    const invitation = await ChatInvitation.findOne({
-        sender_id: user._id,
-        receiver_id: new ObjectId(receiver_id),
-        status: {$ne: 'rejected'},
-    }).select('status -_id')
-    return invitation ? invitation : {status: 'pending'}
-}
-
 export async function saveMessage(messages, socketId) {
     const message = new Messenger({
         sender_id: userSockets[socketId],

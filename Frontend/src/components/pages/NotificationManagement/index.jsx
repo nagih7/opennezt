@@ -38,8 +38,8 @@ function NotificationProject() {
 	}, [dataFilter]);
 
 	const handleOpenTalentDetails = async (user_id) => {
-		await store.dispatch(getTalentDetails(user_id));
 		setOpenModalTalentDetails(true);
+		await store.dispatch(getTalentDetails(user_id));
 	};
 
 	const handleReplyNotification = async (notification_id, type, status) => {
