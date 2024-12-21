@@ -17,4 +17,6 @@ projectRouter.put('/response-request', asyncHandler(projectController.responseRe
 
 projectRouter.put('/background', asyncHandler(projectController.updateBackground))
 
+projectRouter.get('/invitations/:user_id', asyncHandler(projectController.getInvitations))
+
 export default projectRouter

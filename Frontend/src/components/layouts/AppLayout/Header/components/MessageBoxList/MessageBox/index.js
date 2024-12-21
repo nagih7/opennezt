@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 import CloseIcon from "@mui/icons-material/Close";
@@ -12,8 +12,8 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import GroupsIcon from "@mui/icons-material/Groups";
 import MicIcon from "@mui/icons-material/Mic";
-import { Modal } from "antd";
-import { getProjects } from "api/project";
+import { message, Modal } from "antd";
+import { getProjectInvitations } from "api/project";
 
 const MessageBoxContent = React.lazy(() => import("./MessageBoxContent"));
 const Projects = React.lazy(() => import("components/common/Projects"));
@@ -27,7 +27,6 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
 	const [newMessage, setNewMessage] = useState([]);
 	const [showMoreActions, setShowMoreActions] = useState(false);
 	const [modalProjectInvitation, setModalProjectInvitation] = useState(false);
-	const [inviteeId, setInviteeId] = useState(null);
 	const moreActionsRef = useRef(null);
 
 	useEffect(() => {
@@ -88,10 +87,9 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
 		setShowMoreActions(!showMoreActions);
 	};
 
-	const handleSendProjectInvitation = (user_id) => {
+	const handleSendProjectInvitation = () => {
 		setModalProjectInvitation(true);
-		setInviteeId(user_id);
-		store.dispatch(getProjects());
+		store.dispatch(getProjectInvitations(chatBox.user_id));
 	};
 
 	return (
@@ -132,7 +130,9 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
 						className={styles.addButton}>
 						<AddCircleIcon className={styles.AddIcon} />
 					</button>
-					<button className={styles.addButton}>
+					<button
+						className={styles.addButton}
+						onClick={() => message.info("Comming soon")}>
 						<InsertPhotoIcon className={styles.AddIcon} />
 					</button>
 				</div>
@@ -142,11 +142,13 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
 					}`}>
 					<button
 						className={styles.moreActionsButton}
-						onClick={() => handleSendProjectInvitation(chatBox.user_id)}>
+						onClick={() => handleSendProjectInvitation()}>
 						<GroupsIcon className={styles.icon} />
 						<span>Send project invitation</span>
 					</button>
-					<button className={styles.moreActionsButton}>
+					<button
+						className={styles.moreActionsButton}
+						onClick={() => message.info("Comming soon")}>
 						<MicIcon className={styles.icon} />
 						<span>Send voice message</span>
 					</button>
@@ -175,7 +177,7 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
 				onCancel={() => setModalProjectInvitation(false)}
 				width={1000}>
 				<LazyLoadingMedium>
-					<Projects inviteeId={inviteeId} />
+					<Projects inviteeId={chatBox.user_id} />
 				</LazyLoadingMedium>
 			</Modal>
 		</div>

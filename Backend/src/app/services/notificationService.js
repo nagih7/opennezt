@@ -1,8 +1,7 @@
-import {NotificationFeed, Friend} from '@/models'
+import {NotificationFeed, Friend, ObjectId, Project} from '@/models'
 import {userSockets} from '@/routes/socket'
 
 export async function filter(user, {q, page, per_page, order}) {
-    console.log('q', q, 'page', page, 'per_page', per_page, 'order', order)
     q = q ? q : ''
     order = order === '-1' ? -1 : 1
     const matchStage = {
@@ -79,6 +78,9 @@ export async function replyNotification(requestBody) {
         case 'friend_request':
             await replyFriendRequest(notification_id, status)
             break
+        case 'project_invitation':
+            await replyProjectInvitation(notification_id, status)
+            break
         default:
             break
     }
@@ -94,6 +96,21 @@ export async function replyFriendRequest(notification_id, status) {
             await Friend.create({user_id: user_id, friend_id: source_id})
             await Friend.create({user_id: source_id, friend_id: user_id})
         }
+    }
+
+    notification.metadata.status = status
+    notification.read = true
+    notification.markModified('metadata')
+    await notification.save()
+}
+
+export async function replyProjectInvitation(notification_id, status) {
+    const notification = await NotificationFeed.findById({_id: notification_id})
+    const {user_id, metadata} = notification
+    if (status === 'accepted') {
+        const project = await Project.findById(metadata.project_id)
+        project.metadata.members.push({user_id: user_id, role: 'member'})
+        await project.save()
     }
 
     notification.metadata.status = status
@@ -131,14 +148,13 @@ export async function getTotalFriends(user) {
 
 export async function projectInvitation(user, requestBody, io) {
     const {project_id, user_id} = requestBody
-    console.log('user_id', user_id)
     const notification = new NotificationFeed({
         user_id: user_id,
         source_id: user._id,
         type: 'project_invitation',
         message: 'invited you to join the project',
         metadata: {
-            project_id: project_id,
+            project_id: new ObjectId(project_id),
             source_name: user.name,
             status: 'waiting',
             avatar: user.avatar ? user.avatar : '',
@@ -148,6 +164,5 @@ export async function projectInvitation(user, requestBody, io) {
     await notification.save()
     const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === user_id)
 
-    console.log('userSocketId', userSocketId)
     io.to(userSocketId).emit('new_notification')
 }

@@ -9,6 +9,9 @@ import { useSelector } from "react-redux";
 import store from "states/configureStore";
 import { useSocket } from "context/SocketContext";
 import { requestChatInvitation } from "../../../api/chat";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import ChatIcon from "@mui/icons-material/Chat";
+
 const TalentProfileCard = ({ talent }) => {
 	const socket = useSocket();
 	const { loadingRequestChatInvitation, chatInvitation } = useSelector(
@@ -96,22 +99,31 @@ const TalentProfileCard = ({ talent }) => {
 							<Button
 								style={{
 									borderRadius: "0.5rem",
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
+									gap: "0.5rem",
 								}}
 								type="primary"
 								loading={loadingRequestChatInvitation}>
-								Chat Now
+								<ChatIcon /> Message
 							</Button>
 						) : (
 							<Button
 								style={{
 									borderRadius: "0.5rem",
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
+									gap: "0.5rem",
 								}}
 								type="primary"
 								loading={loadingRequestChatInvitation}
 								onClick={() =>
 									handleRequestChatInvitation(talent._id, talent.name)
 								}>
-								Send Request
+								<PersonAddIcon />
+								Add friend
 							</Button>
 						)}
 					</div>

@@ -1,7 +1,5 @@
-import {ref} from 'joi'
 import createModel, {ObjectId} from './base'
 import {Schema} from 'mongoose'
-import {create} from 'lodash'
 
 const Revernue = new Schema(
     {
@@ -47,25 +45,41 @@ const FundingSource = new Schema(
     }
 )
 
-const Metadata = new Schema({
-    members: [
-        {
-            user_id: {
-                type: ObjectId,
-                required: true,
-                ref: 'User',
-            },
-            role: {
-                type: String,
-                required: true,
-            },
-            join_at: {
-                type: Date,
-                required: true,
-            },
+const Members = new Schema(
+    {
+        user_id: {
+            type: ObjectId,
+            required: true,
+            ref: 'User',
         },
-    ],
-})
+        role: {
+            type: String,
+            required: true,
+            default: 'talent',
+        },
+        join_at: {
+            type: Date,
+            required: true,
+            default: Date.now,
+        },
+    },
+    {
+        _id: false,
+    }
+)
+
+const Metadata = new Schema(
+    {
+        members: {
+            type: [Members],
+            required: true,
+            default: [],
+        },
+    },
+    {
+        _id: false,
+    }
+)
 
 const Project = createModel('Project', 'projects', {
     user_id: {
@@ -93,8 +107,9 @@ const Project = createModel('Project', 'projects', {
         required: true,
     },
     metadata: {
-        type: [Metadata],
+        type: Metadata,
         required: true,
+        default: {},
     },
     landing_page_url: {
         type: String,

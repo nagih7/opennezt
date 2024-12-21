@@ -156,7 +156,7 @@ export async function createChatInvitation(user, requestBody) {
     await invitation.save()
 }
 
-export async function getChatInvitations(user) {
+export async function getChatInvitations(user, user_id) {
     const invitations = await ChatInvitation.find({receiver_id: user._id})
     return invitations
 }

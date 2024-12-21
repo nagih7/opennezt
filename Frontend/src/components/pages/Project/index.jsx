@@ -159,7 +159,7 @@ function Project() {
 	return (
 		<div className={styles.projectContainer}>
 			<div className={styles.projectHeader}>
-				<h2>Project Manager</h2>
+				<h2>Project Management</h2>
 				<Button
 					type="primary"
 					className={styles.btnCreate}

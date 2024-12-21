@@ -28,7 +28,7 @@ const ChatList = ({ handleSetChatBoxList, setIsShowChatList }) => {
 	useEffect(() => {
 		const handler = setTimeout(() => {
 			setDebouncedTerm(searchQuery);
-		}, 500);
+		}, 300);
 
 		return () => {
 			clearTimeout(handler);

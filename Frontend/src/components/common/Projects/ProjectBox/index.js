@@ -1,24 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
-import ButtonMASQ from "components/UI/Button";
 import store from "states/configureStore";
 import { sendProjectInvitation } from "api/notification";
-import { getProjectInvitations } from "api/project";
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import { useSelector } from "react-redux";
+import { getProjectInvitations } from "api/project";
 
 const ProjectBox = ({ project, inviteeId }) => {
 	const [projectIdInvitation, setProjectIdInvitation] = useState("");
 	const [modalConfirm, setModalConfirm] = useState(false);
+	const [invitationStatus, setInvitationStatus] = useState(false);
+	const [invitations, setInvitations] = useState([]);
 
 	const { loadingProjectInvitation } = useSelector(
 		(state) => state.notification
 	);
+	const { projectInvitations } = useSelector((state) => state.project);
+
+	useEffect(() => {
+		// eslint-disable-next-line
+	}, []);
+
+	useEffect(() => {
+		setInvitationStatus(false);
+		if (projectInvitations.length > 0) {
+			setInvitations(projectInvitations);
+			const projectInvitation = invitations.find(
+				(item) => item.metadata.project._id === project._id
+			);
+			if (projectInvitation) {
+				setInvitationStatus(true);
+			}
+		}
+	}, [projectInvitations, project._id, invitations]);
 
 	const handleProjectInvitation = (project_id) => {
 		setModalConfirm(true);
-		store.dispatch(getProjectInvitations());
 		setProjectIdInvitation(project_id);
 	};
 
@@ -56,22 +74,13 @@ const ProjectBox = ({ project, inviteeId }) => {
 				</p>
 			</div>
 			<div className={styles.btnInvite}>
-				<ButtonMASQ
+				<Button
 					onClick={() => handleProjectInvitation(project._id)}
 					loading={false}
-					style={{
-						minWidth: "80px",
-						height: "2rem",
-						margin: "0",
-						border: "none",
-						padding: "4px 8px",
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						backgroundColor: "#1a85f8",
-					}}
-					textBtn={"Invite"}
-				/>
+					type="primary"
+					disabled={invitationStatus}>
+					{invitationStatus ? "Invited" : "Invite"}
+				</Button>
 			</div>
 			<Modal
 				title="Are you sure you want to invite?"

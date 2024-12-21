@@ -156,10 +156,10 @@ export const updateBackgroundProject =
 		});
 	};
 
-export const getProjectInvitations = () => async (dispatch, getState) => {
+export const getProjectInvitations = (id) => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
-		apiPath: "project/invitations",
+		apiPath: `project/invitations/${id}`,
 		actionTypes: [
 			startRequestGetProjectInvitations,
 			startRequestGetProjectInvitationsSuccess,
