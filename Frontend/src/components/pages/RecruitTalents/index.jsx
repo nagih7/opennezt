@@ -4,14 +4,10 @@ import store from "states/configureStore";
 import { recruitTalents, skipTalent, getTalentDetails } from "api/talent";
 import { useSelector } from "react-redux";
 import { Modal } from "antd";
-import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 import { getRequestAddFriend } from "api/notification";
-
-const RecruitWrap = React.lazy(() => import("./RecuitWrap"));
-const ListTalents = React.lazy(() => import("./ListTalents"));
-const TalentProfile = React.lazy(() =>
-	import("components/common/TalentProfile")
-);
+import RecruitWrap from "./RecuitWrap";
+import ListTalents from "./ListTalents";
+import TalentProfile from "components/common/TalentProfile";
 
 function RecruitTalents() {
 	const { talents, loadingRecruitTalents, talentDetails } = useSelector(
@@ -25,19 +21,10 @@ function RecruitTalents() {
 		location: "",
 		language: "",
 		page: 1,
-		per_page: 10,
+		per_page: 12,
 	});
 	const [skip, setSkip] = useState(0);
 	const [modalTalentDetails, setModalTalentDetails] = useState(false);
-
-	// useEffect(() => {
-	// 	store.dispatch(
-	// 		recruitTalents({
-	// 			page: 1,
-	// 			per_page: 10,
-	// 		})
-	// 	);
-	// }, []);
 
 	const handleOnChange = (event, nameSelect) => {
 		if (nameSelect) {
@@ -77,19 +64,15 @@ function RecruitTalents() {
 
 	return (
 		<div className={styles.searchContainer}>
-			<LazyLoadingMedium>
-				<RecruitWrap
-					handleOnChange={handleOnChange}
-					handleConfirmRecruitTalents={handleConfirmRecruitTalents}
-					loadingRecruitTalents={loadingRecruitTalents}
-				/>
-			</LazyLoadingMedium>
-			<LazyLoadingMedium>
-				<ListTalents
-					talents={talents}
-					handleGetDetailTalent={handleGetDetailTalent}
-				/>
-			</LazyLoadingMedium>
+			<RecruitWrap
+				handleOnChange={handleOnChange}
+				handleConfirmRecruitTalents={handleConfirmRecruitTalents}
+				loadingRecruitTalents={loadingRecruitTalents}
+			/>
+			<ListTalents
+				talents={talents}
+				handleGetDetailTalent={handleGetDetailTalent}
+			/>
 
 			<Modal
 				footer={null}
@@ -100,9 +83,7 @@ function RecruitTalents() {
 				confirmLoading={false}
 				onCancel={handleClosePopup}
 				width={1000}>
-				<LazyLoadingMedium>
-					<TalentProfile talent={talentDetails} handleSkip={handleSkip} />
-				</LazyLoadingMedium>
+				<TalentProfile talent={talentDetails} handleSkip={handleSkip} />
 			</Modal>
 		</div>
 	);

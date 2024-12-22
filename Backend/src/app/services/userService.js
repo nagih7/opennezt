@@ -240,6 +240,8 @@ export async function deleteProject(user, requestBody) {
 
 export async function recuitTalents(user, requestRecuitTalents) {
     const query = {}
+    const per_page = 12
+
     if (requestRecuitTalents.sector) {
         query.industry = {
             $regex: requestRecuitTalents.sector,
@@ -324,10 +326,10 @@ export async function recuitTalents(user, requestRecuitTalents) {
             },
         },
         {
-            $skip: (requestRecuitTalents.page - 1) * requestRecuitTalents.per_page,
+            $skip: (requestRecuitTalents.page - 1) * per_page,
         },
         {
-            $limit: requestRecuitTalents.per_page,
+            $limit: per_page,
         },
         {
             $project: {

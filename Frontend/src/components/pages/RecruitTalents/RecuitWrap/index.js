@@ -91,15 +91,15 @@ const RecruitWrap = ({
 					options={listLanguage}
 					onChange={(e) => handleOnChange(e, "language")}
 				/>
-				<Button
-					style={{ padding: "0 1rem", height: "32px" }}
-					type="primary"
-					icon={<SearchOutlined />}
-					loading={loadingRecruitTalents}
-					onClick={handleConfirmRecruitTalents}>
-					Search
-				</Button>
 			</div>
+			<Button
+				className={styles.recruitButton}
+				type="primary"
+				icon={<SearchOutlined />}
+				loading={loadingRecruitTalents}
+				onClick={handleConfirmRecruitTalents}>
+				Search
+			</Button>
 		</div>
 	);
 };
