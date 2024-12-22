@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import { useSelector } from "react-redux";
 import store from "states/configureStore";
-import { getFounderProfile } from "api/founder";
-import EditProfilePopup from "components/common/EditProfilePopup";
 import { Modal } from "antd";
 import { updateFounderProfile } from "api/founder";
 import ProfileCard from "components/common/ProfileCard";
 import FounderProfile from "components/common/FounderProfile";
+import LazyLoading from "components/UI/LazyLoading";
+
+const EditProfilePopup = React.lazy(() =>
+	import("components/common/EditProfilePopup")
+);
 
 const About = () => {
 	const [infoUpdateProfile, setInfoUpdateProfile] = useState({
@@ -41,10 +44,6 @@ const About = () => {
 	const [modalUpdateFounderProfile, setModalUpdateFounderProfile] =
 		useState(false);
 	const [updatedFounderProfile, setUpdatedFounderProfile] = useState(false);
-
-	useEffect(() => {
-		store.dispatch(getFounderProfile());
-	}, []);
 
 	useEffect(() => {
 		if (resultUpdateFounderProfile) {
@@ -100,6 +99,7 @@ const About = () => {
 		<div className={styles.aboutContainer}>
 			<ProfileCard handleOpenModal={handleOpenModal} />
 			{founderProfile && <FounderProfile />}
+
 			<Modal
 				title=""
 				okText="Save"
@@ -108,10 +108,12 @@ const About = () => {
 				confirmLoading={false}
 				onCancel={handleClosePopup}
 				width={1000}>
-				<EditProfilePopup
-					formData={infoUpdateProfile}
-					onChange={onChange}
-				/>
+				<LazyLoading>
+					<EditProfilePopup
+						formData={infoUpdateProfile}
+						onChange={onChange}
+					/>
+				</LazyLoading>
 			</Modal>
 		</div>
 	);

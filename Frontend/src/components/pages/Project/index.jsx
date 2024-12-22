@@ -13,6 +13,8 @@ import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 import BoxProject from "./BoxProject";
 import ProjectDetails from "../../common/ProjectDetails";
 import ProjectsSkeleton from "components/skeleton/ProjectsSkeleton";
+import NotFound from "components/UI/NotFound";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 
 const CreateProjectForm = React.lazy(() => import("./CreateProjectForm"));
 const UpdateProjectForm = React.lazy(() => import("./UpdateProjectForm"));
@@ -52,10 +54,6 @@ function Project() {
 		milestones: "",
 		background: {},
 	});
-
-	useEffect(() => {
-		dispatch(getProjects());
-	}, [dispatch]);
 
 	const setDefaultForm = () => {
 		setFormData({
@@ -113,10 +111,9 @@ function Project() {
 
 	useEffect(() => {
 		if (resultCreateProject === true) {
-			setDefaultForm();
-			dispatch(getProjects());
 			setOpenModalCreateProject(false);
 			setDefaultForm();
+			dispatch(getProjects());
 		}
 	}, [resultCreateProject, dispatch]);
 
@@ -162,24 +159,33 @@ function Project() {
 					type="primary"
 					className={styles.btnCreate}
 					onClick={() => setOpenModalCreateProject(true)}>
+					<CreateNewFolderIcon />
 					Create new project
 				</Button>
 			</div>
-			<div className={styles.projectsList}>
-				{loadingGetProjects ? (
-					<ProjectsSkeleton boxs={6} />
-				) : (
-					projects &&
-					projects.length > 0 &&
-					projects.map((project, index) => (
-						<BoxProject
-							project={project}
-							key={index}
-							openModalDetails={handleOpenModalDetails}
-						/>
-					))
-				)}
-			</div>
+
+			{projects && projects.length === 0 && !loadingGetProjects ? (
+				<NotFound
+					content={"You do not have any project yet"}
+					size={"10rem"}
+				/>
+			) : (
+				<div className={styles.projectsList}>
+					{loadingGetProjects ? (
+						<ProjectsSkeleton boxs={6} />
+					) : (
+						projects &&
+						projects.length > 0 &&
+						projects.map((project, index) => (
+							<BoxProject
+								project={project}
+								key={index}
+								openModalDetails={handleOpenModalDetails}
+							/>
+						))
+					)}
+				</div>
+			)}
 
 			<Modal
 				title=""

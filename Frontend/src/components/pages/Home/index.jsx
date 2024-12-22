@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./styles.module.scss";
-import store from "states/configureStore";
-import { checkSteps } from "api/home";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import StepBoxSkeleton from "components/skeleton/StepBoxSkeleton";
@@ -10,10 +8,6 @@ import StepBox from "./StepBox";
 function Home() {
 	const navigate = useNavigate();
 	const { steps, loadingCheckSteps } = useSelector((state) => state.home);
-
-	useEffect(() => {
-		store.dispatch(checkSteps());
-	}, []);
 
 	return (
 		<>
