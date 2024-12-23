@@ -1,3 +1,4 @@
+@import "../../../assets/scss/variables.scss";
 :root {
 	--color-primary: #6c9bcf;
 	--color-danger: #ff0060;
@@ -25,7 +26,7 @@
 	.bannerContainer {
 		background-color: white;
 		border-radius: 2rem;
-		box-shadow: var(--box-shadow);
+		box-shadow: $boxShadow;
 		padding: 2rem;
 
 		.banner {
