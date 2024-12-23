@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import { recruitTalents, getTalentDetails } from "api/talent";
 import { useSelector, useDispatch } from "react-redux";
@@ -6,13 +6,19 @@ import { Modal } from "antd";
 import { getRequestAddFriend } from "api/notification";
 import RecruitWrap from "./RecuitWrap";
 import ListTalents from "./ListTalents";
-import TalentProfile from "components/common/TalentProfile";
+import LazyLoading from "components/UI/LazyLoading";
+
+const TalentProfile = React.lazy(() =>
+	import("components/common/TalentProfile")
+);
 
 function RecruitTalents() {
+	console.log("Re-render RecruitTalents");
 	const dispatch = useDispatch();
-	const { talents, loadingRecruitTalents, talentDetails } = useSelector(
+	const { talents, loadingRecruitTalents, talentRecruitPage } = useSelector(
 		(state) => state.talent
 	);
+
 	const [formRecruitTalents, setFormRecruitTalents] = useState({
 		sector: "",
 		experience_level: "",
@@ -20,10 +26,16 @@ function RecruitTalents() {
 		commitment: "",
 		location: "",
 		language: "",
-		page: 1,
-		per_page: 12,
+		page: 0,
 	});
-	const [skip, setSkip] = useState(0);
+
+	useEffect(() => {
+		setFormRecruitTalents((prevState) => ({
+			...prevState,
+			page: talentRecruitPage,
+		}));
+	}, [talentRecruitPage]);
+
 	const [modalTalentDetails, setModalTalentDetails] = useState(false);
 
 	const handleOnChange = (event, nameSelect) => {
@@ -39,17 +51,24 @@ function RecruitTalents() {
 				[name]: value,
 			}));
 		}
+		setFormRecruitTalents((prevState) => ({
+			...prevState,
+			page: 0,
+		}));
 	};
 	const handleConfirmRecruitTalents = () => {
-		dispatch(recruitTalents({ ...formRecruitTalents, skip: 0 }));
-		setSkip(0);
+		console.log(formRecruitTalents);
+		dispatch(recruitTalents({ ...formRecruitTalents }));
 	};
 
-	const handleGetDetailTalent = (id) => {
-		setModalTalentDetails(true);
-		dispatch(getTalentDetails(id));
-		dispatch(getRequestAddFriend(id));
-	};
+	const handleGetDetailTalent = useCallback(
+		(id) => {
+			dispatch(getTalentDetails(id));
+			dispatch(getRequestAddFriend(id));
+			setModalTalentDetails(true);
+		},
+		[dispatch]
+	);
 
 	const handleClosePopup = () => {
 		setModalTalentDetails(false);
@@ -76,7 +95,9 @@ function RecruitTalents() {
 				confirmLoading={false}
 				onCancel={handleClosePopup}
 				width={1000}>
-				<TalentProfile talent={talentDetails} />
+				<LazyLoading>
+					<TalentProfile />
+				</LazyLoading>
 			</Modal>
 		</div>
 	);

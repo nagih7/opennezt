@@ -4,7 +4,7 @@ import { message } from "antd";
 const founderSlice = createSlice({
 	name: "founder",
 	initialState: {
-		founderProfile: {},
+		founderProfile: null,
 		loadingGetFounderProfile: false,
 		loadingUpdateFounderProfile: false,
 		resultUpdateFounderProfile: false,
@@ -21,7 +21,7 @@ const founderSlice = createSlice({
 		}),
 		startRequestGetFounderProfileFail: (state) => ({
 			...state,
-			founderProfile: {},
+			founderProfile: null,
 			loadingGetFounderProfile: false,
 		}),
 		startUpdateFounderProfile: (state) => ({

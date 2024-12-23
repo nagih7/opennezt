@@ -7,7 +7,8 @@ const talentSlice = createSlice({
 		loadingGetTalentDetails: false,
 		loadingSkipTalent: false,
 		talents: [],
-		talentDetails: {},
+		talentRecruitPage: 0,
+		talentDetails: null,
 	},
 	reducers: {
 		startRequestRecruitTalents: (state) => ({
@@ -17,7 +18,8 @@ const talentSlice = createSlice({
 		}),
 		startRequestRecruitTalentsSuccess: (state, action) => ({
 			...state,
-			talents: action.payload.data,
+			talents: action.payload.data.talents,
+			talentRecruitPage: action.payload.data.page,
 			loadingRecruitTalents: false,
 		}),
 		startRequestRecruitTalentsFail: (state) => ({
@@ -51,7 +53,7 @@ const talentSlice = createSlice({
 		}),
 		startRequestGetDetailTalentFail: (state) => ({
 			...state,
-			talentDetails: {},
+			talentDetails: null,
 			loadingGetTalentDetails: false,
 		}),
 	},

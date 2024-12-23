@@ -3,20 +3,31 @@ import styles from "./styles.module.scss";
 import TalentProfileCard from "../TalentProfileCard";
 import FounderProfile from "../FounderProfile";
 import TalentProfileSkeleton from "components/skeleton/TalentProfileSkeleton";
+import TalentProfileCardSkeleton from "components/skeleton/TalentProfileCardSkeleton";
 import { useSelector } from "react-redux";
 
-function TalentProfile({ talent }) {
-	const { talent_profile, ...user_data } = talent;
-
-	const { loadingGetTalentDetails } = useSelector((state) => state.talent);
+function TalentProfile() {
+	const { talentDetails, loadingGetTalentDetails } = useSelector(
+		(state) => state.talent
+	);
+	const { loadingGetRequestAddFriend } = useSelector(
+		(state) => state.notification
+	);
 
 	return (
 		<div className={styles.talentProfileWrap}>
-			{talent && <TalentProfileCard talent={user_data} />}
+			{loadingGetRequestAddFriend && loadingGetTalentDetails ? (
+				<TalentProfileCardSkeleton />
+			) : (
+				talentDetails && <TalentProfileCard talent={talentDetails} />
+			)}
 			{loadingGetTalentDetails ? (
 				<TalentProfileSkeleton />
 			) : (
-				<FounderProfile founderProfile={talent_profile} />
+				talentDetails &&
+				talentDetails.talent_profile && (
+					<FounderProfile founderProfile={talentDetails.talent_profile} />
+				)
 			)}
 		</div>
 	);

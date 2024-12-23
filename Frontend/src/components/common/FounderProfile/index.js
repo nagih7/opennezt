@@ -1,14 +1,11 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { useSelector } from "react-redux";
 import { Card, Col, Row, Typography } from "antd";
 const { Title, Text, Paragraph } = Typography;
 import { DollarCircleOutlined, AimOutlined } from "@ant-design/icons";
 
-const FounderProfile = () => {
-	const { founderProfile } = useSelector((state) => state.founder);
-
+const FounderProfile = ({ founderProfile }) => {
 	return (
 		<div className={styles.founderProfileWrap}>
 			<Row gutter={[24, 24]}>

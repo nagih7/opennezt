@@ -337,7 +337,7 @@ export async function recuitTalents(user, requestRecuitTalents) {
             },
         },
         {
-            $skip: (requestRecuitTalents.page - 1) * per_page,
+            $skip: requestRecuitTalents.page * per_page,
         },
         {
             $limit: per_page,
@@ -367,7 +367,7 @@ export async function recuitTalents(user, requestRecuitTalents) {
         talent.friend_request = friendRequest ? friendRequest : null
     })
 
-    return talents
+    return {total: talents.length, page: requestRecuitTalents.page + 1, per_page, talents}
 }
 
 export async function getTalentDetails(user, id) {

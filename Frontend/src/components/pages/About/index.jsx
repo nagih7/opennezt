@@ -7,6 +7,7 @@ import { updateFounderProfile } from "api/founder";
 import ProfileCard from "components/common/ProfileCard";
 import FounderProfile from "components/common/FounderProfile";
 import LazyLoading from "components/UI/LazyLoading";
+import TalentProfileSkeleton from "components/skeleton/TalentProfileSkeleton";
 
 const EditProfilePopup = React.lazy(() =>
 	import("components/common/EditProfilePopup")
@@ -37,9 +38,11 @@ const About = () => {
 			technology_and_internet: [],
 		},
 	});
-	const { founderProfile, resultUpdateFounderProfile } = useSelector(
-		(state) => state.founder
-	);
+	const {
+		founderProfile,
+		resultUpdateFounderProfile,
+		loadingGetFounderProfile,
+	} = useSelector((state) => state.founder);
 
 	const [modalUpdateFounderProfile, setModalUpdateFounderProfile] =
 		useState(false);
@@ -98,8 +101,11 @@ const About = () => {
 	return (
 		<div className={styles.aboutContainer}>
 			<ProfileCard handleOpenModal={handleOpenModal} />
-			{founderProfile && <FounderProfile />}
-
+			{loadingGetFounderProfile ? (
+				<TalentProfileSkeleton />
+			) : (
+				founderProfile && <FounderProfile founderProfile={founderProfile} />
+			)}
 			<Modal
 				title=""
 				okText="Save"
