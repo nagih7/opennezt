@@ -4,12 +4,12 @@ import * as chatService from '../services/chatService.js'
 import {userSockets} from '@/routes/socket/index.js'
 
 export async function getChatList(req, res) {
-    const chatList = await chatService.getChatList(req.currentUser)
+    const chatList = await chatService.getChatList(req.currentUser, req.query.value)
     res.status(200).jsonify(chatList)
 }
 
 export async function getChatHistory(req, res) {
-    const chatHistory = await chatService.getChatHistory(req.currentUser, req.params.receiver_id)
+    const chatHistory = await chatService.getChatHistory(req.currentUser, req.params.user_id)
     res.status(200).jsonify(chatHistory)
 }
 
@@ -55,22 +55,4 @@ export const getReceiverIds = async (userId) => {
         console.error('Error getting receiver names:', error)
         throw error
     }
-}
-
-export async function createChatInvitation(req, res) {
-    await chatService.createChatInvitation(req.currentUser, req.body)
-    res.status(201).jsonify('Mời trò chuyện thành công.')
-}
-
-export async function getChatInvitations(req, res) {
-    const invitations = await chatService.getChatInvitations(req.currentUser)
-    res.status(200).json(invitations)
-}
-
-export async function getChatInvitationByReceiverId(req, res) {
-    const invitation = await chatService.getChatInvitationByReceiverId(
-        req.currentUser,
-        req.params.receiver_id
-    )
-    res.status(200).jsonify(invitation)
 }

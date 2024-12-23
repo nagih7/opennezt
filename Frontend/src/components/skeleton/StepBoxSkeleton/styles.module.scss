@@ -1,0 +1,27 @@
+@import "../../../assets/scss/variables.scss";
+
+.stepBoxSkeletonWrap {
+	background-color: white;
+	height: 100px;
+	border-radius: 1rem;
+	display: flex;
+	align-items: center;
+	box-shadow: $boxShadow;
+	transition: all 0.3s ease;
+
+	.stepContentLeft {
+		flex: 1;
+		margin: 0 2rem;
+	}
+
+	.stepContentRight {
+		.chevron {
+			margin-right: 1rem;
+			font-size: 3rem;
+			color: #4c4c4c;
+			font-weight: 600;
+			line-height: 30px;
+			text-align: center;
+		}
+	}
+}

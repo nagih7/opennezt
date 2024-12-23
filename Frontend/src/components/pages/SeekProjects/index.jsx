@@ -1,71 +1,46 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
-import { useSelector } from "react-redux";
-import store from "states/configureStore";
+import { useSelector, useDispatch } from "react-redux";
 import { listSector, listStage } from "components/common/ListSelected";
-import {
-	seekProjects,
-	getProjectDetails,
-	requestToJoinProject,
-} from "api/project";
+import { seekProjects, getProjectDetails } from "api/project";
 import { Select, Button, Input } from "antd";
+import LazyLoading from "components/UI/LazyLoading";
+import { getRequestAddFriend } from "api/notification";
+import BoxProject from "../Project/BoxProject";
+import { DeleteOutlined, SearchOutlined } from "@mui/icons-material";
+import ProjectsSkeleton from "components/skeleton/ProjectsSkeleton";
+import {
+	resetFormSeekProjects,
+	setFormSeekProjects,
+} from "states/modules/project";
+import NotFound from "components/UI/NotFound";
 
-import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
-
-const SeekProjectBox = React.lazy(() => import("./SeekProjectBox"));
-const ProjectDetailsModal = React.lazy(() =>
-	import("./ProjectDetailsModal/ProjectDetailsModal")
-);
+const ProjectDetailsModal = React.lazy(() => import("./ProjectDetailsModal"));
 
 const SeekProjects = () => {
-	const { projectsBySeek, projectDetails } = useSelector(
-		(state) => state.project
-	);
+	const dispatch = useDispatch();
+	const {
+		projectsBySeek,
+		projectDetails,
+		loadingSeekProjects,
+		formSeekProjects,
+	} = useSelector((state) => state.project);
 
-	const [formSeekProjects, setFormSeekProjects] = useState({
-		industry: null,
-		stage: null,
-		name: null,
-	});
-
-	const [expandedProjectId, setExpandedProjectId] = useState(null);
 	const [isModalVisible, setIsModalVisible] = useState(false);
+	const [canDeleteForm, setCanDeleteForm] = useState(false);
 
 	useEffect(() => {
-		store.dispatch(seekProjects());
-	}, []);
-
-	const handleRequestToJoin = async (project_id, project_name, owner_id) => {
-		const requestProjectData = {
-			project_id,
-			project_name,
-			owner_id,
-			role: "talent",
-		};
-
-		await store.dispatch(requestToJoinProject(requestProjectData));
-	};
-
-	const handleSeekProjects = async (e) => {
-		await store.dispatch(seekProjects(formSeekProjects));
-	};
-	const toggleExpand = (projectId) => {
-		setExpandedProjectId(expandedProjectId === projectId ? null : projectId);
-	};
+		if (
+			formSeekProjects.industry ||
+			formSeekProjects.stage ||
+			formSeekProjects.name
+		) {
+			setCanDeleteForm(true);
+		}
+	}, [formSeekProjects]);
 
 	const onChange = (event, nameSelect) => {
-		if (nameSelect) {
-			setFormSeekProjects((prevState) => ({
-				...prevState,
-				[nameSelect]: event,
-			}));
-		} else {
-			const { name, value } = event.target;
-			setFormSeekProjects((prevState) => ({
-				...prevState,
-				[name]: value,
-			}));
-		}
+		dispatch(setFormSeekProjects({ event, nameSelect }));
 	};
 
 	const handleKeyDown = (event) => {
@@ -74,71 +49,106 @@ const SeekProjects = () => {
 		}
 	};
 
-	const handleViewDetails = async (projectId) => {
-		await store.dispatch(getProjectDetails(projectId));
+	const handleSeekProjects = () => {
+		dispatch(
+			seekProjects({
+				...formSeekProjects,
+				industry: formSeekProjects.industry ?? "",
+				stage: formSeekProjects.stage ?? "",
+				name: formSeekProjects.name ?? "",
+			})
+		);
+	};
+
+	const handleResetForm = () => {
+		dispatch(resetFormSeekProjects());
+		setCanDeleteForm(false);
+	};
+
+	const handleViewDetails = (projectId, userId) => {
 		setIsModalVisible(true);
+		dispatch(getProjectDetails(projectId));
+		dispatch(getRequestAddFriend(userId));
 	};
 
 	return (
 		<div className={styles.searchContainer}>
 			<div className={styles.searchForm}>
-				<Select
-					name="industry"
-					value={formSeekProjects.industry}
-					onChange={(e) => onChange(e, "industry")}
-					className={styles.searchSelect}
-					placeholder="Select Industry"
-					style={{ width: "100%", marginRight: "2rem" }}
-					options={listSector}
-				/>
-				<Select
-					value={formSeekProjects.stage}
-					onChange={(e) => onChange(e, "stage")}
-					className={styles.searchSelect}
-					placeholder="Select Stage"
-					style={{ width: "100%", marginRight: "2rem" }}
-					options={listStage}
-				/>
-				<Input
-					type="text"
-					placeholder="Project Name"
-					value={formSeekProjects.name}
-					onChange={onChange}
-					className={styles.searchInput}
-					style={{ flex: 1 }}
-					name="name"
-				/>
 				<Button
-					onClick={handleSeekProjects}
-					onKeyDown={(e) => handleKeyDown(e)}
+					disabled={!canDeleteForm || loadingSeekProjects}
+					className={styles.deleteButton}
+					type="dashed"
+					danger
+					icon={<DeleteOutlined />}
+					onClick={() => handleResetForm()}>
+					Reset
+				</Button>
+				<div className={styles.searchContent}>
+					<Input
+						type="text"
+						placeholder="Project Name"
+						value={formSeekProjects.name}
+						onChange={onChange}
+						className={styles.searchInput}
+						style={{ width: "100%" }}
+						name="name"
+					/>
+					<Select
+						name="industry"
+						value={formSeekProjects.industry}
+						onChange={(e) => onChange(e, "industry")}
+						className={styles.searchSelect}
+						placeholder="Select Industry"
+						style={{ width: "13rem" }}
+						options={listSector}
+					/>
+					<Select
+						value={formSeekProjects.stage}
+						onChange={(e) => onChange(e, "stage")}
+						className={styles.searchSelect}
+						placeholder="Select Stage"
+						style={{ width: "13rem" }}
+						options={listStage}
+					/>
+				</div>
+				<Button
+					className={styles.searchButton}
 					type="primary"
-					htmlType="submit"
-					className={styles.searchButton}>
+					icon={<SearchOutlined />}
+					loading={loadingSeekProjects}
+					onClick={handleSeekProjects}
+					onKeyDown={(e) => handleKeyDown(e)}>
 					Search
 				</Button>
 			</div>
 
-			<div className={styles.projectsList}>
-				{projectsBySeek &&
-					projectsBySeek.length > 0 &&
-					projectsBySeek.map((project, index) => (
-						<LazyLoadingMedium key={index}>
-							<SeekProjectBox
+			<div className={styles.projectsWrap}>
+				{projectsBySeek.length === 0 && !loadingSeekProjects && (
+					<NotFound content={"No suitable project found"} size={"10rem"} />
+				)}
+				<div className={styles.projectsList}>
+					{loadingSeekProjects ? (
+						<ProjectsSkeleton boxs={6} />
+					) : (
+						projectsBySeek.map((project, index) => (
+							<BoxProject
 								project={project}
-								handleViewDetails={handleViewDetails}
-								handleRequestToJoin={handleRequestToJoin}
+								key={index}
+								openModalDetails={handleViewDetails}
+								usedTo="projects-by-seek"
 							/>
-						</LazyLoadingMedium>
-					))}
+						))
+					)}
+				</div>
 			</div>
-			{projectDetails.name && (
-				<LazyLoadingMedium>
+			{projectDetails && projectDetails.name && (
+				<LazyLoading>
 					<ProjectDetailsModal
 						isVisible={isModalVisible}
 						onClose={() => setIsModalVisible(false)}
 						projectDetails={projectDetails}
 					/>
-				</LazyLoadingMedium>
+				</LazyLoading>
 			)}
 		</div>
 	);

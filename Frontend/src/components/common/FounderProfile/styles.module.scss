@@ -10,6 +10,16 @@
 }
 
 .founderProfileWrap {
+	padding: $cardPadding;
+	border-radius: $borderRadius4;
+	box-shadow: $boxShadow;
+	background-color: $colorWhite;
+
+	.section {
+		background-color: $backgroundMain;
+		box-shadow: $boxShadow1;
+	}
+
 	h2 {
 		margin-top: 2rem;
 		position: relative;

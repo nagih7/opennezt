@@ -10,7 +10,6 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	user-select: none;
 	z-index: 100;
 
 	.headerLeftWrap {
@@ -140,8 +139,13 @@
 				}
 			}
 		}
+
 		.itemChangeTheme {
 			padding: 10px 8px;
+		}
+
+		.popover {
+			position: relative;
 		}
 
 		.notificationAnimationWrap {
@@ -174,7 +178,6 @@
 		}
 
 		.messageAnimationWrap {
-			position: relative;
 			transition: all 0.3s;
 			&::before {
 				content: "";

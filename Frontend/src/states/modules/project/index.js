@@ -7,9 +7,9 @@ const projectSlice = createSlice({
 	initialState: {
 		title: "",
 		projects: [],
-		projectDetails: {},
+		projectDetails: null,
 		projectsBySeek: [],
-		pendingRequests: [],
+		projectInvitations: [],
 		resultCreateProject: null,
 		loadingGetProjects: false,
 		loadingGetProjectDetails: false,
@@ -19,6 +19,13 @@ const projectSlice = createSlice({
 		loadingUpdateProject: false,
 		resultUpdateProject: null,
 		loadingDeleteProject: false,
+		loadingGetProjectInvitations: false,
+		formSeekProjects: {
+			industry: null,
+			stage: null,
+			name: null,
+			page: 0,
+		},
 	},
 	reducers: {
 		setTitle: (state) => ({
@@ -71,7 +78,7 @@ const projectSlice = createSlice({
 		startGetProjectDetailsFail: (state) => ({
 			...state,
 			loadingGetProjectDetails: false,
-			projectDetails: {},
+			projectDetails: null,
 		}),
 
 		// Seek project
@@ -82,7 +89,11 @@ const projectSlice = createSlice({
 
 		startRequestSeekProjectsSuccess: (state, action) => ({
 			...state,
-			projectsBySeek: action.payload.data,
+			projectsBySeek: action.payload.data.projects,
+			formSeekProjects: {
+				...state.formSeekProjects,
+				page: action.payload.data.page,
+			},
 			loadingSeekProjects: false,
 		}),
 		startRequestSeekProjectsFail: (state) => ({
@@ -129,21 +140,6 @@ const projectSlice = createSlice({
 				loadingDeleteProject: false,
 			};
 		},
-		startGetPendingProjects: (state) => ({
-			...state,
-			loadingPendingProjects: true,
-		}),
-		startGetPendingProjectsSuccess: (state, action) => ({
-			...state,
-			pendingRequests: action.payload.data,
-			loadingPendingProjects: false,
-		}),
-		startGetPendingProjectsFail: (state) => ({
-			...state,
-			pendingRequests: [],
-			loadingPendingProjects: false,
-		}),
-
 		startUpdateRequestStatus: (state) => ({
 			...state,
 			loadingUpdateStatus: true,
@@ -157,18 +153,6 @@ const projectSlice = createSlice({
 			...state,
 			updatedRequest: null,
 			loadingUpdateStatus: false,
-		}),
-		startRequestJoinProject: (state) => ({
-			...state,
-			loadingJoinProject: true,
-		}),
-		startRequestJoinProjectSuccess: (state) => ({
-			...state,
-			loadingJoinProject: false,
-		}),
-		startRequestJoinProjectFail: (state) => ({
-			...state,
-			loadingJoinProject: false,
 		}),
 		startRequestUpdateBackground: (state) => ({
 			...state,
@@ -190,6 +174,54 @@ const projectSlice = createSlice({
 				loadingUpdateBackground: false,
 			};
 		},
+		startRequestGetProjectInvitations: (state) => ({
+			...state,
+			loadingGetProjectInvitations: true,
+		}),
+		startRequestGetProjectInvitationsSuccess: (state, action) => ({
+			...state,
+			loadingGetProjectInvitations: false,
+			projectInvitations: action.payload.data,
+		}),
+		startRequestGetProjectInvitationsFail: (state) => ({
+			...state,
+			loadingGetProjectInvitations: false,
+			projectInvitations: [],
+		}),
+
+		// formSeekProjects
+		setFormSeekProjects: (state, action) => {
+			const { event, nameSelect } = action.payload;
+			if (nameSelect) {
+				return {
+					...state,
+					formSeekProjects: {
+						...state.formSeekProjects,
+						[nameSelect]: event,
+						page: 0,
+					},
+				};
+			} else {
+				const { name, value } = event.target;
+				return {
+					...state,
+					formSeekProjects: {
+						...state.formSeekProjects,
+						[name]: value,
+						page: 0,
+					},
+				};
+			}
+		},
+		resetFormSeekProjects: (state) => ({
+			...state,
+			formSeekProjects: {
+				industry: null,
+				stage: null,
+				name: null,
+				page: 0,
+			},
+		}),
 	},
 });
 
@@ -213,18 +245,17 @@ export const {
 	startRequestDeleteProject,
 	startRequestDeleteProjectSuccess,
 	startRequestDeleteProjectFail,
-	startGetPendingProjects,
-	startGetPendingProjectsSuccess,
-	startGetPendingProjectsFail,
 	startUpdateRequestStatus,
 	startUpdateRequestStatusSuccess,
 	startUpdateRequestStatusFail,
-	startRequestJoinProject,
-	startRequestJoinProjectSuccess,
-	startRequestJoinProjectFail,
 	startRequestUpdateBackground,
 	startRequestUpdateBackgroundSuccess,
 	startRequestUpdateBackgroundFail,
+	startRequestGetProjectInvitations,
+	startRequestGetProjectInvitationsSuccess,
+	startRequestGetProjectInvitationsFail,
+	setFormSeekProjects,
+	resetFormSeekProjects,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

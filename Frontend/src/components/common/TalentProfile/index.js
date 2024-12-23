@@ -1,28 +1,34 @@
 import React from "react";
 import styles from "./styles.module.scss";
-import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+import TalentProfileCard from "../TalentProfileCard";
+import FounderProfile from "../FounderProfile";
+import TalentProfileSkeleton from "components/skeleton/TalentProfileSkeleton";
+import TalentProfileCardSkeleton from "components/skeleton/TalentProfileCardSkeleton";
+import { useSelector } from "react-redux";
 
-const TalentProfileCard = React.lazy(() => import("../TalentProfileCard"));
-const FounderProfile = React.lazy(() => import("../FounderProfile"));
+function TalentProfile() {
+	const { talentDetails, loadingGetTalentDetails } = useSelector(
+		(state) => state.talent
+	);
+	const { loadingGetRequestAddFriend } = useSelector(
+		(state) => state.notification
+	);
 
-function TalentProfile({ talent, handleSkip }) {
-	const { talent_profile, ...user_data } = talent;
 	return (
 		<div className={styles.talentProfileWrap}>
-			{talent && (
-				<LazyLoadingMedium>
-					<TalentProfileCard talent={user_data} handleSkip={handleSkip} />
-				</LazyLoadingMedium>
+			{loadingGetRequestAddFriend && loadingGetTalentDetails ? (
+				<TalentProfileCardSkeleton />
+			) : (
+				talentDetails && <TalentProfileCard talent={talentDetails} />
 			)}
-			{talent_profile &&
-				talent_profile.industry &&
-				talent_profile.industry && (
-					<div className={styles.talentDetailsWrap}>
-						<LazyLoadingMedium>
-							<FounderProfile founderProfile={talent_profile} />
-						</LazyLoadingMedium>
-					</div>
-				)}
+			{loadingGetTalentDetails ? (
+				<TalentProfileSkeleton />
+			) : (
+				talentDetails &&
+				talentDetails.talent_profile && (
+					<FounderProfile founderProfile={talentDetails.talent_profile} />
+				)
+			)}
 		</div>
 	);
 }

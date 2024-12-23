@@ -4,18 +4,15 @@ import requireAuthentication from '@/app/middleware/common/require-authenticatio
 import validate from '@/app/middleware/common/validate'
 import * as projectRequest from '../app/requests/projectRequest'
 import * as projectController from '../app/controllers/projectController'
-import {update} from 'lodash'
 
 const projectRouter = Router()
 
 projectRouter.use(asyncHandler(requireAuthentication))
 
-projectRouter.get('/seek-projects', asyncHandler(projectController.seekProjects))
-
-projectRouter.post(
-    '/request-to-join',
-    asyncHandler(validate(projectRequest.requestToJoinProject)),
-    asyncHandler(projectController.requestToJoinProject)
+projectRouter.get(
+    '/seek-projects',
+    asyncHandler(validate(projectRequest.seekProjects)),
+    asyncHandler(projectController.seekProjects)
 )
 
 projectRouter.get('/request-to-join', asyncHandler(projectController.getRequestsToJoinProject))
@@ -23,5 +20,7 @@ projectRouter.get('/request-to-join', asyncHandler(projectController.getRequests
 projectRouter.put('/response-request', asyncHandler(projectController.responseRequest))
 
 projectRouter.put('/background', asyncHandler(projectController.updateBackground))
+
+projectRouter.get('/invitations/:user_id', asyncHandler(projectController.getInvitations))
 
 export default projectRouter

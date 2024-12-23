@@ -83,7 +83,7 @@ export async function recuitTalents(req, res) {
 }
 
 export async function getTalentDetails(req, res) {
-    const result = await userService.getTalentDetails(req.params.id)
+    const result = await userService.getTalentDetails(req.currentUser, req.params.id)
     res.jsonify(result)
 }
 

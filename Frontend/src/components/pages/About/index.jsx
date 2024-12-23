@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import { useSelector } from "react-redux";
 import store from "states/configureStore";
-import { getFounderProfile } from "api/founder";
-import LazyLoading from "components/UI/LazyLoading";
-import EditProfilePopup from "components/common/EditProfilePopup";
 import { Modal } from "antd";
 import { updateFounderProfile } from "api/founder";
+import ProfileCard from "components/common/ProfileCard";
+import FounderProfile from "components/common/FounderProfile";
+import LazyLoading from "components/UI/LazyLoading";
+import TalentProfileSkeleton from "components/skeleton/TalentProfileSkeleton";
 
-const ProfileCard = React.lazy(() => import("components/common/ProfileCard"));
-const FounderProfile = React.lazy(() =>
-	import("components/common/FounderProfile")
+const EditProfilePopup = React.lazy(() =>
+	import("components/common/EditProfilePopup")
 );
 
 const About = () => {
@@ -38,20 +38,15 @@ const About = () => {
 			technology_and_internet: [],
 		},
 	});
-	const authUser = useSelector((state) => state.auth.authUser);
 	const {
 		founderProfile,
-		loadingUpdateFounderProfile,
 		resultUpdateFounderProfile,
+		loadingGetFounderProfile,
 	} = useSelector((state) => state.founder);
 
 	const [modalUpdateFounderProfile, setModalUpdateFounderProfile] =
 		useState(false);
 	const [updatedFounderProfile, setUpdatedFounderProfile] = useState(false);
-
-	useEffect(() => {
-		store.dispatch(getFounderProfile());
-	}, []);
 
 	useEffect(() => {
 		if (resultUpdateFounderProfile) {
@@ -105,20 +100,12 @@ const About = () => {
 
 	return (
 		<div className={styles.aboutContainer}>
-			{authUser && authUser.name && (
-				<LazyLoading>
-					<ProfileCard
-						user={authUser}
-						handleOpenModal={handleOpenModal}
-						loadingUpdateFounderProfile={loadingUpdateFounderProfile}
-					/>
-				</LazyLoading>
+			<ProfileCard handleOpenModal={handleOpenModal} />
+			{loadingGetFounderProfile ? (
+				<TalentProfileSkeleton />
+			) : (
+				founderProfile && <FounderProfile founderProfile={founderProfile} />
 			)}
-			<LazyLoading>
-				{founderProfile && (
-					<FounderProfile founderProfile={founderProfile} />
-				)}
-			</LazyLoading>
 			<Modal
 				title=""
 				okText="Save"
@@ -127,10 +114,12 @@ const About = () => {
 				confirmLoading={false}
 				onCancel={handleClosePopup}
 				width={1000}>
-				<EditProfilePopup
-					formData={infoUpdateProfile}
-					onChange={onChange}
-				/>
+				<LazyLoading>
+					<EditProfilePopup
+						formData={infoUpdateProfile}
+						onChange={onChange}
+					/>
+				</LazyLoading>
 			</Modal>
 		</div>
 	);

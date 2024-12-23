@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import "./styles.scss";
 import { Popover } from "antd";
@@ -22,12 +22,7 @@ const Header = () => {
 	const [isShowChatList, setIsShowChatList] = useState(false);
 	const [chatBoxList, setChatBoxList] = useState([]);
 	const authUser = useSelector((state) => state.auth.authUser);
-	const showChatList = () => {
-		if (!isShowChatList) {
-			store.dispatch(getChatList());
-		}
-		setIsShowChatList(!isShowChatList);
-	};
+	const chatListRef = useRef(null);
 
 	useEffect(() => {
 		const handleFullScreenChange = () => {
@@ -62,6 +57,22 @@ const Header = () => {
 		};
 	}, []);
 
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (
+				chatListRef.current &&
+				!chatListRef.current.contains(event.target)
+			) {
+				setIsShowChatList(false);
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
+
 	const openFullScreen = () => {
 		if (!document.fullscreenElement) {
 			if (document.documentElement.requestFullscreen) {
@@ -88,15 +99,20 @@ const Header = () => {
 
 	const handleSetChatBoxList = useCallback((chatBox) => {
 		setChatBoxList((prev) => {
-			const index = prev.findIndex(
-				(chat) => chat.username === chatBox.username
-			);
+			const index = prev.findIndex((chat) => chat._id === chatBox._id);
 			if (index !== -1) {
 				return prev;
 			}
 			return [...prev, { ...chatBox, messages: [] }];
 		});
 	}, []);
+
+	const showChatList = () => {
+		if (!isShowChatList) {
+			store.dispatch(getChatList());
+		}
+		setIsShowChatList(!isShowChatList);
+	};
 
 	return (
 		<header className={styles.headerWrap}>
@@ -116,7 +132,6 @@ const Header = () => {
 					content={contentNotification}
 					trigger="click">
 					<div
-						onClick={() => setIsShowChatList(false)}
 						className={`${styles.itemHeaderRight} ${styles.notificationAnimationWrap}`}>
 						<div className={`${styles.iconWrap}`}>
 							<NotificationsIcon />
@@ -124,11 +139,13 @@ const Header = () => {
 					</div>
 				</Popover>
 
-				<div
-					onClick={() => showChatList()}
-					className={`${styles.itemHeaderRight} ${styles.messageAnimationWrap}`}>
-					<div className={`${styles.iconWrap}`}>
-						<ChatBubbleOutlineIcon />
+				<div className={styles.popover} ref={chatListRef}>
+					<div
+						onClick={() => showChatList()}
+						className={`${styles.itemHeaderRight} ${styles.messageAnimationWrap}`}>
+						<div className={`${styles.iconWrap}`}>
+							<ChatBubbleOutlineIcon />
+						</div>
 					</div>
 					<div
 						className={`${styles.chatListWrap} ${
@@ -136,18 +153,18 @@ const Header = () => {
 						}`}>
 						<LazyLoadingMedium>
 							<ChatList
-								chatBoxList={chatBoxList}
 								handleSetChatBoxList={handleSetChatBoxList}
+								setIsShowChatList={setIsShowChatList}
 							/>
 						</LazyLoadingMedium>
 					</div>
+					<LazyLoadingMedium>
+						<MessageBoxList
+							chatBoxList={chatBoxList}
+							setChatBoxList={setChatBoxList}
+						/>
+					</LazyLoadingMedium>
 				</div>
-				<LazyLoadingMedium>
-					<MessageBoxList
-						chatBoxList={chatBoxList}
-						setChatBoxList={setChatBoxList}
-					/>
-				</LazyLoadingMedium>
 				<div
 					onClick={() => setIsShowChatList(false)}
 					className={`${styles.itemHeaderRight}`}>

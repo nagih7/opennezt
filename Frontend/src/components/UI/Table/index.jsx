@@ -34,6 +34,7 @@ function TableCustom(props) {
 	return (
 		<div className={styles.tableWrap}>
 			<Table
+				scroll={{ y: "calc(100% - 76px)" }}
 				className={`table-custom ${styles.table}`}
 				columns={columns}
 				dataSource={dataSource}

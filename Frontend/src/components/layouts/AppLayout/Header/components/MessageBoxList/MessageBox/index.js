@@ -1,43 +1,65 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 import CloseIcon from "@mui/icons-material/Close";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
+import { getChatHistory } from "api/chat";
+import { useSocket } from "context/SocketContext";
+import { useSelector } from "react-redux";
+import store from "states/configureStore";
+import SendIcon from "@mui/icons-material/Send";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import GroupsIcon from "@mui/icons-material/Groups";
+import MicIcon from "@mui/icons-material/Mic";
+import { message, Modal } from "antd";
+import { getProjectInvitations } from "api/project";
 
 const MessageBoxContent = React.lazy(() => import("./MessageBoxContent"));
+const Projects = React.lazy(() => import("components/common/Projects"));
 
-const MessageBox = ({
-	chatBox,
-	closeChatBox,
-	sendMessage,
-	newMessage,
-	handleAckNewMessage,
-}) => {
+const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
+	const socket = useSocket();
+
+	const { loadingGetChatHistory } = useSelector((state) => state.chat);
+
 	const [content, setContent] = useState("");
-	const [messages, setMessages] = useState([]);
+	const [newMessage, setNewMessage] = useState([]);
+	const [showMoreActions, setShowMoreActions] = useState(false);
+	const [modalProjectInvitation, setModalProjectInvitation] = useState(false);
+	const moreActionsRef = useRef(null);
 
 	useEffect(() => {
-		setMessages(chatBox.messages);
+		store.dispatch(getChatHistory(chatBox.user_id));
+	}, [chatBox.user_id]);
+
+	useEffect(() => {
+		setNewMessage(chatBox.messages);
 	}, [chatBox.messages]);
 
 	useEffect(() => {
-		if (newMessage.sender_id === chatBox.receiver_id) {
-			setMessages((prevMessages) => [...prevMessages, newMessage]);
-			handleAckNewMessage();
-		}
-	}, [newMessage, chatBox.receiver_id, handleAckNewMessage]);
+		socket.on("message", (message) => {
+			store.dispatch(getChatHistory(message.sender_id));
+		});
+
+		return () => {
+			socket.off("message");
+		};
+	}, [socket]);
 
 	useEffect(() => {
-		const handleScroll = () => {
-			if (window.scrollY === 0) {
-				console.log("Thanh scroll đã ở đầu trang");
+		const handleClickOutside = (event) => {
+			if (
+				moreActionsRef.current &&
+				!moreActionsRef.current.contains(event.target)
+			) {
+				setShowMoreActions(false);
 			}
 		};
 
-		window.addEventListener("scroll", handleScroll);
-
+		document.addEventListener("mousedown", handleClickOutside);
 		return () => {
-			window.removeEventListener("scroll", handleScroll);
+			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, []);
 
@@ -56,9 +78,18 @@ const MessageBox = ({
 			timestamp: date,
 		};
 		sendMessage(message);
-		setMessages([...messages, message]);
+		store.dispatch(getChatHistory(receiver_id));
 
 		setContent("");
+	};
+
+	const handleShowMoreActions = () => {
+		setShowMoreActions(!showMoreActions);
+	};
+
+	const handleSendProjectInvitation = () => {
+		setModalProjectInvitation(true);
+		store.dispatch(getProjectInvitations(chatBox.user_id));
 	};
 
 	return (
@@ -67,27 +98,63 @@ const MessageBox = ({
 				<div className={styles.miniChatHeaderContent}>
 					<div className={styles.avatar}>
 						<img
-							src={chatBox.avatar ? chatBox.avatar : AvatarDefault}
+							src={
+								chatBox.user_avatar
+									? chatBox.user_avatar
+									: AvatarDefault
+							}
 							alt="avatar"
 						/>
 					</div>
-					<span>{chatBox.username}</span>
+					<span>{chatBox.user_name}</span>
 				</div>
 				<button
-					onClick={() => closeChatBox(chatBox.receiver_id)}
+					onClick={() => closeChatBox(chatBox.user_id)}
 					className={styles.closeButton}>
 					<CloseIcon />
 				</button>
 			</div>
-			<LazyLoadingMedium>
-				<MessageBoxContent
-					messages={messages}
-					receiver_id={chatBox.receiver_id}
-				/>
-			</LazyLoadingMedium>
+			<div className={styles.miniChatContent}>
+				<LazyLoadingMedium>
+					<MessageBoxContent
+						messages={newMessage}
+						receiver_id={chatBox.user_id}
+					/>
+				</LazyLoadingMedium>
+			</div>
 			<div className={styles.miniChatFooter}>
+				<div className={styles.chatActions}>
+					<button
+						ref={moreActionsRef}
+						onClick={() => handleShowMoreActions()}
+						className={styles.addButton}>
+						<AddCircleIcon className={styles.AddIcon} />
+					</button>
+					<button
+						className={styles.addButton}
+						onClick={() => message.info("Comming soon")}>
+						<InsertPhotoIcon className={styles.AddIcon} />
+					</button>
+				</div>
+				<div
+					className={`${styles.chatMoreActions} ${
+						showMoreActions ? styles.visible : ""
+					}`}>
+					<button
+						className={styles.moreActionsButton}
+						onClick={() => handleSendProjectInvitation()}>
+						<GroupsIcon className={styles.icon} />
+						<span>Send project invitation</span>
+					</button>
+					<button
+						className={styles.moreActionsButton}
+						onClick={() => message.info("Comming soon")}>
+						<MicIcon className={styles.icon} />
+						<span>Send voice message</span>
+					</button>
+				</div>
 				<input
-					onKeyDown={(e) => handleEnterKey(e, chatBox.receiver_id)}
+					onKeyDown={(e) => handleEnterKey(e, chatBox.user_id)}
 					type="text"
 					placeholder="Type a message..."
 					className={styles.miniChatInput}
@@ -95,11 +162,24 @@ const MessageBox = ({
 					onChange={(e) => setContent(e.target.value)}
 				/>
 				<button
-					onClick={() => handleSendMessage(chatBox.receiver_id)}
+					onClick={() => handleSendMessage(chatBox.user_id)}
 					className={styles.sendButton}>
-					Send
+					<SendIcon />
 				</button>
 			</div>
+			<Modal
+				footer={null}
+				title=""
+				okText="OK"
+				onOk={() => setModalProjectInvitation(false)}
+				open={modalProjectInvitation}
+				confirmLoading={false}
+				onCancel={() => setModalProjectInvitation(false)}
+				width={1000}>
+				<LazyLoadingMedium>
+					<Projects inviteeId={chatBox.user_id} />
+				</LazyLoadingMedium>
+			</Modal>
 		</div>
 	);
 };

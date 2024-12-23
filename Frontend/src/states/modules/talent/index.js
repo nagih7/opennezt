@@ -7,7 +7,16 @@ const talentSlice = createSlice({
 		loadingGetTalentDetails: false,
 		loadingSkipTalent: false,
 		talents: [],
-		talentDetails: {},
+		talentDetails: null,
+		formRecruitTalents: {
+			sector: null,
+			experience_level: null,
+			education_level: null,
+			commitment: null,
+			location: null,
+			language: null,
+			page: 0,
+		},
 	},
 	reducers: {
 		startRequestRecruitTalents: (state) => ({
@@ -17,7 +26,11 @@ const talentSlice = createSlice({
 		}),
 		startRequestRecruitTalentsSuccess: (state, action) => ({
 			...state,
-			talents: action.payload.data,
+			talents: action.payload.data.talents,
+			formRecruitTalents: {
+				...state.formRecruitTalents,
+				page: action.payload.data.page,
+			},
 			loadingRecruitTalents: false,
 		}),
 		startRequestRecruitTalentsFail: (state) => ({
@@ -51,8 +64,45 @@ const talentSlice = createSlice({
 		}),
 		startRequestGetDetailTalentFail: (state) => ({
 			...state,
-			talentDetails: {},
+			talentDetails: null,
 			loadingGetTalentDetails: false,
+		}),
+
+		// formRecruitTalents
+		setFormRecruitTalents: (state, action) => {
+			const { event, nameSelect } = action.payload;
+			if (nameSelect) {
+				return {
+					...state,
+					formRecruitTalents: {
+						...state.formRecruitTalents,
+						[nameSelect]: event,
+						page: 0,
+					},
+				};
+			} else {
+				const { name, value } = event.target;
+				return {
+					...state,
+					formRecruitTalents: {
+						...state.formRecruitTalents,
+						[name]: value,
+						page: 0,
+					},
+				};
+			}
+		},
+		resetFormRecruitTalents: (state) => ({
+			...state,
+			formRecruitTalents: {
+				sector: null,
+				experience_level: null,
+				education_level: null,
+				commitment: null,
+				location: null,
+				language: null,
+				page: 0,
+			},
 		}),
 	},
 });
@@ -67,6 +117,8 @@ export const {
 	startRequestGetDetailTalent,
 	startRequestGetDetailTalentSuccess,
 	startRequestGetDetailTalentFail,
+	setFormRecruitTalents,
+	resetFormRecruitTalents,
 } = talentSlice.actions;
 
 export default talentSlice.reducer;

@@ -1,208 +1,295 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { Card, Col, Row, Typography } from "antd";
+const { Title, Text, Paragraph } = Typography;
+import { DollarCircleOutlined, AimOutlined } from "@ant-design/icons";
 
 const FounderProfile = ({ founderProfile }) => {
 	return (
 		<div className={styles.founderProfileWrap}>
-			<h2>
-				Professional Background
-				<ArrowDropDownIcon className={styles.dropDown} />
-			</h2>
-			<div className={styles.founderProfileBoxWrap}>
-				{founderProfile.professional_summary && (
-					<>
-						<h3>Professional Summary</h3>
-						<p>{founderProfile.professional_summary}</p>
-					</>
-				)}
-				{founderProfile.industry && founderProfile.industry.length > 0 && (
-					<>
-						<h3>Primary Industries</h3>
-						{founderProfile.industry.map((industry) => {
-							return <p key={industry}>{industry}</p>;
-						})}
-					</>
-				)}
-				{founderProfile.experience_level && (
-					<>
-						<h3>Experience Level</h3>
-						<p>{founderProfile.experience_level}</p>
-					</>
-				)}
-				{founderProfile.degree && (
-					<>
-						<h3>Education Level</h3>
-						<p>{founderProfile.degree}</p>
-					</>
-				)}
-				{founderProfile.certification &&
-					founderProfile.certification.length > 0 && (
-						<>
-							<h3>Certifications</h3>
-							{founderProfile.certification.map((certification) => {
-								return <p key={certification}>{certification}</p>;
-							})}
-						</>
-					)}
-			</div>
-			<h2>
-				Expertise
-				<ArrowDropDownIcon className={styles.dropDown} />
-			</h2>
-			<div className={styles.founderProfileBoxWrap}>
-				{founderProfile.areas_of_expertise &&
-					founderProfile.areas_of_expertise.accounting_and_finance &&
-					founderProfile.areas_of_expertise.accounting_and_finance.length >
-						0 && (
-						<>
-							<h3>Accounting and Finance</h3>
-							{founderProfile.areas_of_expertise.accounting_and_finance.map(
-								(area) => {
-									return <p key={area}>{area}</p>;
-								}
-							)}
-						</>
-					)}
-				{founderProfile.areas_of_expertise &&
-					founderProfile.areas_of_expertise.accounting_and_finance &&
-					founderProfile.areas_of_expertise.accounting_and_finance.length >
-						0 && (
-						<>
-							<h3>Human Resources</h3>
-							{founderProfile.areas_of_expertise.human_resource.map(
-								(area) => {
-									return <p key={area}>{area}</p>;
-								}
-							)}
-						</>
-					)}
-				{founderProfile.areas_of_expertise &&
-					founderProfile.areas_of_expertise.international &&
-					founderProfile.areas_of_expertise.international.length > 0 && (
-						<>
-							<h3>International</h3>
-							{founderProfile.areas_of_expertise.international.map(
-								(area) => {
-									return <p key={area}>{area}</p>;
-								}
-							)}
-						</>
-					)}
-				{founderProfile.areas_of_expertise &&
-					founderProfile.areas_of_expertise.law_and_legal &&
-					founderProfile.areas_of_expertise.law_and_legal.length > 0 && (
-						<>
-							<h3>Law and Legal</h3>
-							{founderProfile.areas_of_expertise.law_and_legal.map(
-								(area) => {
-									return <p key={area}>{area}</p>;
-								}
-							)}
-						</>
-					)}
-				{founderProfile.areas_of_expertise &&
-					founderProfile.areas_of_expertise.management &&
-					founderProfile.areas_of_expertise.management.length > 0 && (
-						<>
-							<h3>Management</h3>
-							{founderProfile.areas_of_expertise.management.map(
-								(area) => {
-									return <p key={area}>{area}</p>;
-								}
-							)}
-						</>
-					)}
-				{founderProfile.areas_of_expertise &&
-					founderProfile.areas_of_expertise.operations &&
-					founderProfile.areas_of_expertise.operations.length > 0 && (
-						<>
-							<h3>Operations</h3>
-							{founderProfile.areas_of_expertise.operations.map(
-								(area) => {
-									return <p key={area}>{area}</p>;
-								}
-							)}
-						</>
-					)}
-				{founderProfile.areas_of_expertise &&
-					founderProfile.areas_of_expertise.sales &&
-					founderProfile.areas_of_expertise.sales.length > 0 && (
-						<>
-							<h3>Sales</h3>
-							{founderProfile.areas_of_expertise.sales.map((area) => {
-								return <p key={area}>{area}</p>;
-							})}
-						</>
-					)}
-				{founderProfile.areas_of_expertise &&
-					founderProfile.areas_of_expertise.starting_up &&
-					founderProfile.areas_of_expertise.starting_up.length > 0 && (
-						<>
-							<h3>Starting up</h3>
-							{founderProfile.areas_of_expertise.starting_up.map(
-								(area) => {
-									return <p key={area}>{area}</p>;
-								}
-							)}
-						</>
-					)}
-				{founderProfile.areas_of_expertise &&
-					founderProfile.areas_of_expertise.sustainability &&
-					founderProfile.areas_of_expertise.sustainability.length > 0 && (
-						<>
-							<h3>Sustainability</h3>
-							{founderProfile.areas_of_expertise.sustainability.map(
-								(area) => {
-									return <p key={area}>{area}</p>;
-								}
-							)}
-						</>
-					)}
-				{founderProfile.areas_of_expertise &&
-					founderProfile.areas_of_expertise.technology_and_internet &&
-					founderProfile.areas_of_expertise.technology_and_internet
-						.length > 0 && (
-						<>
-							<h3>Technology and Internet</h3>
-							{founderProfile.areas_of_expertise.technology_and_internet.map(
-								(area) => {
-									return <p key={area}>{area}</p>;
-								}
-							)}
-						</>
-					)}
-			</div>
-			<h2>
-				How to Work with Me
-				<ArrowDropDownIcon className={styles.dropDown} />
-			</h2>
-			<div className={styles.founderProfileBoxWrap}>
-				{founderProfile.avalability && (
-					<>
-						<h3>Avalability</h3>
-						<p>{founderProfile.avalability}</p>
-					</>
-				)}
-				{founderProfile.career_goals && (
-					<>
-						<h3>My career goals</h3>
-						<p>{founderProfile.career_goals}</p>
-					</>
-				)}
-				{founderProfile.offer && (
-					<>
-						<h3>What I can offer</h3>
-						<p>{founderProfile.offer}</p>
-					</>
-				)}
-				{founderProfile.expectation && (
-					<>
-						<h3>My work expectation</h3>
-						<p>{founderProfile.expectation}</p>
-					</>
-				)}
-			</div>
+			<Row gutter={[24, 24]}>
+				<Col span={24}>
+					<Card className={styles.section}>
+						<Title level={4} icon={<AimOutlined />}>
+							Professional Background
+							<ArrowDropDownIcon className={styles.dropDown} />
+						</Title>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Professional Summary</Text>
+									<Paragraph>
+										{founderProfile.professional_summary
+											? founderProfile.professional_summary
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Professional Summary</Text>
+									<Paragraph>
+										{founderProfile.professional_summary
+											? founderProfile.professional_summary
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Experience Level</Text>
+									<Paragraph>
+										{founderProfile.experience_level
+											? founderProfile.experience_level
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Education Level</Text>
+									<Paragraph>
+										{founderProfile.degree
+											? founderProfile.degree
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+						<Row gutter={[24, 24]}>
+							<Col span={24}>
+								<div className={styles.infoItem}>
+									<Text strong>Certifications</Text>
+									<Paragraph>
+										{founderProfile.certification &&
+										founderProfile.certification.length > 0
+											? founderProfile.certification.join(", ")
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+					</Card>
+				</Col>
+				<Col span={24}>
+					<Card className={styles.section}>
+						<Title level={4} icon={<DollarCircleOutlined />}>
+							Expertise
+							<ArrowDropDownIcon className={styles.dropDown} />
+						</Title>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Accounting and Finance</Text>
+									<Paragraph>
+										{founderProfile.areas_of_expertise
+											.accounting_and_finance &&
+										founderProfile.areas_of_expertise
+											.accounting_and_finance.length > 0
+											? founderProfile.areas_of_expertise.accounting_and_finance.join(
+													", "
+											  )
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Human Resources</Text>
+									<Paragraph>
+										{founderProfile.areas_of_expertise
+											.human_resource &&
+										founderProfile.areas_of_expertise.human_resource
+											.length > 0
+											? founderProfile.areas_of_expertise.human_resource.join(
+													", "
+											  )
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>International</Text>
+									<Paragraph>
+										{founderProfile.areas_of_expertise
+											.international &&
+										founderProfile.areas_of_expertise.international
+											.length > 0
+											? founderProfile.areas_of_expertise.international.join(
+													", "
+											  )
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Law and Legal</Text>
+									<Paragraph>
+										{founderProfile.areas_of_expertise
+											.law_and_legal &&
+										founderProfile.areas_of_expertise.law_and_legal
+											.length > 0
+											? founderProfile.areas_of_expertise.law_and_legal.join(
+													", "
+											  )
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Management</Text>
+									<Paragraph>
+										{founderProfile.areas_of_expertise.management &&
+										founderProfile.areas_of_expertise.management
+											.length > 0
+											? founderProfile.areas_of_expertise.management.join(
+													", "
+											  )
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Operations</Text>
+									<Paragraph>
+										{founderProfile.areas_of_expertise.operations &&
+										founderProfile.areas_of_expertise.operations
+											.length > 0
+											? founderProfile.areas_of_expertise.operations.join(
+													", "
+											  )
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Sales</Text>
+									<Paragraph>
+										{founderProfile.areas_of_expertise.sales &&
+										founderProfile.areas_of_expertise.sales.length > 0
+											? founderProfile.areas_of_expertise.sales.join(
+													", "
+											  )
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Starting up</Text>
+									<Paragraph>
+										{founderProfile.areas_of_expertise.starting_up &&
+										founderProfile.areas_of_expertise.starting_up
+											.length > 0
+											? founderProfile.areas_of_expertise.starting_up.join(
+													", "
+											  )
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Sustainability</Text>
+									<Paragraph>
+										{founderProfile.areas_of_expertise
+											.sustainability &&
+										founderProfile.areas_of_expertise.sustainability
+											.length > 0
+											? founderProfile.areas_of_expertise.sustainability.join(
+													", "
+											  )
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Technology and Internet</Text>
+									<Paragraph>
+										{founderProfile.areas_of_expertise
+											.technology_and_internet &&
+										founderProfile.areas_of_expertise
+											.technology_and_internet.length > 0
+											? founderProfile.areas_of_expertise.technology_and_internet.join(
+													", "
+											  )
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+					</Card>
+				</Col>
+				<Col span={24}>
+					<Card className={styles.section}>
+						<Title level={4} icon={<AimOutlined />}>
+							How to Work with Me
+							<ArrowDropDownIcon className={styles.dropDown} />
+						</Title>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>My career goals</Text>
+									<Paragraph>
+										{founderProfile.career_goals
+											? founderProfile.career_goals
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Avalability</Text>
+									<Paragraph>
+										{founderProfile.avalability
+											? founderProfile.avalability
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>What I can offer</Text>
+									<Paragraph>
+										{founderProfile.offer
+											? founderProfile.offer
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>My work expectation</Text>
+									<Paragraph>
+										{founderProfile.expectation
+											? founderProfile.expectation
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+					</Card>
+				</Col>
+			</Row>
 		</div>
 	);
 };

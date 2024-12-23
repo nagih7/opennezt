@@ -45,6 +45,50 @@ const FundingSource = new Schema(
     }
 )
 
+const Members = new Schema(
+    {
+        _id: {
+            type: ObjectId,
+            required: true,
+            ref: 'User',
+        },
+        name: {
+            type: String,
+            required: true,
+        },
+        avatar: {
+            type: String,
+            required: false,
+        },
+        role: {
+            type: String,
+            required: true,
+            default: 'talent',
+        },
+        join_at: {
+            type: Date,
+            required: true,
+            default: Date.now,
+        },
+    },
+    {
+        _id: false,
+    }
+)
+
+const Metadata = new Schema(
+    {
+        members: {
+            type: [Members],
+            required: true,
+            default: [],
+        },
+    },
+    {
+        _id: false,
+    }
+)
+
 const Project = createModel('Project', 'projects', {
     user_id: {
         type: ObjectId,
@@ -62,10 +106,6 @@ const Project = createModel('Project', 'projects', {
         type: String,
         required: false,
     },
-    landing_page_url: {
-        type: String,
-        required: false,
-    },
     related_industries: {
         type: [String],
         required: true,
@@ -74,13 +114,22 @@ const Project = createModel('Project', 'projects', {
         type: String,
         required: true,
     },
+    metadata: {
+        type: Metadata,
+        required: true,
+        default: {},
+    },
+    landing_page_url: {
+        type: String,
+        required: false,
+    },
     problem: {
         type: String,
-        required: true,
+        required: false,
     },
     solution: {
         type: String,
-        required: true,
+        required: false,
     },
     project_demo_url: {
         type: String,
@@ -96,7 +145,7 @@ const Project = createModel('Project', 'projects', {
     },
     statistics: {
         type: String,
-        required: true,
+        required: false,
     },
     revenues: {
         type: [Revernue],
@@ -108,35 +157,31 @@ const Project = createModel('Project', 'projects', {
     },
     target_money: {
         type: String,
-        required: true,
+        required: false,
     },
     target_audience: {
         type: String,
-        required: true,
+        required: false,
     },
     competitors: {
         type: String,
-        required: true,
+        required: false,
     },
     competitive_advantage: {
         type: String,
-        required: true,
+        required: false,
     },
     why_now: {
         type: String,
-        required: true,
+        required: false,
     },
     strategy: {
         type: String,
-        required: true,
+        required: false,
     },
     milestones: {
         type: String,
-        required: true,
-    },
-    about_opennezt: {
-        type: String,
-        required: true,
+        required: false,
     },
 })
 

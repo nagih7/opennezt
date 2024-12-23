@@ -1,143 +1,181 @@
 import React from "react";
 import styles from "./styles.module.scss";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+import { useSelector } from "react-redux";
+import { Card, Col, Row, Typography } from "antd";
+const { Title, Text, Paragraph } = Typography;
+import {
+	DollarCircleOutlined,
+	TeamOutlined,
+	AimOutlined,
+} from "@ant-design/icons";
 
 const MemberBox = React.lazy(() => import("./MemberBox"));
 
-const ProjectInfo = ({ projectDetails }) => {
+const ProjectInfo = () => {
+	const { projectDetails } = useSelector((state) => state.project);
+
 	return (
 		<div className={styles.projectInfoWrap}>
-			{(projectDetails.problem || projectDetails.solution) && (
-				<>
-					<h2>
-						Startup Overview
-						<ArrowDropDownIcon className={styles.dropDown} />
-					</h2>
-					<div className={styles.projectInfoBoxWrap}>
-						<h3>Problem Statement</h3>
-						<p>{projectDetails.problem}</p>
-						<h3>Solution</h3>
-						<p>{projectDetails.solution}</p>
-					</div>
-				</>
-			)}
+			<Row gutter={[24, 24]}>
+				<Col span={24}>
+					<Card className={styles.section}>
+						<Title level={4} icon={<AimOutlined />}>
+							Project Overview
+						</Title>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Problem</Text>
+									<Paragraph>
+										{projectDetails.problem
+											? projectDetails.problem
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Target Audience</Text>
+									<Paragraph>
+										{projectDetails.target_audience
+											? projectDetails.target_audience
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Solution</Text>
+									<Paragraph>
+										{projectDetails.solution
+											? projectDetails.solution
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Statistics</Text>
+									<Paragraph>
+										{projectDetails.statistics
+											? projectDetails.statistics
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+					</Card>
+				</Col>
+				<Col span={24}>
+					<Card className={styles.section}>
+						<Title level={4} icon={<DollarCircleOutlined />}>
+							Team Infomation
+						</Title>
+						<Row gutter={[16, 16]}>
+							<LazyLoadingMedium>
+								<MemberBox member={projectDetails.owner} />
+							</LazyLoadingMedium>
+							{projectDetails.metadata &&
+								projectDetails.metadata.members &&
+								projectDetails.metadata.members.length > 0 &&
+								projectDetails.metadata.members.map((member, index) => (
+									<LazyLoadingMedium key={index}>
+										<MemberBox member={member} />
+									</LazyLoadingMedium>
+								))}
+						</Row>
+					</Card>
+				</Col>
 
-			{/* <h2>
-				Expertise Request
-				<ArrowDropDownIcon className={styles.dropDown} />
-			</h2>
-			<div className={styles.projectInfoBoxWrap}>
-				<p>{projectDetails.expertise_request}</p>
-			</div> */}
-			{(projectDetails.project_demo_url ||
-				projectDetails.team_intro_url ||
-				projectDetails.pitch_deck) && (
-				<>
-					<h2>
-						Media
-						<ArrowDropDownIcon className={styles.dropDown} />
-					</h2>
-					<div className={styles.projectInfoBoxWrap}>
-						{projectDetails.project_demo_url && (
-							<>
-								<h3>Product Demo</h3>
-								<a
-									href={projectDetails.project_demo_url}
-									target="_blank"
-									rel="noopener noreferrer">
-									Watch Demo
-								</a>
-							</>
-						)}
-						{projectDetails.team_intro_url && (
-							<>
-								<h3>Team Introduction</h3>
-								<a
-									href={projectDetails.team_intro_url}
-									target="_blank"
-									rel="noopener noreferrer">
-									Watch Team Introduction
-								</a>
-							</>
-						)}
-						{projectDetails.pitch_deck && (
-							<>
-								<h3>Pitch Desk</h3>
-								<a
-									href={projectDetails.pitch_deck}
-									target="_blank"
-									rel="noopener noreferrer">
-									View PDF
-								</a>
-							</>
-						)}
-					</div>
-				</>
-			)}
+				<Col span={24}>
+					<Card className={styles.section}>
+						<Title level={4} icon={<DollarCircleOutlined />}>
+							Funding Information
+						</Title>
+						<Row gutter={[16, 16]}>
+							{Object.entries(projectDetails.funding_sources).map(
+								([source, amount]) => (
+									<Col span={8} key={source}>
+										<Card className={styles.fundingCard}>
+											<Text strong>
+												{source.replace(/_/g, " ").toUpperCase()}
+											</Text>
+											<Text className={styles.amount}>
+												${amount ? amount : "0"}
+											</Text>
+										</Card>
+									</Col>
+								)
+							)}
+							<Col span={24}>
+								<div className={styles.infoItem}>
+									<Text strong>Target Money</Text>
+									<Paragraph>
+										{projectDetails.target_money
+											? projectDetails.target_money
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+					</Card>
+				</Col>
 
-			<h2>
-				Team Infomation
-				<ArrowDropDownIcon className={styles.dropDown} />
-			</h2>
-			<div className={styles.projectInfoBoxWrapMember}>
-				<LazyLoadingMedium>
-					<MemberBox member={projectDetails.owner} />
-				</LazyLoadingMedium>
-				{projectDetails.members &&
-					projectDetails.members.map((member, index) => (
-						<LazyLoadingMedium key={index}>
-							<MemberBox member={member} />
-						</LazyLoadingMedium>
-					))}
-			</div>
-
-			<h2>
-				Startup Progress <ArrowDropDownIcon className={styles.dropDown} />
-			</h2>
-			<div className={styles.projectInfoBoxWrap}>
-				<h3>Tradition Metrics</h3>
-				<p>{projectDetails.statistics}</p>
-				{projectDetails.revenues && (
-					<>
-						<h3>Revenue Status</h3>
-						<p>
-							{projectDetails.revenues.map((item) => {
-								return (
-									<>
-										<p>{item.time}</p>
-										<p>{item.revenue}</p>
-									</>
-								);
-							})}
-						</p>
-					</>
-				)}
-			</div>
-			<h2>Startup Strategy</h2>
-			<div className={styles.projectInfoBoxWrap}>
-				<h3>Target Money</h3>
-				<p>{projectDetails.target_money}$</p>
-				<h3>Target Audience</h3>
-				<p>{projectDetails.target_audience}</p>
-				<h3>Competitors</h3>
-				<p>{projectDetails.competitors}</p>
-				<h3>Competitive Advantage</h3>
-				<p>{projectDetails.competitive_advantage}</p>
-				<h3>Market Timing</h3>
-				<p>{projectDetails.why_now}</p>
-				<h3>Strategy</h3>
-				<p>{projectDetails.strategy}</p>
-				<h3>Milestones</h3>
-				<p>{projectDetails.milestones}</p>
-			</div>
-
-			{/* <p>
-					<strong>Funding Sources:</strong>{" "}
-					{Object.entries(funding_sources)
-						.map(([key, value]) => `${key.replace(/_/g, " ")}: ${value}`)
-						.join(", ")}
-				</p> */}
+				<Col span={24}>
+					<Card className={styles.section}>
+						<Title level={4} icon={<TeamOutlined />}>
+							Strategy & Competition
+						</Title>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Competitors</Text>
+									<Paragraph>
+										{projectDetails.competitors
+											? projectDetails.competitors
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Strategy</Text>
+									<Paragraph>
+										{projectDetails.strategy
+											? projectDetails.strategy
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Competitive Advantage</Text>
+									<Paragraph>
+										{projectDetails.competitive_advantage
+											? projectDetails.competitive_advantage
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>Why Now</Text>
+									<Paragraph>
+										{projectDetails.why_now
+											? projectDetails.why_now
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
+					</Card>
+				</Col>
+			</Row>
 		</div>
 	);
 };

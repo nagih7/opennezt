@@ -18,18 +18,15 @@ import {
 	startRequestDeleteProject,
 	startRequestDeleteProjectSuccess,
 	startRequestDeleteProjectFail,
-	startGetPendingProjects,
-	startGetPendingProjectsSuccess,
-	startGetPendingProjectsFail,
 	startUpdateRequestStatus,
 	startUpdateRequestStatusSuccess,
 	startUpdateRequestStatusFail,
-	startRequestJoinProject,
-	startRequestJoinProjectSuccess,
-	startRequestJoinProjectFail,
 	startRequestUpdateBackground,
 	startRequestUpdateBackgroundSuccess,
 	startRequestUpdateBackgroundFail,
+	startRequestGetProjectInvitations,
+	startRequestGetProjectInvitationsSuccess,
+	startRequestGetProjectInvitationsFail,
 } from "../../states/modules/project";
 
 export const getProjects = () => async (dispatch, getState) => {
@@ -77,38 +74,22 @@ export const getProjectDetails = (projectId) => async (dispatch, getState) => {
 	});
 };
 
-export const requestToJoinProject =
-	(requestProjectData) => async (dispatch, getState) => {
+export const seekProjects =
+	(requestSeekProjects) => async (dispatch, getState) => {
+		requestSeekProjects = new URLSearchParams(requestSeekProjects).toString();
 		return callApi({
-			method: "post",
-			apiPath: `project/request-to-join`,
+			method: "get",
+			apiPath: `project/seek-projects?${requestSeekProjects}`,
 			actionTypes: [
-				startRequestJoinProject,
-				startRequestJoinProjectSuccess,
-				startRequestJoinProjectFail,
+				startRequestSeekProjects,
+				startRequestSeekProjectsSuccess,
+				startRequestSeekProjectsFail,
 			],
-			variables: requestProjectData,
+			variables: {},
 			dispatch,
 			getState,
 		});
 	};
-
-export const seekProjects = (data) => async (dispatch, getState) => {
-	return callApi({
-		method: "get",
-		apiPath: data
-			? `project/seek-projects?industry=${data.industry}&stage=${data.stage}&name=${data.name}`
-			: `project/seek-projects`,
-		actionTypes: [
-			startRequestSeekProjects,
-			startRequestSeekProjectsSuccess,
-			startRequestSeekProjectsFail,
-		],
-		variables: {},
-		dispatch,
-		getState,
-	});
-};
 
 export const updateProject = (data) => async (dispatch, getState) => {
 	return callApi({
@@ -135,21 +116,6 @@ export const deleteProject = (projectId) => async (dispatch, getState) => {
 			startRequestDeleteProjectFail,
 		],
 		variables: { projectId },
-		dispatch,
-		getState,
-	});
-};
-
-export const getPendingProjects = () => async (dispatch, getState) => {
-	return callApi({
-		method: "get",
-		apiPath: `project/request-to-join`,
-		actionTypes: [
-			startGetPendingProjects,
-			startGetPendingProjectsSuccess,
-			startGetPendingProjectsFail,
-		],
-		variables: {},
 		dispatch,
 		getState,
 	});
@@ -185,6 +151,22 @@ export const updateBackgroundProject =
 				startRequestUpdateBackgroundFail,
 			],
 			variables: formData,
+			dispatch,
+			getState,
+		});
+	};
+
+export const getProjectInvitations =
+	(user_id) => async (dispatch, getState) => {
+		return callApi({
+			method: "get",
+			apiPath: `project/invitations/${user_id}`,
+			actionTypes: [
+				startRequestGetProjectInvitations,
+				startRequestGetProjectInvitationsSuccess,
+				startRequestGetProjectInvitationsFail,
+			],
+			variables: {},
 			dispatch,
 			getState,
 		});

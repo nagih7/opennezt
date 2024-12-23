@@ -1,17 +1,13 @@
 @import "../../../../assets/scss/variables.scss";
 
 .listTalentsWrap {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 2rem;
 	flex-grow: 1;
 	background-color: $backgroundMain;
 	border-radius: $borderRadius;
 	padding: 1.8rem;
 	overflow-x: hidden;
 	overflow-y: scroll;
-	box-shadow: $boxShadow;
+	box-shadow: $boxShadow1;
 
 	&::-webkit-scrollbar {
 		width: 7px;
@@ -35,5 +31,11 @@
 
 	&::-webkit-scrollbar-thumb:vertical:hover {
 		background-color: rgba(133, 133, 133, 0.68);
+	}
+
+	.listTalentContent {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+		gap: 2rem;
 	}
 }

@@ -2,11 +2,18 @@ import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import { Col, Row } from "antd";
 import { useSelector } from "react-redux";
+import store from "states/configureStore";
+import { getTotalUsers } from "api/manage";
+
+const UserManagement = React.lazy(() => import("../UserManagement"));
 
 function Manage() {
 	const [totalUsersView, setTotalUsers] = useState(0);
-
 	const totalUsers = useSelector((state) => state.manage.totalUsers);
+
+	useEffect(() => {
+		store.dispatch(getTotalUsers());
+	}, []);
 
 	useEffect(() => {
 		if (totalUsers !== 0) {
@@ -157,6 +164,7 @@ function Manage() {
 					</Col>
 				</Row>
 			</div>
+			<UserManagement />
 		</div>
 	);
 }

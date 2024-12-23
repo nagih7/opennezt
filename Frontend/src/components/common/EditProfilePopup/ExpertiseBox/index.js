@@ -24,14 +24,6 @@ const ExpertiseBox = ({
 				placeholder="Select your expertise*"
 				onChange={(value) => onChange(value, { ExpertiseTarget })}
 				options={listValue}
-				optionRender={(value) => (
-					<Space>
-						<span role="img" aria-label={value.data.label}>
-							{value.data.emoji}
-						</span>
-						{value.data.desc}
-					</Space>
-				)}
 			/>
 			{/* <Select
 				value={formData.industry}
@@ -44,14 +36,7 @@ const ExpertiseBox = ({
 				placeholder="What is your primary industry*"
 				onChange={(value) => onChange(value, "industry")}
 				options={listSector}
-				optionRender={(listSector) => (
-					<Space>
-						<span role="img" aria-label={listSector.data.label}>
-							{listSector.data.emoji}
-						</span>
-						{listSector.data.desc}
-					</Space>
-				)}
+				
 			/> */}
 		</div>
 	);

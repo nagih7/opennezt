@@ -8,6 +8,7 @@ const homeSlice = createSlice({
 			founderProfile: false,
 			project: false,
 		},
+		loadingCheckSteps: false,
 	},
 	reducers: {
 		setValue: (state, action) => ({
@@ -16,10 +17,12 @@ const homeSlice = createSlice({
 		}),
 		startCheckSteps: (state, action) => ({
 			...state,
+			loadingCheckSteps: true,
 		}),
 		startCheckStepsSuccess: (state, action) => ({
 			...state,
 			steps: action.payload.data,
+			loadingCheckSteps: false,
 		}),
 		startCheckStepsFail: (state) => ({
 			...state,
@@ -27,6 +30,7 @@ const homeSlice = createSlice({
 				founderProfile: false,
 				project: false,
 			},
+			loadingCheckSteps: false,
 		}),
 	},
 });

@@ -1,13 +1,8 @@
 import * as projectService from '../services/projectService'
 
 export async function seekProjects(req, res) {
-    const result = await projectService.seekProjects(req.currentUser._id, req.query)
+    const result = await projectService.seekProjects(req.currentUser, req.query)
     res.jsonify(result)
-}
-
-export async function requestToJoinProject(req, res) {
-    await projectService.requestToJoinProject(req.currentUser, req.body)
-    res.status(201).jsonify('Yêu cầu tham gia dự án thành công.')
 }
 
 export async function getRequestsToJoinProject(req, res) {
@@ -23,4 +18,9 @@ export async function responseRequest(req, res) {
 export async function updateBackground(req, res) {
     await projectService.updateBackground(req.currentUser, req.body)
     res.status(200).jsonify('Cập nhật nền dự án thành công.')
+}
+
+export async function getInvitations(req, res) {
+    const result = await projectService.getInvitations(req.currentUser._id, req.params.user_id)
+    res.jsonify(result)
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./styles.module.scss";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import AvatarDefault from "../../../assets/images/default/AvatarDefault.png";
@@ -7,22 +7,24 @@ import verify from "../../../assets/images/icon/verify.png";
 import { Button } from "antd";
 import { useSelector } from "react-redux";
 import store from "states/configureStore";
-import { useSocket } from "../SocketContext";
-import { requestChatInvitation } from "../../../api/chat";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import {
+	sendRequestAddFriend,
+	getRequestAddFriend,
+} from "../../../api/notification";
+
 const TalentProfileCard = ({ talent }) => {
-	const socket = useSocket();
-	const { loadingRequestChatInvitation, chatInvitation } = useSelector(
-		(state) => state.chat
+	const { requestAddFriend, loadingSendRequestAddFriend } = useSelector(
+		(state) => state.notification
 	);
 
-	const handleRequestChatInvitation = async (receiver_id, receiver_name) => {
-		console.log("Request Chat Invitation:", receiver_id, receiver_name);
-		await store.dispatch(requestChatInvitation(receiver_id, receiver_name));
-	};
-
-	const handleInvite = (receiver_id) => {
-		// Gửi yêu cầu 'invite' lên server khi user nhấn nút
-		socket.emit("invite", receiver_id);
+	const handleRequestAddFriend = async (user_id) => {
+		const requestMessageForm = {
+			user_id: user_id,
+			metadata: {},
+		};
+		await store.dispatch(sendRequestAddFriend(requestMessageForm));
+		await store.dispatch(getRequestAddFriend(user_id));
 	};
 
 	return (
@@ -81,39 +83,21 @@ const TalentProfileCard = ({ talent }) => {
 						</a>
 					</div>
 					<div className={styles.userActions}>
-						{chatInvitation === "waiting" ? (
-							<Button
-								style={{
-									borderRadius: "0.5rem",
-									backgroundColor: "green",
-								}}
-								type="primary"
-								loading={loadingRequestChatInvitation}
-								onClick={() => handleInvite(talent._id)}>
-								Requested
-							</Button>
-						) : chatInvitation === "accepted" ? (
-							<Button
-								style={{
-									borderRadius: "0.5rem",
-								}}
-								type="primary"
-								loading={loadingRequestChatInvitation}>
-								Chat Now
-							</Button>
-						) : (
-							<Button
-								style={{
-									borderRadius: "0.5rem",
-								}}
-								type="primary"
-								loading={loadingRequestChatInvitation}
-								onClick={() =>
-									handleRequestChatInvitation(talent._id, talent.name)
-								}>
-								Send Request
-							</Button>
-						)}
+						<Button
+							style={{
+								borderRadius: "0.5rem",
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								gap: "0.5rem",
+							}}
+							disabled={requestAddFriend}
+							type="primary"
+							loading={loadingSendRequestAddFriend}
+							onClick={() => handleRequestAddFriend(talent._id)}>
+							<PersonAddIcon />
+							Add friend
+						</Button>
 					</div>
 				</div>
 			</div>

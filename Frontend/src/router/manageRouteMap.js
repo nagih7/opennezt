@@ -1,6 +1,5 @@
 import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PersonIcon from "@mui/icons-material/Person";
 import FolderIcon from "@mui/icons-material/Folder";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
@@ -16,13 +15,6 @@ const manageRouteMap = [
 		path: "/admin/manage",
 		routeActive: ["/admin/manage"],
 		permissions: ["manage_page"],
-	},
-	{
-		label: "User Management",
-		icon: <ManageAccountsIcon className="material-icons" />,
-		path: "/admin/user-management",
-		routeActive: ["/admin/user-management"],
-		permissions: ["user-management"],
 	},
 	{
 		label: "Dashboard",
@@ -62,11 +54,11 @@ const manageRouteMap = [
 		permissions: ["seek_projects_page"],
 	},
 	{
-		label: "Project's Requests",
+		label: "Notifications",
 		icon: <FolderSharedIcon className="material-icons" />,
-		path: "/project-notifications",
-		routeActive: ["/project-notifications"],
-		permissions: ["project_notifications_page"],
+		path: "/notification-management",
+		routeActive: ["/notification-management"],
+		permissions: ["notification_management_page"],
 	},
 ];
 

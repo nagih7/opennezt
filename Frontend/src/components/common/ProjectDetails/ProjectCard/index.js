@@ -1,13 +1,18 @@
 import React from "react";
 import styles from "./styles.module.scss";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
-import { Upload } from "antd";
+import { Space, Tag, Typography, Upload } from "antd";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { updateBackgroundProject } from "api/project";
 import store from "states/configureStore";
+import { useSelector } from "react-redux";
+import { RocketOutlined } from "@ant-design/icons";
+const { Title } = Typography;
 
-const ProjectCard = ({ projectDetails }) => {
+const ProjectCard = () => {
+	const { projectDetails } = useSelector((state) => state.project);
+	console.log(projectDetails);
+
 	const propsBackground = {
 		name: "file",
 		customRequest: async ({ file }) => {
@@ -25,33 +30,35 @@ const ProjectCard = ({ projectDetails }) => {
 
 	return (
 		<div className={styles.projectCardWrap}>
-			<div className={styles.backgroundProject}>
-				<LazyLoadImage
-					src={
-						projectDetails.background
-							? projectDetails.background
-							: BackgroundDefault
-					}
-					alt="Project"
-					className={styles.background}
-				/>
-				<div className={styles.buttonChangeBackground}>
-					<Upload {...propsBackground}>
-						<CameraAltIcon fontSize="2rem" />
-						<span className={styles.btnWrap}>Update Background</span>
-					</Upload>
-				</div>
+			<img
+				src={
+					projectDetails.background
+						? projectDetails.background
+						: BackgroundDefault
+				}
+				alt={projectDetails.name}
+				className={styles.headerImage}
+			/>
+			<div className={styles.buttonChangeBackground}>
+				<Upload {...propsBackground}>
+					<CameraAltIcon fontSize="2rem" />
+					<span className={styles.btnWrap}>Update Background</span>
+				</Upload>
 			</div>
-
-			<div className={styles.projectInfo}>
-				<h1>{projectDetails.name}</h1>
-				<p>
-					<strong>[Industry Field]</strong>{" "}
-					{projectDetails.related_industries.join(" / ")}
-				</p>
-				<p>
-					<strong>[Stage of Development]</strong> {projectDetails.stage}
-				</p>
+			<div className={styles.headerOverlay}>
+				<Title level={2}>{projectDetails.name}</Title>
+				<Space size={8} wrap>
+					{projectDetails.related_industries?.map((industry) => (
+						<Tag key={industry} color="blue">
+							{industry}
+						</Tag>
+					))}
+				</Space>
+				<Space size={8} wrap>
+					<Tag color="green" icon={<RocketOutlined />}>
+						{projectDetails.stage}
+					</Tag>
+				</Space>
 			</div>
 		</div>
 	);

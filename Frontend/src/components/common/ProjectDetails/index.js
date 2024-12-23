@@ -1,18 +1,18 @@
 import React from "react";
 import styles from "./styles.module.scss";
+import { useSelector } from "react-redux";
 import ProjectCard from "./ProjectCard";
 import ProjectInfo from "./ProjectInfo";
-import LazyLoading from "components/UI/LazyLoading";
+import ProjectCardSkeleton from "components/skeleton/ProjectCardSkeleton";
+import ProjectInfoSkeleton from "components/skeleton/ProjectInfoSkeleton";
 
-const ProjectDetails = ({ projectDetails }) => {
+const ProjectDetails = () => {
+	const { loadingGetProjectDetails } = useSelector((state) => state.project);
+
 	return (
 		<div className={styles.projectDetailWrap}>
-			<LazyLoading>
-				<ProjectCard projectDetails={projectDetails} />
-			</LazyLoading>
-			<LazyLoading>
-				<ProjectInfo projectDetails={projectDetails} />
-			</LazyLoading>
+			{loadingGetProjectDetails ? <ProjectCardSkeleton /> : <ProjectCard />}
+			{loadingGetProjectDetails ? <ProjectInfoSkeleton /> : <ProjectInfo />}
 		</div>
 	);
 };

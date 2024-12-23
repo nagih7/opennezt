@@ -1,167 +1,65 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {Project, FounderProfile, ProjectRequest, User} from '@/models'
+import {Project, ProjectRequest, NotificationFeed, ObjectId} from '@/models'
 import {FileUpload} from '@/utils/classes'
 
-export async function seekProjects(userId, requestQuery) {
-    if (!requestQuery) {
-        const industries = await FounderProfile.findOne({user_id: userId}, {industry: 1})
-        const projects = await Project.aggregate([
-            {
-                $match: {
-                    related_industries: {$in: industries},
-                    user_id: {$ne: userId},
-                },
-            },
-            {
-                $lookup: {
-                    from: 'project_requests',
-                    localField: '_id',
-                    foreignField: 'project_id',
-                    as: 'project_request',
-                    pipeline: [
-                        {
-                            $match: {
-                                sender_id: userId,
-                            },
-                        },
-                    ],
-                },
-            },
-            {
-                $addFields: {
-                    background: {
-                        $cond: {
-                            if: {$eq: [{$ifNull: ['$background', '']}, '']},
-                            then: '$background',
-                            else: {$concat: [LINK_STATIC_URL, '$background']},
-                        },
-                    },
-                    project_request: {$arrayElemAt: ['$project_request', 0]},
-                },
-            },
-            {
-                $limit: 10,
-            },
-            {
-                $project: {
-                    user_id: 1,
-                    problem: 1,
-                    solution: 1,
-                    background: 1,
-                    updated_at: 1,
-                    name: 1,
-                    _id: 1,
-                    project_request: {
-                        status: 1,
-                    },
-                },
-            },
-        ])
-        return projects
-    } else {
-        const {industry, stage, name} = requestQuery
-        const query = {user_id: {$ne: userId}}
-        if (industry && industry !== 'null') {
-            query.related_industries = industry
-        }
-        if (stage && stage !== 'null') {
-            query.stage = stage
-        }
-        if (name && name !== 'null') {
-            query.name = {$regex: name, $options: 'i'}
-            query.user_id = {$ne: userId}
-        }
+export async function seekProjects(user, requestQuery) {
+    const query = {user_id: {$ne: user._id}}
+    const per_page = 6
 
-        const projects = await Project.aggregate([
-            {
-                $match: query,
-            },
-            {
-                $lookup: {
-                    from: 'project_requests',
-                    localField: '_id',
-                    foreignField: 'project_id',
-                    as: 'project_request',
-                    pipeline: [
-                        {
-                            $match: {
-                                sender_id: userId,
-                            },
-                        },
-                    ],
-                },
-            },
-
-            {
-                $addFields: {
-                    background: {
-                        $cond: {
-                            if: {$eq: [{$ifNull: ['$background', '']}, '']},
-                            then: '$background',
-                            else: {$concat: [LINK_STATIC_URL, '$background']},
-                        },
-                    },
-                    project_request: {$arrayElemAt: ['$project_request', 0]},
-                },
-            },
-            {
-                $project: {
-                    user_id: 1,
-                    problem: 1,
-                    solution: 1,
-                    background: 1,
-                    updated_at: 1,
-                    name: 1,
-                    _id: 1,
-                    project_request: {
-                        status: 1,
-                    },
-                },
-            },
-        ])
-
-        return projects
+    if (requestQuery.industry) {
+        query.industry = {
+            $regex: requestQuery.industry,
+            $options: 'i',
+        }
     }
-}
-
-export async function requestToJoinProject(user, requestProjectData) {
-    const {project_id, project_name, owner_id, role} = requestProjectData
-    const owner = await User.findOne({_id: owner_id}, {name: 1})
-
-    const existingRequest = await ProjectRequest.findOne({
-        sender_id: user._id,
-        receiver_id: owner_id,
-        project_id,
-    })
-
-    if (existingRequest) {
-        if (existingRequest.status === 'rejected') {
-            await ProjectRequest.updateOne(
-                {_id: existingRequest._id},
-                {
-                    $set: {
-                        status: 'waiting',
-                        role: role,
-                        updatedAt: new Date(),
-                    },
-                }
-            )
-            return
+    if (requestQuery.stage) {
+        query.stage = {
+            $regex: requestQuery.stage,
+            $options: 'i',
+        }
+    }
+    if (requestQuery.name) {
+        query.name = {
+            $regex: requestQuery.name,
+            $options: 'i',
         }
     }
 
-    const newRequest = new ProjectRequest({
-        sender_id: user._id,
-        project_name: project_name,
-        sender_name: user.name,
-        receiver_id: owner_id,
-        receiver_name: owner.name,
-        role,
-        project_id,
-        status: 'waiting',
-    })
+    const projects = await Project.aggregate([
+        {
+            $match: query,
+        },
+        {
+            $addFields: {
+                background: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        then: '$background',
+                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                    },
+                },
+            },
+        },
+        {
+            $skip: per_page * requestQuery.page,
+        },
+        {
+            $limit: per_page,
+        },
+        {
+            $project: {
+                related_industries: 1,
+                stage: 1,
+                background: 1,
+                user_id: 1,
+                created_at: 1,
+                name: 1,
+                _id: 1,
+            },
+        },
+    ])
 
-    await newRequest.save()
+    return {total: projects.length, page: requestQuery.page + 1, per_page, projects}
 }
 
 export async function getRequestsToJoinProject(userId) {
@@ -183,4 +81,48 @@ export async function updateBackground(user, requestBody) {
         project.background = requestBody.background.save('background_projects')
         await project.save()
     }
+}
+
+export async function getInvitations(userId, user_id) {
+    const invitations = await NotificationFeed.aggregate([
+        {
+            $match: {
+                source_id: userId,
+                user_id: new ObjectId(user_id),
+                type: 'project_invitation',
+                'metadata.status': {$in: ['waiting', 'accepted']},
+            },
+        },
+        {
+            $lookup: {
+                from: 'projects',
+                localField: 'metadata.project_id',
+                foreignField: '_id',
+                as: 'project',
+            },
+        },
+        {
+            $unwind: '$project',
+        },
+        {
+            $addFields: {
+                'metadata.project': {
+                    name: '$project.name',
+                    _id: '$project._id',
+                },
+            },
+        },
+        {
+            $project: {
+                _id: 0,
+                created_at: 1,
+                type: 1,
+                metadata: {
+                    status: 1,
+                    project: 1,
+                },
+            },
+        },
+    ])
+    return invitations
 }

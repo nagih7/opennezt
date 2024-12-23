@@ -1,7 +1,6 @@
-import {User, FounderProfile, Project, Invitation, ObjectId, ChatInvitation, ProjectRequest} from '@/models'
+import {User, FounderProfile, Project, Invitation, ObjectId, ChatInvitation, NotificationFeed} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
-import status from 'statuses'
 
 export async function create(requestBody) {
     const user = new User(requestBody)
@@ -151,29 +150,6 @@ export async function getProject(projectId) {
         },
         {
             $lookup: {
-                from: 'project_requests',
-                localField: '_id',
-                foreignField: 'project_id',
-                as: 'project_requests',
-                pipeline: [
-                    {
-                        $match: {
-                            status: 'accepted',
-                        },
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                            sender_id: 1,
-                            sender_name: 1,
-                            role: 1,
-                        },
-                    },
-                ],
-            },
-        },
-        {
-            $lookup: {
                 from: 'users',
                 localField: 'user_id',
                 foreignField: '_id',
@@ -208,35 +184,6 @@ export async function getProject(projectId) {
             $unwind: '$owner',
         },
         {
-            $lookup: {
-                from: 'users',
-                localField: 'project_requests.sender_id',
-                foreignField: '_id',
-                as: 'members',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 1,
-                            name: 1,
-                            // email: 1,
-                            avatar: 1,
-                        },
-                    },
-                    {
-                        $addFields: {
-                            avatar: {
-                                $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
-                                    then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
-                                },
-                            },
-                        },
-                    },
-                ],
-            },
-        },
-        {
             $addFields: {
                 background: {
                     $cond: {
@@ -252,9 +199,28 @@ export async function getProject(projectId) {
                         else: {$concat: [LINK_STATIC_URL, '$pitch_deck']},
                     },
                 },
+                'metadata.members': {
+                    $map: {
+                        input: '$metadata.members',
+                        as: 'member',
+                        in: {
+                            $mergeObjects: [
+                                '$$member',
+                                {
+                                    avatar: {
+                                        $cond: {
+                                            if: {$eq: [{$ifNull: ['$$member.avatar', '']}, '']},
+                                            then: '$$member.avatar',
+                                            else: {$concat: [LINK_STATIC_URL, '$$member.avatar']},
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                },
             },
         },
-
         {
             $project: {
                 project_requests: 0,
@@ -293,6 +259,8 @@ export async function deleteProject(user, requestBody) {
 
 export async function recuitTalents(user, requestRecuitTalents) {
     const query = {}
+    const per_page = 12
+
     if (requestRecuitTalents.sector) {
         query.industry = {
             $regex: requestRecuitTalents.sector,
@@ -318,6 +286,18 @@ export async function recuitTalents(user, requestRecuitTalents) {
         }
     }
 
+    const getFriendRequest = async (talents) => {
+        const friendRequests = await NotificationFeed.find({
+            type: 'friend_request',
+            $or: [
+                {user_id: user._id, source_id: {$in: talents.map((talent) => talent.user_data._id)}},
+                {user_id: {$in: talents.map((talent) => talent.user_data._id)}, source_id: user._id},
+            ],
+        }).select('source_id user_id type metadata.status')
+
+        return friendRequests
+    }
+
     const talents = await FounderProfile.aggregate([
         {
             $match: query,
@@ -340,19 +320,19 @@ export async function recuitTalents(user, requestRecuitTalents) {
             $match: {
                 ...(requestRecuitTalents.location
                     ? {
-                          'user_data.region': {
-                              $regex: requestRecuitTalents.location,
-                              $options: 'i',
-                          },
-                      }
+                        'user_data.region': {
+                            $regex: requestRecuitTalents.location,
+                            $options: 'i',
+                        },
+                    }
                     : {}),
                 ...(requestRecuitTalents.language
                     ? {
-                          'user_data.language': {
-                              $regex: requestRecuitTalents.language,
-                              $options: 'i',
-                          },
-                      }
+                        'user_data.language': {
+                            $regex: requestRecuitTalents.language,
+                            $options: 'i',
+                        },
+                    }
                     : {}),
                 'user_data.is_active': true,
                 'user_data._id': {$ne: user._id},
@@ -377,10 +357,10 @@ export async function recuitTalents(user, requestRecuitTalents) {
             },
         },
         {
-            $skip: (requestRecuitTalents.page - 1) * requestRecuitTalents.per_page,
+            $skip: requestRecuitTalents.page * per_page,
         },
         {
-            $limit: requestRecuitTalents.per_page,
+            $limit: per_page,
         },
         {
             $project: {
@@ -398,10 +378,19 @@ export async function recuitTalents(user, requestRecuitTalents) {
             },
         },
     ])
-    return talents
+    const friendRequests = await getFriendRequest(talents)
+    talents.forEach((talent) => {
+        const friendRequest = friendRequests.find(
+            (request) =>
+                request.source_id.equals(talent.user_data._id) || request.user_id.equals(talent.user_data._id)
+        )
+        talent.friend_request = friendRequest ? friendRequest : null
+    })
+
+    return {total: talents.length, page: requestRecuitTalents.page + 1, per_page, talents}
 }
 
-export async function getTalentDetails(id) {
+export async function getTalentDetails(user, id) {
     const detailTalent = await User.aggregate([
         {$match: {_id: new ObjectId(id)}},
         {
@@ -415,7 +404,30 @@ export async function getTalentDetails(id) {
         {
             $unwind: {
                 path: '$talent_profile',
-                preserveNullAndEmptyArrays: false, // Nếu không muốn giữ lại các bản ghi không có founder_profiles
+                preserveNullAndEmptyArrays: true, // Nếu không muốn giữ lại các bản ghi không có founder_profiles
+            },
+        },
+        {
+            $lookup: {
+                from: 'notifications_feed',
+                as: 'friend_request',
+                pipeline: [
+                    {
+                        $match: {
+                            type: 'friend_request',
+                            $and: [
+                                {$or: [{user_id: user._id}, {user_id: new ObjectId(id)}]},
+                                {$or: [{source_id: user._id}, {source_id: new ObjectId(id)}]},
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: {
+                path: '$friend_request',
+                preserveNullAndEmptyArrays: true,
             },
         },
         {

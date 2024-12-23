@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styles from "./styles.module.scss";
-import store from "states/configureStore";
 import {
 	getProjects,
 	createNewProject,
@@ -8,22 +7,25 @@ import {
 	updateProject,
 	deleteProject,
 } from "api/project";
-import { useSelector } from "react-redux";
-import { Button, message, Modal } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { Button, Modal } from "antd";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+import BoxProject from "./BoxProject";
+import ProjectDetails from "../../common/ProjectDetails";
+import ProjectsSkeleton from "components/skeleton/ProjectsSkeleton";
+import NotFound from "components/UI/NotFound";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 
 const CreateProjectForm = React.lazy(() => import("./CreateProjectForm"));
-const BoxProject = React.lazy(() => import("./BoxProject"));
-const ProjectDetails = React.lazy(() => import("../../common/ProjectDetails"));
 const UpdateProjectForm = React.lazy(() => import("./UpdateProjectForm"));
 
 function Project() {
-	useEffect(() => {
-		store.dispatch(getProjects());
-	}, []);
+	const dispatch = useDispatch();
 
 	const [openModalUpdateProject, setOpenModalUpdateProject] = useState(false);
 	const [openModalCreateProject, setOpenModalCreateProject] = useState(false);
+	const [openModalProjectDetails, setOpenModalProjectDetails] =
+		useState(false);
 	const [formProject, setFormData] = useState({
 		name: "",
 		landing_page_url: "",
@@ -50,7 +52,6 @@ function Project() {
 		why_now: "",
 		strategy: "",
 		milestones: "",
-		about_opennezt: "",
 		background: {},
 	});
 
@@ -81,7 +82,6 @@ function Project() {
 			why_now: "",
 			strategy: "",
 			milestones: "",
-			about_opennezt: "",
 			background: {},
 		});
 	};
@@ -91,36 +91,28 @@ function Project() {
 		loadingCreateNewProject,
 		resultCreateProject,
 		projectDetails,
-		// loadingGetProjectDetails,
 		loadingUpdateProject,
 		resultUpdateProject,
 		loadingDeleteProject,
+		loadingGetProjects,
 	} = useSelector((state) => state.project);
 
-	const handleOpenModalDetails = async (project_id) => {
-		await store.dispatch(getProjectDetails(project_id));
+	const handleOpenModalDetails = (project_id) => {
 		setOpenModalProjectDetails(true);
-	};
-
-	const [openModalProjectDetails, setOpenModalProjectDetails] =
-		useState(false);
-
-	const showLoading = () => {
-		setOpenModalProjectDetails(false);
+		dispatch(getProjectDetails(project_id));
 	};
 
 	const handleCreateProject = async () => {
-		await store.dispatch(createNewProject(formProject));
+		dispatch(createNewProject(formProject));
 	};
 
 	useEffect(() => {
 		if (resultCreateProject === true) {
-			setDefaultForm();
-			store.dispatch(getProjects());
 			setOpenModalCreateProject(false);
 			setDefaultForm();
+			dispatch(getProjects());
 		}
-	}, [resultCreateProject]);
+	}, [resultCreateProject, dispatch]);
 
 	const handleCancel = () => {
 		setOpenModalCreateProject(false);
@@ -138,15 +130,15 @@ function Project() {
 	};
 
 	const handleDeleteProject = async (project_id) => {
-		await store.dispatch(deleteProject(project_id));
-		await store.dispatch(getProjects());
+		dispatch(deleteProject(project_id));
+		dispatch(getProjects());
 		setOpenModalProjectDetails(false);
 	};
 
 	const handleUpdateProject = async () => {
-		await store.dispatch(updateProject(formProject));
-		await store.dispatch(getProjectDetails(projectDetails._id));
-		await store.dispatch(getProjects());
+		dispatch(updateProject(formProject));
+		dispatch(getProjectDetails(projectDetails._id));
+		dispatch(getProjects());
 	};
 
 	useEffect(() => {
@@ -156,32 +148,42 @@ function Project() {
 		}
 	}, [resultUpdateProject]);
 
-	const confirmLoading = false;
-
 	return (
 		<div className={styles.projectContainer}>
 			<div className={styles.projectHeader}>
-				<h2>Project Manager</h2>
+				<h2>Project Management</h2>
 				<Button
 					type="primary"
 					className={styles.btnCreate}
 					onClick={() => setOpenModalCreateProject(true)}>
+					<CreateNewFolderIcon />
 					Create new project
 				</Button>
 			</div>
-			<div className={styles.projectsList}>
-				<LazyLoadingMedium>
-					{projects &&
+
+			{projects && projects.length === 0 && !loadingGetProjects ? (
+				<NotFound
+					content={"You do not have any project yet"}
+					size={"10rem"}
+				/>
+			) : (
+				<div className={styles.projectsList}>
+					{loadingGetProjects ? (
+						<ProjectsSkeleton boxs={6} />
+					) : (
+						projects &&
 						projects.length > 0 &&
 						projects.map((project, index) => (
 							<BoxProject
 								project={project}
 								key={index}
 								openModalDetails={handleOpenModalDetails}
+								usedTo="my-projects"
 							/>
-						))}
-				</LazyLoadingMedium>
-			</div>
+						))
+					)}
+				</div>
+			)}
 
 			<Modal
 				title=""
@@ -198,7 +200,6 @@ function Project() {
 					/>
 				</LazyLoadingMedium>
 			</Modal>
-
 			<Modal
 				title=""
 				open={openModalProjectDetails}
@@ -209,7 +210,7 @@ function Project() {
 						<Button
 							type="primary"
 							onClick={handleOpenModalUpdateProject}
-							loading={confirmLoading}>
+							loading={false}>
 							Update
 						</Button>
 						<Button
@@ -221,11 +222,8 @@ function Project() {
 						</Button>
 					</>
 				}>
-				<LazyLoadingMedium>
-					<ProjectDetails projectDetails={projectDetails} />
-				</LazyLoadingMedium>
+				<ProjectDetails />
 			</Modal>
-
 			<Modal
 				title=""
 				okText="Update now"

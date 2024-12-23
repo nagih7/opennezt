@@ -43,9 +43,9 @@
 		box-shadow: $boxShadow1;
 		padding: 1.8rem;
 		width: 100%;
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+		gap: 2rem;
 		flex-grow: 1;
-		gap: 20px;
 	}
 }

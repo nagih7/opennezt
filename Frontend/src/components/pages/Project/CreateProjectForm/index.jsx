@@ -197,15 +197,16 @@ const CreateProjectForm = (props) => {
 		<div className={styles.createProjectForm}>
 			<h2>Startup Details</h2>
 			<Input
+				className={styles.inputCreate}
 				value={formProject.name}
 				name="name"
 				placeholder="Startup name*"
 				onChange={(e) => handleOnChange(e)}
 				autoSize
 				required
-				style={{ padding: "4px 11px" }}
 			/>
 			<Input
+				className={styles.inputCreate}
 				value={formProject.landing_page_url}
 				name="landing_page_url"
 				placeholder="Landing page URL"
@@ -214,26 +215,17 @@ const CreateProjectForm = (props) => {
 				style={{ padding: "4px 11px" }}
 			/>
 			<Select
+				className={styles.selectCreate}
 				value={formProject.related_industries}
 				mode="multiple"
-				style={{
-					width: "100%",
-				}}
 				required
 				size="large"
 				placeholder="Which industries are relevant to your company?*"
 				onChange={(value) => handleOnChange(value, "related_industries")}
 				options={listSector}
-				optionRender={(listSector) => (
-					<Space>
-						<span role="img" aria-label={listSector.data.label}>
-							{listSector.data.emoji}
-						</span>
-						{listSector.data.desc}
-					</Space>
-				)}
 			/>
 			<Select
+				className={styles.selectCreate}
 				value={formProject.stage}
 				required
 				showSearch
@@ -241,16 +233,15 @@ const CreateProjectForm = (props) => {
 				optionFilterProp="label"
 				onChange={(value) => handleOnChange(value, "stage")}
 				size="large"
-				style={{ width: "100%" }}
 				options={listStage}
 			/>
 			<TextArea
+				className={styles.inputCreate}
 				rows={4}
 				value={formProject.problem}
 				name="problem"
 				placeholder="Describe the problem*"
 				onChange={(e) => handleOnChange(e)}
-				// autoSize
 				maxLength={500}
 			/>
 			{/* <p>
@@ -258,6 +249,7 @@ const CreateProjectForm = (props) => {
 				might be unsatisfied with the current solutions available to them.
 			</p> */}
 			<TextArea
+				className={styles.inputCreate}
 				rows={4}
 				value={formProject.solution}
 				name="solution"
@@ -268,6 +260,7 @@ const CreateProjectForm = (props) => {
 			/>
 			{/* <p>Please describe your product and what it does or will do.</p> */}
 			<Input
+				className={styles.inputCreate}
 				value={formProject.product_demo_url}
 				name="product_demo_url"
 				placeholder="Product Demo Video URL"
@@ -276,6 +269,7 @@ const CreateProjectForm = (props) => {
 				style={{ padding: "4px 11px" }}
 			/>
 			<Input
+				className={styles.inputCreate}
 				value={formProject.team_intro_url}
 				name="team_intro_url"
 				placeholder="Team Introduction Video (~2 minutes) URL"
@@ -283,7 +277,7 @@ const CreateProjectForm = (props) => {
 				autoSize
 				style={{ padding: "4px 11px" }}
 			/>
-			<Dragger {...propsPitchDeck}>
+			<Dragger {...propsPitchDeck} className={styles.inputCreate}>
 				<p className="ant-upload-drag-icon">
 					<InboxOutlined />
 				</p>
@@ -296,6 +290,7 @@ const CreateProjectForm = (props) => {
 			</Dragger>
 			<h2>Startup Progress</h2>
 			<TextArea
+				className={styles.inputCreate}
 				rows={4}
 				value={formProject.statistics}
 				name="statistics"
@@ -451,7 +446,7 @@ const CreateProjectForm = (props) => {
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
 			/>
-			<p style={{ marginTop: "0" }}>
+			<p style={{ marginTop: "0", color: "#666", fontSize: "0.8rem" }}>
 				What trends, changes in the market, new laws, policies, or
 				technologies signal this as an opportune time for your startup?
 			</p>
@@ -464,7 +459,7 @@ const CreateProjectForm = (props) => {
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
 			/>
-			<p style={{ marginTop: "0" }}>
+			<p style={{ marginTop: "0", color: "#666", fontSize: "0.8rem" }}>
 				How will you get your first (or next) 10, 100, 1,000, or 10,000
 				customers?
 			</p>
@@ -477,11 +472,11 @@ const CreateProjectForm = (props) => {
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
 			/>
-			<p style={{ marginTop: "0" }}>
+			<p style={{ marginTop: "0", color: "#666", fontSize: "0.8rem" }}>
 				What are your next features, or what are you learning to let you
 				know you’re on the right path with your business?
 			</p>
-			<TextArea
+			{/* <TextArea
 				required
 				rows={4}
 				value={formProject.about_opennezt}
@@ -489,7 +484,7 @@ const CreateProjectForm = (props) => {
 				placeholder="How did you hear about OpenNezt?*"
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
-			/>
+			/> */}
 			<Dragger {...propsBackground}>
 				<p className="ant-upload-drag-icon">
 					<InboxOutlined />

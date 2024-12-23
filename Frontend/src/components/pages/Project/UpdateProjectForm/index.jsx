@@ -1,29 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import { Input, Select, Space } from "antd";
-// import { InboxOutlined } from "@ant-design/icons";
 import { Switch, DatePicker, Button } from "antd";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import FundingSourceBox from "./FundingSourceBox";
 import { listSector, listStage } from "components/common/ListSelected";
 import moment from "moment";
-// const { Dragger } = Upload;
 const { TextArea } = Input;
-// const baseUrlApi = process.env.REACT_APP_API_URL;
-
-// const getBase64 = (file) =>
-// 	new Promise((resolve, reject) => {
-// 		const reader = new FileReader();
-// 		reader.readAsDataURL(file);
-// 		reader.onload = () => resolve(reader.result);
-// 		reader.onerror = (error) => reject(error);
-// 	});
 
 const UpdateProjectForm = (props) => {
 	const { formProject, setFormData } = props;
 
-	// const [listPitchDeck, setListPitchDeck] = useState([]);
-	// const [listBackground, setListBackground] = useState([]);
 	const [isHaveRevenue, setIsHaveRevenue] = useState(false);
 
 	useEffect(() => {
@@ -31,88 +18,6 @@ const UpdateProjectForm = (props) => {
 			setIsHaveRevenue(true);
 		}
 	}, [formProject.revenues, setFormData]);
-
-	// const propsPitchDeck = {
-	// 	name: "file",
-	// 	multiple: false,
-	// 	accept: ".pdf",
-	// 	fileList: listPitchDeck,
-	// 	customRequest: async ({ file, onSuccess, onError }) => {
-	// 		const formData = new FormData();
-	// 		formData.append("pitch_deck", file);
-	// 		const result = await axios.post(
-	// 			`${baseUrlApi}/common/check-upload-pitch-deck`,
-	// 			formData
-	// 		);
-	// 		if (result.data.success) {
-	// 			// convert file to base64
-	// 			const base64 = await getBase64(file);
-	// 			setFormData((prevState) => ({
-	// 				...prevState,
-	// 				pitch_deck: { file: base64, name: file.name },
-	// 			}));
-	// 			onSuccess(result.data);
-	// 		} else {
-	// 			onError(new Error("Upload failed"));
-	// 		}
-	// 	},
-	// 	onChange(info) {
-	// 		const { status } = info.file;
-	// 		if (status !== "uploading") {
-	// 			console.log(info.file, info.fileList);
-	// 		}
-	// 		if (status === "done") {
-	// 			message.success(`${info.file.name} file uploaded successfully.`);
-	// 		} else if (status === "error") {
-	// 			message.error(`${info.file.name} file upload failed.`);
-	// 		}
-	// 		setListPitchDeck([info.file]);
-	// 	},
-	// 	onDrop(e) {
-	// 		console.log("Dropped files", e.dataTransfer.files);
-	// 	},
-	// };
-
-	// const propsBackground = {
-	// 	name: "file",
-	// 	multiple: false,
-	// 	accept: ".png,.jpg,.jpeg",
-	// 	fileList: listBackground,
-	// 	customRequest: async ({ file, onSuccess, onError }) => {
-	// 		const formData = new FormData();
-	// 		formData.append("background", file);
-	// 		const result = await axios.post(
-	// 			`${baseUrlApi}/common/check-upload-background-startup`,
-	// 			formData
-	// 		);
-	// 		if (result.data.success) {
-	// 			// convert file to base64
-	// 			const base64 = await getBase64(file);
-	// 			setFormData((prevState) => ({
-	// 				...prevState,
-	// 				background: { file: base64, name: file.name },
-	// 			}));
-	// 			onSuccess(result.data);
-	// 		} else {
-	// 			onError(new Error("Upload failed"));
-	// 		}
-	// 	},
-	// 	onChange(info) {
-	// 		const { status } = info.file;
-	// 		if (status !== "uploading") {
-	// 			console.log(info.file, info.fileList);
-	// 		}
-	// 		if (status === "done") {
-	// 			message.success(`${info.file.name} file uploaded successfully.`);
-	// 		} else if (status === "error") {
-	// 			message.error(`${info.file.name} file upload failed.`);
-	// 		}
-	// 		setListBackground([info.file]);
-	// 	},
-	// 	onDrop(e) {
-	// 		console.log("Dropped files", e.dataTransfer.files);
-	// 	},
-	// };
 
 	const handleOnChange = (event, nameSelect) => {
 		if (nameSelect) {
@@ -230,14 +135,6 @@ const UpdateProjectForm = (props) => {
 				placeholder="Which industries are relevant to your company?*"
 				onChange={(value) => handleOnChange(value, "related_industries")}
 				options={listSector}
-				optionRender={(listSector) => (
-					<Space>
-						<span role="img" aria-label={listSector.data.label}>
-							{listSector.data.emoji}
-						</span>
-						{listSector.data.desc}
-					</Space>
-				)}
 			/>
 			<Select
 				value={formProject.stage}
@@ -459,7 +356,7 @@ const UpdateProjectForm = (props) => {
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
 			/>
-			<p style={{ marginTop: "0" }}>
+			<p style={{ marginTop: "0", color: "#666", fontSize: "0.8rem" }}>
 				What trends, changes in the market, new laws, policies, or
 				technologies signal this as an opportune time for your startup?
 			</p>
@@ -472,7 +369,7 @@ const UpdateProjectForm = (props) => {
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
 			/>
-			<p style={{ marginTop: "0" }}>
+			<p style={{ marginTop: "0", color: "#666", fontSize: "0.8rem" }}>
 				How will you get your first (or next) 10, 100, 1,000, or 10,000
 				customers?
 			</p>
@@ -485,7 +382,7 @@ const UpdateProjectForm = (props) => {
 				onChange={(e) => handleOnChange(e)}
 				maxLength={500}
 			/>
-			<p style={{ marginTop: "0" }}>
+			<p style={{ marginTop: "0", color: "#666", fontSize: "0.8rem" }}>
 				What are your next features, or what are you learning to let you
 				know you’re on the right path with your business?
 			</p>
