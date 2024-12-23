@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import styles from "./styles.module.scss";
 import { getTalentDetails } from "api/talent";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Modal } from "antd";
 import { getRequestAddFriend } from "api/notification";
 import RecruitWrap from "./RecuitWrap";
@@ -14,15 +14,14 @@ const TalentProfile = React.lazy(() =>
 
 function RecruitTalents() {
 	const dispatch = useDispatch();
-	const { talents } = useSelector((state) => state.talent);
 
 	const [modalTalentDetails, setModalTalentDetails] = useState(false);
 
 	const handleGetDetailTalent = useCallback(
 		(id) => {
+			setModalTalentDetails(true);
 			dispatch(getTalentDetails(id));
 			dispatch(getRequestAddFriend(id));
-			setModalTalentDetails(true);
 		},
 		[dispatch]
 	);
@@ -34,10 +33,7 @@ function RecruitTalents() {
 	return (
 		<div className={styles.searchContainer}>
 			<RecruitWrap />
-			<ListTalents
-				talents={talents}
-				handleGetDetailTalent={handleGetDetailTalent}
-			/>
+			<ListTalents handleGetDetailTalent={handleGetDetailTalent} />
 
 			<Modal
 				footer={null}

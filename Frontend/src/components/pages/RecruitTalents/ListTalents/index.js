@@ -5,8 +5,10 @@ import TalentCardSkeleton from "components/skeleton/TalentCardSkeleton";
 import { useSelector } from "react-redux";
 import NotFound from "components/UI/NotFound";
 
-const ListTalents = ({ talents, handleGetDetailTalent }) => {
-	const { loadingRecruitTalents } = useSelector((state) => state.talent);
+const ListTalents = ({ handleGetDetailTalent }) => {
+	const { loadingRecruitTalents, talents } = useSelector(
+		(state) => state.talent
+	);
 
 	if (talents.length === 0 && !loadingRecruitTalents) {
 		return <NotFound content={"No suitable talent found"} size={"10rem"} />;
