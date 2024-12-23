@@ -223,14 +223,6 @@ const CreateProjectForm = (props) => {
 				placeholder="Which industries are relevant to your company?*"
 				onChange={(value) => handleOnChange(value, "related_industries")}
 				options={listSector}
-				optionRender={(listSector) => (
-					<Space>
-						<span role="img" aria-label={listSector.data.label}>
-							{listSector.data.emoji}
-						</span>
-						{listSector.data.desc}
-					</Space>
-				)}
 			/>
 			<Select
 				className={styles.selectCreate}
@@ -250,7 +242,6 @@ const CreateProjectForm = (props) => {
 				name="problem"
 				placeholder="Describe the problem*"
 				onChange={(e) => handleOnChange(e)}
-				// autoSize
 				maxLength={500}
 			/>
 			{/* <p>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./styles.module.scss";
 import ExpertiseBox from "./ExpertiseBox";
 import {
@@ -27,14 +27,6 @@ const EditProfilePopup = ({ formData, onChange }) => {
 				placeholder="What is your primary industry*"
 				onChange={(value) => onChange(value, "industry")}
 				options={listSector}
-				optionRender={(listSector) => (
-					<Space>
-						<span role="img" aria-label={listSector.data.label}>
-							{listSector.data.emoji}
-						</span>
-						{listSector.data.desc}
-					</Space>
-				)}
 			/>
 			<Select
 				value={formData.experience_level}
@@ -69,14 +61,6 @@ const EditProfilePopup = ({ formData, onChange }) => {
 				placeholder="Which certifications do you hold?*"
 				onChange={(value) => onChange(value, "certification")}
 				options={listCertification}
-				optionRender={(listCertification) => (
-					<Space>
-						<span role="img" aria-label={listCertification.data.label}>
-							{listCertification.data.emoji}
-						</span>
-						{listCertification.data.desc}
-					</Space>
-				)}
 			/>
 			<div className={styles.areaOfExpertiseWrap}>
 				<h4 style={{ margin: "0" }}>

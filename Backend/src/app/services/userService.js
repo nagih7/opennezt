@@ -1,7 +1,6 @@
-import {User, FounderProfile, Project, Invitation, ObjectId, ChatInvitation, ProjectRequest} from '@/models'
+import {User, FounderProfile, Project, Invitation, ObjectId, ChatInvitation, NotificationFeed} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
-import status from 'statuses'
 
 export async function create(requestBody) {
     const user = new User(requestBody)
@@ -267,6 +266,18 @@ export async function recuitTalents(user, requestRecuitTalents) {
         }
     }
 
+    const getFriendRequest = async (talents) => {
+        const friendRequests = await NotificationFeed.find({
+            type: 'friend_request',
+            $or: [
+                {user_id: user._id, source_id: {$in: talents.map((talent) => talent.user_data._id)}},
+                {user_id: {$in: talents.map((talent) => talent.user_data._id)}, source_id: user._id},
+            ],
+        }).select('source_id user_id type metadata.status')
+
+        return friendRequests
+    }
+
     const talents = await FounderProfile.aggregate([
         {
             $match: query,
@@ -347,10 +358,19 @@ export async function recuitTalents(user, requestRecuitTalents) {
             },
         },
     ])
+    const friendRequests = await getFriendRequest(talents)
+    talents.forEach((talent) => {
+        const friendRequest = friendRequests.find(
+            (request) =>
+                request.source_id.equals(talent.user_data._id) || request.user_id.equals(talent.user_data._id)
+        )
+        talent.friend_request = friendRequest ? friendRequest : null
+    })
+
     return talents
 }
 
-export async function getTalentDetails(id) {
+export async function getTalentDetails(user, id) {
     const detailTalent = await User.aggregate([
         {$match: {_id: new ObjectId(id)}},
         {
@@ -365,6 +385,29 @@ export async function getTalentDetails(id) {
             $unwind: {
                 path: '$talent_profile',
                 preserveNullAndEmptyArrays: true, // Nếu không muốn giữ lại các bản ghi không có founder_profiles
+            },
+        },
+        {
+            $lookup: {
+                from: 'notifications_feed',
+                as: 'friend_request',
+                pipeline: [
+                    {
+                        $match: {
+                            type: 'friend_request',
+                            $and: [
+                                {$or: [{user_id: user._id}, {user_id: new ObjectId(id)}]},
+                                {$or: [{source_id: user._id}, {source_id: new ObjectId(id)}]},
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: {
+                path: '$friend_request',
+                preserveNullAndEmptyArrays: true,
             },
         },
         {

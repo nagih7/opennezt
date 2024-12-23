@@ -1,16 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
 import { Button, Space, Tag } from "antd";
 import InfoIcon from "@mui/icons-material/Info";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { getRequestAddFriend, sendRequestAddFriend } from "api/notification";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-const BoxBasicTalent = ({ talent, handleGetDetailTalent }) => {
-	const { requestAddFriend, loadingSendRequestAddFriend } = useSelector(
-		(state) => state.notification
-	);
+const BoxBasicTalent = ({ talentInfo, handleGetDetailTalent }) => {
+	const [talent, setTalent] = useState(talentInfo);
 
 	const dispatch = useDispatch();
 	const handleRequestAddFriend = async (user_id) => {
@@ -19,7 +17,7 @@ const BoxBasicTalent = ({ talent, handleGetDetailTalent }) => {
 			metadata: {},
 		};
 		dispatch(sendRequestAddFriend(requestMessageForm));
-		dispatch(getRequestAddFriend(user_id));
+		setTalent({ ...talent, friend_request: true });
 	};
 
 	return (
@@ -78,14 +76,14 @@ const BoxBasicTalent = ({ talent, handleGetDetailTalent }) => {
 						View Details
 					</Button>
 					<Button
-						disabled={requestAddFriend}
+						disabled={talent.friend_request}
 						style={{
 							borderRadius: "4px",
 							height: "2rem",
 							width: "100%",
 						}}
 						type="primary"
-						loading={loadingSendRequestAddFriend}
+						loading={false}
 						onClick={() => handleRequestAddFriend(talent.user_data._id)}>
 						<PersonAddIcon />
 						Add friend

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./styles.module.scss";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import AvatarDefault from "../../../assets/images/default/AvatarDefault.png";
@@ -8,7 +8,6 @@ import { Button } from "antd";
 import { useSelector } from "react-redux";
 import store from "states/configureStore";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import ChatIcon from "@mui/icons-material/Chat";
 import {
 	sendRequestAddFriend,
 	getRequestAddFriend,

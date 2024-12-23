@@ -1,16 +1,15 @@
 import React from "react";
 import styles from "./styles.module.scss";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { useSelector } from "react-redux";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { Card, Col, Row, Typography } from "antd";
 const { Title, Text, Paragraph } = Typography;
 import { DollarCircleOutlined, AimOutlined } from "@ant-design/icons";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-const FounderProfile = () => {
-	const { founderProfile } = useSelector((state) => state.founder);
-
+const TalentProfileSkeleton = () => {
 	return (
-		<div className={styles.founderProfileWrap}>
+		<div className={styles.talentProfileSkeletonWrap}>
 			<Row gutter={[24, 24]}>
 				<Col span={24}>
 					<Card className={styles.section}>
@@ -23,9 +22,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Professional Summary</Text>
 									<Paragraph>
-										{founderProfile.professional_summary
-											? founderProfile.professional_summary
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -33,9 +30,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Professional Summary</Text>
 									<Paragraph>
-										{founderProfile.professional_summary
-											? founderProfile.professional_summary
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -45,9 +40,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Experience Level</Text>
 									<Paragraph>
-										{founderProfile.experience_level
-											? founderProfile.experience_level
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -55,9 +48,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Education Level</Text>
 									<Paragraph>
-										{founderProfile.degree
-											? founderProfile.degree
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -67,10 +58,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Certifications</Text>
 									<Paragraph>
-										{founderProfile.certification &&
-										founderProfile.certification.length > 0
-											? founderProfile.certification.join(", ")
-											: "..."}
+										<Skeleton count={1} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -88,14 +76,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Accounting and Finance</Text>
 									<Paragraph>
-										{founderProfile.areas_of_expertise
-											.accounting_and_finance &&
-										founderProfile.areas_of_expertise
-											.accounting_and_finance.length > 0
-											? founderProfile.areas_of_expertise.accounting_and_finance.join(
-													", "
-											  )
-											: "..."}
+										<Skeleton count={2} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -103,14 +84,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Human Resources</Text>
 									<Paragraph>
-										{founderProfile.areas_of_expertise
-											.human_resource &&
-										founderProfile.areas_of_expertise.human_resource
-											.length > 0
-											? founderProfile.areas_of_expertise.human_resource.join(
-													", "
-											  )
-											: "..."}
+										<Skeleton count={2} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -120,14 +94,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>International</Text>
 									<Paragraph>
-										{founderProfile.areas_of_expertise
-											.international &&
-										founderProfile.areas_of_expertise.international
-											.length > 0
-											? founderProfile.areas_of_expertise.international.join(
-													", "
-											  )
-											: "..."}
+										<Skeleton count={2} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -135,14 +102,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Law and Legal</Text>
 									<Paragraph>
-										{founderProfile.areas_of_expertise
-											.law_and_legal &&
-										founderProfile.areas_of_expertise.law_and_legal
-											.length > 0
-											? founderProfile.areas_of_expertise.law_and_legal.join(
-													", "
-											  )
-											: "..."}
+										<Skeleton count={2} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -152,13 +112,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Management</Text>
 									<Paragraph>
-										{founderProfile.areas_of_expertise.management &&
-										founderProfile.areas_of_expertise.management
-											.length > 0
-											? founderProfile.areas_of_expertise.management.join(
-													", "
-											  )
-											: "..."}
+										<Skeleton count={2} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -166,13 +120,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Operations</Text>
 									<Paragraph>
-										{founderProfile.areas_of_expertise.operations &&
-										founderProfile.areas_of_expertise.operations
-											.length > 0
-											? founderProfile.areas_of_expertise.operations.join(
-													", "
-											  )
-											: "..."}
+										<Skeleton count={2} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -182,12 +130,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Sales</Text>
 									<Paragraph>
-										{founderProfile.areas_of_expertise.sales &&
-										founderProfile.areas_of_expertise.sales.length > 0
-											? founderProfile.areas_of_expertise.sales.join(
-													", "
-											  )
-											: "..."}
+										<Skeleton count={2} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -195,13 +138,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Starting up</Text>
 									<Paragraph>
-										{founderProfile.areas_of_expertise.starting_up &&
-										founderProfile.areas_of_expertise.starting_up
-											.length > 0
-											? founderProfile.areas_of_expertise.starting_up.join(
-													", "
-											  )
-											: "..."}
+										<Skeleton count={2} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -211,14 +148,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Sustainability</Text>
 									<Paragraph>
-										{founderProfile.areas_of_expertise
-											.sustainability &&
-										founderProfile.areas_of_expertise.sustainability
-											.length > 0
-											? founderProfile.areas_of_expertise.sustainability.join(
-													", "
-											  )
-											: "..."}
+										<Skeleton count={2} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -226,14 +156,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Technology and Internet</Text>
 									<Paragraph>
-										{founderProfile.areas_of_expertise
-											.technology_and_internet &&
-										founderProfile.areas_of_expertise
-											.technology_and_internet.length > 0
-											? founderProfile.areas_of_expertise.technology_and_internet.join(
-													", "
-											  )
-											: "..."}
+										<Skeleton count={2} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -251,9 +174,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>My career goals</Text>
 									<Paragraph>
-										{founderProfile.career_goals
-											? founderProfile.career_goals
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -261,9 +182,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>Avalability</Text>
 									<Paragraph>
-										{founderProfile.avalability
-											? founderProfile.avalability
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -273,9 +192,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>What I can offer</Text>
 									<Paragraph>
-										{founderProfile.offer
-											? founderProfile.offer
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -283,9 +200,7 @@ const FounderProfile = () => {
 								<div className={styles.infoItem}>
 									<Text strong>My work expectation</Text>
 									<Paragraph>
-										{founderProfile.expectation
-											? founderProfile.expectation
-											: "..."}
+										<Skeleton count={3} />
 									</Paragraph>
 								</div>
 							</Col>
@@ -297,4 +212,4 @@ const FounderProfile = () => {
 	);
 };
 
-export default FounderProfile;
+export default TalentProfileSkeleton;

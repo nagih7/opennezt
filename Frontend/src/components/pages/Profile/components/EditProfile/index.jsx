@@ -161,16 +161,6 @@ function EditProfile() {
 									placeholder="Select language..."
 									onChange={(value) => onChange(value, "language")}
 									options={listLanguage}
-									optionRender={(listLanguage) => (
-										<Space>
-											<span
-												role="img"
-												aria-label={listLanguage.data.label}>
-												{listLanguage.data.emoji}
-											</span>
-											{listLanguage.data.desc}
-										</Space>
-									)}
 								/>
 							</div>
 						</div>

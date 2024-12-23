@@ -22,7 +22,7 @@ const ListTalents = ({ talents, handleGetDetailTalent }) => {
 							<BoxBasicTalent
 								key={talent.user_data._id}
 								index={index}
-								talent={talent}
+								talentInfo={talent}
 								handleGetDetailTalent={handleGetDetailTalent}
 							/>
 						))

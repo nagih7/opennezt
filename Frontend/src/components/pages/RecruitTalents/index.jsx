@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
-import store from "states/configureStore";
-import { recruitTalents, skipTalent, getTalentDetails } from "api/talent";
-import { useSelector } from "react-redux";
+import { recruitTalents, getTalentDetails } from "api/talent";
+import { useSelector, useDispatch } from "react-redux";
 import { Modal } from "antd";
 import { getRequestAddFriend } from "api/notification";
 import RecruitWrap from "./RecuitWrap";
@@ -10,6 +9,7 @@ import ListTalents from "./ListTalents";
 import TalentProfile from "components/common/TalentProfile";
 
 function RecruitTalents() {
+	const dispatch = useDispatch();
 	const { talents, loadingRecruitTalents, talentDetails } = useSelector(
 		(state) => state.talent
 	);
@@ -40,22 +40,15 @@ function RecruitTalents() {
 			}));
 		}
 	};
-	const handleConfirmRecruitTalents = async () => {
-		await store.dispatch(recruitTalents({ ...formRecruitTalents, skip: 0 }));
+	const handleConfirmRecruitTalents = () => {
+		dispatch(recruitTalents({ ...formRecruitTalents, skip: 0 }));
 		setSkip(0);
 	};
 
-	const handleSkip = async () => {
-		setSkip((prevState) => prevState + 1);
-		await store.dispatch(
-			skipTalent({ ...formRecruitTalents, skip: skip + 1 })
-		);
-	};
-
-	const handleGetDetailTalent = async (id) => {
+	const handleGetDetailTalent = (id) => {
 		setModalTalentDetails(true);
-		await store.dispatch(getTalentDetails(id));
-		await store.dispatch(getRequestAddFriend(id));
+		dispatch(getTalentDetails(id));
+		dispatch(getRequestAddFriend(id));
 	};
 
 	const handleClosePopup = () => {
@@ -83,7 +76,7 @@ function RecruitTalents() {
 				confirmLoading={false}
 				onCancel={handleClosePopup}
 				width={1000}>
-				<TalentProfile talent={talentDetails} handleSkip={handleSkip} />
+				<TalentProfile talent={talentDetails} />
 			</Modal>
 		</div>
 	);
