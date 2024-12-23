@@ -22,3 +22,10 @@ export const requestAddFriend = Joi.object({
         project_name: Joi.string().required().label('Project Name'),
     }).required(),
 })
+
+export const seekProjects = Joi.object({
+    industry: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Industry'),
+    stage: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Stage'),
+    name: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Name'),
+    page: Joi.number().integer().min(0).default(0).label('Page'),
+})

@@ -74,22 +74,22 @@ export const getProjectDetails = (projectId) => async (dispatch, getState) => {
 	});
 };
 
-export const seekProjects = (data) => async (dispatch, getState) => {
-	return callApi({
-		method: "get",
-		apiPath: data
-			? `project/seek-projects?industry=${data.industry}&stage=${data.stage}&name=${data.name}`
-			: `project/seek-projects`,
-		actionTypes: [
-			startRequestSeekProjects,
-			startRequestSeekProjectsSuccess,
-			startRequestSeekProjectsFail,
-		],
-		variables: {},
-		dispatch,
-		getState,
-	});
-};
+export const seekProjects =
+	(requestSeekProjects) => async (dispatch, getState) => {
+		requestSeekProjects = new URLSearchParams(requestSeekProjects).toString();
+		return callApi({
+			method: "get",
+			apiPath: `project/seek-projects?${requestSeekProjects}`,
+			actionTypes: [
+				startRequestSeekProjects,
+				startRequestSeekProjectsSuccess,
+				startRequestSeekProjectsFail,
+			],
+			variables: {},
+			dispatch,
+			getState,
+		});
+	};
 
 export const updateProject = (data) => async (dispatch, getState) => {
 	return callApi({

@@ -1,7 +1,7 @@
 import * as projectService from '../services/projectService'
 
 export async function seekProjects(req, res) {
-    const result = await projectService.seekProjects(req.currentUser._id, req.query)
+    const result = await projectService.seekProjects(req.currentUser, req.query)
     res.jsonify(result)
 }
 

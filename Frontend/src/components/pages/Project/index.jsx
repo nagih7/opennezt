@@ -97,13 +97,10 @@ function Project() {
 		loadingGetProjects,
 	} = useSelector((state) => state.project);
 
-	const handleOpenModalDetails = useCallback(
-		(project_id) => {
-			setOpenModalProjectDetails(true);
-			dispatch(getProjectDetails(project_id));
-		},
-		[dispatch]
-	);
+	const handleOpenModalDetails = (project_id) => {
+		setOpenModalProjectDetails(true);
+		dispatch(getProjectDetails(project_id));
+	};
 
 	const handleCreateProject = async () => {
 		dispatch(createNewProject(formProject));
@@ -181,6 +178,7 @@ function Project() {
 								project={project}
 								key={index}
 								openModalDetails={handleOpenModalDetails}
+								usedTo="my-projects"
 							/>
 						))
 					)}

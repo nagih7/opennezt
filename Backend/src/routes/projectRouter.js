@@ -9,7 +9,11 @@ const projectRouter = Router()
 
 projectRouter.use(asyncHandler(requireAuthentication))
 
-projectRouter.get('/seek-projects', asyncHandler(projectController.seekProjects))
+projectRouter.get(
+    '/seek-projects',
+    asyncHandler(validate(projectRequest.seekProjects)),
+    asyncHandler(projectController.seekProjects)
+)
 
 projectRouter.get('/request-to-join', asyncHandler(projectController.getRequestsToJoinProject))
 

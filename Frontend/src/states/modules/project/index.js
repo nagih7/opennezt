@@ -20,6 +20,12 @@ const projectSlice = createSlice({
 		resultUpdateProject: null,
 		loadingDeleteProject: false,
 		loadingGetProjectInvitations: false,
+		formSeekProjects: {
+			industry: null,
+			stage: null,
+			name: null,
+			page: 0,
+		},
 	},
 	reducers: {
 		setTitle: (state) => ({
@@ -83,7 +89,11 @@ const projectSlice = createSlice({
 
 		startRequestSeekProjectsSuccess: (state, action) => ({
 			...state,
-			projectsBySeek: action.payload.data,
+			projectsBySeek: action.payload.data.projects,
+			formSeekProjects: {
+				...state.formSeekProjects,
+				page: action.payload.data.page,
+			},
 			loadingSeekProjects: false,
 		}),
 		startRequestSeekProjectsFail: (state) => ({
@@ -178,6 +188,40 @@ const projectSlice = createSlice({
 			loadingGetProjectInvitations: false,
 			projectInvitations: [],
 		}),
+
+		// formSeekProjects
+		setFormSeekProjects: (state, action) => {
+			const { event, nameSelect } = action.payload;
+			if (nameSelect) {
+				return {
+					...state,
+					formSeekProjects: {
+						...state.formSeekProjects,
+						[nameSelect]: event,
+						page: 0,
+					},
+				};
+			} else {
+				const { name, value } = event.target;
+				return {
+					...state,
+					formSeekProjects: {
+						...state.formSeekProjects,
+						[name]: value,
+						page: 0,
+					},
+				};
+			}
+		},
+		resetFormSeekProjects: (state) => ({
+			...state,
+			formSeekProjects: {
+				industry: null,
+				stage: null,
+				name: null,
+				page: 0,
+			},
+		}),
 	},
 });
 
@@ -210,6 +254,8 @@ export const {
 	startRequestGetProjectInvitations,
 	startRequestGetProjectInvitationsSuccess,
 	startRequestGetProjectInvitationsFail,
+	setFormSeekProjects,
+	resetFormSeekProjects,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

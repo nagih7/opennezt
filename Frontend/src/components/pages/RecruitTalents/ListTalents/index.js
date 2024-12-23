@@ -19,7 +19,6 @@ const ListTalents = ({ handleGetDetailTalent }) => {
 					{loadingRecruitTalents ? (
 						<TalentCardSkeleton count={12} />
 					) : (
-						talents.length > 0 &&
 						talents.map((talent, index) => (
 							<BoxBasicTalent
 								key={talent.user_data._id}

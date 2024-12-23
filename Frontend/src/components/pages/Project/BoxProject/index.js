@@ -3,7 +3,7 @@ import styles from "./styles.module.scss";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
 
-const BoxProject = ({ project, openModalDetails }) => {
+const BoxProject = ({ project, openModalDetails, usedTo }) => {
 	return (
 		<div
 			className={styles.boxProjectWrap}

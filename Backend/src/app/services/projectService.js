@@ -1,24 +1,27 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {Project, FounderProfile, ProjectRequest, NotificationFeed, ObjectId} from '@/models'
+import {Project, ProjectRequest, NotificationFeed, ObjectId} from '@/models'
 import {FileUpload} from '@/utils/classes'
 
-export async function seekProjects(userId, requestQuery) {
-    const query = {user_id: {$ne: userId}}
+export async function seekProjects(user, requestQuery) {
+    const query = {user_id: {$ne: user._id}}
+    const per_page = 6
 
-    if (!requestQuery) {
-        const industries = await FounderProfile.findOne({user_id: userId}, {industry: 1})
-        ;(query.related_industries = {$in: industries}), (query.user_id = {$ne: userId})
-    } else {
-        const {industry, stage, name} = requestQuery
-        if (industry && industry !== 'null') {
-            query.related_industries = industry
+    if (requestQuery.industry) {
+        query.industry = {
+            $regex: requestQuery.industry,
+            $options: 'i',
         }
-        if (stage && stage !== 'null') {
-            query.stage = stage
+    }
+    if (requestQuery.stage) {
+        query.stage = {
+            $regex: requestQuery.stage,
+            $options: 'i',
         }
-        if (name && name !== 'null') {
-            query.name = {$regex: name, $options: 'i'}
-            query.user_id = {$ne: userId}
+    }
+    if (requestQuery.name) {
+        query.name = {
+            $regex: requestQuery.name,
+            $options: 'i',
         }
     }
 
@@ -38,7 +41,10 @@ export async function seekProjects(userId, requestQuery) {
             },
         },
         {
-            $limit: 10,
+            $skip: per_page * requestQuery.page,
+        },
+        {
+            $limit: per_page,
         },
         {
             $project: {
@@ -52,7 +58,8 @@ export async function seekProjects(userId, requestQuery) {
             },
         },
     ])
-    return projects
+
+    return {total: projects.length, page: requestQuery.page + 1, per_page, projects}
 }
 
 export async function getRequestsToJoinProject(userId) {
