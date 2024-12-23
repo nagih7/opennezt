@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import styles from "./styles.module.scss";
-import { recruitTalents, getTalentDetails } from "api/talent";
+import { getTalentDetails } from "api/talent";
 import { useSelector, useDispatch } from "react-redux";
 import { Modal } from "antd";
 import { getRequestAddFriend } from "api/notification";
@@ -13,53 +13,10 @@ const TalentProfile = React.lazy(() =>
 );
 
 function RecruitTalents() {
-	console.log("Re-render RecruitTalents");
 	const dispatch = useDispatch();
-	const { talents, loadingRecruitTalents, talentRecruitPage } = useSelector(
-		(state) => state.talent
-	);
-
-	const [formRecruitTalents, setFormRecruitTalents] = useState({
-		sector: "",
-		experience_level: "",
-		education_level: "",
-		commitment: "",
-		location: "",
-		language: "",
-		page: 0,
-	});
-
-	useEffect(() => {
-		setFormRecruitTalents((prevState) => ({
-			...prevState,
-			page: talentRecruitPage,
-		}));
-	}, [talentRecruitPage]);
+	const { talents } = useSelector((state) => state.talent);
 
 	const [modalTalentDetails, setModalTalentDetails] = useState(false);
-
-	const handleOnChange = (event, nameSelect) => {
-		if (nameSelect) {
-			setFormRecruitTalents((prevState) => ({
-				...prevState,
-				[nameSelect]: event,
-			}));
-		} else {
-			const { name, value } = event.target;
-			setFormRecruitTalents((prevState) => ({
-				...prevState,
-				[name]: value,
-			}));
-		}
-		setFormRecruitTalents((prevState) => ({
-			...prevState,
-			page: 0,
-		}));
-	};
-	const handleConfirmRecruitTalents = () => {
-		console.log(formRecruitTalents);
-		dispatch(recruitTalents({ ...formRecruitTalents }));
-	};
 
 	const handleGetDetailTalent = useCallback(
 		(id) => {
@@ -76,11 +33,7 @@ function RecruitTalents() {
 
 	return (
 		<div className={styles.searchContainer}>
-			<RecruitWrap
-				handleOnChange={handleOnChange}
-				handleConfirmRecruitTalents={handleConfirmRecruitTalents}
-				loadingRecruitTalents={loadingRecruitTalents}
-			/>
+			<RecruitWrap />
 			<ListTalents
 				talents={talents}
 				handleGetDetailTalent={handleGetDetailTalent}
