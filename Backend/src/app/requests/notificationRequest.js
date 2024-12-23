@@ -53,6 +53,8 @@ export const projectInvitation = Joi.object({
                 })
         ),
 
+    project_name: Joi.string().max(MAX_STRING_SIZE).required().label('Project_Name'),
+
     user_id: Joi.string()
         .required()
         .label('User_ID')

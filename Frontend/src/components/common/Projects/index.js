@@ -1,26 +1,27 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./styles.module.scss";
 import { useSelector } from "react-redux";
-import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
-import { getProjects } from "api/project";
-import store from "states/configureStore";
-
-const ProjectBox = React.lazy(() => import("./ProjectBox"));
+import ProjectBox from "./ProjectBox";
+import ProjectInvitationsSkeleton from "../ProjectInvitationsSkeleton";
 
 const Projects = ({ inviteeId }) => {
-	const { projects } = useSelector((state) => state.project);
-
-	useEffect(() => {
-		store.dispatch(getProjects());
-	}, []);
+	const { projects, loadingGetProjectInvitations } = useSelector(
+		(state) => state.project
+	);
 
 	return (
 		<div className={styles.projectsWrap}>
-			{projects.map((project, index) => (
-				<LazyLoadingMedium key={index}>
-					<ProjectBox project={project} inviteeId={inviteeId} />
-				</LazyLoadingMedium>
-			))}
+			{loadingGetProjectInvitations ? (
+				<ProjectInvitationsSkeleton count={projects.length} />
+			) : (
+				projects.map((project, index) => (
+					<ProjectBox
+						key={index}
+						project={project}
+						inviteeId={inviteeId}
+					/>
+				))
+			)}
 		</div>
 	);
 };

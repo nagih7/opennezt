@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./styles.module.scss";
 import { useSelector } from "react-redux";
 import moment from "moment";
@@ -6,7 +6,6 @@ import { Button, Tag } from "antd";
 import { CheckOutlined, CloseOutlined } from "@mui/icons-material";
 import store from "states/configureStore";
 import { replyNotification, getNotifications } from "api/notification";
-import { getChatList } from "api/chat";
 import { useNavigate } from "react-router-dom";
 
 function PopoverNotification() {
@@ -14,18 +13,11 @@ function PopoverNotification() {
 
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		store.dispatch(getNotifications());
-	}, []);
-
 	const handleReplyNotification = async (notification_id, type, status) => {
 		await store.dispatch(
 			replyNotification({ notification_id, type, status })
 		);
-		await store.dispatch(getNotifications());
-		if (status === "accepted") {
-			await store.dispatch(getChatList());
-		}
+		store.dispatch(getNotifications());
 	};
 
 	const handleNavigateToNotification = () => {
@@ -56,11 +48,20 @@ function PopoverNotification() {
 										</svg>
 									</div>
 									<div className={styles.contentWrap}>
-										<div>
-											<b>{notification.metadata.source_name}</b>{" "}
-											{notification.message}
-										</div>
-
+										{notification.type === "project_invitation" && (
+											<div>
+												<b>{notification.metadata.source_name}</b>{" "}
+												invited you to join the{" "}
+												<b>{notification.metadata.project_name}</b>{" "}
+												project
+											</div>
+										)}
+										{notification.type === "friend_request" && (
+											<div>
+												<b>{notification.metadata.source_name}</b>{" "}
+												sent you a friend request
+											</div>
+										)}
 										<span className={styles.date}>
 											{moment(notification.created_at).fromNow()}
 										</span>
@@ -69,6 +70,7 @@ function PopoverNotification() {
 								{notification.metadata.status === "waiting" ? (
 									<div className={styles.actionsWrap}>
 										<Button
+											// loading={loadingGetNotifications}
 											type="primary"
 											icon={<CheckOutlined />}
 											onClick={() =>

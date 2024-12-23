@@ -47,10 +47,18 @@ const FundingSource = new Schema(
 
 const Members = new Schema(
     {
-        user_id: {
+        _id: {
             type: ObjectId,
             required: true,
             ref: 'User',
+        },
+        name: {
+            type: String,
+            required: true,
+        },
+        avatar: {
+            type: String,
+            required: false,
         },
         role: {
             type: String,

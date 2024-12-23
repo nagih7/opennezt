@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
-import store from "states/configureStore";
 import { sendProjectInvitation } from "api/notification";
 import { Button, Modal } from "antd";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import { getProjectInvitations } from "api/project";
+import store from "states/configureStore";
 
 const ProjectBox = ({ project, inviteeId }) => {
-	const [projectIdInvitation, setProjectIdInvitation] = useState("");
+	const dispatch = useDispatch();
+
 	const [modalConfirm, setModalConfirm] = useState(false);
-	const [invitationStatus, setInvitationStatus] = useState(false);
+	const [invitationStatus, setInvitationStatus] = useState(true);
 	const [invitations, setInvitations] = useState([]);
+	const [formProjectInvitation, setFormProjectInvitation] = useState({
+		project_id: "",
+		project_name: "",
+	});
 
 	const { loadingProjectInvitation } = useSelector(
 		(state) => state.notification
@@ -18,11 +25,6 @@ const ProjectBox = ({ project, inviteeId }) => {
 	const { projectInvitations } = useSelector((state) => state.project);
 
 	useEffect(() => {
-		// eslint-disable-next-line
-	}, []);
-
-	useEffect(() => {
-		setInvitationStatus(false);
 		if (projectInvitations.length > 0) {
 			setInvitations(projectInvitations);
 			const projectInvitation = invitations.find(
@@ -30,22 +32,26 @@ const ProjectBox = ({ project, inviteeId }) => {
 			);
 			if (projectInvitation) {
 				setInvitationStatus(true);
+			} else {
+				setInvitationStatus(false);
 			}
 		}
 	}, [projectInvitations, project._id, invitations]);
 
-	const handleProjectInvitation = (project_id) => {
+	const handleProjectInvitation = (project) => {
 		setModalConfirm(true);
-		setProjectIdInvitation(project_id);
+		setFormProjectInvitation({
+			project_id: project._id,
+			project_name: project.name,
+		});
 	};
 
-	const confirmInvite = () => {
-		const formRequest = {
-			project_id: projectIdInvitation,
-			user_id: inviteeId,
-		};
-		store.dispatch(sendProjectInvitation(formRequest));
+	const confirmInvite = async () => {
+		await store.dispatch(
+			sendProjectInvitation({ ...formProjectInvitation, user_id: inviteeId })
+		);
 		setModalConfirm(false);
+		store.dispatch(getProjectInvitations(inviteeId));
 	};
 
 	return (
@@ -74,10 +80,11 @@ const ProjectBox = ({ project, inviteeId }) => {
 			</div>
 			<div className={styles.btnInvite}>
 				<Button
-					onClick={() => handleProjectInvitation(project._id)}
+					onClick={() => handleProjectInvitation(project)}
 					loading={false}
 					type="primary"
-					disabled={invitationStatus}>
+					disabled={invitationStatus}
+					icon=<GroupAddIcon />>
 					{invitationStatus ? "Invited" : "Invite"}
 				</Button>
 			</div>

@@ -1,4 +1,4 @@
-import {NotificationFeed, Friend, ObjectId, Project} from '@/models'
+import {NotificationFeed, Friend, ObjectId, Project, User} from '@/models'
 import {userSockets} from '@/routes/socket'
 
 export async function filter(user, {q, page, per_page, order}) {
@@ -107,9 +107,10 @@ export async function replyFriendRequest(notification_id, status) {
 export async function replyProjectInvitation(notification_id, status) {
     const notification = await NotificationFeed.findById({_id: notification_id})
     const {user_id, metadata} = notification
+    const user = await User.findById(user_id).select('name avatar _id')
     if (status === 'accepted') {
         const project = await Project.findById(metadata.project_id)
-        project.metadata.members.push({user_id: user_id, role: 'member'})
+        project.metadata.members.push({_id: user_id, name: user.name, avatar: user.avatar, role: 'talent'})
         await project.save()
     }
 
@@ -126,7 +127,6 @@ export async function requestAddFriend(user, requestBody, io) {
         user_id: user_id,
         source_id: user._id,
         type: 'friend_request',
-        message: 'sent you a friend request',
         metadata: {
             ...metadata,
             source_name: user.name,
@@ -152,9 +152,9 @@ export async function projectInvitation(user, requestBody, io) {
         user_id: user_id,
         source_id: user._id,
         type: 'project_invitation',
-        message: 'invited you to join the project',
         metadata: {
             project_id: new ObjectId(project_id),
+            project_name: requestBody.project_name,
             source_name: user.name,
             status: 'waiting',
             avatar: user.avatar ? user.avatar : '',

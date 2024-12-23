@@ -21,10 +21,6 @@ const NotificationFeed = createModel('NotificationFeed', 'notifications_feed', {
             'project_invitation',
         ],
     },
-    message: {
-        type: String,
-        required: true,
-    },
     read: {
         type: Boolean,
         default: false,

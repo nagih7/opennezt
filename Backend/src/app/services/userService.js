@@ -199,6 +199,26 @@ export async function getProject(projectId) {
                         else: {$concat: [LINK_STATIC_URL, '$pitch_deck']},
                     },
                 },
+                'metadata.members': {
+                    $map: {
+                        input: '$metadata.members',
+                        as: 'member',
+                        in: {
+                            $mergeObjects: [
+                                '$$member',
+                                {
+                                    avatar: {
+                                        $cond: {
+                                            if: {$eq: [{$ifNull: ['$$member.avatar', '']}, '']},
+                                            then: '$$member.avatar',
+                                            else: {$concat: [LINK_STATIC_URL, '$$member.avatar']},
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                },
             },
         },
         {

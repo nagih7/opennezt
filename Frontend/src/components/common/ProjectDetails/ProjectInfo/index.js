@@ -78,9 +78,10 @@ const ProjectInfo = () => {
 							<LazyLoadingMedium>
 								<MemberBox member={projectDetails.owner} />
 							</LazyLoadingMedium>
-							{projectDetails.members &&
-								projectDetails.members.length > 0 &&
-								projectDetails.members.map((member, index) => (
+							{projectDetails.metadata &&
+								projectDetails.metadata.members &&
+								projectDetails.metadata.members.length > 0 &&
+								projectDetails.metadata.members.map((member, index) => (
 									<LazyLoadingMedium key={index}>
 										<MemberBox member={member} />
 									</LazyLoadingMedium>

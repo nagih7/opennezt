@@ -17,6 +17,7 @@ const notificationSlice = createSlice({
 		loadingProjectInvitation: false,
 		loadingSendRequestAddFriend: false,
 		loadingGetRequestAddFriend: false,
+		loadingReplyNotification: false,
 	},
 	reducers: {
 		startRequestReadRoot: (state) => ({
@@ -51,12 +52,15 @@ const notificationSlice = createSlice({
 		}),
 		startRequestReplyNotification: (state) => ({
 			...state,
+			loadingReplyNotification: true,
 		}),
 		startRequestReplyNotificationSuccess: (state) => ({
 			...state,
+			loadingReplyNotification: false,
 		}),
 		startRequestReplyNotificationFail: (state) => ({
 			...state,
+			loadingReplyNotification: false,
 		}),
 		startRequestMessage: (state) => ({
 			...state,
