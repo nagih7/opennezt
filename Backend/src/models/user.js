@@ -78,7 +78,7 @@ const User = createModel(
             virtuals: false,
             transform(doc, ret) {
                 // eslint-disable-next-line no-unused-vars
-                const {_id, password, is_active, created_at, updated_at, ...result} = ret
+                const {password, is_active, created_at, updated_at, ...result} = ret
                 return result
             },
         },

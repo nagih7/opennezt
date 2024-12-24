@@ -23,7 +23,7 @@ export const AppProvider = ({ children }) => {
 		if (!isAuthSuccess) {
 			navigate("/login");
 		} else {
-			let token = localStorage.getItem("token");
+			const token = localStorage.getItem("token");
 			socket.emit("login", token);
 		}
 	}, [isAuthSuccess, navigate, socket]);

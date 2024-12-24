@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 import CloseIcon from "@mui/icons-material/Close";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
-import { getChatHistory } from "api/chat";
 import { useSocket } from "context/SocketContext";
-import { useSelector } from "react-redux";
-import store from "states/configureStore";
+import { useDispatch, useSelector } from "react-redux";
 import SendIcon from "@mui/icons-material/Send";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
@@ -14,38 +12,31 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import MicIcon from "@mui/icons-material/Mic";
 import { message, Modal } from "antd";
 import { getProjectInvitations } from "api/project";
+import { closeChatBox, comfirmSendMessage } from "states/modules/chat";
+import MessageBoxContent from "./MessageBoxContent";
 
-const MessageBoxContent = React.lazy(() => import("./MessageBoxContent"));
 const Projects = React.lazy(() => import("components/common/Projects"));
 
-const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
+const MessageBox = ({ key, converse, sendMessage }) => {
+	const dispatch = useDispatch();
 	const socket = useSocket();
 
-	const { loadingGetChatHistory } = useSelector((state) => state.chat);
+	const { authUser } = useSelector((state) => state.auth);
 
 	const [content, setContent] = useState("");
-	const [newMessage, setNewMessage] = useState([]);
 	const [showMoreActions, setShowMoreActions] = useState(false);
 	const [modalProjectInvitation, setModalProjectInvitation] = useState(false);
 	const moreActionsRef = useRef(null);
 
 	useEffect(() => {
-		store.dispatch(getChatHistory(chatBox.user_id));
-	}, [chatBox.user_id]);
-
-	useEffect(() => {
-		setNewMessage(chatBox.messages);
-	}, [chatBox.messages]);
-
-	useEffect(() => {
 		socket.on("message", (message) => {
-			store.dispatch(getChatHistory(message.sender_id));
+			dispatch(comfirmSendMessage(message));
 		});
 
 		return () => {
 			socket.off("message");
 		};
-	}, [socket]);
+	}, [socket, dispatch]);
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {
@@ -63,22 +54,24 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
 		};
 	}, []);
 
-	const handleEnterKey = (event, receiver_id) => {
+	const handleEnterKey = (event, converse) => {
 		if (event.key === "Enter") {
-			handleSendMessage(receiver_id);
+			handleSendMessage(converse);
 		}
 	};
 
-	const handleSendMessage = (receiver_id) => {
+	const handleSendMessage = (converse) => {
 		if (!content) return;
-		const date = new Date().toISOString();
 		const message = {
-			receiver_id: receiver_id,
+			user_id: authUser._id,
+			conversation_id: converse.conversation._id,
 			content: content,
-			timestamp: date,
+			created_at: new Date().toISOString(),
+			metadata: { type: "text", read_by: [] },
+			updated_at: new Date().toISOString(),
 		};
 		sendMessage(message);
-		store.dispatch(getChatHistory(receiver_id));
+		dispatch(comfirmSendMessage(message));
 
 		setContent("");
 	};
@@ -86,10 +79,8 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
 	const handleShowMoreActions = () => {
 		setShowMoreActions(!showMoreActions);
 	};
-
-	const handleSendProjectInvitation = () => {
-		setModalProjectInvitation(true);
-		store.dispatch(getProjectInvitations(chatBox.user_id));
+	const handleCloseChatBox = (conversation) => {
+		dispatch(closeChatBox(conversation.conversation._id));
 	};
 
 	return (
@@ -99,28 +90,26 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
 					<div className={styles.avatar}>
 						<img
 							src={
-								chatBox.user_avatar
-									? chatBox.user_avatar
+								converse.conversation.members[0].avatar
+									? converse.conversation.members[0].avatar
 									: AvatarDefault
 							}
 							alt="avatar"
 						/>
 					</div>
-					<span>{chatBox.user_name}</span>
+					<span>{converse.conversation.members[0].name}</span>
 				</div>
 				<button
-					onClick={() => closeChatBox(chatBox.user_id)}
+					onClick={() => handleCloseChatBox(converse)}
 					className={styles.closeButton}>
 					<CloseIcon />
 				</button>
 			</div>
 			<div className={styles.miniChatContent}>
-				<LazyLoadingMedium>
-					<MessageBoxContent
-						messages={newMessage}
-						receiver_id={chatBox.user_id}
-					/>
-				</LazyLoadingMedium>
+				<MessageBoxContent
+					messages={converse.messages}
+					receiver_id={converse.conversation.members[0].id}
+				/>
 			</div>
 			<div className={styles.miniChatFooter}>
 				<div className={styles.chatActions}>
@@ -154,7 +143,7 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
 					</button>
 				</div>
 				<input
-					onKeyDown={(e) => handleEnterKey(e, chatBox.user_id)}
+					onKeyDown={(e) => handleEnterKey(e, converse)}
 					type="text"
 					placeholder="Type a message..."
 					className={styles.miniChatInput}
@@ -162,7 +151,7 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
 					onChange={(e) => setContent(e.target.value)}
 				/>
 				<button
-					onClick={() => handleSendMessage(chatBox.user_id)}
+					onClick={() => handleSendMessage(converse)}
 					className={styles.sendButton}>
 					<SendIcon />
 				</button>
@@ -177,7 +166,7 @@ const MessageBox = ({ chatBox, closeChatBox, sendMessage }) => {
 				onCancel={() => setModalProjectInvitation(false)}
 				width={1000}>
 				<LazyLoadingMedium>
-					<Projects inviteeId={chatBox.user_id} />
+					<Projects inviteeId={converse.conversation.members[0]._id} />
 				</LazyLoadingMedium>
 			</Modal>
 		</div>

@@ -11,7 +11,6 @@ const { Title } = Typography;
 
 const ProjectCard = () => {
 	const { projectDetails } = useSelector((state) => state.project);
-	console.log(projectDetails);
 
 	const propsBackground = {
 		name: "file",

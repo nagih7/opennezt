@@ -16,7 +16,7 @@ import {
 	changeBackgroundUserFail,
 	getIdByEmailUser,
 	getIdByEmailUserSuccess,
-	getIdByEmailUserFail
+	getIdByEmailUserFail,
 } from "../../states/modules/profile";
 
 export const updateUser = (data) => async (dispatch, getState) => {
@@ -71,14 +71,16 @@ export const changeBackground = (formData) => async (dispatch, getState) => {
 	});
 };
 export const getIdByEmail = (email) => async (dispatch, getState) => {
-    console.log('Calling getIdByEmail with email:', email);
-    
-   return SeekProject({
-	method: "post",
-	apiPath: `/users/getid-byemail`,
-	actionTypes: [getIdByEmailUser, getIdByEmailUserSuccess, getIdByEmailUserFail],
-	variables: { email },
-	dispatch,
-	getState,
+	return SeekProject({
+		method: "post",
+		apiPath: `/users/getid-byemail`,
+		actionTypes: [
+			getIdByEmailUser,
+			getIdByEmailUserSuccess,
+			getIdByEmailUserFail,
+		],
+		variables: { email },
+		dispatch,
+		getState,
 	});
 };

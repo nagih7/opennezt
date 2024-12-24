@@ -1,4 +1,4 @@
-import Messenger from '../../models/messenger.js'
+import Message from '../../models/message.js'
 import User from '../../models/user.js'
 import * as chatService from '../services/chatService.js'
 import {userSockets} from '@/routes/socket/index.js'
@@ -9,27 +9,32 @@ export async function getChatList(req, res) {
 }
 
 export async function getChatHistory(req, res) {
-    const chatHistory = await chatService.getChatHistory(req.currentUser, req.params.user_id)
+    const chatHistory = await chatService.getChatHistory(req.currentUser, req.params)
     res.status(200).jsonify(chatHistory)
 }
 
 export const saveMessage = async (data, io, socketId) => {
-    const result = await chatService.saveMessage(data, socketId)
-    const receiverSocketId = Object.keys(userSockets).find(
-        (socketId) => userSockets[socketId] === data.receiver_id
-    )
-    if (receiverSocketId) {
-        io.to(receiverSocketId).emit('message', result)
-    }
+    const {message, members} = await chatService.saveMessage(data, userSockets[socketId])
+
+    members.forEach((member) => {
+        console.log('Emitting message to:', member.user_id.toString())
+
+        const receiverSocketId = Object.keys(userSockets).find(
+            (socketId) => userSockets[socketId] === member.user_id.toString()
+        )
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit('message', message)
+        }
+    })
 }
 
 export const getReceiverIds = async (userId) => {
     try {
-        const senderIds = await Messenger.find({
+        const senderIds = await Message.find({
             $or: [{sender_id: userId}, {receiver_id: userId}],
         }).distinct('sender_id')
 
-        const receiverIds = await Messenger.find({
+        const receiverIds = await Message.find({
             $or: [{sender_id: userId}, {receiver_id: userId}],
         }).distinct('receiver_id')
 

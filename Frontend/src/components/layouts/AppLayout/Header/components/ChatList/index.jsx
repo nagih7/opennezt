@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import styles from "./styles.module.scss";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
-import { getChatList } from "api/chat";
-import store from "states/configureStore";
+import { getChatHistory, getChatList } from "api/chat";
 import NotFound from "components/UI/NotFound";
 
-const ChatList = ({ handleSetChatBoxList, setIsShowChatList }) => {
+const ChatList = () => {
+	const dispatch = useDispatch();
 	const { chatList } = useSelector((state) => state.chat);
 
-	// const [minimizedChats, setMinimizedChats] = useState([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [debouncedTerm, setDebouncedTerm] = useState("");
 
-	const openChatBox = async (conversation) => {
-		await handleSetChatBoxList(conversation);
-		setIsShowChatList(false);
+	// NEW
+	const handleGetChatHistory = (conversation) => {
+		dispatch(getChatHistory(conversation._id));
 	};
 
 	useEffect(() => {
@@ -29,8 +28,8 @@ const ChatList = ({ handleSetChatBoxList, setIsShowChatList }) => {
 	}, [searchQuery]);
 
 	useEffect(() => {
-		store.dispatch(getChatList(debouncedTerm));
-	}, [debouncedTerm]);
+		dispatch(getChatList(debouncedTerm));
+	}, [debouncedTerm, dispatch]);
 
 	const handleSearchQuery = (value) => {
 		setSearchQuery(value);
@@ -51,13 +50,12 @@ const ChatList = ({ handleSetChatBoxList, setIsShowChatList }) => {
 			<div className={styles.chatListWrap}>
 				{chatList.length > 0 ? (
 					chatList.map((conversation, index) => {
-						console.log(conversation);
 						if (conversation.metadata.type === "direct")
 							return (
 								<div
 									className={styles.chatItem}
 									key={index}
-									onClick={() => openChatBox(conversation)}>
+									onClick={() => handleGetChatHistory(conversation)}>
 									<div className={styles.avatar}>
 										<img
 											src={
@@ -82,19 +80,6 @@ const ChatList = ({ handleSetChatBoxList, setIsShowChatList }) => {
 					</div>
 				)}
 			</div>
-			{/* <div className={styles.miniChatBoxWrap}>
-				<div className={styles.minimizedChatIcons}>
-					{minimizedChats.map((chat, index) => (
-						<div
-							key={index}
-							className={styles.minimizedChatIcon}
-							style={{ backgroundColor: chat.avatarColor }}
-							onClick={() => restoreMinimizedChat(chat)}>
-							{chat.username[0]}
-						</div>
-					))}
-				</div>
-			</div> */}
 		</div>
 	);
 };

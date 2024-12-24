@@ -1,4 +1,4 @@
-import Messenger from '../models/messenger.js'
+import {Message} from '@/models'
 import {Router} from 'express'
 import {asyncHandler} from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
@@ -12,7 +12,7 @@ chatRouter.use(asyncHandler(requireAuthentication))
 
 chatRouter.get('/chat-list', asyncHandler(chatController.getChatList))
 
-chatRouter.get('/chat-history/:user_id', asyncHandler(chatController.getChatHistory))
+chatRouter.get('/chat-history/:conversation_id', asyncHandler(chatController.getChatHistory))
 
 chatRouter.get('/receiverIds/:userId', async (req, res) => {
     const {userId} = req.params
@@ -31,7 +31,7 @@ chatRouter.post('/save-messages', async (req, res) => {
         // const {user_id} = verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
 
         for (const msg of messages) {
-            const newMessage = new Messenger({
+            const newMessage = new Message({
                 sender_id: msg.sender_id,
                 receiver_id: msg.receiver_id,
                 content: msg.content,

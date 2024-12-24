@@ -11,6 +11,8 @@ const Members = new Schema(
         role: {
             type: String,
             required: true,
+            enum: ['admin', 'member', 'user'],
+            default: 'user',
         },
     },
     {
@@ -29,6 +31,7 @@ const Metadata = new Schema(
         data: {
             type: Object,
             required: true,
+            default: {},
         },
     },
     {
@@ -36,7 +39,7 @@ const Metadata = new Schema(
     }
 )
 
-const conversation = createModel('Conversation', 'conversations', {
+const Conversation = createModel('Conversation', 'conversations', {
     members: {
         type: [Members],
         required: true,
@@ -47,4 +50,4 @@ const conversation = createModel('Conversation', 'conversations', {
     },
 })
 
-export default conversation
+export default Conversation

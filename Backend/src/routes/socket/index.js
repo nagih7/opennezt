@@ -7,7 +7,6 @@ export const userSockets = {}
 
 const socketRoutes = (io) => {
     io.on('connection', (socket) => {
-        console.log('User connected')
         socket.on('login', async (token) => {
             const {user_id} = await verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
             userSockets[socket.id] = user_id
