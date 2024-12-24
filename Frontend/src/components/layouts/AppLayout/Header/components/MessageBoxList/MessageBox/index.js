@@ -10,7 +10,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import GroupsIcon from "@mui/icons-material/Groups";
 import MicIcon from "@mui/icons-material/Mic";
-import { message, Modal } from "antd";
+import { Avatar, message, Modal, Tooltip } from "antd";
 import { getProjectInvitations } from "api/project";
 import { closeChatBox, comfirmSendMessage } from "states/modules/chat";
 import MessageBoxContent from "./MessageBoxContent";
@@ -92,19 +92,53 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 	return (
 		<div className={styles.messageBoxWrap}>
 			<div className={styles.miniChatHeader}>
-				<div className={styles.miniChatHeaderContent}>
-					<div className={styles.avatar}>
-						<img
-							src={
-								converse.conversation.members[0].avatar
-									? converse.conversation.members[0].avatar
-									: AvatarDefault
-							}
-							alt="avatar"
-						/>
+				{converse.conversation.metadata.type === "direct" && (
+					<div className={styles.miniChatHeaderContent}>
+						<div className={styles.avatar}>
+							<img
+								src={
+									converse.conversation.members[0].avatar
+										? converse.conversation.members[0].avatar
+										: AvatarDefault
+								}
+								alt="avatar"
+							/>
+						</div>
+						<span>{converse.conversation.members[0].name}</span>
 					</div>
-					<span>{converse.conversation.members[0].name}</span>
-				</div>
+				)}
+				{converse.conversation.metadata.type === "group" && (
+					<div className={styles.miniChatHeaderContent}>
+						<div className={styles.avatarGroup}>
+							<Avatar.Group
+								size={"medium"}
+								max={{
+									count: 2,
+									style: {
+										color: "#f56a00",
+										backgroundColor: "#fde3cf",
+									},
+								}}>
+								{converse.conversation.members.map((member, index) => (
+									<Tooltip title={member.name} key={member._id}>
+										<Avatar
+											src={
+												member.avatar
+													? member.avatar
+													: AvatarDefault
+											}
+											alt="avatar"
+										/>
+									</Tooltip>
+								))}
+							</Avatar.Group>
+						</div>
+						<span>
+							{converse.conversation.metadata.data.project.name}
+						</span>
+					</div>
+				)}
+
 				<button
 					onClick={() => handleCloseChatBox(converse)}
 					className={styles.closeButton}>
@@ -114,7 +148,7 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 			<div className={styles.miniChatContent}>
 				<MessageBoxContent
 					messages={converse.messages}
-					receiver_id={converse.conversation.members[0].id}
+					conversation={converse.conversation}
 				/>
 			</div>
 			<div className={styles.miniChatFooter}>

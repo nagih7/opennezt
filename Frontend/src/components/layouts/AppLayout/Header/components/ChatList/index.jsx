@@ -4,6 +4,7 @@ import styles from "./styles.module.scss";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
 import { getChatHistory, getChatList } from "api/chat";
 import NotFound from "components/UI/NotFound";
+import { Avatar, Tooltip } from "antd";
 
 const ChatList = () => {
 	const dispatch = useDispatch();
@@ -50,29 +51,83 @@ const ChatList = () => {
 			<div className={styles.chatListWrap}>
 				{chatList.length > 0 ? (
 					chatList.map((conversation, index) => {
-						if (conversation.metadata.type === "direct")
-							return (
-								<div
-									className={styles.chatItem}
-									key={index}
-									onClick={() => handleGetChatHistory(conversation)}>
-									<div className={styles.avatar}>
-										<img
-											src={
-												conversation.members.avatar
-													? conversation.members.avatar
-													: AvatarDefault
-											}
-											alt="avatar"
-										/>
-									</div>
-									<div className={styles.chatContent}>
-										<div className={styles.chatName}>
-											{conversation.members.name}
+						switch (conversation.metadata.type) {
+							case "direct":
+								return (
+									<div
+										className={styles.chatItem}
+										key={index}
+										onClick={() =>
+											handleGetChatHistory(conversation)
+										}>
+										<div className={styles.avatar}>
+											<img
+												src={
+													conversation.members[0].avatar
+														? conversation.members[0].avatar
+														: AvatarDefault
+												}
+												alt="avatar"
+											/>
+										</div>
+										<div className={styles.chatContent}>
+											<div className={styles.chatName}>
+												{conversation.members[0].name}
+											</div>
 										</div>
 									</div>
-								</div>
-							);
+								);
+							case "group":
+								return (
+									<div
+										className={styles.chatItem}
+										key={index}
+										onClick={() =>
+											handleGetChatHistory(conversation)
+										}>
+										<div
+											className={
+												conversation.members.length > 1
+													? styles.avatarGroup
+													: styles.avatar
+											}>
+											<Avatar.Group
+												size={"medium"}
+												max={{
+													count: 2,
+													style: {
+														color: "#f56a00",
+														backgroundColor: "#fde3cf",
+													},
+												}}>
+												{conversation.members.map(
+													(member, index) => (
+														<Tooltip
+															title={member.name}
+															key={member._id}>
+															<Avatar
+																src={
+																	member.avatar
+																		? member.avatar
+																		: AvatarDefault
+																}
+																alt="avatar"
+															/>
+														</Tooltip>
+													)
+												)}
+											</Avatar.Group>
+										</div>
+										<div className={styles.chatContent}>
+											<div className={styles.chatName}>
+												{conversation.metadata.data.project.name}
+											</div>
+										</div>
+									</div>
+								);
+							default:
+								return null;
+						}
 					})
 				) : (
 					<div className={styles.noResult}>

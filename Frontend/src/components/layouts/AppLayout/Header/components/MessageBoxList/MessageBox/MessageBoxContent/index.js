@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import styles from "./styles.module.scss";
 import { useSelector } from "react-redux";
+import { Avatar } from "antd";
 
-const MessageBoxContent = ({ messages, receiver_id }) => {
+const MessageBoxContent = ({ messages, conversation }) => {
 	const chatBoxRef = useRef(null);
 
 	const { authUser } = useSelector((state) => state.auth);
@@ -13,19 +14,82 @@ const MessageBoxContent = ({ messages, receiver_id }) => {
 		chatBox.scrollTop = chatBox.scrollHeight;
 	}, [messages]);
 
-	return (
-		<div className={styles.boxMessageWrap} ref={chatBoxRef}>
-			{messages.map((msg, index) => (
-				<div
-					key={index}
-					className={`${styles.messageWrap} ${
-						msg.user_id === authUser._id ? styles.sent : styles.received
-					}`}>
-					<span className={styles.message}>{msg.content}</span>
+	switch (conversation.metadata.type) {
+		case "direct":
+			return (
+				<div className={styles.boxMessageWrap} ref={chatBoxRef}>
+					{messages.map((msg, index) => (
+						<div
+							key={index}
+							className={`${styles.messageWrap} ${
+								msg.user_id === authUser._id
+									? styles.sent
+									: styles.received
+							}`}>
+							<span className={styles.message}>{msg.content}</span>
+						</div>
+					))}
 				</div>
-			))}
-		</div>
-	);
+			);
+		case "group":
+			return (
+				<div className={styles.boxMessageWrap} ref={chatBoxRef}>
+					{messages.map((msg, index) => {
+						switch (msg.user_id) {
+							case authUser._id:
+								return (
+									<div
+										key={index}
+										className={`${styles.messageWrap} ${styles.sent}`}>
+										<span className={styles.message}>
+											{msg.content}
+										</span>
+									</div>
+								);
+							default:
+								return (
+									<div className={styles.msgWrap}>
+										{conversation.members.map((member) => {
+											if (member._id === msg.user_id) {
+												return (
+													<div className={styles.avatarWrap}>
+														<Avatar
+															src={
+																member.avatar
+																	? member.avatar
+																	: AvatarDefault
+															}
+															alt="avatar"
+														/>
+													</div>
+												);
+											}
+										})}
+										<div className={styles.receivedWrap}>
+											<span className={styles.name}>
+												{conversation.members.map((member) => {
+													if (member._id === msg.user_id) {
+														return member.name;
+													}
+												})}
+											</span>
+											<div
+												key={index}
+												className={`${styles.messageWrap} ${styles.received}`}>
+												<span className={styles.message}>
+													{msg.content}
+												</span>
+											</div>
+										</div>
+									</div>
+								);
+						}
+					})}
+				</div>
+			);
+		default:
+			return null;
+	}
 };
 
 export default MessageBoxContent;

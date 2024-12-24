@@ -33,7 +33,6 @@ const chatSlice = createSlice({
 			const { data } = action.payload;
 			let i = 0;
 			while (i < state.conversations.length + 1) {
-				console.log("i", i);
 				if (i === state.conversations.length) {
 					return {
 						...state,

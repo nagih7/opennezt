@@ -1,5 +1,5 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {Message, ObjectId, Conversation} from '@/models'
+import {Message, ObjectId, Conversation, Project} from '@/models'
 
 export async function getChatList(user, input_value) {
     if (!input_value || input_value === 'undefined' || input_value === null) {
@@ -41,9 +41,25 @@ export async function getChatList(user, input_value) {
             },
         },
         {
+            $lookup: {
+                from: 'projects',
+                localField: 'metadata.data.project_id',
+                foreignField: '_id',
+                as: 'metadata.data.project',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
             $unwind: {
-                path: '$members',
-                preserveNullAndEmptyArrays: true, // Nếu không muốn giữ lại các bản ghi không có data
+                path: '$metadata.data.project',
+                preserveNullAndEmptyArrays: true, // giữ lại các bản ghi không có project
             },
         },
         {
@@ -56,7 +72,13 @@ export async function getChatList(user, input_value) {
             $project: {
                 _id: 1,
                 members: 1,
-                metadata: 1,
+                metadata: {
+                    type: 1,
+                    data: {
+                        project: 1,
+                    },
+                },
+                project: 1,
                 updated_at: 1,
             },
         },
@@ -109,10 +131,39 @@ export async function getChatHistory(user, requestParams) {
             },
         },
         {
+            $lookup: {
+                from: 'projects',
+                localField: 'metadata.data.project_id',
+                foreignField: '_id',
+                as: 'metadata.data.project',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: {
+                path: '$metadata.data.project',
+                preserveNullAndEmptyArrays: true, // giữ lại các bản ghi không có project
+            },
+        },
+        {
             $project: {
                 _id: 1,
                 members: 1,
-                metadata: 1,
+                metadata: {
+                    type: 1,
+                    data: {
+                        project: 1,
+                    },
+                },
+                project: 1,
+                updated_at: 1,
             },
         },
     ])
