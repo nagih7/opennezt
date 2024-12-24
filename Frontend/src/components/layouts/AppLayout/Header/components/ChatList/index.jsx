@@ -1,29 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import styles from "./styles.module.scss";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
-import { getChatList } from "api/chat";
-import store from "states/configureStore";
+import { getChatHistory, getChatList } from "api/chat";
+import NotFound from "components/UI/NotFound";
+import { Avatar, Tooltip } from "antd";
 
-const ChatList = ({ handleSetChatBoxList, setIsShowChatList }) => {
+const ChatList = () => {
+	const dispatch = useDispatch();
 	const { chatList } = useSelector((state) => state.chat);
 
-	// const [minimizedChats, setMinimizedChats] = useState([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [debouncedTerm, setDebouncedTerm] = useState("");
 
-	const openChatBox = async (user) => {
-		await handleSetChatBoxList(user);
-		setIsShowChatList(false);
+	// NEW
+	const handleGetChatHistory = (conversation) => {
+		dispatch(getChatHistory(conversation._id));
 	};
-
-	// minimize chat box
-	// const restoreMinimizedChat = (chat) => {
-	// 	setMinimizedChats(
-	// 		minimizedChats.filter((c) => c.username !== chat.username)
-	// 	);
-	// 	openChatBox(chat);
-	// };
 
 	useEffect(() => {
 		const handler = setTimeout(() => {
@@ -36,8 +29,8 @@ const ChatList = ({ handleSetChatBoxList, setIsShowChatList }) => {
 	}, [searchQuery]);
 
 	useEffect(() => {
-		store.dispatch(getChatList(debouncedTerm));
-	}, [debouncedTerm]);
+		dispatch(getChatList(debouncedTerm));
+	}, [debouncedTerm, dispatch]);
 
 	const handleSearchQuery = (value) => {
 		setSearchQuery(value);
@@ -57,43 +50,91 @@ const ChatList = ({ handleSetChatBoxList, setIsShowChatList }) => {
 			</div>
 			<div className={styles.chatListWrap}>
 				{chatList.length > 0 ? (
-					chatList.map((user, index) => (
-						<div
-							className={styles.chatItem}
-							key={index}
-							onClick={() => openChatBox(user)}>
-							<div className={styles.avatar}>
-								<img
-									src={
-										user.user_avatar
-											? user.user_avatar
-											: AvatarDefault
-									}
-									alt="avatar"
-								/>
-							</div>
-							<div className={styles.chatContent}>
-								<div className={styles.chatName}>{user.user_name}</div>
-							</div>
-						</div>
-					))
+					chatList.map((conversation, index) => {
+						switch (conversation.metadata.type) {
+							case "direct":
+								return (
+									<div
+										className={styles.chatItem}
+										key={index}
+										onClick={() =>
+											handleGetChatHistory(conversation)
+										}>
+										<div className={styles.avatar}>
+											<img
+												src={
+													conversation.members[0].avatar
+														? conversation.members[0].avatar
+														: AvatarDefault
+												}
+												alt="avatar"
+											/>
+										</div>
+										<div className={styles.chatContent}>
+											<div className={styles.chatName}>
+												{conversation.members[0].name}
+											</div>
+										</div>
+									</div>
+								);
+							case "group":
+								return (
+									<div
+										className={styles.chatItem}
+										key={index}
+										onClick={() =>
+											handleGetChatHistory(conversation)
+										}>
+										<div
+											className={
+												conversation.members.length > 1
+													? styles.avatarGroup
+													: styles.avatar
+											}>
+											<Avatar.Group
+												size={"medium"}
+												max={{
+													count: 2,
+													style: {
+														color: "#f56a00",
+														backgroundColor: "#fde3cf",
+													},
+												}}>
+												{conversation.members.map(
+													(member, index) => (
+														<Tooltip
+															title={member.name}
+															key={member._id}>
+															<Avatar
+																src={
+																	member.avatar
+																		? member.avatar
+																		: AvatarDefault
+																}
+																alt="avatar"
+															/>
+														</Tooltip>
+													)
+												)}
+											</Avatar.Group>
+										</div>
+										<div className={styles.chatContent}>
+											<div className={styles.chatName}>
+												{conversation.metadata.data.project.name}
+											</div>
+										</div>
+									</div>
+								);
+							default:
+								return null;
+						}
+					})
 				) : (
-					<div className={styles.noResult}>No chats found</div>
+					<div className={styles.noResult}>
+						<NotFound content="Not found" size="100" />
+					</div>
 				)}
 			</div>
-			{/* <div className={styles.miniChatBoxWrap}>
-				<div className={styles.minimizedChatIcons}>
-					{minimizedChats.map((chat, index) => (
-						<div
-							key={index}
-							className={styles.minimizedChatIcon}
-							style={{ backgroundColor: chat.avatarColor }}
-							onClick={() => restoreMinimizedChat(chat)}>
-							{chat.username[0]}
-						</div>
-					))}
-				</div>
-			</div> */}
 		</div>
 	);
 };

@@ -22,10 +22,38 @@
 	.sent {
 		background-color: #dcf8c6;
 		align-self: flex-end;
+		box-shadow: $boxShadow;
 	}
 
-	.received {
-		background-color: #f1f0f0;
-		align-self: flex-start;
+	.msgWrap {
+		max-width: 250px;
+		font-size: 14px;
+		display: flex;
+		gap: 0.5rem;
+		align-items: flex-end;
+		margin-bottom: 0.5rem;
+
+		.avatarWrap {
+			margin-bottom: 0.1rem;
+		}
+
+		.receivedWrap {
+			display: flex;
+			flex-direction: column;
+			.name {
+				font-size: 12px;
+				font-weight: 600;
+				color: $colorBackgroundButtonCancel;
+				margin-bottom: 5px;
+				margin-left: 0.5rem;
+			}
+
+			.received {
+				background-color: white;
+				align-self: flex-start;
+				margin: 0;
+				box-shadow: $boxShadow;
+			}
+		}
 	}
 }

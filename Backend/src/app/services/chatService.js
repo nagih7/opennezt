@@ -1,157 +1,200 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {ChatInvitation, Messenger, ObjectId, Friend} from '@/models'
-import {userSockets} from '@/routes/socket'
+import {Message, ObjectId, Conversation, Project} from '@/models'
 
 export async function getChatList(user, input_value) {
-    // const chatList = await ChatInvitation.aggregate([
-    //     {
-    //         $match: {
-    //             $or: [{sender_id: user._id}, {receiver_id: user._id}],
-    //             status: 'accepted',
-    //         },
-    //     },
-    //     {
-    //         $project: {
-    //             participants: {
-    //                 $cond: [{$eq: ['$sender_id', user._id]}, '$receiver_id', '$sender_id'],
-    //             },
-    //             created_at: 1,
-    //             updated_at: 1,
-    //         },
-    //     },
-    //     {
-    //         $group: {
-    //             _id: null,
-    //             uniqueParticipants: {$addToSet: '$participants'},
-    //         },
-    //     },
-    //     {
-    //         $match: {
-    //             uniqueParticipants: {$ne: user._id},
-    //         },
-    //     },
-    //     {
-    //         $lookup: {
-    //             from: 'users',
-    //             localField: 'uniqueParticipants',
-    //             foreignField: '_id',
-    //             as: 'users',
-    //         },
-    //     },
-
-    //     {
-    //         $project: {
-    //             chatList: {
-    //                 $map: {
-    //                     input: '$users',
-    //                     as: 'user',
-    //                     in: {
-    //                         receiver_id: '$$user._id',
-    //                         username: '$$user.name',
-    //                         avatar: {
-    //                             $cond: {
-    //                                 if: {$eq: [{$ifNull: ['$$user.avatar', '']}, '']},
-    //                                 then: '$$user.avatar',
-    //                                 else: {$concat: [LINK_STATIC_URL, '$$user.avatar']},
-    //                             },
-    //                         },
-    //                         created_at: '$$user.created_at',
-    //                         updated_at: '$$user.updated_at',
-    //                     },
-    //                 },
-    //             },
-    //         },
-    //     },
-    //     {
-    //         $unwind: '$chatList',
-    //     },
-    //     {
-    //         $replaceRoot: {
-    //             newRoot: '$chatList',
-    //         },
-    //     },
-    //     {
-    //         $sort: {updated_at: -1},
-    //     },
-    // ])
     if (!input_value || input_value === 'undefined' || input_value === null) {
         input_value = ''
     }
-    const chatList = await Friend.aggregate([
+    const chatList = await Conversation.aggregate([
         {
             $match: {
-                user_id: user._id,
+                members: {$elemMatch: {user_id: user._id}},
             },
         },
         {
             $lookup: {
                 from: 'users',
-                localField: 'friend_id',
+                localField: 'members.user_id',
                 foreignField: '_id',
-                as: 'friend',
+                as: 'members',
                 pipeline: [
                     {
                         $match: {
+                            _id: {$ne: user._id},
                             name: {$regex: input_value, $options: 'i'},
                         },
                     },
                     {
                         $project: {
+                            _id: 1,
                             name: 1,
-                            avatar: 1,
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
                         },
                     },
                 ],
             },
         },
         {
-            $unwind: '$friend',
-        },
-        {
-            $project: {
-                // _id: 0,
-                user_id: '$friend._id',
-                user_name: '$friend.name',
-                user_avatar: {
-                    $cond: {
-                        if: {$eq: [{$ifNull: ['$friend.avatar', '']}, '']},
-                        then: '$friend.avatar',
-                        else: {$concat: [LINK_STATIC_URL, '$friend.avatar']},
+            $lookup: {
+                from: 'projects',
+                localField: 'metadata.data.project_id',
+                foreignField: '_id',
+                as: 'metadata.data.project',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                        },
                     },
-                },
+                ],
             },
         },
         {
-            $sort: {last_message_at: -1},
+            $unwind: {
+                path: '$metadata.data.project',
+                preserveNullAndEmptyArrays: true, // giữ lại các bản ghi không có project
+            },
+        },
+        {
+            $match: {
+                members: {$ne: null},
+            },
+        },
+
+        {
+            $project: {
+                _id: 1,
+                members: 1,
+                metadata: {
+                    type: 1,
+                    data: {
+                        project: 1,
+                    },
+                },
+                project: 1,
+                updated_at: 1,
+            },
+        },
+        {
+            $sort: {updated_at: -1},
         },
     ])
 
     return chatList
 }
 
-export async function getChatHistory(user, user_id) {
+export async function getChatHistory(user, requestParams) {
     const result = {
+        conversation: {},
         messages: [],
-        receiver_id: user_id,
     }
-    const messages = await Messenger.find({
-        $or: [
-            {sender_id: user._id, receiver_id: new ObjectId(user_id)},
-            {sender_id: new ObjectId(user_id), receiver_id: user._id},
-        ],
-    }).sort({date: 1})
-    result.messages = messages
+    const conversation = await Conversation.aggregate([
+        {
+            $match: {
+                _id: new ObjectId(requestParams.conversation_id),
+                members: {$elemMatch: {user_id: user._id}},
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'members.user_id',
+                foreignField: '_id',
+                as: 'members',
+                pipeline: [
+                    {
+                        $match: {
+                            _id: {$ne: user._id},
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'projects',
+                localField: 'metadata.data.project_id',
+                foreignField: '_id',
+                as: 'metadata.data.project',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: {
+                path: '$metadata.data.project',
+                preserveNullAndEmptyArrays: true, // giữ lại các bản ghi không có project
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+                members: 1,
+                metadata: {
+                    type: 1,
+                    data: {
+                        project: 1,
+                    },
+                },
+                project: 1,
+                updated_at: 1,
+            },
+        },
+    ])
+    const messages = await Message.find({conversation_id: requestParams.conversation_id}).sort({
+        created_at: 1,
+    })
 
+    result.conversation = conversation[0]
+    result.messages = messages
     return result
 }
 
-export async function saveMessage(messages, socketId) {
-    const message = new Messenger({
-        sender_id: userSockets[socketId],
-        receiver_id: messages.receiver_id,
-        content: messages.content,
-        date: new Date().toISOString(),
+export async function saveMessage(newMessage, user_id) {
+    const message = new Message({
+        conversation_id: newMessage.conversation_id,
+        user_id: user_id,
+        content: newMessage.content,
+        metadata: {
+            type: 'text',
+            data: {},
+            read_by: [],
+        },
     })
     await message.save()
-    return message
+    const conversation = await Conversation.findById({_id: newMessage.conversation_id})
+    conversation.updated_at = new Date()
+    conversation.save()
+
+    const members = await conversation.members.filter(
+        (member) => member.user_id.toString() !== user_id.toString()
+    )
+
+    return {message, members}
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import "./styles.scss";
 import { Popover } from "antd";
@@ -9,18 +9,14 @@ import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useSelector } from "react-redux";
-import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
-import store from "states/configureStore";
-import { getChatList } from "api/chat";
-
-const ChatList = React.lazy(() => import("./components/ChatList"));
-const MessageBoxList = React.lazy(() => import("./components/MessageBoxList"));
+import ChatList from "./components/ChatList";
+import MessageBoxList from "./components/MessageBoxList";
+import AvatarDefault from "assets/images/default/AvatarDefault.png";
 
 const Header = () => {
 	// const [isShowThemeLight, setIsShowThemeLight] = useState(true);
 	const [isFullScreen, setIsFullScreen] = useState(false);
 	const [isShowChatList, setIsShowChatList] = useState(false);
-	const [chatBoxList, setChatBoxList] = useState([]);
 	const authUser = useSelector((state) => state.auth.authUser);
 	const chatListRef = useRef(null);
 
@@ -97,20 +93,7 @@ const Header = () => {
 		}
 	};
 
-	const handleSetChatBoxList = useCallback((chatBox) => {
-		setChatBoxList((prev) => {
-			const index = prev.findIndex((chat) => chat._id === chatBox._id);
-			if (index !== -1) {
-				return prev;
-			}
-			return [...prev, { ...chatBox, messages: [] }];
-		});
-	}, []);
-
 	const showChatList = () => {
-		if (!isShowChatList) {
-			store.dispatch(getChatList());
-		}
 		setIsShowChatList(!isShowChatList);
 	};
 
@@ -151,19 +134,10 @@ const Header = () => {
 						className={`${styles.chatListWrap} ${
 							isShowChatList ? styles.visible : ""
 						}`}>
-						<LazyLoadingMedium>
-							<ChatList
-								handleSetChatBoxList={handleSetChatBoxList}
-								setIsShowChatList={setIsShowChatList}
-							/>
-						</LazyLoadingMedium>
+						<ChatList />
 					</div>
-					<LazyLoadingMedium>
-						<MessageBoxList
-							chatBoxList={chatBoxList}
-							setChatBoxList={setChatBoxList}
-						/>
-					</LazyLoadingMedium>
+
+					<MessageBoxList />
 				</div>
 				<div
 					onClick={() => setIsShowChatList(false)}
@@ -175,11 +149,16 @@ const Header = () => {
 						trigger="click">
 						<div className={styles.infoWrap}>
 							<div className={styles.avatarWrap}>
-								{authUser.avatar ? (
-									<img src={authUser.avatar} alt="" />
-								) : (
-									<img src="https://scontent.fhan5-2.fna.fbcdn.net/v/t1.30497-1/453178253_471506465671661_2781666950760530985_n.png?stp=dst-png_s200x200&_nc_cat=1&ccb=1-7&_nc_sid=136b72&_nc_eui2=AeFwjzt3TLwRlu7A9A-KfDx0Wt9TLzuBU1Ba31MvO4FTUJ3aTrvrVcopb2NyVQPTTf6BthcdOye-NFjZTDew3OW4&_nc_ohc=DXnAdsnLWisQ7kNvgEJlRtG&_nc_zt=24&_nc_ht=scontent.fhan5-2.fna&_nc_gid=AbNmUcQBb3oSbY8ZuoFoTMp&oh=00_AYD0S418FAm6QCijZBx8fRizD-ohHGG1nhDVdX1fNCUjlw&oe=676EA37A" />
-								)}
+								<img
+									src={
+										authUser.avatar ? (
+											authUser.avatar
+										) : (
+											<AvatarDefault />
+										)
+									}
+									alt=""
+								/>
 							</div>
 						</div>
 					</Popover>

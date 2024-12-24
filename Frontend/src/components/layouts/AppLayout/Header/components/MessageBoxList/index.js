@@ -1,33 +1,13 @@
 import React, { useCallback } from "react";
 import styles from "./styles.module.scss";
-import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
 import { useSelector } from "react-redux";
 import { useSocket } from "context/SocketContext";
+import MessageBox from "./MessageBox";
 
-const MessageBox = React.lazy(() => import("./MessageBox"));
-
-const MessageBoxList = ({ chatBoxList, setChatBoxList }) => {
+const MessageBoxList = () => {
 	const socket = useSocket();
 
-	const { chatHistory, loadingGetChatHistory } = useSelector(
-		(state) => state.chat
-	);
-	if (chatHistory && !loadingGetChatHistory) {
-		chatBoxList.map((chatBox) => {
-			if (chatBox.user_id === chatHistory.receiver_id) {
-				chatBox.messages = chatHistory.messages;
-			}
-		});
-	}
-
-	const closeChatBox = useCallback(
-		(user_id) => {
-			setChatBoxList((prev) =>
-				prev.filter((chatBox) => chatBox.user_id !== user_id)
-			);
-		},
-		[setChatBoxList]
-	);
+	const { conversations } = useSelector((state) => state.chat);
 
 	const sendMessage = useCallback(
 		(message) => {
@@ -38,17 +18,13 @@ const MessageBoxList = ({ chatBoxList, setChatBoxList }) => {
 
 	return (
 		<div className={styles.messageBoxListWrap}>
-			{chatBoxList &&
-				chatBoxList.length > 0 &&
-				chatBoxList.map((chatBox, index) => (
-					<LazyLoadingMedium key={index}>
-						<MessageBox
-							chatBox={chatBox}
-							closeChatBox={closeChatBox}
-							sendMessage={sendMessage}
-						/>
-					</LazyLoadingMedium>
-				))}
+			{conversations.map((converse, i) => (
+				<MessageBox
+					key={converse.conversation._id}
+					converse={converse}
+					sendMessage={sendMessage}
+				/>
+			))}
 		</div>
 	);
 };
