@@ -11,7 +11,7 @@ export async function getNotifications(req, res) {
 }
 
 export async function replyNotification(req, res) {
-    await notificationService.replyNotification(req.body)
+    await notificationService.replyNotification(req.body, req.io)
     res.jsonify('Reply notification successfully.')
 }
 

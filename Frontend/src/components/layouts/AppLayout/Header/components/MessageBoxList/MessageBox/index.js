@@ -79,6 +79,12 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 	const handleShowMoreActions = () => {
 		setShowMoreActions(!showMoreActions);
 	};
+
+	const handleSendProjectInvitation = async () => {
+		setModalProjectInvitation(true);
+		dispatch(getProjectInvitations(converse.conversation.members[0]._id));
+	};
+
 	const handleCloseChatBox = (conversation) => {
 		dispatch(closeChatBox(conversation.conversation._id));
 	};

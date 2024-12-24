@@ -17,8 +17,6 @@ export const saveMessage = async (data, io, socketId) => {
     const {message, members} = await chatService.saveMessage(data, userSockets[socketId])
 
     members.forEach((member) => {
-        console.log('Emitting message to:', member.user_id.toString())
-
         const receiverSocketId = Object.keys(userSockets).find(
             (socketId) => userSockets[socketId] === member.user_id.toString()
         )

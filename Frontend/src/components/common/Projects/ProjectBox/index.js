@@ -25,16 +25,14 @@ const ProjectBox = ({ project, inviteeId }) => {
 	const { projectInvitations } = useSelector((state) => state.project);
 
 	useEffect(() => {
-		if (projectInvitations.length > 0) {
-			setInvitations(projectInvitations);
-			const projectInvitation = invitations.find(
-				(item) => item.metadata.project._id === project._id
-			);
-			if (projectInvitation) {
-				setInvitationStatus(true);
-			} else {
-				setInvitationStatus(false);
-			}
+		setInvitations(projectInvitations);
+		const projectInvitation = invitations.find(
+			(item) => item.metadata.project._id === project._id
+		);
+		if (projectInvitation) {
+			setInvitationStatus(true);
+		} else {
+			setInvitationStatus(false);
 		}
 	}, [projectInvitations, project._id, invitations]);
 

@@ -72,21 +72,21 @@ export async function getNotifications(user) {
     return notifications
 }
 
-export async function replyNotification(requestBody) {
+export async function replyNotification(requestBody, io) {
     const {notification_id, type, status} = requestBody
     switch (type) {
         case 'friend_request':
-            await replyFriendRequest(notification_id, status)
+            await replyFriendRequest(notification_id, status, io)
             break
         case 'project_invitation':
-            await replyProjectInvitation(notification_id, status)
+            await replyProjectInvitation(notification_id, status, io)
             break
         default:
             break
     }
 }
 
-export async function replyFriendRequest(notification_id, status) {
+export async function replyFriendRequest(notification_id, status, io) {
     if (status === 'accepted') {
         const notification = await NotificationFeed.findOne({_id: notification_id})
         const {user_id, source_id} = notification
@@ -117,26 +117,52 @@ export async function replyFriendRequest(notification_id, status) {
         notification.metadata.status = status
         notification.read = true
         notification.markModified('metadata')
+
+        const user = await User.findById(user_id).select('name')
+
+        const receiverSocketId = Object.keys(userSockets).find(
+            (socketId) => userSockets[socketId] === source_id.toString()
+        )
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit('confirm_add_friend', user.name)
+        }
+
         await notification.save()
     } else if (status === 'rejected') {
         await NotificationFeed.deleteOne({_id: notification_id})
     }
 }
 
-export async function replyProjectInvitation(notification_id, status) {
-    const notification = await NotificationFeed.findById({_id: notification_id})
-    const {user_id, metadata} = notification
-    const user = await User.findById(user_id).select('name avatar _id')
+export async function replyProjectInvitation(notification_id, status, io) {
     if (status === 'accepted') {
-        const project = await Project.findById(metadata.project_id)
-        project.metadata.members.push({_id: user_id, name: user.name, avatar: user.avatar, role: 'talent'})
-        await project.save()
-    }
+        const notification = await NotificationFeed.findById({_id: notification_id})
+        const {user_id, source_id, metadata} = notification
+        const user = await User.findById(user_id).select('name avatar _id')
+        if (status === 'accepted') {
+            const project = await Project.findById(metadata.project_id)
+            project.metadata.members.push({
+                _id: user_id,
+                name: user.name,
+                avatar: user.avatar,
+                role: 'talent',
+            })
+            await project.save()
+        }
 
-    notification.metadata.status = status
-    notification.read = true
-    notification.markModified('metadata')
-    await notification.save()
+        notification.metadata.status = status
+        notification.read = true
+        notification.markModified('metadata')
+        await notification.save()
+
+        const userSocketId = Object.keys(userSockets).find(
+            (socketId) => userSockets[socketId] === source_id.toString()
+        )
+        if (userSocketId) {
+            io.to(userSocketId).emit('confirm_project_invitation', user.name)
+        }
+    } else if (status === 'rejected') {
+        await NotificationFeed.delete({_id: notification_id})
+    }
 }
 
 export async function requestAddFriend(user, requestBody, io) {
@@ -157,7 +183,7 @@ export async function requestAddFriend(user, requestBody, io) {
     await notification.save()
     const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === user_id)
 
-    io.to(userSocketId).emit('new_notification')
+    io.to(userSocketId).emit('new_notification', notification)
 }
 
 export async function getTotalFriends(user) {
@@ -183,7 +209,7 @@ export async function projectInvitation(user, requestBody, io) {
     await notification.save()
     const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === user_id)
 
-    io.to(userSocketId).emit('new_notification')
+    io.to(userSocketId).emit('new_notification', notification)
 }
 
 // Get request add friend

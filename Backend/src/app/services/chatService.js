@@ -5,55 +5,6 @@ export async function getChatList(user, input_value) {
     if (!input_value || input_value === 'undefined' || input_value === null) {
         input_value = ''
     }
-    // const chatList = await Friend.aggregate([
-    //     {
-    //         $match: {
-    //             user_id: user._id,
-    //         },
-    //     },
-    //     {
-    //         $lookup: {
-    //             from: 'users',
-    //             localField: 'friend_id',
-    //             foreignField: '_id',
-    //             as: 'friend',
-    //             pipeline: [
-    //                 {
-    //                     $match: {
-    //                         name: {$regex: input_value, $options: 'i'},
-    //                     },
-    //                 },
-    //                 {
-    //                     $project: {
-    //                         name: 1,
-    //                         avatar: 1,
-    //                     },
-    //                 },
-    //             ],
-    //         },
-    //     },
-    //     {
-    //         $unwind: '$friend',
-    //     },
-    //     {
-    //         $project: {
-    //             // _id: 0,
-    //             user_id: '$friend._id',
-    //             user_name: '$friend.name',
-    //             user_avatar: {
-    //                 $cond: {
-    //                     if: {$eq: [{$ifNull: ['$friend.avatar', '']}, '']},
-    //                     then: '$friend.avatar',
-    //                     else: {$concat: [LINK_STATIC_URL, '$friend.avatar']},
-    //                 },
-    //             },
-    //         },
-    //     },
-    //     {
-    //         $sort: {last_message_at: -1},
-    //     },
-    // ])
-
     const chatList = await Conversation.aggregate([
         {
             $match: {
