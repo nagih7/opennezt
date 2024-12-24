@@ -7,9 +7,13 @@ import { CheckOutlined, CloseOutlined } from "@mui/icons-material";
 import store from "states/configureStore";
 import { replyNotification, getNotifications } from "api/notification";
 import { useNavigate } from "react-router-dom";
+import { getProjects } from "api/project";
+import { getChatList } from "api/chat";
 
 function PopoverNotification() {
-	const { notifications } = useSelector((state) => state.notification);
+	const { notifications, loadingReplyNotification } = useSelector(
+		(state) => state.notification
+	);
 
 	const navigate = useNavigate();
 
@@ -17,7 +21,21 @@ function PopoverNotification() {
 		await store.dispatch(
 			replyNotification({ notification_id, type, status })
 		);
-		store.dispatch(getNotifications());
+		if (!loadingReplyNotification) {
+			await store.dispatch(getNotifications());
+
+			// DISPATCH ACTIONS BASED ON NOTIFICATION TYPE
+			switch (type) {
+				case "project_invitation":
+					store.dispatch(getProjects());
+					break;
+				case "friend_request":
+					store.dispatch(getChatList());
+					break;
+				default:
+					break;
+			}
+		}
 	};
 
 	const handleNavigateToNotification = () => {

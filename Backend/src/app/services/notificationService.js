@@ -88,6 +88,7 @@ export async function replyNotification(requestBody, io) {
 
 export async function replyFriendRequest(notification_id, status, io) {
     if (status === 'accepted') {
+        // THAY ĐỔI TRẠNG THÁI THÔNG BÁO (TYPE)
         const notification = await NotificationFeed.findOne({_id: notification_id})
         const {user_id, source_id} = notification
         const friend = await Friend.findOne({user_id: user_id, friend_id: source_id})
@@ -95,7 +96,7 @@ export async function replyFriendRequest(notification_id, status, io) {
             await Friend.create({user_id: user_id, friend_id: source_id})
             await Friend.create({user_id: source_id, friend_id: user_id})
         }
-
+        // TẠO CONVERSATION MỚI
         const conversation = new Conversation({
             members: [
                 {
@@ -135,6 +136,7 @@ export async function replyFriendRequest(notification_id, status, io) {
 
 export async function replyProjectInvitation(notification_id, status, io) {
     if (status === 'accepted') {
+        // THAY ĐỔI TRẠNG THÁI THÔNG BÁO (TYPE)
         const notification = await NotificationFeed.findById({_id: notification_id})
         const {user_id, source_id, metadata} = notification
         const user = await User.findById(user_id).select('name avatar _id')
@@ -148,12 +150,48 @@ export async function replyProjectInvitation(notification_id, status, io) {
             })
             await project.save()
         }
-
         notification.metadata.status = status
         notification.read = true
         notification.markModified('metadata')
         await notification.save()
 
+        // TẠO CONVERSATION MỚI HOẶC CẬP NHẬT CONVERSATION CŨ
+        const conversation = await Conversation.findOne({
+            'metadata.data.project_id': metadata.project_id,
+            'metadata.type': 'group',
+        })
+        if (conversation) {
+            // THÊM THÀNH VIÊN VÀO CONVERSATION
+            conversation.members.push({
+                user_id: user_id,
+                role: 'member',
+            })
+            await conversation.save()
+        } else {
+            // TẠO CONVERSATION MỚI
+            const newConversation = new Conversation({
+                members: [
+                    {
+                        user_id: source_id,
+                        role: 'admin',
+                    },
+                    {
+                        user_id: user_id,
+                        role: 'member',
+                    },
+                ],
+                metadata: {
+                    type: 'group',
+                    data: {
+                        project_id: metadata.project_id,
+                    },
+                },
+            })
+
+            await newConversation.save()
+        }
+
+        // GỬI THÔNG BÁO ĐẾN USER
         const userSocketId = Object.keys(userSockets).find(
             (socketId) => userSockets[socketId] === source_id.toString()
         )

@@ -47,6 +47,10 @@ const Conversation = createModel('Conversation', 'conversations', {
     metadata: {
         type: Metadata,
         required: true,
+        default: {
+            type: 'direct',
+            data: {},
+        },
     },
 })
 

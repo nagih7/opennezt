@@ -54,6 +54,7 @@ export const AppProvider = ({ children }) => {
 		};
 	}, [socket, dispatch]);
 
+	// CONFIRM ADD FRIEND
 	useEffect(() => {
 		socket.on("confirm_add_friend", (name) => {
 			message.success({
@@ -71,6 +72,7 @@ export const AppProvider = ({ children }) => {
 		};
 	}, [socket, dispatch]);
 
+	// CONFIRM PROJECT INVITATION
 	useEffect(() => {
 		socket.on("confirm_project_invitation", (name) => {
 			message.success({
@@ -82,6 +84,7 @@ export const AppProvider = ({ children }) => {
 				duration: 10,
 			});
 			dispatch(getProjects());
+			dispatch(getChatList());
 		});
 
 		return () => {
