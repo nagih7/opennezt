@@ -30,6 +30,7 @@ export const AppProvider = ({ children }) => {
 
 	useEffect(() => {
 		socket.on("new_notification", () => {
+			console.log("new notification");
 			dispatch(getNotifications());
 		});
 	}, [socket, dispatch]);

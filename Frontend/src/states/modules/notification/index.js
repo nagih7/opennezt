@@ -54,14 +54,20 @@ const notificationSlice = createSlice({
 			...state,
 			loadingReplyNotification: true,
 		}),
-		startRequestReplyNotificationSuccess: (state) => ({
-			...state,
-			loadingReplyNotification: false,
-		}),
-		startRequestReplyNotificationFail: (state) => ({
-			...state,
-			loadingReplyNotification: false,
-		}),
+		startRequestReplyNotificationSuccess: (state) => {
+			message.success("Reply notification successfully");
+			return {
+				...state,
+				loadingReplyNotification: false,
+			};
+		},
+		startRequestReplyNotificationFail: (state) => {
+			message.error("Reply notification failed");
+			return {
+				...state,
+				loadingReplyNotification: false,
+			};
+		},
 		startRequestMessage: (state) => ({
 			...state,
 			loadingSendRequestAddFriend: true,

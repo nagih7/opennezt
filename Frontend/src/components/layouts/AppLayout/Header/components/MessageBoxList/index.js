@@ -13,9 +13,9 @@ const MessageBoxList = ({ chatBoxList, setChatBoxList }) => {
 		(state) => state.chat
 	);
 	if (chatHistory && !loadingGetChatHistory) {
-		chatBoxList.map((chatBox) => {
-			if (chatBox.user_id === chatHistory.receiver_id) {
-				chatBox.messages = chatHistory.messages;
+		chatBoxList.map((conversation) => {
+			if (conversation.user_id === chatHistory.receiver_id) {
+				conversation.messages = chatHistory.messages;
 			}
 		});
 	}

@@ -97,13 +97,13 @@ const Header = () => {
 		}
 	};
 
-	const handleSetChatBoxList = useCallback((chatBox) => {
+	const handleSetChatBoxList = useCallback((conversation) => {
 		setChatBoxList((prev) => {
-			const index = prev.findIndex((chat) => chat._id === chatBox._id);
+			const index = prev.findIndex((chat) => chat._id === conversation._id);
 			if (index !== -1) {
 				return prev;
 			}
-			return [...prev, { ...chatBox, messages: [] }];
+			return [...prev, { ...conversation, messages: [] }];
 		});
 	}, []);
 

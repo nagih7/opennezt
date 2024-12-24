@@ -72,6 +72,7 @@ $backgroundHoverMain: rgba(108, 95, 252, 0.1);
 	}
 
 	.chatListWrap {
+		min-height: 10rem;
 		max-height: 400px;
 		overflow-y: auto;
 		background-color: $colorLight1;
@@ -145,6 +146,19 @@ $backgroundHoverMain: rgba(108, 95, 252, 0.1);
 		&::-webkit-scrollbar-thumb {
 			background: $secondaryAccent;
 			border-radius: 10px;
+		}
+
+		.noResult {
+			color: #1f2937;
+
+			.notFoundWrap {
+				h4 {
+					font-size: 16px;
+					font-weight: 600;
+					color: $textColorDark;
+					margin-bottom: 10px;
+				}
+			}
 		}
 	}
 

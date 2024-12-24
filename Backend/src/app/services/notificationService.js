@@ -1,4 +1,4 @@
-import {NotificationFeed, Friend, ObjectId, Project, User} from '@/models'
+import {NotificationFeed, Friend, ObjectId, Project, User, Conversation} from '@/models'
 import {userSockets} from '@/routes/socket'
 
 export async function filter(user, {q, page, per_page, order}) {
@@ -87,21 +87,40 @@ export async function replyNotification(requestBody) {
 }
 
 export async function replyFriendRequest(notification_id, status) {
-    const notification = await NotificationFeed.findOne({_id: notification_id})
-    const {user_id, source_id} = notification
-
     if (status === 'accepted') {
+        const notification = await NotificationFeed.findOne({_id: notification_id})
+        const {user_id, source_id} = notification
         const friend = await Friend.findOne({user_id: user_id, friend_id: source_id})
         if (!friend) {
             await Friend.create({user_id: user_id, friend_id: source_id})
             await Friend.create({user_id: source_id, friend_id: user_id})
         }
-    }
 
-    notification.metadata.status = status
-    notification.read = true
-    notification.markModified('metadata')
-    await notification.save()
+        const conversation = new Conversation({
+            members: [
+                {
+                    user_id: user_id,
+                    role: 'user',
+                },
+                {
+                    user_id: source_id,
+                    role: 'user',
+                },
+            ],
+            metadata: {
+                type: 'direct',
+                data: {},
+            },
+        })
+
+        await conversation.save()
+        notification.metadata.status = status
+        notification.read = true
+        notification.markModified('metadata')
+        await notification.save()
+    } else if (status === 'rejected') {
+        await NotificationFeed.deleteOne({_id: notification_id})
+    }
 }
 
 export async function replyProjectInvitation(notification_id, status) {

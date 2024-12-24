@@ -4,6 +4,7 @@ import styles from "./styles.module.scss";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
 import { getChatList } from "api/chat";
 import store from "states/configureStore";
+import NotFound from "components/UI/NotFound";
 
 const ChatList = ({ handleSetChatBoxList, setIsShowChatList }) => {
 	const { chatList } = useSelector((state) => state.chat);
@@ -12,18 +13,10 @@ const ChatList = ({ handleSetChatBoxList, setIsShowChatList }) => {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [debouncedTerm, setDebouncedTerm] = useState("");
 
-	const openChatBox = async (user) => {
-		await handleSetChatBoxList(user);
+	const openChatBox = async (conversation) => {
+		await handleSetChatBoxList(conversation);
 		setIsShowChatList(false);
 	};
-
-	// minimize chat box
-	// const restoreMinimizedChat = (chat) => {
-	// 	setMinimizedChats(
-	// 		minimizedChats.filter((c) => c.username !== chat.username)
-	// 	);
-	// 	openChatBox(chat);
-	// };
 
 	useEffect(() => {
 		const handler = setTimeout(() => {
@@ -57,28 +50,36 @@ const ChatList = ({ handleSetChatBoxList, setIsShowChatList }) => {
 			</div>
 			<div className={styles.chatListWrap}>
 				{chatList.length > 0 ? (
-					chatList.map((user, index) => (
-						<div
-							className={styles.chatItem}
-							key={index}
-							onClick={() => openChatBox(user)}>
-							<div className={styles.avatar}>
-								<img
-									src={
-										user.user_avatar
-											? user.user_avatar
-											: AvatarDefault
-									}
-									alt="avatar"
-								/>
-							</div>
-							<div className={styles.chatContent}>
-								<div className={styles.chatName}>{user.user_name}</div>
-							</div>
-						</div>
-					))
+					chatList.map((conversation, index) => {
+						console.log(conversation);
+						if (conversation.metadata.type === "direct")
+							return (
+								<div
+									className={styles.chatItem}
+									key={index}
+									onClick={() => openChatBox(conversation)}>
+									<div className={styles.avatar}>
+										<img
+											src={
+												conversation.members.avatar
+													? conversation.members.avatar
+													: AvatarDefault
+											}
+											alt="avatar"
+										/>
+									</div>
+									<div className={styles.chatContent}>
+										<div className={styles.chatName}>
+											{conversation.members.name}
+										</div>
+									</div>
+								</div>
+							);
+					})
 				) : (
-					<div className={styles.noResult}>No chats found</div>
+					<div className={styles.noResult}>
+						<NotFound content="Not found" size="100" />
+					</div>
 				)}
 			</div>
 			{/* <div className={styles.miniChatBoxWrap}>
