@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import styles from "./styles.module.scss";
 import { useSelector } from "react-redux";
 import { Avatar } from "antd";
+import AvatarDefault from "assets/images/default/AvatarDefault.png";
 
 const MessageBoxContent = ({ messages, conversation }) => {
 	const chatBoxRef = useRef(null);

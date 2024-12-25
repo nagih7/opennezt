@@ -26,7 +26,7 @@ const ProfileCard = (props) => {
 							{authUser.background ? (
 								<LazyLoadImage
 									alt="User Background"
-									src={authUser.name}
+									src={authUser.background}
 								/>
 							) : (
 								<LazyLoadImage

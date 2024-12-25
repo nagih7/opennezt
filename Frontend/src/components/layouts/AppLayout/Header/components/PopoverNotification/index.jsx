@@ -28,6 +28,7 @@ function PopoverNotification() {
 			switch (type) {
 				case "project_invitation":
 					store.dispatch(getProjects());
+					store.dispatch(getChatList());
 					break;
 				case "friend_request":
 					store.dispatch(getChatList());
