@@ -102,10 +102,13 @@ const notificationSlice = createSlice({
 			...state,
 			loadingProjectInvitation: true,
 		}),
-		startRequestProjectInvitationSuccess: (state) => ({
-			...state,
-			loadingProjectInvitation: false,
-		}),
+		startRequestProjectInvitationSuccess: (state) => {
+			message.success("Project invitation sent successfully");
+			return {
+				...state,
+				loadingProjectInvitation: false,
+			};
+		},
 		startRequestProjectInvitationFail: (state) => ({
 			...state,
 			loadingProjectInvitation: false,

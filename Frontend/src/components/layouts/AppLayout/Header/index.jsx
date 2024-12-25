@@ -151,11 +151,7 @@ const Header = () => {
 							<div className={styles.avatarWrap}>
 								<img
 									src={
-										authUser.avatar ? (
-											authUser.avatar
-										) : (
-											<AvatarDefault />
-										)
+										authUser.avatar ? authUser.avatar : AvatarDefault
 									}
 									alt=""
 								/>
