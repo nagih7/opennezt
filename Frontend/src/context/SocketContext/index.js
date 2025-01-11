@@ -20,16 +20,14 @@ export const SocketProvider = ({ children }) => {
 	useEffect(() => {
 		// Thiết lập kết nối socket
 		const socketInstance = io(SOCKET_SERVER_URL);
-
 		// Gửi sự kiện `login` khi kết nối được thiết lập
 		socketInstance.on("connect", () => {
 			console.log("Connected to socket server...");
-
 			// Lấy token từ localStorage (hoặc từ bất kỳ nguồn nào bạn lưu trữ token)
-			const token = localStorage.getItem("token");
-			if (token) {
-				socketInstance.emit("login", token); // Gửi sự kiện `login`
-			}
+			// const token = localStorage.getItem("token");
+			// if (token) {
+			// 	socketInstance.emit("login", token); // Gửi sự kiện `login`
+			// }
 		});
 
 		socketInstance.on("disconnect", () => {

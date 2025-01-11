@@ -13,7 +13,6 @@ const socketRoutes = (io) => {
         }),
         notificationRouter(socket)
         chatRouter(socket, io)
-
         socket.on('disconnect', () => {
             const user_id = userSockets[socket.id]
             if (user_id) {
