@@ -23,39 +23,25 @@ const ProfileCard = (props) => {
 				<div className={styles.bannerContainer}>
 					<div className={styles.banner}>
 						<div className={styles.background}>
-							{authUser.background ? (
-								<LazyLoadImage
-									alt="User Background"
-									src={authUser.background}
-								/>
-							) : (
-								<LazyLoadImage
-									alt="User Background"
-									src={BackgroundDefault}
-								/>
-							)}
+							<LazyLoadImage
+								alt={authUser.name}
+								src={authUser.background || BackgroundDefault}
+							/>
 						</div>
 					</div>
 
 					<div className={styles.userInfoWrap}>
 						<div className={styles.userInfo}>
 							<div className={styles.avatar}>
-								{authUser.avatar ? (
-									<LazyLoadImage
-										alt="User Avatar"
-										src={authUser.avatar}
-									/>
-								) : (
-									<LazyLoadImage
-										alt="User Avatar"
-										src={AvatarDefault}
-									/>
-								)}
+								<LazyLoadImage
+									alt={authUser.name}
+									src={authUser.avatar || AvatarDefault}
+								/>
 							</div>
 							<h1>
 								{authUser.name}
 								<LazyLoadImage
-									alt="Verify"
+									alt="icon-verify"
 									src={verify}
 									className={styles.verifyIcon}
 								/>

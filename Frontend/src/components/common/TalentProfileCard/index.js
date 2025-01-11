@@ -32,33 +32,25 @@ const TalentProfileCard = ({ talent }) => {
 			<div className={styles.bannerContainer}>
 				<div className={styles.banner}>
 					<div className={styles.background}>
-						{talent.background ? (
-							<LazyLoadImage
-								alt="User Background"
-								src={talent.background}
-							/>
-						) : (
-							<LazyLoadImage
-								alt="User Background"
-								src={BackgroundDefault}
-							/>
-						)}
+						<LazyLoadImage
+							alt={authUser.name}
+							src={talent.background || BackgroundDefault}
+						/>
 					</div>
 				</div>
 
 				<div className={styles.userInfoWrap}>
 					<div className={styles.userInfo}>
 						<div className={styles.avatar}>
-							{talent.avatar ? (
-								<LazyLoadImage alt="User Avatar" src={talent.avatar} />
-							) : (
-								<LazyLoadImage alt="User Avatar" src={AvatarDefault} />
-							)}
+							<LazyLoadImage
+								alt={authUser.name}
+								src={talent.avatar || AvatarDefault}
+							/>
 						</div>
 						<h1>
 							{talent.name}
 							<LazyLoadImage
-								alt="Verify"
+								alt="icon-verify"
 								src={verify}
 								className={styles.verifyIcon}
 							/>

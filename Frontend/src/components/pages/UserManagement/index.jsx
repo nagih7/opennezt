@@ -29,11 +29,7 @@ function UserManagement() {
 			render: (text, record) => (
 				<div className={styles.nameWrap}>
 					<div className={styles.imgWrap}>
-						{record.avatar ? (
-							<img src={record.avatar} alt="" />
-						) : (
-							<img src={AvatarDefault} alt="" />
-						)}
+						<img src={record.avatar || AvatarDefault} alt="" />
 					</div>
 					<span>{record.name}</span>
 				</div>

@@ -97,11 +97,10 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 						<div className={styles.avatar}>
 							<img
 								src={
-									converse.conversation.members[0].avatar
-										? converse.conversation.members[0].avatar
-										: AvatarDefault
+									converse.conversation.members[0].avatar ||
+									AvatarDefault
 								}
-								alt="avatar"
+								alt={converse.conversation.members[0].name}
 							/>
 						</div>
 						<span>{converse.conversation.members[0].name}</span>
@@ -122,12 +121,8 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 								{converse.conversation.members.map((member, index) => (
 									<Tooltip title={member.name} key={member._id}>
 										<Avatar
-											src={
-												member.avatar
-													? member.avatar
-													: AvatarDefault
-											}
-											alt="avatar"
+											src={member.avatar || AvatarDefault}
+											alt={member.name}
 										/>
 									</Tooltip>
 								))}

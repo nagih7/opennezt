@@ -54,11 +54,7 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 			<div className={styles.modalContent}>
 				<div className={styles.projectHeader}>
 					<img
-						src={
-							projectDetails.background
-								? projectDetails.background
-								: BackgroundDefault
-						}
+						src={projectDetails.background || BackgroundDefault}
 						alt={projectDetails.name}
 						className={styles.headerImage}
 					/>

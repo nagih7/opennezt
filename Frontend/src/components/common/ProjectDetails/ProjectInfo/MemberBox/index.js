@@ -8,7 +8,7 @@ const MemberBox = ({ member }) => {
 			<div className={styles.memberBoxAvatar}>
 				<img
 					src={member.avatar ? member.avatar : AvatarDefault}
-					alt="Member Avatar"
+					alt={member.name}
 				/>
 			</div>
 			<span className={styles.memberBoxName}>{member.name}</span>

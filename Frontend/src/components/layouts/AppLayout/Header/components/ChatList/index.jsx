@@ -63,11 +63,10 @@ const ChatList = () => {
 										<div className={styles.avatar}>
 											<img
 												src={
-													conversation.members[0].avatar
-														? conversation.members[0].avatar
-														: AvatarDefault
+													conversation.members[0].avatar ||
+													AvatarDefault
 												}
-												alt="avatar"
+												alt={conversation.members[0].name}
 											/>
 										</div>
 										<div className={styles.chatContent}>
@@ -107,11 +106,10 @@ const ChatList = () => {
 															key={member._id}>
 															<Avatar
 																src={
-																	member.avatar
-																		? member.avatar
-																		: AvatarDefault
+																	member.avatar ||
+																	AvatarDefault
 																}
-																alt="avatar"
+																alt={member.name}
 															/>
 														</Tooltip>
 													)

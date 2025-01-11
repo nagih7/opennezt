@@ -56,7 +56,7 @@ const ProjectBox = ({ project, inviteeId }) => {
 		<div className={styles.projectBoxWrap}>
 			<div className={styles.projectBackground}>
 				<img
-					src={project.background ? project.background : BackgroundDefault}
+					src={project.background || BackgroundDefault}
 					alt={project.title}
 				/>
 			</div>

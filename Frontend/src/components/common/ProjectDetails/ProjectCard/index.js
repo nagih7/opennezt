@@ -30,11 +30,7 @@ const ProjectCard = () => {
 	return (
 		<div className={styles.projectCardWrap}>
 			<img
-				src={
-					projectDetails.background
-						? projectDetails.background
-						: BackgroundDefault
-				}
+				src={projectDetails.background || BackgroundDefault}
 				alt={projectDetails.name}
 				className={styles.headerImage}
 			/>
