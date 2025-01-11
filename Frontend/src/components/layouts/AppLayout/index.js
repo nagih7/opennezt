@@ -1,22 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./styles.module.scss";
 import SideBar from "./SiderBar";
 import Header from "./Header";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import LazyLoading from "components/UI/LazyLoading";
-import { AppProvider } from "context/AppContext";
+import { RealtimeProvider } from "context/RealtimeContext";
+import { useNavigate } from "react-router-dom";
+import { setLocation } from "states/modules/app";
 // import { SkeletonTheme } from "react-loading-skeleton";
 
 function AppLayout(props) {
 	const { children } = props;
+
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
 	const isShowSideBar = useSelector((state) => state.app.isShowSideBar);
 	const isThemeLight = useSelector((state) => state.app.isThemeLight);
+	const location = useSelector((state) => state.app.location);
 
-	// const titlePage = useSelector((state) => state.app.title);
+	useEffect(() => {
+		if (location.pathName !== location.prevPathName) {
+			dispatch(
+				setLocation({
+					pathName: location.pathName,
+					payload: location.payload,
+					prevPathName: location.pathName,
+				})
+			);
+			navigate(location.pathName);
+		}
+	}, [location, navigate, dispatch]);
 
 	return (
-		<AppProvider>
-			{/* <SkeletonTheme baseColor="#ddd" highlightColor="#999"> */}
+		<RealtimeProvider>
 			<div className={`${styles.boxMainLayout}`}>
 				<div className={styles.mainLayoutWrap}>
 					<SideBar
@@ -37,8 +54,7 @@ function AppLayout(props) {
 					</div>
 				</div>
 			</div>
-			{/* </SkeletonTheme> */}
-		</AppProvider>
+		</RealtimeProvider>
 	);
 }
 

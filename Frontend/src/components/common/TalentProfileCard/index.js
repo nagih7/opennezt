@@ -33,7 +33,7 @@ const TalentProfileCard = ({ talent }) => {
 				<div className={styles.banner}>
 					<div className={styles.background}>
 						<LazyLoadImage
-							alt={authUser.name}
+							alt={talent.name}
 							src={talent.background || BackgroundDefault}
 						/>
 					</div>
@@ -43,7 +43,7 @@ const TalentProfileCard = ({ talent }) => {
 					<div className={styles.userInfo}>
 						<div className={styles.avatar}>
 							<LazyLoadImage
-								alt={authUser.name}
+								alt={talent.name}
 								src={talent.avatar || AvatarDefault}
 							/>
 						</div>

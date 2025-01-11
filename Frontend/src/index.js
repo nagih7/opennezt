@@ -7,7 +7,7 @@ import router from "./router/route";
 import { Provider } from "react-redux";
 import store from "./states/configureStore";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { SocketProvider } from "context/SocketContext";
+import { RootProvider } from "context/RootContext";
 import Mobile_Responsive from "components/common/Mobile_Responsive";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -18,13 +18,13 @@ const isMobileDevice = () => {
 
 root.render(
 	<Provider store={store}>
-		<SocketProvider>
+		<RootProvider>
 			{isMobileDevice() ? (
 				<Mobile_Responsive />
 			) : (
 				<RouterProvider router={router} />
 			)}
-		</SocketProvider>
+		</RootProvider>
 	</Provider>
 );
 
