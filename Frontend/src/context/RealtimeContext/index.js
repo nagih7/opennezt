@@ -12,9 +12,10 @@ export const RealtimeProvider = ({ children }) => {
 	const dispatch = useDispatch();
 	const socket = useSocket();
 
-	// NEW MESSAGE
-	useEffect(() => {
-		socket.on("new_notification", (notification) => {
+	// Handle new websocket events
+	const handleSocketEvents = () => {
+		// Handle new notification
+		const handleNewNotification = (notification) => {
 			message.success({
 				content: (
 					<span>
@@ -32,14 +33,12 @@ export const RealtimeProvider = ({ children }) => {
 				duration: 10,
 			});
 			dispatch(getNotifications());
-		});
-		return () => {
-			socket.off("new_notification");
 		};
-	}, [socket, dispatch]);
 
-	// CONFIRM ADD FRIEND
-	useEffect(() => {
+		// NEW PROJECT INVITATION
+		socket.on("new_notification", handleNewNotification);
+
+		// CONFIRM ADD FRIEND
 		socket.on("confirm_add_friend", (name) => {
 			message.success({
 				content: (
@@ -51,13 +50,8 @@ export const RealtimeProvider = ({ children }) => {
 			});
 			dispatch(getChatList());
 		});
-		return () => {
-			socket.off("confirm_add_friend");
-		};
-	}, [socket, dispatch]);
 
-	// CONFIRM PROJECT INVITATION
-	useEffect(() => {
+		// CONFIRM PROJECT INVITATION
 		socket.on("confirm_project_invitation", (name) => {
 			message.success({
 				content: (
@@ -70,10 +64,21 @@ export const RealtimeProvider = ({ children }) => {
 			dispatch(getProjects());
 			dispatch(getChatList());
 		});
+	};
 
+	useEffect(() => {
+		if (!socket) return;
+
+		// Handle new websocket events
+		handleSocketEvents();
+
+		// Clean up
 		return () => {
+			socket.off("new_notification");
+			socket.off("confirm_add_friend");
 			socket.off("confirm_project_invitation");
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket, dispatch]);
 
 	return <RealtimeContext.Provider>{children}</RealtimeContext.Provider>;

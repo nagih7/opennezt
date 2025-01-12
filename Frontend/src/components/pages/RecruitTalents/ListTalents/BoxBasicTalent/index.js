@@ -4,7 +4,7 @@ import AvatarDefault from "assets/images/default/AvatarDefault.png";
 import { Button, Space, Tag } from "antd";
 import InfoIcon from "@mui/icons-material/Info";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { getRequestAddFriend, sendRequestAddFriend } from "api/notification";
+import { sendRequestAddFriend } from "api/notification";
 import { useDispatch } from "react-redux";
 
 const BoxBasicTalent = ({ talentInfo, handleGetDetailTalent }) => {
@@ -26,6 +26,10 @@ const BoxBasicTalent = ({ talentInfo, handleGetDetailTalent }) => {
 				<img
 					src={talent.user_data.avatar || AvatarDefault}
 					alt={talent.user_data.name}
+					onError={(e) => {
+						e.target.onerror = null;
+						e.target.src = AvatarDefault;
+					}}
 				/>
 			</div>
 			<div className={styles.boxBasicTalentContent}>

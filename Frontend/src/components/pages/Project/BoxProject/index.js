@@ -7,9 +7,13 @@ const BoxProject = ({ project, openModalDetails, usedTo }) => {
 	return (
 		<div
 			className={styles.boxProjectWrap}
-			onClick={() => openModalDetails(project._id)}>
+			onClick={() => openModalDetails(project._id, project.user_id)}>
 			<LazyLoadImage
 				src={project.background || BackgroundDefault}
+				onError={(e) => {
+					e.target.onerror = null;
+					e.target.src = BackgroundDefault;
+				}}
 				alt={project.name}
 				className={styles.backgroundProject}
 			/>

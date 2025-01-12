@@ -152,6 +152,10 @@ const Header = () => {
 								<img
 									src={authUser.avatar || AvatarDefault}
 									alt={authUser.name}
+									onError={(e) => {
+										e.target.onerror = null;
+										e.target.src = AvatarDefault;
+									}}
 								/>
 							</div>
 						</div>

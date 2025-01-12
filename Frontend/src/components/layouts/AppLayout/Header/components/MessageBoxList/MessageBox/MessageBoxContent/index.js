@@ -59,6 +59,10 @@ const MessageBoxContent = ({ messages, conversation }) => {
 																member.avatar || AvatarDefault
 															}
 															alt={member.name}
+															onError={(e) => {
+																e.target.onerror = null;
+																e.target.src = AvatarDefault;
+															}}
 														/>
 													</div>
 												);

@@ -26,6 +26,10 @@ const ProfileCard = (props) => {
 							<LazyLoadImage
 								alt={authUser.name}
 								src={authUser.background || BackgroundDefault}
+								onError={(e) => {
+									e.target.onerror = null;
+									e.target.src = BackgroundDefault;
+								}}
 							/>
 						</div>
 					</div>
@@ -36,6 +40,10 @@ const ProfileCard = (props) => {
 								<LazyLoadImage
 									alt={authUser.name}
 									src={authUser.avatar || AvatarDefault}
+									onError={(e) => {
+										e.target.onerror = null;
+										e.target.src = AvatarDefault;
+									}}
 								/>
 							</div>
 							<h1>

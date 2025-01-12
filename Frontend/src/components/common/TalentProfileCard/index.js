@@ -14,6 +14,8 @@ import {
 } from "../../../api/notification";
 
 const TalentProfileCard = ({ talent }) => {
+	const { authUser } = useSelector((state) => state.auth);
+
 	const { requestAddFriend, loadingSendRequestAddFriend } = useSelector(
 		(state) => state.notification
 	);
@@ -35,6 +37,10 @@ const TalentProfileCard = ({ talent }) => {
 						<LazyLoadImage
 							alt={talent.name}
 							src={talent.background || BackgroundDefault}
+							onError={(e) => {
+								e.target.onerror = null;
+								e.target.src = BackgroundDefault;
+							}}
 						/>
 					</div>
 				</div>
@@ -45,6 +51,10 @@ const TalentProfileCard = ({ talent }) => {
 							<LazyLoadImage
 								alt={talent.name}
 								src={talent.avatar || AvatarDefault}
+								onError={(e) => {
+									e.target.onerror = null;
+									e.target.src = AvatarDefault;
+								}}
 							/>
 						</div>
 						<h1>
@@ -74,23 +84,25 @@ const TalentProfileCard = ({ talent }) => {
 							LinkedIn Profile
 						</a>
 					</div>
-					<div className={styles.userActions}>
-						<Button
-							style={{
-								borderRadius: "0.5rem",
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "center",
-								gap: "0.5rem",
-							}}
-							disabled={requestAddFriend}
-							type="primary"
-							loading={loadingSendRequestAddFriend}
-							onClick={() => handleRequestAddFriend(talent._id)}>
-							<PersonAddIcon />
-							Add friend
-						</Button>
-					</div>
+					{authUser._id !== talent._id && (
+						<div className={styles.userActions}>
+							<Button
+								style={{
+									borderRadius: "0.5rem",
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
+									gap: "0.5rem",
+								}}
+								disabled={requestAddFriend}
+								type="primary"
+								loading={loadingSendRequestAddFriend}
+								onClick={() => handleRequestAddFriend(talent._id)}>
+								<PersonAddIcon />
+								Add friend
+							</Button>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

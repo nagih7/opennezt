@@ -101,6 +101,10 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 									AvatarDefault
 								}
 								alt={converse.conversation.members[0].name}
+								onError={(e) => {
+									e.target.onerror = null;
+									e.target.src = AvatarDefault;
+								}}
 							/>
 						</div>
 						<span>{converse.conversation.members[0].name}</span>

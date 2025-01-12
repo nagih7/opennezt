@@ -1,29 +1,24 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
-import { getTalentDetails } from "api/talent";
-import { useDispatch } from "react-redux";
 
-const MemberBox = ({ member }) => {
-	const dispatch = useDispatch();
-
-	const showMemberDetails = (member) => {
-		console.log("member", member);
-		dispatch(getTalentDetails(member._id));
-	};
-
+const MemberBox = ({ member, openModalMemberDetails }) => {
 	return (
 		<div className={styles.memberBoxWrap}>
 			<div className={styles.memberBoxAvatar}>
 				<img
 					src={member.avatar ? member.avatar : AvatarDefault}
+					onError={(e) => {
+						e.target.onerror = null;
+						e.target.src = AvatarDefault;
+					}}
 					alt={member.name}
-					onClick={() => showMemberDetails(member)}
+					onClick={() => openModalMemberDetails(member)}
 				/>
 			</div>
 			<span
 				className={styles.memberBoxName}
-				onClick={() => showMemberDetails(member)}>
+				onClick={() => openModalMemberDetails(member)}>
 				{member.name}
 			</span>
 		</div>

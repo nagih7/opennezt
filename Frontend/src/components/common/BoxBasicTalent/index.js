@@ -10,6 +10,10 @@ const BoxBasicTalent = ({ talent, handleGetDetailTalent }) => {
 				<img
 					src={talent.user_data.avatar || AvatarDefault}
 					alt={talent.user_data.name}
+					onError={(e) => {
+						e.target.onerror = null;
+						e.target.src = AvatarDefault;
+					}}
 				/>
 			</div>
 			<div className={styles.boxBasicTalentContent}>

@@ -30,9 +30,13 @@ const ProjectCard = () => {
 	return (
 		<div className={styles.projectCardWrap}>
 			<img
+				className={styles.headerImage}
 				src={projectDetails.background || BackgroundDefault}
 				alt={projectDetails.name}
-				className={styles.headerImage}
+				onError={(e) => {
+					e.target.onerror = null;
+					e.target.src = BackgroundDefault;
+				}}
 			/>
 			<div className={styles.buttonChangeBackground}>
 				<Upload {...propsBackground}>

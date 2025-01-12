@@ -77,11 +77,7 @@ function Profile() {
 					<div className={`${styles.profileItem}`}>
 						<div className={styles.informationWrap}>
 							<div className={styles.backgroundWrap}>
-								{background ? (
-									<img src={background}></img>
-								) : (
-									<img src={BackgroundDefault} />
-								)}
+								<img src={background || BackgroundDefault} />
 								<div className={styles.buttonChangeBackground}>
 									<Upload {...propsBackground}>
 										<CameraAltIcon fontSize="2rem" />
@@ -98,17 +94,18 @@ function Profile() {
 											<CameraAltIcon fontSize="12px" />
 										</Upload>
 									</div>
-									{avatar ? (
-										<img src={avatar}></img>
-									) : (
-										<img src={AvatarDefault} />
-									)}
+									<img
+										src={avatar || AvatarDefault}
+										onError={(e) => {
+											e.target.onerror = null;
+											e.target.src = AvatarDefault;
+										}}
+										alt={authUser.name}
+									/>
 								</div>
 								<div className={styles.infoWrap}>
 									<div className={styles.name}>{authUser.name}</div>
-									{/* <div className={styles.bod}>
-										Member Since: November 2020
-									</div> */}
+
 									<div className={styles.btnWrap}></div>
 								</div>
 							</div>

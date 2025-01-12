@@ -29,7 +29,14 @@ function UserManagement() {
 			render: (text, record) => (
 				<div className={styles.nameWrap}>
 					<div className={styles.imgWrap}>
-						<img src={record.avatar || AvatarDefault} alt="" />
+						<img
+							src={record.avatar || AvatarDefault}
+							alt={record.name}
+							onError={(e) => {
+								e.target.onerror = null;
+								e.target.src = AvatarDefault;
+							}}
+						/>
 					</div>
 					<span>{record.name}</span>
 				</div>

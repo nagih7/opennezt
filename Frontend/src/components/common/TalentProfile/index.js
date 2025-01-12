@@ -6,7 +6,7 @@ import TalentProfileSkeleton from "components/skeleton/TalentProfileSkeleton";
 import TalentProfileCardSkeleton from "components/skeleton/TalentProfileCardSkeleton";
 import { useSelector } from "react-redux";
 
-function TalentProfile() {
+const TalentProfile = () => {
 	const { talentDetails, loadingGetTalentDetails } = useSelector(
 		(state) => state.talent
 	);
@@ -31,6 +31,6 @@ function TalentProfile() {
 			)}
 		</div>
 	);
-}
+};
 
 export default TalentProfile;

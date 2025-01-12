@@ -67,6 +67,10 @@ const ChatList = () => {
 													AvatarDefault
 												}
 												alt={conversation.members[0].name}
+												onError={(e) => {
+													e.target.onerror = null;
+													e.target.src = AvatarDefault;
+												}}
 											/>
 										</div>
 										<div className={styles.chatContent}>
@@ -110,6 +114,10 @@ const ChatList = () => {
 																	AvatarDefault
 																}
 																alt={member.name}
+																// onError={(e) => {
+																// 	e.target.src = AvatarDefault;
+																// 	return false;
+																// }}
 															/>
 														</Tooltip>
 													)
