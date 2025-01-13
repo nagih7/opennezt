@@ -1,4 +1,7 @@
+@import "assets/scss/variables.scss";
+
 .memberBoxWrap {
+	position: relative;
 	padding: 1rem;
 	width: auto;
 	height: auto;
@@ -13,6 +16,7 @@
 		border-radius: 50%;
 		overflow: hidden;
 		cursor: pointer;
+		box-shadow: $boxShadowDark;
 
 		img {
 			width: 100%;
@@ -27,5 +31,18 @@
 		font-size: 1rem;
 		font-weight: 500;
 		cursor: pointer;
+		text-shadow: $boxShadowDark;
+	}
+
+	.memberRoleWrap {
+		position: absolute;
+		bottom: 3rem;
+
+		border: 1px solid $colorDark1;
+		border-radius: $borderRadius1;
+		box-shadow: $boxShadowDark;
+		background-color: $backgroundMain;
+		padding: 0.2rem 1rem;
+		font-size: 0.8rem;
 	}
 }

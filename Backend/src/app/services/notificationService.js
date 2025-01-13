@@ -139,6 +139,7 @@ export async function replyProjectInvitation(notification_id, status, io) {
         // THAY ĐỔI TRẠNG THÁI THÔNG BÁO (TYPE)
         const notification = await NotificationFeed.findById({_id: notification_id})
         const {user_id, source_id, metadata} = notification
+        console.log('metadata', metadata)
         const user = await User.findById(user_id).select('name avatar _id')
         if (status === 'accepted') {
             const project = await Project.findById(metadata.project_id)
@@ -146,7 +147,8 @@ export async function replyProjectInvitation(notification_id, status, io) {
                 _id: user_id,
                 name: user.name,
                 avatar: user.avatar,
-                role: 'talent',
+                team_role: metadata.team_role,
+                role: metadata.role,
             })
             await project.save()
         }
@@ -237,6 +239,8 @@ export async function projectInvitation(user, requestBody, io) {
         type: 'project_invitation',
         metadata: {
             project_id: new ObjectId(project_id),
+            team_role: requestBody.team_role,
+            role: requestBody.role,
             project_name: requestBody.project_name,
             source_name: user.name,
             status: 'waiting',

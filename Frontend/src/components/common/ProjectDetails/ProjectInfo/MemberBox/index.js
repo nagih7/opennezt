@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./styles.module.scss";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
 
-const MemberBox = ({ member, openModalMemberDetails }) => {
+const MemberBox = ({ owner_id, member, openModalMemberDetails }) => {
 	return (
 		<div className={styles.memberBoxWrap}>
 			<div className={styles.memberBoxAvatar}>
@@ -16,6 +16,16 @@ const MemberBox = ({ member, openModalMemberDetails }) => {
 					onClick={() => openModalMemberDetails(member)}
 				/>
 			</div>
+			<span className={styles.memberRoleWrap}>
+				<strong>
+					{
+						owner_id === member._id
+							? "Founder"
+							: "Co-Founder" /* member.team_role */
+					}
+					{/* : `${member.team_role}/${member.role}`} */}
+				</strong>
+			</span>
 			<span
 				className={styles.memberBoxName}
 				onClick={() => openModalMemberDetails(member)}>

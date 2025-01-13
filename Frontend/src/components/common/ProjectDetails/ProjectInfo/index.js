@@ -93,15 +93,18 @@ const ProjectInfo = () => {
 							gutter={[16, 16]}
 							style={{ display: "flex", justifyContent: "center" }}>
 							<MemberBox
+								owner_id={projectDetails.user_id}
 								member={projectDetails.owner}
 								openModalMemberDetails={handleOpenModalMemberDetails}
 							/>
+
 							{projectDetails.metadata &&
 								projectDetails.metadata.members &&
 								projectDetails.metadata.members.length > 0 &&
 								projectDetails.metadata.members.map((member, index) => (
 									<MemberBox
 										key={index}
+										owner_id={projectDetails.user_id}
 										member={member}
 										openModalMemberDetails={
 											handleOpenModalMemberDetails

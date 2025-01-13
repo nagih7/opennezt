@@ -212,3 +212,28 @@ export const listStage = [
 	{ label: "Expansion Stage", value: "Expansion Stage" },
 	{ label: "Mature Stage", value: "Mature Stage" },
 ];
+
+export const listRole = [
+	{ label: "Founder", value: "Founder" },
+	{ label: "Co-Founder", value: "Co-Founder" },
+	{ label: "CEO", value: "CEO" },
+	{ label: "CTO", value: "CTO" },
+	{ label: "CFO", value: "CFO" },
+	{ label: "CMO", value: "CMO" },
+	{ label: "COO", value: "COO" },
+	{ label: "CIO", value: "CIO" },
+	{ label: "CISO", value: "CISO" },
+	{ label: "CPO", value: "CPO" },
+	{ label: "VP", value: "VP" },
+	{ label: "Director", value: "Director" },
+	{ label: "Manager", value: "Manager" },
+	{ label: "Senior", value: "Senior" },
+	{ label: "Junior", value: "Junior" },
+	{ label: "Intern", value: "Intern" },
+	{ label: "Freelancer", value: "Freelancer" },
+];
+
+export const listTeamRole = [
+	{ label: "Core", value: "Core" },
+	{ label: "Founding", value: "Founding" },
+];

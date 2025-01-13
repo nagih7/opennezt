@@ -145,6 +145,7 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 								</Title>
 								<Row gutter={[16, 16]}>
 									<MemberBox
+										owner_id={projectDetails.user_id}
 										member={projectDetails.owner}
 										openModalMemberDetails={
 											handleOpenModalMemberDetails
@@ -154,6 +155,7 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 										projectDetails.members.length > 0 &&
 										projectDetails.members.map((member, index) => (
 											<MemberBox
+												owner_id={projectDetails.user_id}
 												member={member}
 												key={index}
 												openModalMemberDetails={
