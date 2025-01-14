@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Modal, Typography, Tag, Space, Row, Col, Card } from "antd";
 import {
 	DollarCircleOutlined,
@@ -9,28 +9,42 @@ import {
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import styles from "./styles.module.scss";
 import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
-import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
-import { useSelector } from "react-redux";
+import LazyLoading from "components/UI/LazyLoading";
+import { useSelector, useDispatch } from "react-redux";
 import { getRequestAddFriend, sendRequestAddFriend } from "api/notification";
-import store from "states/configureStore";
-
+import { getTalentDetails } from "api/talent";
 const { Title, Text, Paragraph } = Typography;
-const MemberBox = React.lazy(() =>
-	import("../../../common/ProjectDetails/ProjectInfo/MemberBox")
+import MemberBox from "../../../common/ProjectDetails/ProjectInfo/MemberBox";
+
+const TalentProfile = React.lazy(() =>
+	import("components/common/TalentProfile")
 );
 
 const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
+	const dispatch = useDispatch();
+
+	// Redux
 	const { requestAddFriend, loadingSendRequestAddFriend } = useSelector(
 		(state) => state.notification
 	);
+	const { talentDetails } = useSelector((state) => state.talent);
 
-	const handleRequestAddFriend = async (user_id) => {
+	// State
+	const [openModalMemberDetails, setOpenModalMemberDetails] = useState(false);
+
+	const handleRequestAddFriend = (user_id) => {
 		const requestMessageForm = {
 			user_id: user_id,
 			metadata: {},
 		};
-		await store.dispatch(sendRequestAddFriend(requestMessageForm));
-		await store.dispatch(getRequestAddFriend(user_id));
+		dispatch(sendRequestAddFriend(requestMessageForm));
+		dispatch(getRequestAddFriend(user_id));
+	};
+
+	// Function handle open modal member details
+	const handleOpenModalMemberDetails = (member) => {
+		setOpenModalMemberDetails(true);
+		dispatch(getTalentDetails(member._id));
 	};
 
 	return (
@@ -54,13 +68,13 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 			<div className={styles.modalContent}>
 				<div className={styles.projectHeader}>
 					<img
-						src={
-							projectDetails.background
-								? projectDetails.background
-								: BackgroundDefault
-						}
-						alt={projectDetails.name}
 						className={styles.headerImage}
+						src={projectDetails.background || BackgroundDefault}
+						alt={projectDetails.name}
+						onError={(e) => {
+							e.target.onerror = null;
+							e.target.src = Background;
+						}}
 					/>
 					<div className={styles.headerOverlay}>
 						<Title level={2}>{projectDetails.name}</Title>
@@ -130,15 +144,24 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 									Team Infomation
 								</Title>
 								<Row gutter={[16, 16]}>
-									<LazyLoadingMedium>
-										<MemberBox member={projectDetails.owner} />
-									</LazyLoadingMedium>
+									<MemberBox
+										owner_id={projectDetails.user_id}
+										member={projectDetails.owner}
+										openModalMemberDetails={
+											handleOpenModalMemberDetails
+										}
+									/>
 									{projectDetails.members &&
 										projectDetails.members.length > 0 &&
 										projectDetails.members.map((member, index) => (
-											<LazyLoadingMedium key={index}>
-												<MemberBox member={member} />
-											</LazyLoadingMedium>
+											<MemberBox
+												owner_id={projectDetails.user_id}
+												member={member}
+												key={index}
+												openModalMemberDetails={
+													handleOpenModalMemberDetails
+												}
+											/>
 										))}
 								</Row>
 							</Card>
@@ -221,6 +244,16 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 						</Col>
 					</Row>
 				</div>
+				<Modal
+					footer={null}
+					title=""
+					open={openModalMemberDetails}
+					onCancel={() => setOpenModalMemberDetails(false)}
+					width={1000}>
+					<LazyLoading>
+						<TalentProfile talent={talentDetails} />
+					</LazyLoading>
+				</Modal>
 			</div>
 		</Modal>
 	);

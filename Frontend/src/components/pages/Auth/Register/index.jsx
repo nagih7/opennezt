@@ -78,7 +78,7 @@ const Register = () => {
 		<div className={styles.registerWrap}>
 			<div className={styles.registerHeaderWrap}>
 				<div className={styles.logo}>
-					<img src={Logo} alt="logo" />
+					<img src={Logo} alt="logo-opennezt" />
 				</div>
 				<h1 className={styles.title}>Register</h1>
 			</div>

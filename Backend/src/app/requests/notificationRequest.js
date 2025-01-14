@@ -54,6 +54,8 @@ export const projectInvitation = Joi.object({
         ),
 
     project_name: Joi.string().max(MAX_STRING_SIZE).required().label('Project_Name'),
+    team_role: Joi.string().max(MAX_STRING_SIZE).required().label('Team_Role'),
+    role: Joi.string().max(MAX_STRING_SIZE).required().label('Role'),
 
     user_id: Joi.string()
         .required()

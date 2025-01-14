@@ -14,6 +14,8 @@ import {
 } from "../../../api/notification";
 
 const TalentProfileCard = ({ talent }) => {
+	const { authUser } = useSelector((state) => state.auth);
+
 	const { requestAddFriend, loadingSendRequestAddFriend } = useSelector(
 		(state) => state.notification
 	);
@@ -32,33 +34,33 @@ const TalentProfileCard = ({ talent }) => {
 			<div className={styles.bannerContainer}>
 				<div className={styles.banner}>
 					<div className={styles.background}>
-						{talent.background ? (
-							<LazyLoadImage
-								alt="User Background"
-								src={talent.background}
-							/>
-						) : (
-							<LazyLoadImage
-								alt="User Background"
-								src={BackgroundDefault}
-							/>
-						)}
+						<LazyLoadImage
+							alt={talent.name}
+							src={talent.background || BackgroundDefault}
+							onError={(e) => {
+								e.target.onerror = null;
+								e.target.src = BackgroundDefault;
+							}}
+						/>
 					</div>
 				</div>
 
 				<div className={styles.userInfoWrap}>
 					<div className={styles.userInfo}>
 						<div className={styles.avatar}>
-							{talent.avatar ? (
-								<LazyLoadImage alt="User Avatar" src={talent.avatar} />
-							) : (
-								<LazyLoadImage alt="User Avatar" src={AvatarDefault} />
-							)}
+							<LazyLoadImage
+								alt={talent.name}
+								src={talent.avatar || AvatarDefault}
+								onError={(e) => {
+									e.target.onerror = null;
+									e.target.src = AvatarDefault;
+								}}
+							/>
 						</div>
 						<h1>
 							{talent.name}
 							<LazyLoadImage
-								alt="Verify"
+								alt="icon-verify"
 								src={verify}
 								className={styles.verifyIcon}
 							/>
@@ -82,23 +84,25 @@ const TalentProfileCard = ({ talent }) => {
 							LinkedIn Profile
 						</a>
 					</div>
-					<div className={styles.userActions}>
-						<Button
-							style={{
-								borderRadius: "0.5rem",
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "center",
-								gap: "0.5rem",
-							}}
-							disabled={requestAddFriend}
-							type="primary"
-							loading={loadingSendRequestAddFriend}
-							onClick={() => handleRequestAddFriend(talent._id)}>
-							<PersonAddIcon />
-							Add friend
-						</Button>
-					</div>
+					{authUser._id !== talent._id && (
+						<div className={styles.userActions}>
+							<Button
+								style={{
+									borderRadius: "0.5rem",
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
+									gap: "0.5rem",
+								}}
+								disabled={requestAddFriend}
+								type="primary"
+								loading={loadingSendRequestAddFriend}
+								onClick={() => handleRequestAddFriend(talent._id)}>
+								<PersonAddIcon />
+								Add friend
+							</Button>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

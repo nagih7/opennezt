@@ -70,7 +70,7 @@ function SideBar(props) {
 			<div className={`border-bottom ${styles.logoWrap}`}>
 				<img
 					src={Logo}
-					alt="OpenNezt Logo"
+					alt="logo-opennezt"
 					className={`${styles.imgWrap}`}
 				/>
 			</div>

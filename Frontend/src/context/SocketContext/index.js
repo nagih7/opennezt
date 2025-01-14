@@ -1,4 +1,3 @@
-// src/SocketContext.js
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
@@ -15,21 +14,20 @@ export const useSocket = () => {
 
 // Component SocketProvider sẽ quản lý kết nối socket
 export const SocketProvider = ({ children }) => {
+	console.log("SocketProvider");
 	const [socket, setSocket] = useState(null);
 
+	// Kết nối socket khi component được render
 	useEffect(() => {
 		// Thiết lập kết nối socket
 		const socketInstance = io(SOCKET_SERVER_URL);
-
 		// Gửi sự kiện `login` khi kết nối được thiết lập
 		socketInstance.on("connect", () => {
 			console.log("Connected to socket server...");
 
-			// Lấy token từ localStorage (hoặc từ bất kỳ nguồn nào bạn lưu trữ token)
+			// Lấy token từ localStorage và gửi lên server, emit sự kiện `login`
 			const token = localStorage.getItem("token");
-			if (token) {
-				socketInstance.emit("login", token); // Gửi sự kiện `login`
-			}
+			socketInstance.emit("login", token);
 		});
 
 		socketInstance.on("disconnect", () => {

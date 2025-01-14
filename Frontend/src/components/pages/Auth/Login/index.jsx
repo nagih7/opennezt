@@ -86,7 +86,7 @@ const Login = () => {
 		<div className={styles.loginWrap}>
 			<div className={styles.loginHeaderWrap}>
 				<div className={styles.logo}>
-					<img src={Logo} alt="logo" />
+					<img src={Logo} alt="logo-opennezt" />
 				</div>
 				<h1 className={styles.title}>Login</h1>
 			</div>

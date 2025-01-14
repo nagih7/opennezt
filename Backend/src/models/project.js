@@ -60,10 +60,13 @@ const Members = new Schema(
             type: String,
             required: false,
         },
+        team_role: {
+            type: String,
+            required: true,
+        },
         role: {
             type: String,
             required: true,
-            default: 'talent',
         },
         join_at: {
             type: Date,

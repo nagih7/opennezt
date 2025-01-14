@@ -8,12 +8,12 @@ export const userSockets = {}
 const socketRoutes = (io) => {
     io.on('connection', (socket) => {
         socket.on('login', async (token) => {
+            console.log('User connected')
             const {user_id} = await verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
             userSockets[socket.id] = user_id
         }),
         notificationRouter(socket)
         chatRouter(socket, io)
-
         socket.on('disconnect', () => {
             const user_id = userSockets[socket.id]
             if (user_id) {

@@ -150,10 +150,12 @@ const Header = () => {
 						<div className={styles.infoWrap}>
 							<div className={styles.avatarWrap}>
 								<img
-									src={
-										authUser.avatar ? authUser.avatar : AvatarDefault
-									}
-									alt=""
+									src={authUser.avatar || AvatarDefault}
+									alt={authUser.name}
+									onError={(e) => {
+										e.target.onerror = null;
+										e.target.src = AvatarDefault;
+									}}
 								/>
 							</div>
 						</div>

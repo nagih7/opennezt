@@ -1,19 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
-import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
-import { useSelector } from "react-redux";
-import { Card, Col, Row, Typography } from "antd";
+import LazyLoading from "components/UI/LazyLoading";
+import { useDispatch, useSelector } from "react-redux";
+import { Card, Col, Modal, Row, Typography } from "antd";
 const { Title, Text, Paragraph } = Typography;
 import {
 	DollarCircleOutlined,
 	TeamOutlined,
 	AimOutlined,
 } from "@ant-design/icons";
+import MemberBox from "./MemberBox";
+import { getTalentDetails } from "api/talent";
 
-const MemberBox = React.lazy(() => import("./MemberBox"));
+const TalentProfile = React.lazy(() =>
+	import("components/common/TalentProfile")
+);
 
 const ProjectInfo = () => {
+	const dispatch = useDispatch();
 	const { projectDetails } = useSelector((state) => state.project);
+	const { talentDetails } = useSelector((state) => state.talent);
+
+	// State
+	const [openModalMemberDetails, setOpenModalMemberDetails] = useState(false);
+
+	// Function handle open modal member details
+	const handleOpenModalMemberDetails = (member) => {
+		setOpenModalMemberDetails(true);
+		dispatch(getTalentDetails(member._id));
+	};
 
 	return (
 		<div className={styles.projectInfoWrap}>
@@ -74,17 +89,27 @@ const ProjectInfo = () => {
 						<Title level={4} icon={<DollarCircleOutlined />}>
 							Team Infomation
 						</Title>
-						<Row gutter={[16, 16]}>
-							<LazyLoadingMedium>
-								<MemberBox member={projectDetails.owner} />
-							</LazyLoadingMedium>
+						<Row
+							gutter={[16, 16]}
+							style={{ display: "flex", justifyContent: "center" }}>
+							<MemberBox
+								owner_id={projectDetails.user_id}
+								member={projectDetails.owner}
+								openModalMemberDetails={handleOpenModalMemberDetails}
+							/>
+
 							{projectDetails.metadata &&
 								projectDetails.metadata.members &&
 								projectDetails.metadata.members.length > 0 &&
 								projectDetails.metadata.members.map((member, index) => (
-									<LazyLoadingMedium key={index}>
-										<MemberBox member={member} />
-									</LazyLoadingMedium>
+									<MemberBox
+										key={index}
+										owner_id={projectDetails.user_id}
+										member={member}
+										openModalMemberDetails={
+											handleOpenModalMemberDetails
+										}
+									/>
 								))}
 						</Row>
 					</Card>
@@ -176,6 +201,18 @@ const ProjectInfo = () => {
 					</Card>
 				</Col>
 			</Row>
+
+			{/* Modal MemberDetails */}
+			<Modal
+				footer={null}
+				title=""
+				open={openModalMemberDetails}
+				onCancel={() => setOpenModalMemberDetails(false)}
+				width={1000}>
+				<LazyLoading>
+					<TalentProfile talent={talentDetails} />
+				</LazyLoading>
+			</Modal>
 		</div>
 	);
 };

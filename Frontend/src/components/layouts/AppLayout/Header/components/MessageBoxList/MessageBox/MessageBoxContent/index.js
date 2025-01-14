@@ -56,11 +56,13 @@ const MessageBoxContent = ({ messages, conversation }) => {
 													<div className={styles.avatarWrap}>
 														<Avatar
 															src={
-																member.avatar
-																	? member.avatar
-																	: AvatarDefault
+																member.avatar || AvatarDefault
 															}
-															alt="avatar"
+															alt={member.name}
+															onError={(e) => {
+																e.target.onerror = null;
+																e.target.src = AvatarDefault;
+															}}
 														/>
 													</div>
 												);
