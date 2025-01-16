@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
-import { Select, Button } from "antd";
+import { Select, Button, Input } from "antd";
 import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import {
 	listSector,
@@ -27,6 +27,7 @@ const RecruitWrap = () => {
 
 	useEffect(() => {
 		if (
+			formRecruitTalents.keyword ||
 			formRecruitTalents.sector ||
 			formRecruitTalents.experience_level ||
 			formRecruitTalents.education_level ||
@@ -43,9 +44,11 @@ const RecruitWrap = () => {
 	};
 
 	const handleConfirmRecruitTalents = () => {
+		console.log(formRecruitTalents);
 		dispatch(
 			recruitTalents({
 				...formRecruitTalents,
+				keyword: formRecruitTalents.keyword ?? "",
 				sector: formRecruitTalents.sector ?? "",
 				experience_level: formRecruitTalents.experience_level ?? "",
 				education_level: formRecruitTalents.education_level ?? "",
@@ -73,6 +76,12 @@ const RecruitWrap = () => {
 				Reset
 			</Button>
 			<div className={styles.recruitSelectWrap}>
+				<Input
+					value={formRecruitTalents.keyword}
+					placeholder="Name"
+					style={{ width: "100%", borderRadius: "8px" }}
+					onChange={(e) => handleOnChange(e.target.value, "keyword")}
+				/>
 				<Select
 					value={formRecruitTalents.sector}
 					style={{ width: "13rem" }}

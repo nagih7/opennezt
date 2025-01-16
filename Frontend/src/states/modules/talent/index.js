@@ -9,6 +9,7 @@ const talentSlice = createSlice({
 		talents: [],
 		talentDetails: null,
 		formRecruitTalents: {
+			keyword: null,
 			sector: null,
 			experience_level: null,
 			education_level: null,
@@ -95,6 +96,7 @@ const talentSlice = createSlice({
 		resetFormRecruitTalents: (state) => ({
 			...state,
 			formRecruitTalents: {
+				keyword: null,
 				sector: null,
 				experience_level: null,
 				education_level: null,

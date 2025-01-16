@@ -8,6 +8,7 @@ import LandingPageRouter from './subscribe.js'
 import notificationRouter from './notificationRouter'
 import projectRouter from './projectRouter'
 import socketRoutes from './socket'
+import artificialIntelligenceRouter from './artificialIntelligenceRouter'
 
 function route(app, io) {
     socketRoutes(io)
@@ -25,6 +26,7 @@ function route(app, io) {
     app.use('/subscribe', LandingPageRouter)
     app.use('/notification', notificationRouter)
     app.use('/project', projectRouter)
+    app.use('/ai', artificialIntelligenceRouter)
 
     app.get('/', (req, res) => {
         res.json({

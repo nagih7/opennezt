@@ -103,7 +103,6 @@ export const TOKEN_TYPE = {
     FORGOT_PASSWORD: 'FORGOT_PASSWORD',
     VERIFY_EMAIL: 'VERIFY_EMAIL',
     ACCESS_TOKEN: 'ACCESS_TOKEN',
-    
 }
 export const MAX_STRING_SIZE = 255
 export const MAX_AREAS_STRING_SIZE = 500
@@ -176,3 +175,73 @@ export const JOI_DEFAULT_OPTIONS = {
 export const VALIDATE_PHONE_REGEX = /^(0[235789])[0-9]{8}$/
 export const VALIDATE_PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])/
 export const VALIDATE_FULL_NAME_REGEX = /^[a-zA-ZÀ-ỹ ]+$/
+
+// OpenAI API
+export const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+assert(!_.isEmpty(OPENAI_API_KEY), assert('OPENAI_API_KEY'))
+export const OPENAI_ENDPOINT = process.env.OPENAI_ENDPOINT
+assert(!_.isEmpty(OPENAI_ENDPOINT), assertMsg('OPENAI_ENDPOINT'))
+export const OPENAI_MODEL = process.env.OPENAI_MODEL
+assert(!_.isEmpty(OPENAI_MODEL), assertMsg('OPENAI_MODEL'))
+export const OPENAI_API_VERSION = process.env.OPENAI_API_VERSION
+assert(!_.isEmpty(OPENAI_API_VERSION), assertMsg('OPENAI_API_VERSION'))
+export const MODEL = process.env.MODEL
+assert(!_.isEmpty(MODEL), assertMsg('MODEL'))
+
+export const OPENAI_ANALYZE_PROMPT_MAX_TOKENS = 200
+export const OPENAI_ANALYZE_PROMPT_TEMPERATURE = 0.2
+export const OPENAI_ANALYZE_PROMPT_TOP_P = 0.9
+export const OPENAI_ANALYZE_PROMPT_FREQUENCY_PENALTY = 0
+export const OPENAI_ANALYZE_PROMPT_PRESENCE_PENALTY = 0
+export const OPENAI_ANALYZE_PROMPT_STOP = ['###']
+
+export const MATCHING_PROJECTS_PROMPT = (userSkills, projects) => {
+    const messages = [
+        {
+            role: 'system',
+            content:
+                'You are an AI system that matches user skills with project requirements. Analyze input data carefully and return structured output.',
+        },
+        {
+            role: 'user',
+            content: `
+                Input:
+
+                1. User Skills:
+                Industry: ${userSkills.industry.join(', ')}
+                Skills: ${Object.keys(userSkills.skills)
+        .map((key) => `${key}: ${userSkills.skills[key].join(', ')}`)
+        .join('\n                ')}
+                
+                2. Projects:
+                    ${projects
+        .map(
+            (project, index) => `
+                    - Project ID: ${project._id}
+                    - Related Industries: ${project.related_industries.join(', ')}`
+        )
+        .join('\n                    ')}
+                    - Problem Solving: ${projects.problem_solving}
+
+                Task:
+                - Analyze the user's skills against the skill requirements of each project.
+                - Return an array of projects that match the user (Only return if the project matches).
+                - Limit the 6 projects with the highest score.
+                - For each matching project, include:
+                - "projectId": ID of the project
+                - "matchScore": score from 1 to 100 indicating the match rate
+
+                Output format:
+                    [
+                        {
+                            "projectId": "<Project ID>",
+                            "matchScore": <Score>,
+                        },
+                        ...
+                    ]
+                `,
+        },
+    ]
+
+    return messages
+}

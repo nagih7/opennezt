@@ -7,35 +7,43 @@ import { useNavigate } from "react-router-dom";
 import { isValidate } from "../../../../utils/validate";
 import { handleCheckValidateConfirm } from "../../../../utils/helper";
 import { register } from "../../../../api/auth";
-import { useSelector } from "react-redux";
-import store from "states/configureStore";
+import { useSelector, useDispatch } from "react-redux";
 import Logo from "../../../../assets/images/logo/OpenNezt_icon_black.png";
 
 const Register = () => {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	const [isRegisterSuccess, setIsRegisterSuccess] = useState(false);
 	const [dataRegister, setDataRegister] = useState({
 		name: "",
 		email: "",
-		phone: "",
+		// phone: "",
 		password: "",
 		confirmPassword: "",
 	});
 	const [errorDataRegister, setErrorDataRegister] = useState({
 		name: "",
 		email: "",
-		phone: "",
+		// phone: "",
 		password: "",
 		confirmPassword: "",
 	});
-	const { isLoadingBtnRegister, resultRegister } = useSelector(
+	const { isLoadingRegister, authRegister } = useSelector(
 		(state) => state.auth
 	);
 
 	useEffect(() => {
-		if (resultRegister) {
-			navigate("/login");
+		if (authRegister && authRegister.email) {
+			setIsRegisterSuccess(true);
 		}
-	}, [resultRegister, navigate]);
+	}, [authRegister]);
+
+	useEffect(() => {
+		if (isRegisterSuccess === true) {
+			navigate("/verify-authentication");
+		}
+	}, [isRegisterSuccess, navigate]);
 
 	useEffect(() => {
 		handleResetError();
@@ -51,7 +59,7 @@ const Register = () => {
 	const handleResetError = () => {
 		setErrorDataRegister({
 			email: "",
-			phone: "",
+			// phone: "",
 			password: "",
 			confirmPassword: "",
 		});
@@ -63,14 +71,18 @@ const Register = () => {
 		return validate.isError;
 	};
 
-	const handleConfirmRegister = () => {
+	const handleConfirmRegister = async () => {
+		console.log("dataRegister", dataRegister);
 		let validate = handleCheckValidateConfirm(
 			dataRegister,
 			errorDataRegister
 		);
 		setErrorDataRegister(validate.dataError);
 		if (!validate.isError) {
-			store.dispatch(register(dataRegister));
+			dispatch(register(dataRegister));
+
+			// Check register success
+			await handleCheckRegisterSuccess();
 		}
 	};
 
@@ -84,7 +96,7 @@ const Register = () => {
 			</div>
 			<div className={styles.registerContent}>
 				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Name *</div>
+					<div className={styles.label}>Full name *</div>
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter name..."}
@@ -107,7 +119,7 @@ const Register = () => {
 					/>
 				</div>
 
-				<div className={styles.inputWrapper}>
+				{/* <div className={styles.inputWrapper}>
 					<div className={styles.label}>Phone *</div>
 					<InputMASQ
 						type={"text"}
@@ -117,7 +129,7 @@ const Register = () => {
 						value={dataRegister.phone}
 						error={errorDataRegister.phone}
 					/>
-				</div>
+				</div> */}
 
 				<div className={styles.inputWrapper}>
 					<div className={styles.label}>Password *</div>
@@ -143,10 +155,10 @@ const Register = () => {
 					/>
 				</div>
 
-				<div className={styles.btnWrap}>
+				<div className={styles.btnWrap} style={{ marginTop: "1.5rem" }}>
 					<ButtonMASQ
 						textBtn={"Register"}
-						loading={isLoadingBtnRegister}
+						loading={isLoadingRegister}
 						onClick={() => handleConfirmRegister()}
 						disable={false}
 						style={{

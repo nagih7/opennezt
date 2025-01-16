@@ -1,4 +1,4 @@
-@import "assets/scss/variables.scss";
+@import "../../../../assets/scss/variables.scss";
 
 .projectBoxWrap {
 	width: 100%;
@@ -35,6 +35,11 @@
 
 		h3 {
 			margin: 0;
+			margin-top: 1rem;
+			font-weight: 700 !important;
+			white-space: nowrap; /* Ngăn không cho văn bản xuống dòng */
+			overflow: hidden; /* Ẩn phần văn bản vượt quá chiều rộng */
+			text-overflow: ellipsis;
 		}
 
 		p {

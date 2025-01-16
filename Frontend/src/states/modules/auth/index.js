@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { message } from "antd";
-import { result } from "lodash";
 
 const authSlice = createSlice({
 	name: "auth",
 	initialState: {
 		isAuthSuccess: false,
 		authorize: "user",
+		authRegister: {},
 		authUser: {},
 		errorRegister: {
 			name: "",
@@ -16,9 +16,10 @@ const authSlice = createSlice({
 			password: "",
 			confirmPassword: "",
 		},
-		resultRegister: false,
+		isLoadingGetMe: false,
 		isLoadingBtnLogin: false,
-		isLoadingBtnRegister: false,
+		isRegisterSuccess: false,
+		isLoadingRegister: false,
 		isSuccessForgotPassword: false,
 	},
 	reducers: {
@@ -27,7 +28,7 @@ const authSlice = createSlice({
 			isLoadingBtnLogin: true,
 		}),
 		startRequestLoginSuccess: (state) => {
-			message.success("Đăng nhập thành công!");
+			message.success("Login success!");
 			return {
 				...state,
 				isLoadingBtnLogin: false,
@@ -44,46 +45,54 @@ const authSlice = createSlice({
 		},
 		startRequestGetMe: (state) => ({
 			...state,
+			isLoadingGetMe: true,
 		}),
 		startRequestGetMeSuccess: (state, action) => ({
 			...state,
 			isAuthSuccess: true,
+			isLoadingGetMe: false,
 			authUser: action.payload.data,
 			authorize: action.payload.data.role,
 		}),
 		startRequestGetMeFail: (state) => ({
 			...state,
 			isAuthSuccess: false,
+			isLoadingGetMe: false,
 			authUser: {},
 			authorize: "user",
 		}),
 		startRequestRegister: (state) => ({
 			...state,
-			isLoadingBtnRegister: true,
-			resultRegister: false,
+			isLoadingRegister: true,
+			isRegisterSuccess: false,
+			authRegister: {},
 		}),
-		startRequestRegisterSuccess: (state, action) => {
-			message.success(action.payload.message);
-			return {
-				...state,
-				isLoadingBtnRegister: false,
-				resultRegister: true,
-			};
-		},
+		startRequestRegisterSuccess: (state, action) => ({
+			...state,
+			isLoadingRegister: false,
+			isRegisterSuccess: true,
+			authRegister: action.payload.data,
+		}),
 		startRequestRegisterFail: (state, action) => {
 			const error =
-				action.payload.data.detail.name ||
-				action.payload.data.detail.email ||
-				action.payload.data.detail.phone ||
-				action.payload.data.detail.password ||
-				action.payload.data.detail.confirmPassword;
+				Object.values(action.payload.data.detail).length > 0 &&
+				Object.values(action.payload.data.detail)[0];
 			message.error(error);
 			return {
 				...state,
-				isLoadingBtnRegister: false,
-				resultRegister: false,
+				isLoadingRegister: false,
+				isRegisterSuccess: false,
+				authRegister: {},
 			};
 		},
+		resetRegister: (state) => ({
+			...state,
+			isRegisterSuccess: false,
+		}),
+		resetAuthRegister: (state) => ({
+			...state,
+			authRegister: {},
+		}),
 		startRequestLogout: (state) => ({
 			...state,
 		}),
@@ -126,6 +135,8 @@ export const {
 	startRequestRegister,
 	startRequestRegisterSuccess,
 	startRequestRegisterFail,
+	resetRegister,
+	resetAuthRegister,
 	startRequestLogout,
 	startRequestLogoutSuccess,
 	startRequestLogoutFail,

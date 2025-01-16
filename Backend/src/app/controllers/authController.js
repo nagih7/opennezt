@@ -7,26 +7,29 @@ export async function login(req, res) {
     const validLogin = await authService.checkValidLogin(req.body)
 
     if (validLogin && !validLogin.is_active) {
-        abort(403, 'Tài khoản chưa được xác thực.')
+        abort(403, 'Account is not active. Please verify by email.')
     } else if (validLogin && validLogin.is_active) {
         // Set cookie
-        res.cookie('access_token', authService.authToken(validLogin).access_token, {
-            httpOnly: true,
-            // secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-        }).jsonify(authService.authToken(validLogin))
+        res
+            // .cookie('access_token', authService.authToken(validLogin).access_token, {
+            //     httpOnly: true,
+            //     secure: process.env.NODE_ENV === 'production',
+            //     sameSite: 'strict',
+            // })
+            .jsonify(authService.authToken(validLogin))
     } else {
-        abort(400, 'Email hoặc mật khẩu không đúng.')
+        abort(400, 'Email or password is incorrect.')
     }
 }
 
 export async function register(req, res) {
     const token = await authService.register(req.body)
-    await res.sendMail(req.body.email, 'Xác thực tài khoản', 'emails/verify-email', {
+    await res.sendMail(req.body.email, 'Verify account', 'emails/verify-email', {
         name: req.body.name,
+        // verify email link
         linkVerifyEmail: `${LINK_VERIFY_EMAIL_URL}/${encodeURIComponent(token)}`,
     })
-    res.status(201).jsonify('Đăng ký thành công. Vui lòng kiểm tra email để xác thực tài khoản.')
+    res.status(201).jsonify(req.body)
 }
 
 export async function verifyEmail(req, res) {
@@ -37,7 +40,7 @@ export async function verifyEmail(req, res) {
 export async function logout(req, res) {
     const token = getToken(req.headers)
     await authService.blockToken(token)
-    res.jsonify('Đăng xuất thành công.')
+    res.jsonify('Logout success.')
 }
 
 export async function me(req, res) {
@@ -47,12 +50,12 @@ export async function me(req, res) {
 
 export async function updateProfile(req, res) {
     await authService.updateProfile(req.currentUser, req.body)
-    res.status(201).jsonify('Cập nhật thông tin cá nhân thành công.')
+    res.status(201).jsonify('Update profile success.')
 }
 
 export async function changePassword(req, res) {
     await userService.resetPassword(req.currentUser, req.body.password)
-    res.status(201).jsonify('Cập nhật mật khẩu thành công.')
+    res.status(201).jsonify('Change password success.')
 }
 
 export async function forgotPassword(req, res) {
@@ -61,14 +64,14 @@ export async function forgotPassword(req, res) {
         name: req.currentUser.name,
         linkResetPassword: `${LINK_RESET_PASSWORD_URL}/${encodeURIComponent(token)}`,
     })
-    res.status(200).jsonify('Yêu cầu lấy lại mật khẩu thành công! Vui lòng kiểm tra email của bạn.')
+    res.status(200).jsonify('Please check your email to reset password.')
 }
 
 export async function requestResetPassword(req, res) {
     if (req.currentUser) {
         await res.render('forms/reset-password', {token: req.params.token, email: req.currentUser.email})
     } else {
-        abort(403, 'Liên kết không hợp lệ.')
+        abort(403, 'Token is invalid.')
     }
 }
 

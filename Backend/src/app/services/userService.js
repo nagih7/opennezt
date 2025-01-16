@@ -257,7 +257,7 @@ export async function deleteProject(user, requestBody) {
     await Project.deleteOne({user_id: user._id, _id: requestBody.projectId})
 }
 
-export async function recuitTalents(user, requestRecuitTalents) {
+export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
     const query = {}
     const per_page = 12
 
@@ -286,18 +286,6 @@ export async function recuitTalents(user, requestRecuitTalents) {
         }
     }
 
-    const getFriendRequest = async (talents) => {
-        const friendRequests = await NotificationFeed.find({
-            type: 'friend_request',
-            $or: [
-                {user_id: user._id, source_id: {$in: talents.map((talent) => talent.user_data._id)}},
-                {user_id: {$in: talents.map((talent) => talent.user_data._id)}, source_id: user._id},
-            ],
-        }).select('source_id user_id type metadata.status')
-
-        return friendRequests
-    }
-
     const talents = await FounderProfile.aggregate([
         {
             $match: query,
@@ -308,6 +296,13 @@ export async function recuitTalents(user, requestRecuitTalents) {
                 localField: 'user_id',
                 foreignField: '_id',
                 as: 'user_data',
+                pipeline: [
+                    {
+                        $match: {
+                            name: {$regex: keyword, $options: 'i'},
+                        },
+                    },
+                ],
             },
         },
         {
@@ -316,6 +311,7 @@ export async function recuitTalents(user, requestRecuitTalents) {
                 preserveNullAndEmptyArrays: false, // Nếu không muốn giữ lại các bản ghi không có user_data
             },
         },
+
         {
             $match: {
                 ...(requestRecuitTalents.location
@@ -378,6 +374,17 @@ export async function recuitTalents(user, requestRecuitTalents) {
             },
         },
     ])
+    const getFriendRequest = async (talents) => {
+        const friendRequests = await NotificationFeed.find({
+            type: 'friend_request',
+            $or: [
+                {user_id: user._id, source_id: {$in: talents.map((talent) => talent.user_data._id)}},
+                {user_id: {$in: talents.map((talent) => talent.user_data._id)}, source_id: user._id},
+            ],
+        }).select('source_id user_id type metadata.status')
+
+        return friendRequests
+    }
     const friendRequests = await getFriendRequest(talents)
     talents.forEach((talent) => {
         const friendRequest = friendRequests.find(

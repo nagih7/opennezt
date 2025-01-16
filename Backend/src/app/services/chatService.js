@@ -1,5 +1,5 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {Message, ObjectId, Conversation, Project} from '@/models'
+import {Message, ObjectId, Conversation} from '@/models'
 
 export async function getChatList(user, input_value) {
     if (!input_value || input_value === 'undefined' || input_value === null) {

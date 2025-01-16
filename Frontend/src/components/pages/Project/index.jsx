@@ -167,21 +167,23 @@ function Project() {
 					size={"10rem"}
 				/>
 			) : (
-				<div className={styles.projectsList}>
-					{loadingGetProjects ? (
-						<ProjectsSkeleton boxs={6} />
-					) : (
-						projects &&
-						projects.length > 0 &&
-						projects.map((project, index) => (
-							<BoxProject
-								project={project}
-								key={index}
-								openModalDetails={handleOpenModalDetails}
-								usedTo="my-projects"
-							/>
-						))
-					)}
+				<div className={styles.projectsListWrap}>
+					<div className={styles.projectsList}>
+						{loadingGetProjects ? (
+							<ProjectsSkeleton boxs={6} />
+						) : (
+							projects &&
+							projects.length > 0 &&
+							projects.map((project, index) => (
+								<BoxProject
+									project={project}
+									key={index}
+									openModalDetails={handleOpenModalDetails}
+									usedTo="my-projects"
+								/>
+							))
+						)}
+					</div>
 				</div>
 			)}
 

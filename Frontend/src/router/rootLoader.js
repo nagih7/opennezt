@@ -17,7 +17,11 @@ export const rootLoader = async (
 	}
 	var { auth } = store.getState();
 
-	if (!auth.isAuthSuccess && getAuthToken()) {
+	if (
+		!auth.isAuthSuccess &&
+		getAuthToken() &&
+		url.pathname !== "verify-authentication"
+	) {
 		await store.dispatch(getMe());
 		auth = store.getState().auth;
 	}
