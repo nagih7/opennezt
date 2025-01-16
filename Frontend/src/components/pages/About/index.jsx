@@ -9,6 +9,9 @@ import LazyLoading from "components/UI/LazyLoading";
 import TalentProfileSkeleton from "components/skeleton/TalentProfileSkeleton";
 import BoxProject from "../Project/BoxProject";
 import { setOpenModalMatchingProjects } from "states/modules/artificialIntelligence";
+import ProjectDetailsModal from "../SeekProjects/ProjectDetailsModal";
+import { getProjectDetails } from "api/project";
+import { getRequestAddFriend } from "api/notification";
 
 const EditProfilePopup = React.lazy(() =>
 	import("components/common/EditProfilePopup")
@@ -19,7 +22,9 @@ const About = () => {
 
 	const { projects, openModalMatchingProjects, loadingMatchingProjects } =
 		useSelector((state) => state.artificialIntelligence);
+	const { projectDetails } = useSelector((state) => state.project);
 
+	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [infoUpdateProfile, setInfoUpdateProfile] = useState({
 		experience_level: null,
 		industry: [],
@@ -44,6 +49,7 @@ const About = () => {
 			technology_and_internet: [],
 		},
 	});
+
 	const {
 		founderProfile,
 		resultUpdateFounderProfile,
@@ -104,6 +110,12 @@ const About = () => {
 		);
 	};
 
+	const handleViewDetails = (projectId, userId) => {
+		setIsModalVisible(true);
+		dispatch(getProjectDetails(projectId));
+		dispatch(getRequestAddFriend(userId));
+	};
+
 	return (
 		<div className={styles.aboutContainer}>
 			<ProfileCard handleOpenModal={handleOpenModal} />
@@ -130,7 +142,7 @@ const About = () => {
 			<Modal
 				open={openModalMatchingProjects}
 				footer={null}
-				width={1200}
+				width={1300}
 				onCancel={() => dispatch(setOpenModalMatchingProjects(false))}>
 				<div className={styles.matchingProjectsWrap}>
 					{projects.length > 0 &&
@@ -138,11 +150,21 @@ const About = () => {
 							<BoxProject
 								key={index}
 								project={datum._doc}
+								openModalDetails={handleViewDetails}
 								matchScore={datum.matchScore}
 							/>
 						))}
 				</div>
 			</Modal>
+			{projectDetails && projectDetails.name && (
+				<LazyLoading>
+					<ProjectDetailsModal
+						isVisible={isModalVisible}
+						onClose={() => setIsModalVisible(false)}
+						projectDetails={projectDetails}
+					/>
+				</LazyLoading>
+			)}
 		</div>
 	);
 };

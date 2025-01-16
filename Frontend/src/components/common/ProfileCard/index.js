@@ -124,7 +124,7 @@ const ProfileCard = (props) => {
 									Matching with AI
 								</Button>
 							) : (
-								<Tooltip title="Button này đang bị disable">
+								<Tooltip title="Please update your profile to get matching projects">
 									<Button
 										disabled
 										style={{
