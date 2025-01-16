@@ -1,19 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import verify from "../../../assets/images/icon/verify.png";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import BackgroundDefault from "../../../assets/images/default/BackgroundDefault.png";
 import AvatarDefault from "../../../assets/images/default/AvatarDefault.png";
-import { Button } from "antd";
+import { Button, message, Progress, Tooltip } from "antd";
 import ProfileCardSkeleton from "./ProfileCardSkeleton";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { SearchOutlined } from "@mui/icons-material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { matchingProjects } from "api/artificialIntelligence";
+import { setOpenModalMatchingProjects } from "states/modules/artificialIntelligence";
 
 const ProfileCard = (props) => {
+	const dispatch = useDispatch();
 	const { handleOpenModal } = props;
 
-	const authUser = useSelector((state) => state.auth.authUser);
+	const { authUser } = useSelector((state) => state.auth);
+	const { founderProfile } = useSelector((state) => state.founder);
 	const { loadingUpdateFounderProfile, loadingGetFounderProfile } =
 		useSelector((state) => state.founder);
+	const { projects, loadingMatchingProjects, matchedProjects } = useSelector(
+		(state) => state.artificialIntelligence
+	);
+
+	const handleMatchingWithAI = () => {
+		dispatch(matchingProjects());
+		message.loading({
+			content: "Matching projects with AI...",
+			key: "matchingProjects",
+			duration: 100000,
+		});
+	};
+
+	const handleViewMatchingProjects = () => {
+		dispatch(setOpenModalMatchingProjects(true));
+	};
 
 	return (
 		<div className={styles.profileCardWrap}>
@@ -65,7 +87,7 @@ const ProfileCard = (props) => {
 									? `${authUser.region}`
 									: ""}
 							</p>
-							<p>{authUser.language.join(", ")}</p>
+							<p>{authUser.language && authUser.language.join(", ")}</p>
 							{authUser.linkedin && (
 								<a
 									href={authUser.linkedin}
@@ -76,6 +98,46 @@ const ProfileCard = (props) => {
 							)}
 						</div>
 						<div className={styles.userActions}>
+							{projects && projects.length > 0 ? (
+								<Button
+									color="cyan"
+									variant="solid"
+									style={{
+										borderRadius: "0.5rem",
+									}}
+									icon={<VisibilityIcon />}
+									loading={false}
+									onClick={handleViewMatchingProjects}>
+									View Matching Projects
+								</Button>
+							) : founderProfile &&
+							  founderProfile.industry &&
+							  founderProfile.areas_of_expertise ? (
+								<Button
+									style={{
+										borderRadius: "0.5rem",
+									}}
+									icon={<SearchOutlined />}
+									type="primary"
+									loading={loadingMatchingProjects}
+									onClick={handleMatchingWithAI}>
+									Matching with AI
+								</Button>
+							) : (
+								<Tooltip title="Button này đang bị disable">
+									<Button
+										disabled
+										style={{
+											borderRadius: "0.5rem",
+										}}
+										icon={<SearchOutlined />}
+										type="primary"
+										loading={loadingMatchingProjects}
+										onClick={handleMatchingWithAI}>
+										Matching with AI
+									</Button>
+								</Tooltip>
+							)}
 							<Button
 								style={{
 									borderRadius: "0.5rem",

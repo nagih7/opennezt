@@ -29,6 +29,8 @@ const SeekProjects = React.lazy(() =>
 const NotificationManagement = React.lazy(() =>
 	import("../components/pages/NotificationManagement")
 );
+const VerifyAuth = React.lazy(() => import("../components/pages/Auth/Verify"));
+
 const router = createBrowserRouter([
 	{
 		path: "/login",
@@ -44,6 +46,15 @@ const router = createBrowserRouter([
 		element: (
 			<AuthLayout title={"Register account"} path="register">
 				<Register />
+			</AuthLayout>
+		),
+		loader: ({ request }) => rootLoader({ request }, false, "LOAD_AUTH_PAGE"),
+	},
+	{
+		path: "/verify-authentication",
+		element: (
+			<AuthLayout title={"Verify authentication"} path="verify">
+				<VerifyAuth />
 			</AuthLayout>
 		),
 		loader: ({ request }) => rootLoader({ request }, false, "LOAD_AUTH_PAGE"),

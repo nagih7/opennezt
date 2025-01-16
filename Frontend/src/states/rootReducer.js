@@ -9,6 +9,7 @@ import talentReducer from "./modules/talent";
 import projectReducer from "./modules/project";
 import chatReducer from "./modules/chat";
 import notificationReducer from "./modules/notification";
+import artificialIntelligenceReducer from "./modules/artificialIntelligence";
 
 const rootReducer = {
 	app: appReducer,
@@ -22,6 +23,7 @@ const rootReducer = {
 	project: projectReducer,
 	chat: chatReducer,
 	notification: notificationReducer,
+	artificialIntelligence: artificialIntelligenceReducer,
 };
 
 export default rootReducer;

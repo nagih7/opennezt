@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
-import { useSelector } from "react-redux";
-import store from "states/configureStore";
+import { useSelector, useDispatch } from "react-redux";
 import { Modal } from "antd";
 import { updateFounderProfile } from "api/founder";
 import ProfileCard from "components/common/ProfileCard";
 import FounderProfile from "components/common/FounderProfile";
 import LazyLoading from "components/UI/LazyLoading";
 import TalentProfileSkeleton from "components/skeleton/TalentProfileSkeleton";
+import BoxProject from "../Project/BoxProject";
+import { setOpenModalMatchingProjects } from "states/modules/artificialIntelligence";
 
 const EditProfilePopup = React.lazy(() =>
 	import("components/common/EditProfilePopup")
 );
 
 const About = () => {
+	const dispatch = useDispatch();
+
+	const { projects, openModalMatchingProjects, loadingMatchingProjects } =
+		useSelector((state) => state.artificialIntelligence);
+
 	const [infoUpdateProfile, setInfoUpdateProfile] = useState({
 		experience_level: null,
 		industry: [],
@@ -90,7 +96,7 @@ const About = () => {
 	};
 
 	const handleUpdateProfile = async () => {
-		await store.dispatch(
+		dispatch(
 			updateFounderProfile(
 				infoUpdateProfile,
 				updatedFounderProfile ? "put" : "post"
@@ -120,6 +126,22 @@ const About = () => {
 						onChange={onChange}
 					/>
 				</LazyLoading>
+			</Modal>
+			<Modal
+				open={openModalMatchingProjects}
+				footer={null}
+				width={1200}
+				onCancel={() => dispatch(setOpenModalMatchingProjects(false))}>
+				<div className={styles.matchingProjectsWrap}>
+					{projects.length > 0 &&
+						projects.map((datum, index) => (
+							<BoxProject
+								key={index}
+								project={datum._doc}
+								matchScore={datum.matchScore}
+							/>
+						))}
+				</div>
 			</Modal>
 		</div>
 	);

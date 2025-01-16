@@ -100,16 +100,18 @@ const ProjectBox = ({ project, inviteeId }) => {
 					<strong>[Stage of Development]</strong> {project.stage}
 				</p>
 			</div>
-			<div className={styles.btnInvite}>
-				<Button
-					onClick={() => handleProjectInvitation(project)}
-					loading={false}
-					type="primary"
-					disabled={invitationStatus}
-					icon=<GroupAddIcon />>
-					{invitationStatus ? "Invited" : "Invite"}
-				</Button>
-			</div>
+			{inviteeId && (
+				<div className={styles.btnInvite}>
+					<Button
+						onClick={() => handleProjectInvitation(project)}
+						loading={false}
+						type="primary"
+						disabled={invitationStatus}
+						icon=<GroupAddIcon />>
+						{invitationStatus ? "Invited" : "Invite"}
+					</Button>
+				</div>
+			)}
 			<Modal
 				title="Please select a role."
 				okText="Confirm"

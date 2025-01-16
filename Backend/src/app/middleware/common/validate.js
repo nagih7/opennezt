@@ -3,6 +3,7 @@ import _ from 'lodash'
 import assert from 'assert'
 import {abort, validateAsync} from '@/utils/helpers'
 
+// Validate request data against a Joi schema
 function validate(schema) {
     assert(Joi.isSchema(schema), new TypeError('"schema" must be a Joi schema.'))
 

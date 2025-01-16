@@ -37,14 +37,20 @@ export function authToken(user) {
 }
 
 export async function register({avatar, ...requestBody}) {
-    if (avatar instanceof FileUpload) {
-        requestBody.avatar = avatar.save('avatars')
+    const user = await User.findOne({email: requestBody.email})
+    if (user && user.is_active === false) {
+        console.log('old user')
+        // update user info
+        user.set(requestBody)
+        await user.save()
+        return generateToken({user_id: user._id}, TOKEN_TYPE.VERIFY_EMAIL, VERIFY_EMAIL_EXPIRE_IN)
+    } else {
+        console.log('new user')
+        const newUser = new User(requestBody)
+        await newUser.save()
+
+        return generateToken({user_id: newUser._id}, TOKEN_TYPE.VERIFY_EMAIL, VERIFY_EMAIL_EXPIRE_IN)
     }
-
-    const user = new User(requestBody)
-    await user.save()
-
-    return generateToken({user_id: user._id}, TOKEN_TYPE.VERIFY_EMAIL, VERIFY_EMAIL_EXPIRE_IN)
 }
 
 export async function verifyEmail(currentUser) {

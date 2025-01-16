@@ -10,7 +10,7 @@ import {AsyncValidate, FileUpload} from '@/utils/classes'
 
 export const login = Joi.object({
     email: Joi.string().trim().max(MAX_STRING_SIZE).lowercase().email().required().label('Email'),
-    password: Joi.string().max(MAX_STRING_SIZE).required().label('Mật khẩu'),
+    password: Joi.string().max(MAX_STRING_SIZE).required().label('Password'),
 })
 
 export const register = Joi.object({
@@ -19,8 +19,8 @@ export const register = Joi.object({
         .max(MAX_STRING_SIZE)
         .pattern(VALIDATE_FULL_NAME_REGEX)
         .required()
-        .label('Họ và tên')
-        .messages({'string.pattern.base': '{{#label}} không bao gồm số hay ký tự đặc biệt.'}),
+        .label('Full name')
+        .messages({'string.pattern.base': '{{#label}} do not include numbers or special characters.'}),
     email: Joi.string()
         .trim()
         .max(MAX_STRING_SIZE)
@@ -32,7 +32,7 @@ export const register = Joi.object({
             (value, helpers) =>
                 new AsyncValidate(value, async function () {
                     const user = await User.findOne({email: value})
-                    return !user ? value : helpers.error('any.exists')
+                    return !user || (user && user.is_active === false) ? value : helpers.error('any.exists')
                 })
         ),
     password: Joi.string()
@@ -40,24 +40,25 @@ export const register = Joi.object({
         .max(MAX_STRING_SIZE)
         .pattern(VALIDATE_PASSWORD_REGEX)
         .required()
-        .label('Mật khẩu')
+        .label('Password')
         .messages({
             'string.pattern.base':
-                '{{#label}} phải có ít nhất một chữ thường, chữ hoa, số và ký tự đặc biệt.',
+                '{{#label}} must contain at least one lowercase letter, one uppercase letter, one number and one special character.',
         }),
-    phone: Joi.string()
-        .trim()
-        .pattern(VALIDATE_PHONE_REGEX)
-        .allow('')
-        .required()
-        .label('Số điện thoại')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async function () {
-                    const user = await User.findOne({phone: value})
-                    return !user ? value : helpers.error('any.exists')
-                })
-        ),
+    // phone: Joi.string()
+    //     .trim()
+    //     .pattern(VALIDATE_PHONE_REGEX)
+    //     .allow('')
+    //     .required()
+    //     .label('Số điện thoại')
+    //     .custom(
+    //         (value, helpers) =>
+    //             new AsyncValidate(value, async function () {
+    //                 const user = await User.findOne({phone: value})
+    //                 return !user ? value : helpers.error('any.exists')
+    //             })
+    //     ),
+
     // avatar: Joi.object({
     //     mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
     //         .required()
@@ -75,8 +76,8 @@ export const updateProfile = Joi.object({
         .max(MAX_STRING_SIZE)
         .pattern(VALIDATE_FULL_NAME_REGEX)
         .required()
-        .label('Họ và tên')
-        .messages({'string.pattern.base': '{{#label}} không bao gồm số hay ký tự đặc biệt.'}),
+        .label('Full name')
+        .messages({'string.pattern.base': '{{#label}} do not include numbers or special characters.'}),
     email: Joi.string()
         .trim()
         .lowercase()
@@ -95,7 +96,7 @@ export const updateProfile = Joi.object({
         .trim()
         .pattern(VALIDATE_PHONE_REGEX)
         .allow('')
-        .required()
+        // .required()
         .label('Số điện thoại')
         .custom(
             (value, helpers) =>
@@ -132,22 +133,22 @@ export const changePassword = Joi.object({
         .max(MAX_STRING_SIZE)
         .pattern(VALIDATE_PASSWORD_REGEX)
         .required()
-        .label('Mật khẩu mới')
+        .label('New password')
         .messages({
             'string.pattern.base':
-                '{{#label}} phải có ít nhất một chữ thường, chữ hoa, số và ký tự đặc biệt.',
+                '{{#label}} must contain at least one lowercase letter, one uppercase letter, one number and one special character.',
         })
         .custom(function (value, helpers) {
             const {data} = helpers.prefs.context
             return data.password === data.new_password
-                ? helpers.message('{{#label}} không được trùng với mật khẩu cũ.')
+                ? helpers.message('{{#label}} must be different from the current password.')
                 : value
         }),
     password_confirmation: Joi.string()
         .required()
         .valid(Joi.ref('password'))
         .label('Xác nhận mật khẩu')
-        .messages({'any.only': '{{#label}} không trùng với mật khẩu mới.'}),
+        .messages({'any.only': '{{#label}} does not match the new password.'}),
 })
 
 export const forgotPassword = Joi.object({
@@ -165,7 +166,7 @@ export const forgotPassword = Joi.object({
                     if (user && user.is_active) {
                         req.currentUser = user
                     }
-                    return user && user.is_active ? value : helpers.message('{{#label}} không tồn tại.')
+                    return user && user.is_active ? value : helpers.message('{{#label}} does not exist.')
                 })
         ),
 })
@@ -176,9 +177,9 @@ export const resetPassword = Joi.object({
         .max(MAX_STRING_SIZE)
         .pattern(VALIDATE_PASSWORD_REGEX)
         .required()
-        .label('Mật khẩu mới')
+        .label('New password')
         .messages({
             'string.pattern.base':
-                '{{#label}} phải có ít nhất một chữ thường, chữ hoa, số và ký tự đặc biệt.',
+                '{{#label}} must contain at least one lowercase letter, one uppercase letter, one number and one special character.',
         }),
 })

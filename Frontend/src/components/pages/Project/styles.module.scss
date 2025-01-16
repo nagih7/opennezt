@@ -37,15 +37,20 @@
 		}
 	}
 
-	.projectsList {
+	.projectsListWrap {
+		display: flex;
+		flex-grow: 1;
 		background-color: $backgroundMain;
 		border-radius: $borderRadius;
 		box-shadow: $boxShadow1;
-		padding: 1.8rem;
-		width: 100%;
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
-		gap: 2rem;
-		flex-grow: 1;
+
+		.projectsList {
+			padding: 1.8rem;
+			width: 100%;
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+			gap: 2rem;
+			height: auto;
+		}
 	}
 }

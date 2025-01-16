@@ -3,20 +3,22 @@ import styles from "./styles.module.scss";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
 
-const BoxProject = ({ project, openModalDetails, usedTo }) => {
+const BoxProject = ({ project, matchScore, openModalDetails, usedTo }) => {
 	return (
 		<div
 			className={styles.boxProjectWrap}
 			onClick={() => openModalDetails(project._id, project.user_id)}>
-			<LazyLoadImage
-				src={project.background || BackgroundDefault}
-				onError={(e) => {
-					e.target.onerror = null;
-					e.target.src = BackgroundDefault;
-				}}
-				alt={project.name}
-				className={styles.backgroundProject}
-			/>
+			<div className={styles.backgroundProject}>
+				<LazyLoadImage
+					src={project.background || BackgroundDefault}
+					onError={(e) => {
+						e.target.onerror = null;
+						e.target.src = BackgroundDefault;
+					}}
+					alt={project.name}
+					className={styles.backgroundImage}
+				/>
+			</div>
 			<div className={styles.projectInfo}>
 				<h3>{project.name}</h3>
 				<p
@@ -38,6 +40,11 @@ const BoxProject = ({ project, openModalDetails, usedTo }) => {
 					}}>
 					<strong>[Stage of Development]</strong> {project.stage}
 				</p>
+				{matchScore && (
+					<p>
+						<strong>Compatibility:</strong> {matchScore}%{" "}
+					</p>
+				)}
 			</div>
 		</div>
 	);
