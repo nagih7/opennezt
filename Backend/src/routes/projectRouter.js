@@ -15,10 +15,6 @@ projectRouter.get(
     asyncHandler(projectController.seekProjects)
 )
 
-projectRouter.get('/request-to-join', asyncHandler(projectController.getRequestsToJoinProject))
-
-projectRouter.put('/response-request', asyncHandler(projectController.responseRequest))
-
 projectRouter.put('/background', asyncHandler(projectController.updateBackground))
 
 projectRouter.get('/invitations/:user_id', asyncHandler(projectController.getInvitations))

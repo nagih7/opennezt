@@ -97,6 +97,7 @@ function AuthLayout(props) {
 				</div>
 			)}
 			{path === "verify" && <LazyLoading>{children}</LazyLoading>}
+			{path === "reset-password" && <LazyLoading>{children}</LazyLoading>}
 		</div>
 	);
 }

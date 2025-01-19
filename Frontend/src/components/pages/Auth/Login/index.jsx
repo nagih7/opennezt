@@ -7,14 +7,16 @@ import ButtonMASQ from "../../../../components/UI/Button";
 import { useNavigate } from "react-router-dom";
 import { isValidate } from "../../../../utils/validate";
 import { handleCheckValidateConfirm } from "../../../../utils/helper";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import store from "states/configureStore";
 import { Checkbox } from "antd";
 import Social from "./components/Social";
 import { login } from "../../../../api/auth";
 import Logo from "../../../../assets/images/logo/OpenNezt_icon_black.png";
+import { resetForgotPassword } from "../../../../states/modules/auth";
 
 const Login = () => {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [dataLogin, setDataLogin] = useState({
 		email: "",
@@ -29,6 +31,10 @@ const Login = () => {
 		(state) => state.auth.isLoadingBtnLogin
 	);
 	const { isAuthSuccess, authorize } = useSelector((state) => state.auth);
+
+	useEffect(() => {
+		dispatch(resetForgotPassword());
+	}, [dispatch]);
 
 	useEffect(() => {
 		handleResetError();

@@ -20,17 +20,12 @@ const ProfileCard = (props) => {
 	const { founderProfile } = useSelector((state) => state.founder);
 	const { loadingUpdateFounderProfile, loadingGetFounderProfile } =
 		useSelector((state) => state.founder);
-	const { projects, loadingMatchingProjects, matchedProjects } = useSelector(
+	const { projects, loadingMatchingProjects } = useSelector(
 		(state) => state.artificialIntelligence
 	);
 
 	const handleMatchingWithAI = () => {
 		dispatch(matchingProjects());
-		message.loading({
-			content: "Matching projects with AI...",
-			key: "matchingProjects",
-			duration: 100000,
-		});
 	};
 
 	const handleViewMatchingProjects = () => {

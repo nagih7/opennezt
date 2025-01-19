@@ -17,16 +17,16 @@ export async function verifyForgotPasswordToken(req, res, next) {
                 return
             }
         }
-        abort(410, 'Liên kết đã hết hạn.')
+        abort(410, 'Link has expired.')
     } catch (error) {
         if (!(error instanceof JsonWebTokenError)) {
             throw error
         }
         if (error instanceof TokenExpiredError) {
-            abort(410, 'Liên kết đã hết hạn.')
+            abort(410, 'Link has expired.')
         }
     }
-    abort(403, 'Liên kết không hợp lệ.')
+    abort(403, 'Invalid link.')
 }
 
 export async function verifyEmailToken(req, res, next) {
@@ -39,43 +39,14 @@ export async function verifyEmailToken(req, res, next) {
             next()
             return
         }
-        abort(410, 'Liên kết đã hết hạn.')
+        abort(410, 'Link has expired.')
     } catch (error) {
         if (!(error instanceof JsonWebTokenError)) {
             throw error
         }
         if (error instanceof TokenExpiredError) {
-            abort(410, 'Liên kết đã hết hạn.')
+            abort(410, 'Link has expired.')
         }
     }
-    abort(403, 'Liên kết không hợp lệ.')
-}
-
-export async function authMiddleware(req, res, next) {
-    if (!req.headers['authorization']) {
-        return res.status(401).json({message: 'Không có token'})
-    }
-    const token2 = req.headers['authorization']
-
-    const token = token2.split(' ')[1]
-    // console.log(token)
-    if (!token) {
-        return res.status(401).json({message: 'Không có token'})
-    }
-
-    try {
-        const decoded = verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
-
-        const user = await User.findOne({_id: decoded.user_id})
-        if (!user) {
-            return res.status(401).json({message: 'User không tồn tại'})
-        }
-        req.user = user
-        next()
-    } catch (error) {
-        if (error instanceof JsonWebTokenError) {
-            return res.status(401).json({message: 'Token không hợp lệ'})
-        }
-        next(error)
-    }
+    abort(403, 'Invalid link.')
 }

@@ -1,4 +1,4 @@
-import {User, FounderProfile, Project, Invitation, ObjectId, ChatInvitation, NotificationFeed} from '@/models'
+import {User, FounderProfile, Project, ObjectId, NotificationFeed} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
 
@@ -505,88 +505,5 @@ export async function checkSteps(user) {
     return {
         founderProfile: founderProfile ? true : false,
         project: project ? true : false,
-    }
-}
-
-export async function inviteMember(user, {email, project_id, role}) {
-    const receiver_user = await User.findOne({email}, {_id: 1, email: 1})
-    const invitation = new Invitation({
-        sender_id: user._id,
-        sender_email: user.email,
-        receiver_id: receiver_user._id,
-        receiver_email: receiver_user.email,
-        role,
-        project_id,
-    })
-
-    await invitation.save()
-}
-
-export async function checkExistInvitation(user, {email, project_id, role}) {
-    const isExist = await Invitation.findOne({
-        sender_id: user._id,
-        sender_email: user.email,
-        receiver_email: email,
-        project_id,
-        role,
-    })
-
-    if (isExist) {
-        return true
-    }
-    return false
-}
-
-// NOTIFICATIONS
-export async function getNotifications(user) {
-    const chatInvitations = await ChatInvitation.aggregate([
-        {
-            $match: {receiver_id: user._id},
-        },
-
-        {
-            $addFields: {
-                type: 'chat_invitation',
-            },
-        },
-        {
-            $project: {
-                _id: 1,
-                type: 1,
-                sender_id: 1,
-                sender_name: 1,
-                created_at: 1,
-                status: 1,
-            },
-        },
-        {
-            $sort: {created_at: -1},
-        },
-    ])
-    return chatInvitations
-}
-export async function getIdByEmail(emailData) {
-    try {
-        const email = typeof emailData === 'object' ? emailData.email : emailData
-
-        if (!email || typeof email !== 'string') {
-            throw new Error('Invalid email format')
-        }
-
-        const user = await User.findOne({email})
-
-        if (!user) {
-            throw new Error('User not found')
-        }
-
-        return {
-            success: true,
-            data: user._id,
-        }
-    } catch (error) {
-        return {
-            success: false,
-            message: error.message,
-        }
     }
 }

@@ -20,12 +20,12 @@ export async function checkUserId(req, res, next) {
             return
         }
     }
-    abort(404, 'Không tìm thấy người dùng.')
+    abort(404, 'User not found.')
 }
 
 export function checkCanDeleteUser(req, res, next) {
     if (req.currentUser._id.equals(req.params.id)) {
-        abort(403, 'Không thể xóa chính mình.')
+        abort(403, 'Cannot delete yourself.')
     }
     next()
 }

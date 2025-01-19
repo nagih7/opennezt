@@ -29,7 +29,7 @@ async function requireAuthentication(req, res, next) {
             throw error
         }
         if (error instanceof TokenExpiredError) {
-            abort(401, 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập để tiếp tục!')
+            abort(401, 'Your session has expired. Please log in again!')
         }
     }
     abort(401)

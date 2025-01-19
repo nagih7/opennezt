@@ -13,7 +13,7 @@ export const readRoot = Joi.object({
 })
 
 export const createItem = Joi.object({
-    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Họ và tên'),
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Full name'),
     email: Joi.string()
         .trim()
         .max(MAX_STRING_SIZE)
@@ -32,7 +32,7 @@ export const createItem = Joi.object({
         .pattern(VALIDATE_PHONE_REGEX)
         .allow('')
         .required()
-        .label('Số điện thoại')
+        .label('Phone number')
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async function () {
@@ -40,11 +40,11 @@ export const createItem = Joi.object({
                     return !user ? value : helpers.error('any.exists')
                 })
         ),
-    password: Joi.string().min(6).max(MAX_STRING_SIZE).required().label('Mật khẩu'),
+    password: Joi.string().min(6).max(MAX_STRING_SIZE).required().label('Password'),
 })
 
 export const updateItem = Joi.object({
-    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Họ và tên'),
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Full name'),
     email: Joi.string()
         .trim()
         .max(MAX_STRING_SIZE)
@@ -64,7 +64,7 @@ export const updateItem = Joi.object({
         .pattern(VALIDATE_PHONE_REGEX)
         .allow('')
         .required()
-        .label('Số điện thoại')
+        .label('Phone number')
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async function (req) {
@@ -75,8 +75,8 @@ export const updateItem = Joi.object({
         ),
     linkedin: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('LinkedIn'),
     facebook: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Facebook'),
-    region: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Khu vực'),
-    city: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Thành phố'),
+    region: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Region'),
+    city: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('City'),
     // avatar: Joi.object({
     //     mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
     //         .required()
@@ -86,68 +86,68 @@ export const updateItem = Joi.object({
     //     .instance(FileUpload)
     //     .allow('')
     //     .label('Ảnh đại diện'),
-    language: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Ngôn ngữ'),
+    language: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Language'),
 })
 
 export const resetPassword = Joi.object({
-    new_password: Joi.string().min(6).max(MAX_STRING_SIZE).required().label('Mật khẩu'),
+    new_password: Joi.string().min(6).max(MAX_STRING_SIZE).required().label('New password'),
 })
 
 export const createProject = Joi.object({
-    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Tên dự án'),
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Project name'),
     landing_page_url: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('URL landing page'),
     related_industries: Joi.array()
         .items(Joi.string().trim().max(MAX_STRING_SIZE))
         .required()
-        .label('Các ngành liên quan'),
-    stage: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Giai đoạn'),
-    problem: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Vấn đề'),
-    solution: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Giải pháp'),
-    project_demo_url: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('URL demo sản phẩm'),
-    team_intro_url: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('URL giới thiệu nhóm'),
+        .label('Related industries'),
+    stage: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Stage'),
+    problem: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Problem'),
+    solution: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Solution'),
+    project_demo_url: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Project demo URL'),
+    team_intro_url: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Team intro URL'),
     // pitch_deck định dạng FileUpload
     pitch_deck: Joi.object({
-        mimetype: Joi.valid('application/pdf').required().label('Định dạng tệp'),
+        mimetype: Joi.valid('application/pdf').required().label('PDF file'),
     })
         .unknown(true)
         .instance(FileUpload)
         .allow('', {})
         .label('Pitch deck'),
-    statistics: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Thống kê'),
+    statistics: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Statistics'),
     revenues: Joi.array().items(
         Joi.object({
-            time: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Thời gian'),
-            revenue: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Doanh thu'),
+            time: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Time'),
+            revenue: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Revenue'),
         })
     ),
     funding_sources: Joi.object({
-        friend_and_family: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Bạn bè và gia đình'),
-        grant: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Trợ cấp'),
-        angel: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Nhà đầu tư thiên thần'),
-        venture_capital: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Vốn đầu tư mạo hiểm'),
-        other: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Khác'),
+        friend_and_family: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Friend and family'),
+        grant: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Grant'),
+        angel: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Angel'),
+        venture_capital: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Venture capital'),
+        other: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Other'),
     }),
-    target_money: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Mục tiêu tài chính'),
-    target_audience: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Đối tượng'),
-    competitors: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Đối thủ cạnh tranh'),
+    target_money: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Target money'),
+    target_audience: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Target audience'),
+    competitors: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Competitors'),
     competitive_advantage: Joi.string()
         .trim()
         .max(MAX_AREAS_STRING_SIZE)
         .allow('')
-        .label('Lợi thế cạnh tranh'),
-    why_now: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Tại sao là bây giờ ?'),
-    strategy: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Chiến lược'),
-    milestones: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Các mốc thời gian'),
+        .label('Competitive advantage'),
+    why_now: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Why now'),
+    strategy: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Strategy'),
+    milestones: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Milestones'),
     // background định dạng FileUpload
     background: Joi.object({
         mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
             .required()
-            .label('Định dạng ảnh'),
+            .label('Image format'),
     })
         .unknown(true)
         .instance(FileUpload)
         .allow('', {})
-        .label('Ảnh nền'),
+        .label('Background'),
 })
 
 export const getTalentDetails = Joi.object({
@@ -166,121 +166,84 @@ export const getTalentDetails = Joi.object({
         ),
 })
 
-export const inviteMember = Joi.object({
-    email: Joi.string()
-        .trim()
-        .lowercase()
-        .email()
-        .required()
-        .label('Email')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async function () {
-                    const user = await User.findOne({email: value})
-                    return user ? value : helpers.error('any.empty')
-                })
-        ),
-    project_id: Joi.string()
-        .trim()
-        .required()
-        .label('ID dự án')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async function () {
-                    const project = await Project.findOne({
-                        _id: value,
-                    })
-                    return project ? value : helpers.error('any.empty')
-                })
-        ),
-
-    role: Joi.valid(
-        'founder',
-        'co-founder',
-        'talent',
-        'investor',
-        'advisor',
-        'mentor',
-        'Founder',
-        'Co-founder',
-        'Talent',
-        'Investor',
-        'Advisor',
-        'Mentor'
-    )
-        .required()
-        .label('Vai trò'),
-})
-
 export const createFounderProfile = Joi.object({
-    industry: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Ngành nghề'),
-    experience_level: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Kinh nghiệm'),
-    degree: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Bằng cấp'),
-    certification: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Chứng chỉ'),
+    industry: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Industry'),
+    experience_level: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Experience level'),
+    degree: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Degree'),
+    certification: Joi.array()
+        .items(Joi.string().trim().max(MAX_STRING_SIZE))
+        .required()
+        .label('Certification'),
     areas_of_expertise: Joi.object({
         accounting_and_finance: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
             .required()
-            .label('Kế toán và tài chính'),
+            .label('Accounting and finance'),
         human_resource: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
             .required()
-            .label('Nhân sự'),
+            .label('Human resource'),
         international: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
             .required()
-            .label('Quốc tế'),
+            .label('International'),
         law_and_legal: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
             .required()
-            .label('Pháp lý'),
-        management: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Quản lý'),
+            .label('Law and legal'),
+        management: Joi.array()
+            .items(Joi.string().trim().max(MAX_STRING_SIZE))
+            .required()
+            .label('Management'),
         marketing: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Marketing'),
-        operations: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Hoạt động'),
-        sales: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Bán hàng'),
+        operations: Joi.array()
+            .items(Joi.string().trim().max(MAX_STRING_SIZE))
+            .required()
+            .label('Operations'),
+        sales: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Sales'),
         starting_up: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
             .required()
-            .label('Khởi nghiệp'),
+            .label('Starting up'),
         sustainability: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
             .required()
-            .label('Bền vững'),
+            .label('Sustainability'),
         technology_and_internet: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
             .required()
-            .label('Công nghệ và Internet'),
+            .label('Technology and internet'),
     }),
     professional_summary: Joi.string()
         .trim()
         .max(MAX_AREAS_STRING_SIZE)
         .required()
-        .label('Tóm tắt nghề nghiệp'),
-    career_goals: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Mục tiêu nghề nghiệp'),
-    offer: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Đề xuất'),
-    expectation: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Kỳ vọng'),
+        .label('Professional summary'),
+    career_goals: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Career goals'),
+    offer: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Offer'),
+    expectation: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Expectation'),
     availability: Joi.valid('Exploring', 'Full-time', 'Part-time', 'All-In', 'Freelance')
         .required()
-        .label('Thời gian làm việc'),
+        .label('Availability'),
 })
 
 export const recuitTalents = Joi.object({
-    keyword: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Từ khóa'),
-    sector: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Ngành nghề'),
-    experience_level: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Kinh nghiệm'),
-    education_level: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Bằng cấp'),
-    commitment: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Cam kết'),
-    location: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Địa điểm'),
-    language: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Ngôn ngữ'),
-    page: Joi.number().integer().min(0).required().label('Trang'),
-    // per_page: Joi.number().integer().min(1).max(100).required().label('Số lượng'),
+    keyword: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Keyword'),
+    sector: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Sector'),
+    experience_level: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Experience level'),
+    education_level: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Education level'),
+    commitment: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Commitment'),
+    location: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Location'),
+    language: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Language'),
+    page: Joi.number().integer().min(0).required().label('Page'),
+    // per_page: Joi.number().integer().min(1).max(100).required().label('Per page'),
 })
 
 export const updateAvatar = Joi.object({
     avatar: Joi.object({
         mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
             .required()
-            .label('Định dạng ảnh'),
+            .label('Image format'),
     })
         .unknown(true)
         .instance(FileUpload)
@@ -292,10 +255,10 @@ export const updateBackground = Joi.object({
     background: Joi.object({
         mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
             .required()
-            .label('Định dạng ảnh'),
+            .label('Image format'),
     })
         .unknown(true)
         .instance(FileUpload)
         .required()
-        .label('Ảnh nền'),
+        .label('Background'),
 })

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { message } from "antd";
+import { startRequest } from "../app";
 
 const authSlice = createSlice({
 	name: "auth",
@@ -8,6 +9,7 @@ const authSlice = createSlice({
 		authorize: "user",
 		authRegister: {},
 		authUser: {},
+		resetPasswordSuccess: false,
 		errorRegister: {
 			name: "",
 			email: "",
@@ -21,6 +23,7 @@ const authSlice = createSlice({
 		isRegisterSuccess: false,
 		isLoadingRegister: false,
 		isSuccessForgotPassword: false,
+		isLoadingResetPassword: false,
 	},
 	reducers: {
 		startRequestLogin: (state) => ({
@@ -122,6 +125,30 @@ const authSlice = createSlice({
 				isSuccessForgotPassword: false,
 			};
 		},
+		resetForgotPassword: (state) => ({
+			...state,
+			isSuccessForgotPassword: false,
+		}),
+		startRequestResetPassword: (state) => ({
+			...state,
+			isLoadingResetPassword: true,
+		}),
+		startRequestResetPasswordSuccess: (state, action) => {
+			message.success(action.payload.message);
+			return {
+				...state,
+				isLoadingResetPassword: false,
+				resetPasswordSuccess: true,
+			};
+		},
+		startRequestResetPasswordFail: (state, action) => {
+			message.error(action.payload.data.message);
+			return {
+				...state,
+				isLoadingResetPassword: false,
+				resetPasswordSuccess: false,
+			};
+		},
 	},
 });
 
@@ -143,6 +170,10 @@ export const {
 	startRequestForgotPassword,
 	startRequestForgotPasswordSuccess,
 	startRequestForgotPasswordFail,
+	resetForgotPassword,
+	startRequestResetPassword,
+	startRequestResetPasswordSuccess,
+	startRequestResetPasswordFail,
 } = authSlice.actions;
 
 export default authSlice.reducer;

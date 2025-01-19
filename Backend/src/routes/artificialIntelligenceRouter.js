@@ -10,4 +10,6 @@ openAIRouter.use(requireAuthentication)
 
 openAIRouter.get('/matching-projects', asyncHandler(artificialIntelligenceController.matchingProjects))
 
+openAIRouter.get('/matching-talents', asyncHandler(artificialIntelligenceController.matchingTalents))
+
 export default openAIRouter

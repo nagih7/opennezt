@@ -63,7 +63,7 @@ assert(!_.isEmpty(VERIFY_EMAIL_EXPIRE_IN), assertMsg('VERIFY_EMAIL_EXPIRE_IN'))
 export const REQUESTS_LIMIT_PER_MINUTE = parseInt(process.env.REQUESTS_LIMIT_PER_MINUTE, 10) || 1000
 
 export const LINK_STATIC_URL = `${APP_URL_API}/static/`
-export const LINK_RESET_PASSWORD_URL = `${APP_URL_API}/${APP_URL_AUTH}/reset-password`
+export const LINK_RESET_PASSWORD_URL = `${APP_URL_CLIENT}/reset-password`
 export const LINK_VERIFY_EMAIL_URL = `${APP_URL_API}/${APP_URL_AUTH}/verify-email`
 
 assert(!_.isEmpty(process.env.DB_HOST), assertMsg('DB_HOST'))
@@ -110,11 +110,11 @@ export const MAX_AREAS_STRING_SIZE = 500
 export const UUID_TRANSLATOR = short()
 
 export const STATUS_DEFAULT_MESSAGE = {
-    401: 'Vui lòng đăng nhập để tiếp tục.',
-    403: 'Xin lỗi, bạn không được phép truy cập.',
-    404: 'Đường dẫn không tồn tại.',
-    429: 'Có quá nhiều yêu cầu. Vui lòng thử lại sau.',
-    500: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
+    401: 'Please login to continue.',
+    403: 'You do not have permission to access this resource.',
+    404: 'Path does not exist.',
+    429: 'Too many requests. Please try again later.',
+    500: 'An error occurred. Please try again later.',
 }
 
 export const JOI_DEFAULT_OPTIONS = {
@@ -127,48 +127,48 @@ export const JOI_DEFAULT_OPTIONS = {
     stripUnknown: true,
     messages: {
         // boolean
-        'boolean.base': '{{#label}} sai định dạng.',
+        'boolean.base': '{{#label}} wrong format.',
 
         // string
-        'string.base': '{{#label}} sai định dạng.',
-        'string.empty': '{{#label}} không được bỏ trống.',
-        'string.min': '{{#label}} không được ít hơn {{#limit}} ký tự.',
-        'string.max': '{{#label}} không được vượt quá {{#limit}} ký tự.',
-        'string.pattern.base': '{{#label}} không đúng định dạng.',
-        'string.email': '{{#label}} không đúng định dạng.',
+        'string.base': '{{#label}} wrong format.',
+        'string.empty': '{{#label}} cannot be left blank.',
+        'string.min': '{{#label}} must not be less than {{#limit}} characters.',
+        'string.max': '{{#label}} must not exceed {{#limit}} characters.',
+        'string.pattern.base': '{{#label}} is not in the correct format.',
+        'string.email': '{{#label}} is not in the correct format.',
 
         // number
-        'number.base': '{{#label}} sai định dạng.',
-        'number.integer': '{{#label}} sai định dạng.',
+        'number.base': '{{#label}} wrong format.',
+        'number.integer': '{{#label}} wrong format.',
         'number.min': '{{#label}} không được nhỏ hơn {{#limit}}.',
         'number.max': '{{#label}} không được lớn hơn {{#limit}}.',
 
         // array
-        'array.base': '{{#label}} sai định dạng.',
-        'array.unique': 'Các {{#label}} không được giống nhau.',
-        'array.min': '{{#label}} không được ít hơn {{#limit}} phần tử.',
-        'array.max': '{{#label}} không được vượt quá {{#limit}} phần tử.',
-        'array.length': '{{#label}} phải có đúng {{#limit}} phần tử.',
-        'array.includesRequiredUnknowns': '{{#label}} không hợp lệ.',
-        'array.includesRequiredKnowns': '{{#label}} không hợp lệ.',
+        'array.base': '{{#label}} wrong format.',
+        'array.unique': 'Các {{#label}} not allow same.',
+        'array.min': '{{#label}} must not have less than {{#limit}} elements.',
+        'array.max': '{{#label}} must not exceed {{#limit}} elements.',
+        'array.length': '{{#label}} must have exactly {{#limit}} elements.',
+        'array.includesRequiredUnknowns': '{{#label}} is invalid.',
+        'array.includesRequiredKnowns': '{{#label}} is invalid.',
 
         // object
-        'object.base': '{{#label}} sai định dạng.',
-        'object.unknown': 'Trường {#key} không được xác định.',
-        'object.instance': '{{#label}} không đúng định dạng.',
+        'object.base': '{{#label}} wrong format.',
+        'object.unknown': 'The {#key} field is not defined.',
+        'object.instance': '{{#label}} is not in the correct format.',
 
         // binary
-        'binary.base': '{{#label}} sai định dạng.',
-        'binary.min': '{{#label}} không được ít hơn {{#limit}} bytes.',
-        'binary.max': '{{#label}} không được vượt quá {{#limit}} bytes.',
+        'binary.base': '{{#label}} wrong format.',
+        'binary.min': '{{#label}} must not be less than {{#limit}} bytes.',
+        'binary.max': '{{#label}} must not exceed {{#limit}} bytes.',
 
         // any
-        'any.only': '{{#label}} không hợp lệ.',
-        'any.required': '{{#label}} không được bỏ trống.',
-        'any.unknown': 'Trường {#key} không được xác định.',
-        'any.invalid': '{{#label}} không hợp lệ.',
-        'any.exists': '{{#label}} đã tồn tại.',
-        'any.empty': '{{#label}} không tồn tại.',
+        'any.only': '{{#label}} is invalid.',
+        'any.required': '{{#label}} cannot be left blank.',
+        'any.unknown': 'The {#key} field is not defined.',
+        'any.invalid': '{{#label}} is invalid.',
+        'any.exists': '{{#label}} already exists.',
+        'any.empty': '{{#label}} does not exist.',
     },
 }
 
@@ -199,47 +199,57 @@ export const MATCHING_PROJECTS_PROMPT = (userSkills, projects) => {
     const messages = [
         {
             role: 'system',
-            content:
-                'You are an AI system that matches user skills with project requirements. Analyze input data carefully and return structured output.',
+            content: `
+You are an AI system that matches user skills with project requirements. Analyze input data carefully and return structured output.`,
         },
         {
             role: 'user',
             content: `
-                Input:
+Input:
 
-                1. User Skills:
-                Industry: ${userSkills.industry.join(', ')}
-                Skills: ${Object.keys(userSkills.skills)
+1. User Skills:
+Industry: ${userSkills.industry.join(', ')}
+Skills: ${Object.keys(userSkills.skills)
         .map((key) => `${key}: ${userSkills.skills[key].join(', ')}`)
-        .join('\n                ')}
-                
-                2. Projects:
-                    ${projects
+        .join('\n')}         
+2. Projects:${projects
         .map(
             (project, index) => `
-                    - Project ID: ${project._id}
-                    - Related Industries: ${project.related_industries.join(', ')}`
+- Project ID: ${project._id}
+- Related Industries: ${project.related_industries.join(', ')}`
         )
-        .join('\n                    ')}
-                    - Problem Solving: ${projects.problem_solving}
+        .join('\n')}
+Task:
+- Analyze the user's skills against the skill requirements of each project.
+- Return an array of projects that match the user (Only return if the project matches).
+- Limit the 6 projects with the highest score.
+- For each matching project, include:
+- "projectId": ID of the project
+- "matchScore": score from 1 to 100 indicating the match rate
+Output format:[{"projectId": "<Project ID>", "matchScore": <Score>},...]`,
+        },
+    ]
 
-                Task:
-                - Analyze the user's skills against the skill requirements of each project.
-                - Return an array of projects that match the user (Only return if the project matches).
-                - Limit the 6 projects with the highest score.
-                - For each matching project, include:
-                - "projectId": ID of the project
-                - "matchScore": score from 1 to 100 indicating the match rate
+    return messages
+}
 
-                Output format:
-                    [
-                        {
-                            "projectId": "<Project ID>",
-                            "matchScore": <Score>,
-                        },
-                        ...
-                    ]
-                `,
+export const MATCHING_TALENTS_PROMPT = (projects, talents) => {
+    const messages = [
+        {
+            role: 'system',
+            content: `
+You are an AI system that matches projects with talents. Analyze input data carefully and return structured output.`,
+        },
+        {
+            role: 'user',
+            content: `
+Input:
+1. Projects Requirements:${projects.join(', ')}
+2. Talents: ${talents
+        .map((talent, index) => `User ID: ${talent.user_id}, Industry: ${talent.industry.join(', ')}`)
+        .join('; ')}
+Task:
+Analyze the skill requirements of each project against the user's skills; Return an array of talents that match the project (Only return if the talent matches); Limit the 6 talents with the highest score; For each matching talent, include: "user_id": ID of the user, "match_score": score from 1 to 100 indicating the match rate; Output format:{"<user_id>": <Score>,...}`,
         },
     ]
 

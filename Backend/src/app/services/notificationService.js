@@ -139,7 +139,6 @@ export async function replyProjectInvitation(notification_id, status, io) {
         // THAY ĐỔI TRẠNG THÁI THÔNG BÁO (TYPE)
         const notification = await NotificationFeed.findById({_id: notification_id})
         const {user_id, source_id, metadata} = notification
-        console.log('metadata', metadata)
         const user = await User.findById(user_id).select('name avatar _id')
         if (status === 'accepted') {
             const project = await Project.findById(metadata.project_id)

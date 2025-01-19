@@ -30,6 +30,9 @@ const NotificationManagement = React.lazy(() =>
 	import("../components/pages/NotificationManagement")
 );
 const VerifyAuth = React.lazy(() => import("../components/pages/Auth/Verify"));
+const ResetPassword = React.lazy(() =>
+	import("../components/pages/Auth/ResetPassword")
+);
 
 const router = createBrowserRouter([
 	{
@@ -55,6 +58,15 @@ const router = createBrowserRouter([
 		element: (
 			<AuthLayout title={"Verify authentication"} path="verify">
 				<VerifyAuth />
+			</AuthLayout>
+		),
+		loader: ({ request }) => rootLoader({ request }, false, "LOAD_AUTH_PAGE"),
+	},
+	{
+		path: "/reset-password",
+		element: (
+			<AuthLayout title={"Reset password"} path="reset-password">
+				<ResetPassword />
 			</AuthLayout>
 		),
 		loader: ({ request }) => rootLoader({ request }, false, "LOAD_AUTH_PAGE"),

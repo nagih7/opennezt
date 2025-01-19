@@ -19,7 +19,7 @@ export async function checkAuthorizeManage(req, res, next) {
                 const user = await User.findOne({_id: user_id})
                 if (user) {
                     if (user.role !== 'admin') {
-                        abort(403, 'Bạn không có quyền truy cập.')
+                        abort(403, 'You do not have permission to access this resource!')
                     }
                     next()
                     return
@@ -31,7 +31,7 @@ export async function checkAuthorizeManage(req, res, next) {
             throw error
         }
         if (error instanceof TokenExpiredError) {
-            abort(401, 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập để tiếp tục!')
+            abort(401, 'Your session has expired. Please log in again.')
         }
     }
     abort(401)

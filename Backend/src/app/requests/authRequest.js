@@ -108,7 +108,7 @@ export const updateProfile = Joi.object({
     avatar: Joi.object({
         mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
             .required()
-            .label('Định dạng ảnh'),
+            .label('Image format'),
     })
         .unknown(true)
         .instance(FileUpload)
@@ -119,7 +119,7 @@ export const updateProfile = Joi.object({
 export const changePassword = Joi.object({
     current_password: Joi.string()
         .required()
-        .label('Mật khẩu cũ')
+        .label('Current password')
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, (req) =>
@@ -147,7 +147,7 @@ export const changePassword = Joi.object({
     password_confirmation: Joi.string()
         .required()
         .valid(Joi.ref('password'))
-        .label('Xác nhận mật khẩu')
+        .label('Password confirmation')
         .messages({'any.only': '{{#label}} does not match the new password.'}),
 })
 
@@ -172,7 +172,7 @@ export const forgotPassword = Joi.object({
 })
 
 export const resetPassword = Joi.object({
-    new_password: Joi.string()
+    password: Joi.string()
         .min(6)
         .max(MAX_STRING_SIZE)
         .pattern(VALIDATE_PASSWORD_REGEX)
