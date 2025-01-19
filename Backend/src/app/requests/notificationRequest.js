@@ -14,7 +14,7 @@ export const readRoot = Joi.object({
 export const requestAddFriend = Joi.object({
     user_id: Joi.string()
         .required()
-        .label('User_ID')
+        .label('User ID')
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async () => {
@@ -59,7 +59,7 @@ export const projectInvitation = Joi.object({
 
     user_id: Joi.string()
         .required()
-        .label('User_ID')
+        .label('User ID')
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async () => {

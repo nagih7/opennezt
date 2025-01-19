@@ -60,9 +60,9 @@ export async function changePassword(req, res) {
 
 export async function forgotPassword(req, res) {
     const token = generateToken({user_id: req.currentUser._id}, TOKEN_TYPE.FORGOT_PASSWORD, 600)
-    await res.sendMail(req.currentUser.email, 'Quên mật khẩu', 'emails/forgot-password', {
+    await res.sendMail(req.currentUser.email, 'Forgot password', 'emails/forgot-password', {
         name: req.currentUser.name,
-        linkResetPassword: `${LINK_RESET_PASSWORD_URL}/${encodeURIComponent(token)}`,
+        linkResetPassword: `${LINK_RESET_PASSWORD_URL}?token=${encodeURIComponent(token)}`,
     })
     res.status(200).jsonify('Please check your email to reset password.')
 }
@@ -76,7 +76,7 @@ export async function requestResetPassword(req, res) {
 }
 
 export async function resetPassword(req, res) {
-    await userService.resetPassword(req.currentUser, req.body.new_password)
+    await userService.resetPassword(req.currentUser, req.body.password)
     await authService.blockToken(req.params.token)
-    res.redirect(`${process.env.APP_URL_CLIENT}`)
+    res.status(201).jsonify('Reset password success.')
 }

@@ -1,8 +1,6 @@
 import {Router} from 'express'
 import {asyncHandler} from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
-// import validate from '@/app/middleware/common/validate'
-// import * as chatRequest from '../app/requests/chatRequest'
 import * as chatController from '../app/controllers/chatController'
 
 const chatRouter = Router()

@@ -7,9 +7,10 @@ import { isValidate } from "../../../../utils/validate";
 import { forgotPassword } from "../../../../api/auth";
 import store from "states/configureStore";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 function ForgotPassword() {
+	const dispatch = useDispatch();
 	const [dataForgotPassword, setDataForgotPassword] = useState({ email: "" });
 	const [errorDataForgotPassword, setErrorDataForgotPassword] = useState({
 		email: "",
@@ -22,9 +23,10 @@ function ForgotPassword() {
 
 	useEffect(() => {
 		if (isSuccessForgotPassword) {
+			console.log("isSuccessForgotPassword", isSuccessForgotPassword);
 			navigate("/login");
 		}
-	}, [isSuccessForgotPassword, navigate]);
+	}, [isSuccessForgotPassword, navigate, dispatch]);
 
 	useEffect(() => {
 		handleResetError();

@@ -3,9 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const talentSlice = createSlice({
 	name: "founder",
 	initialState: {
-		loadingRecruitTalents: false,
-		loadingGetTalentDetails: false,
-		loadingSkipTalent: false,
 		talents: [],
 		talentDetails: null,
 		formRecruitTalents: {
@@ -18,6 +15,9 @@ const talentSlice = createSlice({
 			language: null,
 			page: 0,
 		},
+		loadingRecruitTalents: false,
+		loadingGetTalentDetails: false,
+		loadingSkipTalent: false,
 	},
 	reducers: {
 		startRequestRecruitTalents: (state) => ({

@@ -67,22 +67,6 @@ userRouter.get(
 
 userRouter.get('/talent-details/:id', asyncHandler(userController.getTalentDetails))
 
-// Invite member
-userRouter.post(
-    '/invite-member',
-    asyncHandler(validate(userRequest.inviteMember)),
-    asyncHandler(userController.inviteMember)
-)
-
-// Invite member
-userRouter.post(
-    '/invite-member',
-    asyncHandler(validate(userRequest.inviteMember)),
-    asyncHandler(userController.inviteMember)
-)
-
-userRouter.get('/notifications', asyncHandler(userController.getNotifications))
-
 // URL dynamic
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))
 
@@ -101,5 +85,5 @@ userRouter.put(
     asyncHandler(validate(userRequest.updateItem)),
     asyncHandler(userController.updateItem)
 )
-userRouter.post('/getid-byemail', asyncHandler(userController.getIdByEmail))
+
 export default userRouter

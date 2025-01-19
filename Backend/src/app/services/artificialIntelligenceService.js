@@ -1,6 +1,6 @@
-import {FounderProfile, Project} from '@/models'
+import {FounderProfile, Project, User, ObjectId} from '@/models'
 import callOpenAI from '@/configs/openAI'
-import {MATCHING_PROJECTS_PROMPT} from '@/configs/constants'
+import {LINK_STATIC_URL, MATCHING_PROJECTS_PROMPT, MATCHING_TALENTS_PROMPT} from '@/configs/constants'
 
 export async function matchingProjects(user) {
     const founderProfile = await FounderProfile.findOne({user_id: user._id}).lean()
@@ -41,6 +41,104 @@ export async function matchingProjects(user) {
             }
         })
         return result.filter((project) => project !== null)
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export async function matchingTalents(user) {
+    const projects = await Project.find({user_id: user._id}).lean().select('related_industries ')
+    const founderProfile = await FounderProfile.find({user_id: {$ne: user._id}})
+        .lean()
+        .select('industry  user_id')
+
+    // Get user skills and project requirements
+    const skillRequirements = projects.map((project) => ({
+        related_industries: project.related_industries,
+        // problem_solving: project.problem,
+    }))
+
+    const relatedIndustries = [...new Set(skillRequirements.flatMap((item) => item.related_industries))]
+
+    const userSkills = founderProfile.map((profile) => ({
+        user_id: profile.user_id,
+        industry: profile.industry,
+        // skills: Object.keys(profile.areas_of_expertise).reduce((acc, key) => {
+        //     if (profile.areas_of_expertise[key].length > 0) {
+        //         acc[key] = profile.areas_of_expertise[key]
+        //     }
+        //     return acc
+        // }, {}),
+    }))
+    // Filter userSkills with industry - skillRequirements.related_industries
+    userSkills.forEach((userSkill) => {
+        const commonIndustries = userSkill.industry.filter((industry) => relatedIndustries.includes(industry))
+        userSkill.industry = commonIndustries
+    })
+
+    // Generate prompt for OpenAI API
+    const prompt = MATCHING_TALENTS_PROMPT(relatedIndustries, userSkills)
+    try {
+        const response = await callOpenAI(prompt)
+        const cleanResponse = response.replace(/```json\n|```/g, '')
+        const talentsByMatching = JSON.parse(cleanResponse)
+
+        // Matching user_id with User model
+
+        const userIds = Object.keys(talentsByMatching).map((userId) => new ObjectId(userId))
+        const result = await User.aggregate([
+            {
+                $match: {
+                    _id: {$in: userIds},
+                },
+            },
+            {
+                // Thêm trường mới `_id_str` để lưu `_id` dưới dạng chuỗi
+                $addFields: {
+                    user_id: {$toString: '$_id'},
+                },
+            },
+
+            {
+                $addFields: {
+                    match_score: {
+                        $let: {
+                            vars: {talentsByMatching}, // Truyền trực tiếp ánh xạ
+                            in: {
+                                $getField: {
+                                    field: '$user_id',
+                                    input: '$$talentsByMatching',
+                                },
+                            },
+                        },
+                    },
+                    avatar: {
+                        $cond: {
+                            if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                            then: '$avatar',
+                            else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                        },
+                    },
+                },
+            },
+            {
+                $sort: {
+                    match_score: -1,
+                },
+            },
+            {
+                $project: {
+                    _id: 1, // Giữ lại _id
+                    name: 1,
+                    match_score: 1,
+                    avatar: 1,
+                    language: 1,
+                },
+            },
+        ])
+
+        return result
     } catch (error) {
         console.error(error)
         throw error

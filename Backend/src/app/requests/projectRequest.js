@@ -6,7 +6,7 @@ import {User} from '@/models'
 export const requestAddFriend = Joi.object({
     user_id: Joi.string()
         .required()
-        .label('User_ID')
+        .label('User ID')
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async () => {

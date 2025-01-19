@@ -9,12 +9,19 @@ import {
 } from "api/project";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Modal } from "antd";
-import LazyLoadingMedium from "components/UI/LazyLoadingMedium";
+import LazyLoading from "components/UI/LazyLoading";
 import BoxProject from "./BoxProject";
 import ProjectDetails from "../../common/ProjectDetails";
 import ProjectsSkeleton from "components/skeleton/ProjectsSkeleton";
 import NotFound from "components/UI/NotFound";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { SearchOutlined } from "@mui/icons-material";
+import { matchingTalents } from "api/artificialIntelligence";
+import AvatarDefault from "assets/images/default/AvatarDefault.png";
+import TalentProfile from "components/common/TalentProfile";
+import { getTalentDetails } from "api/talent";
+import { getRequestAddFriend } from "api/notification";
 
 const CreateProjectForm = React.lazy(() => import("./CreateProjectForm"));
 const UpdateProjectForm = React.lazy(() => import("./UpdateProjectForm"));
@@ -22,10 +29,17 @@ const UpdateProjectForm = React.lazy(() => import("./UpdateProjectForm"));
 function Project() {
 	const dispatch = useDispatch();
 
+	const { talents, loadingMatchingTalents } = useSelector(
+		(state) => state.artificialIntelligence
+	);
+
 	const [openModalUpdateProject, setOpenModalUpdateProject] = useState(false);
 	const [openModalCreateProject, setOpenModalCreateProject] = useState(false);
 	const [openModalProjectDetails, setOpenModalProjectDetails] =
 		useState(false);
+	const [openModalMatchingTalents, setOpenModalMatchingTalents] =
+		useState(false);
+	const [modalTalentDetails, setModalTalentDetails] = useState(false);
 	const [formProject, setFormData] = useState({
 		name: "",
 		landing_page_url: "",
@@ -148,17 +162,61 @@ function Project() {
 		}
 	}, [resultUpdateProject]);
 
+	const handleMatchingWithAI = useCallback(() => {
+		dispatch(matchingTalents());
+	}, [dispatch]);
+
+	const handleViewMatchingTalents = () => {
+		setOpenModalMatchingTalents(true);
+	};
+
+	const handleGetDetailTalent = useCallback(
+		(id) => {
+			setModalTalentDetails(true);
+			dispatch(getTalentDetails(id));
+			dispatch(getRequestAddFriend(id));
+		},
+		[dispatch]
+	);
+
 	return (
 		<div className={styles.projectContainer}>
 			<div className={styles.projectHeader}>
 				<h2>Project Management</h2>
-				<Button
-					type="primary"
-					className={styles.btnCreate}
-					onClick={() => setOpenModalCreateProject(true)}>
-					<CreateNewFolderIcon />
-					Create new project
-				</Button>
+				<div className={styles.userActions}>
+					{talents && talents.length > 0 ? (
+						<Button
+							color="cyan"
+							variant="solid"
+							style={{
+								borderRadius: "0.5rem",
+							}}
+							icon={<VisibilityIcon />}
+							loading={false}
+							onClick={handleViewMatchingTalents}>
+							View matching talents
+						</Button>
+					) : (
+						<Button
+							style={{
+								borderRadius: "0.5rem",
+							}}
+							icon={<SearchOutlined />}
+							type="primary"
+							loading={loadingMatchingTalents}
+							onClick={handleMatchingWithAI}>
+							Matching talent with AI
+						</Button>
+					)}
+
+					<Button
+						type="primary"
+						className={styles.btnCreate}
+						onClick={() => setOpenModalCreateProject(true)}>
+						<CreateNewFolderIcon />
+						Create new project
+					</Button>
+				</div>
 			</div>
 
 			{projects && projects.length === 0 && !loadingGetProjects ? (
@@ -195,12 +253,12 @@ function Project() {
 				confirmLoading={loadingCreateNewProject}
 				onCancel={handleCancel}
 				width={1000}>
-				<LazyLoadingMedium>
+				<LazyLoading>
 					<CreateProjectForm
 						formProject={formProject}
 						setFormData={setFormData}
 					/>
-				</LazyLoadingMedium>
+				</LazyLoading>
 			</Modal>
 			<Modal
 				title=""
@@ -234,12 +292,61 @@ function Project() {
 				confirmLoading={loadingUpdateProject}
 				onCancel={handleCloseModalUpdateProject}
 				width={1000}>
-				<LazyLoadingMedium>
+				<LazyLoading>
 					<UpdateProjectForm
 						formProject={formProject}
 						setFormData={setFormData}
 					/>
-				</LazyLoadingMedium>
+				</LazyLoading>
+			</Modal>
+			<Modal
+				title=""
+				okText="Update now"
+				open={openModalMatchingTalents}
+				footer={null}
+				onCancel={() => setOpenModalMatchingTalents(false)}
+				width={1000}>
+				<LazyLoading>
+					<div className={styles.modalMatchingTalentsWrap}>
+						{talents.map((talent, index) => (
+							<div className={styles.talentWrap} key={index}>
+								<div className={styles.talentAvatar}>
+									<img
+										src={talent.avatar || AvatarDefault}
+										alt={talent.name}
+										onError={(e) => {
+											e.target.onerror = null;
+											e.target.src = AvatarDefault;
+										}}
+									/>
+								</div>
+								<span className={styles.name}>{talent.name}</span>
+								<span className={styles.matchScore}>
+									Compatibility: {talent.match_score}%
+								</span>
+								<div className={styles.talentActions}>
+									<Button
+										type="primary"
+										onClick={() => handleGetDetailTalent(talent._id)}>
+										View detail
+									</Button>
+								</div>
+							</div>
+						))}
+					</div>
+				</LazyLoading>
+			</Modal>
+			<Modal
+				footer={null}
+				title=""
+				okText="OK"
+				open={modalTalentDetails}
+				confirmLoading={false}
+				onCancel={() => setModalTalentDetails(false)}
+				width={1000}>
+				<LazyLoading>
+					<TalentProfile />
+				</LazyLoading>
 			</Modal>
 		</div>
 	);

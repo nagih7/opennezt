@@ -1,5 +1,5 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {Project, ProjectRequest, NotificationFeed, ObjectId} from '@/models'
+import {Project, NotificationFeed, ObjectId} from '@/models'
 import {FileUpload} from '@/utils/classes'
 
 export async function seekProjects(user, requestQuery) {
@@ -60,16 +60,6 @@ export async function seekProjects(user, requestQuery) {
     ])
 
     return {total: projects.length, page: requestQuery.page + 1, per_page, projects}
-}
-
-export async function getRequestsToJoinProject(userId) {
-    const requests = await ProjectRequest.find({receiver_id: userId}).sort({updatedAt: -1})
-    return requests
-}
-
-export async function responseRequest(requestData) {
-    const {request_id, status} = requestData
-    await ProjectRequest.updateOne({_id: request_id}, {status})
 }
 
 export async function updateBackground(user, requestBody) {

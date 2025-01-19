@@ -20,8 +20,10 @@ export const rootLoader = async (
 	if (
 		!auth.isAuthSuccess &&
 		getAuthToken() &&
-		url.pathname !== "verify-authentication"
+		url.pathname !== "verify-authentication" &&
+		url.pathname !== "forgot-password"
 	) {
+		console.log("getme");
 		await store.dispatch(getMe());
 		auth = store.getState().auth;
 	}

@@ -23,16 +23,23 @@
 			font-weight: bold;
 		}
 
-		.btnCreate {
-			color: white;
-			padding: 10px 20px;
-			border: none;
-			border-radius: 8px;
-			cursor: pointer;
-			font-size: 14px;
+		.userActions {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 1.5rem;
 
-			&:hover {
-				background-color: darken(#6c9bcf, 10%);
+			.btnCreate {
+				color: white;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 8px;
+				cursor: pointer;
+				font-size: 14px;
+
+				&:hover {
+					background-color: darken(#6c9bcf, 10%);
+				}
 			}
 		}
 	}
@@ -51,6 +58,49 @@
 			grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
 			gap: 2rem;
 			height: auto;
+		}
+	}
+}
+
+.modalMatchingTalentsWrap {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+	gap: 2rem;
+
+	.talentWrap {
+		background-color: $colorWhite;
+		border-radius: $borderRadius;
+		padding: 1.8rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		gap: 0.5rem;
+		box-shadow: $boxShadow1;
+
+		.talentAvatar {
+			width: 10rem;
+			height: 10rem;
+			border-radius: $borderRadius;
+			background-color: $colorBackground;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				border-radius: $borderRadius;
+			}
+		}
+
+		.name {
+			font-size: 18px;
+			font-weight: bold;
+		}
+
+		.matchScore {
+			font-size: 14px;
+			color: $colorPrimary;
+			font-style: italic;
 		}
 	}
 }

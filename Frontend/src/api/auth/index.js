@@ -15,6 +15,9 @@ import {
 	startRequestForgotPassword,
 	startRequestForgotPasswordSuccess,
 	startRequestForgotPasswordFail,
+	startRequestResetPassword,
+	startRequestResetPasswordSuccess,
+	startRequestResetPasswordFail,
 } from "../../states/modules/auth";
 
 export const login = (data) => async (dispatch, getState) => {
@@ -102,3 +105,19 @@ export const forgotPassword = (email) => async (dispatch, getState) => {
 		getState,
 	});
 };
+
+export const resetPassword =
+	(token, password) => async (dispatch, getState) => {
+		return callApi({
+			method: "post",
+			apiPath: `auth/reset-password/${token}`,
+			actionTypes: [
+				startRequestResetPassword,
+				startRequestResetPasswordSuccess,
+				startRequestResetPasswordFail,
+			],
+			variables: { password },
+			dispatch,
+			getState,
+		});
+	};

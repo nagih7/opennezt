@@ -89,34 +89,15 @@ export async function getTalentDetails(req, res) {
 
 export async function updateBackground(req, res) {
     await userService.updateBackground(req.currentUser, req.body)
-    res.status(200).jsonify('Cập nhật ảnh nền thành công.')
+    res.status(200).jsonify('Update background successfully.')
 }
 
 export async function updateAvatar(req, res) {
     await userService.updateAvatar(req.currentUser, req.body)
-    res.status(200).jsonify('Cập nhật ảnh đại diện thành công.')
+    res.status(200).jsonify('Update avatar successfully.')
 }
 
 export async function checkSteps(req, res) {
     const result = await userService.checkSteps(req.currentUser)
-    res.jsonify(result)
-}
-
-export async function inviteMember(req, res) {
-    const isExist = await userService.checkExistInvitation(req.currentUser, req.body)
-    if (isExist) {
-        res.status(200).jsonify('Lời mời thành viên đã tồn tại.')
-    } else {
-        await userService.inviteMember(req.currentUser, req.body)
-        res.status(201).jsonify('Mời thành viên thành công.')
-    }
-}
-
-export async function getNotifications(req, res) {
-    const result = await userService.getNotifications(req.currentUser)
-    res.jsonify(result)
-}
-export async function getIdByEmail(req, res) {
-    const result = await userService.getIdByEmail(req.body)
     res.jsonify(result)
 }
