@@ -237,3 +237,11 @@ export const listTeamRole = [
 	{ label: "Core", value: "Core" },
 	{ label: "Founding", value: "Founding" },
 ];
+
+export const listLanguages = [
+	{ label: "Vietnamese", value: "Vietnamese" },
+	{ label: "English", value: "English" },
+	// { label: "Japanese", value: "Japanese" },
+	// { label: "Korean", value: "Korean" },
+	{ label: "Chinese", value: "Chinese" },
+];

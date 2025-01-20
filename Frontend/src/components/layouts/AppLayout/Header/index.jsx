@@ -1,23 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import "./styles.scss";
-import { Popover } from "antd";
+import { Popover, Radio } from "antd";
 import contentInfo from "./components/PopoverProfile";
 import contentNotification from "./components/PopoverNotification";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ChatList from "./components/ChatList";
 import MessageBoxList from "./components/MessageBoxList";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
+import { LANG } from "utils/constains";
+import { setLanguage } from "states/modules/app";
 
 const Header = () => {
+	const dispatch = useDispatch();
 	// const [isShowThemeLight, setIsShowThemeLight] = useState(true);
 	const [isFullScreen, setIsFullScreen] = useState(false);
 	const [isShowChatList, setIsShowChatList] = useState(false);
 	const authUser = useSelector((state) => state.auth.authUser);
+	const { language } = useSelector((state) => state.app);
 	const chatListRef = useRef(null);
 
 	useEffect(() => {
@@ -97,10 +101,24 @@ const Header = () => {
 		setIsShowChatList(!isShowChatList);
 	};
 
+	const handleChangeLanguage = (e) => {
+		dispatch(setLanguage(e.target.value));
+	};
+
 	return (
 		<header className={styles.headerWrap}>
 			<div className={styles.headerLeftWrap}></div>
 			<div className={`${styles.headerRightWrap}`}>
+				<Radio.Group
+					style={{ marginRight: "10px", height: "10px" }}
+					value={language}
+					onChange={handleChangeLanguage}>
+					{LANG.map((item, index) => (
+						<Radio.Button key={index} value={item.label}>
+							{item.label}
+						</Radio.Button>
+					))}
+				</Radio.Group>
 				<div
 					className={`${styles.itemHeaderRight}`}
 					onClick={() => openFullScreen()}>

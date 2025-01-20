@@ -1,22 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "./styles.module.scss";
 import verify from "../../../assets/images/icon/verify.png";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import BackgroundDefault from "../../../assets/images/default/BackgroundDefault.png";
 import AvatarDefault from "../../../assets/images/default/AvatarDefault.png";
-import { Button, message, Progress, Tooltip } from "antd";
+import { Button, Tooltip } from "antd";
 import ProfileCardSkeleton from "./ProfileCardSkeleton";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchOutlined } from "@mui/icons-material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { matchingProjects } from "api/artificialIntelligence";
 import { setOpenModalMatchingProjects } from "states/modules/artificialIntelligence";
+import {
+	MATCHING_PROJECTS_WITH_AI,
+	LINKEDIN_PROFILE,
+	VIEW_MATCHING_PROJECTS,
+	UPDATE_PROFILE,
+} from "utils/constains";
 
 const ProfileCard = (props) => {
 	const dispatch = useDispatch();
 	const { handleOpenModal } = props;
 
 	const { authUser } = useSelector((state) => state.auth);
+	const { language } = useSelector((state) => state.app);
 	const { founderProfile } = useSelector((state) => state.founder);
 	const { loadingUpdateFounderProfile, loadingGetFounderProfile } =
 		useSelector((state) => state.founder);
@@ -88,7 +95,7 @@ const ProfileCard = (props) => {
 									href={authUser.linkedin}
 									target="_blank"
 									rel="noopener noreferrer">
-									LinkedIn Profile
+									{LINKEDIN_PROFILE[language]}
 								</a>
 							)}
 						</div>
@@ -103,7 +110,7 @@ const ProfileCard = (props) => {
 									icon={<VisibilityIcon />}
 									loading={false}
 									onClick={handleViewMatchingProjects}>
-									View Matching Projects
+									{VIEW_MATCHING_PROJECTS[language]}
 								</Button>
 							) : founderProfile &&
 							  founderProfile.industry &&
@@ -116,7 +123,7 @@ const ProfileCard = (props) => {
 									type="primary"
 									loading={loadingMatchingProjects}
 									onClick={handleMatchingWithAI}>
-									Matching with AI
+									{MATCHING_PROJECTS_WITH_AI[language]}
 								</Button>
 							) : (
 								<Tooltip title="Please update your profile to get matching projects">
@@ -129,7 +136,7 @@ const ProfileCard = (props) => {
 										type="primary"
 										loading={loadingMatchingProjects}
 										onClick={handleMatchingWithAI}>
-										Matching with AI
+										{MATCHING_PROJECTS_WITH_AI[language]}
 									</Button>
 								</Tooltip>
 							)}
@@ -140,7 +147,7 @@ const ProfileCard = (props) => {
 								type="primary"
 								loading={loadingUpdateFounderProfile}
 								onClick={() => handleOpenModal()}>
-								Update Profile
+								{UPDATE_PROFILE[language]}
 							</Button>
 						</div>
 					</div>

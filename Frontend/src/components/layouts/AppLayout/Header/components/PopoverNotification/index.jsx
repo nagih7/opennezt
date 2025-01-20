@@ -9,11 +9,13 @@ import { replyNotification, getNotifications } from "api/notification";
 import { useNavigate } from "react-router-dom";
 import { getProjects } from "api/project";
 import { getChatList } from "api/chat";
+import { NOTIFICATIONS, ACTIONS, STATUS } from "utils/constains/appConstains";
 
 function PopoverNotification() {
 	const { notifications, loadingReplyNotification } = useSelector(
 		(state) => state.notification
 	);
+	const { language } = useSelector((state) => state.app);
 
 	const navigate = useNavigate();
 
@@ -45,7 +47,9 @@ function PopoverNotification() {
 
 	return (
 		<div className={styles.modalNotificationWrap}>
-			<div className={styles.headerWrap}>Notifications</div>
+			<div className={styles.headerWrap}>
+				{NOTIFICATIONS.NOTIFICATIONS[language]}
+			</div>
 			<div className={styles.mainModalInfoWrap}>
 				<ul className={styles.menuInfoWrap}>
 					{notifications &&
@@ -70,15 +74,23 @@ function PopoverNotification() {
 										{notification.type === "project_invitation" && (
 											<div>
 												<b>{notification.metadata.source_name}</b>{" "}
-												invited you to join the{" "}
+												{
+													NOTIFICATIONS.INVITED_YOU_TO_JOIN_THE[
+														language
+													]
+												}{" "}
 												<b>{notification.metadata.project_name}</b>{" "}
-												project
+												{NOTIFICATIONS.PROJECT[language]}
 											</div>
 										)}
 										{notification.type === "friend_request" && (
 											<div>
 												<b>{notification.metadata.source_name}</b>{" "}
-												sent you a friend request
+												{
+													NOTIFICATIONS.SENT_YOU_A_FRIEND_REQUEST[
+														language
+													]
+												}
 											</div>
 										)}
 										<span className={styles.date}>
@@ -99,7 +111,7 @@ function PopoverNotification() {
 													"accepted"
 												)
 											}>
-											Accept
+											{ACTIONS.ACCEPT[language]}
 										</Button>
 										<Button
 											type="default"
@@ -112,16 +124,18 @@ function PopoverNotification() {
 													"rejected"
 												)
 											}>
-											Reject
+											{ACTIONS.REJECT[language]}
 										</Button>
 									</div>
 								) : notification.metadata.status === "accepted" ? (
 									<div className={styles.actionsWrap}>
-										<Tag color="green">Accepted</Tag>
+										<Tag color="green">
+											{STATUS.ACCEPTED[language]}
+										</Tag>
 									</div>
 								) : (
 									<div className={styles.actionsWrap}>
-										<Tag color="red">Rejected</Tag>
+										<Tag color="red">{STATUS.REJECTED[language]}</Tag>
 									</div>
 								)}
 							</li>
@@ -131,7 +145,7 @@ function PopoverNotification() {
 			<div
 				className={styles.footerWrap}
 				onClick={() => handleNavigateToNotification()}>
-				View all notification
+				{NOTIFICATIONS.VIEW_ALL_NOTIFICATIONS[language]}
 			</div>
 		</div>
 	);

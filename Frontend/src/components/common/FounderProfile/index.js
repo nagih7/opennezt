@@ -4,21 +4,30 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Card, Col, Row, Typography } from "antd";
 const { Title, Text, Paragraph } = Typography;
 import { DollarCircleOutlined, AimOutlined } from "@ant-design/icons";
+import { PROFESSIONAL_PROFILE } from "../../../utils/constains/appConstains";
+import { useSelector } from "react-redux";
 
 const FounderProfile = ({ founderProfile }) => {
+	const { language } = useSelector((state) => state.app);
 	return (
 		<div className={styles.founderProfileWrap}>
 			<Row gutter={[24, 24]}>
 				<Col span={24}>
 					<Card className={styles.section}>
 						<Title level={4} icon={<AimOutlined />}>
-							Professional Background
+							{PROFESSIONAL_PROFILE.PROFESSIONAL_BACKGROUND[language]}
 							<ArrowDropDownIcon className={styles.dropDown} />
 						</Title>
 						<Row gutter={[24, 24]}>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Professional Summary</Text>
+									<Text strong>
+										{
+											PROFESSIONAL_PROFILE.PROFESSIONAL_SUMMARY[
+												language
+											]
+										}
+									</Text>
 									<Paragraph>
 										{founderProfile.professional_summary
 											? founderProfile.professional_summary
@@ -28,19 +37,9 @@ const FounderProfile = ({ founderProfile }) => {
 							</Col>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Professional Summary</Text>
-									<Paragraph>
-										{founderProfile.professional_summary
-											? founderProfile.professional_summary
-											: "..."}
-									</Paragraph>
-								</div>
-							</Col>
-						</Row>
-						<Row gutter={[24, 24]}>
-							<Col span={12}>
-								<div className={styles.infoItem}>
-									<Text strong>Experience Level</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.EXPERIENCE_LEVEL[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.experience_level
 											? founderProfile.experience_level
@@ -48,9 +47,13 @@ const FounderProfile = ({ founderProfile }) => {
 									</Paragraph>
 								</div>
 							</Col>
+						</Row>
+						<Row gutter={[24, 24]}>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Education Level</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.EDUCATION_LEVEL[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.degree
 											? founderProfile.degree
@@ -58,11 +61,11 @@ const FounderProfile = ({ founderProfile }) => {
 									</Paragraph>
 								</div>
 							</Col>
-						</Row>
-						<Row gutter={[24, 24]}>
-							<Col span={24}>
+							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Certifications</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.CERTIFICATIONS[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.certification &&
 										founderProfile.certification.length > 0
@@ -77,13 +80,19 @@ const FounderProfile = ({ founderProfile }) => {
 				<Col span={24}>
 					<Card className={styles.section}>
 						<Title level={4} icon={<DollarCircleOutlined />}>
-							Expertise
+							{PROFESSIONAL_PROFILE.EXPERTISE[language]}
 							<ArrowDropDownIcon className={styles.dropDown} />
 						</Title>
 						<Row gutter={[24, 24]}>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Accounting and Finance</Text>
+									<Text strong>
+										{
+											PROFESSIONAL_PROFILE.ACCOUNTING_AND_FINANCE[
+												language
+											]
+										}
+									</Text>
 									<Paragraph>
 										{founderProfile.areas_of_expertise
 											.accounting_and_finance &&
@@ -98,7 +107,9 @@ const FounderProfile = ({ founderProfile }) => {
 							</Col>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Human Resources</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.HUMAN_RESOURCES[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.areas_of_expertise
 											.human_resource &&
@@ -115,7 +126,9 @@ const FounderProfile = ({ founderProfile }) => {
 						<Row gutter={[24, 24]}>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>International</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.INTERNATIONAL[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.areas_of_expertise
 											.international &&
@@ -130,7 +143,9 @@ const FounderProfile = ({ founderProfile }) => {
 							</Col>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Law and Legal</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.LAW_AND_LEGAL[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.areas_of_expertise
 											.law_and_legal &&
@@ -147,7 +162,9 @@ const FounderProfile = ({ founderProfile }) => {
 						<Row gutter={[24, 24]}>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Management</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.MANAGEMENT[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.areas_of_expertise.management &&
 										founderProfile.areas_of_expertise.management
@@ -161,7 +178,9 @@ const FounderProfile = ({ founderProfile }) => {
 							</Col>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Operations</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.OPERATION[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.areas_of_expertise.operations &&
 										founderProfile.areas_of_expertise.operations
@@ -177,7 +196,9 @@ const FounderProfile = ({ founderProfile }) => {
 						<Row gutter={[24, 24]}>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Sales</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.SALE[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.areas_of_expertise.sales &&
 										founderProfile.areas_of_expertise.sales.length > 0
@@ -190,7 +211,9 @@ const FounderProfile = ({ founderProfile }) => {
 							</Col>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Starting up</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.STARTING_UP[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.areas_of_expertise.starting_up &&
 										founderProfile.areas_of_expertise.starting_up
@@ -206,7 +229,9 @@ const FounderProfile = ({ founderProfile }) => {
 						<Row gutter={[24, 24]}>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Sustainability</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.SUSTAINABILITY[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.areas_of_expertise
 											.sustainability &&
@@ -221,7 +246,13 @@ const FounderProfile = ({ founderProfile }) => {
 							</Col>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Technology and Internet</Text>
+									<Text strong>
+										{
+											PROFESSIONAL_PROFILE.TECHNOLOGY_AND_INTERNET[
+												language
+											]
+										}
+									</Text>
 									<Paragraph>
 										{founderProfile.areas_of_expertise
 											.technology_and_internet &&
@@ -240,13 +271,15 @@ const FounderProfile = ({ founderProfile }) => {
 				<Col span={24}>
 					<Card className={styles.section}>
 						<Title level={4} icon={<AimOutlined />}>
-							How to Work with Me
+							{PROFESSIONAL_PROFILE.WORK_WITH_ME[language]}
 							<ArrowDropDownIcon className={styles.dropDown} />
 						</Title>
 						<Row gutter={[24, 24]}>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>My career goals</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.MY_CAREER_GOALS[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.career_goals
 											? founderProfile.career_goals
@@ -256,7 +289,9 @@ const FounderProfile = ({ founderProfile }) => {
 							</Col>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>Avalability</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.AVAILABILITY[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.avalability
 											? founderProfile.avalability
@@ -268,7 +303,9 @@ const FounderProfile = ({ founderProfile }) => {
 						<Row gutter={[24, 24]}>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>What I can offer</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.WHAT_I_CAN_OFFER[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.offer
 											? founderProfile.offer
@@ -278,7 +315,9 @@ const FounderProfile = ({ founderProfile }) => {
 							</Col>
 							<Col span={12}>
 								<div className={styles.infoItem}>
-									<Text strong>My work expectation</Text>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.EXPECTATIONS[language]}
+									</Text>
 									<Paragraph>
 										{founderProfile.expectation
 											? founderProfile.expectation

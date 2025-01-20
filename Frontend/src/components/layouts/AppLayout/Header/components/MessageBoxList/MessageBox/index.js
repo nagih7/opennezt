@@ -14,6 +14,7 @@ import { Avatar, message, Modal, Tooltip } from "antd";
 import { getProjectInvitations } from "api/project";
 import { closeChatBox, comfirmSendMessage } from "states/modules/chat";
 import MessageBoxContent from "./MessageBoxContent";
+import { ACTIONS } from "utils/constains";
 
 const Projects = React.lazy(() => import("components/common/Projects"));
 
@@ -22,6 +23,7 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 	const socket = useSocket();
 
 	const { authUser } = useSelector((state) => state.auth);
+	const { language } = useSelector((state) => state.app);
 
 	const [content, setContent] = useState("");
 	const [showMoreActions, setShowMoreActions] = useState(false);
@@ -172,19 +174,19 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 						className={styles.moreActionsButton}
 						onClick={() => handleSendProjectInvitation()}>
 						<GroupsIcon className={styles.icon} />
-						<span>Send project invitation</span>
+						<span>{ACTIONS.SEND_PROJECT_INVITATION[language]}</span>
 					</button>
 					<button
 						className={styles.moreActionsButton}
 						onClick={() => message.info("Comming soon")}>
 						<MicIcon className={styles.icon} />
-						<span>Send voice message</span>
+						<span>{ACTIONS.SEND_VOICE_MESSAGE[language]}</span>
 					</button>
 				</div>
 				<input
 					onKeyDown={(e) => handleEnterKey(e, converse)}
 					type="text"
-					placeholder="Type a message..."
+					placeholder={ACTIONS.ENTER_MESSAGE[language]}
 					className={styles.miniChatInput}
 					value={content}
 					onChange={(e) => setContent(e.target.value)}

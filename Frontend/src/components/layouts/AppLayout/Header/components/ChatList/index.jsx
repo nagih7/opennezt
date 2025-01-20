@@ -5,10 +5,12 @@ import AvatarDefault from "assets/images/default/AvatarDefault.png";
 import { getChatHistory, getChatList } from "api/chat";
 import NotFound from "components/UI/NotFound";
 import { Avatar, Tooltip } from "antd";
+import { CHATS } from "utils/constains/appConstains";
 
 const ChatList = () => {
 	const dispatch = useDispatch();
 	const { chatList } = useSelector((state) => state.chat);
+	const { language } = useSelector((state) => state.app);
 
 	const [searchQuery, setSearchQuery] = useState("");
 	const [debouncedTerm, setDebouncedTerm] = useState("");
@@ -39,10 +41,10 @@ const ChatList = () => {
 	return (
 		<div className={styles.chatPopoverWrap}>
 			<div className={styles.headerWrap}>
-				<h3>Chats</h3>
+				<h3>{CHATS.CHATS[language]}</h3>
 				<input
 					type="text"
-					placeholder="Search people"
+					placeholder={CHATS.SEARCH[language]}
 					className={styles.searchInput}
 					value={searchQuery}
 					onChange={(e) => handleSearchQuery(e.target.value)}

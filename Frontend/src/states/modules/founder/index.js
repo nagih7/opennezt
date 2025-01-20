@@ -30,7 +30,7 @@ const founderSlice = createSlice({
 			resultUpdateFounderProfile: false,
 		}),
 		startUpdateFounderProfileSuccess: (state, action) => {
-			message.success("Cập nhật thông tin thành công");
+			message.success("Information updated successfully!");
 			return {
 				...state,
 				founderProfile: action.payload.data,
@@ -39,7 +39,7 @@ const founderSlice = createSlice({
 			};
 		},
 		startUpdateFounderProfileFail: (state) => {
-			message.error("Cập nhật thông tin thất bại");
+			message.error("Failed to update information!");
 			return {
 				...state,
 				loadingUpdateFounderProfile: false,
