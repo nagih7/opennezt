@@ -110,7 +110,7 @@ const Header = () => {
 			<div className={styles.headerLeftWrap}></div>
 			<div className={`${styles.headerRightWrap}`}>
 				<Radio.Group
-					style={{ marginRight: "10px", height: "10px" }}
+					style={{ marginRight: "10px" }}
 					value={language}
 					onChange={handleChangeLanguage}>
 					{LANG.map((item, index) => (
