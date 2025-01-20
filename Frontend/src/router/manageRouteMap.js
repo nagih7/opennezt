@@ -6,55 +6,55 @@ import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import PageviewIcon from "@mui/icons-material/Pageview";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
+import { NAVBAR_LABEL } from "utils/constains";
 
 const manageRouteMap = [
 	{
-		label: "Admin",
-		name: "Admin",
+		label: NAVBAR_LABEL.ADMIN,
+		// name: "Admin",
 		icon: <AdminPanelSettingsIcon className="material-icons" />,
 		path: "/admin/manage",
 		routeActive: ["/admin/manage"],
 		permissions: ["manage_page"],
 	},
 	{
-		label: "Dashboard",
+		label: NAVBAR_LABEL.DASHBOARD,
 		name: "Dashboard",
 		icon: <DashboardIcon className="material-icons" />,
 		path: "/",
 		routeActive: ["/"],
 		permissions: [""],
 	},
-
 	{
-		label: "About Me",
+		label: NAVBAR_LABEL.ABOUT_ME,
 		icon: <PersonIcon className="material-icons" />,
 		path: "/about",
 		routeActive: ["/about"],
 		permissions: ["about_page"],
 	},
 	{
-		label: "Project",
+		label: NAVBAR_LABEL.PROJECT,
 		icon: <FolderIcon className="material-icons" />,
 		path: "/project",
 		routeActive: ["/project"],
 		permissions: ["project_page"],
 	},
 	{
-		label: "Recruit Talents",
+		label: NAVBAR_LABEL.RECRUIT_TALENTS,
 		icon: <PersonSearchIcon className="material-icons" />,
 		path: "/recruit-talents",
 		routeActive: ["/recruit-talents"],
 		permissions: ["recruit_talents_page"],
 	},
 	{
-		label: "Seek Projects",
+		label: NAVBAR_LABEL.SEEK_PROJECTS,
 		icon: <PageviewIcon className="material-icons" />,
 		path: "/seek-projects",
 		routeActive: ["/seek-projects"],
 		permissions: ["seek_projects_page"],
 	},
 	{
-		label: "Notifications",
+		label: NAVBAR_LABEL.NOTIFICATIONS,
 		icon: <FolderSharedIcon className="material-icons" />,
 		path: "/notification-management",
 		routeActive: ["/notification-management"],

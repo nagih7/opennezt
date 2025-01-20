@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { logout } from "../../../../api/auth";
 import store from "states/configureStore";
+import { LOGOUT } from "../../../../utils/constains";
 
 SideBar.prototype = {
 	isShowSideBar: PropTypes.bool.isRequired,
@@ -29,7 +30,8 @@ function SideBar(props) {
 	const location = useLocation();
 	const navigate = useNavigate();
 
-	const authorize = useSelector((state) => state.auth.authorize);
+	const { authorize } = useSelector((state) => state.auth);
+	const { language } = useSelector((state) => state.app);
 
 	const handleToggleMenu = (indexNavItem, menuNavItem) => {
 		if (menuNavItem.path) {
@@ -129,7 +131,7 @@ function SideBar(props) {
 						className={`${styles.menuNavItem} ${styles.logout}`}
 						onClick={() => handleConfirmLogOut()}>
 						<LogoutIcon style={{ color: "#7d8da1" }} />
-						Logout
+						{LOGOUT[language]}
 					</li>
 				</ul>
 			</div>

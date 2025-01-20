@@ -23,7 +23,6 @@ export const rootLoader = async (
 		url.pathname !== "verify-authentication" &&
 		url.pathname !== "forgot-password"
 	) {
-		console.log("getme");
 		await store.dispatch(getMe());
 		auth = store.getState().auth;
 	}

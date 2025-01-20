@@ -3,15 +3,23 @@ import styles from "./styles.module.scss";
 import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
 import { sendProjectInvitation } from "api/notification";
 import { Button, message, Modal, Select } from "antd";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import { getProjectInvitations } from "api/project";
 import store from "states/configureStore";
 import { listTeamRole, listRole } from "components/common/ListSelected";
+import {
+	INDUSTRY_FIELD,
+	STAGE_OF_DEVELOPMENT,
+	ACTIONS,
+	STATUS,
+	NOTIFICATIONS,
+	INPUT_PLACEHOLDER,
+	TEAM_ROLE,
+	ROLE,
+} from "utils/constains";
 
 const ProjectBox = ({ project, inviteeId }) => {
-	const dispatch = useDispatch();
-
 	const [modalConfirm, setModalConfirm] = useState(false);
 	const [modalRole, setModalRole] = useState(false);
 	const [invitationStatus, setInvitationStatus] = useState(true);
@@ -26,6 +34,7 @@ const ProjectBox = ({ project, inviteeId }) => {
 	const { loadingProjectInvitation } = useSelector(
 		(state) => state.notification
 	);
+	const { language } = useSelector((state) => state.app);
 	const { projectInvitations } = useSelector((state) => state.project);
 
 	useEffect(() => {
@@ -57,7 +66,6 @@ const ProjectBox = ({ project, inviteeId }) => {
 	};
 
 	const confirmInvite = async () => {
-		console.log("formProjectInvitation", formProjectInvitation);
 		await store.dispatch(
 			sendProjectInvitation({ ...formProjectInvitation, user_id: inviteeId })
 		);
@@ -88,7 +96,7 @@ const ProjectBox = ({ project, inviteeId }) => {
 				<h3>{project.name}</h3>
 
 				<p>
-					<strong>[Industry Field]</strong>{" "}
+					<strong>[{INDUSTRY_FIELD[language]}]</strong>{" "}
 					{project.related_industries.join(" / ")}
 				</p>
 				<p
@@ -97,7 +105,8 @@ const ProjectBox = ({ project, inviteeId }) => {
 						overflow: "hidden",
 						textOverflow: "ellipsis",
 					}}>
-					<strong>[Stage of Development]</strong> {project.stage}
+					<strong>[{STAGE_OF_DEVELOPMENT[language]}]</strong>{" "}
+					{project.stage}
 				</p>
 			</div>
 			{inviteeId && (
@@ -108,13 +117,15 @@ const ProjectBox = ({ project, inviteeId }) => {
 						type="primary"
 						disabled={invitationStatus}
 						icon=<GroupAddIcon />>
-						{invitationStatus ? "Invited" : "Invite"}
+						{invitationStatus
+							? ACTIONS.INVITE[language]
+							: STATUS.INVITED[language]}
 					</Button>
 				</div>
 			)}
 			<Modal
-				title="Please select a role."
-				okText="Confirm"
+				title={NOTIFICATIONS.PLEASE_SELECT_A_ROLE[language]}
+				okText={ACTIONS.CONFIRM[language]}
 				onOk={confirmRole}
 				open={modalRole}
 				width={800}
@@ -126,29 +137,29 @@ const ProjectBox = ({ project, inviteeId }) => {
 						value={formProjectInvitation.team_role}
 						required
 						showSearch
-						placeholder="Team Role"
+						placeholder={INPUT_PLACEHOLDER.TEAM_ROLE[language]}
 						optionFilterProp="label"
-						onChange={(value) => onChange(value, "team_role")}
+						onChange={(value, option) => onChange(option, "team_role")}
 						size="large"
 						style={{ width: "100%" }}
-						options={listTeamRole}
+						options={TEAM_ROLE[language]}
 					/>
 					<Select
 						value={formProjectInvitation.role}
 						required
 						showSearch
-						placeholder="Role"
+						placeholder={INPUT_PLACEHOLDER.ROLE[language]}
 						optionFilterProp="label"
 						onChange={(value) => onChange(value, "role")}
 						size="large"
 						style={{ width: "100%" }}
-						options={listRole}
+						options={ROLE[language]}
 					/>
 				</div>
 			</Modal>
 			<Modal
-				title="Are you sure you want to invite?"
-				okText="Confirm"
+				title={NOTIFICATIONS.ARE_YOU_SURE_YOU_WANT_TO_INVITE[language]}
+				okText={ACTIONS.CONFIRM[language]}
 				onOk={confirmInvite}
 				open={modalConfirm}
 				confirmLoading={loadingProjectInvitation}

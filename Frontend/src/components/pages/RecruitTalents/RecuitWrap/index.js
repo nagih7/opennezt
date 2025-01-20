@@ -3,13 +3,16 @@ import styles from "./styles.module.scss";
 import { Select, Button, Input } from "antd";
 import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import {
-	listSector,
-	listExperienceLevel,
-	listEducationLevel,
-	listCommitment,
-	listLocation,
-	listLanguage,
-} from "components/common/ListSelected";
+	SECTOR,
+	EXPERIENCE_LEVEL,
+	EDUCATION_LEVEL,
+	COMMITMENT,
+	LOCATION,
+	LANGUAGE,
+	SEARCH,
+	RESET,
+	INPUT_PLACEHOLDER,
+} from "utils/constains";
 import { useDispatch, useSelector } from "react-redux";
 import { recruitTalents } from "api/talent";
 import {
@@ -22,6 +25,7 @@ const RecruitWrap = () => {
 	const { loadingRecruitTalents, formRecruitTalents } = useSelector(
 		(state) => state.talent
 	);
+	const { language } = useSelector((state) => state.app);
 
 	const [canDeleteForm, setCanDeleteForm] = useState(false);
 
@@ -40,11 +44,11 @@ const RecruitWrap = () => {
 	}, [formRecruitTalents]);
 
 	const handleOnChange = (event, nameSelect) => {
+		console.log(event, nameSelect);
 		dispatch(setFormRecruitTalents({ event, nameSelect }));
 	};
 
 	const handleConfirmRecruitTalents = () => {
-		console.log(formRecruitTalents);
 		dispatch(
 			recruitTalents({
 				...formRecruitTalents,
@@ -73,92 +77,63 @@ const RecruitWrap = () => {
 				danger
 				icon={<DeleteOutlined />}
 				onClick={() => handleResetForm()}>
-				Reset
+				{RESET[language]}
 			</Button>
 			<div className={styles.recruitSelectWrap}>
 				<Input
 					value={formRecruitTalents.keyword}
-					placeholder="Name"
+					placeholder={INPUT_PLACEHOLDER.NAME[language]}
 					style={{ width: "100%", borderRadius: "8px" }}
-					onChange={(e) => handleOnChange(e.target.value, "keyword")}
+					onChange={(e) => handleOnChange(e.target, "keyword")}
 				/>
 				<Select
-					value={formRecruitTalents.sector}
 					style={{ width: "13rem" }}
 					showSearch
-					placeholder="Sector"
-					filterOption={(input, option) =>
-						(option?.label ?? "")
-							.toLowerCase()
-							.includes(input.toLowerCase())
-					}
-					options={listSector}
-					onChange={(e) => handleOnChange(e, "sector")}
+					placeholder={INPUT_PLACEHOLDER.SECTOR[language]}
+					options={SECTOR[language]}
+					optionLabelProp="label"
+					onChange={(value, option) => handleOnChange(option, "sector")}
 				/>
 				<Select
-					value={formRecruitTalents.experience_level}
 					style={{ width: "13rem" }}
 					showSearch
-					placeholder="Experience Level"
-					filterOption={(input, option) =>
-						(option?.label ?? "")
-							.toLowerCase()
-							.includes(input.toLowerCase())
+					placeholder={INPUT_PLACEHOLDER.EXPERIENCE_LEVEL[language]}
+					options={EXPERIENCE_LEVEL[language]}
+					onChange={(value, option) =>
+						handleOnChange(option, "experience_level")
 					}
-					options={listExperienceLevel}
-					onChange={(e) => handleOnChange(e, "experience_level")}
 				/>
 				<Select
-					value={formRecruitTalents.education_level}
 					style={{ width: "13rem" }}
 					showSearch
-					placeholder="Education Level"
-					filterOption={(input, option) =>
-						(option?.label ?? "")
-							.toLowerCase()
-							.includes(input.toLowerCase())
+					placeholder={INPUT_PLACEHOLDER.EDUCATION_LEVEL[language]}
+					options={EDUCATION_LEVEL[language]}
+					onChange={(value, option) =>
+						handleOnChange(option, "education_level")
 					}
-					options={listEducationLevel}
-					onChange={(e) => handleOnChange(e, "education_level")}
 				/>
 				<Select
-					value={formRecruitTalents.commitment}
 					style={{ width: "13rem" }}
 					showSearch
-					placeholder="Commitment"
-					filterOption={(input, option) =>
-						(option?.label ?? "")
-							.toLowerCase()
-							.includes(input.toLowerCase())
+					placeholder={INPUT_PLACEHOLDER.COMMITMENT[language]}
+					options={COMMITMENT[language]}
+					onChange={(value, option) =>
+						handleOnChange(option, "commitment")
 					}
-					options={listCommitment}
-					onChange={(e) => handleOnChange(e, "commitment")}
 				/>
 				<Select
-					value={formRecruitTalents.location}
 					style={{ width: "13rem" }}
 					showSearch
-					placeholder="Location"
-					filterOption={(input, option) =>
-						(option?.label ?? "")
-							.toLowerCase()
-							.includes(input.toLowerCase())
-					}
-					options={listLocation}
-					onChange={(e) => handleOnChange(e, "location")}
+					placeholder={INPUT_PLACEHOLDER.LOCATION[language]}
+					options={LOCATION[language]}
+					onChange={(value, option) => handleOnChange(option, "location")}
 				/>
 				<Select
-					value={formRecruitTalents.language}
 					style={{ width: "13rem" }}
 					showSearch
-					placeholder="Language"
-					filterOption={(input, option) =>
-						(option?.label ?? "")
-							.toLowerCase()
-							.includes(input.toLowerCase())
-					}
-					options={listLanguage}
-					onChange={(e) => handleOnChange(e, "language")}
+					placeholder={INPUT_PLACEHOLDER.LANGUAGE[language]}
+					options={LANGUAGE[language]}
+					onChange={(value, option) => handleOnChange(option, "language")}
 				/>
 			</div>
 			<Button
@@ -167,7 +142,7 @@ const RecruitWrap = () => {
 				icon={<SearchOutlined />}
 				loading={loadingRecruitTalents}
 				onClick={handleConfirmRecruitTalents}>
-				Search
+				{SEARCH[language]}
 			</Button>
 		</div>
 	);

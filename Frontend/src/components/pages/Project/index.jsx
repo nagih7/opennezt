@@ -22,6 +22,16 @@ import AvatarDefault from "assets/images/default/AvatarDefault.png";
 import TalentProfile from "components/common/TalentProfile";
 import { getTalentDetails } from "api/talent";
 import { getRequestAddFriend } from "api/notification";
+import {
+	PROJECT_MANAGEMENT,
+	VIEW_MATCHING_TALENTS,
+	MATCHING_TALENT_WITH_AI,
+	CREATE_NEW_PROJECT,
+	UPDATE,
+	DELETE,
+	COMPATIBILITY,
+	VIEW_DETAILS,
+} from "utils/constains";
 
 const CreateProjectForm = React.lazy(() => import("./CreateProjectForm"));
 const UpdateProjectForm = React.lazy(() => import("./UpdateProjectForm"));
@@ -32,6 +42,7 @@ function Project() {
 	const { talents, loadingMatchingTalents } = useSelector(
 		(state) => state.artificialIntelligence
 	);
+	const { language } = useSelector((state) => state.app);
 
 	const [openModalUpdateProject, setOpenModalUpdateProject] = useState(false);
 	const [openModalCreateProject, setOpenModalCreateProject] = useState(false);
@@ -182,7 +193,7 @@ function Project() {
 	return (
 		<div className={styles.projectContainer}>
 			<div className={styles.projectHeader}>
-				<h2>Project Management</h2>
+				<h2>{PROJECT_MANAGEMENT[language]}</h2>
 				<div className={styles.userActions}>
 					{talents && talents.length > 0 ? (
 						<Button
@@ -194,7 +205,7 @@ function Project() {
 							icon={<VisibilityIcon />}
 							loading={false}
 							onClick={handleViewMatchingTalents}>
-							View matching talents
+							{VIEW_MATCHING_TALENTS[language]}
 						</Button>
 					) : (
 						<Button
@@ -205,7 +216,7 @@ function Project() {
 							type="primary"
 							loading={loadingMatchingTalents}
 							onClick={handleMatchingWithAI}>
-							Matching talent with AI
+							{MATCHING_TALENT_WITH_AI[language]}
 						</Button>
 					)}
 
@@ -214,7 +225,7 @@ function Project() {
 						className={styles.btnCreate}
 						onClick={() => setOpenModalCreateProject(true)}>
 						<CreateNewFolderIcon />
-						Create new project
+						{CREATE_NEW_PROJECT[language]}
 					</Button>
 				</div>
 			</div>
@@ -271,14 +282,14 @@ function Project() {
 							type="primary"
 							onClick={handleOpenModalUpdateProject}
 							loading={false}>
-							Update
+							{UPDATE[language]}
 						</Button>
 						<Button
 							type="primary"
 							danger
 							onClick={() => handleDeleteProject(projectDetails._id)}
 							loading={loadingDeleteProject}>
-							Delete
+							{DELETE[language]}
 						</Button>
 					</>
 				}>
@@ -322,13 +333,13 @@ function Project() {
 								</div>
 								<span className={styles.name}>{talent.name}</span>
 								<span className={styles.matchScore}>
-									Compatibility: {talent.match_score}%
+									{COMPATIBILITY[language]}: {talent.match_score}%
 								</span>
 								<div className={styles.talentActions}>
 									<Button
 										type="primary"
 										onClick={() => handleGetDetailTalent(talent._id)}>
-										View detail
+										{VIEW_DETAILS[language]}
 									</Button>
 								</div>
 							</div>

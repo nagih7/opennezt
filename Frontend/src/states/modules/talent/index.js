@@ -77,17 +77,7 @@ const talentSlice = createSlice({
 					...state,
 					formRecruitTalents: {
 						...state.formRecruitTalents,
-						[nameSelect]: event,
-						page: 0,
-					},
-				};
-			} else {
-				const { name, value } = event.target;
-				return {
-					...state,
-					formRecruitTalents: {
-						...state.formRecruitTalents,
-						[name]: value,
+						[nameSelect]: event.value,
 						page: 0,
 					},
 				};

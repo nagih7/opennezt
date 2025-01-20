@@ -6,6 +6,7 @@ const appSlice = createSlice({
 		isShowSideBar: true,
 		isThemeLight: false,
 		title: "Dashboard",
+		language: "EN",
 		location: {
 			pathName: "",
 			payload: {},
@@ -41,6 +42,10 @@ const appSlice = createSlice({
 				prevPathName: action.payload.prevPathName || null,
 			},
 		}),
+		setLanguage: (state, action) => ({
+			...state,
+			language: action.payload,
+		}),
 	},
 });
 
@@ -51,6 +56,7 @@ export const {
 	startRequest,
 	requestSuccess,
 	requestError,
+	setLanguage,
 } = appSlice.actions;
 
 export default appSlice.reducer;

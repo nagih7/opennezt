@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import { useSelector, useDispatch } from "react-redux";
-import { listSector, listStage } from "components/common/ListSelected";
 import { seekProjects, getProjectDetails } from "api/project";
 import { Select, Button, Input } from "antd";
 import LazyLoading from "components/UI/LazyLoading";
@@ -14,6 +13,13 @@ import {
 	setFormSeekProjects,
 } from "states/modules/project";
 import NotFound from "components/UI/NotFound";
+import {
+	SECTOR,
+	STAGE,
+	SEARCH,
+	RESET,
+	INPUT_PLACEHOLDER,
+} from "utils/constains";
 
 const ProjectDetailsModal = React.lazy(() => import("./ProjectDetailsModal"));
 
@@ -25,6 +31,7 @@ const SeekProjects = () => {
 		loadingSeekProjects,
 		formSeekProjects,
 	} = useSelector((state) => state.project);
+	const { language } = useSelector((state) => state.app);
 
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [canDeleteForm, setCanDeleteForm] = useState(false);
@@ -39,7 +46,7 @@ const SeekProjects = () => {
 		}
 	}, [formSeekProjects]);
 
-	const onChange = (event, nameSelect) => {
+	const handleOnChange = (event, nameSelect) => {
 		dispatch(setFormSeekProjects({ event, nameSelect }));
 	};
 
@@ -81,34 +88,34 @@ const SeekProjects = () => {
 					danger
 					icon={<DeleteOutlined />}
 					onClick={() => handleResetForm()}>
-					Reset
+					{RESET[language]}
 				</Button>
 				<div className={styles.searchContent}>
 					<Input
 						type="text"
-						placeholder="Project Name"
+						placeholder={INPUT_PLACEHOLDER.PROJECT_NAME[language]}
 						value={formSeekProjects.name}
-						onChange={onChange}
+						onChange={(e) => handleOnChange(e.target, "name")}
 						className={styles.searchInput}
 						style={{ width: "100%" }}
 						name="name"
 					/>
 					<Select
 						name="industry"
-						value={formSeekProjects.industry}
-						onChange={(e) => onChange(e, "industry")}
+						onChange={(value, option) =>
+							handleOnChange(option, "industry")
+						}
 						className={styles.searchSelect}
-						placeholder="Select Industry"
+						placeholder={INPUT_PLACEHOLDER.INDUSTRY[language]}
 						style={{ width: "13rem" }}
-						options={listSector}
+						options={SECTOR[language]}
 					/>
 					<Select
-						value={formSeekProjects.stage}
-						onChange={(e) => onChange(e, "stage")}
+						onChange={(value, option) => handleOnChange(option, "stage")}
 						className={styles.searchSelect}
-						placeholder="Select Stage"
+						placeholder={INPUT_PLACEHOLDER.STAGE[language]}
 						style={{ width: "13rem" }}
-						options={listStage}
+						options={STAGE[language]}
 					/>
 				</div>
 				<Button
@@ -118,7 +125,7 @@ const SeekProjects = () => {
 					loading={loadingSeekProjects}
 					onClick={handleSeekProjects}
 					onKeyDown={(e) => handleKeyDown(e)}>
-					Search
+					{SEARCH[language]}
 				</Button>
 			</div>
 

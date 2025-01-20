@@ -61,7 +61,7 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 				<div
 					style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
 					<PersonAddIcon />
-					Add friend
+					Contact
 				</div>
 			}
 			className={styles.projectModal}>

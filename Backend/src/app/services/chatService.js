@@ -62,9 +62,10 @@ export async function getChatList(user, input_value) {
                 preserveNullAndEmptyArrays: true, // giữ lại các bản ghi không có project
             },
         },
+        // Loại bỏ các bản ghi có members rỗng
         {
             $match: {
-                members: {$ne: null},
+                $expr: {$gt: [{$size: '$members'}, 0]},
             },
         },
 

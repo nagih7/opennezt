@@ -13,6 +13,14 @@ import {
 	readRoot,
 	replyNotification,
 } from "api/notification";
+import {
+	FRIENDS,
+	ACTIONS,
+	STATUS,
+	TYPE,
+	REQUEST_BY,
+	REQUEST_AT,
+} from "utils/constains";
 
 const TalentProfile = React.lazy(() =>
 	import("components/common/TalentProfile")
@@ -20,6 +28,7 @@ const TalentProfile = React.lazy(() =>
 
 function NotificationProject() {
 	const [openModalTalentDetails, setOpenModalTalentDetails] = useState(false);
+	const { language } = useSelector((state) => state.app);
 	const [dataFilter, setDataFilter] = useState({
 		page: 1,
 		perPage: 10,
@@ -54,7 +63,7 @@ function NotificationProject() {
 
 	const columns = [
 		{
-			title: "Requested By",
+			title: REQUEST_BY[language],
 			dataIndex: "metadata",
 			key: "source_name",
 			render: (metadata, record) => (
@@ -67,20 +76,20 @@ function NotificationProject() {
 			),
 		},
 		{
-			title: "Type",
+			title: TYPE.TYPE[language],
 			dataIndex: "type",
 			key: "type",
 			// width: "10rem",
 			render: (type, record) => <div>{type.toUpperCase()}</div>,
 		},
 		{
-			title: "Requested At",
+			title: REQUEST_AT[language],
 			dataIndex: "created_at",
 			key: "created_at",
 			render: (date) => moment(date).fromNow(),
 		},
 		{
-			title: "Status",
+			title: STATUS.STATUS[language],
 			dataIndex: "metadata",
 			key: "status",
 
@@ -110,7 +119,7 @@ function NotificationProject() {
 			},
 		},
 		{
-			title: "Actions",
+			title: ACTIONS.ACTIONS[language],
 			key: "actions",
 			fixed: "right",
 			align: "center",
@@ -124,11 +133,11 @@ function NotificationProject() {
 							handleReplyNotification(
 								record._id,
 								record.type,
-								"accepted"
+								STATUS.ACCEPTED[language]
 							)
 						}
 						disabled={record.metadata.status !== "waiting"}>
-						Accept
+						{ACTIONS.ACCEPT[language]}
 					</Button>
 					<Button
 						type="default"
@@ -138,11 +147,11 @@ function NotificationProject() {
 							handleReplyNotification(
 								record._id,
 								record.type,
-								"rejected"
+								STATUS.REJECTED[language]
 							)
 						}
 						disabled={record.metadata.status !== "waiting"}>
-						Reject
+						{ACTIONS.REJECT[language]}
 					</Button>
 				</div>
 			),
@@ -174,11 +183,13 @@ function NotificationProject() {
 							<Row>
 								<Col xs={12} sm={12} md={12} lg={12} xl={12}>
 									<div className={styles.friendsWrap}>
-										<div className={styles.labelWrap}>Friends</div>
+										<div className={styles.labelWrap}>
+											{FRIENDS[language]}
+										</div>
 										<div className={styles.numberWrap}>
 											{totalFriends}
 										</div>
-										<div className={styles.dateUpdate}>last week</div>
+										{/* <div className={styles.dateUpdate}>last week</div> */}
 									</div>
 								</Col>
 								<Col xs={12} sm={12} md={12} lg={12} xl={12}>
@@ -219,7 +230,7 @@ function NotificationProject() {
 				open={openModalTalentDetails}
 				onCancel={() => setOpenModalTalentDetails(false)}
 				width={1000}>
-				<React.Suspense fallback={<div>Loading...</div>}>
+				<React.Suspense fallback={<div>{ACTIONS.LOADING[language]}</div>}>
 					<TalentProfile talent={talentDetails} />
 				</React.Suspense>
 			</Modal>

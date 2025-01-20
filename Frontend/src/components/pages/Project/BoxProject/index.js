@@ -1,9 +1,16 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import BackgroundDefault from "assets/images/default/BackgroundDefault.png";
+import {
+	INDUSTRY_FIELD,
+	STAGE_OF_DEVELOPMENT,
+	COMPATIBILITY,
+} from "utils/constains";
 
 const BoxProject = ({ project, matchScore, openModalDetails, usedTo }) => {
+	const { language } = useSelector((state) => state.app);
 	return (
 		<div
 			className={styles.boxProjectWrap}
@@ -28,7 +35,7 @@ const BoxProject = ({ project, matchScore, openModalDetails, usedTo }) => {
 						textOverflow: "ellipsis",
 						width: "100%",
 					}}>
-					<strong>[Industry Field]</strong>{" "}
+					<strong>[{INDUSTRY_FIELD[language]}]</strong>{" "}
 					{project.related_industries.join(" / ")}
 				</p>
 				<p
@@ -38,11 +45,12 @@ const BoxProject = ({ project, matchScore, openModalDetails, usedTo }) => {
 						textOverflow: "ellipsis",
 						width: "300px",
 					}}>
-					<strong>[Stage of Development]</strong> {project.stage}
+					<strong>[{STAGE_OF_DEVELOPMENT[language]}]</strong>{" "}
+					{project.stage}
 				</p>
 				{matchScore && (
 					<p>
-						<strong>Compatibility:</strong> {matchScore}%{" "}
+						<strong>{COMPATIBILITY[language]}:</strong> {matchScore}%{" "}
 					</p>
 				)}
 			</div>

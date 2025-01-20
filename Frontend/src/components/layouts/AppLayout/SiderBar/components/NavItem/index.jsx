@@ -3,6 +3,7 @@ import dark from "./styles.module.scss";
 import { handleCheckRoute } from "../../../../../../utils/helper";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { NAVBAR } from "../../../../../../utils/constains";
 
 function NavItem(props) {
 	const styles = dark;
@@ -10,6 +11,7 @@ function NavItem(props) {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const isShowSideBar = useSelector((state) => state.app.isShowSideBar);
+	const { language } = useSelector((state) => state.app);
 
 	const handleCheckRouteActive = (routeActive, isShowMenu = false) => {
 		let is_active = false;
@@ -38,7 +40,9 @@ function NavItem(props) {
 						<div className={styles.textWrap}>
 							<div className={styles.iconWrap}>{route.icon}</div>
 							{isShowSideBar ? (
-								<span className={styles.text}>{route.label}</span>
+								<span className={styles.text}>
+									{NAVBAR[route.label][language]}
+								</span>
 							) : (
 								""
 							)}
@@ -95,7 +99,7 @@ function NavItem(props) {
 													{subMenu.icon}
 												</div>
 												<span className={styles.text}>
-													{subMenu.label}
+													{NAVBAR[route.label][language]}
 												</span>
 											</div>
 										</div>
@@ -122,7 +126,9 @@ function NavItem(props) {
 						<div className={styles.textWrap}>
 							<div className={styles.iconWrap}>{route.icon}</div>
 							{isShowSideBar ? (
-								<span className={styles.text}>{route.label}</span>
+								<span className={styles.text}>
+									{NAVBAR[route.label][language]}
+								</span>
 							) : (
 								""
 							)}
