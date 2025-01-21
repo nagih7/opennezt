@@ -116,10 +116,6 @@ const ChatList = () => {
 																	AvatarDefault
 																}
 																alt={member.name}
-																// onError={(e) => {
-																// 	e.target.src = AvatarDefault;
-																// 	return false;
-																// }}
 															/>
 														</Tooltip>
 													)

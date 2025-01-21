@@ -1,4 +1,4 @@
-import {User, FounderProfile, Project, ObjectId, NotificationFeed} from '@/models'
+import {User, FounderProfile, Project, ObjectId, NotificationFeed, Conversation} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
 
@@ -255,6 +255,7 @@ export async function updateProject(user, requestBody) {
 
 export async function deleteProject(user, requestBody) {
     await Project.deleteOne({user_id: user._id, _id: requestBody.projectId})
+    await Conversation.deleteOne({'metadata.data.project_id': requestBody.projectId})
 }
 
 export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
