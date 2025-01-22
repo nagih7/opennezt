@@ -73,10 +73,10 @@ const ProjectBox = ({ project, inviteeId }) => {
 		store.dispatch(getProjectInvitations(inviteeId));
 	};
 
-	const onChange = (value, key) => {
+	const onChange = (option, key) => {
 		setFormProjectInvitation({
 			...formProjectInvitation,
-			[key]: value,
+			[key]: option.value,
 		});
 	};
 
@@ -150,7 +150,7 @@ const ProjectBox = ({ project, inviteeId }) => {
 						showSearch
 						placeholder={INPUT_PLACEHOLDER.ROLE[language]}
 						optionFilterProp="label"
-						onChange={(value) => onChange(value, "role")}
+						onChange={(value, option) => onChange(option, "role")}
 						size="large"
 						style={{ width: "100%" }}
 						options={ROLE[language]}

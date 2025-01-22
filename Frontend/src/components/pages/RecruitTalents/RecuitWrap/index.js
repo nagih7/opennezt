@@ -44,7 +44,6 @@ const RecruitWrap = () => {
 	}, [formRecruitTalents]);
 
 	const handleOnChange = (event, nameSelect) => {
-		console.log(event, nameSelect);
 		dispatch(setFormRecruitTalents({ event, nameSelect }));
 	};
 
@@ -79,8 +78,6 @@ const RecruitWrap = () => {
 		);
 		dispatch(resetFormRecruitTalents());
 	};
-
-	console.log(formRecruitTalents);
 
 	return (
 		<div className={styles.recruitWrap}>

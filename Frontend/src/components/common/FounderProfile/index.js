@@ -266,6 +266,24 @@ const FounderProfile = ({ founderProfile }) => {
 								</div>
 							</Col>
 						</Row>
+						<Row gutter={[24, 24]}>
+							<Col span={12}>
+								<div className={styles.infoItem}>
+									<Text strong>
+										{PROFESSIONAL_PROFILE.MARKETING[language]}
+									</Text>
+									<Paragraph>
+										{founderProfile.areas_of_expertise.marketing &&
+										founderProfile.areas_of_expertise.marketing
+											.length > 0
+											? founderProfile.areas_of_expertise.marketing.join(
+													", "
+											  )
+											: "..."}
+									</Paragraph>
+								</div>
+							</Col>
+						</Row>
 					</Card>
 				</Col>
 				<Col span={24}>

@@ -23,7 +23,6 @@ function ForgotPassword() {
 
 	useEffect(() => {
 		if (isSuccessForgotPassword) {
-			console.log("isSuccessForgotPassword", isSuccessForgotPassword);
 			navigate("/login");
 		}
 	}, [isSuccessForgotPassword, navigate, dispatch]);

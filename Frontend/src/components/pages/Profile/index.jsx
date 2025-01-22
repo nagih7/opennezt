@@ -44,7 +44,6 @@ function Profile() {
 	const propsAvatar = {
 		name: "file",
 		customRequest: async ({ file }) => {
-			console.log(file);
 			const formData = new FormData();
 			formData.append("avatar", file);
 			await store.dispatch(changeAvatar(formData));

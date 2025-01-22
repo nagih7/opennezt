@@ -391,13 +391,13 @@ export const AREA_OF_EXPERTISE = {
 			{ label: "Personnel Policies", value: "Personnel Policies" },
 			{ label: "Staffing and Recruiting", value: "Staffing and Recruiting" },
 		],
-		International: [
+		INTERNATIONAL: [
 			{ label: "Custom and Tariffs", value: "Custom and Tariffs" },
 			{ label: "Exporting and Importing", value: "Exporting and Importing" },
 			{ label: "Global Markets", value: "Global Markets" },
 			{ label: "Outsourcing", value: "Outsourcing" },
 		],
-		Law_and_Legal: [
+		LAW_AMD_LEGAL: [
 			{ label: "Contracts", value: "Contracts" },
 			{ label: "Employee/Labour Law", value: "Employee/Labour Law" },
 			{ label: "Immigration Law", value: "Immigration Law" },
@@ -405,7 +405,7 @@ export const AREA_OF_EXPERTISE = {
 			{ label: "Property Law", value: "Property Law" },
 			{ label: "Tax Law", value: "Tax Law" },
 		],
-		Management: [
+		MANAGEMENT: [
 			{ label: "Board Development", value: "Board Development" },
 			{ label: "Businness Insurance", value: "Businness Insurance" },
 			{ label: "Businness Strategy", value: "Businness Strategy" },
@@ -419,7 +419,7 @@ export const AREA_OF_EXPERTISE = {
 			{ label: "Project Management", value: "Project Management" },
 			{ label: "Work-life Balance", value: "Work-life Balance" },
 		],
-		Marketing: [
+		MARKETING: [
 			{
 				label: "Advertising and Promotion",
 				value: "Advertising and Promotion",
@@ -439,7 +439,7 @@ export const AREA_OF_EXPERTISE = {
 			{ label: "Web Marketing", value: "Web Marketing" },
 			{ label: "Writing and Editing", value: "Writing and Editing" },
 		],
-		Operations: [
+		OPERATIONS: [
 			{ label: "Facilities Management", value: "Facilities Management" },
 			{ label: "Inventory Management", value: "Inventory Management" },
 			{ label: "Logistics", value: "Logistics" },
@@ -457,7 +457,7 @@ export const AREA_OF_EXPERTISE = {
 				value: "Transportation and Delivery",
 			},
 		],
-		Sales: [
+		SALES: [
 			{
 				label: "Customer Service and CRM",
 				value: "Customer Service and CRM",
@@ -472,7 +472,7 @@ export const AREA_OF_EXPERTISE = {
 			{ label: "Selling Services", value: "Selling Services" },
 			{ label: "Wholesale and B2B Sales", value: "Wholesale and B2B Sales" },
 		],
-		Starting_up: [
+		STARTING_UP: [
 			{ label: "Business Planning", value: "Business Planning" },
 			{ label: "Franchising", value: "Franchising" },
 			{ label: "Getting Started", value: "Getting Started" },
@@ -480,7 +480,12 @@ export const AREA_OF_EXPERTISE = {
 			{ label: "Location and Zoning", value: "Location and Zoning" },
 			{ label: "Sustainability", value: "Sustainability" },
 		],
-		Technology_and_Internet: [
+		SUSTAINABILITY: [
+			{ label: "Energy Efficiency", value: "Energy Efficiency" },
+			{ label: "Green Business", value: "Green Business" },
+			{ label: "Green Products", value: "Green Products" },
+		],
+		TECHNOLOGY_AND_INTERNET: [
 			{ label: "Cloud Computing", value: "Cloud Computing" },
 			{ label: "Cybersecurity", value: "Cybersecurity" },
 			{ label: "Data Management", value: "Data Management" },
