@@ -4,9 +4,35 @@ import {LINK_STATIC_URL, MATCHING_PROJECTS_PROMPT, MATCHING_TALENTS_PROMPT} from
 
 export async function matchingProjects(user) {
     const founderProfile = await FounderProfile.findOne({user_id: user._id}).lean()
-    const projects = await Project.find({
-        user_id: {$ne: user._id},
-    })
+    const projects = await Project.aggregate([
+        {
+            $match: {
+                user_id: {$ne: user._id},
+            },
+        },
+        {
+            $addFields: {
+                background: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        then: '$background',
+                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                    },
+                },
+            },
+        },
+        {
+            $project: {
+                related_industries: 1,
+                stage: 1,
+                user_id: 1,
+                created_at: 1,
+                name: 1,
+                _id: 1,
+                background: 1,
+            },
+        },
+    ])
 
     // Get user skills and project requirements
     const userSkills = {
@@ -16,7 +42,7 @@ export async function matchingProjects(user) {
     const skillRequirements = projects.map((project) => ({
         _id: project._id,
         related_industries: project.related_industries,
-        problem_solving: project.problem,
+        // problem_solving: project.problem,
     }))
 
     // Generate prompt for OpenAI API
@@ -29,19 +55,22 @@ export async function matchingProjects(user) {
         const projectsByMatching = JSON.parse(cleanResponse)
 
         // Filter projects with projectsByMatching
-        const result = projects.map((project) => {
-            const match = projectsByMatching.find((p) => p.projectId === project._id.toString())
-            if (match) {
-                return {
-                    ...project,
-                    matchScore: match.matchScore,
+        const result = projects
+            .map((project) => {
+                const match = projectsByMatching.find((p) => p.projectId === project._id.toString())
+                if (match) {
+                    return {
+                        ...project,
+                        matchScore: match.matchScore,
+                    }
+                } else {
+                    return null
                 }
-            } else {
-                return null
-            }
-        })
-        // sắp sếp theo matchScore giảm dần
-        return result.filter((project) => project !== null).sort((a, b) => b.matchScore - a.matchScore)
+            })
+            .filter((project) => project !== null)
+            .sort((a, b) => b.matchScore - a.matchScore)
+
+        return result
     } catch (error) {
         console.error(error)
         throw error

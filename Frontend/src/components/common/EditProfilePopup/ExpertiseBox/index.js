@@ -21,7 +21,7 @@ const ExpertiseBox = ({
 				}}
 				required
 				size="large"
-				placeholder="Select your expertise*"
+				placeholder="Select your expertise"
 				onChange={(value) => onChange(value, { ExpertiseTarget })}
 				options={listValue}
 			/>

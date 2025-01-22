@@ -19,6 +19,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { SearchOutlined } from "@mui/icons-material";
 import { matchingTalents } from "api/artificialIntelligence";
 import store from "states/configureStore";
+import { setOpenModalMatchingTalents } from "states/modules/artificialIntelligence";
 import {
 	PROJECT_MANAGEMENT,
 	VIEW_MATCHING_TALENTS,

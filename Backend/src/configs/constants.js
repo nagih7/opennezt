@@ -215,18 +215,10 @@ Skills: ${Object.keys(userSkills.skills)
 2. Projects:${projects
         .map(
             (project, index) => `
-- Project ID: ${project._id}
-- Related Industries: ${project.related_industries.join(', ')}`
+Project ID: ${project._id}; Related Industries: ${project.related_industries.join(', ')}`
         )
         .join('\n')}
-Task:
-- Analyze the user's skills against the skill requirements of each project.
-- Return an array of projects that match the user.
-- Limit the top 6 projects to the highest score.
-- Return at least 3 most relevant projects.
-- For each relevant project, include:
-- "projectId": ID of the project
-- "matchScore": score from 1 to 99 indicating the match rate (do not create even numbers).
+Task: Analyze the user's skills against the skill requirements of each project; Return an array of projects that match the user.; Limit the top 6 projects to the highest score; Return at least 3 most relevant projects; For each relevant project, include: "projectId": ID of the project; "matchScore": score from 1 to 99 indicating the match rate (do not create even numbers).
 Output format:[{"projectId": "<Project ID>", "matchScore": <Score>},...]`,
         },
     ]
@@ -249,12 +241,8 @@ Input:
 2. Talents: ${talents
         .map((talent, index) => `User ID: ${talent.user_id}, Industry: ${talent.industry.join(', ')}`)
         .join('; ')}
-Task:
-- Analyze the user's suitability for the project
-- Return the matching users
-- Limit the top 6 users to the highest score
-- For each user, include: "user_id": user ID, "match_score": score from 1 to 99 indicating the match rate (do not create even numbers).
-- Output format:{"<user_id>": <Score>,...}`,
+Task: Analyze the user's suitability for the project; Return the matching users; Limit the top 6 users to the highest score; For each user, include: "user_id": user ID, "match_score": score from 1 to 99 indicating the match rate (do not create even numbers).
+Output format:{"<user_id>": <Score>,...}`,
         },
     ]
 
