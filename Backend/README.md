@@ -21,7 +21,7 @@ PORT=3456
 - Config Project
 
 ```bash
-APP_NAME=Express App
+APP_NAME=OpenNezt App
 # server domain name
 APP_URL_API=http://localhost:3456
 # primary client domain name

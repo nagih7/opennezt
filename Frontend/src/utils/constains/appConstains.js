@@ -507,3 +507,15 @@ export const CHATS = {
 		ZH: "新聊天",
 	},
 };
+
+export const TOOLTIP = {
+	EN: "Tooltip",
+	VI: "Chú giải",
+	ZH: "工具提示",
+
+	YOU_NEED_TO_CREATE_A_PROJECT_FIRST: {
+		EN: "You need to create a project first",
+		VI: "Bạn cần tạo một dự án trước",
+		ZH: "您需要先创建一个项目",
+	},
+};

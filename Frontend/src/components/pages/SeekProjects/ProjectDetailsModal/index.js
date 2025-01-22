@@ -15,6 +15,7 @@ import { getRequestAddFriend, sendRequestAddFriend } from "api/notification";
 import { getTalentDetails } from "api/talent";
 const { Title, Text, Paragraph } = Typography;
 import MemberBox from "../../../common/ProjectDetails/ProjectInfo/MemberBox";
+import store from "states/configureStore";
 
 const TalentProfile = React.lazy(() =>
 	import("components/common/TalentProfile")
@@ -32,12 +33,12 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 	// State
 	const [openModalMemberDetails, setOpenModalMemberDetails] = useState(false);
 
-	const handleRequestAddFriend = (user_id) => {
+	const handleRequestAddFriend = async (user_id) => {
 		const requestMessageForm = {
 			user_id: user_id,
 			metadata: {},
 		};
-		dispatch(sendRequestAddFriend(requestMessageForm));
+		await store.dispatch(sendRequestAddFriend(requestMessageForm));
 		dispatch(getRequestAddFriend(user_id));
 	};
 

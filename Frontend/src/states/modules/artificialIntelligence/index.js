@@ -1,4 +1,7 @@
+import React from "react";
 import { createSlice } from "@reduxjs/toolkit";
+import TransformAI from "components/UI/TransformAI";
+
 import { message } from "antd";
 
 const artificialIntelligenceSlice = createSlice({
@@ -7,6 +10,7 @@ const artificialIntelligenceSlice = createSlice({
 		projects: [],
 		talents: [],
 		openModalMatchingProjects: false,
+		openModalMatchingTalents: false,
 		loadingMatchingProjects: false,
 		loadingMatchingTalents: false,
 	},
@@ -17,9 +21,10 @@ const artificialIntelligenceSlice = createSlice({
 		}),
 		startRequestMatchingProjects: (state) => {
 			message.loading({
-				content: "Matching projects with AI...",
+				content: "",
 				key: "matchingProjects",
 				duration: 100000,
+				icon: <TransformAI />,
 			});
 			return {
 				...state,
@@ -29,15 +34,28 @@ const artificialIntelligenceSlice = createSlice({
 		},
 		startRequestMatchingProjectsSuccess: (state, action) => {
 			message.destroy("matchingProjects");
-			message.success({
-				content: "Matching projects with AI successfully",
-				duration: 5,
-			});
-			return {
-				...state,
-				projects: action.payload.data,
-				loadingMatchingProjects: false,
-			};
+			if (action.payload.data.length === 0) {
+				message.error({
+					content: "No matching projects found",
+					duration: 10,
+				});
+				return {
+					...state,
+					projects: [],
+					loadingMatchingProjects: false,
+				};
+			} else {
+				message.success({
+					content: "Matching projects with AI successfully",
+					duration: 10,
+				});
+				return {
+					...state,
+					projects: action.payload.data,
+					loadingMatchingProjects: false,
+					openModalMatchingProjects: true,
+				};
+			}
 		},
 		startRequestMatchingProjectsFail: (state) => {
 			message.destroy("matchingProjects");
@@ -53,9 +71,10 @@ const artificialIntelligenceSlice = createSlice({
 		},
 		startRequestMatchingTalents: (state) => {
 			message.loading({
-				content: "Matching projects with AI...",
+				content: "",
 				key: "matchingTalents",
 				duration: 100000,
+				icon: <TransformAI />,
 			});
 			return {
 				...state,
@@ -64,15 +83,28 @@ const artificialIntelligenceSlice = createSlice({
 		},
 		startRequestMatchingTalentsSuccess: (state, action) => {
 			message.destroy("matchingTalents");
-			message.success({
-				content: "Matching talents with AI successfully",
-				duration: 5,
-			});
-			return {
-				...state,
-				talents: action.payload.data,
-				loadingMatchingTalents: false,
-			};
+			if (action.payload.data.length === 0) {
+				message.error({
+					content: "No matching talents found",
+					duration: 10,
+				});
+				return {
+					...state,
+					talents: [],
+					loadingMatchingTalents: false,
+				};
+			} else {
+				message.success({
+					content: "Matching talents with AI successfully",
+					duration: 10,
+				});
+				return {
+					...state,
+					talents: action.payload.data,
+					loadingMatchingTalents: false,
+					openModalMatchingTalents: true,
+				};
+			}
 		},
 		startRequestMatchingTalentsFail: (state) => {
 			message.destroy("matchingTalents");
@@ -86,6 +118,10 @@ const artificialIntelligenceSlice = createSlice({
 				loadingMatchingTalents: false,
 			};
 		},
+		setOpenModalMatchingTalents: (state, action) => ({
+			...state,
+			openModalMatchingTalents: action.payload,
+		}),
 	},
 });
 
@@ -97,6 +133,7 @@ export const {
 	startRequestMatchingTalents,
 	startRequestMatchingTalentsSuccess,
 	startRequestMatchingTalentsFail,
+	setOpenModalMatchingTalents,
 } = artificialIntelligenceSlice.actions;
 
 export default artificialIntelligenceSlice.reducer;

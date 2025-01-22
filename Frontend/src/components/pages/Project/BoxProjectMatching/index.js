@@ -10,11 +10,11 @@ import {
 } from "utils/constains";
 import Compatibility from "components/UI/Compatibility";
 
-const BoxProject = ({ project, matchScore, openModalDetails, usedTo }) => {
+const BoxProjectMatching = ({ project, matchScore, openModalDetails }) => {
 	const { language } = useSelector((state) => state.app);
 	return (
 		<div
-			className={styles.boxProjectWrap}
+			className={styles.boxProjectMatchingWrap}
 			onClick={() => openModalDetails(project._id, project.user_id)}>
 			<div className={styles.backgroundProject}>
 				<LazyLoadImage
@@ -50,14 +50,14 @@ const BoxProject = ({ project, matchScore, openModalDetails, usedTo }) => {
 					{project.stage}
 				</p>
 				{matchScore && (
-					<p>
-						<strong>{COMPATIBILITY[language]}:</strong>{" "}
+					<div className={styles.compatibility}>
 						<Compatibility percent={matchScore} />
-					</p>
+						<strong>{COMPATIBILITY[language]}</strong>
+					</div>
 				)}
 			</div>
 		</div>
 	);
 };
 
-export default BoxProject;
+export default BoxProjectMatching;

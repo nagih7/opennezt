@@ -4,6 +4,7 @@ import SideBar from "./SiderBar";
 import Header from "./Header";
 import { useSelector, useDispatch } from "react-redux";
 import LazyLoading from "components/UI/LazyLoading";
+import { ModalProvider } from "context/ModalContext";
 import { RealtimeProvider } from "context/RealtimeContext";
 import { useNavigate } from "react-router-dom";
 import { setLocation } from "states/modules/app";
@@ -33,28 +34,30 @@ function AppLayout(props) {
 	}, [location, navigate, dispatch]);
 
 	return (
-		<RealtimeProvider>
-			<div className={`${styles.boxMainLayout}`}>
-				<div className={styles.mainLayoutWrap}>
-					<SideBar
-						isThemeLight={isThemeLight}
-						isShowSideBar={isShowSideBar}
-					/>
+		<ModalProvider>
+			<RealtimeProvider>
+				<div className={`${styles.boxMainLayout}`}>
+					<div className={styles.mainLayoutWrap}>
+						<SideBar
+							isThemeLight={isThemeLight}
+							isShowSideBar={isShowSideBar}
+						/>
 
-					<div
-						className={`${styles.mainWrap} ${
-							!isShowSideBar
-								? styles.mainWrapWithConditionSideBarClose
-								: ""
-						}`}>
-						<Header />
-						<main className={styles.mainContentWrap}>
-							<LazyLoading>{children}</LazyLoading>
-						</main>
+						<div
+							className={`${styles.mainWrap} ${
+								!isShowSideBar
+									? styles.mainWrapWithConditionSideBarClose
+									: ""
+							}`}>
+							<Header />
+							<main className={styles.mainContentWrap}>
+								<LazyLoading>{children}</LazyLoading>
+							</main>
+						</div>
 					</div>
 				</div>
-			</div>
-		</RealtimeProvider>
+			</RealtimeProvider>
+		</ModalProvider>
 	);
 }
 
