@@ -39,7 +39,7 @@ const founderSlice = createSlice({
 			};
 		},
 		startUpdateFounderProfileFail: (state) => {
-			message.error("Failed to update information!");
+			message.error("Please enter all required fields!");
 			return {
 				...state,
 				loadingUpdateFounderProfile: false,

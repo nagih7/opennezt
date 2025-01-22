@@ -44,7 +44,7 @@ const openAI = async (prompt) => {
         if (response.data.error) {
             throw new Error(`OpenAI API Error: ${response.data.error.message}`)
         }
-        await delay(15000)
+        await delay(5000)
         return response.data.choices[0].message.content
     } catch (error) {
         console.error('Error calling OpenAI API:', error.response ? error.response.data : error.message)

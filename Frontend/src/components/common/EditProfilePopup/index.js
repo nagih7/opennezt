@@ -70,7 +70,7 @@ const EditProfilePopup = ({ formData, onChange }) => {
 				}}
 				required
 				size="large"
-				placeholder="Which certifications do you hold?*"
+				placeholder="Which certifications do you hold?"
 				onChange={(value) => onChange(value, "certification")}
 				options={CERTIFICATION[language]}
 			/>
@@ -158,7 +158,7 @@ const EditProfilePopup = ({ formData, onChange }) => {
 				required
 				value={formData.professional_summary}
 				name="professional_summary"
-				placeholder="Professional Summary*"
+				placeholder="Professional Summary"
 				onChange={(e) => onChange(e)}
 				maxLength={500}
 			/>
@@ -167,7 +167,7 @@ const EditProfilePopup = ({ formData, onChange }) => {
 				rows={4}
 				value={formData.career_goals}
 				name="career_goals"
-				placeholder="My career goals*"
+				placeholder="My career goals"
 				onChange={(e) => onChange(e)}
 				maxLength={500}
 			/>
@@ -176,7 +176,7 @@ const EditProfilePopup = ({ formData, onChange }) => {
 				required
 				value={formData.offer}
 				name="offer"
-				placeholder="What I can offer*"
+				placeholder="What I can offer"
 				onChange={(e) => onChange(e)}
 				maxLength={500}
 			/>
@@ -185,7 +185,7 @@ const EditProfilePopup = ({ formData, onChange }) => {
 				rows={4}
 				value={formData.expectation}
 				name="expectation"
-				placeholder="My work expectation*"
+				placeholder="My work expectation"
 				onChange={(e) => onChange(e)}
 				maxLength={500}
 			/>

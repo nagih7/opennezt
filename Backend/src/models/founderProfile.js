@@ -7,47 +7,58 @@ const AreasOfExpertise = new Schema(
     {
         accounting_and_finance: {
             type: [String],
-            required: true,
+            required: false,
+            default: [],
         },
         human_resource: {
             type: [String],
-            required: true,
+            required: false,
+            default: [],
         },
         international: {
             type: [String],
-            required: true,
+            required: false,
+            default: [],
         },
         law_and_legal: {
             type: [String],
-            required: true,
+            required: false,
+            default: [],
         },
         management: {
             type: [String],
-            required: true,
+            required: false,
+            default: [],
         },
         marketing: {
             type: [String],
-            required: true,
+            required: false,
+            default: [],
         },
         operations: {
             type: [String],
-            required: true,
+            required: false,
+            default: [],
         },
         sales: {
             type: [String],
-            required: true,
+            required: false,
+            default: [],
         },
         starting_up: {
             type: [String],
-            required: true,
+            required: false,
+            default: [],
         },
         sustainability: {
             type: [String],
-            required: true,
+            required: false,
+            default: [],
         },
         technology_and_internet: {
             type: [String],
-            required: true,
+            required: false,
+            default: [],
         },
     },
     {
@@ -83,19 +94,19 @@ const FounderProfile = createModel('Founder_Profile', 'founder_profiles', {
     },
     professional_summary: {
         type: String,
-        required: true,
+        required: false,
     },
     career_goals: {
         type: String,
-        required: true,
+        required: false,
     },
     offer: {
         type: String,
-        required: true,
+        required: false,
     },
     expectation: {
         type: String,
-        required: true,
+        required: false,
     },
     availability: {
         type: String,

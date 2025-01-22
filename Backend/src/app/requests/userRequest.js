@@ -172,58 +172,52 @@ export const createFounderProfile = Joi.object({
     degree: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Degree'),
     certification: Joi.array()
         .items(Joi.string().trim().max(MAX_STRING_SIZE))
-        .required()
+        .allow('')
         .label('Certification'),
     areas_of_expertise: Joi.object({
         accounting_and_finance: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
-            .required()
+            .allow('')
             .label('Accounting and finance'),
         human_resource: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
-            .required()
+            .allow('')
             .label('Human resource'),
         international: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
-            .required()
+            .allow('')
             .label('International'),
         law_and_legal: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
-            .required()
+            .allow('')
             .label('Law and legal'),
-        management: Joi.array()
-            .items(Joi.string().trim().max(MAX_STRING_SIZE))
-            .required()
-            .label('Management'),
-        marketing: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Marketing'),
-        operations: Joi.array()
-            .items(Joi.string().trim().max(MAX_STRING_SIZE))
-            .required()
-            .label('Operations'),
-        sales: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Sales'),
+        management: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).allow('').label('Management'),
+        marketing: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).allow('').label('Marketing'),
+        operations: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).allow('').label('Operations'),
+        sales: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).allow('').label('Sales'),
         starting_up: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
-            .required()
+            .allow('')
             .label('Starting up'),
         sustainability: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
-            .required()
+            .allow('')
             .label('Sustainability'),
         technology_and_internet: Joi.array()
             .items(Joi.string().trim().max(MAX_STRING_SIZE))
-            .required()
+            .allow('')
             .label('Technology and internet'),
     }),
     professional_summary: Joi.string()
         .trim()
         .max(MAX_AREAS_STRING_SIZE)
-        .required()
+        .allow('')
         .label('Professional summary'),
-    career_goals: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Career goals'),
-    offer: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Offer'),
-    expectation: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).required().label('Expectation'),
+    career_goals: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Career goals'),
+    offer: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Offer'),
+    expectation: Joi.string().trim().max(MAX_AREAS_STRING_SIZE).allow('').label('Expectation'),
     availability: Joi.valid('Exploring', 'Full-time', 'Part-time', 'All-In', 'Freelance')
-        .required()
+        .allow('')
         .label('Availability'),
 })
 

@@ -25,6 +25,7 @@ const MatchingProjectsModal = () => {
 		dispatch(getProjectDetails(projectId));
 		dispatch(getRequestAddFriend(userId));
 	};
+	console.log(projects);
 	return (
 		<>
 			<Modal
@@ -34,12 +35,12 @@ const MatchingProjectsModal = () => {
 				onCancel={() => dispatch(setOpenModalMatchingProjects(false))}>
 				<div className={styles.matchingProjectsWrap}>
 					{projects.length > 0 &&
-						projects.map((datum, index) => (
+						projects.map((project, index) => (
 							<BoxProjectMatching
 								key={index}
-								project={datum._doc}
+								project={project}
 								openModalDetails={handleViewDetails}
-								matchScore={datum.matchScore}
+								matchScore={project.matchScore}
 							/>
 						))}
 				</div>
