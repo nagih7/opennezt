@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import verify from "../../../assets/images/icon/verify.png";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import BackgroundDefault from "../../../assets/images/default/BackgroundDefault.png";
 import AvatarDefault from "../../../assets/images/default/AvatarDefault.png";
-import { Button, Tooltip } from "antd";
+import { Button, Modal, Tooltip } from "antd";
 import ProfileCardSkeleton from "./ProfileCardSkeleton";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchOutlined } from "@mui/icons-material";
@@ -31,7 +31,10 @@ const ProfileCard = (props) => {
 		(state) => state.artificialIntelligence
 	);
 
+	const [openModalConfirm, setOpenModalConfirm] = useState(false);
+
 	const handleMatchingWithAI = () => {
+		setOpenModalConfirm(false);
 		dispatch(matchingProjects());
 	};
 
@@ -122,7 +125,7 @@ const ProfileCard = (props) => {
 									icon={<SearchOutlined />}
 									type="primary"
 									loading={loadingMatchingProjects}
-									onClick={handleMatchingWithAI}>
+									onClick={() => setOpenModalConfirm(true)}>
 									{MATCHING_PROJECTS_WITH_AI[language]}
 								</Button>
 							) : (
@@ -133,9 +136,7 @@ const ProfileCard = (props) => {
 											borderRadius: "0.5rem",
 										}}
 										icon={<SearchOutlined />}
-										type="primary"
-										loading={loadingMatchingProjects}
-										onClick={handleMatchingWithAI}>
+										type="primary">
 										{MATCHING_PROJECTS_WITH_AI[language]}
 									</Button>
 								</Tooltip>
@@ -151,6 +152,43 @@ const ProfileCard = (props) => {
 							</Button>
 						</div>
 					</div>
+					<Modal
+						onCancel={() => setOpenModalConfirm(false)}
+						onOk={handleMatchingWithAI}
+						title=""
+						open={openModalConfirm}
+						width={1000}>
+						<div className={styles.modalConfirm}>
+							<h2>{MATCHING_PROJECTS_WITH_AI[language]}</h2>
+							<p style={{ fontSize: "1rem", marginTop: "1rem" }}>
+								<b>
+									To provide you with the most accurate and relevant
+									matches, our AI system needs to analyze the
+									following:
+								</b>
+								<br />
+								<br />
+								<b>(1)</b> Your project profile, including its
+								description, goals, tractions and requirements.
+								<br />
+								<b>(2)</b> Profiles of your founding team and core team,
+								including skills, roles, and expertise.
+								<br />
+								<br />
+								This information will only be used to enhance the
+								matching process and recommend talents who best align
+								with your needs. Your data will remain confidential and
+								protected under our Privacy Policy.
+								<br />
+								<br />
+								<b>
+									Do you consent to allowing our AI system to access
+									this information for the purpose of generating
+									matches?
+								</b>
+							</p>
+						</div>
+					</Modal>
 				</div>
 			)}
 		</div>

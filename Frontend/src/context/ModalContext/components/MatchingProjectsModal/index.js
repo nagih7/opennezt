@@ -16,7 +16,6 @@ const MatchingProjectsModal = () => {
 	const { openModalMatchingProjects, projects } = useSelector(
 		(state) => state.artificialIntelligence
 	);
-	console.log(openModalMatchingProjects);
 
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -25,7 +24,6 @@ const MatchingProjectsModal = () => {
 		dispatch(getProjectDetails(projectId));
 		dispatch(getRequestAddFriend(userId));
 	};
-	console.log(projects);
 	return (
 		<>
 			<Modal

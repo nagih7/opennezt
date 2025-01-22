@@ -72,7 +72,6 @@ const Register = () => {
 	};
 
 	const handleConfirmRegister = async () => {
-		console.log("dataRegister", dataRegister);
 		let validate = handleCheckValidateConfirm(
 			dataRegister,
 			errorDataRegister

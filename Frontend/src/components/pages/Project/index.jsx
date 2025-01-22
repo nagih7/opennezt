@@ -74,6 +74,7 @@ function Project() {
 		milestones: "",
 		background: {},
 	});
+	const [openModalConfirm, setOpenModalConfirm] = useState(false);
 
 	const setDefaultForm = () => {
 		setFormData({
@@ -169,6 +170,7 @@ function Project() {
 	}, [resultUpdateProject]);
 
 	const handleMatchingWithAI = useCallback(() => {
+		setOpenModalConfirm(false);
 		dispatch(matchingTalents());
 	}, [dispatch]);
 
@@ -199,7 +201,7 @@ function Project() {
 							icon={<SearchOutlined />}
 							type="primary"
 							loading={loadingMatchingTalents}
-							onClick={handleMatchingWithAI}>
+							onClick={() => setOpenModalConfirm(true)}>
 							{MATCHING_TALENT_WITH_AI[language]}
 						</Button>
 					) : (
@@ -309,6 +311,41 @@ function Project() {
 						setFormData={setFormData}
 					/>
 				</LazyLoading>
+			</Modal>
+			<Modal
+				onCancel={() => setOpenModalConfirm(false)}
+				onOk={handleMatchingWithAI}
+				title=""
+				open={openModalConfirm}
+				width={1000}>
+				<div className={styles.modalConfirm}>
+					<h2>{MATCHING_TALENT_WITH_AI[language]}</h2>
+					<p style={{ fontSize: "1rem", marginTop: "1rem" }}>
+						<b>
+							To provide you with the most accurate and relevant matches,
+							our AI system needs to analyze the following:
+						</b>
+						<br />
+						<br />
+						<b>(1)</b> Your project profile, including its description,
+						goals, tractions and requirements.
+						<br />
+						<b>(2)</b> Profiles of your founding team and core team,
+						including skills, roles, and expertise.
+						<br />
+						<br />
+						This information will only be used to enhance the matching
+						process and recommend talents who best align with your needs.
+						Your data will remain confidential and protected under our
+						Privacy Policy.
+						<br />
+						<br />
+						<b>
+							Do you consent to allowing our AI system to access this
+							information for the purpose of generating matches?
+						</b>
+					</p>
+				</div>
 			</Modal>
 		</div>
 	);

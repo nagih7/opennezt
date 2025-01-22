@@ -1,14 +1,7 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import ExpertiseBox from "./ExpertiseBox";
-import {
-	listSector,
-	listExperienceLevel,
-	listEducationLevel,
-	listCertification,
-	listAreaOfExpertise,
-	listCommitment,
-} from "../ListSelected";
+import { listAreaOfExpertise, listCommitment } from "../ListSelected";
 import { Select, Input } from "antd";
 const { TextArea } = Input;
 import {
@@ -80,7 +73,7 @@ const EditProfilePopup = ({ formData, onChange }) => {
 				</h4>
 				<ExpertiseBox
 					value={formData.areas_of_expertise.accounting_and_finance}
-					listValue={listAreaOfExpertise.Accounting_and_Finance}
+					listValue={AREA_OF_EXPERTISE[language].ACCOUNTING_AND_FINANCE}
 					onChange={onChange}
 					ExpertiseName={
 						INPUT_PLACEHOLDER.ACCOUNTING_AND_FINANCE[language]
@@ -89,63 +82,70 @@ const EditProfilePopup = ({ formData, onChange }) => {
 				/>
 				<ExpertiseBox
 					value={formData.areas_of_expertise.human_resource}
-					listValue={listAreaOfExpertise.Human_Resources}
+					listValue={AREA_OF_EXPERTISE[language].HUMAN_RESOURCE}
 					onChange={onChange}
 					ExpertiseName={INPUT_PLACEHOLDER.HUMAN_RESOURCE[language]}
 					ExpertiseTarget="human_resource"
 				/>
 				<ExpertiseBox
 					value={formData.areas_of_expertise.international}
-					listValue={listAreaOfExpertise.International}
+					listValue={AREA_OF_EXPERTISE[language].INTERNATIONAL}
 					onChange={onChange}
 					ExpertiseName={INPUT_PLACEHOLDER.INTERNATIONAL[language]}
 					ExpertiseTarget="international"
 				/>
 				<ExpertiseBox
 					value={formData.areas_of_expertise.law_and_legal}
-					listValue={listAreaOfExpertise.Law_and_Legal}
+					listValue={AREA_OF_EXPERTISE[language].LAW_AND_LEGAL}
 					onChange={onChange}
 					ExpertiseName={INPUT_PLACEHOLDER.LAW_AND_LEGAL[language]}
 					ExpertiseTarget="law_and_legal"
 				/>
 				<ExpertiseBox
 					value={formData.areas_of_expertise.management}
-					listValue={listAreaOfExpertise.Management}
+					listValue={AREA_OF_EXPERTISE[language].MANAGEMENT}
 					onChange={onChange}
 					ExpertiseName={INPUT_PLACEHOLDER.MANAGEMENT[language]}
 					ExpertiseTarget="management"
 				/>
 				<ExpertiseBox
 					value={formData.areas_of_expertise.marketing}
-					listValue={listAreaOfExpertise.Marketing}
+					listValue={AREA_OF_EXPERTISE[language].MARKETING}
 					onChange={onChange}
 					ExpertiseName={INPUT_PLACEHOLDER.MARKETING[language]}
 					ExpertiseTarget="marketing"
 				/>
 				<ExpertiseBox
 					value={formData.areas_of_expertise.operations}
-					listValue={listAreaOfExpertise.Operations}
+					listValue={AREA_OF_EXPERTISE[language].OPERATIONS}
 					onChange={onChange}
 					ExpertiseName={INPUT_PLACEHOLDER.OPERATIONS[language]}
 					ExpertiseTarget="operations"
 				/>
 				<ExpertiseBox
 					value={formData.areas_of_expertise.sales}
-					listValue={listAreaOfExpertise.Sales}
+					listValue={AREA_OF_EXPERTISE[language].SALES}
 					onChange={onChange}
 					ExpertiseName={INPUT_PLACEHOLDER.SALES[language]}
 					ExpertiseTarget="sales"
 				/>
 				<ExpertiseBox
 					value={formData.areas_of_expertise.starting_up}
-					listValue={listAreaOfExpertise.Starting_up}
+					listValue={AREA_OF_EXPERTISE[language].STARTING_UP}
 					onChange={onChange}
 					ExpertiseName={INPUT_PLACEHOLDER.STARTING_UP[language]}
 					ExpertiseTarget="starting_up"
 				/>
 				<ExpertiseBox
+					value={formData.areas_of_expertise.sustainability}
+					listValue={AREA_OF_EXPERTISE[language].SUSTAINABILITY}
+					onChange={onChange}
+					ExpertiseName={INPUT_PLACEHOLDER.SUSTAINABILITY[language]}
+					ExpertiseTarget="sustainability"
+				/>
+				<ExpertiseBox
 					value={formData.areas_of_expertise.technology_and_internet}
-					listValue={listAreaOfExpertise.Technology_and_Internet}
+					listValue={AREA_OF_EXPERTISE[language].TECHNOLOGY_AND_INTERNET}
 					onChange={onChange}
 					ExpertiseName={
 						INPUT_PLACEHOLDER.TECHNOLOGY_AND_INTERNET[language]

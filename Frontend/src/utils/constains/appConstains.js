@@ -177,6 +177,11 @@ export const PROFESSIONAL_PROFILE = {
 		VI: "Quản lý",
 		ZH: "管理",
 	},
+	MARKETING: {
+		EN: "Marketing",
+		VI: "Marketing",
+		ZH: "市场营销",
+	},
 	OPERATION: {
 		EN: "Operation",
 		VI: "Vận hành",

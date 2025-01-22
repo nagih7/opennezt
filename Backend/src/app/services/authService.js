@@ -39,7 +39,6 @@ export function authToken(user) {
 export async function register({avatar, ...requestBody}) {
     const user = await User.findOne({email: requestBody.email})
     if (user && user.is_active === false) {
-        console.log('old user')
         // update user info
         user.set(requestBody)
         await user.save()

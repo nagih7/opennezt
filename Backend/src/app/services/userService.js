@@ -235,7 +235,6 @@ export async function getProject(projectId) {
 }
 
 export async function updateProject(user, requestBody) {
-    console.log(requestBody)
     if (requestBody.background) {
         // xoá LINK_STATIC_URL nếu tồn tại
         if (requestBody.background.includes(LINK_STATIC_URL)) {
