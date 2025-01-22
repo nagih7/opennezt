@@ -152,18 +152,20 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 											handleOpenModalMemberDetails
 										}
 									/>
-									{projectDetails.members &&
-										projectDetails.members.length > 0 &&
-										projectDetails.members.map((member, index) => (
-											<MemberBox
-												owner_id={projectDetails.user_id}
-												member={member}
-												key={index}
-												openModalMemberDetails={
-													handleOpenModalMemberDetails
-												}
-											/>
-										))}
+									{projectDetails.metadata.members &&
+										projectDetails.metadata.members.length > 0 &&
+										projectDetails.metadata.members.map(
+											(member, index) => (
+												<MemberBox
+													owner_id={projectDetails.user_id}
+													member={member}
+													key={index}
+													openModalMemberDetails={
+														handleOpenModalMemberDetails
+													}
+												/>
+											)
+										)}
 								</Row>
 							</Card>
 						</Col>
