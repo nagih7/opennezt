@@ -45,7 +45,6 @@ export async function register({avatar, ...requestBody}) {
         await user.save()
         return generateToken({user_id: user._id}, TOKEN_TYPE.VERIFY_EMAIL, VERIFY_EMAIL_EXPIRE_IN)
     } else {
-        console.log('new user')
         const newUser = new User(requestBody)
         await newUser.save()
 

@@ -189,7 +189,7 @@ export const MODEL = process.env.MODEL
 assert(!_.isEmpty(MODEL), assertMsg('MODEL'))
 
 export const OPENAI_ANALYZE_PROMPT_MAX_TOKENS = 200
-export const OPENAI_ANALYZE_PROMPT_TEMPERATURE = 0.2
+export const OPENAI_ANALYZE_PROMPT_TEMPERATURE = 0.7
 export const OPENAI_ANALYZE_PROMPT_TOP_P = 0.9
 export const OPENAI_ANALYZE_PROMPT_FREQUENCY_PENALTY = 0
 export const OPENAI_ANALYZE_PROMPT_PRESENCE_PENALTY = 0
@@ -221,11 +221,12 @@ Skills: ${Object.keys(userSkills.skills)
         .join('\n')}
 Task:
 - Analyze the user's skills against the skill requirements of each project.
-- Return an array of projects that match the user (Only return if the project matches).
-- Limit the 6 projects with the highest score.
-- For each matching project, include:
+- Return an array of projects that match the user.
+- Limit the top 6 projects to the highest score.
+- Return at least 3 most relevant projects.
+- For each relevant project, include:
 - "projectId": ID of the project
-- "matchScore": score from 1 to 100 indicating the match rate
+- "matchScore": score from 1 to 99 indicating the match rate (do not create even numbers).
 Output format:[{"projectId": "<Project ID>", "matchScore": <Score>},...]`,
         },
     ]
@@ -249,7 +250,11 @@ Input:
         .map((talent, index) => `User ID: ${talent.user_id}, Industry: ${talent.industry.join(', ')}`)
         .join('; ')}
 Task:
-Analyze the skill requirements of each project against the user's skills; Return an array of talents that match the project (Only return if the talent matches); Limit the 6 talents with the highest score; For each matching talent, include: "user_id": ID of the user, "match_score": score from 1 to 100 indicating the match rate; Output format:{"<user_id>": <Score>,...}`,
+- Analyze the user's suitability for the project
+- Return the matching users
+- Limit the top 6 users to the highest score
+- For each user, include: "user_id": user ID, "match_score": score from 1 to 99 indicating the match rate (do not create even numbers).
+- Output format:{"<user_id>": <Score>,...}`,
         },
     ]
 

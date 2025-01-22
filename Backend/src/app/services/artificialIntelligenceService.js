@@ -40,7 +40,8 @@ export async function matchingProjects(user) {
                 return null
             }
         })
-        return result.filter((project) => project !== null)
+        // sắp sếp theo matchScore giảm dần
+        return result.filter((project) => project !== null).sort((a, b) => b.matchScore - a.matchScore)
     } catch (error) {
         console.error(error)
         throw error

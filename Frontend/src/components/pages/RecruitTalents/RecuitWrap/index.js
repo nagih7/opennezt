@@ -64,14 +64,38 @@ const RecruitWrap = () => {
 	};
 
 	const handleResetForm = () => {
-		dispatch(resetFormRecruitTalents());
 		setCanDeleteForm(false);
+		dispatch(
+			recruitTalents({
+				keyword: "",
+				sector: "",
+				experience_level: "",
+				education_level: "",
+				commitment: "",
+				location: "",
+				language: "",
+				page: 0,
+			})
+		);
+		dispatch(resetFormRecruitTalents());
 	};
+
+	console.log(formRecruitTalents);
 
 	return (
 		<div className={styles.recruitWrap}>
 			<Button
-				disabled={!canDeleteForm || loadingRecruitTalents}
+				// disabled={!canDeleteForm || loadingRecruitTalents}
+				disabled={
+					formRecruitTalents.page <= 1 &&
+					formRecruitTalents.keyword === null &&
+					formRecruitTalents.sector === null &&
+					formRecruitTalents.experience_level === null &&
+					formRecruitTalents.education_level === null &&
+					formRecruitTalents.commitment === null &&
+					formRecruitTalents.location === null &&
+					formRecruitTalents.language === null
+				}
 				className={styles.deleteButton}
 				type="dashed"
 				danger
@@ -87,6 +111,7 @@ const RecruitWrap = () => {
 					onChange={(e) => handleOnChange(e.target, "keyword")}
 				/>
 				<Select
+					value={formRecruitTalents.sector}
 					style={{ width: "13rem" }}
 					showSearch
 					placeholder={INPUT_PLACEHOLDER.SECTOR[language]}
@@ -95,6 +120,7 @@ const RecruitWrap = () => {
 					onChange={(value, option) => handleOnChange(option, "sector")}
 				/>
 				<Select
+					value={formRecruitTalents.experience_level}
 					style={{ width: "13rem" }}
 					showSearch
 					placeholder={INPUT_PLACEHOLDER.EXPERIENCE_LEVEL[language]}
@@ -104,6 +130,7 @@ const RecruitWrap = () => {
 					}
 				/>
 				<Select
+					value={formRecruitTalents.education_level}
 					style={{ width: "13rem" }}
 					showSearch
 					placeholder={INPUT_PLACEHOLDER.EDUCATION_LEVEL[language]}
@@ -113,6 +140,7 @@ const RecruitWrap = () => {
 					}
 				/>
 				<Select
+					value={formRecruitTalents.commitment}
 					style={{ width: "13rem" }}
 					showSearch
 					placeholder={INPUT_PLACEHOLDER.COMMITMENT[language]}
@@ -122,6 +150,7 @@ const RecruitWrap = () => {
 					}
 				/>
 				<Select
+					value={formRecruitTalents.location}
 					style={{ width: "13rem" }}
 					showSearch
 					placeholder={INPUT_PLACEHOLDER.LOCATION[language]}
@@ -129,6 +158,7 @@ const RecruitWrap = () => {
 					onChange={(value, option) => handleOnChange(option, "location")}
 				/>
 				<Select
+					value={formRecruitTalents.language}
 					style={{ width: "13rem" }}
 					showSearch
 					placeholder={INPUT_PLACEHOLDER.LANGUAGE[language]}

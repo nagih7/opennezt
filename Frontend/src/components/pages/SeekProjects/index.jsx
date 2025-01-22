@@ -68,8 +68,16 @@ const SeekProjects = () => {
 	};
 
 	const handleResetForm = () => {
+		// setCanDeleteForm(false);
+		dispatch(
+			seekProjects({
+				industry: "",
+				stage: "",
+				name: "",
+				page: 0,
+			})
+		);
 		dispatch(resetFormSeekProjects());
-		setCanDeleteForm(false);
 	};
 
 	const handleViewDetails = (projectId, userId) => {
@@ -82,7 +90,13 @@ const SeekProjects = () => {
 		<div className={styles.searchContainer}>
 			<div className={styles.searchForm}>
 				<Button
-					disabled={!canDeleteForm || loadingSeekProjects}
+					// disabled={!canDeleteForm || loadingSeekProjects}
+					disabled={
+						formSeekProjects.page <= 1 &&
+						formSeekProjects.name === null &&
+						formSeekProjects.industry === null &&
+						formSeekProjects.stage === null
+					}
 					className={styles.deleteButton}
 					type="dashed"
 					danger
@@ -101,6 +115,7 @@ const SeekProjects = () => {
 						name="name"
 					/>
 					<Select
+						value={formSeekProjects.industry}
 						name="industry"
 						onChange={(value, option) =>
 							handleOnChange(option, "industry")
@@ -111,6 +126,7 @@ const SeekProjects = () => {
 						options={SECTOR[language]}
 					/>
 					<Select
+						value={formSeekProjects.stage}
 						onChange={(value, option) => handleOnChange(option, "stage")}
 						className={styles.searchSelect}
 						placeholder={INPUT_PLACEHOLDER.STAGE[language]}

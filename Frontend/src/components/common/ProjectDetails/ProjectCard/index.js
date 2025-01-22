@@ -38,12 +38,6 @@ const ProjectCard = () => {
 					e.target.src = BackgroundDefault;
 				}}
 			/>
-			<div className={styles.buttonChangeBackground}>
-				<Upload {...propsBackground}>
-					<CameraAltIcon fontSize="2rem" />
-					<span className={styles.btnWrap}>Update Background</span>
-				</Upload>
-			</div>
 			<div className={styles.headerOverlay}>
 				<Title level={2}>{projectDetails.name}</Title>
 				<Space size={8} wrap>
@@ -58,6 +52,12 @@ const ProjectCard = () => {
 						{projectDetails.stage}
 					</Tag>
 				</Space>
+			</div>
+			<div className={styles.buttonChangeBackground}>
+				<Upload {...propsBackground}>
+					<CameraAltIcon fontSize="2rem" />
+					<span className={styles.btnWrap}>Update Background</span>
+				</Upload>
 			</div>
 		</div>
 	);
