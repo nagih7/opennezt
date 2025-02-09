@@ -1,50 +1,63 @@
 // models/messenger.js
 import createModel, {ObjectId} from './base'
-import {Conversation, User} from '@/models'
-import {Schema} from 'mongoose'
-
-const Metadata = new Schema(
-    {
-        type: {
-            type: String,
-            required: true,
-            enum: ['text', 'image', 'file'],
-            default: 'text',
-        },
-        data: {
-            type: Object,
-            required: true,
-            default: {},
-        },
-        read_by: {
-            type: [ObjectId],
-            required: true,
-            default: [],
-        },
-    },
-    {
-        _id: false,
-    }
-)
 
 const Message = createModel('Message', 'messages', {
     conversation_id: {
         type: ObjectId,
+        ref: 'Conversation',
         required: true,
-        ref: Conversation,
     },
     user_id: {
         type: ObjectId,
+        ref: 'User',
         required: true,
-        ref: User,
     },
     content: {
         type: String,
         required: true,
     },
-    metadata: {
-        type: Metadata,
+    type_id: {
+        type: ObjectId,
+        ref: 'Type',
         required: true,
+    },
+    reply_to: {
+        type: ObjectId,
+        ref: 'Message',
+        required: false,
+    },
+    read_by: {
+        type: [ObjectId],
+        ref: 'User',
+        required: true,
+        default: [],
+    },
+    reaction_ids: {
+        type: [ObjectId],
+        ref: 'Reaction',
+        required: true,
+        default: [],
+    },
+    is_active: {
+        type: Boolean,
+        required: true,
+        default: true,
+    },
+    pinned: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    status: {
+        type: String,
+        required: true,
+        enum: ['sent', 'delivered', 'read'],
+        default: 'sent',
+    },
+    metadata: {
+        type: Object,
+        required: true,
+        default: {},
     },
 })
 

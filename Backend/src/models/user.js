@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import createModel from './base'
+import createModel, {ObjectId} from './base'
 
 const User = createModel(
     'User',
@@ -60,11 +60,10 @@ const User = createModel(
             default: ['Vietnamese'],
             required: true,
         },
-        role: {
-            type: String,
-            default: 'user',
+        role_id: {
+            type: ObjectId,
+            ref: 'Role',
             required: true,
-            enum: ['user', 'admin'],
         },
         is_active: {
             type: Boolean,

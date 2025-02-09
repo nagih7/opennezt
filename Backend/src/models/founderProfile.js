@@ -1,70 +1,5 @@
 import createModel, {ObjectId} from './base'
-import {Schema} from 'mongoose'
 import User from './user'
-
-// Khai báo schema cho AreasOfExpertise
-const AreasOfExpertise = new Schema(
-    {
-        accounting_and_finance: {
-            type: [String],
-            required: false,
-            default: [],
-        },
-        human_resource: {
-            type: [String],
-            required: false,
-            default: [],
-        },
-        international: {
-            type: [String],
-            required: false,
-            default: [],
-        },
-        law_and_legal: {
-            type: [String],
-            required: false,
-            default: [],
-        },
-        management: {
-            type: [String],
-            required: false,
-            default: [],
-        },
-        marketing: {
-            type: [String],
-            required: false,
-            default: [],
-        },
-        operations: {
-            type: [String],
-            required: false,
-            default: [],
-        },
-        sales: {
-            type: [String],
-            required: false,
-            default: [],
-        },
-        starting_up: {
-            type: [String],
-            required: false,
-            default: [],
-        },
-        sustainability: {
-            type: [String],
-            required: false,
-            default: [],
-        },
-        technology_and_internet: {
-            type: [String],
-            required: false,
-            default: [],
-        },
-    },
-    {
-        _id: false,
-    }
-)
 
 const FounderProfile = createModel('Founder_Profile', 'founder_profiles', {
     user_id: {
@@ -72,47 +7,66 @@ const FounderProfile = createModel('Founder_Profile', 'founder_profiles', {
         ref: User,
         required: true,
     },
-    industry: {
-        type: [String],
+    industry_ids: {
+        type: [ObjectId],
         required: true,
     },
-    experience_level: {
-        type: String,
+    experience_level_id: {
+        type: ObjectId,
+        ref: 'Experience_Level',
         required: true,
     },
-    degree: {
-        type: String,
+    education_ids: {
+        type: [ObjectId],
+        ref: 'Education',
         required: true,
+        default: [],
     },
-    certification: {
-        type: [String],
-        required: false,
-    },
-    areas_of_expertise: {
-        type: AreasOfExpertise,
+    certification_ids: {
+        type: [ObjectId],
+        ref: 'Certification',
         required: true,
+        default: [],
     },
-    professional_summary: {
-        type: String,
-        required: false,
-    },
-    career_goals: {
-        type: String,
-        required: false,
-    },
-    offer: {
-        type: String,
-        required: false,
-    },
-    expectation: {
-        type: String,
-        required: false,
-    },
-    availability: {
-        type: String,
+    category_ids: {
+        type: [ObjectId],
+        ref: 'Category',
         required: true,
-        enum: ['Exploring', 'Full-time', 'Part-time', 'All-In', 'Freelance'],
+        default: [],
     },
+    skill_ids: {
+        type: [ObjectId],
+        ref: 'Skill',
+        required: true,
+        default: [],
+    },
+    founder_additional_info_ids: {
+        type: [ObjectId],
+        ref: 'Founder_Additional_Info',
+        required: true,
+        default: [],
+    },
+    // professional_summary: {
+    //     type: String,
+    //     required: false,
+    // },
+    // career_goals: {
+    //     type: String,
+    //     required: false,
+    // },
+    // offer: {
+    //     type: String,
+    //     required: false,
+    // },
+    // expectation: {
+    //     type: String,
+    //     required: false,
+    // },
+    // availability: {
+    //     type: String,
+    //     required: true,
+    //     enum: ['Exploring', 'Full-time', 'Part-time', 'All-In', 'Freelance'],
+    // },
 })
 
 export default FounderProfile

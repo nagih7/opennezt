@@ -1,4 +1,36 @@
 import createModel, {ObjectId} from './base'
+import {Schema} from 'mongoose'
+
+const additional_info = new Schema(
+    {
+        project_id: {
+            type: ObjectId,
+            ref: 'Project',
+            required: false,
+        },
+    },
+    {
+        _id: false,
+    }
+)
+
+const metadata = new Schema(
+    {
+        read: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
+        status: {
+            type: String,
+            required: false,
+            default: '',
+        },
+    },
+    {
+        _id: false,
+    }
+)
 
 const NotificationFeed = createModel('NotificationFeed', 'notifications_feed', {
     user_id: {
@@ -9,24 +41,31 @@ const NotificationFeed = createModel('NotificationFeed', 'notifications_feed', {
         type: ObjectId,
         required: true,
     },
-    type: {
-        type: String,
+    // type: {
+    //     type: String,
+    //     required: true,
+    //     enum: [
+    //         'project_request',
+    //         'message',
+    //         'message_request',
+    //         'chat_invitation',
+    //         'friend_request',
+    //         'project_invitation',
+    //     ],
+    // },
+    type_id: {
+        type: ObjectId,
+        ref: 'Type',
         required: true,
-        enum: [
-            'project_request',
-            'message',
-            'message_request',
-            'chat_invitation',
-            'friend_request',
-            'project_invitation',
-        ],
     },
-    read: {
-        type: Boolean,
-        default: false,
+    additional_info: {
+        type: additional_info,
+        required: true,
+        default: {},
     },
     metadata: {
-        type: Object,
+        type: metadata,
+        required: true,
         default: {},
     },
 })
