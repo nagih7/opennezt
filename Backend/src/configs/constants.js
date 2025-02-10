@@ -248,3 +248,10 @@ Output format:{"<user_id>": <Score>,...}`,
 
     return messages
 }
+
+//ARTICLE CONST
+export const REACTIONS_ENUM = ['like', 'dislike', 'share']
+export const ARTICLE_STATUS_ENUM = ['draft', 'published', 'archived']
+export const ARTICLE_AUDIENCE_ENUM = ['public', 'private', 'friends']
+export const REACTION_TARGET_TYPE_ENUM = ['article', 'comment']
+//END ARTICLE CONST
