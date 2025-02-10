@@ -3,6 +3,9 @@ import {
 	startRequestGetTotalUsers,
 	startRequestGetTotalUsersSuccess,
 	startRequestGetTotalUsersFail,
+	requestGetListRole,
+	getListRoleSuccess,
+	getListRoleFail,
 } from "../../states/modules/manage";
 
 export const getTotalUsers = () => async (dispatch, getState) => {
@@ -19,3 +22,35 @@ export const getTotalUsers = () => async (dispatch, getState) => {
 		getState,
 	});
 };
+
+export const getListRole =
+	(
+		dataFilter = {
+			perPage: 10,
+			page: 1,
+		}
+	) =>
+	async (dispatch, getState) => {
+		let path = `manage/roles?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
+
+		if (dataFilter.keySearch) {
+			path += `&q=${dataFilter.keySearch}`;
+		}
+
+		if (dataFilter.status && dataFilter.status.length > 0) {
+			path += `&status=${dataFilter.status}`;
+		}
+
+		if (dataFilter.order && dataFilter.column) {
+			path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+		}
+
+		return callApi({
+			method: "get",
+			apiPath: path,
+			actionTypes: [requestGetListRole, getListRoleSuccess, getListRoleFail],
+			variables: {},
+			dispatch,
+			getState,
+		});
+	};
