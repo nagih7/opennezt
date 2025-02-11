@@ -1,5 +1,5 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {User, Type, Role} from '@/models'
+import {User, Type, Role, Industry} from '@/models'
 
 // GET TOTAL USERS
 export async function getTotalUsers() {
@@ -108,4 +108,32 @@ export async function typeReadRoot({q, page, per_page, field, order}) {
 
     const total = await Type.countDocuments(filter)
     return {total, page, per_page, types}
+}
+
+// INDUSTRY READ ROOT
+export async function industryReadRoot({q, page, per_page, field, order}) {
+    q = q ? q : ''
+    order = order === '-1' ? -1 : 1
+    const matchStage = {
+        $match: {name: {$regex: q, $options: 'i'}},
+    }
+
+    const sortStage = {
+        $sort: {[field]: order},
+    }
+    const skipStage = {
+        $skip: (page - 1) * per_page,
+    }
+    const limitStage = {
+        $limit: per_page,
+    }
+
+    const industries = await Industry.aggregate([matchStage, sortStage, skipStage, limitStage])
+
+    const filter = {
+        ...(q && {name: q}),
+    }
+
+    const total = await Industry.countDocuments(filter)
+    return {total, page, per_page, industries}
 }

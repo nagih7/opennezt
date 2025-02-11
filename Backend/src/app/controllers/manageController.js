@@ -19,3 +19,8 @@ export async function typeReadRoot(req, res) {
     const result = await manageService.typeReadRoot(req.query)
     res.jsonify(result)
 }
+
+export async function industryReadRoot(req, res) {
+    const result = await manageService.industryReadRoot(req.query)
+    res.jsonify(result)
+}

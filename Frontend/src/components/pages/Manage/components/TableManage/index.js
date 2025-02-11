@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import TableCustom from "./../../../../UI/Table/index";
 import InputMASQ from "./../../../../UI/Input/index";
@@ -8,70 +8,62 @@ import IconEditTable from "../../../../../assets/images/icon/table/edit_12x12.sv
 import SwitchMASQ from "./../../../../UI/Switch/index";
 import ModalConfirm from "./../../../../UI/Modal/ModalConfirm/index";
 import { useDispatch, useSelector } from "react-redux";
-// import { getListEmployee, handleDeleteEmployee } from "../../../api/employee";
-// import {
-// 	setVisibleModalCreateOrUpdateEmployee,
-// 	setVisibleModalDeleteEmployee,
-// } from "../../../states/modules/employee";
 import _ from "lodash";
+import CreateOrUpdate from "components/pages/UserManagement/components/CreateOrUpdate";
 // import Filter from "./components/Filter";
 // import BtnFilter from "../../UI/ButtonFilter";
 
-function TableManage({ columns, dataSource, pagination, loading }) {
-	// const [employee, setEmployee] = useState({});
-	// const [configModal, setConfigModal] = useState({
-	// 	title: "Create user",
-	// 	type: "CREATE",
-	// });
-	const [dataFilter, setDataFilter] = useState({
-		keySearch: "",
-		status: "",
-		perPage: 10,
-		page: 1,
-		order: null,
-		column: null,
+function TableManage({
+	columns,
+	dataSource,
+	pagination,
+	loading,
+	visibleModalCreateOrUpdate,
+	visibleModalDelete,
+	setVisibleModalCreateOrUpdate,
+	setVisibleModalDelete,
+}) {
+	const [data, setData] = useState({});
+	const [configModal, setConfigModal] = useState({
+		title: "Create user",
+		type: "CREATE",
 	});
-	// const dispatch = useDispatch();
 
-	// useEffect(() => {
-	// 	dispatch(getListEmployee(dataFilter));
-	// }, [dataFilter, dispatch]);
+	const handleCreate = () => {
+		dispatch(setVisibleModalCreateOrUpdateEmployee(true));
+		setConfigModal({
+			title: "Create user",
+			type: "CREATE",
+		});
+	};
 
-	// const handleCreate = () => {
-	// 	dispatch(setVisibleModalCreateOrUpdateEmployee(true));
-	// 	setConfigModal({
-	// 		title: "Create user",
-	// 		type: "CREATE",
-	// 	});
-	// };
+	const handleEdit = (data) => {
+		let dataSelect = _.cloneDeep(data);
+		setData(dataSelect);
+		dispatch(setVisibleModalCreateOrUpdate(true));
+		setConfigModal({
+			title: "Update user",
+			type: "UPDATE",
+		});
+	};
 
-	// const handleEdit = (employee) => {
-	// 	let employeeSelect = _.cloneDeep(employee);
-	// 	setEmployee(employeeSelect);
-	// 	dispatch(setVisibleModalCreateOrUpdateEmployee(true));
-	// 	setConfigModal({
-	// 		title: "Update user",
-	// 		type: "UPDATE",
-	// 	});
-	// };
+	const handleShowConfirmDelete = (data) => {
+		let dataSelect = _.cloneDeep(data);
+		setData(dataSelect);
+		dispatch(setVisibleModalDelete(true));
+	};
 
-	// const handleShowConfirmDelete = (employee) => {
-	// 	let employeeSelect = _.cloneDeep(employee);
-	// 	setEmployee(employeeSelect);
-	// 	dispatch(setVisibleModalDeleteEmployee(true));
-	// };
-
-	// const handleConfirmDeleteEmployee = () => {
-	// 	dispatch(handleDeleteEmployee(employee.id));
-	// };
+	const handleConfirmDelete = () => {
+		dispatch(handleDeleteEmployee(employee.id));
+	};
 
 	const changeCurrentPage = (page) => {
 		setDataFilter({ ...dataFilter, page: page });
 	};
 
-	// const handleSearch = (e) => {
-	// 	setDataFilter({ ...dataFilter, keySearch: e.target.value });
-	// };
+	const handleSearch = (e) => {
+		setDataFilter({ ...dataFilter, keySearch: e.target.value });
+	};
 
 	const onChange = (pagination, filters, sorter) => {
 		if (sorter.order && sorter.field) {
@@ -85,16 +77,48 @@ function TableManage({ columns, dataSource, pagination, loading }) {
 		}
 	};
 
-	// const handleChangeStatus = (value) => {
-	// 	setDataFilter({ ...dataFilter, status: value.toString() });
-	// };
+	const handleChangeStatus = (value) => {
+		setDataFilter({ ...dataFilter, status: value.toString() });
+	};
+
+	const columnsData = [
+		...columns,
+		{
+			title: "Actions",
+			key: "action",
+			fixed: "right",
+			align: "center",
+			width: "10rem",
+			render: (text, record) => (
+				<>
+					<div className={styles.btnAction}>
+						<div
+							onClick={() => handleEdit(record)}
+							className={styles.btnWrap}>
+							<img src={IconEditTable} alt="" />
+						</div>
+						<div
+							onClick={() => handleShowConfirmDelete(record)}
+							className={styles.btnWrap}>
+							<img src={IconDeleteTable} alt="" />
+						</div>
+
+						{/* <div
+							className={`switch-table-style-custom ${styles.btnWrap}`}>
+							<SwitchMASQ disabled={true} status={record.status} />
+						</div> */}
+					</div>
+				</>
+			),
+		},
+	];
 
 	return (
 		<div className={styles.tableManageWrap}>
 			<div className={styles.mainWrap}>
 				<div className={styles.headerMainWrap}>
 					<span className={styles.title}>
-						{/* Total records ({paginationListEmployee.totalRecord}) */}
+						Total records ({pagination.totalRecord})
 					</span>
 					<div className={styles.btnWrap}>
 						<ButtonMASQ
@@ -149,7 +173,7 @@ function TableManage({ columns, dataSource, pagination, loading }) {
 					/> */}
 				</div>
 				<TableCustom
-					columns={columns}
+					columns={columnsData}
 					loading={loading}
 					dataSource={dataSource}
 					rowKey={"lens_color_id"}
@@ -159,14 +183,14 @@ function TableManage({ columns, dataSource, pagination, loading }) {
 				/>
 			</div>
 
-			{/* <CreateOrUpdate employee={employee} configModal={configModal} /> */}
+			<CreateOrUpdate employee={data} configModal={configModal} />
 
 			<ModalConfirm
-			// isModalOpen={visibleModalDeleteEmployee}
-			// title={`Delete ${employee.name}?`}
-			// description={`Are you sure you want to delete ${employee.name}? Your action can not be undone.`}
-			// onClose={() => dispatch(setVisibleModalDeleteEmployee(true))}
-			// onConfirm={() => handleConfirmDeleteEmployee()}
+				isModalOpen={visibleModalDelete}
+				title={`Delete ${data.name}?`}
+				description={`Are you sure you want to delete ${data.name}? Your action can not be undone.`}
+				onClose={() => dispatch(setVisibleModalCreateOrUpdate(true))}
+				onConfirm={() => handleConfirmDelete()}
 			/>
 		</div>
 	);

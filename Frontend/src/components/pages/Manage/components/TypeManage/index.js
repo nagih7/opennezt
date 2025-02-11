@@ -3,21 +3,21 @@ import styles from "./styles.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import TableManage from "../TableManage";
-import { getListRole } from "api/manage";
+import { getListType } from "api/manage";
 import {
-	setVisibleModalCreateOrUpdateRole,
-	setVisibleModalDeleteRole,
+	setVisibleModalCreateOrUpdateType,
+	setVisibleModalDeleteType,
 } from "states/modules/manage";
 
-function RoleManage() {
+function TypeManage() {
 	const dispatch = useDispatch();
 
 	const {
-		roles,
-		paginationListRole,
-		isLoadingGetListRoles,
-		visibleModalCreateOrUpdateRole,
-		visibleModalDeleteRole,
+		types,
+		paginationListType,
+		isLoadingGetListType,
+		visibleModalCreateOrUpdateType,
+		visibleModalDeleteType,
 	} = useSelector((state) => state.manage);
 
 	const [dataFilter, setDataFilter] = useState({
@@ -30,13 +30,13 @@ function RoleManage() {
 	});
 
 	useEffect(() => {
-		dispatch(getListRole(dataFilter));
+		dispatch(getListType(dataFilter));
 		console.log("dataFilter", dataFilter);
 	}, [dataFilter, dispatch]);
 
 	const columns = [
 		{
-			title: "Role",
+			title: "Type",
 			dataIndex: "index",
 			key: "index",
 			render: (text, record, index) => <span>{index + 1}</span>,
@@ -55,6 +55,18 @@ function RoleManage() {
 			sorter: (a, b) => a.age - b.age,
 		},
 		{
+			title: "Class",
+			dataIndex: "class",
+			key: "class",
+			render: (text, record) => (
+				<div className={styles.nameWrap}>
+					<span>{record.class}</span>
+				</div>
+			),
+			defaultSortOrder: "",
+			sorter: (a, b) => a.age - b.age,
+		},
+		{
 			title: "Description",
 			dataIndex: "description",
 			key: "description",
@@ -67,15 +79,15 @@ function RoleManage() {
 	return (
 		<TableManage
 			columns={columns}
-			dataSource={roles}
-			pagination={paginationListRole}
-			loading={isLoadingGetListRoles}
-			visibleModalCreateOrUpdate={visibleModalCreateOrUpdateRole}
-			visibleModalDelete={visibleModalDeleteRole}
-			setVisibleModalCreateOrUpdate={setVisibleModalCreateOrUpdateRole}
-			setVisibleModalDelete={setVisibleModalDeleteRole}
+			dataSource={types}
+			pagination={paginationListType}
+			loading={isLoadingGetListType}
+			visibleModalCreateOrUpdate={visibleModalCreateOrUpdateType}
+			visibleModalDelete={visibleModalDeleteType}
+			setVisibleModalCreateOrUpdate={setVisibleModalCreateOrUpdateType}
+			setVisibleModalDelete={setVisibleModalDeleteType}
 		/>
 	);
 }
 
-export default RoleManage;
+export default TypeManage;

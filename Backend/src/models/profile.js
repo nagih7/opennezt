@@ -1,7 +1,7 @@
 import createModel, {ObjectId} from './base'
 import User from './user'
 
-const FounderProfile = createModel('Founder_Profile', 'founder_profiles', {
+const Profile = createModel('Profile', 'profiles', {
     user_id: {
         type: ObjectId,
         ref: User,
@@ -42,7 +42,7 @@ const FounderProfile = createModel('Founder_Profile', 'founder_profiles', {
     },
     founder_additional_info_ids: {
         type: [ObjectId],
-        ref: 'Founder_Additional_Info',
+        ref: 'Profile_Additional_Info',
         required: true,
         default: [],
     },
@@ -69,4 +69,4 @@ const FounderProfile = createModel('Founder_Profile', 'founder_profiles', {
     // },
 })
 
-export default FounderProfile
+export default Profile

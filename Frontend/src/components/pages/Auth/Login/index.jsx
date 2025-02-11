@@ -30,7 +30,7 @@ const Login = () => {
 	const isLoadingBtnLogin = useSelector(
 		(state) => state.auth.isLoadingBtnLogin
 	);
-	const { isAuthSuccess, authorize } = useSelector((state) => state.auth);
+	const { isAuthSuccess, authRole } = useSelector((state) => state.auth);
 
 	useEffect(() => {
 		dispatch(resetForgotPassword());
@@ -42,13 +42,13 @@ const Login = () => {
 
 	useEffect(() => {
 		if (isAuthSuccess) {
-			if (authorize === "admin") {
+			if (authRole === "Super Admin") {
 				navigate("/admin/manage");
-			} else if (authorize === "user") {
+			} else if (authRole === "User") {
 				navigate("/");
 			}
 		}
-	}, [isAuthSuccess, authorize, navigate]);
+	}, [isAuthSuccess, authRole, navigate]);
 
 	const handleResetError = () => {
 		setErrorDataLogin({

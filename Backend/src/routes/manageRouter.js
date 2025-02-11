@@ -16,15 +16,26 @@ manageRouter.get(
     asyncHandler(validate(manageRequest.readRoot)),
     asyncHandler(manageController.userReadRoot)
 )
+
+// ROLES
 manageRouter.get(
     '/roles',
     asyncHandler(validate(manageRequest.readRoot)),
     asyncHandler(manageController.roleReadRoot)
 )
+
+// TYPES
 manageRouter.get(
     '/types',
     asyncHandler(validate(manageRequest.readRoot)),
     asyncHandler(manageController.typeReadRoot)
+)
+
+// INDUSTRIES
+manageRouter.get(
+    '/industries',
+    validate(manageRequest.readRoot),
+    asyncHandler(manageController.industryReadRoot)
 )
 
 export default manageRouter

@@ -9,6 +9,7 @@ const authSlice = createSlice({
 		authorize: "user",
 		authRegister: {},
 		authUser: {},
+		authRole: "",
 		resetPasswordSuccess: false,
 		errorRegister: {
 			name: "",
@@ -20,6 +21,7 @@ const authSlice = createSlice({
 		},
 		isLoadingGetMe: false,
 		isLoadingBtnLogin: false,
+		isLoadingGetAuthRole: false,
 		isRegisterSuccess: false,
 		isLoadingRegister: false,
 		isSuccessForgotPassword: false,
@@ -63,6 +65,21 @@ const authSlice = createSlice({
 			isLoadingGetMe: false,
 			authUser: {},
 			authorize: "user",
+		}),
+		requestGetAuthRole: (state) => ({
+			...state,
+			authRole: "",
+			isLoadingGetAuthRole: true,
+		}),
+		getAuthRoleSuccess: (state, action) => ({
+			...state,
+			authRole: action.payload.data.role,
+			isLoadingGetAuthRole: false,
+		}),
+		getAuthRoleFail: (state, action) => ({
+			...state,
+			authRole: "",
+			isLoadingGetAuthRole: false,
 		}),
 		startRequestRegister: (state) => ({
 			...state,
@@ -159,6 +176,9 @@ export const {
 	startRequestGetMe,
 	startRequestGetMeSuccess,
 	startRequestGetMeFail,
+	requestGetAuthRole,
+	getAuthRoleSuccess,
+	getAuthRoleFail,
 	startRequestRegister,
 	startRequestRegisterSuccess,
 	startRequestRegisterFail,

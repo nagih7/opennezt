@@ -1,9 +1,14 @@
 @import "../../../assets/scss/variables";
 
+// color logo
+.logo {
+	filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(94deg) brightness(101%) contrast(102%);
+  }
+
 .boxMainLayout {
 	margin: 0 auto;
 	max-width: 1920px;
-	padding: 0 2rem;
+	// padding: 0 2rem;
 	background-color: $backgroundMain;
 }
 
@@ -18,7 +23,7 @@
 	margin: auto;
 
 	.mainWrap {
-		padding-left: 1.8rem;
+		// padding-left: 1.8rem;
 		width: calc(100% - $sizeNavbar);
 		margin-left: $sizeNavbar;
 		transition: all 0.5s;
@@ -30,7 +35,8 @@
 			background-color: $backgroundMain;
 			overflow-y: auto;
 			overflow-x: hidden;
-
+			// truong them
+			
 			// .headerMainWrap {
 			// 	display: flex;
 			// 	justify-content: space-between;
