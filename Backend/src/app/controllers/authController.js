@@ -48,6 +48,11 @@ export async function me(req, res) {
     res.jsonify(result)
 }
 
+export async function getRole(req, res) {
+    const result = await authService.getRole(req.currentUser.role_id)
+    res.jsonify(result)
+}
+
 export async function updateProfile(req, res) {
     await authService.updateProfile(req.currentUser, req.body)
     res.status(201).jsonify('Update profile success.')

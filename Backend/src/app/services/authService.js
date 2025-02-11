@@ -1,6 +1,6 @@
 import moment from 'moment'
 import jwt from 'jsonwebtoken'
-import {User} from '@/models'
+import {User, Role} from '@/models'
 import {cache, LOGIN_EXPIRE_IN, LINK_STATIC_URL, TOKEN_TYPE, VERIFY_EMAIL_EXPIRE_IN} from '@/configs'
 import {FileUpload} from '@/utils/classes'
 import {generateToken} from '@/utils/helpers'
@@ -68,6 +68,11 @@ export async function profile(userId) {
     user.avatar = user.avatar && LINK_STATIC_URL + user.avatar
     user.background = user.background && LINK_STATIC_URL + user.background
     return user
+}
+
+export async function getRole(role_id) {
+    const role = await Role.findOne({_id: role_id})
+    return {role: role.name}
 }
 
 export async function updateProfile(currentUser, {name, email, phone, avatar}) {

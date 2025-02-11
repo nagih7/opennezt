@@ -30,7 +30,8 @@ function SideBar(props) {
 	const location = useLocation();
 	const navigate = useNavigate();
 
-	const { authorize } = useSelector((state) => state.auth);
+	const { authRole } = useSelector((state) => state.auth);
+	console.log("authRole", authRole);
 	const { language } = useSelector((state) => state.app);
 
 	const handleToggleMenu = (indexNavItem, menuNavItem) => {
@@ -80,7 +81,7 @@ function SideBar(props) {
 
 			<div className={`${styles.navbarWrap}`}>
 				<ul className={`${styles.menuNav}`}>
-					{authorize === "admin"
+					{authRole === "Super Admin"
 						? manageRouteMap.map((route, index) => {
 								return (
 									<li

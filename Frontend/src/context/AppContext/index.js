@@ -6,6 +6,7 @@ import { getProjects, seekProjects } from "api/project";
 import { getFounderProfile } from "api/founder";
 import { checkSteps } from "api/home";
 import { recruitTalents } from "api/talent";
+import { getAuthRole } from "api/auth";
 
 export const AppContext = React.createContext();
 
@@ -13,6 +14,7 @@ export const AppProvider = ({ children }) => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		dispatch(getAuthRole());
 		dispatch(getChatList());
 		dispatch(getNotifications());
 		dispatch(checkSteps());

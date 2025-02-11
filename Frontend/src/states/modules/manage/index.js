@@ -12,6 +12,8 @@ const manageSlice = createSlice({
 			totalRecord: 0,
 		},
 		isLoadingGetListRoles: false,
+		visibleModalCreateOrUpdateRole: false,
+		visibleModalDeleteRole: false,
 	},
 	reducers: {
 		startRequestGetTotalUsers: (state) => ({
@@ -45,6 +47,14 @@ const manageSlice = createSlice({
 			...state,
 			isLoadingGetListRoles: false,
 		}),
+		setVisibleModalCreateOrUpdateRole: (state, action) => ({
+			...state,
+			visibleModalCreateOrUpdateRole: action.payload,
+		}),
+		setVisibleModalDeleteRole: (state, action) => ({
+			...state,
+			visibleModalDeleteRole: action.payload,
+		}),
 	},
 });
 
@@ -55,6 +65,8 @@ export const {
 	requestGetListRole,
 	getListRoleSuccess,
 	getListRoleFail,
+	setVisibleModalCreateOrUpdateRole,
+	setVisibleModalDeleteRole,
 } = manageSlice.actions;
 
 export default manageSlice.reducer;
