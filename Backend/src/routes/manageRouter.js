@@ -27,4 +27,10 @@ manageRouter.get(
     asyncHandler(manageController.typeReadRoot)
 )
 
+manageRouter.get(
+    '/industries',
+    validate(manageRequest.readRoot),
+    asyncHandler(manageController.industryReadRoot)
+)
+
 export default manageRouter

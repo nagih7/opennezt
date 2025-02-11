@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import {User, Project} from '../../models'
+import {User} from '../../models'
 import {MAX_STRING_SIZE, VALIDATE_PHONE_REGEX, MAX_AREAS_STRING_SIZE} from '@/configs'
 import {AsyncValidate, FileUpload} from '@/utils/classes'
 import {tryValidateOrDefault} from '@/utils/helpers'
@@ -166,7 +166,7 @@ export const getTalentDetails = Joi.object({
         ),
 })
 
-export const createFounderProfile = Joi.object({
+export const createProfile = Joi.object({
     industry: Joi.array().items(Joi.string().trim().max(MAX_STRING_SIZE)).required().label('Industry'),
     experience_level: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Experience level'),
     degree: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Degree'),

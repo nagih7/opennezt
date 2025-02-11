@@ -51,8 +51,8 @@ userRouter.delete('/project', asyncHandler(userController.deleteProject))
 // Founder Profile
 userRouter.post(
     '/founder-profile',
-    asyncHandler(validate(userRequest.createFounderProfile)),
-    asyncHandler(userController.createFounderProfile)
+    asyncHandler(validate(userRequest.createProfile)),
+    asyncHandler(userController.createProfile)
 )
 
 userRouter.get('/get-founder-profile', asyncHandler(userController.getFounderProfile))

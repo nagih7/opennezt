@@ -1,4 +1,4 @@
-import {User, FounderProfile, Project, ObjectId, NotificationFeed, Conversation} from '@/models'
+import {User, Profile, Project, ObjectId, NotificationFeed, Conversation} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
 
@@ -78,20 +78,22 @@ export async function remove(user) {
     await User.deleteOne({_id: user._id})
 }
 
-export async function createFounderProfile(user, requestBody) {
+export async function createProfile(user, requestBody) {
+    await console.log('requestBody', requestBody)
     requestBody.user_id = user._id
-    const founder = new FounderProfile(requestBody)
-    await founder.save()
-    return founder
+    // const founder = new Profile(requestBody)
+    // await founder.save()
+    // return founder
+    return requestBody
 }
 
 export async function getFounderProfile(userId) {
-    const founder = await FounderProfile.findOne({user_id: userId})
+    const founder = await Profile.findOne({user_id: userId})
     return founder
 }
 
 export async function updateFounderProfile(user, requestBody) {
-    const founder = await FounderProfile.findOne({user_id: user._id})
+    const founder = await Profile.findOne({user_id: user._id})
     founder.set(requestBody)
     await founder.save()
     return founder
@@ -286,7 +288,7 @@ export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
         }
     }
 
-    const talents = await FounderProfile.aggregate([
+    const talents = await Profile.aggregate([
         {
             $match: query,
         },
@@ -496,7 +498,7 @@ export async function updateAvatar(user, requestBody) {
 }
 
 export async function checkSteps(user) {
-    const founderProfile = await FounderProfile.findOne(
+    const founderProfile = await Profile.findOne(
         {user_id: user._id},
         {user_id: 0, created_at: 0, updated_at: 0}
     )

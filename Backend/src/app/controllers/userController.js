@@ -1,4 +1,4 @@
-import {FounderProfile} from '@/models'
+import {Profile} from '@/models'
 import * as userService from '../services/userService'
 
 export async function readRoot(req, res) {
@@ -13,30 +13,30 @@ export async function readItem(req, res) {
 
 export async function createItem(req, res) {
     await userService.create(req.body)
-    res.status(201).jsonify('Tạo mới người dùng thành công.')
+    res.status(201).jsonify('Create user successfully.')
 }
 
 export async function updateItem(req, res) {
     await userService.update(req.user, req.body)
-    res.status(201).jsonify('Cập nhật người dùng thành công.')
+    res.status(201).jsonify('Update user successfully.')
 }
 
 export async function removeItem(req, res) {
     await userService.remove(req.user)
-    res.jsonify('Xoá người dùng thành công.')
+    res.jsonify('Delete user successfully.')
 }
 
 export async function resetPassword(req, res) {
     await userService.resetPassword(req.user, req.body.new_password)
-    res.status(201).jsonify('Đặt lại mật khẩu thành công.')
+    res.status(201).jsonify('Reset password successfully.')
 }
 
-export async function createFounderProfile(req, res) {
-    const isExist = await FounderProfile.findOne({user_id: req.currentUser._id})
+export async function createProfile(req, res) {
+    const isExist = await Profile.findOne({user_id: req.currentUser._id})
     if (isExist) {
-        res.status(200).jsonify('Hồ sơ người sáng lập đã tồn tại.')
+        res.status(200).jsonify('Profile is already exist.')
     } else {
-        const result = await userService.createFounderProfile(req.currentUser, req.body)
+        const result = await userService.createProfile(req.currentUser, req.body)
         res.status(201).jsonify(result)
     }
 }
@@ -53,7 +53,7 @@ export async function updateFounderProfile(req, res) {
 
 export async function createProject(req, res) {
     await userService.createProject(req.currentUser, req.body)
-    res.status(201).jsonify('Tạo dự án thành công.')
+    res.status(201).jsonify('Create project successfully.')
 }
 
 export async function getProjects(req, res) {
@@ -69,12 +69,12 @@ export async function getProject(req, res) {
 export async function updateProject(req, res) {
     await userService.updateProject(req.currentUser, req.body)
     // res.status(200).jsonify('Cập nhật dự án thành công.')
-    res.status(200).jsonify('Cập nhật dự án thành công.')
+    res.status(200).jsonify('Update project successfully.')
 }
 
 export async function deleteProject(req, res) {
     await userService.deleteProject(req.currentUser, req.body)
-    res.jsonify('Xoá dự án thành công.')
+    res.jsonify('Delete project successfully.')
 }
 
 export async function recuitTalents(req, res) {
