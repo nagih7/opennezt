@@ -12,6 +12,9 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { logout } from "../../../../api/auth";
 import store from "states/configureStore";
 import { LOGOUT } from "../../../../utils/constains";
+import { CheckCircleFilled } from "@ant-design/icons";
+import { FundOutlined } from "@ant-design/icons";
+import { IconlyActivity } from "components/UI/Iconly";
 
 SideBar.prototype = {
 	isShowSideBar: PropTypes.bool.isRequired,
@@ -67,19 +70,18 @@ function SideBar(props) {
 	return (
 		<div
 			onMouseLeave={() => handleLeaveMenuNavItem()}
-			className={`${styles.sideBarWrap} ${
-				!isShowSideBar ? styles.sideBarWrapClose : ""
-			}`}>
-			<div className={`border-bottom ${styles.logoWrap}`}>
+			className={`${styles.sideBarWrap} ${!isShowSideBar ? styles.sideBarWrapClose : ""
+				}`}>
+			{/* <div className={`border-bottom ${styles.logoWrap}`}>
 				<img
 					src={Logo}
 					alt="logo-opennezt"
 					className={`${styles.imgWrap}`}
 				/>
 			</div>
-			<div className={styles.fakeLogoWrap}></div>
+			<div className={styles.fakeLogoWrap}></div> */}
 
-			<div className={`${styles.navbarWrap}`}>
+			{/* <div className={`${styles.navbarWrap}`}>
 				<ul className={`${styles.menuNav}`}>
 					{authRole === "Super Admin"
 						? manageRouteMap.map((route, index) => {
@@ -135,8 +137,90 @@ function SideBar(props) {
 						{LOGOUT[language]}
 					</li>
 				</ul>
+			</div> */}
+			<div>
+				<img
+					src={Logo}
+					alt="logo-opennezt"
+					className="py-[18px] px-8 bg-[#ffffff] border-b-2 border-gray-100"
+				/>
 			</div>
-
+			<div className="relative max-h-[600px] overflow-y-scroll scrollbar-hide bg-[#ffffff] p-8">
+				<div className="flex items-center gap-3 pb-4 mb-3 border-b-[1px] border-gray-200">
+					<div className="bg-blue-400 p-[10px] rounded-full ">
+						avt
+					</div>
+					<div>
+						<div className="flex items-center gap-2">
+							<span className="text-nowrap font-semibold">Young Truong</span>
+							<CheckCircleFilled className="text-blue-500" />
+						</div>
+						<span className="text-xs text-gray-500">
+							@youngtruong
+						</span>
+					</div>
+				</div>
+				<div className="border-b-[1px] border-gray-200">
+					<span className="text-xs font-semibold  text-gray-400">MENU</span>
+					<div className="flex flex-col gap-2 font-semibold text-sm mt-2 mb-4">
+						<div className="flex items-center px-3 py-[10px] rounded-md text-white bg-[#2f65b9] cursor-pointer gap-2">
+							<IconlyActivity size={18} color={`#ffff`} className="" />
+							Activity
+						</div>
+						<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
+							<FundOutlined />
+							Members</div>
+						<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
+							<FundOutlined />
+							Groups</div>
+						<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
+							<FundOutlined />
+							Badges</div>
+						<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
+							<FundOutlined />
+							Message</div>
+						<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
+							<FundOutlined />
+							Shop</div>
+						<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
+							<FundOutlined />
+							Courses</div>
+						<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
+							<FundOutlined />
+							Levels</div>
+					</div>
+				</div>
+				<div className="border-b-[1px] border-gray-200 mt-3">
+					<span className="text-xs font-semibold text-gray-400">FORUM</span>
+					<div className="flex flex-col gap-2 font-semibold text-sm mt-2 mb-4">
+						<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
+							<FundOutlined />
+							All Forums</div>
+						<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
+							<FundOutlined />
+							Forum Single</div>
+						<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
+							<FundOutlined />
+							Topic Single</div>
+					</div>
+				</div>
+				<div className="mt-3">
+					<span className="text-xs font-semibold text-gray-400">OTHERS</span>
+					<div className="flex flex-col gap-2 font-semibold text-sm mt-2 mb-4">
+						<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
+							<FundOutlined />
+							Membership</div>
+					</div>
+				</div>
+				<div className="fixed bottom-0 left-0 w-[270px] py-4 px-3 bg-[#ffffff] text-gray-500">
+					<div className="flex items-center w-[240px] p-3 bg-[#f8f9fa] ] rounded-md gap-10">
+						<FundOutlined />
+						<LogoutIcon /> 
+						<LogoutIcon /> 
+						<FundOutlined />
+					</div>
+				</div>
+			</div>
 			{/* <div
 				className={`${styles.btnToggleIsShowSideBar} ${
 					!isShowSideBar ? styles.btnToggleIsHideSideBar : ""
@@ -170,14 +254,13 @@ function SideBar(props) {
 											onClick={() => navigate(menuSubItem.path)}
 											className={`
                               ${styles.contentSubItemWrap} 
-                              ${
-											handleCheckRoute(
+                              ${handleCheckRoute(
 												menuSubItem.routeActive,
 												location.pathname
 											)
-												? styles.menuSubItemActive
-												: ""
-										}
+													? styles.menuSubItemActive
+													: ""
+												}
                             `}>
 											<div className={styles.textWrap}>
 												<span className={styles.text}>
