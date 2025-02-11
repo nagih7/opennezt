@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import TableCustom from "./../../../../UI/Table/index";
 import InputMASQ from "./../../../../UI/Input/index";
@@ -8,11 +8,6 @@ import IconEditTable from "../../../../../assets/images/icon/table/edit_12x12.sv
 import SwitchMASQ from "./../../../../UI/Switch/index";
 import ModalConfirm from "./../../../../UI/Modal/ModalConfirm/index";
 import { useDispatch, useSelector } from "react-redux";
-// import { getListEmployee, handleDeleteEmployee } from "../../../api/employee";
-// import {
-// 	setVisibleModalCreateOrUpdateEmployee,
-// 	setVisibleModalDeleteEmployee,
-// } from "../../../states/modules/employee";
 import _ from "lodash";
 import CreateOrUpdate from "components/pages/UserManagement/components/CreateOrUpdate";
 // import Filter from "./components/Filter";
@@ -108,10 +103,10 @@ function TableManage({
 							<img src={IconDeleteTable} alt="" />
 						</div>
 
-						<div
+						{/* <div
 							className={`switch-table-style-custom ${styles.btnWrap}`}>
 							<SwitchMASQ disabled={true} status={record.status} />
-						</div>
+						</div> */}
 					</div>
 				</>
 			),

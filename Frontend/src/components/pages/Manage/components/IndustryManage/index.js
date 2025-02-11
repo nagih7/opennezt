@@ -5,19 +5,19 @@ import _ from "lodash";
 import TableManage from "../TableManage";
 import { getListRole } from "api/manage";
 import {
-	setVisibleModalCreateOrUpdateRole,
-	setVisibleModalDeleteRole,
+	setVisibleModalCreateOrUpdateIndustry,
+	setVisibleModalDeleteIndustry,
 } from "states/modules/manage";
 
-function RoleManage() {
+function IndustryManage() {
 	const dispatch = useDispatch();
 
 	const {
-		roles,
-		paginationListRole,
-		isLoadingGetListRoles,
-		visibleModalCreateOrUpdateRole,
-		visibleModalDeleteRole,
+		industries,
+		paginationListIndustry,
+		isLoadingGetListIndustries,
+		visibleModalCreateOrUpdateIndustry,
+		visibleModalDeleteIndustry,
 	} = useSelector((state) => state.manage);
 
 	const [dataFilter, setDataFilter] = useState({
@@ -36,7 +36,7 @@ function RoleManage() {
 
 	const columns = [
 		{
-			title: "Role",
+			title: "Idt",
 			dataIndex: "index",
 			key: "index",
 			render: (text, record, index) => <span>{index + 1}</span>,
@@ -67,15 +67,15 @@ function RoleManage() {
 	return (
 		<TableManage
 			columns={columns}
-			dataSource={roles}
-			pagination={paginationListRole}
-			loading={isLoadingGetListRoles}
-			visibleModalCreateOrUpdate={visibleModalCreateOrUpdateRole}
-			visibleModalDelete={visibleModalDeleteRole}
-			setVisibleModalCreateOrUpdate={setVisibleModalCreateOrUpdateRole}
-			setVisibleModalDelete={setVisibleModalDeleteRole}
+			dataSource={industries}
+			pagination={paginationListIndustry}
+			loading={isLoadingGetListIndustries}
+			visibleModalCreateOrUpdate={visibleModalCreateOrUpdateIndustry}
+			visibleModalDelete={visibleModalDeleteIndustry}
+			setVisibleModalCreateOrUpdate={setVisibleModalCreateOrUpdateIndustry}
+			setVisibleModalDelete={setVisibleModalDeleteIndustry}
 		/>
 	);
 }
 
-export default RoleManage;
+export default IndustryManage;

@@ -72,7 +72,11 @@ function NewFeeds() {
 		// 	)}
 		// </div>
 		<div>
-			{Array(5).fill(0).map((_, index) => <Article/>)}
+			{Array(5)
+				.fill(0)
+				.map((_, index) => (
+					<Article key={index} />
+				))}
 		</div>
 	);
 }
