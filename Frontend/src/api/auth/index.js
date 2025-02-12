@@ -18,6 +18,9 @@ import {
 	startRequestResetPassword,
 	startRequestResetPasswordSuccess,
 	startRequestResetPasswordFail,
+	requestGetAuthRole,
+	getAuthRoleSuccess,
+	getAuthRoleFail,
 } from "../../states/modules/auth";
 
 export const login = (data) => async (dispatch, getState) => {
@@ -47,6 +50,17 @@ export const getMe = () => async (dispatch, getState) => {
 			startRequestGetMeSuccess,
 			startRequestGetMeFail,
 		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+export const getAuthRole = () => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: `auth/role`,
+		actionTypes: [requestGetAuthRole, getAuthRoleSuccess, getAuthRoleFail],
 		variables: {},
 		dispatch,
 		getState,

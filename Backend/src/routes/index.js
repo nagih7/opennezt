@@ -1,5 +1,5 @@
 import authRouter from './authRouter'
-import adminRouter from './adminRouter'
+import manageRouteMap from './manageRouter'
 import userRouter from './userRouter'
 import homeRouter from './homeRouter'
 import chatrouter from './chatRouter'
@@ -18,7 +18,7 @@ function route(app, io) {
     })
 
     app.use('/auth', authRouter)
-    app.use('/manage', adminRouter)
+    app.use('/manage', manageRouteMap)
     app.use('/users', userRouter)
     app.use('/home', homeRouter)
     app.use('/chat', chatrouter)

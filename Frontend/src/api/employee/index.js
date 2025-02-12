@@ -25,7 +25,7 @@ export const getListEmployee =
 		}
 	) =>
 	async (dispatch, getState) => {
-		let path = `users/users?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
+		let path = `manage/users?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
 
 		if (dataFilter.keySearch) {
 			path += `&q=${dataFilter.keySearch}`;

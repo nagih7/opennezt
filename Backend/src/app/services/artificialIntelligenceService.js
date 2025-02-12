@@ -1,9 +1,9 @@
-import {FounderProfile, Project, User, ObjectId} from '@/models'
+import {Profile, Project, User, ObjectId} from '@/models'
 import callOpenAI from '@/configs/openAI'
 import {LINK_STATIC_URL, MATCHING_PROJECTS_PROMPT, MATCHING_TALENTS_PROMPT} from '@/configs/constants'
 
 export async function matchingProjects(user) {
-    const founderProfile = await FounderProfile.findOne({user_id: user._id}).lean()
+    const founderProfile = await Profile.findOne({user_id: user._id}).lean()
     const projects = await Project.aggregate([
         {
             $match: {
@@ -79,7 +79,7 @@ export async function matchingProjects(user) {
 
 export async function matchingTalents(user) {
     const projects = await Project.find({user_id: user._id}).lean().select('related_industries ')
-    const founderProfile = await FounderProfile.find({user_id: {$ne: user._id}})
+    const founderProfile = await Profile.find({user_id: {$ne: user._id}})
         .lean()
         .select('industry  user_id')
 

@@ -4,6 +4,9 @@ import { Col, Row } from "antd";
 import { useSelector } from "react-redux";
 import store from "states/configureStore";
 import { getTotalUsers } from "api/manage";
+import RoleManage from "./components/RoleManage";
+import TypeManage from "./components/TypeManage";
+import IndustryManage from "./components/IndustryManage";
 
 const UserManagement = React.lazy(() => import("../UserManagement"));
 
@@ -165,6 +168,9 @@ function Manage() {
 				</Row>
 			</div>
 			<UserManagement />
+			<RoleManage />
+			<TypeManage />
+			<IndustryManage />
 		</div>
 	);
 }

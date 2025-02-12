@@ -3,9 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const employeeSlice = createSlice({
 	name: "employee",
 	initialState: {
-		employees: [],
-		isLoadingTableEmployee: false,
-		paginationListEmployee: {
+		users: [],
+		isLoadingGetListUser: false,
+		paginationListUser: {
 			currentPage: 1,
 			perPage: 10,
 			totalPage: 1,
@@ -39,14 +39,14 @@ const employeeSlice = createSlice({
 		}),
 		getList: (state) => ({
 			...state,
-			employees: [],
-			isLoadingTableEmployee: true,
+			users: [],
+			isLoadingGetListUser: true,
 		}),
 		getListSuccess: (state, action) => ({
 			...state,
-			isLoadingTableEmployee: false,
-			employees: action.payload.data.users,
-			paginationListEmployee: {
+			isLoadingGetListUser: false,
+			users: action.payload.data.users,
+			paginationListUser: {
 				currentPage: action.payload.data.page,
 				perPage: action.payload.data.per_page,
 				totalPage: action.payload.data.last_page,
@@ -55,8 +55,8 @@ const employeeSlice = createSlice({
 		}),
 		getListFail: (state) => ({
 			...state,
-			employees: [],
-			isLoadingTableEmployee: false,
+			users: [],
+			isLoadingGetListUser: false,
 		}),
 		getAllRole: (state) => ({ ...state }),
 		getAllRoleSuccess: (state, action) => ({

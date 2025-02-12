@@ -36,9 +36,10 @@ export const rootLoader = async (
 			return redirect("/403");
 		}
 	} else {
-		if (auth.isAuthSuccess && auth.authorize === "admin") {
+		console.log("auth", auth);
+		if (auth.isAuthSuccess && auth.authRole === "Super Admin") {
 			return redirect("/admin/manage");
-		} else if (auth.isAuthSuccess && auth.authorize === "user") {
+		} else if (auth.isAuthSuccess && auth.authRole === "User") {
 			return redirect("/");
 		}
 		// return redirect("/");

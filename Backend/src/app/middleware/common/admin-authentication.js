@@ -1,24 +1,42 @@
 // import _ from 'lodash'
 import {JsonWebTokenError, TokenExpiredError} from 'jsonwebtoken'
-import {abort} from '@/utils/helpers'
+import {abort, getToken, verifyToken} from '@/utils/helpers'
+import {Role, User} from '@/models'
+import _ from 'lodash'
+import {tokenBlocklist} from '@/app/services/authService'
+import {TOKEN_TYPE} from '@/configs'
 
-async function adminAuthentication(req, res, next) {
+async function superAdminAuthentication(req, res, next) {
     try {
-        // admin authentication
-        const user = await req.currentUser
-        if (user && user.is_active && user.role === 'admin') {
-            next()
-            return
+        // Get token from request headers
+        const token = getToken(req.headers)
+
+        if (token) {
+            // Check if the token is not in the blocklist
+            const allowedToken = _.isUndefined(await tokenBlocklist.get(token))
+            if (allowedToken) {
+                const {user_id} = verifyToken(token, TOKEN_TYPE.AUTHORIZATION)
+                const user = await User.findOne({_id: user_id})
+                if (user && user.is_active) {
+                    const role_id = user.role_id
+                    const role = await Role.findOne({_id: role_id})
+                    if (role && role.name === 'Super Admin') {
+                        req.currentUser = user
+                        next()
+                        return
+                    }
+                }
+            }
         }
     } catch (error) {
         if (!(error instanceof JsonWebTokenError)) {
             throw error
         }
         if (error instanceof TokenExpiredError) {
-            abort(401, 'Your account does not have permission to access this page!')
+            abort(401, 'Your session has expired. Please log in again!')
         }
     }
-    abort(401)
+    abort(403)
 }
 
-export default adminAuthentication
+export default superAdminAuthentication
