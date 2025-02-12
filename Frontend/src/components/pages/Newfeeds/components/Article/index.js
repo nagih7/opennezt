@@ -5,7 +5,7 @@ import anh_1 from "assets/images/background/cute-little-girl-with-handmaded-wing
 import anh_angry from "assets/images/icon/logo/angry.png";
 import anh_like from "assets/images/icon/logo/like.png";
 import anh_happy from "assets/images/icon/logo/happy.png";
-import anh_avt from "assets/images/background/avt.jpg";
+import avt from "assets/images/background/avt.jpg";
 import { IconlyChat } from "components/UI/Iconly";
 import { IconlyHeart } from "components/UI/Iconly";
 import { IconlySend } from "components/UI/Iconly";
@@ -16,7 +16,7 @@ function Article() {
     <div className="bg-[#ffffff] w-[800px] max-h-full mb-8 rounded-md p-8">
       <div className="flex items-center gap-3">
         <div className="w-[65px]">
-          <img src={anh_avt} className="w-[65px]  rounded-full" />
+          <img src={avt} className="w-[65px]  rounded-full" />
         </div>
         <div className="flex justify-between items-center w-full">
           <div className="flex flex-col gap-2 w-9/12 text-base font-medium">
@@ -96,14 +96,14 @@ function Article() {
       </div>
       <div className="flex items-center w-full justify-between p-[10px] rounded-md border-[1px] border-gray-200 gap-3 mt-[20px]">
         <div className="w-8 h-8">
-          <img src={anh_avt} className="rounded-full" />
+          <img src={avt} className="rounded-full w-8 h-8" />
         </div>
         <div className="flex items-center justify-between">
           <div>
             <input
               type="text"
               placeholder="Write a comment..."
-              className="w-[660px] h-9 bg-[#ffffff] pr-[50px] outline-none"
+              className="w-[630px] h-9 bg-[#ffffff] pr-[50px] outline-none"
             />
           </div>
 
@@ -117,7 +117,7 @@ function Article() {
           <li>
             <div className="flex items-center gap-2">
               <div className="w-[40px] h-[40px]">
-                <img src={anh_avt} className="rounded-full" />
+                <img src={avt} className="rounded-full" />
               </div>
               <div className="flex items-center">
                 <a href="#" className="flex items-center gap-1 text-sm font-medium no-underline text-black">

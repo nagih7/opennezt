@@ -15,6 +15,7 @@ import { LOGOUT } from "../../../../utils/constains";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { FundOutlined } from "@ant-design/icons";
 import { IconlyActivity } from "components/UI/Iconly";
+import avt from "assets/images/background/avt.jpg";
 
 SideBar.prototype = {
   isShowSideBar: PropTypes.bool.isRequired,
@@ -155,12 +156,12 @@ function SideBar(props) {
       <div className="relative h-full">
         <div className="max-h-[610px] 2xl:max-h-full overflow-y-scroll scrollbar-hide bg-[#ffffff] p-8">
           <div className="flex items-center gap-3 pb-4 mb-6 border-b-[1px] border-gray-200">
-            <div className="bg-blue-400 p-[10px] rounded-full ">avt</div>
+            <img src={avt} className="w-[50px] h-[50px] rounded-full" />
             <div>
-              <div className="flex items-center gap-2">
+              <a href="#" className="flex items-center gap-2 no-underline text-black">
                 <span className="text-nowrap font-semibold">Young Truong</span>
                 <CheckCircleFilled className="text-blue-500" />
-              </div>
+              </a>
               <span className="text-xs text-gray-500">@youngtruong</span>
             </div>
           </div>

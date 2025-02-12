@@ -15,6 +15,7 @@ import AvatarDefault from "assets/images/default/AvatarDefault.png";
 import { LANG } from "utils/constains";
 import { setLanguage } from "states/modules/app";
 import { IconlySearch } from "components/UI/Iconly";
+import avt from "assets/images/background/avt.jpg";
 
 const Header = () => {
 	const dispatch = useDispatch();
@@ -218,9 +219,7 @@ const Header = () => {
 					<ZoomOutMapIcon  className="text-[#6f7f92]"/>
 					<NotificationsIcon  className="text-[#6f7f92]"/>
 					<ChatBubbleOutlineIcon  className="text-[#6f7f92]"/>
-					<div className="bg-blue-400 rounded-full p-[10px]">
-						avt
-					</div>
+					<img src={avt} className="w-[50px] h-[50px] rounded-full" />
 				</div>
 			</div>
 		</header>
