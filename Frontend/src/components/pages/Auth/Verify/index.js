@@ -43,9 +43,9 @@ const Verify = () => {
 							target="_blank"
 							rel="noopener noreferrer">
 							{authRegister.email}
-						</a>
+						</a> 
 					</span>
-					<span lassName={styles.verifyText}>
+					<span className={styles.verifyText}>
 						Please check your email to verify your account.
 					</span>
 				</div>

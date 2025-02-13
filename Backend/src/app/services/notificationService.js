@@ -116,7 +116,7 @@ export async function replyFriendRequest(notification_id, status, io) {
 
         await conversation.save()
         notification.metadata.status = status
-        notification.read = true
+        notification.metadata.read = true
         notification.markModified('metadata')
 
         const user = await User.findById(user_id).select('name')
@@ -152,7 +152,7 @@ export async function replyProjectInvitation(notification_id, status, io) {
             await project.save()
         }
         notification.metadata.status = status
-        notification.read = true
+        notification.metadata.read = true
         notification.markModified('metadata')
         await notification.save()
 
@@ -204,13 +204,14 @@ export async function replyProjectInvitation(notification_id, status, io) {
     }
 }
 
-export async function requestAddFriend(user, requestBody, io) {
+// Fix according to database
+export async function requestAddFriend(user, requestBody, type, io) {
     const {user_id, metadata} = requestBody
 
     const notification = new NotificationFeed({
         user_id: user_id,
         source_id: user._id,
-        type: 'friend_request',
+        type_id: type._id,
         metadata: {
             ...metadata,
             source_name: user.name,
