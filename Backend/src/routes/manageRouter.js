@@ -23,6 +23,17 @@ manageRouter.get(
     asyncHandler(validate(manageRequest.readRoot)),
     asyncHandler(manageController.roleReadRoot)
 )
+manageRouter.post(
+    '/roles',
+    asyncHandler(validate(manageRequest.createRole)),
+    asyncHandler(manageController.createRole)
+)
+manageRouter.put(
+    '/roles/:id',
+    asyncHandler(validate(manageRequest.updateRole)),
+    asyncHandler(manageController.updateRole)
+)
+manageRouter.delete('/roles/:id', asyncHandler(manageController.deleteRole))
 
 // TYPES
 manageRouter.get(
@@ -30,6 +41,17 @@ manageRouter.get(
     asyncHandler(validate(manageRequest.readRoot)),
     asyncHandler(manageController.typeReadRoot)
 )
+manageRouter.post(
+    '/types',
+    asyncHandler(validate(manageRequest.createType)),
+    asyncHandler(manageController.createType)
+)
+manageRouter.put(
+    '/types/:id',
+    asyncHandler(validate(manageRequest.updateType)),
+    asyncHandler(manageController.updateType)
+)
+manageRouter.delete('/types/:id', asyncHandler(manageController.deleteType))
 
 // INDUSTRIES
 manageRouter.get(
@@ -37,5 +59,16 @@ manageRouter.get(
     validate(manageRequest.readRoot),
     asyncHandler(manageController.industryReadRoot)
 )
+manageRouter.post(
+    '/industries',
+    validate(manageRequest.createIndustry),
+    asyncHandler(manageController.createIndustry)
+)
+manageRouter.put(
+    '/industries/:id',
+    validate(manageRequest.updateIndustry),
+    asyncHandler(manageController.updateIndustry)
+)
+manageRouter.delete('/industries/:id', asyncHandler(manageController.deleteIndustry))
 
 export default manageRouter

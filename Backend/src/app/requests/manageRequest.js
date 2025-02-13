@@ -1,5 +1,8 @@
 import Joi from 'joi'
 import {tryValidateOrDefault} from '@/utils/helpers'
+import {Industry, Role, Type} from '@/models'
+import {AsyncValidate} from '@/utils/classes'
+import {MAX_STRING_SIZE} from '@/configs'
 
 export const readRoot = Joi.object({
     q: tryValidateOrDefault(Joi.string().trim(), ''),
@@ -7,4 +10,72 @@ export const readRoot = Joi.object({
     per_page: tryValidateOrDefault(Joi.number().integer().min(1).max(100), 20),
     field: tryValidateOrDefault(Joi.valid('created_at', 'name', 'email', 'phone', 'active'), 'created_at'),
     order: tryValidateOrDefault(Joi.valid('1', '-1'), '-1'),
+})
+
+// ROLE
+export const createRole = Joi.object({
+    name: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Name')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const role = await Role.findOne({name: value})
+                    return !role ? value : helpers.error('any.exists')
+                })
+        ),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+export const updateRole = Joi.object({
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+// TYPE
+export const createType = Joi.object({
+    class: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Class'),
+    name: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Name')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const type = await Type.findOne({name: value})
+                    return !type ? value : helpers.error('any.exists')
+                })
+        ),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+export const updateType = Joi.object({
+    class: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Class'),
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+// INDUSTRY
+export const createIndustry = Joi.object({
+    name: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Name')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const industry = await Industry.findOne({name: value})
+                    return !industry ? value : helpers.error('any.exists')
+                })
+        ),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+export const updateIndustry = Joi.object({
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
 })

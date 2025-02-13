@@ -31,7 +31,6 @@ function IndustryManage() {
 
 	useEffect(() => {
 		dispatch(getListRole(dataFilter));
-		console.log("dataFilter", dataFilter);
 	}, [dataFilter, dispatch]);
 
 	const columns = [

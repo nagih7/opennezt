@@ -6,7 +6,7 @@ export async function getTotalUsers() {
     return await User.countDocuments()
 }
 
-// USER READ ROOT
+// USER
 export async function userReadRoot({q, page, per_page, field, order}) {
     q = q ? q : ''
     order = order === '-1' ? -1 : 1
@@ -54,7 +54,7 @@ export async function userReadRoot({q, page, per_page, field, order}) {
     return {total, page, per_page, users}
 }
 
-// ROLE READ ROOT
+// ROLE
 export async function roleReadRoot({q, page, per_page, field, order}) {
     q = q ? q : ''
     order = order === '-1' ? -1 : 1
@@ -81,8 +81,31 @@ export async function roleReadRoot({q, page, per_page, field, order}) {
     const total = await Role.countDocuments(filter)
     return {total, page, per_page, roles}
 }
+export async function createRole(requestBody) {
+    const role = new Role({
+        name: requestBody.name,
+        description: requestBody.description,
+    })
+    const type = await Type.findOne({class: 'account', name: 'Account'})
+    role.type_id = type._id
+    await role.save()
+}
+export async function updateRole(id, requestBody) {
+    await Role.updateOne(
+        {_id: id},
+        {
+            $set: {
+                name: requestBody.name,
+                description: requestBody.description,
+            },
+        }
+    )
+}
+export async function deleteRole(id) {
+    await Role.deleteOne({_id: id})
+}
 
-// TYPE READ ROOT
+// TYPE
 export async function typeReadRoot({q, page, per_page, field, order}) {
     q = q ? q : ''
     order = order === '-1' ? -1 : 1
@@ -109,8 +132,31 @@ export async function typeReadRoot({q, page, per_page, field, order}) {
     const total = await Type.countDocuments(filter)
     return {total, page, per_page, types}
 }
+export async function createType(requestBody) {
+    const type = new Type({
+        class: requestBody.class,
+        name: requestBody.name,
+        description: requestBody.description,
+    })
+    await type.save()
+}
+export async function updateType(id, requestBody) {
+    await Type.updateOne(
+        {_id: id},
+        {
+            $set: {
+                class: requestBody.class,
+                name: requestBody.name,
+                description: requestBody.description,
+            },
+        }
+    )
+}
+export async function deleteType(id) {
+    await Type.deleteOne({_id: id})
+}
 
-// INDUSTRY READ ROOT
+// INDUSTRY
 export async function industryReadRoot({q, page, per_page, field, order}) {
     q = q ? q : ''
     order = order === '-1' ? -1 : 1
@@ -136,4 +182,25 @@ export async function industryReadRoot({q, page, per_page, field, order}) {
 
     const total = await Industry.countDocuments(filter)
     return {total, page, per_page, industries}
+}
+export async function createIndustry(requestBody) {
+    const industry = new Industry({
+        name: requestBody.name,
+        description: requestBody.description,
+    })
+    await industry.save()
+}
+export async function updateIndustry(id, requestBody) {
+    await Industry.updateOne(
+        {_id: id},
+        {
+            $set: {
+                name: requestBody.name,
+                description: requestBody.description,
+            },
+        }
+    )
+}
+export async function deleteIndustry(id) {
+    await Industry.deleteOne({_id: id})
 }
