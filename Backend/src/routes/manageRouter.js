@@ -71,4 +71,50 @@ manageRouter.put(
 )
 manageRouter.delete('/industries/:id', asyncHandler(manageController.deleteIndustry))
 
+// EXPERIENCE_LEVELS
+manageRouter.get(
+    '/experience-levels',
+    validate(manageRequest.readRoot),
+    asyncHandler(manageController.experienceLevelReadRoot)
+)
+manageRouter.post(
+    '/experience-levels',
+    validate(manageRequest.createExperienceLevel),
+    asyncHandler(manageController.createExperienceLevel)
+)
+manageRouter.put(
+    '/experience-levels/:id',
+    validate(manageRequest.updateExperienceLevel),
+    asyncHandler(manageController.updateExperienceLevel)
+)
+manageRouter.delete('/experience-levels/:id', asyncHandler(manageController.deleteExperienceLevel))
+
+// CATEGORIES
+manageRouter.get(
+    '/categories',
+    validate(manageRequest.readRoot),
+    asyncHandler(manageController.categoryReadRoot)
+)
+manageRouter.post(
+    '/categories',
+    validate(manageRequest.createCategory),
+    asyncHandler(manageController.createCategory)
+)
+manageRouter.put(
+    '/categories/:id',
+    validate(manageRequest.updateCategory),
+    asyncHandler(manageController.updateCategory)
+)
+manageRouter.delete('/categories/:id', asyncHandler(manageController.deleteCategory))
+
+// SKILLS
+manageRouter.get('/skills', validate(manageRequest.readRoot), asyncHandler(manageController.skillReadRoot))
+manageRouter.post('/skills', validate(manageRequest.createSkill), asyncHandler(manageController.createSkill))
+manageRouter.put(
+    '/skills/:id',
+    validate(manageRequest.updateSkill),
+    asyncHandler(manageController.updateSkill)
+)
+manageRouter.delete('/skills/:id', asyncHandler(manageController.deleteSkill))
+
 export default manageRouter
