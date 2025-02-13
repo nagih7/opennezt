@@ -1,5 +1,5 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {User, Type, Role, Industry} from '@/models'
+import {User, Type, Role, Industry, Category, Skill, ExperienceLevel} from '@/models'
 
 // GET TOTAL USERS
 export async function getTotalUsers() {
@@ -203,4 +203,154 @@ export async function updateIndustry(id, requestBody) {
 }
 export async function deleteIndustry(id) {
     await Industry.deleteOne({_id: id})
+}
+
+// EXPERIENCE_LEVELS
+export async function experienceLevelReadRoot({q, page, per_page, field, order}) {
+    q = q ? q : ''
+    order = order === '-1' ? -1 : 1
+    const matchStage = {
+        $match: {name: {$regex: q, $options: 'i'}},
+    }
+
+    const sortStage = {
+        $sort: {[field]: order},
+    }
+    const skipStage = {
+        $skip: (page - 1) * per_page,
+    }
+    const limitStage = {
+        $limit: per_page,
+    }
+
+    const experienceLevels = await ExperienceLevel.aggregate([matchStage, sortStage, skipStage, limitStage])
+
+    const filter = {
+        ...(q && {name: q}),
+    }
+
+    const total = await ExperienceLevel.countDocuments(filter)
+    return {total, page, per_page, experienceLevels}
+}
+export async function createExperienceLevel(requestBody) {
+    const experienceLevel = new ExperienceLevel({
+        name: requestBody.name,
+        description: requestBody.description,
+    })
+    await experienceLevel.save()
+}
+export async function updateExperienceLevel(id, requestBody) {
+    await ExperienceLevel.updateOne(
+        {_id: id},
+        {
+            $set: {
+                name: requestBody.name,
+                description: requestBody.description,
+            },
+        }
+    )
+}
+export async function deleteExperienceLevel(id) {
+    await ExperienceLevel.deleteOne({_id: id})
+}
+
+// CATEGORIES
+export async function categoryReadRoot({q, page, per_page, field, order}) {
+    q = q ? q : ''
+    order = order === '-1' ? -1 : 1
+    const matchStage = {
+        $match: {name: {$regex: q, $options: 'i'}},
+    }
+
+    const sortStage = {
+        $sort: {[field]: order},
+    }
+    const skipStage = {
+        $skip: (page - 1) * per_page,
+    }
+    const limitStage = {
+        $limit: per_page,
+    }
+
+    const categories = await Category.aggregate([matchStage, sortStage, skipStage, limitStage])
+
+    const filter = {
+        ...(q && {name: q}),
+    }
+
+    const total = await Category.countDocuments(filter)
+    return {total, page, per_page, categories}
+}
+export async function createCategory(requestBody) {
+    const category = new Category({
+        name: requestBody.name,
+        description: requestBody.description,
+    })
+    await category.save()
+}
+export async function updateCategory(id, requestBody) {
+    await Category.updateOne(
+        {_id: id},
+        {
+            $set: {
+                name: requestBody.name,
+                description: requestBody.description,
+            },
+        }
+    )
+}
+export async function deleteCategory(id) {
+    await Category.deleteOne({_id: id})
+    await Skill.deleteMany({category_id: id})
+}
+
+// SKILLS
+export async function skillReadRoot({q, page, per_page, field, order}) {
+    q = q ? q : ''
+    order = order === '-1' ? -1 : 1
+    const matchStage = {
+        $match: {name: {$regex: q, $options: 'i'}},
+    }
+
+    const sortStage = {
+        $sort: {[field]: order},
+    }
+    const skipStage = {
+        $skip: (page - 1) * per_page,
+    }
+    const limitStage = {
+        $limit: per_page,
+    }
+
+    const skills = await Skill.aggregate([matchStage, sortStage, skipStage, limitStage])
+
+    const filter = {
+        ...(q && {name: q}),
+    }
+
+    const total = await Skill.countDocuments(filter)
+    return {total, page, per_page, skills}
+}
+export async function createSkill(requestBody) {
+    const skill = new Skill({
+        category_id: requestBody.category_id,
+        name: requestBody.name,
+        description: requestBody.description,
+    })
+    await skill.save()
+}
+export async function updateSkill(id, requestBody) {
+    await Skill.updateOne(
+        {_id: id},
+        {
+            $set: {
+                category_id: requestBody.category_id,
+                name: requestBody.name,
+                description: requestBody.description,
+            },
+        }
+    )
+}
+export async function deleteSkill(id) {
+    await Skill.deleteOne({_id: id})
 }
