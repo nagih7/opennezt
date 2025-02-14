@@ -120,15 +120,19 @@ function Article() {
                 <img src={avt} className="rounded-full" />
               </div>
               <div className="flex items-center">
-                <a href="#" className="flex items-center gap-1 text-sm font-medium no-underline text-black">
+                <a
+                  href="#"
+                  className="flex items-center gap-1 text-sm font-medium no-underline text-black"
+                >
                   <span className="hover:text-[#3897f0]">Vuong Manh Nghia</span>
-                  <CheckCircleFilled className="text-[#3897f0] w-[14px] h-[14px]"/>
+                  <CheckCircleFilled className="text-[#3897f0] w-[14px] h-[14px]" />
                 </a>
                 <div className="pl-3">
-                  <span className="text-[#6f7f92] text-xs">
-                    replied
-                  </span>
-                  <a href="#" className="text-[#6f7f92] text-xs no-underline hover:underline">
+                  <span className="text-[#6f7f92] text-xs">replied</span>
+                  <a
+                    href="#"
+                    className="text-[#6f7f92] text-xs no-underline hover:underline"
+                  >
                     <span> 2 years ago</span>
                   </a>
                 </div>
@@ -139,26 +143,35 @@ function Article() {
             </div>
             <div className="flex items-center gap-3 py-[5px] ml-[56px]">
               <div className="flex items-center gap-1">
-                <img src={anh_like} className="w-[18px] h-[18px]"/>
+                <img src={anh_like} className="w-[18px] h-[18px]" />
                 <span className="text-xs text-[#6f7f92]">Like</span>
               </div>
-              <a href="#" className="no-underline text-[#6f7f92] text-xs font-medium">Reply</a>
+              <a
+                href="#"
+                className="no-underline text-[#6f7f92] text-xs font-medium"
+              >
+                Reply
+              </a>
               <div>
                 <div className="flex items-center gap-2">
                   <div>
                     <div>
                       <ul className="pl-0">
                         <li>
-                          <img src={anh_angry} className="w-[18px] h-[18px]"/>
+                          <img src={anh_angry} className="w-[18px] h-[18px]" />
                         </li>
                       </ul>
                     </div>
                   </div>
                   <span className="text-xs text-[#6f7f92]">
-                    Reacted by 
-                    <a href="#" className="no-underline ml-[2px] text-black font-medium">
-                       Marvin McKinney
-                    </a> And 
+                    Reacted by
+                    <a
+                      href="#"
+                      className="no-underline ml-[2px] text-black font-medium"
+                    >
+                      Marvin McKinney
+                    </a>{" "}
+                    And
                     <span className="text-black"> 1 Other</span>
                   </span>
                 </div>
