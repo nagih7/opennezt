@@ -3,26 +3,34 @@ import styles from "./styles.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import TableManage from "../TableManage";
-import { createOrUpdateRole, deleteRole, getListRole } from "api/manage";
 import {
-	setVisibleModalCreateOrUpdateRole,
-	setVisibleModalDeleteRole,
+	createOrUpdateSkill,
+	deleteSkill,
+	getListSkill,
+	getSkillCategories,
+} from "api/manage";
+import {
+	setVisibleModalCreateOrUpdateSkill,
+	setVisibleModalDeleteSkill,
 } from "states/modules/manage";
 import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
+import SelectCustom from "components/UI/Select";
+import { Select } from "antd";
 
-function RoleManage() {
+function SkillManage() {
 	const dispatch = useDispatch();
 
 	const {
 		// CONFIG
-		roles,
-		paginationListRole,
-		isLoadingGetListRole,
-		visibleModalCreateOrUpdateRole,
-		visibleModalDeleteRole,
-		isLoadingBtnCreateOrUpdateRole,
+		skills,
+		skillCategories,
+		paginationListSkill,
+		isLoadingGetListSkill,
+		visibleModalCreateOrUpdateSkill,
+		visibleModalDeleteSkill,
+		isLoadingBtnCreateOrUpdateSkill,
 	} = useSelector((state) => state.manage);
 
 	const [data, setData] = useState({});
@@ -36,11 +44,13 @@ function RoleManage() {
 	});
 	const [dataCreateOrUpdate, setDataCreateOrUpdate] = useState({
 		// CONFIG
+		category_id: "",
 		name: "",
 		description: "",
 	});
 	const [configModal, setConfigModal] = useState({
-		title: "Create role",
+		// CONFIG
+		title: "Create skill",
 		type: "CREATE",
 	});
 
@@ -53,25 +63,28 @@ function RoleManage() {
 
 	useEffect(() => {
 		// CONFIG
-		dispatch(getListRole(dataFilter));
+		dispatch(getListSkill(dataFilter));
 	}, [dataFilter, dispatch]);
 
 	// CREATE
 	const handleCreate = () => {
-		dispatch(setVisibleModalCreateOrUpdateRole(true));
+		// CONFIG
+		dispatch(setVisibleModalCreateOrUpdateSkill(true));
 		setConfigModal({
-			title: "Create role",
+			title: "Create skill",
 			type: "CREATE",
 		});
+		dispatch(getSkillCategories());
 	};
 
 	// UPDATE
 	const handleUpdate = (data) => {
 		let dataSelect = _.cloneDeep(data);
 		setData(dataSelect);
-		dispatch(setVisibleModalCreateOrUpdateRole(true));
+		// CONFIG
+		dispatch(setVisibleModalCreateOrUpdateSkill(true));
 		setConfigModal({
-			title: "Update role",
+			title: "Update skill",
 			type: "UPDATE",
 		});
 	};
@@ -80,15 +93,17 @@ function RoleManage() {
 	const handleShowConfirmDelete = (data) => {
 		let dataSelect = _.cloneDeep(data);
 		setData(dataSelect);
-		dispatch(setVisibleModalDeleteRole(true));
+		dispatch(setVisibleModalDeleteSkill(true));
 	};
 	const handleConfirmDelete = () => {
-		dispatch(deleteRole(data._id));
+		// CONFIG
+		dispatch(deleteSkill(data._id));
 	};
 
 	useEffect(() => {
 		// CONFIG
 		setDataCreateOrUpdate({
+			category_id: data.category_id,
 			name: data.name,
 			description: data.description,
 		});
@@ -97,21 +112,23 @@ function RoleManage() {
 	const handleReloadData = useCallback(() => {
 		setDataCreateOrUpdate({
 			// CONFIG
+			category_id: "",
 			name: "",
 			description: "",
 		});
 	}, []);
 
 	const handleConfirmCreateOrUpdate = () => {
+		console.log(dataCreateOrUpdate);
 		// CONFIG
 		// let data = new FormData();
 		// data.append(`name`, dataCreateOrUpdate.name);
 		// data.append(`description`, dataCreateOrUpdate.description);
 
 		if (configModal.type === "CREATE") {
-			dispatch(createOrUpdateRole(dataCreateOrUpdate, "CREATE"));
+			dispatch(createOrUpdateSkill(dataCreateOrUpdate, "CREATE"));
 		} else {
-			dispatch(createOrUpdateRole(dataCreateOrUpdate, "UPDATE", data._id));
+			dispatch(createOrUpdateSkill(dataCreateOrUpdate, "UPDATE", data._id));
 		}
 		// }
 	};
@@ -119,7 +136,7 @@ function RoleManage() {
 	const columns = [
 		// CONFIG
 		{
-			title: "Role",
+			title: "Skill",
 			dataIndex: "index",
 			key: "index",
 			render: (text, record, index) => <span>{index + 1}</span>,
@@ -148,6 +165,12 @@ function RoleManage() {
 	];
 
 	const handleChangeInput = (valueInput, type) => {
+		if (type === "category_id") {
+			let data = _.cloneDeep(dataCreateOrUpdate);
+			data[type] = valueInput.value;
+			setDataCreateOrUpdate(data);
+			return;
+		}
 		let value = valueInput.target.value;
 		let data = _.cloneDeep(dataCreateOrUpdate);
 		data[type] = value;
@@ -158,6 +181,20 @@ function RoleManage() {
 		// CONFIG
 		return (
 			<div className={styles.mainModalWrap}>
+				<div className={styles.inputWrapper}>
+					<div className={styles.label}>Category *</div>
+					<SelectCustom
+						style={{ height: "40px" }}
+						value={dataCreateOrUpdate.category_id}
+						onChange={(e, option) =>
+							handleChangeInput(option, "category_id")
+						}
+						options={skillCategories.map((item) => ({
+							value: item._id,
+							label: item.name,
+						}))}
+					/>
+				</div>
 				<div className={styles.inputWrapper}>
 					<div className={styles.label}>Name *</div>
 					<InputMASQ
@@ -183,7 +220,7 @@ function RoleManage() {
 				<div className={styles.btnWrap}>
 					<ButtonMASQ
 						textBtn={"Save"}
-						loading={isLoadingBtnCreateOrUpdateRole}
+						loading={isLoadingBtnCreateOrUpdateSkill}
 						onClick={() => handleConfirmCreateOrUpdate()}
 						disable={false}
 						style={{
@@ -199,7 +236,7 @@ function RoleManage() {
 
 	return (
 		<>
-			<h1>Role management</h1>
+			<h1>Skill management</h1>
 			<TableManage
 				// CONFIG
 				data={data}
@@ -208,24 +245,24 @@ function RoleManage() {
 				handleShowConfirmDelete={handleShowConfirmDelete}
 				handleConfirmDelete={handleConfirmDelete}
 				columns={columns}
-				dataSource={roles}
-				pagination={paginationListRole}
+				dataSource={skills}
+				pagination={paginationListSkill}
 				dataFilter={dataFilter}
 				setDataFilter={setDataFilter}
-				loading={isLoadingGetListRole}
-				visibleModalDelete={visibleModalDeleteRole}
-				setVisibleModalDelete={setVisibleModalDeleteRole}
+				loading={isLoadingGetListSkill}
+				visibleModalDelete={visibleModalDeleteSkill}
+				setVisibleModalDelete={setVisibleModalDeleteSkill}
 			/>
 			<ModalCreateOrUpdate
 				// CONFIG
 				CreateOrUpdateElement={CreateOrUpdateElement}
 				configModal={configModal}
 				handleReloadData={handleReloadData}
-				visibleModalCreateOrUpdate={visibleModalCreateOrUpdateRole}
-				setVisibleModalCreateOrUpdate={setVisibleModalCreateOrUpdateRole}
+				visibleModalCreateOrUpdate={visibleModalCreateOrUpdateSkill}
+				setVisibleModalCreateOrUpdate={setVisibleModalCreateOrUpdateSkill}
 			/>
 		</>
 	);
 }
 
-export default RoleManage;
+export default SkillManage;

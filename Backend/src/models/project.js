@@ -35,7 +35,7 @@ const Project = createModel('Project', 'projects', {
     },
     funding_source_ids: {
         type: [ObjectId],
-        ref: 'Funding_Source',
+        ref: 'Project_Funding_Source',
         required: true,
         default: [],
     },
