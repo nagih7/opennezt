@@ -9,6 +9,7 @@ import notificationRouter from './notificationRouter'
 import projectRouter from './projectRouter'
 import socketRoutes from './socket'
 import artificialIntelligenceRouter from './artificialIntelligenceRouter'
+import articleRouter from './articleRouter'
 
 function route(app, io) {
     socketRoutes(io)
@@ -17,6 +18,7 @@ function route(app, io) {
         next()
     })
 
+    app.use('/articl', articleRouter)
     app.use('/auth', authRouter)
     app.use('/manage', manageRouteMap)
     app.use('/users', userRouter)

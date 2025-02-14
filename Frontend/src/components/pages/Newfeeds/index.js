@@ -1,58 +1,76 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
 import Article from "./components/Article";
+import { getListFeeds } from "api/newfeeds";
+import { useDispatch, useSelector } from "react-redux";
 import RightSidebar from "components/common/RightSidebar";
 
 function NewFeeds() {
-	const [feeds, setFeeds] = useState([]);
-	const [selectedFeed, setSelectedFeed] = useState(null);
-	const popupRef = useRef(null);
+   const dispatch = useDispatch();
 
-	const handleFeedClick = (feed) => {
-		setSelectedFeed(feed);
-	};
+   const { feeds, isLoadingGetFeeds, pagination } = useSelector(
+      (state) => state.article
+   );
+   const { nextCursor, limit, hasMore } = pagination;
 
-	const closePopup = () => {
-		setSelectedFeed(null);
-	};
+   const [dataFilter, setDataFilter] = useState({
+      cursor: nextCursor,
+      limit: limit,
+   });
 
-	useEffect(() => {
-		if (!selectedFeed) return;
+   useEffect(() => {
+      dispatch(getListFeeds(dataFilter));
+   }, [dataFilter, dispatch]);
 
-		const handleClickOutside = (event) => {
-			if (popupRef.current && !popupRef.current.contains(event.target)) {
-				closePopup();
-			}
-		};
+   // const [feeds, setFeeds] = useState([]);
+   // const [selectedFeed, setSelectedFeed] = useState(null);
+   // const popupRef = useRef(null);
 
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [selectedFeed]);
+   // const handleFeedClick = (feed) => {
+   //    setSelectedFeed(feed);
+   // };
 
-	return (
-		// <div className="newfeed-container">
-		// 	<h1 className="newfeed-title">Startup News</h1>
-		// 	<div className="feed-grid">
-		// 		{feeds.map((feed) => (
-		// 			<div
-		// 				key={feed.id}
-		// 				className="feed-card"
-		// 				onClick={() => handleFeedClick(feed)}>
-		// 				<img
-		// 					src={feed.image}
-		// 					alt={feed.title}
-		// 					className="feed-image"
-		// 				/>
-		// 				<div className="feed-content">
-		// 					<h2 className="feed-title">{feed.title}</h2>
-		// 					<p className="feed-description">{feed.description}</p>
-		// 					<span className="feed-date">{feed.date}</span>
-		// 				</div>
-		// 			</div>
-		// 		))}
-		// 	</div>
+   // const closePopup = () => {
+   //    setSelectedFeed(null);
+   // };
+
+   // useEffect(() => {
+   //    if (!selectedFeed) return;
+
+   //    const handleClickOutside = (event) => {
+   //       if (popupRef.current && !popupRef.current.contains(event.target)) {
+   //          closePopup();
+   //       }
+   //    };
+
+   //    document.addEventListener("mousedown", handleClickOutside);
+   //    return () => {
+   //       document.removeEventListener("mousedown", handleClickOutside);
+   //    };
+   // }, [selectedFeed]);
+
+   return (
+      // <div className="newfeed-container">
+      // 	<h1 className="newfeed-title">Startup News</h1>
+      // 	<div className="feed-grid">
+      // 		{feeds.map((feed) => (
+      // 			<div
+      // 				key={feed.id}
+      // 				className="feed-card"
+      // 				onClick={() => handleFeedClick(feed)}>
+      // 				<img
+      // 					src={feed.image}
+      // 					alt={feed.title}
+      // 					className="feed-image"
+      // 				/>
+      // 				<div className="feed-content">
+      // 					<h2 className="feed-title">{feed.title}</h2>
+      // 					<p className="feed-description">{feed.description}</p>
+      // 					<span className="feed-date">{feed.date}</span>
+      // 				</div>
+      // 			</div>
+      // 		))}
+      // 	</div>
 
 		// 	{selectedFeed && (
 		// 		<div className="feed-popup">
