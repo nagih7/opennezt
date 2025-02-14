@@ -1,6 +1,6 @@
 import Joi from 'joi'
 import {tryValidateOrDefault} from '@/utils/helpers'
-import {Category, ExperienceLevel, Industry, Role, Skill, Type} from '@/models'
+import {Category, ExperienceLevel, Industry, ObjectId, Role, Skill, Type} from '@/models'
 import {AsyncValidate} from '@/utils/classes'
 import {MAX_STRING_SIZE} from '@/configs'
 
@@ -131,7 +131,7 @@ export const createSkill = Joi.object({
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async function () {
-                    const category = await Category.findById(value)
+                    const category = await Category.findById(new ObjectId(value))
                     return category ? value : helpers.error('any.invalid')
                 })
         ),

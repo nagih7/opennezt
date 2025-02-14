@@ -311,6 +311,27 @@ export async function skillReadRoot({q, page, per_page, field, order}) {
     const matchStage = {
         $match: {name: {$regex: q, $options: 'i'}},
     }
+    const lookupStage = {
+        $lookup: {
+            from: 'categories',
+            localField: 'category_id',
+            foreignField: '_id',
+            as: 'category',
+            pipeline: [
+                {
+                    $project: {
+                        _id: 0,
+                        name: 1,
+                        description: 1,
+                    },
+                },
+            ],
+        },
+    }
+
+    const unwindStage = {
+        $unwind: '$category',
+    }
 
     const sortStage = {
         $sort: {[field]: order},
@@ -322,7 +343,14 @@ export async function skillReadRoot({q, page, per_page, field, order}) {
         $limit: per_page,
     }
 
-    const skills = await Skill.aggregate([matchStage, sortStage, skipStage, limitStage])
+    const skills = await Skill.aggregate([
+        matchStage,
+        lookupStage,
+        unwindStage,
+        sortStage,
+        skipStage,
+        limitStage,
+    ])
 
     const filter = {
         ...(q && {name: q}),
@@ -353,4 +381,7 @@ export async function updateSkill(id, requestBody) {
 }
 export async function deleteSkill(id) {
     await Skill.deleteOne({_id: id})
+}
+export async function skillCategories() {
+    return await Category.find().select('_id name description')
 }

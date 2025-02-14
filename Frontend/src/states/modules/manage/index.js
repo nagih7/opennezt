@@ -7,6 +7,10 @@ const manageSlice = createSlice({
 		roles: [],
 		types: [],
 		industries: [],
+		experienceLevels: [],
+		categories: [],
+		skills: [],
+		skillCategories: [],
 		paginationListRole: {
 			currentPage: 1,
 			perPage: 10,
@@ -25,6 +29,12 @@ const manageSlice = createSlice({
 			totalPage: 1,
 			totalRecord: 0,
 		},
+		paginationListExperienceLevel: {
+			currentPage: 1,
+			perPage: 10,
+			totalPage: 1,
+			totalRecord: 0,
+		},
 		paginationListCategory: {
 			currentPage: 1,
 			perPage: 10,
@@ -37,31 +47,43 @@ const manageSlice = createSlice({
 			totalPage: 1,
 			totalRecord: 0,
 		},
+		// ROLES
 		isLoadingGetListRole: false,
 		visibleModalCreateOrUpdateRole: false,
 		isLoadingBtnCreateOrUpdateRole: false,
 		visibleModalDeleteRole: false,
 		isLoadingDeleteRole: false,
+		// TYPES
 		isLoadingGetListType: false,
 		visibleModalCreateOrUpdateType: false,
 		isLoadingBtnCreateOrUpdateType: false,
 		visibleModalDeleteType: false,
 		isLoadingDeleteType: false,
+		// INDUSTRIES
 		isLoadingGetListIndustry: false,
 		visibleModalCreateOrUpdateIndustry: false,
 		isLoadingBtnCreateOrUpdateIndustry: false,
 		visibleModalDeleteIndustry: false,
 		isLoadingDeleteIndustry: false,
+		// EXPERIENCE LEVELS
+		isLoadingGetListExperienceLevel: false,
+		visibleModalCreateOrUpdateExperienceLevel: false,
+		isLoadingBtnCreateOrUpdateExperienceLevel: false,
+		visibleModalDeleteExperienceLevel: false,
+		isLoadingDeleteExperienceLevel: false,
+		// CATEGORIES
 		isLoadingGetListCategory: false,
 		visibleModalCreateOrUpdateCategory: false,
 		isLoadingBtnCreateOrUpdateCategory: false,
 		visibleModalDeleteCategory: false,
 		isLoadingDeleteCategory: false,
+		// SKILLS
 		isLoadingGetListSkill: false,
 		visibleModalCreateOrUpdateSkill: false,
 		isLoadingBtnCreateOrUpdateSkill: false,
 		visibleModalDeleteSkill: false,
 		isLoadingDeleteSkill: false,
+		isLoadingGetSkillCategories: false,
 	},
 	reducers: {
 		startRequestGetTotalUsers: (state) => ({
@@ -240,6 +262,61 @@ const manageSlice = createSlice({
 			isLoadingDeleteIndustry: false,
 		}),
 
+		// EXPERIENCE LEVELS
+		requestGetListExperienceLevel: (state) => ({
+			...state,
+			isLoadingGetListExperienceLevel: true,
+		}),
+		getListExperienceLevelSuccess: (state, action) => ({
+			...state,
+			isLoadingGetListExperienceLevel: false,
+			experienceLevels: action.payload.data.experience_levels,
+			paginationListExperienceLevel: {
+				currentPage: action.payload.data.page,
+				perPage: action.payload.data.per_page,
+				totalPage: action.payload.data.last_page,
+				totalRecord: action.payload.data.total,
+			},
+		}),
+		getListExperienceLevelFail: (state) => ({
+			...state,
+			isLoadingGetListExperienceLevel: false,
+		}),
+		setVisibleModalCreateOrUpdateExperienceLevel: (state, action) => ({
+			...state,
+			visibleModalCreateOrUpdateExperienceLevel: action.payload,
+		}),
+		setVisibleModalDeleteExperienceLevel: (state, action) => ({
+			...state,
+			visibleModalDeleteExperienceLevel: action.payload,
+		}),
+		requestCreateOrUpdateExperienceLevel: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateExperienceLevel: true,
+		}),
+		createOrUpdateExperienceLevelSuccess: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateExperienceLevel: false,
+			visibleModalCreateOrUpdateExperienceLevel: false,
+		}),
+		createOrUpdateExperienceLevelFail: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateExperienceLevel: false,
+		}),
+		requestDeleteExperienceLevel: (state) => ({
+			...state,
+			isLoadingDeleteExperienceLevel: true,
+		}),
+		deleteExperienceLevelSuccess: (state) => ({
+			...state,
+			isLoadingDeleteExperienceLevel: false,
+			visibleModalDeleteExperienceLevel: false,
+		}),
+		deleteExperienceLevelFail: (state) => ({
+			...state,
+			isLoadingDeleteExperienceLevel: false,
+		}),
+
 		// CATEGORIES
 		requestGetListCategory: (state) => ({
 			...state,
@@ -263,6 +340,10 @@ const manageSlice = createSlice({
 		setVisibleModalCreateOrUpdateCategory: (state, action) => ({
 			...state,
 			visibleModalCreateOrUpdateCategory: action.payload,
+		}),
+		setVisibleModalDeleteCategory: (state, action) => ({
+			...state,
+			visibleModalDeleteCategory: action.payload,
 		}),
 		requestCreateOrUpdateCategory: (state) => ({
 			...state,
@@ -315,6 +396,10 @@ const manageSlice = createSlice({
 			...state,
 			visibleModalCreateOrUpdateSkill: action.payload,
 		}),
+		setVisibleModalDeleteSkill: (state, action) => ({
+			...state,
+			visibleModalDeleteSkill: action.payload,
+		}),
 		requestCreateOrUpdateSkill: (state) => ({
 			...state,
 			isLoadingBtnCreateOrUpdateSkill: true,
@@ -340,6 +425,19 @@ const manageSlice = createSlice({
 		deleteSkillFail: (state) => ({
 			...state,
 			isLoadingDeleteSkill: false,
+		}),
+		requestGetSkillCategories: (state) => ({
+			...state,
+			isLoadingGetSkillCategories: true,
+		}),
+		getSkillCategoriesSuccess: (state, action) => ({
+			...state,
+			isLoadingGetSkillCategories: false,
+			skillCategories: action.payload.data,
+		}),
+		getSkillCategoriesFail: (state) => ({
+			...state,
+			isLoadingGetSkillCategories: false,
 		}),
 	},
 });
@@ -385,11 +483,24 @@ export const {
 	requestDeleteIndustry,
 	deleteIndustrySuccess,
 	deleteIndustryFail,
+	// EXPERIENCE LEVELS
+	requestGetListExperienceLevel,
+	getListExperienceLevelSuccess,
+	getListExperienceLevelFail,
+	setVisibleModalCreateOrUpdateExperienceLevel,
+	setVisibleModalDeleteExperienceLevel,
+	requestCreateOrUpdateExperienceLevel,
+	createOrUpdateExperienceLevelSuccess,
+	createOrUpdateExperienceLevelFail,
+	requestDeleteExperienceLevel,
+	deleteExperienceLevelSuccess,
+	deleteExperienceLevelFail,
 	// CATEGORIES
 	requestGetListCategory,
 	getListCategorySuccess,
 	getListCategoryFail,
 	setVisibleModalCreateOrUpdateCategory,
+	setVisibleModalDeleteCategory,
 	requestCreateOrUpdateCategory,
 	createOrUpdateCategorySuccess,
 	createOrUpdateCategoryFail,
@@ -401,12 +512,16 @@ export const {
 	getListSkillSuccess,
 	getListSkillFail,
 	setVisibleModalCreateOrUpdateSkill,
+	setVisibleModalDeleteSkill,
 	requestCreateOrUpdateSkill,
 	createOrUpdateSkillSuccess,
 	createOrUpdateSkillFail,
 	requestDeleteSkill,
 	deleteSkillSuccess,
 	deleteSkillFail,
+	requestGetSkillCategories,
+	getSkillCategoriesSuccess,
+	getSkillCategoriesFail,
 } = manageSlice.actions;
 
 export default manageSlice.reducer;

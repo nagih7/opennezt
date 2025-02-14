@@ -116,5 +116,6 @@ manageRouter.put(
     asyncHandler(manageController.updateSkill)
 )
 manageRouter.delete('/skills/:id', asyncHandler(manageController.deleteSkill))
+manageRouter.get('/skills/categories', asyncHandler(manageController.skillCategories))
 
 export default manageRouter

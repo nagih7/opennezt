@@ -117,3 +117,7 @@ export async function deleteSkill(req, res) {
     await manageService.deleteSkill(req.params.id)
     res.jsonify('Delete skill successfully')
 }
+export async function skillCategories(req, res) {
+    const result = await manageService.skillCategories()
+    res.jsonify(result)
+}

@@ -30,6 +30,16 @@ import {
 	requestDeleteIndustry,
 	deleteIndustrySuccess,
 	deleteIndustryFail,
+	// EXPERIENCE LEVELS
+	requestGetListExperienceLevel,
+	getListExperienceLevelSuccess,
+	getListExperienceLevelFail,
+	requestCreateOrUpdateExperienceLevel,
+	createOrUpdateExperienceLevelSuccess,
+	createOrUpdateExperienceLevelFail,
+	requestDeleteExperienceLevel,
+	deleteExperienceLevelSuccess,
+	deleteExperienceLevelFail,
 	// CATEGORIES
 	requestGetListCategory,
 	getListCategorySuccess,
@@ -50,6 +60,9 @@ import {
 	requestDeleteSkill,
 	deleteSkillSuccess,
 	deleteSkillFail,
+	requestGetSkillCategories,
+	getSkillCategoriesSuccess,
+	getSkillCategoriesFail,
 } from "../../states/modules/manage";
 
 export const getTotalUsers = () => async (dispatch, getState) => {
@@ -248,6 +261,70 @@ export const deleteIndustry = (id) => async (dispatch, getState) => {
 	});
 };
 
+// EXPERIENCE LEVELS
+export const getListExperienceLevel =
+	(dataFilter) => async (dispatch, getState) => {
+		let path = `manage/experience-levels?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
+
+		if (dataFilter.keySearch) {
+			path += `&q=${dataFilter.keySearch}`;
+		}
+
+		if (dataFilter.status && dataFilter.status.length > 0) {
+			path += `&status=${dataFilter.status}`;
+		}
+
+		if (dataFilter.order && dataFilter.column) {
+			path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+		}
+
+		return callApi({
+			method: "get",
+			apiPath: path,
+			actionTypes: [
+				requestGetListExperienceLevel,
+				getListExperienceLevelSuccess,
+				getListExperienceLevelFail,
+			],
+			variables: {},
+			dispatch,
+			getState,
+		});
+	};
+export const createOrUpdateExperienceLevel =
+	(data, action, id) => async (dispatch, getState) => {
+		let path = `manage/experience-levels`;
+		if (action === "UPDATE") {
+			path += `/${id}`;
+		}
+		return callApi({
+			method: action === "CREATE" ? "post" : "put",
+			apiPath: path,
+			actionTypes: [
+				requestCreateOrUpdateExperienceLevel,
+				createOrUpdateExperienceLevelSuccess,
+				createOrUpdateExperienceLevelFail,
+			],
+			variables: data,
+			dispatch,
+			getState,
+		});
+	};
+export const deleteExperienceLevel = (id) => async (dispatch, getState) => {
+	return callApi({
+		method: "delete",
+		apiPath: `manage/experience-levels/${id}`,
+		actionTypes: [
+			requestDeleteExperienceLevel,
+			deleteExperienceLevelSuccess,
+			deleteExperienceLevelFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
 // CATEGORIES
 export const getListCategory = (dataFilter) => async (dispatch, getState) => {
 	let path = `manage/categories?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
@@ -360,6 +437,21 @@ export const deleteSkill = (id) => async (dispatch, getState) => {
 		method: "delete",
 		apiPath: `manage/skills/${id}`,
 		actionTypes: [requestDeleteSkill, deleteSkillSuccess, deleteSkillFail],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+export const getSkillCategories = () => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: `manage/skills/categories`,
+		actionTypes: [
+			requestGetSkillCategories,
+			getSkillCategoriesSuccess,
+			getSkillCategoriesFail,
+		],
 		variables: {},
 		dispatch,
 		getState,
