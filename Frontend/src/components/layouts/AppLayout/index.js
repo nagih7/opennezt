@@ -45,26 +45,26 @@ function AppLayout(props) {
 						// isShowSideBar={isShowSideBar}
 						/>
 
-            <div
-              className={`${styles.mainWrap} ${
-                !isShowSideBar ? styles.mainWrapWithConditionSideBarClose : ""
-              }, h-full`}
-            >
-              <Header />
-              <div className="flex w-full h-full max-h-full overflow-y-scroll ">
-                <main
-                  className={`$styles.mainContentWrap,w-full`}
-                >
-                  <LazyLoading>{children}</LazyLoading>
-                </main>
-              </div>
-              <Footer />
-            </div>
-          </div>
-        </div>
-      </RealtimeProvider>
-    </ModalProvider>
-  );
+						<div
+							style={{ display: "flex", flexDirection: "column" }}
+							className={`${styles.mainWrap} ${
+								!isShowSideBar
+									? styles.mainWrapWithConditionSideBarClose
+									: ""
+							}, h-full`}>
+							<Header />
+							<div className="flex w-full h-full max-h-full overflow-y-scroll ">
+								<main className={`$styles.mainContentWrap,w-full`}>
+									<LazyLoading>{children}</LazyLoading>
+								</main>
+							</div>
+							<Footer />
+						</div>
+					</div>
+				</div>
+			</RealtimeProvider>
+		</ModalProvider>
+	);
 }
 
 export default AppLayout;
