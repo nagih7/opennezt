@@ -3,7 +3,6 @@ import styles from "./styles.module.scss";
 import PropTypes from "prop-types";
 import NavItem from "./components/NavItem";
 import manageRouteMap from "../../../../router/manageRouteMap";
-import appRouteMap from "router/appRouteMap";
 import { handleCheckRoute } from "../../../../utils/helper";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -11,10 +10,14 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { logout } from "../../../../api/auth";
 import store from "states/configureStore";
 import { LOGOUT } from "../../../../utils/constains";
-import { CheckCircleFilled } from "@ant-design/icons";
 import { FundOutlined } from "@ant-design/icons";
-import { IconlyActivity } from "components/UI/Iconly";
-import avt from "assets/images/background/avt.jpg";
+import {
+	IconlyActivity,
+	IconlyLogout,
+	IconlySetting,
+} from "components/UI/Iconly";
+import ProfileCardSidebar from "./components/ProfileCardSidebar";
+import appRouteMap from "router/appRouteMap";
 
 SideBar.prototype = {
 	isShowSideBar: PropTypes.bool.isRequired,
@@ -32,9 +35,6 @@ function SideBar(props) {
 	const [topMenuSub, setTopMenuSub] = useState(0);
 	const location = useLocation();
 	const navigate = useNavigate();
-
-	const { authorize } = useSelector((state) => state.auth);
-	const { language } = useSelector((state) => state.app);
 
 	const { authRole } = useSelector((state) => state.auth);
 	console.log("authRole", authRole);
@@ -75,64 +75,8 @@ function SideBar(props) {
 			className={`${styles.sideBarWrap} ${
 				!isShowSideBar ? styles.sideBarWrapClose : ""
 			} border-t-2 border-gray-100`}>
-			{/* <div className={`border-bottom ${styles.logoWrap}`}>
-				<img
-					src={Logo}
-					alt="logo-opennezt"
-					className={`${styles.imgWrap}`}
-				/>
-			</div>
-			<div className={styles.fakeLogoWrap}></div> */}
-
 			{/* <div className={`${styles.navbarWrap}`}>
 				<ul className={`${styles.menuNav}`}>
-					{authRole === "Super Admin"
-						? manageRouteMap.map((route, index) => {
-								return (
-									<li
-										onMouseEnter={(e) =>
-											handleHoverMenuNavItem(e, route)
-										}
-										onClick={() => handleToggleMenu(index, route)}
-										key={route.path}
-										className={`${styles.menuNavItem} ${
-											handleCheckRoute(
-												route.routeActive,
-												location.pathname
-											)
-												? styles.menuNavItemActive
-												: ""
-										}`}>
-										<NavItem
-											route={route}
-											isShowMenu={index === indexNavItemSelect}
-										/>
-									</li>
-								);
-						  })
-						: appRouteMap.map((route, index) => {
-								return (
-									<li
-										onMouseEnter={(e) =>
-											handleHoverMenuNavItem(e, route)
-										}
-										onClick={() => handleToggleMenu(index, route)}
-										key={route.path}
-										className={`${styles.menuNavItem} ${
-											handleCheckRoute(
-												route.routeActive,
-												location.pathname
-											)
-												? styles.menuNavItemActive
-												: ""
-										}`}>
-										<NavItem
-											route={route}
-											isShowMenu={index === indexNavItemSelect}
-										/>
-									</li>
-								);
-						  })}
 					<li
 						className={`${styles.menuNavItem} ${styles.logout}`}
 						onClick={() => handleConfirmLogOut()}>
@@ -142,66 +86,57 @@ function SideBar(props) {
 				</ul>
 			</div> */}
 
-			<div className="relative h-full">
-				<div className="max-h-[610px] 2xl:max-h-full overflow-y-scroll scrollbar-hide bg-[#ffffff] p-8">
-					<div className="flex items-center gap-3 pb-4 mb-6 border-b-[1px] border-gray-200">
-						<img src={avt} className="w-[50px] h-[50px] rounded-full" />
-						<div>
-							<a
-								href="#"
-								className="flex items-center gap-2 text-black no-underline">
-								<span className="font-semibold text-nowrap">
-									Young Truong
-								</span>
-								<CheckCircleFilled className="text-blue-500" />
-							</a>
-							<span className="text-xs text-gray-500">@youngtruong</span>
-						</div>
-					</div>
+			<div className="relative flex flex-col h-full">
+				<div className="flex-1 max-h-[610px] 2xl:max-h-full overflow-y-scroll scrollbar-hide bg-[#ffffff] p-8">
+					<ProfileCardSidebar />
+					{/* MENU */}
 					<div className="border-b-[1px] border-gray-200">
 						<span className="text-xs font-semibold text-gray-400">
 							MENU
 						</span>
 						<div className="flex flex-col gap-2 mt-2 mb-6 text-sm font-semibold">
-							<div className="flex items-center px-3 py-[10px] rounded-md text-white bg-[#2f65b9] cursor-pointer gap-2">
-								<IconlyActivity
-									size={18}
-									color={`#ffff`}
-									className=""
-								/>
-								Activity
-							</div>
-							<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
-								<FundOutlined />
-								Members
-							</div>
-							<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
-								<FundOutlined />
-								Groups
-							</div>
-							<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
-								<FundOutlined />
-								Badges
-							</div>
-							<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
-								<FundOutlined />
-								Message
-							</div>
-							<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
-								<FundOutlined />
-								Shop
-							</div>
-							<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
-								<FundOutlined />
-								Courses
-							</div>
-							<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
-								<FundOutlined />
-								Levels
-							</div>
+							{authRole === "Super Admin"
+								? manageRouteMap.map((route, index) => {
+										return (
+											<div
+												className={`flex items-center px-3 py-[10px] rounded-md text-gray-500  hover:text-[#2f65b9] cursor-pointer gap-2 ${
+													handleCheckRoute(
+														route.routeActive,
+														location.pathname
+													)
+														? styles.menuNavItemActive
+														: styles.menuNavItem
+												}`}
+												key={route.path}
+												onMouseEnter={(e) =>
+													handleHoverMenuNavItem(e, route)
+												}
+												onClick={() =>
+													handleToggleMenu(index, route)
+												}>
+												<NavItem
+													route={route}
+													isShowMenu={index === indexNavItemSelect}
+												/>
+											</div>
+										);
+								  })
+								: appRouteMap.map((route, index) => {
+										return (
+											<li
+												key={route.path}
+												className={`${styles.menuNavItem} `}>
+												<NavItem
+													route={route}
+													isShowMenu={index === indexNavItemSelect}
+												/>
+											</li>
+										);
+								  })}
 						</div>
 					</div>
-					<div className="border-b-[1px] border-gray-200 mt-6">
+					{/* FORUM */}
+					{/* <div className="border-b-[1px] border-gray-200 mt-6">
 						<span className="text-xs font-semibold text-gray-400">
 							FORUM
 						</span>
@@ -219,8 +154,9 @@ function SideBar(props) {
 								Topic Single
 							</div>
 						</div>
-					</div>
-					<div className="mt-6">
+					</div> */}
+					{/* ORTHER */}
+					{/* <div className="mt-6">
 						<span className="text-xs font-semibold text-gray-400">
 							OTHERS
 						</span>
@@ -230,32 +166,42 @@ function SideBar(props) {
 								Membership
 							</div>
 						</div>
-					</div>
+					</div> */}
 				</div>
-				<div className="absolute bottom-0 left-0 w-[270px] py-4 px-3 bg-[#ffffff] text-gray-500">
+				<div className="bottom-0 left-0 w-[270px] py-4 px-3 bg-[#ffffff] text-gray-500">
 					<div className="flex items-center w-[240px] p-3 bg-[#f8f9fa] ] rounded-md gap-10">
-						<FundOutlined />
-						<LogoutIcon />
-						<LogoutIcon />
-						<FundOutlined />
+						<ul
+							className="flex items-center justify-between"
+							style={{
+								width: "100%",
+								padding: "0",
+								listStyle: "none",
+								margin: "0",
+							}}>
+							<li style={{ cursor: "pointer" }}>
+								<IconlySetting
+									size={24}
+									color={
+										"rgb(107 114 128 / var(--tw-text-opacity, 1))"
+									}
+								/>
+							</li>
+							<LogoutIcon />
+							<LogoutIcon />
+							<li
+								onClick={() => handleConfirmLogOut()}
+								style={{ cursor: "pointer" }}>
+								<IconlyLogout
+									size={24}
+									color={
+										"rgb(107 114 128 / var(--tw-text-opacity, 1))"
+									}
+								/>
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>
-			{/* <div
-				className={`${styles.btnToggleIsShowSideBar} ${
-					!isShowSideBar ? styles.btnToggleIsHideSideBar : ""
-				}`}>
-				<svg
-					onClick={() => dispatch(handleSetIsShowSideBar(!isShowSideBar))}
-					width="16"
-					height="16"
-					viewBox="0 0 16 16"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg">
-					<path d="M13.5.5 7.5 8l6 7.5" stroke="currentColor" />
-					<path d="M8.5.5 2.5 8l6 7.5" stroke="currentColor" />
-				</svg>
-			</div> */}
 
 			{!isShowSideBar && menuSub && menuSub.length > 0 ? (
 				<div
