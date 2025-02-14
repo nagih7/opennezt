@@ -3,26 +3,30 @@ import styles from "./styles.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import TableManage from "../TableManage";
-import { createOrUpdateRole, deleteRole, getListRole } from "api/manage";
 import {
-	setVisibleModalCreateOrUpdateRole,
-	setVisibleModalDeleteRole,
+	createOrUpdateExperienceLevel,
+	deleteExperienceLevel,
+	getListExperienceLevel,
+} from "api/manage";
+import {
+	setVisibleModalCreateOrUpdateExperienceLevel,
+	setVisibleModalDeleteExperienceLevel,
 } from "states/modules/manage";
 import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
 
-function RoleManage() {
+function ExperienceLevelManage() {
 	const dispatch = useDispatch();
 
 	const {
 		// CONFIG
-		roles,
-		paginationListRole,
-		isLoadingGetListRole,
-		visibleModalCreateOrUpdateRole,
-		visibleModalDeleteRole,
-		isLoadingBtnCreateOrUpdateRole,
+		experienceLevels,
+		paginationListExperienceLevel,
+		isLoadingGetListExperienceLevel,
+		visibleModalCreateOrUpdateExperienceLevel,
+		visibleModalDeleteExperienceLevel,
+		isLoadingBtnCreateOrUpdateExperienceLevel,
 	} = useSelector((state) => state.manage);
 
 	const [data, setData] = useState({});
@@ -36,11 +40,13 @@ function RoleManage() {
 	});
 	const [dataCreateOrUpdate, setDataCreateOrUpdate] = useState({
 		// CONFIG
+		class: "",
 		name: "",
 		description: "",
 	});
 	const [configModal, setConfigModal] = useState({
-		title: "Create role",
+		// CONFIG
+		title: "Create experience level",
 		type: "CREATE",
 	});
 
@@ -53,14 +59,14 @@ function RoleManage() {
 
 	useEffect(() => {
 		// CONFIG
-		dispatch(getListRole(dataFilter));
+		dispatch(getListExperienceLevel(dataFilter));
 	}, [dataFilter, dispatch]);
 
 	// CREATE
 	const handleCreate = () => {
-		dispatch(setVisibleModalCreateOrUpdateRole(true));
+		dispatch(setVisibleModalCreateOrUpdateExperienceLevel(true));
 		setConfigModal({
-			title: "Create role",
+			title: "Create experience level",
 			type: "CREATE",
 		});
 	};
@@ -69,9 +75,9 @@ function RoleManage() {
 	const handleUpdate = (data) => {
 		let dataSelect = _.cloneDeep(data);
 		setData(dataSelect);
-		dispatch(setVisibleModalCreateOrUpdateRole(true));
+		dispatch(setVisibleModalCreateOrUpdateExperienceLevel(true));
 		setConfigModal({
-			title: "Update role",
+			title: "Update experience level",
 			type: "UPDATE",
 		});
 	};
@@ -80,10 +86,11 @@ function RoleManage() {
 	const handleShowConfirmDelete = (data) => {
 		let dataSelect = _.cloneDeep(data);
 		setData(dataSelect);
-		dispatch(setVisibleModalDeleteRole(true));
+		dispatch(setVisibleModalDeleteExperienceLevel(true));
 	};
 	const handleConfirmDelete = () => {
-		dispatch(deleteRole(data._id));
+		// CONFIG
+		dispatch(deleteExperienceLevel(data._id));
 	};
 
 	useEffect(() => {
@@ -103,15 +110,21 @@ function RoleManage() {
 	}, []);
 
 	const handleConfirmCreateOrUpdate = () => {
-		// CONFIG
 		// let data = new FormData();
 		// data.append(`name`, dataCreateOrUpdate.name);
 		// data.append(`description`, dataCreateOrUpdate.description);
 
+		// CONFIG
 		if (configModal.type === "CREATE") {
-			dispatch(createOrUpdateRole(dataCreateOrUpdate, "CREATE"));
+			dispatch(createOrUpdateExperienceLevel(dataCreateOrUpdate, "CREATE"));
 		} else {
-			dispatch(createOrUpdateRole(dataCreateOrUpdate, "UPDATE", data._id));
+			dispatch(
+				createOrUpdateExperienceLevel(
+					dataCreateOrUpdate,
+					"UPDATE",
+					data._id
+				)
+			);
 		}
 		// }
 	};
@@ -119,7 +132,7 @@ function RoleManage() {
 	const columns = [
 		// CONFIG
 		{
-			title: "Role",
+			title: "Exp Level",
 			dataIndex: "index",
 			key: "index",
 			render: (text, record, index) => <span>{index + 1}</span>,
@@ -183,7 +196,7 @@ function RoleManage() {
 				<div className={styles.btnWrap}>
 					<ButtonMASQ
 						textBtn={"Save"}
-						loading={isLoadingBtnCreateOrUpdateRole}
+						loading={isLoadingBtnCreateOrUpdateExperienceLevel}
 						onClick={() => handleConfirmCreateOrUpdate()}
 						disable={false}
 						style={{
@@ -199,7 +212,7 @@ function RoleManage() {
 
 	return (
 		<>
-			<h1>Role management</h1>
+			<h1>Experience level management</h1>
 			<TableManage
 				// CONFIG
 				data={data}
@@ -208,24 +221,28 @@ function RoleManage() {
 				handleShowConfirmDelete={handleShowConfirmDelete}
 				handleConfirmDelete={handleConfirmDelete}
 				columns={columns}
-				dataSource={roles}
-				pagination={paginationListRole}
+				dataSource={experienceLevels}
+				pagination={paginationListExperienceLevel}
 				dataFilter={dataFilter}
 				setDataFilter={setDataFilter}
-				loading={isLoadingGetListRole}
-				visibleModalDelete={visibleModalDeleteRole}
-				setVisibleModalDelete={setVisibleModalDeleteRole}
+				loading={isLoadingGetListExperienceLevel}
+				visibleModalDelete={visibleModalDeleteExperienceLevel}
+				setVisibleModalDelete={setVisibleModalDeleteExperienceLevel}
 			/>
 			<ModalCreateOrUpdate
 				// CONFIG
 				CreateOrUpdateElement={CreateOrUpdateElement}
 				configModal={configModal}
 				handleReloadData={handleReloadData}
-				visibleModalCreateOrUpdate={visibleModalCreateOrUpdateRole}
-				setVisibleModalCreateOrUpdate={setVisibleModalCreateOrUpdateRole}
+				visibleModalCreateOrUpdate={
+					visibleModalCreateOrUpdateExperienceLevel
+				}
+				setVisibleModalCreateOrUpdate={
+					setVisibleModalCreateOrUpdateExperienceLevel
+				}
 			/>
 		</>
 	);
 }
 
-export default RoleManage;
+export default ExperienceLevelManage;

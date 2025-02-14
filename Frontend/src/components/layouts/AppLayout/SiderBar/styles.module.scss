@@ -11,8 +11,8 @@
 }
 .sideBarWrap {
 	width: $sizeNavbar;
-	height: calc(90vh);
-	position: fixed;
+	height: calc(100% - 70px);
+	// position: fixed;
 	transition: all 0.5s ease;
 	z-index: 100;
 

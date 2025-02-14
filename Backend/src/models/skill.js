@@ -15,10 +15,6 @@ const Skill = createModel('Skill', 'skills', {
         required: true,
         default: '',
     },
-    difficulty_level: {
-        type: String,
-        required: true,
-    },
     metadata: {
         type: Object,
         required: true,

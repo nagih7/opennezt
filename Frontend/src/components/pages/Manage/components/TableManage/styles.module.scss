@@ -157,17 +157,15 @@ $color-primary: #6c9bcf;
 
 	.btnWrap {
 		display: flex;
+		cursor: pointer;
 
-		img {
-			cursor: pointer;
-			margin-right: 1.2rem;
-			width: 24px;
-			height: 24px;
-			transition: transform 0.3s ease;
+		margin-right: 1.2rem;
+		width: 24px;
+		height: 24px;
+		transition: transform 0.3s ease;
 
-			&:hover {
-				transform: scale(1.1);
-			}
+		&:hover {
+			transform: scale(1.1);
 		}
 
 		&:last-child {

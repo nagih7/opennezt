@@ -3,6 +3,7 @@ import "./styles.scss";
 import Article from "./components/Article";
 import { getListFeeds } from "api/newfeeds";
 import { useDispatch, useSelector } from "react-redux";
+import RightSidebar from "components/common/RightSidebar";
 
 function NewFeeds() {
    const dispatch = useDispatch();
@@ -71,32 +72,35 @@ function NewFeeds() {
       // 		))}
       // 	</div>
 
-      // 	{selectedFeed && (
-      // 		<div className="feed-popup">
-      // 			<div className="popup-content" ref={popupRef}>
-      // 				<button className="close-button" onClick={closePopup}>
-      // 					&times;
-      // 				</button>
-      // 				<img
-      // 					src={selectedFeed.image}
-      // 					alt={selectedFeed.title}
-      // 					className="popup-image"
-      // 				/>
-      // 				<h2 className="popup-title">{selectedFeed.title}</h2>
-      // 				<p className="popup-details">{selectedFeed.details}</p>
-      // 				<button className="connect-button">View Details</button>
-      // 			</div>
-      // 		</div>
-      // 	)}
-      // </div>
-      <div>
-         {Array(5)
-            .fill(0)
-            .map((_, index) => (
-               <Article key={index} />
-            ))}
-      </div>
-   );
+		// 	{selectedFeed && (
+		// 		<div className="feed-popup">
+		// 			<div className="popup-content" ref={popupRef}>
+		// 				<button className="close-button" onClick={closePopup}>
+		// 					&times;
+		// 				</button>
+		// 				<img
+		// 					src={selectedFeed.image}
+		// 					alt={selectedFeed.title}
+		// 					className="popup-image"
+		// 				/>
+		// 				<h2 className="popup-title">{selectedFeed.title}</h2>
+		// 				<p className="popup-details">{selectedFeed.details}</p>
+		// 				<button className="connect-button">View Details</button>
+		// 			</div>
+		// 		</div>
+		// 	)}
+		// </div>
+		<div className="flex gap-8 pt-4 ">
+			<div className="pl-4">
+				{Array(5)
+					.fill(0)
+					.map((_, index) => (
+						<Article key={index} />
+					))}
+			</div>
+			<RightSidebar />
+		</div>
+	);
 }
 
 export default NewFeeds;

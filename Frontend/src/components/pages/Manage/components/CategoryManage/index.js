@@ -3,26 +3,30 @@ import styles from "./styles.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import TableManage from "../TableManage";
-import { createOrUpdateRole, deleteRole, getListRole } from "api/manage";
 import {
-	setVisibleModalCreateOrUpdateRole,
-	setVisibleModalDeleteRole,
+	createOrUpdateCategory,
+	deleteCategory,
+	getListCategory,
+} from "api/manage";
+import {
+	setVisibleModalCreateOrUpdateCategory,
+	setVisibleModalDeleteCategory,
 } from "states/modules/manage";
 import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
 
-function RoleManage() {
+function CategoryManage() {
 	const dispatch = useDispatch();
 
 	const {
 		// CONFIG
-		roles,
-		paginationListRole,
-		isLoadingGetListRole,
-		visibleModalCreateOrUpdateRole,
-		visibleModalDeleteRole,
-		isLoadingBtnCreateOrUpdateRole,
+		categories,
+		paginationListCategory,
+		isLoadingGetListCategory,
+		visibleModalCreateOrUpdateCategory,
+		visibleModalDeleteCategory,
+		isLoadingBtnCreateOrUpdateCategory,
 	} = useSelector((state) => state.manage);
 
 	const [data, setData] = useState({});
@@ -40,7 +44,8 @@ function RoleManage() {
 		description: "",
 	});
 	const [configModal, setConfigModal] = useState({
-		title: "Create role",
+		// CONFIG
+		title: "Create category",
 		type: "CREATE",
 	});
 
@@ -53,14 +58,14 @@ function RoleManage() {
 
 	useEffect(() => {
 		// CONFIG
-		dispatch(getListRole(dataFilter));
+		dispatch(getListCategory(dataFilter));
 	}, [dataFilter, dispatch]);
 
 	// CREATE
 	const handleCreate = () => {
-		dispatch(setVisibleModalCreateOrUpdateRole(true));
+		dispatch(setVisibleModalCreateOrUpdateCategory(true));
 		setConfigModal({
-			title: "Create role",
+			title: "Create category",
 			type: "CREATE",
 		});
 	};
@@ -69,9 +74,10 @@ function RoleManage() {
 	const handleUpdate = (data) => {
 		let dataSelect = _.cloneDeep(data);
 		setData(dataSelect);
-		dispatch(setVisibleModalCreateOrUpdateRole(true));
+		// CONFIG
+		dispatch(setVisibleModalCreateOrUpdateCategory(true));
 		setConfigModal({
-			title: "Update role",
+			title: "Update category",
 			type: "UPDATE",
 		});
 	};
@@ -80,10 +86,10 @@ function RoleManage() {
 	const handleShowConfirmDelete = (data) => {
 		let dataSelect = _.cloneDeep(data);
 		setData(dataSelect);
-		dispatch(setVisibleModalDeleteRole(true));
+		dispatch(setVisibleModalDeleteCategory(true));
 	};
 	const handleConfirmDelete = () => {
-		dispatch(deleteRole(data._id));
+		dispatch(deleteCategory(data._id));
 	};
 
 	useEffect(() => {
@@ -109,9 +115,11 @@ function RoleManage() {
 		// data.append(`description`, dataCreateOrUpdate.description);
 
 		if (configModal.type === "CREATE") {
-			dispatch(createOrUpdateRole(dataCreateOrUpdate, "CREATE"));
+			dispatch(createOrUpdateCategory(dataCreateOrUpdate, "CREATE"));
 		} else {
-			dispatch(createOrUpdateRole(dataCreateOrUpdate, "UPDATE", data._id));
+			dispatch(
+				createOrUpdateCategory(dataCreateOrUpdate, "UPDATE", data._id)
+			);
 		}
 		// }
 	};
@@ -119,7 +127,7 @@ function RoleManage() {
 	const columns = [
 		// CONFIG
 		{
-			title: "Role",
+			title: "Category",
 			dataIndex: "index",
 			key: "index",
 			render: (text, record, index) => <span>{index + 1}</span>,
@@ -183,7 +191,7 @@ function RoleManage() {
 				<div className={styles.btnWrap}>
 					<ButtonMASQ
 						textBtn={"Save"}
-						loading={isLoadingBtnCreateOrUpdateRole}
+						loading={isLoadingBtnCreateOrUpdateCategory}
 						onClick={() => handleConfirmCreateOrUpdate()}
 						disable={false}
 						style={{
@@ -199,7 +207,7 @@ function RoleManage() {
 
 	return (
 		<>
-			<h1>Role management</h1>
+			<h1>Category management</h1>
 			<TableManage
 				// CONFIG
 				data={data}
@@ -208,24 +216,26 @@ function RoleManage() {
 				handleShowConfirmDelete={handleShowConfirmDelete}
 				handleConfirmDelete={handleConfirmDelete}
 				columns={columns}
-				dataSource={roles}
-				pagination={paginationListRole}
+				dataSource={categories}
+				pagination={paginationListCategory}
 				dataFilter={dataFilter}
 				setDataFilter={setDataFilter}
-				loading={isLoadingGetListRole}
-				visibleModalDelete={visibleModalDeleteRole}
-				setVisibleModalDelete={setVisibleModalDeleteRole}
+				loading={isLoadingGetListCategory}
+				visibleModalDelete={visibleModalDeleteCategory}
+				setVisibleModalDelete={setVisibleModalDeleteCategory}
 			/>
 			<ModalCreateOrUpdate
 				// CONFIG
 				CreateOrUpdateElement={CreateOrUpdateElement}
 				configModal={configModal}
 				handleReloadData={handleReloadData}
-				visibleModalCreateOrUpdate={visibleModalCreateOrUpdateRole}
-				setVisibleModalCreateOrUpdate={setVisibleModalCreateOrUpdateRole}
+				visibleModalCreateOrUpdate={visibleModalCreateOrUpdateCategory}
+				setVisibleModalCreateOrUpdate={
+					setVisibleModalCreateOrUpdateCategory
+				}
 			/>
 		</>
 	);
 }
 
-export default RoleManage;
+export default CategoryManage;

@@ -7,8 +7,10 @@ import { getTotalUsers } from "api/manage";
 import RoleManage from "./components/RoleManage";
 import TypeManage from "./components/TypeManage";
 import IndustryManage from "./components/IndustryManage";
-
-const UserManagement = React.lazy(() => import("../UserManagement"));
+import UserManagement from "../UserManagement";
+import ExperienceLevelManage from "./components/ExperienceLevelManage";
+import CategoryManage from "./components/CategoryManage";
+import SkillManage from "./components/SkillManage";
 
 function Manage() {
 	const [totalUsersView, setTotalUsers] = useState(0);
@@ -171,6 +173,9 @@ function Manage() {
 			<RoleManage />
 			<TypeManage />
 			<IndustryManage />
+			<ExperienceLevelManage />
+			<CategoryManage />
+			<SkillManage />
 		</div>
 	);
 }
