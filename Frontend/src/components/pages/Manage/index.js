@@ -7,8 +7,7 @@ import { getTotalUsers } from "api/manage";
 import RoleManage from "./components/RoleManage";
 import TypeManage from "./components/TypeManage";
 import IndustryManage from "./components/IndustryManage";
-
-const UserManagement = React.lazy(() => import("../UserManagement"));
+import UserManagement from "../UserManagement";
 
 function Manage() {
 	const [totalUsersView, setTotalUsers] = useState(0);

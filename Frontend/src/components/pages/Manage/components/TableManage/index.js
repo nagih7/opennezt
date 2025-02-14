@@ -5,57 +5,29 @@ import InputMASQ from "./../../../../UI/Input/index";
 import ButtonMASQ from "./../../../../UI/Button/index";
 import IconDeleteTable from "../../../../../assets/images/icon/table/delete_14x14.svg";
 import IconEditTable from "../../../../../assets/images/icon/table/edit_12x12.svg";
-import SwitchMASQ from "./../../../../UI/Switch/index";
 import ModalConfirm from "./../../../../UI/Modal/ModalConfirm/index";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { IconlyEdit, IconlyDelete } from "components/UI/Iconly";
 import _ from "lodash";
-import CreateOrUpdate from "components/pages/UserManagement/components/CreateOrUpdate";
-// import Filter from "./components/Filter";
-// import BtnFilter from "../../UI/ButtonFilter";
+// import Filter from "components/pages/UserManagement/components/Filter";
+// import BtnFilter from "components/UI/ButtonFilter";
 
 function TableManage({
+	data,
+	handleCreate,
+	handleUpdate,
+	handleShowConfirmDelete,
+	handleConfirmDelete,
 	columns,
 	dataSource,
 	pagination,
+	dataFilter,
+	setDataFilter,
 	loading,
-	visibleModalCreateOrUpdate,
 	visibleModalDelete,
-	setVisibleModalCreateOrUpdate,
 	setVisibleModalDelete,
 }) {
-	const [data, setData] = useState({});
-	const [configModal, setConfigModal] = useState({
-		title: "Create user",
-		type: "CREATE",
-	});
-
-	const handleCreate = () => {
-		dispatch(setVisibleModalCreateOrUpdateEmployee(true));
-		setConfigModal({
-			title: "Create user",
-			type: "CREATE",
-		});
-	};
-
-	const handleEdit = (data) => {
-		let dataSelect = _.cloneDeep(data);
-		setData(dataSelect);
-		dispatch(setVisibleModalCreateOrUpdate(true));
-		setConfigModal({
-			title: "Update user",
-			type: "UPDATE",
-		});
-	};
-
-	const handleShowConfirmDelete = (data) => {
-		let dataSelect = _.cloneDeep(data);
-		setData(dataSelect);
-		dispatch(setVisibleModalDelete(true));
-	};
-
-	const handleConfirmDelete = () => {
-		dispatch(handleDeleteEmployee(employee.id));
-	};
+	const dispatch = useDispatch();
 
 	const changeCurrentPage = (page) => {
 		setDataFilter({ ...dataFilter, page: page });
@@ -77,10 +49,6 @@ function TableManage({
 		}
 	};
 
-	const handleChangeStatus = (value) => {
-		setDataFilter({ ...dataFilter, status: value.toString() });
-	};
-
 	const columnsData = [
 		...columns,
 		{
@@ -88,19 +56,27 @@ function TableManage({
 			key: "action",
 			fixed: "right",
 			align: "center",
-			width: "10rem",
+			width: "7rem",
 			render: (text, record) => (
 				<>
 					<div className={styles.btnAction}>
 						<div
-							onClick={() => handleEdit(record)}
+							onClick={() => handleUpdate(record)}
 							className={styles.btnWrap}>
-							<img src={IconEditTable} alt="" />
+							<IconlyEdit
+								size={25}
+								color={"#000000"}
+								className={styles.iconAction}
+							/>
 						</div>
 						<div
 							onClick={() => handleShowConfirmDelete(record)}
 							className={styles.btnWrap}>
-							<img src={IconDeleteTable} alt="" />
+							<IconlyDelete
+								size={25}
+								color={"#000000"}
+								className={styles.iconAction}
+							/>
 						</div>
 
 						{/* <div
@@ -136,11 +112,11 @@ function TableManage({
 						/>
 					</div>
 				</div>
-				<div className={styles.boxFilterWrap}>
-					{/* <div className={styles.inputWrap}>
+				{/* <div className={styles.boxFilterWrap}>
+					<div className={styles.inputWrap}>
 						<InputMASQ
 							placeholder="Search by name, email or phone"
-							// value={dataFilter.keySearch}
+							value={dataFilter.keySearch}
 							onChange={(e) => handleSearch(e)}
 						/>
 						<svg
@@ -162,16 +138,16 @@ function TableManage({
 								</clipPath>
 							</defs>
 						</svg>
-					</div> */}
-					{/* <BtnFilter
+					</div>
+					<BtnFilter
 						content={
 							<Filter
-								statusUser={dataFilter.status}
+								// statusUser={dataFilter.status}
 								onChangeStatus={handleChangeStatus}
 							/>
 						}
-					/> */}
-				</div>
+					/>
+				</div> */}
 				<TableCustom
 					columns={columnsData}
 					loading={loading}
@@ -183,15 +159,15 @@ function TableManage({
 				/>
 			</div>
 
-			<CreateOrUpdate employee={data} configModal={configModal} />
-
-			<ModalConfirm
-				isModalOpen={visibleModalDelete}
-				title={`Delete ${data.name}?`}
-				description={`Are you sure you want to delete ${data.name}? Your action can not be undone.`}
-				onClose={() => dispatch(setVisibleModalCreateOrUpdate(true))}
-				onConfirm={() => handleConfirmDelete()}
-			/>
+			{data && (
+				<ModalConfirm
+					isModalOpen={visibleModalDelete}
+					title={`Delete ${data.name}?`}
+					description={`Are you sure you want to delete ${data.name}? Your action can not be undone.`}
+					onClose={() => dispatch(setVisibleModalDelete(false))}
+					onConfirm={() => handleConfirmDelete()}
+				/>
+			)}
 		</div>
 	);
 }

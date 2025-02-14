@@ -45,6 +45,8 @@ export async function register({avatar, ...requestBody}) {
         return generateToken({user_id: user._id}, TOKEN_TYPE.VERIFY_EMAIL, VERIFY_EMAIL_EXPIRE_IN)
     } else {
         const newUser = new User(requestBody)
+        const userRole = await Role.findOne({name: 'User'})
+        newUser.role_id = userRole._id
         await newUser.save()
 
         return generateToken({user_id: newUser._id}, TOKEN_TYPE.VERIFY_EMAIL, VERIFY_EMAIL_EXPIRE_IN)

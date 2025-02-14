@@ -25,15 +25,43 @@ const manageSlice = createSlice({
 			totalPage: 1,
 			totalRecord: 0,
 		},
+		paginationListCategory: {
+			currentPage: 1,
+			perPage: 10,
+			totalPage: 1,
+			totalRecord: 0,
+		},
+		paginationListSkill: {
+			currentPage: 1,
+			perPage: 10,
+			totalPage: 1,
+			totalRecord: 0,
+		},
 		isLoadingGetListRole: false,
 		visibleModalCreateOrUpdateRole: false,
+		isLoadingBtnCreateOrUpdateRole: false,
 		visibleModalDeleteRole: false,
+		isLoadingDeleteRole: false,
 		isLoadingGetListType: false,
 		visibleModalCreateOrUpdateType: false,
+		isLoadingBtnCreateOrUpdateType: false,
 		visibleModalDeleteType: false,
+		isLoadingDeleteType: false,
 		isLoadingGetListIndustry: false,
 		visibleModalCreateOrUpdateIndustry: false,
+		isLoadingBtnCreateOrUpdateIndustry: false,
 		visibleModalDeleteIndustry: false,
+		isLoadingDeleteIndustry: false,
+		isLoadingGetListCategory: false,
+		visibleModalCreateOrUpdateCategory: false,
+		isLoadingBtnCreateOrUpdateCategory: false,
+		visibleModalDeleteCategory: false,
+		isLoadingDeleteCategory: false,
+		isLoadingGetListSkill: false,
+		visibleModalCreateOrUpdateSkill: false,
+		isLoadingBtnCreateOrUpdateSkill: false,
+		visibleModalDeleteSkill: false,
+		isLoadingDeleteSkill: false,
 	},
 	reducers: {
 		startRequestGetTotalUsers: (state) => ({
@@ -75,6 +103,32 @@ const manageSlice = createSlice({
 			...state,
 			visibleModalDeleteRole: action.payload,
 		}),
+		requestCreateOrUpdateRole: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateRole: true,
+		}),
+		createOrUpdateRoleSuccess: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateRole: false,
+			visibleModalCreateOrUpdateRole: false,
+		}),
+		createOrUpdateRoleFail: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateRole: false,
+		}),
+		requestDeleteRole: (state) => ({
+			...state,
+			isLoadingDeleteRole: true,
+		}),
+		deleteRoleSuccess: (state) => ({
+			...state,
+			isLoadingDeleteRole: false,
+			visibleModalDeleteRole: false,
+		}),
+		deleteRoleFail: (state) => ({
+			...state,
+			isLoadingDeleteRole: false,
+		}),
 
 		// TYPES
 		requestGetListType: (state) => ({
@@ -103,6 +157,32 @@ const manageSlice = createSlice({
 		setVisibleModalDeleteType: (state, action) => ({
 			...state,
 			visibleModalDeleteType: action.payload,
+		}),
+		requestCreateOrUpdateType: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateType: true,
+		}),
+		createOrUpdateTypeSuccess: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateType: false,
+			visibleModalCreateOrUpdateType: false,
+		}),
+		createOrUpdateTypeFail: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateType: false,
+		}),
+		requestDeleteType: (state) => ({
+			...state,
+			isLoadingDeleteType: true,
+		}),
+		deleteTypeSuccess: (state) => ({
+			...state,
+			isLoadingDeleteType: false,
+			visibleModalDeleteType: false,
+		}),
+		deleteTypeFail: (state) => ({
+			...state,
+			isLoadingDeleteType: false,
 		}),
 
 		// INDUSTRIES
@@ -133,28 +213,200 @@ const manageSlice = createSlice({
 			...state,
 			visibleModalDeleteIndustry: action.payload,
 		}),
+		requestCreateOrUpdateIndustry: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateIndustry: true,
+		}),
+		createOrUpdateIndustrySuccess: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateIndustry: false,
+			visibleModalCreateOrUpdateIndustry: false,
+		}),
+		createOrUpdateIndustryFail: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateIndustry: false,
+		}),
+		requestDeleteIndustry: (state) => ({
+			...state,
+			isLoadingDeleteIndustry: true,
+		}),
+		deleteIndustrySuccess: (state) => ({
+			...state,
+			isLoadingDeleteIndustry: false,
+			visibleModalDeleteIndustry: false,
+		}),
+		deleteIndustryFail: (state) => ({
+			...state,
+			isLoadingDeleteIndustry: false,
+		}),
+
+		// CATEGORIES
+		requestGetListCategory: (state) => ({
+			...state,
+			isLoadingGetListCategory: true,
+		}),
+		getListCategorySuccess: (state, action) => ({
+			...state,
+			isLoadingGetListCategory: false,
+			categories: action.payload.data.categories,
+			paginationListCategory: {
+				currentPage: action.payload.data.page,
+				perPage: action.payload.data.per_page,
+				totalPage: action.payload.data.last_page,
+				totalRecord: action.payload.data.total,
+			},
+		}),
+		getListCategoryFail: (state) => ({
+			...state,
+			isLoadingGetListCategory: false,
+		}),
+		setVisibleModalCreateOrUpdateCategory: (state, action) => ({
+			...state,
+			visibleModalCreateOrUpdateCategory: action.payload,
+		}),
+		requestCreateOrUpdateCategory: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateCategory: true,
+		}),
+		createOrUpdateCategorySuccess: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateCategory: false,
+			visibleModalCreateOrUpdateCategory: false,
+		}),
+		createOrUpdateCategoryFail: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateCategory: false,
+		}),
+		requestDeleteCategory: (state) => ({
+			...state,
+			isLoadingDeleteCategory: true,
+		}),
+		deleteCategorySuccess: (state) => ({
+			...state,
+			isLoadingDeleteCategory: false,
+			visibleModalDeleteCategory: false,
+		}),
+		deleteCategoryFail: (state) => ({
+			...state,
+			isLoadingDeleteCategory: false,
+		}),
+
+		// SKILLS
+		requestGetListSkill: (state) => ({
+			...state,
+			isLoadingGetListSkill: true,
+		}),
+		getListSkillSuccess: (state, action) => ({
+			...state,
+			isLoadingGetListSkill: false,
+			skills: action.payload.data.skills,
+			paginationListSkill: {
+				currentPage: action.payload.data.page,
+				perPage: action.payload.data.per_page,
+				totalPage: action.payload.data.last_page,
+				totalRecord: action.payload.data.total,
+			},
+		}),
+		getListSkillFail: (state) => ({
+			...state,
+			isLoadingGetListSkill: false,
+		}),
+		setVisibleModalCreateOrUpdateSkill: (state, action) => ({
+			...state,
+			visibleModalCreateOrUpdateSkill: action.payload,
+		}),
+		requestCreateOrUpdateSkill: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateSkill: true,
+		}),
+		createOrUpdateSkillSuccess: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateSkill: false,
+			visibleModalCreateOrUpdateSkill: false,
+		}),
+		createOrUpdateSkillFail: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateSkill: false,
+		}),
+		requestDeleteSkill: (state) => ({
+			...state,
+			isLoadingDeleteSkill: true,
+		}),
+		deleteSkillSuccess: (state) => ({
+			...state,
+			isLoadingDeleteSkill: false,
+			visibleModalDeleteSkill: false,
+		}),
+		deleteSkillFail: (state) => ({
+			...state,
+			isLoadingDeleteSkill: false,
+		}),
 	},
 });
 
 export const {
+	// USERS
 	startRequestGetTotalUsers,
 	startRequestGetTotalUsersSuccess,
 	startRequestGetTotalUsersFail,
+	// ROLES
 	requestGetListRole,
 	getListRoleSuccess,
 	getListRoleFail,
 	setVisibleModalCreateOrUpdateRole,
 	setVisibleModalDeleteRole,
+	requestCreateOrUpdateRole,
+	createOrUpdateRoleSuccess,
+	createOrUpdateRoleFail,
+	requestDeleteRole,
+	deleteRoleSuccess,
+	deleteRoleFail,
+	// TYPES
 	requestGetListType,
 	getListTypeSuccess,
 	getListTypeFail,
 	setVisibleModalCreateOrUpdateType,
 	setVisibleModalDeleteType,
+	requestCreateOrUpdateType,
+	createOrUpdateTypeSuccess,
+	createOrUpdateTypeFail,
+	requestDeleteType,
+	deleteTypeSuccess,
+	deleteTypeFail,
+	// INDUSTRIES
 	requestGetListIndustry,
 	getListIndustrySuccess,
 	getListIndustryFail,
 	setVisibleModalCreateOrUpdateIndustry,
 	setVisibleModalDeleteIndustry,
+	requestCreateOrUpdateIndustry,
+	createOrUpdateIndustrySuccess,
+	createOrUpdateIndustryFail,
+	requestDeleteIndustry,
+	deleteIndustrySuccess,
+	deleteIndustryFail,
+	// CATEGORIES
+	requestGetListCategory,
+	getListCategorySuccess,
+	getListCategoryFail,
+	setVisibleModalCreateOrUpdateCategory,
+	requestCreateOrUpdateCategory,
+	createOrUpdateCategorySuccess,
+	createOrUpdateCategoryFail,
+	requestDeleteCategory,
+	deleteCategorySuccess,
+	deleteCategoryFail,
+	// SKILLS
+	requestGetListSkill,
+	getListSkillSuccess,
+	getListSkillFail,
+	setVisibleModalCreateOrUpdateSkill,
+	requestCreateOrUpdateSkill,
+	createOrUpdateSkillSuccess,
+	createOrUpdateSkillFail,
+	requestDeleteSkill,
+	deleteSkillSuccess,
+	deleteSkillFail,
 } = manageSlice.actions;
 
 export default manageSlice.reducer;
