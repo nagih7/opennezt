@@ -40,25 +40,25 @@ function AppLayout(props) {
 			<RealtimeProvider>
 				<div className={`${styles.boxMainLayout}`}>
 					<div className={styles.mainLayoutWrap}>
-						<SideBar
-						// isThemeLight={isThemeLight}
-						// isShowSideBar={isShowSideBar}
-						/>
-
+						<Header />
 						<div
-							style={{ display: "flex", flexDirection: "column" }}
+							style={{ display: "flex" }}
 							className={`${styles.mainWrap} ${
 								!isShowSideBar
 									? styles.mainWrapWithConditionSideBarClose
 									: ""
-							}, h-full`}>
-							<Header />
-							<div className="flex w-full h-full max-h-full overflow-y-scroll ">
-								<main className={`$styles.mainContentWrap,w-full`}>
+							}, h-full `}>
+							<SideBar
+							// isThemeLight={isThemeLight}
+							// isShowSideBar={isShowSideBar}
+							/>
+							<div className="flex justify-center flex-1 w-full h-full max-h-full ">
+								<main
+									className={`${styles.mainContentWrap} w-full flex flex-col  items-center`}>
 									<LazyLoading>{children}</LazyLoading>
+									<Footer />
 								</main>
 							</div>
-							<Footer />
 						</div>
 					</div>
 				</div>
