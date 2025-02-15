@@ -14,8 +14,13 @@ import MessageBoxList from "./components/MessageBoxList";
 import AvatarDefault from "assets/images/default/AvatarDefault.png";
 import { LANG } from "utils/constains";
 import { setLanguage } from "states/modules/app";
-import { IconlySearch } from "components/UI/Iconly";
+import {
+	IconlyChat,
+	IconlyNotification,
+	IconlySearch,
+} from "components/UI/Iconly";
 import avt from "assets/images/background/avt.jpg";
+import Logo from "assets/images/logo/OpenNezt_logo_black.png";
 
 const Header = () => {
 	const dispatch = useDispatch();
@@ -183,43 +188,124 @@ const Header = () => {
 		// 		</div>
 		// 	</div>
 		// </header>
-		<header className="bg-[#ffffff]">
-			<div className="flex justify-between items-center h-[70px] px-4">
-				<div className="flex items-center gap-4 text-sm font-semibold text-[#6f7f92]">
-				    <div>HOME</div>
-					<div className="flex items-center text-[#2f65b9]">
-						COMMUNITY
-						<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="undefined"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
-					</div>
-					<div className="flex items-center">
-						PAGES
-						<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="undefined"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
-					</div>
-					<div className="flex items-center">
-						BLOG
-						<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="undefined"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg> 
-					</div>
-					<div className="flex items-center">
-						SHOP 
-						<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="undefined"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
-					</div>
-					<div>COUESER</div>
+		<header className="bg-[#ffffff] w-full">
+			<div className="flex items-center h-[70px] px-4">
+				<div className="h-full">
+					<img
+						src={Logo}
+						alt="logo-opennezt"
+						className="py-[18px] px-8 bg-[#ffffff]  h-full"
+					/>
 				</div>
-				<div className="flex items-center gap-4">
-					<form action="" className="flex items-center bg-[#f8f9fa] rounded-md w-[240px] h-[40px] border-[1px]  border-gray-200 ">
-						<button className="w-10 h-10 flex items-center justify-center">
-							<IconlySearch size={16} color={"#6f7f92"} className="text-gray-400" />
-						</button>
-						<input
-							type="text"
-							placeholder="Search Here"
-							className="bg-[#f8f9fa] outline-none text-sm font-medium pr-4 text-[#6f7f92]"
-						/>
-					</form>
-					<ZoomOutMapIcon  className="text-[#6f7f92]"/>
-					<NotificationsIcon  className="text-[#6f7f92]"/>
-					<ChatBubbleOutlineIcon  className="text-[#6f7f92]"/>
-					<img src={avt} className="w-[50px] h-[50px] rounded-full" />
+				<div className="flex items-center justify-between flex-1">
+					<div className="flex items-center gap-4 text-sm font-semibold text-[#6f7f92]">
+						{/* <div>HOME</div>
+						<div className="flex items-center text-[#2f65b9]">
+							COMMUNITY
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								height="24px"
+								viewBox="0 -960 960 960"
+								width="24px"
+								fill="undefined">
+								<path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
+							</svg>
+						</div>
+						<div className="flex items-center">
+							PAGES
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								height="24px"
+								viewBox="0 -960 960 960"
+								width="24px"
+								fill="undefined">
+								<path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
+							</svg>
+						</div>
+						<div className="flex items-center">
+							BLOG
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								height="24px"
+								viewBox="0 -960 960 960"
+								width="24px"
+								fill="undefined">
+								<path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
+							</svg>
+						</div>
+						<div className="flex items-center">
+							SHOP
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								height="24px"
+								viewBox="0 -960 960 960"
+								width="24px"
+								fill="undefined">
+								<path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
+							</svg>
+						</div>
+						<div>COUESER</div> */}
+					</div>
+					<div className="flex items-center gap-4">
+						<form
+							action=""
+							className="flex items-center bg-[#f8f9fa] rounded-md w-[240px] h-[40px] border-[1px]  border-gray-200 ">
+							<button className="flex items-center justify-center w-10 h-10">
+								<IconlySearch
+									size={16}
+									color={"#6f7f92"}
+									className="text-gray-400"
+								/>
+							</button>
+							<input
+								type="text"
+								placeholder="Search Here"
+								className="bg-[#f8f9fa] outline-none text-sm font-medium pr-4 text-[#6f7f92]"
+							/>
+						</form>
+						<div
+							className={`${styles.itemHeaderRight}`}
+							onClick={() => openFullScreen()}>
+							<div className={`${styles.iconWrap}`}>
+								{isFullScreen ? (
+									<ZoomInMapIcon color="#6f7f92" />
+								) : (
+									<ZoomOutMapIcon color="#6f7f92" />
+								)}
+							</div>
+						</div>
+						{/* Notification */}
+						<Popover
+							className={`popover-info-wrap`}
+							placement="bottomRight"
+							content={contentNotification}
+							trigger="click">
+							<div
+								className={`${styles.itemHeaderRight} ${styles.notificationAnimationWrap}`}>
+								<div className={`${styles.iconWrap}`}>
+									<IconlyNotification size={24} color="#6f7f92" />
+								</div>
+							</div>
+						</Popover>
+						{/* Chat */}
+						<div className={styles.popover} ref={chatListRef}>
+							<div
+								onClick={() => showChatList()}
+								className={`${styles.itemHeaderRight} ${styles.messageAnimationWrap}`}>
+								<div className={`${styles.iconWrap}`}>
+									<IconlyChat size={24} color="#6f7f92" />
+								</div>
+							</div>
+							<div
+								className={`${styles.chatListWrap} ${
+									isShowChatList ? styles.visible : ""
+								}`}>
+								<ChatList />
+							</div>
+							<MessageBoxList />
+						</div>
+						<img src={avt} className="w-[50px] h-[50px] rounded-full" />
+					</div>
 				</div>
 			</div>
 		</header>

@@ -5,6 +5,7 @@ import _ from "lodash";
 import ModalGeneral from "../../../../../components/UI/Modal/ModalGeneral";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
+import { getSkillCategories } from "api/manage";
 
 ModalCreateOrUpdate.prototype = {
 	isModalOpen: PropTypes.bool.isRequired,
@@ -30,6 +31,10 @@ function ModalCreateOrUpdate({
 	setVisibleModalCreateOrUpdate,
 }) {
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(getSkillCategories());
+	}, [dispatch]);
 
 	useEffect(() => {
 		handleReloadData();
