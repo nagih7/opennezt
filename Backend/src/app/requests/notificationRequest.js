@@ -11,18 +11,35 @@ export const readRoot = Joi.object({
     order: tryValidateOrDefault(Joi.valid('1', '-1'), '-1'),
 })
 
+// export const requestAddFriend = Joi.object({
+//     user_id: Joi.string()
+//         .required()
+//         .label('User ID')
+//         .custom(
+//             (value, helpers) =>
+//                 new AsyncValidate(value, async () => {
+//                     const user = await User.findById(value)
+//                     return user ? value : helpers.error('any.empty')
+//                 })
+//         ),
+//     metadata: Joi.object().label('Metadata'),
+// })
+
 export const requestAddFriend = Joi.object({
     user_id: Joi.string()
         .required()
         .label('User ID')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async () => {
-                    const user = await User.findById(value)
-                    return user ? value : helpers.error('any.empty')
-                })
-        ),
-    metadata: Joi.object().label('Metadata'),
+        .external(async (value) => {
+            const user = await User.findById(value)
+            if (!user) {
+                throw new Error('User ID không hợp lệ.')
+            }
+            return value
+        }),
+    metadata: Joi.object({
+        read: Joi.boolean().default(false),
+        status: Joi.string().valid('waiting', 'accepted', 'rejected')
+    }).label('Metadata'),
 })
 
 export const replyNotification = Joi.object({
