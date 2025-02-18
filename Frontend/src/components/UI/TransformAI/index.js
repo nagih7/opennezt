@@ -3,7 +3,7 @@ import TransformAIGif from "../../../assets/images/GIF/transformAI.mp4";
 
 const TransformAI = () => {
 	return (
-		<div style={{ width: "30rem" }}>
+		<div style={{ width: "30rem", margin: "0 auto" }}>
 			<video
 				autoPlay
 				loop

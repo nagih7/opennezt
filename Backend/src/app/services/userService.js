@@ -76,6 +76,9 @@ export async function remove(user) {
         FileUpload.remove(user.avatar)
     }
     await User.deleteOne({_id: user._id})
+    await FounderProfile.deleteOne({user_id: user._id})
+    await Project.deleteMany({user_id: user._id})
+    await NotificationFeed.deleteMany({$or: [{user_id: user._id}, {source_id: user._id}]})
 }
 
 export async function createFounderProfile(user, requestBody) {
