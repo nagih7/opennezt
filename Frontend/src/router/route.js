@@ -4,6 +4,7 @@ import { rootLoader } from "./rootLoader";
 
 import AppLayout from "components/layouts/AppLayout";
 import AuthLayout from "components/layouts/AuthLayout";
+import EditProfile from "components/pages/EditProfile";
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import("../components/pages/Auth/Login"));
@@ -186,6 +187,16 @@ const router = createBrowserRouter([
 		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROJECTS_NOTIFICATION_PAGE"),
+	},
+	{
+		path: "/about/edit-profile",
+		element: (
+			<AppLayout>
+				<EditProfile />
+			</AppLayout>
+		),
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_EDIT_PROFILE_PAGE"),
 	},
 ]);
 

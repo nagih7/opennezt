@@ -327,3 +327,136 @@ export const IconlyLocation = ({ size, color }) => {
 		</svg>
 	);
 };
+
+export const IconlyCalendar = ({ size, color}) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path fillRule="evenodd" clipRule="evenodd" d="M2.74976 12.7756C2.74976 5.81959 5.06876 3.50159 12.0238 3.50159C18.9798 3.50159 21.2988 5.81959 21.2988 12.7756C21.2988 19.7316 18.9798 22.0496 12.0238 22.0496C5.06876 22.0496 2.74976 19.7316 2.74976 12.7756Z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path d="M3.02515 9.32397H21.0331" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path d="M16.4285 13.261H16.4375" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path d="M12.0291 13.261H12.0381" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path d="M7.62135 13.261H7.63035" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path d="M16.4285 17.1129H16.4375" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path d="M12.0291 17.1129H12.0381" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path d="M7.62135 17.1129H7.63035" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path d="M16.033 2.05005V5.31205" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path d="M8.02466 2.05005V5.31205" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		</svg> 
+		) 
+}
+
+export const IconlyProfile = ({ size, color}) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path fillRule="evenodd" clipRule="evenodd" d="M11.8445 21.6619C8.15273 21.6619 5 21.0874 5 18.7867C5 16.4859 8.13273 14.3619 11.8445 14.3619C15.5364 14.3619 18.6891 16.4653 18.6891 18.7661C18.6891 21.0659 15.5564 21.6619 11.8445 21.6619Z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path fillRule="evenodd" clipRule="evenodd" d="M11.8372 11.1737C14.26 11.1737 16.2236 9.21002 16.2236 6.7873C16.2236 4.36457 14.26 2.40002 11.8372 2.40002C9.41452 2.40002 7.44998 4.36457 7.44998 6.7873C7.4418 9.20184 9.3918 11.1655 11.8063 11.1737C11.8172 11.1737 11.8272 11.1737 11.8372 11.1737Z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		</svg> 
+		) 
+}
+
+export const IconlyUser = ({ size, color}) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path fillRule="evenodd" clipRule="evenodd" d="M9.55851 21.4562C5.88651 21.4562 2.74951 20.9012 2.74951 18.6772C2.74951 16.4532 5.86651 14.4492 9.55851 14.4492C13.2305 14.4492 16.3665 16.4342 16.3665 18.6572C16.3665 20.8802 13.2505 21.4562 9.55851 21.4562Z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path fillRule="evenodd" clipRule="evenodd" d="M9.55861 11.2776C11.9686 11.2776 13.9226 9.32356 13.9226 6.91356C13.9226 4.50356 11.9686 2.54956 9.55861 2.54956C7.14861 2.54956 5.19461 4.50356 5.19461 6.91356C5.18561 9.31556 7.12661 11.2696 9.52761 11.2776H9.55861Z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path d="M16.8013 10.0789C18.2043 9.70388 19.2383 8.42488 19.2383 6.90288C19.2393 5.31488 18.1123 3.98888 16.6143 3.68188" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		<path d="M17.4607 13.6536C19.4487 13.6536 21.1467 15.0016 21.1467 16.2046C21.1467 16.9136 20.5617 17.6416 19.6717 17.8506" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+		</svg> 
+		) 
+}
+
+export const Iconlyuser = ({ size, color}) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path fillRule="evenodd" clipRule="evenodd" d="M11.9729 12.14H11.9989C14.5359 12.14 16.5999 10.077 16.5999 7.54098C16.5999 5.00398 14.5359 2.94098 11.9989 2.94098C9.46294 2.94098 7.39894 5.00398 7.39894 7.53898C7.39294 10.068 9.44294 12.132 11.9729 12.14ZM8.89894 7.54098C8.89894 5.83198 10.2899 4.44098 11.9989 4.44098C13.7089 4.44098 15.0999 5.83198 15.0999 7.54098C15.0999 9.24998 13.7089 10.64 11.9989 10.64H11.9749C10.2739 10.634 8.89494 9.24498 8.89894 7.54098Z" fill={color}></path>
+		<path fillRule="evenodd" clipRule="evenodd" d="M5.24316 17.8571C5.24316 21.0591 10.3282 21.0591 11.9992 21.0591C13.6702 21.0591 18.7552 21.0591 18.7552 17.8401C18.7552 15.4131 15.7252 13.4371 11.9992 13.4371C8.27316 13.4371 5.24316 15.4191 5.24316 17.8571ZM6.74316 17.8571C6.74316 16.4791 8.99116 14.9371 11.9992 14.9371C15.0072 14.9371 17.2552 16.4701 17.2552 17.8401C17.2552 19.2611 14.3962 19.5591 11.9992 19.5591C9.60216 19.5591 6.74316 19.2641 6.74316 17.8571Z" fill={color}></path>
+		<path d="M18.3897 11.0826C18.0577 11.0826 17.7547 10.8616 17.6647 10.5266C17.5577 10.1266 17.7957 9.71556 18.1957 9.60756C19.1327 9.35656 19.7877 8.50256 19.7877 7.53056C19.7877 6.51356 19.0677 5.62756 18.0737 5.42556C17.6677 5.34256 17.4067 4.94556 17.4887 4.53956C17.5727 4.13456 17.9667 3.87856 18.3737 3.95456C20.0627 4.29956 21.2877 5.80356 21.2877 7.53056C21.2877 9.18056 20.1757 10.6306 18.5837 11.0576C18.5187 11.0746 18.4527 11.0826 18.3897 11.0826Z" fill={color}></path>
+		<path d="M20.1912 17.3991C20.2732 17.7451 20.5802 17.9771 20.9202 17.9771C20.9782 17.9771 21.0352 17.9701 21.0932 17.9571C22.1642 17.7051 22.9732 16.7501 22.9732 15.7371C22.9732 14.1661 21.0662 12.7361 18.9712 12.7361C18.5572 12.7361 18.2212 13.0721 18.2212 13.4861C18.2212 13.9001 18.5572 14.2361 18.9712 14.2361C20.4412 14.2361 21.4732 15.2091 21.4732 15.7371C21.4732 15.9841 21.2222 16.3861 20.7492 16.4971C20.3462 16.5921 20.0962 16.9961 20.1912 17.3991Z" fill={color}></path>
+		<path d="M5.61143 11.0826C5.54843 11.0826 5.48243 11.0746 5.41843 11.0576C3.82443 10.6316 2.71143 9.18156 2.71143 7.53056C2.71143 5.80356 3.93743 4.29956 5.62643 3.95456C6.03343 3.87856 6.42843 4.13456 6.51143 4.53956C6.59343 4.94556 6.33243 5.34256 5.92643 5.42556C4.93243 5.62756 4.21143 6.51356 4.21143 7.53056C4.21143 8.50256 4.86643 9.35656 5.80443 9.60756C6.20543 9.71556 6.44243 10.1266 6.33643 10.5256C6.24643 10.8616 5.94343 11.0826 5.61143 11.0826Z" fill={color}></path>
+		<path d="M2.90686 17.9571C2.96486 17.9711 3.02186 17.9771 3.07986 17.9771C3.41986 17.9771 3.72686 17.7451 3.80886 17.3991C3.90386 16.9961 3.65386 16.5911 3.25086 16.4971C2.77786 16.3861 2.52686 15.9841 2.52686 15.7371C2.52686 15.2091 3.55886 14.2361 5.02886 14.2361C5.44286 14.2361 5.77886 13.9001 5.77886 13.4861C5.77886 13.0721 5.44286 12.7361 5.02886 12.7361C2.93386 12.7361 1.02686 14.1661 1.02686 15.7371C1.02686 16.7501 1.83586 17.7061 2.90686 17.9571Z" fill={color}></path>
+		</svg> 
+		) 
+}
+
+export const IconlyNotification = ({ size, color}) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+		    <title>Iconly/Light/Notification</title>
+		    <g id="Iconly/Light/Notification" stroke="none" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
+		        <g id="Notification" transform="translate(3.500000, 2.000000)" stroke={color} strokeWidth="1.5">
+		            <path d="M8.5,15.8476424 C14.13923,15.8476424 16.7480515,15.1242108 17,12.220506 C17,9.31879687 15.1811526,9.50539234 15.1811526,5.94511102 C15.1811526,3.16414015 12.5452291,-1.86517468e-14 8.5,-1.86517468e-14 C4.4547709,-1.86517468e-14 1.81884743,3.16414015 1.81884743,5.94511102 C1.81884743,9.50539234 0,9.31879687 0,12.220506 C0.252952291,15.135187 2.86177374,15.8476424 8.5,15.8476424 Z" id="Stroke-1"></path>
+		            <path d="M10.8887931,18.8572176 C9.52465753,20.3719337 7.3966462,20.3898948 6.0194615,18.8572176" id="Stroke-3"></path>
+		        </g>
+		    </g>
+		</svg> 
+		) 
+}
+
+export const IconlyMessage = ({ size, color}) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+		    <title>Iconly/Light/Message</title>
+		    <g id="Iconly/Light/Message" stroke="none" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
+		        <g id="Message" transform="translate(2.000000, 3.000000)" stroke={color} strokeWidth="1.5">
+		            <path d="M15.9026143,5.8511436 L11.4593272,9.46418164 C10.6198313,10.1301843 9.4387043,10.1301843 8.59920842,9.46418164 L4.11842516,5.8511436" id="Stroke-1"></path>
+		            <path d="M14.9088637,17.9999789 C17.9502135,18.0083748 20,15.5095497 20,12.4383622 L20,5.57001263 C20,2.49882508 17.9502135,5.32907052e-15 14.9088637,5.32907052e-15 L5.09113634,5.32907052e-15 C2.04978648,5.32907052e-15 1.77635684e-15,2.49882508 1.77635684e-15,5.57001263 L1.77635684e-15,12.4383622 C1.77635684e-15,15.5095497 2.04978648,18.0083748 5.09113634,17.9999789 L14.9088637,17.9999789 Z" id="Stroke-3"></path>
+		        </g>
+		    </g>
+		</svg> 
+		) 
+}
+
+export const IconlyBookmark = ({ size, color}) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+		    <title>Iconly/Light/Bookmark</title>
+		    <g id="Iconly/Light/Bookmark" stroke="none" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
+		        <g id="Bookmark" transform="translate(4.200000, 2.300000)" stroke={color} strokeWidth="1.5">
+		            <path d="M15.5388471,3.85363409 C15.5388471,1.10275689 13.6581454,-2.13162821e-14 10.9503759,-2.13162821e-14 L4.5914787,-2.13162821e-14 C1.96691729,-2.13162821e-14 2.66453526e-15,1.02756892 2.66453526e-15,3.67017544 L2.66453526e-15,18.393985 C2.66453526e-15,19.1197995 0.780952381,19.5769424 1.41353383,19.2220551 L7.79548872,15.6421053 L14.1223058,19.2160401 C14.7558897,19.5729323 15.5388471,19.1157895 15.5388471,18.3889724 L15.5388471,3.85363409 Z" id="Stroke-1"></path>
+		            <line x1="4.071178" y1="6.72802013" x2="11.3894737" y2="6.72802013" id="Stroke-3"></line>
+		        </g>
+		    </g>
+		</svg> 
+		) 
+}
+
+export const IconlyDocument = ({ size, color}) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+		    <title>Iconly/Light-Outline/Document</title>
+		    <g id="Iconly/Light-Outline/Document" stroke="none" strokeWidth="1.5" fill="none" fillRule="evenodd">
+		        <g id="Document" transform="translate(3.000000, 2.000000)" fill={color}>
+		            <path d="M12.9087,8.17124146e-14 C16.0527,8.17124146e-14 18.1647,2.153 18.1647,5.357 L18.1647,14.553 C18.1647,17.785 16.1177,19.887 12.9497,19.907 L5.2567,19.91 C2.1127,19.91 -0.0003,17.757 -0.0003,14.553 L-0.0003,5.357 C-0.0003,2.124 2.0467,0.023 5.2147,0.004 L12.9077,8.17124146e-14 L12.9087,8.17124146e-14 Z M12.9087,1.5 L5.2197,1.504 C2.8917,1.518 1.4997,2.958 1.4997,5.357 L1.4997,14.553 C1.4997,16.968 2.9047,18.41 5.2557,18.41 L12.9447,18.407 C15.2727,18.393 16.6647,16.951 16.6647,14.553 L16.6647,5.357 C16.6647,2.942 15.2607,1.5 12.9087,1.5 Z M12.7158,13.4737 C13.1298,13.4737 13.4658,13.8097 13.4658,14.2237 C13.4658,14.6377 13.1298,14.9737 12.7158,14.9737 L5.4958,14.9737 C5.0818,14.9737 4.7458,14.6377 4.7458,14.2237 C4.7458,13.8097 5.0818,13.4737 5.4958,13.4737 L12.7158,13.4737 Z M12.7158,9.2872 C13.1298,9.2872 13.4658,9.6232 13.4658,10.0372 C13.4658,10.4512 13.1298,10.7872 12.7158,10.7872 L5.4958,10.7872 C5.0818,10.7872 4.7458,10.4512 4.7458,10.0372 C4.7458,9.6232 5.0818,9.2872 5.4958,9.2872 L12.7158,9.2872 Z M8.2505,5.1104 C8.6645,5.1104 9.0005,5.4464 9.0005,5.8604 C9.0005,6.2744 8.6645,6.6104 8.2505,6.6104 L5.4955,6.6104 C5.0815,6.6104 4.7455,6.2744 4.7455,5.8604 C4.7455,5.4464 5.0815,5.1104 5.4955,5.1104 L8.2505,5.1104 Z" id="Combined-Shape"></path>
+		        </g>
+		    </g>
+		</svg> 
+		) 
+}
+
+export const IconlyEditSquare = ({ size, color}) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+		    <title>Iconly/Light/Edit Square</title>
+		    <g id="Iconly/Light/Edit-Square" stroke="none" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
+		        <g id="Edit-Square" transform="translate(2.000000, 2.000000)" stroke={color} strokeWidth="1.5">
+		            <path d="M9.4923,0.789 L5.7533,0.789 C2.6783,0.789 0.7503,2.966 0.7503,6.048 L0.7503,14.362 C0.7503,17.444 2.6693,19.621 5.7533,19.621 L14.5773,19.621 C17.6623,19.621 19.5813,17.444 19.5813,14.362 L19.5813,10.334" id="Stroke-1"></path>
+		            <path d="M6.8278,8.9209 L14.3008,1.4479 C15.2318,0.5179 16.7408,0.5179 17.6718,1.4479 L18.8888,2.6649 C19.8198,3.5959 19.8198,5.1059 18.8888,6.0359 L11.3798,13.5449 C10.9728,13.9519 10.4208,14.1809 9.8448,14.1809 L6.0988,14.1809 L6.1928,10.4009 C6.2068,9.8449 6.4338,9.3149 6.8278,8.9209 Z" id="Stroke-3"></path>
+		            <line x1="13.1652" y1="2.6025" x2="17.7312" y2="7.1685" id="Stroke-5"></line>
+		        </g>
+		    </g>
+		</svg> 
+		) 
+}
+
+export const IconlyPlus = ({ size, color}) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+		    <title>Iconly/Bold/Plus</title>
+		    <g id="Iconly/Bold/Plus" stroke="none" strokeWidth="1.5" fill="none" fillRule="evenodd">
+		        <g id="Plus" transform="translate(2.000000, 2.000000)" fill={color} fillRule="nonzero">
+		            <path d="M14.6602,0.0001 C18.0602,0.0001 20.0002,1.9201 20.0002,5.3301 L20.0002,5.3301 L20.0002,14.6701 C20.0002,18.0601 18.0702,20.0001 14.6702,20.0001 L14.6702,20.0001 L5.3302,20.0001 C1.9202,20.0001 0.0002,18.0601 0.0002,14.6701 L0.0002,14.6701 L0.0002,5.3301 C0.0002,1.9201 1.9202,0.0001 5.3302,0.0001 L5.3302,0.0001 Z M9.9902,5.5101 C9.5302,5.5101 9.1602,5.8801 9.1602,6.3401 L9.1602,6.3401 L9.1602,9.1601 L6.3302,9.1601 C6.1102,9.1601 5.9002,9.2501 5.7402,9.4001 C5.5902,9.5601 5.5002,9.7691 5.5002,9.9901 C5.5002,10.4501 5.8702,10.8201 6.3302,10.8301 L6.3302,10.8301 L9.1602,10.8301 L9.1602,13.6601 C9.1602,14.1201 9.5302,14.4901 9.9902,14.4901 C10.4502,14.4901 10.8202,14.1201 10.8202,13.6601 L10.8202,13.6601 L10.8202,10.8301 L13.6602,10.8301 C14.1202,10.8201 14.4902,10.4501 14.4902,9.9901 C14.4902,9.5301 14.1202,9.1601 13.6602,9.1601 L13.6602,9.1601 L10.8202,9.1601 L10.8202,6.3401 C10.8202,5.8801 10.4502,5.5101 9.9902,5.5101 Z"></path>
+		        </g>
+		    </g>
+		</svg> 
+		) 
+}

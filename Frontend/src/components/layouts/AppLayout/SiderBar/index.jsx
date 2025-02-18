@@ -37,7 +37,7 @@ function SideBar(props) {
 	const { language } = useSelector((state) => state.app);
 
 	const { authRole } = useSelector((state) => state.auth);
-	console.log("authRole", authRole);
+	  // console.log("authRole", authRole);
 
 	const handleToggleMenu = (indexNavItem, menuNavItem) => {
 		if (menuNavItem.path) {

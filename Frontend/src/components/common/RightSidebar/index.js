@@ -7,7 +7,7 @@ import anh_avt from "assets/images/background/avt.jpg";
 
 function RightSidebar() {
   return (
-    <div className=" mr-5 ">
+    <div className="">
       <div className="bg-[#ffffff] p-8 rounded-md mb-4">
         <div className="flex flex-col">
           <span className="text-xl font-semibold border-b-[1px] border-gray-200 pb-3">
