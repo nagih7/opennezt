@@ -8,14 +8,14 @@ import LazyLoading from "components/UI/LazyLoading";
 import { getProjectDetails } from "api/project";
 import { getRequestAddFriend } from "api/notification";
 import BoxProjectMatching from "components/pages/Project/BoxProjectMatching";
+import TransformAI from "components/UI/TransformAI";
 
 const MatchingProjectsModal = () => {
 	const dispatch = useDispatch();
 
 	const { projectDetails } = useSelector((state) => state.project);
-	const { openModalMatchingProjects, projects } = useSelector(
-		(state) => state.artificialIntelligence
-	);
+	const { openModalMatchingProjects, projects, loadingMatchingProjects } =
+		useSelector((state) => state.artificialIntelligence);
 
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -26,6 +26,13 @@ const MatchingProjectsModal = () => {
 	};
 	return (
 		<>
+			<Modal
+				width={560}
+				open={loadingMatchingProjects}
+				footer={null}
+				style={{ textAlign: "center" }}>
+				<TransformAI />
+			</Modal>
 			<Modal
 				open={openModalMatchingProjects}
 				footer={null}

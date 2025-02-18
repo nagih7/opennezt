@@ -7,7 +7,7 @@ export async function seekProjects(user, requestQuery) {
     const per_page = 6
 
     if (requestQuery.industry) {
-        query.industry = {
+        query.related_industries = {
             $regex: requestQuery.industry,
             $options: 'i',
         }

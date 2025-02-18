@@ -68,14 +68,14 @@ function UserManagement() {
 			width: "10rem",
 			render: (text, record) => (
 				<>
-					{authUser.id !== record.id ? (
+					{authUser._id !== record._id ? (
 						<div className={styles.btnAction}>
 							<div
 								onClick={() => handleEdit(record)}
 								className={styles.btnWrap}>
 								<img src={IconEditTable} alt="" />
 							</div>
-							{authUser.id !== record.id ? (
+							{authUser._id !== record._id ? (
 								<div
 									onClick={() => handleShowConfirmDelete(record)}
 									className={styles.btnWrap}>
@@ -151,7 +151,7 @@ function UserManagement() {
 	};
 
 	const handleConfirmDeleteEmployee = () => {
-		dispatch(handleDeleteEmployee(employee.id));
+		dispatch(handleDeleteEmployee(employee._id));
 	};
 
 	const changeCurrentPage = (page) => {
@@ -253,7 +253,7 @@ function UserManagement() {
 				isModalOpen={visibleModalDeleteEmployee}
 				title={`Delete ${employee.name}?`}
 				description={`Are you sure you want to delete ${employee.name}? Your action can not be undone.`}
-				onClose={() => dispatch(setVisibleModalDeleteEmployee(true))}
+				onClose={() => dispatch(setVisibleModalDeleteEmployee(false))}
 				onConfirm={() => handleConfirmDeleteEmployee()}
 			/>
 		</div>

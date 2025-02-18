@@ -118,7 +118,7 @@ const SeekProjects = () => {
 						value={formSeekProjects.industry}
 						name="industry"
 						onChange={(value, option) =>
-							handleOnChange(option, "industry")
+							handleOnChange(option.value, "industry")
 						}
 						className={styles.searchSelect}
 						placeholder={INPUT_PLACEHOLDER.INDUSTRY[language]}
@@ -127,7 +127,9 @@ const SeekProjects = () => {
 					/>
 					<Select
 						value={formSeekProjects.stage}
-						onChange={(value, option) => handleOnChange(option, "stage")}
+						onChange={(value, option) =>
+							handleOnChange(option.value, "stage")
+						}
 						className={styles.searchSelect}
 						placeholder={INPUT_PLACEHOLDER.STAGE[language]}
 						style={{ width: "13rem" }}

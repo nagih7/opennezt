@@ -10,12 +10,12 @@ import { getTalentDetails } from "api/talent";
 import { getRequestAddFriend } from "api/notification";
 import TalentProfile from "components/common/TalentProfile";
 import Compatibility from "components/UI/Compatibility";
+import TransformAI from "components/UI/TransformAI";
 
 const MatchingTalentsModal = () => {
 	const dispatch = useDispatch();
-	const { openModalMatchingTalents, talents } = useSelector(
-		(state) => state.artificialIntelligence
-	);
+	const { openModalMatchingTalents, talents, loadingMatchingTalents } =
+		useSelector((state) => state.artificialIntelligence);
 	const { language } = useSelector((state) => state.app);
 
 	const [modalTalentDetails, setModalTalentDetails] = useState(false);
@@ -31,6 +31,13 @@ const MatchingTalentsModal = () => {
 
 	return (
 		<>
+			<Modal
+				width={560}
+				open={loadingMatchingTalents}
+				footer={null}
+				style={{ textAlign: "center" }}>
+				<TransformAI />
+			</Modal>
 			<Modal
 				title=""
 				okText="Update now"
