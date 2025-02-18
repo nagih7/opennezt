@@ -19,6 +19,20 @@ import {
 	IconlyNotification,
 	IconlySearch,
 } from "components/UI/Iconly";
+import {
+	Avatar,
+	AvatarGroup,
+	Button,
+	Image,
+	Input,
+	PopoverArrow,
+	PopoverBody,
+	PopoverContent,
+	PopoverRoot,
+	PopoverTitle,
+	PopoverTrigger,
+	Text,
+} from "@chakra-ui/react";
 import avt from "assets/images/background/avt.jpg";
 import Logo from "assets/images/logo/OpenNezt_logo_black.png";
 
@@ -274,7 +288,7 @@ const Header = () => {
 								)}
 							</div>
 						</div>
-						{/* Notification */}
+
 						<Popover
 							className={`popover-info-wrap`}
 							placement="bottomRight"
@@ -287,7 +301,7 @@ const Header = () => {
 								</div>
 							</div>
 						</Popover>
-						{/* Chat */}
+
 						<div className={styles.popover} ref={chatListRef}>
 							<div
 								onClick={() => showChatList()}
@@ -304,7 +318,43 @@ const Header = () => {
 							</div>
 							<MessageBoxList />
 						</div>
-						<img src={avt} className="w-[50px] h-[50px] rounded-full" />
+						<Popover
+							className={`popover-info-wrap`}
+							placement="bottomRight"
+							content={contentInfo}
+							trigger="click">
+							{/* <Image
+								src={authUser.avatar || AvatarDefault}
+								boxSize="40px"
+								borderRadius="full"
+								fit="cover"
+								alt={authUser.name}
+							/> */}
+							<Avatar.Root size={"md"}>
+								<Avatar.Fallback name={authUser.name} />
+								<Avatar.Image src={authUser.avatar} />
+							</Avatar.Root>
+						</Popover>
+						{/* <PopoverRoot>
+							<PopoverTrigger asChild>
+								<Button size="sm" variant="outline">
+									Click me
+								</Button>
+							</PopoverTrigger>
+							<PopoverContent>
+								<PopoverArrow />
+								<PopoverBody>
+									<PopoverTitle fontWeight="medium">
+										Naruto Form
+									</PopoverTitle>
+									<Text my="4">
+										Naruto is a Japanese manga series written and
+										illustrated by Masashi Kishimoto.
+									</Text>
+									<Input placeholder="Your fav. character" size="sm" />
+								</PopoverBody>
+							</PopoverContent>
+						</PopoverRoot> */}
 					</div>
 				</div>
 			</div>
