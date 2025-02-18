@@ -32,31 +32,49 @@ export const getArticleList = async (user, requestQuery) => {
 
     const fixedCursor = cursor.replace(' ', '+')
 
-    // const query = fixedCursor
-    //     //`new Date(cursor)` chuyển cursor từ String sang Date
-    //     //Nếu giá trị create_at nhỏ hơn cursor thì gán bằng cursor
-    //     //Nếu lớn hơn thì rỗng
-
-    // const friends = await Friend.find({
-    //     user_id: user._id,
+    const articleList = await Article.aggregate([
+        {
+            $match: {
+                created_at: {$lt: new Date(fixedCursor)},
+                // $or: [{audience: 'public'}, {audience: 'friends', user_id: {$in: friendIds}}],
+                status: 'published',
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+            },
+        },
+        {
+            $lookup: {
+                from: 'projects',
+                localField: 'project_id',
+                foreignField: '_id',
+                as: 'project',
+            },
+        },
+        {
+            $sort: {created_at: -1},
+        },
+        {
+            $limit: articleLimit,
+        },
+    ])
+    // const articleList = await Article.find({
+    //     created_at: {$lt: new Date(fixedCursor)},
+    //     // $or: [{audience: 'public'}, {audience: 'friends', user_id: {$in: friendIds}}],
+    //     status: 'published',
     // })
-    // const friendIds = []
-    // fr
-
-    // const friendIds = []
-
-    const articleList = await Article.find({
-        created_at: {$lt: new Date(fixedCursor)},
-        // $or: [{audience: 'public'}, {audience: 'friends', user_id: {$in: friendIds}}],
-        status: 'published',
-    })
-        .sort({created_at: -1}) //Sắp xếp giảm dần theo thời gian
-        .limit(articleLimit)
+    //     .sort({created_at: -1}) //Sắp xếp giảm dần theo thời gian
+    //     .limit(articleLimit)
 
     //Tìm cursor mới cho phần load trang tiếp theo
     //Nếu có phần tử trong articleList
     //Gán phần thử cuối cùng trong articleList `articleList.length - 1`
-    const next_cursor = articleList.length > 0 ? articleList[articleList.length - 1].create_at : null
+    const next_cursor = articleList.length > 0 ? articleList[articleList.length - 1].created_at : null
 
     return {
         articleList,

@@ -1,5 +1,5 @@
 import callApi from "api/callApi";
-import { getList, getListSuccess, getListFail } from "states/modules/newfeeds";
+import { getList, getListSuccess, getListFail } from "states/modules/article";
 
 export const getListFeeds =
    (
@@ -9,6 +9,7 @@ export const getListFeeds =
    ) =>
    async (dispatch, getState) => {
       let path = `article/article-list?cursor=${dataFilter.cursor}&limit=${dataFilter.limit}`;
+      console.log("path" + path);
       return callApi({
          method: "get",
          apiPath: path,

@@ -12,7 +12,6 @@ const articleSlice = createSlice({
       },
    },
    // reducers: ở đây có chức năng là nhận vào state hiện tại và action, sau đó trả về một state mới
-
    reducers: {
       getList: (state) => ({
          ...state,
@@ -22,7 +21,7 @@ const articleSlice = createSlice({
       getListSuccess: (state, action) => ({
          ...state,
          isLoadingGetFeeds: false,
-         feeds: [...state.feeds, action.payload.data.articleList],
+         feeds: [...state.feeds, ...action.payload.data.articleList],
          pagination: {
             nextCursor: action.payload.data.next_cursor,
             limit: 5,
