@@ -7,6 +7,7 @@ import { getFounderProfile } from "api/founder";
 import { checkSteps } from "api/home";
 import { recruitTalents } from "api/talent";
 import { getAuthRole } from "api/auth";
+import { Provider } from "components/UI/provider";
 
 export const AppContext = React.createContext();
 
@@ -42,5 +43,9 @@ export const AppProvider = ({ children }) => {
 		);
 	}, [dispatch]);
 
-	return <AppContext.Provider>{children}</AppContext.Provider>;
+	return (
+		<AppContext.Provider>
+			<Provider>{children}</Provider>
+		</AppContext.Provider>
+	);
 };

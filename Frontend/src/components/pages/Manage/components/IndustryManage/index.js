@@ -209,6 +209,7 @@ function IndustryManage() {
 
 	return (
 		<>
+			<h1>Industry management</h1>
 			<TableManage
 				data={data}
 				handleCreate={handleCreate}

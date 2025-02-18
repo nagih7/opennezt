@@ -229,6 +229,7 @@ function TypeManage() {
 
 	return (
 		<>
+			<h1>Type management</h1>
 			<TableManage
 				// CONFIG
 				data={data}

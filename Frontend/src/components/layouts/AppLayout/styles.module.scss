@@ -2,7 +2,7 @@
 
 .boxMainLayout {
 	margin: 0 auto;
-	max-width: 1920px;
+	// max-width: 1920px;
 	// padding: 0 2rem;
 	background-color: $backgroundMain;
 }
@@ -19,19 +19,20 @@
 
 	.mainWrap {
 		// padding-left: 1.8rem;
-		width: calc(100% - $sizeNavbar);
-		margin-left: $sizeNavbar;
+		// width: calc(100% - $sizeNavbar);
+		// margin-left: $sizeNavbar;
 		transition: all 0.5s;
 		height: 100vh;
 
 		.mainContentWrap {
 			// box-shadow: $boxShadow;
-			height: 88vh;
+			// height: 88vh;
 			background-color: $backgroundMain;
 			overflow-y: auto;
 			overflow-x: hidden;
+			margin-bottom: 70px;
 			// truong them
-			
+
 			// .headerMainWrap {
 			// 	display: flex;
 			// 	justify-content: space-between;
@@ -66,29 +67,29 @@
 			// 	}
 			// }
 
-			&::-webkit-scrollbar {
-				width: 7px;
-				transition: all 2s;
-			}
+			// &::-webkit-scrollbar {
+			// 	width: 7px;
+			// 	transition: all 2s;
+			// }
 
-			&::-webkit-scrollbar-track {
-				background: rgba(217, 219, 226, 0);
-				border-radius: 5px;
-			}
+			// &::-webkit-scrollbar-track {
+			// 	background: rgba(217, 219, 226, 0);
+			// 	border-radius: 5px;
+			// }
 
-			&::-webkit-scrollbar-thumb {
-				background: rgba(217, 219, 226, 0);
-				border-radius: 8px;
-				transition: all 2s;
-			}
+			// &::-webkit-scrollbar-thumb {
+			// 	background: rgba(217, 219, 226, 0);
+			// 	border-radius: 8px;
+			// 	transition: all 2s;
+			// }
 
-			&:hover::-webkit-scrollbar-thumb:vertical {
-				background-color: rgba(119, 111, 111, 0.68);
-			}
+			// &:hover::-webkit-scrollbar-thumb:vertical {
+			// 	background-color: rgba(119, 111, 111, 0.68);
+			// }
 
-			&::-webkit-scrollbar-thumb:vertical:hover {
-				background-color: rgba(133, 133, 133, 0.68);
-			}
+			// &::-webkit-scrollbar-thumb:vertical:hover {
+			// 	background-color: rgba(133, 133, 133, 0.68);
+			// }
 		}
 	}
 
