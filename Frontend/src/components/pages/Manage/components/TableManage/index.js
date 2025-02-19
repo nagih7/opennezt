@@ -3,8 +3,6 @@ import styles from "./styles.module.scss";
 import TableCustom from "./../../../../UI/Table/index";
 import InputMASQ from "./../../../../UI/Input/index";
 import ButtonMASQ from "./../../../../UI/Button/index";
-import IconDeleteTable from "../../../../../assets/images/icon/table/delete_14x14.svg";
-import IconEditTable from "../../../../../assets/images/icon/table/edit_12x12.svg";
 import ModalConfirm from "./../../../../UI/Modal/ModalConfirm/index";
 import { useDispatch } from "react-redux";
 import { IconlyEdit, IconlyDelete } from "components/UI/Iconly";
@@ -112,42 +110,6 @@ function TableManage({
 						/>
 					</div>
 				</div>
-				{/* <div className={styles.boxFilterWrap}>
-					<div className={styles.inputWrap}>
-						<InputMASQ
-							placeholder="Search by name, email or phone"
-							value={dataFilter.keySearch}
-							onChange={(e) => handleSearch(e)}
-						/>
-						<svg
-							className={styles.iconSearch}
-							width="12"
-							height="12"
-							viewBox="0 0 12 12"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg">
-							<g>
-								<path
-									d="M11.78 9.97 9.75 7.94c.473-.788.75-1.707.75-2.69A5.256 5.256 0 0 0 5.25 0 5.256 5.256 0 0 0 0 5.25a5.256 5.256 0 0 0 5.25 5.25c.984 0 1.902-.277 2.69-.75l2.03 2.03a.748.748 0 0 0 1.06 0l.75-.75a.749.749 0 0 0 0-1.06ZM5.25 9a3.75 3.75 0 1 1 0-7.5 3.75 3.75 0 0 1 0 7.5Z"
-									fill="#3D4667"
-								/>
-							</g>
-							<defs>
-								<clipPath id="a">
-									<path fill="#fff" d="M0 0h12v12H0z" />
-								</clipPath>
-							</defs>
-						</svg>
-					</div>
-					<BtnFilter
-						content={
-							<Filter
-								// statusUser={dataFilter.status}
-								onChangeStatus={handleChangeStatus}
-							/>
-						}
-					/>
-				</div> */}
 				<TableCustom
 					columns={columnsData}
 					loading={loading}

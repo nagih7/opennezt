@@ -9,6 +9,7 @@ import store from "./states/configureStore";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { RootProvider } from "context/RootContext";
 import Mobile_Responsive from "components/common/Mobile_Responsive";
+import ChakraProvider from "components/UI/provider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -17,15 +18,17 @@ const isMobileDevice = () => {
 };
 
 root.render(
-	<Provider store={store}>
-		<RootProvider>
-			{isMobileDevice() ? (
-				<Mobile_Responsive />
-			) : (
-				<RouterProvider router={router} />
-			)}
-		</RootProvider>
-	</Provider>
+	<ChakraProvider>
+		<Provider store={store}>
+			<RootProvider>
+				{isMobileDevice() ? (
+					<Mobile_Responsive />
+				) : (
+					<RouterProvider router={router} />
+				)}
+			</RootProvider>
+		</Provider>
+	</ChakraProvider>
 );
 
 reportWebVitals();
