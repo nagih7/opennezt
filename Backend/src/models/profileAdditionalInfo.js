@@ -13,12 +13,12 @@ const ProfileAdditionalInfo = createModel('Profile_Additional_Info', 'profile_ad
     },
     description: {
         type: String,
-        required: true,
+        required: false,
         default: '',
     },
     content: {
         type: String,
-        required: false,
+        required: true,
     },
 })
 
