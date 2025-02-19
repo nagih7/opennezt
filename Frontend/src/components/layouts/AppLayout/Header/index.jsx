@@ -186,7 +186,7 @@ const Header = () => {
 		// 	</div>
 		// </header>
 		<header className="bg-[#ffffff] w-full">
-			<div className="flex items-center h-[70px] px-4">
+			<div className="flex items-center h-[70px] pr-4">
 				<div className="h-full">
 					<img
 						src={Logo}

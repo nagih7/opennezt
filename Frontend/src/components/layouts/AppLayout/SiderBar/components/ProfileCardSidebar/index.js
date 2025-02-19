@@ -21,13 +21,13 @@ const ProfileCardSidebar = () => {
 			<div>
 				<div
 					href="#"
-					className="flex items-center gap-2 text-black no-underline">
-					<span className="font-semibold text-nowrap">
+					className="flex items-center gap-2 text-black no-underline text-nowrap">
+					<span className="font-semibold">
 						{authUser.name}
 					</span>
 					<CheckCircleFilled className="text-blue-500" />
 				</div>
-				<span className="text-xs text-gray-500">@{authUser.email}</span>
+				<div className="text-xs text-gray-500 truncate w-40">@{authUser.email}</div>
 			</div>
 		</div>
 	);
