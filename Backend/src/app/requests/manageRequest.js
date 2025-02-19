@@ -115,6 +115,17 @@ export const createCategory = Joi.object({
                     return !category ? value : helpers.error('any.exists')
                 })
         ),
+    parent_id: Joi.string()
+        .trim()
+        .allow(null, '')
+        .label('Category ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const category = await Category.findById(new ObjectId(value))
+                    return category ? value : helpers.error('any.invalid')
+                })
+        ),
     description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
 })
 export const updateCategory = Joi.object({
