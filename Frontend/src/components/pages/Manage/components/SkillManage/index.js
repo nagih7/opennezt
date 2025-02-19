@@ -64,6 +64,10 @@ function SkillManage() {
 		dispatch(getListSkill(dataFilter));
 	}, [dataFilter, dispatch]);
 
+	useEffect(() => {
+		dispatch(getSkillCategories());
+	}, [dispatch]);
+
 	// CREATE
 	const handleCreate = () => {
 		// CONFIG
@@ -72,7 +76,6 @@ function SkillManage() {
 			title: "Create skill",
 			type: "CREATE",
 		});
-		dispatch(getSkillCategories());
 	};
 
 	// UPDATE
@@ -117,7 +120,6 @@ function SkillManage() {
 	}, []);
 
 	const handleConfirmCreateOrUpdate = () => {
-		console.log(dataCreateOrUpdate);
 		// CONFIG
 		// let data = new FormData();
 		// data.append(`name`, dataCreateOrUpdate.name);

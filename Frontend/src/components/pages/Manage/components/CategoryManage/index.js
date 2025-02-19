@@ -7,6 +7,7 @@ import {
 	createOrUpdateCategory,
 	deleteCategory,
 	getListCategory,
+	getSkillCategories,
 } from "api/manage";
 import {
 	setVisibleModalCreateOrUpdateCategory,
@@ -23,6 +24,7 @@ function CategoryManage() {
 	const {
 		// CONFIG
 		categories,
+		skillCategories,
 		paginationListCategory,
 		isLoadingGetListCategory,
 		visibleModalCreateOrUpdateCategory,
@@ -62,6 +64,10 @@ function CategoryManage() {
 		// CONFIG
 		dispatch(getListCategory(dataFilter));
 	}, [dataFilter, dispatch]);
+
+	useEffect(() => {
+		dispatch(getSkillCategories());
+	}, [dispatch]);
 
 	// CREATE
 	const handleCreate = () => {
@@ -184,7 +190,7 @@ function CategoryManage() {
 						onChange={(e, option) =>
 							handleChangeInput(option, "parent_id")
 						}
-						options={categories.map((item) => ({
+						options={skillCategories.map((item) => ({
 							value: item._id,
 							label: item.name,
 						}))}
