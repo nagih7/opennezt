@@ -1,5 +1,5 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {User, Type, Role, Industry, Category, Skill, ExperienceLevel} from '@/models'
+import {User, Type, Role, Industry, Category, Skill, ExperienceLevel, ObjectId} from '@/models'
 
 // GET TOTAL USERS
 export async function getTotalUsers() {
@@ -258,21 +258,64 @@ export async function deleteExperienceLevel(id) {
 export async function categoryReadRoot({q, page, per_page, field, order}) {
     q = q ? q : ''
     order = order === '-1' ? -1 : 1
+
     const matchStage = {
         $match: {name: {$regex: q, $options: 'i'}},
+    }
+
+    const lookupStage = {
+        $lookup: {
+            from: 'categories',
+            localField: 'parent_id',
+            foreignField: '_id',
+            as: 'parent',
+            pipeline: [
+                {
+                    $project: {
+                        _id: 0,
+                        name: 1,
+                        description: 1,
+                    },
+                },
+            ],
+        },
+    }
+
+    const addFieldsStage = {
+        $addFields: {
+            hasParent: {$cond: {if: {$eq: [{$size: '$parent'}, 0]}, then: false, else: true}},
+        },
     }
 
     const sortStage = {
         $sort: {[field]: order},
     }
+
     const skipStage = {
         $skip: (page - 1) * per_page,
     }
+
     const limitStage = {
         $limit: per_page,
     }
 
-    const categories = await Category.aggregate([matchStage, sortStage, skipStage, limitStage])
+    // Thực hiện $unwind chỉ khi có parent
+    const unwindStage = {
+        $unwind: {
+            path: '$parent',
+            preserveNullAndEmptyArrays: true, // Giữ nguyên khi không có parent
+        },
+    }
+
+    const categories = await Category.aggregate([
+        matchStage,
+        lookupStage,
+        addFieldsStage, // Thêm trường kiểm tra sự tồn tại của parent
+        unwindStage, // Tiến hành unwind
+        sortStage,
+        skipStage,
+        limitStage,
+    ])
 
     const filter = {
         ...(q && {name: q}),
@@ -281,9 +324,11 @@ export async function categoryReadRoot({q, page, per_page, field, order}) {
     const total = await Category.countDocuments(filter)
     return {total, page, per_page, categories}
 }
+
 export async function createCategory(requestBody) {
     const category = new Category({
         name: requestBody.name,
+        parent_id: requestBody.parent_id,
         description: requestBody.description,
     })
     await category.save()
@@ -293,6 +338,7 @@ export async function updateCategory(id, requestBody) {
         {_id: id},
         {
             $set: {
+                parent_id: requestBody.parent_id,
                 name: requestBody.name,
                 description: requestBody.description,
             },
@@ -300,8 +346,23 @@ export async function updateCategory(id, requestBody) {
     )
 }
 export async function deleteCategory(id) {
-    await Category.deleteOne({_id: id})
-    await Skill.deleteMany({category_id: id})
+    // Tìm tất cả các subcategory liên quan đến category cha
+    const subcategories = await Category.find({parent_id: id}).select('_id')
+
+    // Lấy tất cả skills liên quan đến các category cần xóa
+    const skillIdsToDelete = await Skill.find({
+        category_id: {$in: [...subcategories.map((sub) => sub._id), id]},
+    }).select('_id')
+
+    // Xóa các skills trong một batch
+    await Skill.deleteMany({_id: {$in: skillIdsToDelete.map((skill) => skill._id)}})
+
+    // Xóa tất cả các subcategories (bao gồm cả category cha)
+    const categoryIdsToDelete = subcategories.map((sub) => sub._id).concat(id)
+    await Category.deleteMany({_id: {$in: categoryIdsToDelete}})
+
+    // Xóa các kỹ năng liên quan đến các category đã xóa trong một lần
+    await Skill.deleteMany({category_id: {$in: categoryIdsToDelete}})
 }
 
 // SKILLS

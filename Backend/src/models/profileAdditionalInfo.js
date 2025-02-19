@@ -5,6 +5,7 @@ const ProfileAdditionalInfo = createModel('Profile_Additional_Info', 'profile_ad
         type: ObjectId,
         ref: 'Profile',
         required: true,
+        index: true,
     },
     name: {
         type: String,

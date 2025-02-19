@@ -8,7 +8,6 @@ import { Avatar } from "@chakra-ui/react";
 const ProfileCardSidebar = () => {
 	const navigate = useNavigate();
 	const { authUser } = useSelector((state) => state.auth);
-	console.log("authUser", authUser);
 
 	return (
 		<div

@@ -37,7 +37,6 @@ function SideBar(props) {
 	const navigate = useNavigate();
 
 	const { authRole } = useSelector((state) => state.auth);
-	console.log("authRole", authRole);
 
 	const handleToggleMenu = (indexNavItem, menuNavItem) => {
 		if (menuNavItem.path) {

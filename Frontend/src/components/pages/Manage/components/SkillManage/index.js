@@ -17,11 +17,9 @@ import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
 import SelectCustom from "components/UI/Select";
-import { Select } from "antd";
 
 function SkillManage() {
 	const dispatch = useDispatch();
-
 	const {
 		// CONFIG
 		skills,
@@ -141,6 +139,12 @@ function SkillManage() {
 			key: "index",
 			render: (text, record, index) => <span>{index + 1}</span>,
 			width: "5rem",
+		},
+		{
+			title: "Category",
+			dataIndex: "category",
+			key: "category",
+			render: (text, record) => <span>{record.category.name}</span>,
 		},
 		{
 			title: "Name",
