@@ -328,7 +328,7 @@ export async function categoryReadRoot({q, page, per_page, field, order}) {
 export async function createCategory(requestBody) {
     const category = new Category({
         name: requestBody.name,
-        parent_id: requestBody.parent_id,
+        parent_id: requestBody.parent_id ? requestBody.parent_id : null,
         description: requestBody.description,
     })
     await category.save()
