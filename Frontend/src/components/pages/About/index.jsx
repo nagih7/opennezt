@@ -25,10 +25,10 @@ import {
   IconlyMessage,
   IconlyBookmark,
   IconlyDocument,
-  IconlyEdit,
+  IconlyEditSquare,
 } from "components/UI/Iconly";
 import RightSidebar from "components/common/RightSidebar";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const EditProfilePopup = React.lazy(() =>
   import("components/common/EditProfilePopup")
@@ -358,7 +358,7 @@ const About = () => {
                   to="/about/edit-profile"
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md"
                 >
-                  <IconlyEdit size={20} color={"#ffffff"} />
+                  <IconlyEditSquare size={20} color={"#ffffff"} />
                 </Link>
               </div>
               <div className="p-8">
@@ -418,12 +418,12 @@ const About = () => {
             <div className="bg-[#ffffff] rounded-md mt-8">
               <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                 <h5 className="mb-0">Expertise</h5>
-                <a
-                  href="#"
+                <Link
+                  to="/about/edit-profile"
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md"
                 >
-                  <IconlyEdit size={20} color={"#ffffff"} />
-                </a>
+                  <IconlyEditSquare size={20} color={"#ffffff"} />
+                </Link>
               </div>
               <div className="p-8">
                 <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
@@ -533,12 +533,12 @@ const About = () => {
             <div className="bg-[#ffffff] rounded-md mt-8">
               <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                 <h5 className="mb-0">Work with me </h5>
-                <a
-                  href="#"
+                <Link
+                  to="/about/edit-profile"
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md"
                 >
-                  <IconlyEdit size={20} color={"#ffffff"} />
-                </a>
+                  <IconlyEditSquare size={20} color={"#ffffff"} />
+                </Link>
               </div>
               <div className="p-8">
                 <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
@@ -548,14 +548,21 @@ const About = () => {
                     </div>
                     <div>
                       <p className="text-black text-base mb-2 font-medium line-clamp-3">
-                      My long-term career goal is to become a Senior Data Analyst in the Finance industry, leveraging my analytical skills to drive business growth and make data-driven decisions that optimize financial performance. In the next 3-5 years, I aim to gain expertise in advanced statistical modeling, machine learning, and predictive analytics to provide deeper insights and contribute to strategic planning. I also aspire to take on leadership responsibilities, mentoring junior analysts and leading cross-fun
+                        My long-term career goal is to become a Senior Data
+                        Analyst in the Finance industry, leveraging my
+                        analytical skills to drive business growth and make
+                        data-driven decisions that optimize financial
+                        performance. In the next 3-5 years, I aim to gain
+                        expertise in advanced statistical modeling, machine
+                        learning, and predictive analytics to provide deeper
+                        insights and contribute to strategic planning. I also
+                        aspire to take on leadership responsibilities, mentoring
+                        junior analysts and leading cross-fun
                       </p>
                     </div>
                   </li>
                   <li className="px-[16px] mb-10">
-                    <div className="font-medium text-sm mb-2">
-                      AVAILABILITY
-                    </div>
+                    <div className="font-medium text-sm mb-2">AVAILABILITY</div>
                     <div>
                       <p className="text-black text-base mb-2 font-medium">
                         ...
@@ -563,10 +570,21 @@ const About = () => {
                     </div>
                   </li>
                   <li className="px-[16px]">
-                    <div className="font-medium text-sm mb-2">WHAT I CAN OFFER</div>
+                    <div className="font-medium text-sm mb-2">
+                      WHAT I CAN OFFER
+                    </div>
                     <div>
                       <p className="text-black text-base mb-2 font-medium line-clamp-3">
-                      With a strong foundation in data analysis and problem-solving, I can offer a combination of technical expertise and strategic thinking to help businesses leverage data for growth and efficiency. My skill set includes: Proficient in using tools like Python, R, SQL, and Excel to analyze complex datasets, extract valuable insights, and create clear, actionable reports, Expertise in financial modeling, budgeting, and forecasting to support decision-making and business strategy.
+                        With a strong foundation in data analysis and
+                        problem-solving, I can offer a combination of technical
+                        expertise and strategic thinking to help businesses
+                        leverage data for growth and efficiency. My skill set
+                        includes: Proficient in using tools like Python, R, SQL,
+                        and Excel to analyze complex datasets, extract valuable
+                        insights, and create clear, actionable reports,
+                        Expertise in financial modeling, budgeting, and
+                        forecasting to support decision-making and business
+                        strategy.
                       </p>
                     </div>
                   </li>
@@ -574,7 +592,10 @@ const About = () => {
                     <div className="font-medium text-sm mb-2">EXPECTATIONS</div>
                     <div>
                       <p className="text-black text-base mb-2 font-medium line-clamp-3">
-                      Expertise in analyzing large datasets to uncover trends, patterns, and actionable insights that drive business decisions. Proficient in SQL for data extraction, and advanced Excel functions for analysis and reporting.
+                        Expertise in analyzing large datasets to uncover trends,
+                        patterns, and actionable insights that drive business
+                        decisions. Proficient in SQL for data extraction, and
+                        advanced Excel functions for analysis and reporting.
                       </p>
                     </div>
                   </li>
