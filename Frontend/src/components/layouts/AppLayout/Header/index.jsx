@@ -1,17 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import "./styles.scss";
-import { Popover, Radio } from "antd";
+import { Popover } from "antd";
 import contentInfo from "./components/PopoverProfile";
 import contentNotification from "./components/PopoverNotification";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useSelector, useDispatch } from "react-redux";
 import ChatList from "./components/ChatList";
 import MessageBoxList from "./components/MessageBoxList";
-import AvatarDefault from "assets/images/default/AvatarDefault.png";
 import { LANG } from "utils/constains";
 import { setLanguage } from "states/modules/app";
 import {
@@ -19,7 +16,7 @@ import {
 	IconlyNotification,
 	IconlySearch,
 } from "components/UI/Iconly";
-import avt from "assets/images/background/avt.jpg";
+import { Avatar } from "@chakra-ui/react";
 import Logo from "assets/images/logo/OpenNezt_logo_black.png";
 
 const Header = () => {
@@ -274,7 +271,7 @@ const Header = () => {
 								)}
 							</div>
 						</div>
-						{/* Notification */}
+
 						<Popover
 							className={`popover-info-wrap`}
 							placement="bottomRight"
@@ -287,7 +284,7 @@ const Header = () => {
 								</div>
 							</div>
 						</Popover>
-						{/* Chat */}
+
 						<div className={styles.popover} ref={chatListRef}>
 							<div
 								onClick={() => showChatList()}
@@ -304,7 +301,16 @@ const Header = () => {
 							</div>
 							<MessageBoxList />
 						</div>
-						<img src={avt} className="w-[50px] h-[50px] rounded-full" />
+						<Popover
+							className={`popover-info-wrap`}
+							placement="bottomRight"
+							content={contentInfo}
+							trigger="click">
+							<Avatar.Root size={"md"}>
+								<Avatar.Fallback name={authUser.name} />
+								<Avatar.Image src={authUser.avatar} />
+							</Avatar.Root>
+						</Popover>
 					</div>
 				</div>
 			</div>
