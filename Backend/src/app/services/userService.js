@@ -1,4 +1,13 @@
-import {User, Profile, Project, ObjectId, NotificationFeed, Conversation} from '@/models'
+import {
+    User,
+    Profile,
+    Project,
+    ObjectId,
+    NotificationFeed,
+    Conversation,
+    Industry,
+    ExperienceLevel,
+} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
 
@@ -508,4 +517,14 @@ export async function checkSteps(user) {
         founderProfile: founderProfile ? true : false,
         project: project ? true : false,
     }
+}
+
+export async function getIndustries() {
+    const industries = await Industry.find().select('name _id description')
+    return industries
+}
+
+export async function getExperienceLevels() {
+    const experienceLevels = await ExperienceLevel.find().select('name _id description')
+    return experienceLevels
 }

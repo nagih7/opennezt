@@ -1,6 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getListCategory } from "api/manage";
-import store from "states/configureStore";
 
 const manageSlice = createSlice({
 	name: "home",

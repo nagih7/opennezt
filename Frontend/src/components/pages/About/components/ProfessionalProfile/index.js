@@ -4,9 +4,11 @@ import RightSidebar from "components/common/RightSidebar";
 import { IconlyEditSquare } from "components/UI/Iconly";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const ProfessionalProfile = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	// ========== STATE FROM REDUX STORE ========== //
 	const { profile } = useSelector((state) => state.profile);
 	// ========== USE EFFECT ========== //
@@ -20,11 +22,11 @@ const ProfessionalProfile = () => {
 				<div className="bg-[#ffffff] rounded-md">
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Professional Background</h5>
-						<Link
-							to="/about/edit-profile"
-							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md">
+						<span
+							onClick={() => navigate("/about/edit-profile")}
+							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
 							<IconlyEditSquare size={20} color={"#ffffff"} />
-						</Link>
+						</span>
 					</div>
 					<div className="p-8">
 						<ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
@@ -98,11 +100,11 @@ const ProfessionalProfile = () => {
 				<div className="bg-[#ffffff] rounded-md mt-8">
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Expertise</h5>
-						<Link
-							to="/about/edit-profile"
-							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md">
+						<span
+							onClick={() => navigate("/about/edit-profile")}
+							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
 							<IconlyEditSquare size={20} color={"#ffffff"} />
-						</Link>
+						</span>
 					</div>
 					<div className="p-8">
 						{profile?.skills?.length > 0 ? (
@@ -130,11 +132,11 @@ const ProfessionalProfile = () => {
 				<div className="bg-[#ffffff] rounded-md mt-8">
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Work with me </h5>
-						<Link
-							to="/about/edit-profile"
-							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md">
+						<span
+							onClick={() => navigate("/about/edit-profile")}
+							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
 							<IconlyEditSquare size={20} color={"#ffffff"} />
-						</Link>
+						</span>
 					</div>
 					<div className="p-8">
 						{profile?.additional_infos?.length > 0 ? (

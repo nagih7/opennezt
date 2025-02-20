@@ -67,6 +67,11 @@ userRouter.get(
 
 userRouter.get('/talent-details/:id', asyncHandler(userController.getTalentDetails))
 
+// Industry
+userRouter.get('/industries', asyncHandler(userController.getIndustries))
+// Experience Level
+userRouter.get('/experience-levels', asyncHandler(userController.getExperienceLevels))
+
 // URL dynamic
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))
 

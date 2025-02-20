@@ -1,5 +1,6 @@
 import appReducer from "./modules/app";
 import authReducer from "./modules/auth";
+import userReducer from "./modules/user";
 import profileReducer from "./modules/profile";
 import homeReducer from "./modules/home";
 import employeeReducer from "./modules/employee";
@@ -14,6 +15,7 @@ import artificialIntelligenceReducer from "./modules/artificialIntelligence";
 const rootReducer = {
 	app: appReducer,
 	auth: authReducer,
+	user: userReducer,
 	manage: manageReducer,
 	profile: profileReducer,
 	home: homeReducer,

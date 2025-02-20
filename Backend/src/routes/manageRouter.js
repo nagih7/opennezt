@@ -1,5 +1,6 @@
 import {Router} from 'express'
 import {asyncHandler} from '@/utils/helpers'
+import requireAuthentication from '@/app/middleware/common/require-authentication'
 import superAdminAuthentication from '@/app/middleware/common/admin-authentication'
 import * as manageRequest from '@/app/requests/manageRequest'
 import * as manageController from '@/app/controllers/manageController'
