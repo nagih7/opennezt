@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./styles.module.scss";
 import TableCustom from "./../../../../UI/Table/index";
-import InputMASQ from "./../../../../UI/Input/index";
 import ButtonMASQ from "./../../../../UI/Button/index";
 import ModalConfirm from "./../../../../UI/Modal/ModalConfirm/index";
 import { useDispatch } from "react-redux";

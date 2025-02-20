@@ -16,7 +16,7 @@ import {
 import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
-import SelectCustom from "components/UI/Select";
+import SelectCustom from "components/UI/Select/index";
 
 function SkillManage() {
 	const dispatch = useDispatch();

@@ -1,4 +1,9 @@
-import { createListCollection, Input } from "@chakra-ui/react";
+import {
+	Button,
+	ButtonGroup,
+	createListCollection,
+	Input,
+} from "@chakra-ui/react";
 import { getProfile } from "api/profile";
 import { getAllExperienceLevels, getAllIndustries } from "api/user";
 import {
@@ -18,12 +23,11 @@ const ProfileProfessionalEditor = () => {
 	const { industries } = useSelector((state) => state.user);
 	const { experienceLevels } = useSelector((state) => state.user);
 	// ========== STATE MANAGEMENT ========== //
-	const [industriesSelected, setIndustriesSelected] = useState([]);
-	const [experienceLevelSelected, setExperienceLevelSelected] = useState([]);
-
 	const [formData, setFormData] = useState({
 		industries: [],
-		experience_level: "",
+		experience_level: [],
+		educations: [],
+		certifications: [],
 	});
 	// ========== USE EFFECT ========== //
 	useEffect(() => {
@@ -33,16 +37,11 @@ const ProfileProfessionalEditor = () => {
 	}, [dispatch]);
 
 	useEffect(() => {
-		if (profile?.industries?.length > 0) {
+		if (profile) {
 			setFormData({
 				...formData,
-				industries: profile.industries.map((industry) => industry._id),
-			});
-		}
-		if (profile?.experience_levels?.length > 0) {
-			setFormData({
-				...formData,
-				experience_level: profile.experience_levels._id,
+				industries: profile?.industries?.map((industry) => industry._id),
+				experience_level: [profile?.experience_level?._id],
 			});
 		}
 		// eslint-disable-next-line
@@ -63,22 +62,11 @@ const ProfileProfessionalEditor = () => {
 	});
 	// ========== HANDLE CHANGE FUNCTION ========== //
 	const handleChange = async (event, nameSelect) => {
-		const { value } = event;
-		if (nameSelect === "industries") {
-			setFormData({
-				...formData,
-				industries: [...value],
-			});
-		}
-		if (nameSelect === "experienceLevel") {
-			// setExperienceLevelSelected(event);
-			setFormData({
-				...formData,
-				experience_level: event,
-			});
-		}
+		setFormData({
+			...formData,
+			[nameSelect]: event.value,
+		});
 	};
-
 	const handleSaveChanges = () => {
 		console.log(formData);
 	};
@@ -106,7 +94,7 @@ const ProfileProfessionalEditor = () => {
 							size="sm">
 							<SelectTrigger>
 								<SelectValueText
-									className="p-[16px]"
+									className="p-[6px]"
 									placeholder="Movie"
 								/>
 							</SelectTrigger>
@@ -135,16 +123,10 @@ const ProfileProfessionalEditor = () => {
 				</div>
 				<div className="px-[16px]">
 					<div className="relative mb-8">
-						<Input
-							height={50}
-							type="url"
-							placeholder="Junior"
-							className="p-[16px] w-full border-[1px] outline-none border-gray-200 rounded-md"
-						/>
 						<SelectRoot
-							value={experienceLevelSelected}
+							value={formData.experience_level}
 							onValueChange={(event) =>
-								handleChange(event, "experienceLevel")
+								handleChange(event, "experience_level")
 							}
 							height={50}
 							width={"100%"}
@@ -153,7 +135,7 @@ const ProfileProfessionalEditor = () => {
 							size="sm">
 							<SelectTrigger>
 								<SelectValueText
-									className="p-[16px]"
+									className="p-[6px]"
 									placeholder="Movie"
 								/>
 							</SelectTrigger>
@@ -191,7 +173,7 @@ const ProfileProfessionalEditor = () => {
 						<label
 							htmlFor=""
 							className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
-							Education Level
+							Educations
 						</label>
 						<p className="mt-[11px] mb-0 flex justify-end">
 							<button className="bg-[#f07a3a] text-xs font-medium py-1 px-[6px] text-[#ffffff] rounded-sm">
@@ -222,15 +204,16 @@ const ProfileProfessionalEditor = () => {
 				</div>
 				<div className="px-[16px] flex justify-end">
 					<div className="">
-						<Input
+						<Button
 							onClick={handleSaveChanges}
 							height={50}
-							type="submit"
-							name="profile-group-edit-submit"
-							id=""
 							className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-							value="SAVE CHANGES"
-						/>
+							borderRadius={4}
+							loading={false}
+							loadingText="Loading..."
+							spinnerPlacement="start">
+							SAVE CHANGES
+						</Button>
 					</div>
 				</div>
 			</div>
