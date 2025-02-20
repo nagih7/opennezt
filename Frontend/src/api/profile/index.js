@@ -13,6 +13,10 @@ import {
 	changeBackgroundUser,
 	changeBackgroundUserSuccess,
 	changeBackgroundUserFail,
+	// ========== Profile ========== //
+	requestGetProfile,
+	requestGetProfileSuccess,
+	requestGetProfileFail,
 } from "../../states/modules/profile";
 
 export const updateUser = (data) => async (dispatch, getState) => {
@@ -62,6 +66,21 @@ export const changeBackground = (formData) => async (dispatch, getState) => {
 			changeBackgroundUserFail,
 		],
 		variables: formData,
+		dispatch,
+		getState,
+	});
+};
+
+// ========== Profile ========== //
+export const getProfile = () => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: `/profile`,
+		actionTypes: [
+			requestGetProfile,
+			requestGetProfileSuccess,
+			requestGetProfileFail,
+		],
 		dispatch,
 		getState,
 	});

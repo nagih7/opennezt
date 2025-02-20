@@ -1,7 +1,7 @@
 import {db} from '@/configs'
 import chalk from 'chalk'
-import userSeeder from './userSeeder'
-import adminSeeder from './adminSeeder'
+// import userSeeder from './userSeeder'
+// import adminSeeder from './adminSeeder'
 import typeSeeder from './typeSeeder'
 import roleSeeder from './roleSeeder'
 

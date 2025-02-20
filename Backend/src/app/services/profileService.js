@@ -72,6 +72,28 @@ export async function getProfile(user) {
             localField: 'skill_ids',
             foreignField: '_id',
             as: 'skills',
+            pipeline: [
+                {
+                    $lookup: {
+                        from: 'categories',
+                        localField: 'category_id',
+                        foreignField: '_id',
+                        as: 'category',
+                    },
+                },
+                {
+                    $unwind: {path: '$category', preserveNullAndEmptyArrays: true},
+                },
+                {
+                    $project: {
+                        __v: 0,
+                        category_id: 0,
+                        'category.created_at': 0,
+                        'category.updated_at': 0,
+                        'category.__v': 0,
+                    },
+                },
+            ],
         },
     }
     const lookupAdditionalInfo = {
@@ -144,5 +166,5 @@ export async function getProfile(user) {
 
     const profile = await Profile.aggregate([matchStage, ...lookupStages, ...unwindStages, projectStage])
 
-    return profile
+    return profile[0]
 }

@@ -36,7 +36,7 @@ export function authToken(user) {
     }
 }
 
-export async function register({avatar, ...requestBody}) {
+export async function register({...requestBody}) {
     const user = await User.findOne({email: requestBody.email})
     if (user && user.is_active === false) {
         // update user info

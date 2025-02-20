@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import {MAX_STRING_SIZE} from '@/configs'
-import {AsyncValidate, FileUpload} from '@/utils/classes'
-import {tryValidateOrDefault} from '@/utils/helpers'
+// import {AsyncValidate, FileUpload} from '@/utils/classes'
+// import {tryValidateOrDefault} from '@/utils/helpers'
 // import {validate} from '@/utils/middlewares'
 
 export const createProfile = Joi.object({
