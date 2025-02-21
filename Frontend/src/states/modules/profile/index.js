@@ -34,6 +34,15 @@ const profileSlice = createSlice({
 		},
 		isOpenModalCreateOrUpdateEducation: false,
 		isLoadingCreateOrUpdateEducation: false,
+		// ========== Certification ========== //
+		formDataCertification: {
+			name: "",
+			organization: "",
+			start_date: "",
+			end_date: "",
+			credential_id: "",
+			credential_url: "",
+		},
 	},
 	reducers: {
 		setErrorInfoUser: (state, action) => ({
