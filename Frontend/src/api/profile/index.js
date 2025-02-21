@@ -17,6 +17,10 @@ import {
 	requestGetProfile,
 	requestGetProfileSuccess,
 	requestGetProfileFail,
+	// ========== Education ========== //
+	requestCreateOrUpdateEducation,
+	createOrUpdateEducationSuccess,
+	createOrUpdateEducationFail,
 } from "../../states/modules/profile";
 
 export const updateUser = (data) => async (dispatch, getState) => {
@@ -85,3 +89,22 @@ export const getProfile = () => async (dispatch, getState) => {
 		getState,
 	});
 };
+
+// ========== Education ========== //
+export const createOrUpdateEducation =
+	(data, action) => async (dispatch, getState) => {
+		const method = action === "create" ? "post" : "put";
+		return callApi({
+			method: method,
+			apiPath: `/profile/education`,
+			actionTypes: [
+				requestCreateOrUpdateEducation,
+				createOrUpdateEducationSuccess,
+				createOrUpdateEducationFail,
+			],
+			variables: data,
+			dispatch,
+			getState,
+			action,
+		});
+	};
