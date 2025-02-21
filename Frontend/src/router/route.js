@@ -138,7 +138,7 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_EMPLOYEE_PAGE"),
 	},
 	{
-		path: "/new-feed",
+		path: "/activity",
 		element: (
 			<AppLayout>
 				<Newfeeds />
