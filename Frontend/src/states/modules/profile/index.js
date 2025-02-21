@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { message } from "antd";
+import { toaster } from "components/UI/toaster";
+import { set } from "lodash";
 
 const profileSlice = createSlice({
 	name: "profile",
@@ -21,6 +23,26 @@ const profileSlice = createSlice({
 		profile: {},
 		isLoadingGetProfile: false,
 		isOpenAvatarPreview: false,
+		// ========== Education ========== //
+		formDataEducation: {
+			school: "",
+			degree: "",
+			field_of_study: "",
+			start_date: "",
+			end_date: "",
+			grade: "",
+		},
+		isOpenModalCreateOrUpdateEducation: false,
+		isLoadingCreateOrUpdateEducation: false,
+		// ========== Certification ========== //
+		formDataCertification: {
+			name: "",
+			organization: "",
+			start_date: "",
+			end_date: "",
+			credential_id: "",
+			credential_url: "",
+		},
 	},
 	reducers: {
 		setErrorInfoUser: (state, action) => ({
@@ -108,6 +130,49 @@ const profileSlice = createSlice({
 			...state,
 			isOpenAvatarPreview: action.payload,
 		}),
+
+		// ========== Education ========== //
+		requestCreateOrUpdateEducation: (state) => ({
+			...state,
+			isLoadingCreateOrUpdateEducation: true,
+		}),
+		createOrUpdateEducationSuccess: (state, action) => {
+			toaster.create({
+				title: `${action.payload.message}`,
+				type: "success",
+			});
+			return {
+				...state,
+				isLoadingCreateOrUpdateEducation: false,
+				isOpenModalCreateOrUpdateEducation: false,
+				formDataEducation: {
+					school: "",
+					degree: "",
+					field_of_study: "",
+					start_date: "",
+					end_date: "",
+					grade: "",
+				},
+			};
+		},
+		createOrUpdateEducationFail: (state, action) => {
+			toaster.create({
+				title: `${Object.values(action.payload.data.detail)[0]}`,
+				type: "error",
+			});
+			return {
+				...state,
+				isLoadingCreateOrUpdateEducation: false,
+			};
+		},
+		setIsOpenModalCreateOrUpdateEducation: (state, action) => ({
+			...state,
+			isOpenModalCreateOrUpdateEducation: action.payload,
+		}),
+		setFormDataEducation: (state, action) => ({
+			...state,
+			formDataEducation: action.payload,
+		}),
 	},
 });
 
@@ -131,6 +196,12 @@ export const {
 	requestGetProfileSuccess,
 	requestGetProfileFail,
 	setIsOpenAvatarPreview,
+	// ========== Education ========== //
+	requestCreateOrUpdateEducation,
+	createOrUpdateEducationSuccess,
+	createOrUpdateEducationFail,
+	setIsOpenModalCreateOrUpdateEducation,
+	setFormDataEducation,
 } = profileSlice.actions;
 
 export default profileSlice.reducer;

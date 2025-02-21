@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ProfileCard from "./components/ProfileCard";
 import ActiveMenu from "./components/ActiveMenu";
 import ProfileEditMenu from "./components/ProfileEditMenu";
-import ProfileProfessionalEditor from "./components/ProfileProfessionalEditor";
+import ProfessionalProfile from "./components/ProfessionalProfile";
 
 const EditProfile = () => {
 	return (
@@ -19,7 +19,7 @@ const EditProfile = () => {
 					<ActiveMenu />
 				</div>
 				<div className="bg-[#ffffff] p-8 rounded-md mt-8">
-					<ProfileProfessionalEditor />
+					<ProfessionalProfile />
 				</div>
 			</div>
 		</div>

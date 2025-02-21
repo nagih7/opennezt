@@ -1,9 +1,4 @@
-import {
-	Button,
-	ButtonGroup,
-	createListCollection,
-	Input,
-} from "@chakra-ui/react";
+import { Button, createListCollection, Input } from "@chakra-ui/react";
 import { getProfile } from "api/profile";
 import { getAllExperienceLevels, getAllIndustries } from "api/user";
 import {
@@ -15,13 +10,16 @@ import {
 } from "components/UI/select";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import EducationProfile from "../EducationProfile";
 
-const ProfileProfessionalEditor = () => {
+const ProfessionalProfile = () => {
 	const dispatch = useDispatch();
+
 	// ========== STATE FROM REDUX STORE ========== //
 	const { profile } = useSelector((state) => state.profile);
 	const { industries } = useSelector((state) => state.user);
 	const { experienceLevels } = useSelector((state) => state.user);
+
 	// ========== STATE MANAGEMENT ========== //
 	const [formData, setFormData] = useState({
 		industries: [],
@@ -29,6 +27,7 @@ const ProfileProfessionalEditor = () => {
 		educations: [],
 		certifications: [],
 	});
+
 	// ========== USE EFFECT ========== //
 	useEffect(() => {
 		dispatch(getProfile());
@@ -60,6 +59,7 @@ const ProfileProfessionalEditor = () => {
 			value: experienceLevel._id,
 		})),
 	});
+
 	// ========== HANDLE CHANGE FUNCTION ========== //
 	const handleChange = async (event, nameSelect) => {
 		setFormData({
@@ -70,6 +70,7 @@ const ProfileProfessionalEditor = () => {
 	const handleSaveChanges = () => {
 		console.log(formData);
 	};
+
 	// ========== COMPONENT RENDER ========== //
 	return (
 		<>
@@ -162,26 +163,8 @@ const ProfileProfessionalEditor = () => {
 						</p>
 					</div>
 				</div>
-				<div className="px-[16px]">
-					<div className="relative mb-8">
-						<Input
-							height={50}
-							type="url"
-							placeholder="Bachelors"
-							className="p-[16px] w-full border-[1px] outline-none border-gray-200 rounded-md "
-						/>
-						<label
-							htmlFor=""
-							className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
-							Educations
-						</label>
-						<p className="mt-[11px] mb-0 flex justify-end">
-							<button className="bg-[#f07a3a] text-xs font-medium py-1 px-[6px] text-[#ffffff] rounded-sm">
-								CHANGE
-							</button>
-						</p>
-					</div>
-				</div>
+				{/* ========== Education Profile ========== */}
+				<EducationProfile />
 				<div className="px-[16px]">
 					<div className="relative mb-8">
 						<Input
@@ -221,4 +204,4 @@ const ProfileProfessionalEditor = () => {
 	);
 };
 
-export default ProfileProfessionalEditor;
+export default ProfessionalProfile;
