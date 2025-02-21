@@ -9,12 +9,12 @@ const profileRouter = Router()
 
 profileRouter.use(asyncHandler(requireAuthentication))
 
-// ===================== Profile =====================
-// Create profile
-// profileRouter.post(
-//     '/create',
-//     asyncHandler(validate(profileRequest.createProfile)),
-//     asyncHandler(profileController.createProfile)
-// )
+// ===================== Profile ===================== ///
+profileRouter.post(
+    '/',
+    asyncHandler(validate(profileRequest.createProfile)),
+    asyncHandler(profileController.createProfile)
+)
+profileRouter.get('/', asyncHandler(profileController.getProfile))
 
 export default profileRouter

@@ -101,3 +101,13 @@ export async function checkSteps(req, res) {
     const result = await userService.checkSteps(req.currentUser)
     res.jsonify(result)
 }
+
+export async function getIndustries(req, res) {
+    const result = await userService.getIndustries()
+    res.jsonify(result)
+}
+
+export async function getExperienceLevels(req, res) {
+    const result = await userService.getExperienceLevels()
+    res.jsonify(result)
+}

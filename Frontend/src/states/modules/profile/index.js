@@ -16,7 +16,11 @@ const profileSlice = createSlice({
 		},
 		loadingBtnUpdateInfoUser: false,
 		loadingBtnChangePassword: false,
-		loadingBtnChangeAvatar: false,
+		isLoadingBtnChangeAvatar: false,
+		// ========== Profile ========== //
+		profile: {},
+		isLoadingGetProfile: false,
+		isOpenAvatarPreview: false,
 	},
 	reducers: {
 		setErrorInfoUser: (state, action) => ({
@@ -59,15 +63,18 @@ const profileSlice = createSlice({
 		}),
 		changeAvatarUser: (state) => ({
 			...state,
-			// loadingBtnChangeAvatar: true,
+			isLoadingBtnChangeAvatar: true,
 		}),
-		changeAvatarUserSuccess: (state) => ({
-			...state,
-			// loadingBtnChangeAvatar: false,
-		}),
+		changeAvatarUserSuccess: (state) => {
+			return {
+				...state,
+				isLoadingBtnChangeAvatar: false,
+				isOpenAvatarPreview: false,
+			};
+		},
 		changeAvatarUserFail: (state) => ({
 			...state,
-			// loadingBtnChangeAvatar: false,
+			isLoadingBtnChangeAvatar: false,
 		}),
 		changeBackgroundUser: (state) => ({
 			...state,
@@ -77,6 +84,29 @@ const profileSlice = createSlice({
 		}),
 		changeBackgroundUserFail: (state) => ({
 			...state,
+		}),
+
+		// ========== Profile ========== //
+		requestGetProfile: (state) => ({
+			...state,
+			isLoadingGetProfile: true,
+		}),
+		requestGetProfileSuccess: (state, action) => {
+			return {
+				...state,
+				profile: action.payload.data,
+				isLoadingGetProfile: false,
+			};
+		},
+		requestGetProfileFail: (state) => {
+			return {
+				...state,
+				isLoadingGetProfile: false,
+			};
+		},
+		setIsOpenAvatarPreview: (state, action) => ({
+			...state,
+			isOpenAvatarPreview: action.payload,
 		}),
 	},
 });
@@ -96,6 +126,11 @@ export const {
 	changeBackgroundUser,
 	changeBackgroundUserSuccess,
 	changeBackgroundUserFail,
+	// ========== Profile ========== //
+	requestGetProfile,
+	requestGetProfileSuccess,
+	requestGetProfileFail,
+	setIsOpenAvatarPreview,
 } = profileSlice.actions;
 
 export default profileSlice.reducer;

@@ -9,6 +9,7 @@ export const LANG = [
 ];
 
 export const NAVBAR_LABEL = {
+	ACTIVITY: "ACTIVITY",
 	ADMIN: "ADMIN",
 	DASHBOARD: "DASHBOARD",
 	HOME: "HOME",
@@ -20,6 +21,11 @@ export const NAVBAR_LABEL = {
 };
 
 export const NAVBAR = {
+	ACTIVITY: {
+		EN: "Activity",
+		VI: "Hoạt động",
+		ZH: "活动",
+	},
 	ADMIN: {
 		EN: "Admin",
 		VI: "Quản trị",

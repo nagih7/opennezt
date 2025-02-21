@@ -1,5 +1,5 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {User, Type, Role, Industry, Category, Skill, ExperienceLevel, ObjectId} from '@/models'
+import {User, Type, Role, Industry, Category, Skill, ExperienceLevel} from '@/models'
 
 // GET TOTAL USERS
 export async function getTotalUsers() {

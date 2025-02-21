@@ -41,7 +41,7 @@ export const reactArticle = async (req, res) => {
 }
 
 export const updateArticle = async (req, res) => {
-    const updatedArticle = await articleService.updateArticle(req.params.id, req.body)
+    await articleService.updateArticle(req.params.id, req.body)
     res.status(200).jsonify('Update Article Success')
 }
 
