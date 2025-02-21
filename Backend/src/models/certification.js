@@ -1,6 +1,11 @@
 import createModel, {ObjectId} from './base'
 
 const Certification = createModel('Certification', 'certifications', {
+    profile_id: {
+        type: ObjectId,
+        ref: 'Profile',
+        required: true,
+    },
     organization_id: {
         type: ObjectId,
         ref: 'Organization',

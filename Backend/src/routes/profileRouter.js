@@ -10,6 +10,15 @@ const profileRouter = Router()
 profileRouter.use(asyncHandler(requireAuthentication))
 
 // ===================== Profile ===================== ///
+
+// ========== Education ========== //
+profileRouter.post(
+    '/education',
+    asyncHandler(validate(profileRequest.createProfileEducation)),
+    asyncHandler(profileController.createProfileEducation)
+)
+
+// ========== Dynamic Routes ========== //
 profileRouter.post(
     '/',
     asyncHandler(validate(profileRequest.createProfile)),

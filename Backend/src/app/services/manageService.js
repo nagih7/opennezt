@@ -1,5 +1,15 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {User, Type, Role, Industry, Category, Skill, ExperienceLevel} from '@/models'
+import {
+    User,
+    Type,
+    Role,
+    Industry,
+    Category,
+    Skill,
+    ExperienceLevel,
+    Organization,
+    Certification,
+} from '@/models'
 
 // GET TOTAL USERS
 export async function getTotalUsers() {
@@ -445,4 +455,58 @@ export async function deleteSkill(id) {
 }
 export async function skillCategories() {
     return await Category.find().select('_id name description')
+}
+
+// ORGANIZATIONS
+export async function organizationReadRoot({q, page, per_page, field, order}) {
+    q = q ? q : ''
+    order = order === '-1' ? -1 : 1
+    const matchStage = {
+        $match: {name: {$regex: q, $options: 'i'}},
+    }
+
+    const sortStage = {
+        $sort: {[field]: order},
+    }
+    const skipStage = {
+        $skip: (page - 1) * per_page,
+    }
+    const limitStage = {
+        $limit: per_page,
+    }
+
+    const organizations = await Organization.aggregate([matchStage, sortStage, skipStage, limitStage])
+
+    const filter = {
+        ...(q && {name: q}),
+    }
+
+    const total = await Organization.countDocuments(filter)
+    return {total, page, per_page, organizations}
+}
+export async function createOrganization(requestBody) {
+    const organization = new Organization({
+        name: requestBody.name,
+        website: requestBody.website,
+        contact_email: requestBody.contact_email,
+        description: requestBody.description,
+    })
+    await organization.save()
+}
+export async function updateOrganization(id, requestBody) {
+    await Organization.updateOne(
+        {_id: id},
+        {
+            $set: {
+                name: requestBody.name,
+                website: requestBody.website,
+                contact_email: requestBody.contact_email,
+                description: requestBody.description,
+            },
+        }
+    )
+}
+export async function deleteOrganization(id) {
+    await Organization.deleteOne({_id: id})
+    await Certification.deleteMany({organization_id: id})
 }
