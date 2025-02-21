@@ -1,6 +1,5 @@
 import {Router} from 'express'
 import {asyncHandler} from '@/utils/helpers'
-import requireAuthentication from '@/app/middleware/common/require-authentication'
 import superAdminAuthentication from '@/app/middleware/common/admin-authentication'
 import * as manageRequest from '@/app/requests/manageRequest'
 import * as manageController from '@/app/controllers/manageController'
@@ -117,5 +116,23 @@ manageRouter.put(
 )
 manageRouter.delete('/skills/:id', asyncHandler(manageController.deleteSkill))
 manageRouter.get('/skills/categories', asyncHandler(manageController.skillCategories))
+
+// ORGANIZATIONS
+manageRouter.get(
+    '/organizations',
+    validate(manageRequest.readRoot),
+    asyncHandler(manageController.organizationReadRoot)
+)
+manageRouter.post(
+    '/organizations',
+    validate(manageRequest.createOrganization),
+    asyncHandler(manageController.createOrganization)
+)
+manageRouter.put(
+    '/organizations/:id',
+    validate(manageRequest.updateOrganization),
+    asyncHandler(manageController.updateOrganization)
+)
+manageRouter.delete('/organizations/:id', asyncHandler(manageController.deleteOrganization))
 
 export default manageRouter
