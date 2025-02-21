@@ -1,41 +1,56 @@
+import { createListCollection } from "@chakra-ui/react";
 import { createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
 	name: "home",
 	initialState: {
 		// INDUSTRIES
-		industries: [],
+		industryFramework: createListCollection({
+			items: [],
+		}),
 		isLoadingGetAllIndustry: false,
 		// EXPERIENCE_LEVELS
-		experienceLevels: [],
+		experienceLevelFramework: createListCollection({
+			items: [],
+		}),
 		isLoadingGetAllExperienceLevel: false,
 	},
 	reducers: {
 		// INDUSTRIES
-		requestGetAllIndustries: (state) => ({
+		requestgetIndustryFramework: (state) => ({
 			...state,
 			isLoadingGetAllIndustry: true,
 		}),
-		getAllIndustriesSuccess: (state, action) => ({
+		getIndustryFrameworkSuccess: (state, action) => ({
 			...state,
 			isLoadingGetAllIndustry: false,
-			industries: action.payload.data,
+			industryFramework: createListCollection({
+				items: action.payload.data.map((industry) => ({
+					label: industry.name,
+					value: industry._id,
+				})),
+			}),
 		}),
-		getAllIndustriesFail: (state) => ({
+		getIndustryFrameworkFail: (state) => ({
 			...state,
 			isLoadingGetAllIndustry: false,
 		}),
 		// EXPERIENCE_LEVELS
-		requestGetAllExperienceLevels: (state) => ({
+		requestgetExperienceLevelFramwork: (state) => ({
 			...state,
 			isLoadingGetAllExperienceLevel: true,
 		}),
-		getAllExperienceLevelsSuccess: (state, action) => ({
+		getExperienceLevelFramworkSuccess: (state, action) => ({
 			...state,
 			isLoadingGetAllExperienceLevel: false,
-			experienceLevels: action.payload.data,
+			experienceLevelFramework: createListCollection({
+				items: action.payload.data.map((experienceLevel) => ({
+					label: experienceLevel.name,
+					value: experienceLevel._id,
+				})),
+			}),
 		}),
-		getAllExperienceLevelsFail: (state) => ({
+		getExperienceLevelFramworkFail: (state) => ({
 			...state,
 			isLoadingGetAllExperienceLevel: false,
 		}),
@@ -44,13 +59,13 @@ const userSlice = createSlice({
 
 export const {
 	// INDUSTRIES
-	requestGetAllIndustries,
-	getAllIndustriesSuccess,
-	getAllIndustriesFail,
+	requestgetIndustryFramework,
+	getIndustryFrameworkSuccess,
+	getIndustryFrameworkFail,
 	// EXPERIENCE_LEVELS
-	requestGetAllExperienceLevels,
-	getAllExperienceLevelsSuccess,
-	getAllExperienceLevelsFail,
+	requestgetExperienceLevelFramwork,
+	getExperienceLevelFramworkSuccess,
+	getExperienceLevelFramworkFail,
 } = userSlice.actions;
 
 export default userSlice.reducer;
