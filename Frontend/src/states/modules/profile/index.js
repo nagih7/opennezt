@@ -1,7 +1,7 @@
+import { createListCollection } from "@chakra-ui/react";
 import { createSlice } from "@reduxjs/toolkit";
 import { message } from "antd";
 import { toaster } from "components/UI/toaster";
-import { set } from "lodash";
 
 const profileSlice = createSlice({
 	name: "profile",
@@ -24,25 +24,16 @@ const profileSlice = createSlice({
 		isLoadingGetProfile: false,
 		isOpenAvatarPreview: false,
 		// ========== Education ========== //
-		formDataEducation: {
-			school: "",
-			degree: "",
-			field_of_study: "",
-			start_date: "",
-			end_date: "",
-			grade: "",
-		},
 		isOpenModalCreateOrUpdateEducation: false,
 		isLoadingCreateOrUpdateEducation: false,
 		// ========== Certification ========== //
-		formDataCertification: {
-			name: "",
-			organization: "",
-			start_date: "",
-			end_date: "",
-			credential_id: "",
-			credential_url: "",
-		},
+		isOpenModalCreateOrUpdateCertification: false,
+		isLoadingCreateOrUpdateCertification: false,
+		// ========== Organization ========== //
+		organizationFramework: createListCollection({
+			items: [],
+		}),
+		isLoadingGetAllOrganizationFramework: false,
 	},
 	reducers: {
 		setErrorInfoUser: (state, action) => ({
@@ -145,14 +136,14 @@ const profileSlice = createSlice({
 				...state,
 				isLoadingCreateOrUpdateEducation: false,
 				isOpenModalCreateOrUpdateEducation: false,
-				formDataEducation: {
-					school: "",
-					degree: "",
-					field_of_study: "",
-					start_date: "",
-					end_date: "",
-					grade: "",
-				},
+				// formDataEducation: {
+				// 	school: "",
+				// 	degree: "",
+				// 	field_of_study: "",
+				// 	start_date: "",
+				// 	end_date: "",
+				// 	grade: "",
+				// },
 			};
 		},
 		createOrUpdateEducationFail: (state, action) => {
@@ -169,9 +160,55 @@ const profileSlice = createSlice({
 			...state,
 			isOpenModalCreateOrUpdateEducation: action.payload,
 		}),
-		setFormDataEducation: (state, action) => ({
+
+		// ========== Certification ========== //
+		requestCreateOrUpdateCertification: (state) => ({
 			...state,
-			formDataEducation: action.payload,
+			isLoadingCreateOrUpdateCertification: true,
+		}),
+		createOrUpdateCertificationSuccess: (state, action) => {
+			toaster.create({
+				title: `${action.payload.message}`,
+				type: "success",
+			});
+			return {
+				...state,
+				isLoadingCreateOrUpdateCertification: false,
+				isOpenModalCreateOrUpdateCertification: false,
+			};
+		},
+		createOrUpdateCertificationFail: (state, action) => {
+			toaster.create({
+				title: `${Object.values(action.payload.data.detail)[0]}`,
+				type: "error",
+			});
+			return {
+				...state,
+				isLoadingCreateOrUpdateCertification: false,
+			};
+		},
+		setIsOpenModalCreateOrUpdateCertification: (state, action) => ({
+			...state,
+			isOpenModalCreateOrUpdateCertification: action.payload,
+		}),
+		// ========== Organization ========== //
+		requestgetOrganizationFramework: (state) => ({
+			...state,
+			isLoadingGetAllOrganizationFramework: true,
+		}),
+		requestgetOrganizationFrameworkSuccess: (state, action) => ({
+			...state,
+			isLoadingGetAllOrganizationFramework: false,
+			organizationFramework: createListCollection({
+				items: action.payload.data.map((organization) => ({
+					label: organization.name,
+					value: organization._id,
+				})),
+			}),
+		}),
+		requestgetOrganizationFrameworkFail: (state) => ({
+			...state,
+			isLoadingGetAllOrganizationFramework: false,
 		}),
 	},
 });
@@ -201,7 +238,15 @@ export const {
 	createOrUpdateEducationSuccess,
 	createOrUpdateEducationFail,
 	setIsOpenModalCreateOrUpdateEducation,
-	setFormDataEducation,
+	// ========== Certification ========== //
+	requestCreateOrUpdateCertification,
+	createOrUpdateCertificationSuccess,
+	createOrUpdateCertificationFail,
+	setIsOpenModalCreateOrUpdateCertification,
+	// ========== Organization ========== //
+	requestgetOrganizationFramework,
+	requestgetOrganizationFrameworkSuccess,
+	requestgetOrganizationFrameworkFail,
 } = profileSlice.actions;
 
 export default profileSlice.reducer;

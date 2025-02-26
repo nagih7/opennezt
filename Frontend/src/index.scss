@@ -376,3 +376,13 @@ button:focus {
 	outline: none; /* Tắt outline khi button được focus */
 	border: none; /* Nếu bạn muốn bỏ luôn border */
 }
+
+// ========== CHAKRA UI ========== //
+
+.chakra-checkbox__root {
+	cursor: pointer;
+	display: flex;
+	.chakra-checkbox__control {
+		border: 1px solid $colorBorderInput !important;
+	}
+}
