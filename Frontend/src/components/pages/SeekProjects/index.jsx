@@ -330,7 +330,7 @@ const SeekProjects = () => {
 				</div>
 			</div> */}
 			<div className="pt-[35px] flex gap-6">
-				<div className="bg-gray-100 w-3/4 ">
+				<div className="bg-gray-100 w-3/4 2xl:relative 2xl:left-[-2rem] 2xl:w-[70rem] ">
 					<div className="flex items-center gap-4 p-4 bg-white border rounded-lg shadow-sm ml-[1.9rem] flex-col md:flex-row  justify-between">
 						<p className="text-gray-600 text-lg mt-2 mb-0">All Projects</p>
 						<div className=" md:w-auto">
@@ -355,7 +355,7 @@ const SeekProjects = () => {
 					<ul className={`${isGrid ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "flex flex-col"} gap-6 mt-4`}>
 						{courses.map((course, index) => (
 							<li key={index} className="group cursor-pointer rounded-sm">
-								<div className={`bg-white ${isGrid ? "w-full max-w-lg h-[360px]" : "flex items-center p-4 w-[55rem]"} pt-3 mx-auto`}>
+								<div className={`bg-white ${isGrid ? "w-full max-w-lg h-[360px]" : "flex items-center p-4 w-[55rem] 2xl:w-[68rem]"} pt-3 mx-auto`}>
 									<div className={`relative ${isGrid ? "w-[90%] h-48 mx-auto" : "w-[16rem] h-[10rem]"} rounded-md overflow-hidden group`}>
 										<img
 											src={course.image}
@@ -365,7 +365,7 @@ const SeekProjects = () => {
 										/>
 									</div>
 
-									<div className={`${isGrid ? "relative p-4 top-[-3rem]" : "ml-4 flex flex-col justify-center"}`}>
+									<div className={`${isGrid ? "relative p-4 top-[-3rem] 2xl:top-[-0.75rem]" : "ml-4 flex flex-col justify-center"}`}>
 										<div className={` ${isGrid ? "flex justify-between items-center" : "flex "}`}>
 											<p className={`${isGrid ? "bg-[#EAEFF8] p-1 rounded-sm text-[#737F92] text-xs md:text-[0.85rem] font-semibold" : "bg-[#EAEFF8] p-1 rounded-sm text-[#737F92] text-xs md:text-[0.85rem] font-semibold mr-4"}`}>
 												{course.category}
@@ -389,7 +389,7 @@ const SeekProjects = () => {
 					</ul>
 
 				</div>
-				<div className="w-1/4 bg-white p-4 rounded-md shadow-sm h-fit">
+				<div className="w-1/4 2xl:w-[23.25rem] bg-white p-4 rounded-md shadow-sm h-fit">
 					<h3 className="text-lg font-semibold mb-4 border-b border-[#DEDEDE] pb-4">Recent Courses</h3>
 					<ul className="space-y-4">
 						{recentCourses.map((course, index) => (
