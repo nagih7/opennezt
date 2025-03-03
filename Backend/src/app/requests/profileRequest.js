@@ -52,8 +52,8 @@ export const createProfileCertification = Joi.object({
         }),
     name: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Name'),
     description: Joi.string().trim().allow('').max(MAX_STRING_SIZE).label('Description'),
-    issue_date: Joi.date().allow(null, '').label('Issue Date'),
-    expiration_date: Joi.date().allow(null, '').label('Expiration Date'),
+    issue_date: Joi.date().required().allow(null, '').label('Issue Date'),
+    expiration_date: Joi.date().required().allow(null, '').label('Expiration Date'),
     is_lifetime: Joi.boolean().label('Is Lifetime'),
     verification_url: Joi.string().trim().allow(null).label('Verification ID'),
 })
