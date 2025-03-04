@@ -17,6 +17,18 @@ import {
 	requestGetProfile,
 	requestGetProfileSuccess,
 	requestGetProfileFail,
+	// ========== Education ========== //
+	requestCreateOrUpdateEducation,
+	createOrUpdateEducationSuccess,
+	createOrUpdateEducationFail,
+	// ========== Certification ========== //
+	requestCreateOrUpdateCertification,
+	createOrUpdateCertificationSuccess,
+	createOrUpdateCertificationFail,
+	// ========== Organization ========== //
+	requestgetOrganizationFramework,
+	requestgetOrganizationFrameworkSuccess,
+	requestgetOrganizationFrameworkFail,
 } from "../../states/modules/profile";
 
 export const updateUser = (data) => async (dispatch, getState) => {
@@ -80,6 +92,60 @@ export const getProfile = () => async (dispatch, getState) => {
 			requestGetProfile,
 			requestGetProfileSuccess,
 			requestGetProfileFail,
+		],
+		dispatch,
+		getState,
+	});
+};
+
+// ========== Education ========== //
+export const createOrUpdateEducation =
+	(data, action) => async (dispatch, getState) => {
+		const method = action === "create" ? "post" : "put";
+		return callApi({
+			method: method,
+			apiPath: `/profile/education`,
+			actionTypes: [
+				requestCreateOrUpdateEducation,
+				createOrUpdateEducationSuccess,
+				createOrUpdateEducationFail,
+			],
+			variables: data,
+			dispatch,
+			getState,
+			action,
+		});
+	};
+
+// ========== Certification ========== //
+export const createOrUpdateCertification =
+	(data, action) => async (dispatch, getState) => {
+		console.log(data, action);
+		const method = action === "create" ? "post" : "put";
+		return callApi({
+			method: method,
+			apiPath: `/profile/certification`,
+			actionTypes: [
+				requestCreateOrUpdateCertification,
+				createOrUpdateCertificationSuccess,
+				createOrUpdateCertificationFail,
+			],
+			variables: data,
+			dispatch,
+			getState,
+			action,
+		});
+	};
+
+// ========== Organization ========== //
+export const getOrganizationFramework = () => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: `/profile/organizations`,
+		actionTypes: [
+			requestgetOrganizationFramework,
+			requestgetOrganizationFrameworkSuccess,
+			requestgetOrganizationFrameworkFail,
 		],
 		dispatch,
 		getState,

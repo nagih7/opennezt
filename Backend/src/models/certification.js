@@ -1,6 +1,11 @@
 import createModel, {ObjectId} from './base'
 
 const Certification = createModel('Certification', 'certifications', {
+    profile_id: {
+        type: ObjectId,
+        ref: 'Profile',
+        required: true,
+    },
     organization_id: {
         type: ObjectId,
         ref: 'Organization',
@@ -12,7 +17,7 @@ const Certification = createModel('Certification', 'certifications', {
     },
     description: {
         type: String,
-        required: true,
+        required: false,
         default: '',
     },
     issue_date: {
@@ -21,7 +26,7 @@ const Certification = createModel('Certification', 'certifications', {
     },
     expiration_date: {
         type: Date,
-        required: true,
+        required: false,
     },
     is_lifetime: {
         type: Boolean,

@@ -10,6 +10,24 @@ const profileRouter = Router()
 profileRouter.use(asyncHandler(requireAuthentication))
 
 // ===================== Profile ===================== ///
+
+// ========== Education ========== //
+profileRouter.post(
+    '/education',
+    asyncHandler(validate(profileRequest.createProfileEducation)),
+    asyncHandler(profileController.createProfileEducation)
+)
+// ========== Certification ========== //
+profileRouter.post(
+    '/certification',
+    asyncHandler(validate(profileRequest.createProfileCertification)),
+    asyncHandler(profileController.createProfileCertification)
+)
+
+// ========== Organization ========== //
+profileRouter.get('/organizations', asyncHandler(profileController.getOrganizationFramework))
+
+// ========== Dynamic Routes ========== //
 profileRouter.post(
     '/',
     asyncHandler(validate(profileRequest.createProfile)),

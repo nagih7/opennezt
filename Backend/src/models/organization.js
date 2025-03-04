@@ -7,12 +7,12 @@ const Organization = createModel('Organization', 'organizations', {
     },
     description: {
         type: String,
-        required: true,
+        required: false,
         default: '',
     },
     logo: {
         type: String,
-        required: true,
+        required: false,
         default: '',
     },
     website: {
@@ -22,7 +22,7 @@ const Organization = createModel('Organization', 'organizations', {
     },
     contact_email: {
         type: String,
-        required: true,
+        required: false,
         default: '',
     },
     metadata: {

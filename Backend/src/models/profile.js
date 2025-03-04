@@ -20,20 +20,6 @@ const Profile = createModel('Profile', 'profiles', {
         required: true,
         index: true,
     },
-    education_ids: {
-        type: [ObjectId],
-        ref: 'Education',
-        required: true,
-        default: [],
-        index: true,
-    },
-    certification_ids: {
-        type: [ObjectId],
-        ref: 'Certification',
-        required: true,
-        default: [],
-        index: true,
-    },
     category_ids: {
         type: [ObjectId],
         ref: 'Category',

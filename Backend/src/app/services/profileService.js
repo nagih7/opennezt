@@ -1,4 +1,4 @@
-import {Profile, ProfileAdditionalInfo} from '@/models'
+import {Certification, Education, Profile, ProfileAdditionalInfo, Organization} from '@/models'
 
 export async function createProfile(user, {additional_infos, ...requestBody}) {
     const isExist = await Profile.findOne({user_id: user.id})
@@ -45,16 +45,16 @@ export async function getProfile(user) {
     const lookupEducation = {
         $lookup: {
             from: 'educations',
-            localField: 'education_ids',
-            foreignField: '_id',
+            localField: '_id',
+            foreignField: 'profile_id',
             as: 'educations',
         },
     }
     const lookupCertification = {
         $lookup: {
             from: 'certifications',
-            localField: 'certification_ids',
-            foreignField: '_id',
+            localField: '_id',
+            foreignField: 'profile_id',
             as: 'certifications',
         },
     }
@@ -167,4 +167,74 @@ export async function getProfile(user) {
     const profile = await Profile.aggregate([matchStage, ...lookupStages, ...unwindStages, projectStage])
 
     return profile[0]
+}
+
+// ========== Profile Education ========== //
+export async function createProfileEducation(user, requestBody) {
+    const profile = await Profile.findOne({user_id: user.id})
+    if (!profile) {
+        throw new Error('Profile not found.')
+    }
+
+    const education = new Education({
+        ...requestBody,
+        profile_id: profile._id,
+    })
+    await education.save()
+}
+export async function updateProfileEducation(user, requestBody) {
+    const profile = await Profile.findOne({user_id: user.id})
+    if (!profile) {
+        throw new Error('Profile not found.')
+    }
+
+    const education = await Education.findOneAndUpdate(
+        {
+            profile_id: profile._id,
+            _id: requestBody.id,
+        },
+        requestBody,
+        {new: true}
+    )
+    if (!education) {
+        throw new Error('Education not found.')
+    }
+}
+
+// ========== Profile Certification ========== //
+export async function createProfileCertification(user, requestBody) {
+    const profile = await Profile.findOne({user_id: user.id})
+    if (!profile) {
+        throw new Error('Profile not found.')
+    }
+
+    const certification = new Certification({
+        ...requestBody,
+        profile_id: profile._id,
+    })
+    await certification.save()
+}
+export async function updateProfileCertification(user, requestBody) {
+    const profile = await Profile.findOne({user_id: user.id})
+    if (!profile) {
+        throw new Error('Profile not found.')
+    }
+
+    const certification = await Certification.findOneAndUpdate(
+        {
+            profile_id: profile._id,
+            _id: requestBody.id,
+        },
+        requestBody,
+        {new: true}
+    )
+    if (!certification) {
+        throw new Error('Certification not found.')
+    }
+}
+
+// ========== Organization ========== //
+export async function getOrganizationFramework() {
+    const organizations = await Organization.find().select('_id name description')
+    return organizations
 }

@@ -10,6 +10,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { RootProvider } from "context/RootContext";
 import Mobile_Responsive from "components/common/Mobile_Responsive";
 import ChakraProvider from "components/UI/provider";
+import { Toaster } from "components/UI/toaster";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -24,7 +25,10 @@ root.render(
 				{isMobileDevice() ? (
 					<Mobile_Responsive />
 				) : (
-					<RouterProvider router={router} />
+					<>
+						<Toaster />
+						<RouterProvider router={router} />
+					</>
 				)}
 			</RootProvider>
 		</Provider>
