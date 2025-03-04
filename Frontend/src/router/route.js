@@ -5,6 +5,9 @@ import { rootLoader } from "./rootLoader";
 import AppLayout from "components/layouts/AppLayout";
 import AuthLayout from "components/layouts/AuthLayout";
 import EditProfile from "components/pages/EditProfile";
+import ProfessionalBackground from "components/pages/EditProfile/components/ProfileProfessionalEditor/ProfessionalBackground";
+import Expertise from "components/pages/EditProfile/components/ProfileProfessionalEditor/Expertise";
+import WorkWithMe from "components/pages/EditProfile/components/ProfileProfessionalEditor/WorkWithMe";
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import("../components/pages/Auth/Login"));
@@ -188,11 +191,41 @@ const router = createBrowserRouter([
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROJECTS_NOTIFICATION_PAGE"),
 	},
+	// {
+	// 	path: "/about/edit-profile",
+	// 	element: (
+	// 		<AppLayout>
+	// 			<EditProfile />
+	// 		</AppLayout>
+	// 	),
+	// 	loader: ({ request }) =>
+	// 		rootLoader({ request }, true, "LOAD_EDIT_PROFILE_PAGE"),
+	// },
 	{
-		path: "/about/edit-profile",
+		path: "/about/edit-profile/professional-background",
 		element: (
 			<AppLayout>
-				<EditProfile />
+				<ProfessionalBackground />
+			</AppLayout>
+		),
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_EDIT_PROFILE_PAGE"),
+	},
+	{
+		path: "/about/edit-profile/expertise",
+		element: (
+			<AppLayout>
+				<Expertise />
+			</AppLayout>
+		),
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_EDIT_PROFILE_PAGE"),
+	},
+	{
+		path: "/about/edit-profile/work-with-me",
+		element: (
+			<AppLayout>
+				<WorkWithMe />
 			</AppLayout>
 		),
 		loader: ({ request }) =>
