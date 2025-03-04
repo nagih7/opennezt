@@ -20,7 +20,6 @@ const ProfileCard = () => {
 					Vuong Manh Nghia
 					<CheckCircleFilled className="text-[#3897f0] ml-2" />
 				</h4>
-				{/* <span className="text-[#6f7f92]">Member since 2021</span> */}
 				<span className="text-[#6f7f92]">
 					{authUser?.created_at
 						? `Member since ${new Date(
