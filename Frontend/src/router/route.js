@@ -27,6 +27,8 @@ const RecruitTalents = React.lazy(() =>
 const SeekProjects = React.lazy(() =>
 	import("../components/pages/SeekProjects")
 );
+const ProjectDetailsModal = React.lazy(() =>
+	import("../components/pages/SeekProjects/ProjectDetailsModal"))
 const NotificationManagement = React.lazy(() =>
 	import("../components/pages/NotificationManagement")
 );
@@ -177,6 +179,13 @@ const router = createBrowserRouter([
 		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_SEEK_PROJECT_PAGE"),
+
+	},
+	{
+		path: "seek-projects/:id", // Route động cho từng dự án
+		element: <AppLayout> <ProjectDetailsModal /></AppLayout>,
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_PROJECT_DETAIL_PAGE"),
 	},
 	{
 		path: "/notification-management",
