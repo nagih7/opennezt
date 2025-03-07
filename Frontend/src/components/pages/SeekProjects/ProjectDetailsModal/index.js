@@ -438,7 +438,7 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 								<>
 									<div className="bg-white">
 										<button onClick={() => setDropsown(!dropdown)} className=" p-3 flex  ">
-											<h4 className="mb-0">Lessons in This Class</h4>
+											<h4 className="mb-0">Lesson in This Class</h4>
 											<p className="mb-0 relative right-[-26.5rem] text-[#6F7F92]">{dropdown ? "▲" : "▼"}</p>
 										</button>
 
