@@ -1,4 +1,4 @@
-import { Avatar, Button, Input } from "@chakra-ui/react";
+import { Button, Input } from "@chakra-ui/react";
 import { getProfile } from "api/profile";
 import { getExperienceLevelFramwork, getIndustryFramework } from "api/user";
 import {
@@ -10,23 +10,11 @@ import {
 } from "components/UI/select";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CheckCircleFilled } from "@ant-design/icons";
-import {
-	IconlyArrowDown2,
-	IconlyArrowUp2,
-	IconlyHome,
-	IconlyLogout,
-	IconlyMessage,
-	IconlyProfile,
-} from "components/UI/Iconly";
-import { Link } from "react-router-dom";
+import ProfileCard from "../ProfileCard";
+import ProfileEditMenu from "../ProfileEditMenu";
+import ActionBar from "../ActionBar";
 
 const ProfessionalBackground = () => {
-	// ========== STATE FROM REDUX STORE ========== //
-	const { authUser } = useSelector((state) => state.auth);
-	// ========== STATE MANAGEMENT ========== //
-	const [isOpen, setIsOpen] = useState(true);
-
 	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX STORE ========== //
 	const { profile } = useSelector((state) => state.profile);
@@ -67,122 +55,16 @@ const ProfessionalBackground = () => {
 	const handleSaveChanges = () => {
 		console.log(formData);
 	};
-
 	// ========== COMPONENT RENDER ========== //
 	return (
 		<div className="flex gap-8 w-full py-8 px-[16px]">
-			<div className="w-4/12">
-				{/* ========== Profile Edit Menu ========== */}
-				<h6>
-					<div
-						className="flex items-center justify-between text-[#ffffff] bg-[#2f65b9] py-[16px] px-[20px] rounded-md cursor-pointer"
-						onClick={() => setIsOpen(!isOpen)}>
-						<div className="flex items-center gap-2">
-							<IconlyProfile size={18} color={"#ffffff"} />
-							Profile Settings
-						</div>
-						<div
-							className={`transition-transform duration-300 ${
-								isOpen ? "rotate-180" : "rotate-0"
-							}`}>
-							{isOpen ? (
-								<IconlyArrowUp2 size={18} color={"#ffffff"} />
-							) : (
-								<IconlyArrowDown2 size={18} color={"#ffffff"} />
-							)}
-						</div>
-					</div>
-				</h6>
-				<div
-					className={`mt-3 bg-[#ffffff] overflow-hidden transition-all duration-500 ease-in-out ${
-						isOpen ? "max-h-screen" : "max-h-0"
-					}`}>
-					<div className="px-[24px]">
-						<div className="px-[24px]">
-							<ul className="flex flex-col items-center pl-0 mb-0">
-								<li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
-									<Link
-										to={"/about/edit-profile/professional-background"}
-										className="text-black no-underline ">
-										Professional Background
-									</Link>
-								</li>
-								<li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
-									<Link
-										to={"/about/edit-profile/expertise"}
-										className="text-[#6f7f92]  no-underline ">
-										Expertise
-									</Link>
-								</li>
-								<li className=" w-full text-sm py-[21px] ">
-									<Link
-										to={"/about/edit-profile/work-with-me"}
-										className="text-[#6f7f92]  no-underline ">
-										Work with me
-									</Link>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
+			<ProfileEditMenu />
 			<div className="w-8/12">
 				<div className="bg-[#ffffff] p-8 rounded-md">
 					{/* =========== Profile Card ========== */}
-					<div className="flex items-center gap-3 pb-8 border-b-[1px] border-gray-200 mb-8">
-						<div>
-							<Avatar.Root shape={"rounded"} size={"2xl"}>
-								<Avatar.Fallback name={authUser.name} />
-								<Avatar.Image src={authUser.avatar} />
-							</Avatar.Root>
-						</div>
-						<div>
-							<h4 className="flex items-center">
-								Vuong Manh Nghia
-								<CheckCircleFilled className="text-[#3897f0] ml-2" />
-							</h4>
-							<span className="text-[#6f7f92]">
-								{authUser?.created_at
-									? `Member since ${new Date(
-											authUser.created_at
-									  ).getFullYear()}`
-									: ""}
-							</span>
-						</div>
-					</div>
-					{/* =========== Active Menu  ========== */}
-					<div>
-						<ul className="flex gap-3 pl-0 mb-0">
-							<li>
-								<a
-									href="#"
-									className="flex items-center justify-center bg-[#f8f9fa] h-[60px] w-[60px] rounded-md">
-									<IconlyHome size={25} color={"#6f7f92"} />
-								</a>
-							</li>
-							<li>
-								<a
-									href="#"
-									className="flex items-center justify-center bg-[#f8f9fa] h-[60px] w-[60px] rounded-md">
-									<IconlyProfile size={25} color={"#6f7f92"} />
-								</a>
-							</li>
-							<li>
-								<a
-									href="#"
-									className="flex items-center justify-center bg-[#f8f9fa] h-[60px] w-[60px] rounded-md">
-									<IconlyMessage size={25} color={"#6f7f92"} />
-								</a>
-							</li>
-							<li>
-								<a
-									href="#"
-									className="flex items-center justify-center bg-[#f8f9fa] h-[60px] w-[60px] rounded-md">
-									<IconlyLogout size={25} color={"#6f7f92"} />
-								</a>
-							</li>
-						</ul>
-					</div>
+					<ProfileCard />
+					{/* =========== Action Bar  ========== */}
+					<ActionBar />
 				</div>
 				<div className="bg-[#ffffff] p-8 rounded-md mt-8">
 					<div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">

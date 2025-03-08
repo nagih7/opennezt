@@ -4,10 +4,9 @@ import { rootLoader } from "./rootLoader";
 
 import AppLayout from "components/layouts/AppLayout";
 import AuthLayout from "components/layouts/AuthLayout";
-import EditProfile from "components/pages/EditProfile";
-import ProfessionalBackground from "components/pages/EditProfile/components/ProfileProfessionalEditor/ProfessionalBackground";
-import Expertise from "components/pages/EditProfile/components/ProfileProfessionalEditor/Expertise";
-import WorkWithMe from "components/pages/EditProfile/components/ProfileProfessionalEditor/WorkWithMe";
+import ProfessionalBackground from "components/pages/EditProfile/components/ProfessionalBackground";
+import Expertise from "components/pages/EditProfile/components/Expertise";
+import WorkWithMe from "components/pages/EditProfile/components/WorkWithMe";
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import("../components/pages/Auth/Login"));
@@ -31,7 +30,8 @@ const SeekProjects = React.lazy(() =>
 	import("../components/pages/SeekProjects")
 );
 const ProjectDetailsModal = React.lazy(() =>
-	import("../components/pages/SeekProjects/ProjectDetailsModal"))
+	import("../components/pages/SeekProjects/ProjectDetailsModal")
+);
 const NotificationManagement = React.lazy(() =>
 	import("../components/pages/NotificationManagement")
 );
@@ -182,11 +182,15 @@ const router = createBrowserRouter([
 		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_SEEK_PROJECT_PAGE"),
-
 	},
 	{
 		path: "seek-projects/:id", // Route động cho từng dự án
-		element: <AppLayout> <ProjectDetailsModal /></AppLayout>,
+		element: (
+			<AppLayout>
+				{" "}
+				<ProjectDetailsModal />
+			</AppLayout>
+		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROJECT_DETAIL_PAGE"),
 	},

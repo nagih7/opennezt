@@ -5,25 +5,21 @@ import { getExperienceLevelFramwork, getIndustryFramework } from "api/user";
 import { useDispatch, useSelector } from "react-redux";
 import { CheckCircleFilled } from "@ant-design/icons";
 import {
-	IconlyArrowDown2,
-	IconlyArrowUp2,
 	IconlyHome,
 	IconlyLogout,
 	IconlyMessage,
 	IconlyProfile,
 } from "components/UI/Iconly";
-import { Link } from "react-router-dom";
+import ProfileEditMenu from "../ProfileEditMenu";
+import ProfileCard from "../ProfileCard";
+import ActionBar from "../ActionBar";
 
 const WorkWithMe = () => {
 	const { authUser } = useSelector((state) => state.auth);
 	// ========== STATE MANAGEMENT ========== //
-	const [isOpen, setIsOpen] = useState(true);
-
 	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX STORE ========== //
 	const { profile } = useSelector((state) => state.profile);
-	const { industries } = useSelector((state) => state.user);
-	const { experienceLevels } = useSelector((state) => state.user);
 	// ========== STATE MANAGEMENT ========== //
 	const [formData, setFormData] = useState({
 		industries: [],
@@ -62,62 +58,14 @@ const WorkWithMe = () => {
 
 	return (
 		<div className="flex gap-8 w-full py-8 px-[16px]">
-			<div className="w-4/12">
-				{/* ========== Profile Edit Menu ========== */}
-				<h6>
-					<div
-						className="flex items-center justify-between text-[#ffffff] bg-[#2f65b9] py-[16px] px-[20px] rounded-md cursor-pointer"
-						onClick={() => setIsOpen(!isOpen)}>
-						<div className="flex items-center gap-2">
-							<IconlyProfile size={18} color={"#ffffff"} />
-							Profile Settings
-						</div>
-						<div
-							className={`transition-transform duration-300 ${
-								isOpen ? "rotate-180" : "rotate-0"
-							}`}>
-							{isOpen ? (
-								<IconlyArrowUp2 size={18} color={"#ffffff"} />
-							) : (
-								<IconlyArrowDown2 size={18} color={"#ffffff"} />
-							)}
-						</div>
-					</div>
-				</h6>
-				<div
-					className={`mt-3 bg-[#ffffff] overflow-hidden transition-all duration-500 ease-in-out ${
-						isOpen ? "max-h-screen" : "max-h-0"
-					}`}>
-					<div className="px-[24px]">
-						<div className="px-[24px]">
-							<ul className="flex flex-col items-center pl-0 mb-0">
-								<li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
-									<Link
-										to={"/about/edit-profile/professional-background"}
-										className="text-[#6f7f92]  no-underline ">
-										Professional Background
-									</Link>
-								</li>
-								<li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
-									<Link
-										to={"/about/edit-profile/expertise"}
-										className="text-[#6f7f92]  no-underline ">
-										Expertise
-									</Link>
-								</li>
-								<li className=" w-full text-sm py-[21px] ">
-									<Link
-										to={"/about/edit-profile/work-with-me"}
-										className="text-black no-underline ">
-										Work with me
-									</Link>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
+			<ProfileEditMenu />
 			<div className="w-8/12">
+				<div className="bg-[#ffffff] p-8 rounded-md">
+					{/* =========== Profile Card ========== */}
+					<ProfileCard />
+					{/* =========== Action Bar  ========== */}
+					<ActionBar />
+				</div>
 				<div className="bg-[#ffffff] p-8 rounded-md">
 					{/* =========== Profile Card ========== */}
 					<div className="flex items-center gap-3 pb-8 border-b-[1px] border-gray-200 mb-8">

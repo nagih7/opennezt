@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
 	IconlyArrowDown2,
 	IconlyArrowUp2,
@@ -10,7 +11,8 @@ const ProfileEditMenu = () => {
 	const [isOpen, setIsOpen] = useState(true);
 	// ========== COMPONENT RENDER ========== //
 	return (
-		<>
+		<div className="w-4/12">
+			{/* ========== Profile Edit Menu ========== */}
 			<h6>
 				<div
 					className="flex items-center justify-between text-[#ffffff] bg-[#2f65b9] py-[16px] px-[20px] rounded-md cursor-pointer"
@@ -39,25 +41,31 @@ const ProfileEditMenu = () => {
 					<div className="px-[24px]">
 						<ul className="flex flex-col items-center pl-0 mb-0">
 							<li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
-								<a href="#" className="text-[#6f7f92]  no-underline ">
+								<Link
+									to={"/about/edit-profile/professional-background"}
+									className="text-[#6f7f92] no-underline ">
 									Professional Background
-								</a>
+								</Link>
 							</li>
 							<li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
-								<a href="#" className="text-[#6f7f92]  no-underline ">
+								<Link
+									to={"/about/edit-profile/expertise"}
+									className="text-[#6f7f92]  no-underline ">
 									Expertise
-								</a>
+								</Link>
 							</li>
 							<li className=" w-full text-sm py-[21px] ">
-								<a href="#" className="text-[#6f7f92]  no-underline ">
+								<Link
+									to={"/about/edit-profile/work-with-me"}
+									className="text-[#6f7f92]  no-underline ">
 									Work with me
-								</a>
+								</Link>
 							</li>
 						</ul>
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 
