@@ -29,8 +29,6 @@ function ExperienceLevelManage() {
 		isLoadingBtnCreateOrUpdateExperienceLevel,
 	} = useSelector((state) => state.manage);
 
-	console.log(experienceLevels);
-
 	const [data, setData] = useState({});
 	const [dataFilter, setDataFilter] = useState({
 		keySearch: "",

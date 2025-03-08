@@ -29,6 +29,12 @@ export const createProfile = Joi.object({
     ),
 })
 
+// ========== Professional Profile ========== //
+export const updateProfessionalProfile = Joi.object({
+    industry_ids: Joi.array().items(Joi.string().trim().required()).label('Industry IDs'),
+    experience_level_id: Joi.string().trim().required().label('Experience Level ID'),
+})
+
 // ========== Profile Education ========== //
 export const createProfileEducation = Joi.object({
     school: Joi.string().trim().required().max(MAX_STRING_SIZE).label('School'),

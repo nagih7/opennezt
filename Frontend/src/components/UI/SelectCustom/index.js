@@ -18,10 +18,12 @@ const SelectCustom = ({ ...rest }) => {
 		htmlFor,
 		multiple,
 		canChange,
+		value,
 	} = rest;
 	return (
 		<div>
 			<SelectRoot
+				value={value}
 				multiple={multiple || false}
 				height={height || 50}
 				onValueChange={onChange}

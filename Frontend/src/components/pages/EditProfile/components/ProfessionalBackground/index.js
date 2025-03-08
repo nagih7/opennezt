@@ -1,20 +1,12 @@
-import { Button, Input } from "@chakra-ui/react";
-import { getProfile } from "api/profile";
+import { Button } from "@chakra-ui/react";
+import { getProfile, updateProfessionalProfile } from "api/profile";
 import { getExperienceLevelFramwork, getIndustryFramework } from "api/user";
-import {
-	SelectContent,
-	SelectItem,
-	SelectRoot,
-	SelectTrigger,
-	SelectValueText,
-} from "components/UI/select";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProfileCard from "../ProfileCard";
 import ProfileEditMenu from "../ProfileEditMenu";
 import ActionBar from "../ActionBar";
 import SelectCustom from "components/UI/SelectCustom";
-import { debounce } from "lodash";
 
 const ProfessionalBackground = () => {
 	const dispatch = useDispatch();
@@ -47,15 +39,21 @@ const ProfessionalBackground = () => {
 	}, [profile]);
 
 	// ========== HANDLE CHANGE FUNCTION ========== //
-	const handleChange = debounce((event, nameSelect) => {
+	const handleChange = (event, nameSelect) => {
 		setFormData({
 			...formData,
 			[nameSelect]: event.value,
 		});
-	}, 300);
+	};
 
 	const handleSaveChanges = () => {
 		console.log(formData);
+		dispatch(
+			updateProfessionalProfile({
+				industry_ids: formData.industries,
+				experience_level_id: formData.experience_level[0],
+			})
+		);
 	};
 	// ========== COMPONENT RENDER ========== //
 	return (
@@ -84,14 +82,18 @@ const ProfessionalBackground = () => {
 								collection={industryFramework}
 								onChange={(event) => handleChange(event, "industries")}
 								canChange
+								value={formData.industries}
 							/>
 							<SelectCustom
 								required
 								label="Experience Level"
 								placeholder="Ex: Entry Level"
 								collection={experienceLevelFramework}
-								onChange={(event) => handleChange(event, "industries")}
+								onChange={(event) =>
+									handleChange(event, "experience_level")
+								}
 								canChange
+								value={formData.experience_level}
 							/>
 							<div className="flex justify-end">
 								<div className="">

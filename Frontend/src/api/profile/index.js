@@ -17,6 +17,9 @@ import {
 	requestGetProfile,
 	requestGetProfileSuccess,
 	requestGetProfileFail,
+	requestUpdateProfessionalProfile,
+	UpdateProfessionalProfileSuccess,
+	UpdateProfessionalProfileFail,
 	// ========== Education ========== //
 	requestCreateOrUpdateEducation,
 	createOrUpdateEducationSuccess,
@@ -97,6 +100,22 @@ export const getProfile = () => async (dispatch, getState) => {
 		getState,
 	});
 };
+
+export const updateProfessionalProfile =
+	(data) => async (dispatch, getState) => {
+		return callApi({
+			method: "put",
+			apiPath: `/profile/professional`,
+			actionTypes: [
+				requestUpdateProfessionalProfile,
+				UpdateProfessionalProfileSuccess,
+				UpdateProfessionalProfileFail,
+			],
+			variables: data,
+			dispatch,
+			getState,
+		});
+	};
 
 // ========== Education ========== //
 export const createOrUpdateEducation =
