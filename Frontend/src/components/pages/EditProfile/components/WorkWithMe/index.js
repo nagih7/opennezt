@@ -66,63 +66,6 @@ const WorkWithMe = () => {
 					{/* =========== Action Bar  ========== */}
 					<ActionBar />
 				</div>
-				<div className="bg-[#ffffff] p-8 rounded-md">
-					{/* =========== Profile Card ========== */}
-					<div className="flex items-center gap-3 pb-8 border-b-[1px] border-gray-200 mb-8">
-						<div>
-							<Avatar.Root shape={"rounded"} size={"2xl"}>
-								<Avatar.Fallback name={authUser.name} />
-								<Avatar.Image src={authUser.avatar} />
-							</Avatar.Root>
-						</div>
-						<div>
-							<h4 className="flex items-center">
-								Vuong Manh Nghia
-								<CheckCircleFilled className="text-[#3897f0] ml-2" />
-							</h4>
-							<span className="text-[#6f7f92]">
-								{authUser?.created_at
-									? `Member since ${new Date(
-											authUser.created_at
-									  ).getFullYear()}`
-									: ""}
-							</span>
-						</div>
-					</div>
-					{/* =========== Active Menu  ========== */}
-					<div>
-						<ul className="flex gap-3 pl-0 mb-0">
-							<li>
-								<a
-									href="#"
-									className="flex items-center justify-center bg-[#f8f9fa] h-[60px] w-[60px] rounded-md">
-									<IconlyHome size={25} color={"#6f7f92"} />
-								</a>
-							</li>
-							<li>
-								<a
-									href="#"
-									className="flex items-center justify-center bg-[#f8f9fa] h-[60px] w-[60px] rounded-md">
-									<IconlyProfile size={25} color={"#6f7f92"} />
-								</a>
-							</li>
-							<li>
-								<a
-									href="#"
-									className="flex items-center justify-center bg-[#f8f9fa] h-[60px] w-[60px] rounded-md">
-									<IconlyMessage size={25} color={"#6f7f92"} />
-								</a>
-							</li>
-							<li>
-								<a
-									href="#"
-									className="flex items-center justify-center bg-[#f8f9fa] h-[60px] w-[60px] rounded-md">
-									<IconlyLogout size={25} color={"#6f7f92"} />
-								</a>
-							</li>
-						</ul>
-					</div>
-				</div>
 				<div className="bg-[#ffffff] p-8 rounded-md mt-8">
 					<div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
 						<div>
