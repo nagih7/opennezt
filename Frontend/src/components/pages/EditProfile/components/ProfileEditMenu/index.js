@@ -49,6 +49,20 @@ const ProfileEditMenu = () => {
 							</li>
 							<li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
 								<Link
+									to={"/about/edit-profile/educations"}
+									className="text-[#6f7f92]  no-underline ">
+									Educations
+								</Link>
+							</li>
+							<li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
+								<Link
+									to={"/about/edit-profile/certifications"}
+									className="text-[#6f7f92]  no-underline ">
+									Certifications
+								</Link>
+							</li>
+							<li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
+								<Link
 									to={"/about/edit-profile/expertise"}
 									className="text-[#6f7f92]  no-underline ">
 									Expertise
