@@ -283,7 +283,7 @@ const manageSlice = createSlice({
 		getListExperienceLevelSuccess: (state, action) => ({
 			...state,
 			isLoadingGetListExperienceLevel: false,
-			experienceLevels: action.payload.data.experience_levels,
+			experienceLevels: action.payload.data.experienceLevels,
 			paginationListExperienceLevel: {
 				currentPage: action.payload.data.page,
 				perPage: action.payload.data.per_page,
