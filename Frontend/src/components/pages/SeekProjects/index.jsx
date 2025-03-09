@@ -268,8 +268,8 @@ const SeekProjects = () => {
 		// </div>
 
 		<>
-			<div className="pt-[35px] flex gap-6">
-				<div className="bg-gray-100 w-3/4 2xl:relative 2xl:left-[-2rem] 2xl:w-[70rem] ">
+			<div className="pt-[35px] flex gap-6 ">
+				<div className="bg-gray-100 w-3/4 2xl:relative 2xl:left-[-1rem] 2xl:w-[70rem] ">
 					<div className="flex items-center gap-4 p-4 bg-white border rounded-lg shadow-sm ml-[1.9rem] flex-col md:flex-row  justify-between">
 						<p className="text-gray-600 text-lg mt-2 mb-0">All Projects</p>
 						<div className=" md:w-auto">
