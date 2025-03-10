@@ -33,12 +33,13 @@ const CertificationProfile = () => {
 	// ========== STATE MANAGEMENT ========== //
 	const [action, setAction] = useState("");
 	const [formData, setFormData] = useState({
-		name: "",
 		organization_id: "",
-		start_date: "",
-		end_date: "",
-		credential_id: "",
-		credential_url: "",
+		name: "",
+		description: "",
+		issue_date: "",
+		expiration_date: "",
+		is_lifetime: false,
+		verification_url: "",
 	});
 
 	// ========== USE EFFECT ========== //
@@ -58,8 +59,31 @@ const CertificationProfile = () => {
 		});
 	}, 300);
 
+	const onCheckedChange = (event, nameSelect) => {
+		if (event.checked === true) {
+			setFormData({
+				...formData,
+				expiration_date: "",
+			});
+		}
+		setFormData({
+			...formData,
+			[nameSelect]: event.checked,
+		});
+	};
+
 	const handleConfirm = () => {
-		dispatch(createOrUpdateCertification(formData, action));
+		if (formData.is_lifetime) {
+			const { expiration_date, ...rest } = formData;
+			dispatch(
+				createOrUpdateCertification(
+					{ ...rest, expiration_date: "" },
+					action
+				)
+			);
+		} else {
+			dispatch(createOrUpdateCertification(formData, action));
+		}
 	};
 
 	// ========== COMPONENT RENDER ========== //
@@ -109,7 +133,10 @@ const CertificationProfile = () => {
 								placeholder="Ex: Certified in designing scalable and secure cloud architectures on AWS"
 								height="40px"
 							/>
-							<Checkbox onCheckedChange={(e) => console.log(e)}>
+							<Checkbox
+								onCheckedChange={(event) =>
+									onCheckedChange(event, "is_lifetime")
+								}>
 								Certified for life
 							</Checkbox>
 
@@ -122,6 +149,7 @@ const CertificationProfile = () => {
 									height="40px"
 								/>
 								<InputCustom
+									disabled={formData.is_lifetime}
 									type="month"
 									onChange={(event) =>
 										onChange(event, "expiration_date")
@@ -132,6 +160,7 @@ const CertificationProfile = () => {
 								/>
 							</HStack>
 							<InputCustom
+								required
 								ps="4.5rem"
 								startElement="https://"
 								onChange={(event) =>

@@ -13,12 +13,14 @@ const InputCustom = ({ ...rest }) => {
 		height,
 		onChange,
 		startElement,
+		disabled,
 	} = rest;
 
 	return (
 		<Field.Root invalid>
 			<InputGroup width="full" startElement={startElement}>
 				<Input
+					disabled={disabled}
 					ps={rest?.ps}
 					onChange={onChange}
 					value={value}

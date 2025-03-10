@@ -1,5 +1,6 @@
 import {Certification, Education, Profile, ProfileAdditionalInfo, Organization} from '@/models'
 
+// ========== Profile ========== //
 export async function createProfile(user, {additional_infos, ...requestBody}) {
     const isExist = await Profile.findOne({user_id: user.id})
     if (isExist) {
@@ -167,6 +168,14 @@ export async function getProfile(user) {
     const profile = await Profile.aggregate([matchStage, ...lookupStages, ...unwindStages, projectStage])
 
     return profile[0]
+}
+
+// ========== Professional Profile ========== //
+export async function updateProfessionalProfile(user, requestBody) {
+    const profile = await Profile.findOneAndUpdate({user_id: user.id}, requestBody, {new: true})
+    if (!profile) {
+        throw new Error('Profile not found.')
+    }
 }
 
 // ========== Profile Education ========== //

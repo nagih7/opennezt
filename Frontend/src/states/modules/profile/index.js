@@ -1,6 +1,5 @@
 import { createListCollection } from "@chakra-ui/react";
 import { createSlice } from "@reduxjs/toolkit";
-import { message } from "antd";
 import { toaster } from "components/UI/toaster";
 
 const profileSlice = createSlice({
@@ -22,6 +21,7 @@ const profileSlice = createSlice({
 		// ========== Profile ========== //
 		profile: {},
 		isLoadingGetProfile: false,
+		isLoadingUpdateProfile: false,
 		isOpenAvatarPreview: false,
 		// ========== Education ========== //
 		isOpenModalCreateOrUpdateEducation: false,
@@ -49,14 +49,20 @@ const profileSlice = createSlice({
 			loadingBtnUpdateInfoUser: true,
 		}),
 		updateInfoUserSuccess: (state, action) => {
-			message.success(action.payload.message);
+			toaster.create({
+				title: `Update info user successfully.`,
+				type: "success",
+			});
 			return {
 				...state,
 				loadingBtnUpdateInfoUser: false,
 			};
 		},
 		updateInfoUserFail: (state, action) => {
-			message.error(action.payload.message);
+			toaster.create({
+				title: `${Object.values(action.payload.data.detail)[0]}`,
+				type: "error",
+			});
 			return {
 				...state,
 				loadingBtnUpdateInfoUser: false,
@@ -115,6 +121,30 @@ const profileSlice = createSlice({
 			return {
 				...state,
 				isLoadingGetProfile: false,
+			};
+		},
+		requestUpdateProfessionalProfile: (state) => ({
+			...state,
+			isLoadingUpdateProfile: true,
+		}),
+		UpdateProfessionalProfileSuccess: (state) => {
+			toaster.create({
+				title: `Update professional profile successfully.`,
+				type: "success",
+			});
+			return {
+				...state,
+				isLoadingUpdateProfile: false,
+			};
+		},
+		UpdateProfessionalProfileFail: (state) => {
+			toaster.create({
+				title: `Update professional profile fail.`,
+				type: "error",
+			});
+			return {
+				...state,
+				isLoadingUpdateProfile: false,
 			};
 		},
 		setIsOpenAvatarPreview: (state, action) => ({
@@ -232,6 +262,9 @@ export const {
 	requestGetProfile,
 	requestGetProfileSuccess,
 	requestGetProfileFail,
+	requestUpdateProfessionalProfile,
+	UpdateProfessionalProfileSuccess,
+	UpdateProfessionalProfileFail,
 	setIsOpenAvatarPreview,
 	// ========== Education ========== //
 	requestCreateOrUpdateEducation,

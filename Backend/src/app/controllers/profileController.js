@@ -1,5 +1,6 @@
 import * as profileService from '../services/profileService'
 
+// ========== Profile ========== //
 export async function createProfile(req, res) {
     await profileService.createProfile(req.currentUser, req.body)
     res.status(201).jsonify('Create profile successfully.')
@@ -8,6 +9,13 @@ export async function getProfile(req, res) {
     const profile = await profileService.getProfile(req.currentUser)
     res.jsonify(profile)
 }
+
+// ========== Professional Profile ========== //
+export async function updateProfessionalProfile(req, res) {
+    await profileService.updateProfessionalProfile(req.currentUser, req.body)
+    res.jsonify('Update professional profile successfully.')
+}
+
 // ========== Education ========== //
 export async function createProfileEducation(req, res) {
     await profileService.createProfileEducation(req.currentUser, req.body)
