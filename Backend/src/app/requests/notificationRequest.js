@@ -1,5 +1,5 @@
 import {MAX_STRING_SIZE} from '@/configs'
-import {NotificationFeed, Project, User} from '@/models'
+import {NotificationFeed, Project, User, Type} from '@/models'
 import {AsyncValidate} from '@/utils/classes'
 import {tryValidateOrDefault} from '@/utils/helpers'
 import Joi from 'joi'
@@ -32,7 +32,7 @@ export const requestAddFriend = Joi.object({
         .external(async (value) => {
             const user = await User.findById(value)
             if (!user) {
-                throw new Error('User ID không hợp lệ.')
+                throw new Error('User ID invalid.')
             }
             return value
         }),
@@ -42,21 +42,48 @@ export const requestAddFriend = Joi.object({
     }).label('Metadata'),
 })
 
+// export const replyNotification = Joi.object({
+//     notification_id: Joi.string()
+//         .required()
+//         .label('Notification_ID')
+//         .custom(
+//             (value, helpers) =>
+//                 new AsyncValidate(value, async () => {
+//                     const notification = await NotificationFeed.findById(value)
+//                     return notification ? value : helpers.error('any.empty')
+//                 })
+//         ),
+
+//     type: Joi.string().required().label('Type'),
+//     status: Joi.string().required().label('Status'),
+// })
+
 export const replyNotification = Joi.object({
     notification_id: Joi.string()
         .required()
         .label('Notification_ID')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async () => {
-                    const notification = await NotificationFeed.findById(value)
-                    return notification ? value : helpers.error('any.empty')
-                })
-        ),
+        .custom(async (value, helpers) => {
+            const notification = await NotificationFeed.findById(value)
+            if (!notification) {
+                return helpers.error('any.empty', { message: 'Notification not found' })
+            }
+            return value
+        }),
 
-    type: Joi.string().required().label('Type'),
-    status: Joi.string().required().label('Status'),
+    type_id: Joi.string()
+        .required()
+        .label('Type_ID')
+        .custom(async (value, helpers) => {
+            const type = await Type.findById(value)
+            if (!type) {
+                return helpers.error('any.empty', { message: 'Type not found' })
+            }
+            return value
+        }),
+
+    status: Joi.string().valid('waiting', 'accepted', 'rejected').required().label('Status'),
 })
+
 
 export const projectInvitation = Joi.object({
     project_id: Joi.string()
