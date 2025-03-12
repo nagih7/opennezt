@@ -12,6 +12,7 @@ import {
    getListFeeds,
    getUserReactionsList,
    handleReactArticle,
+   handleCreateArticle,
 } from "../../../api/newfeeds";
 import { useDispatch, useSelector } from "react-redux";
 import RightSidebar from "components/common/RightSidebar";
@@ -20,6 +21,10 @@ import CreateAricleForm from "./components/CreateAricleForm";
 
 function NewFeeds() {
    const dispatch = useDispatch();
+
+   const authUser = useSelector((state) => state.auth);
+
+   console.log(authUser);
 
    const [isOpenForm, setIsOpenForm] = useState(false);
 
@@ -115,11 +120,21 @@ function NewFeeds() {
       },
       [dispatch]
    );
+
+   const handleFormSubmit = useCallback(
+      (formData) => {
+         console.log("formData received " + JSON.stringify(formData));
+         dispatch(handleCreateArticle({ data: formData }));
+      },
+      [dispatch]
+   );
    return (
       <div>
          <div className="flex gap-8 pt-4 ">
             <div className="pl-4">
-               {isOpenForm ? <CreateAricleForm /> : null}
+               {isOpenForm ? (
+                  <CreateAricleForm onSubmitForm={handleFormSubmit} />
+               ) : null}
                <NewArticle onOpenForm={handleOpenForm} />
                {feeds.map((feed, index) => {
                   if (index === feeds.length - 1) {

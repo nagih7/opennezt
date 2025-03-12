@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { create } from "lodash";
 
 const articleSlice = createSlice({
    name: "article",
@@ -9,6 +10,7 @@ const articleSlice = createSlice({
       isLoadingGetFeeds: false,
       isLoadingGetUserReactions: false,
       isLoadingReactArticle: false,
+      isLoadingCreateArticle: false,
       pagination: {
          nextCursor: new Date(),
          limit: 5,
@@ -99,6 +101,18 @@ const articleSlice = createSlice({
             }
          }
       },
+      createArticle: (state) => ({
+         ...state,
+         isLoadingCreateArticle: true,
+      }),
+      createArticleSuccess: (state) => ({
+         ...state,
+         isLoadingCreateArticle: false,
+      }),
+      createArticleFail: (state) => ({
+         ...state,
+         isLoadingCreateArticle: false,
+      }),
    },
 });
 
@@ -113,6 +127,9 @@ export const {
    reactArticle,
    reactArticleSuccess,
    reactArticleFail,
+   createArticle,
+   createArticleSuccess,
+   createArticleFail,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;

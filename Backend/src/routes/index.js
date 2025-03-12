@@ -19,10 +19,7 @@ function route(app, io) {
         next()
     })
 
-<<<<<<< HEAD
     app.use('/article', articleRouter)
-=======
->>>>>>> 6fecf90de5887de522b390e325c5615e7e7f3ea0
     app.use('/auth', authRouter)
     app.use('/manage', manageRouteMap)
     app.use('/users', userRouter)

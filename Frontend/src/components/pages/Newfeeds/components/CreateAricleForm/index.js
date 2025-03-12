@@ -10,41 +10,70 @@ import {
    Button,
 } from "@chakra-ui/react";
 import { LuUpload } from "react-icons/lu";
+import { last, set } from "lodash";
 
-const CreateArticleForm = forwardRef((props, ref) => {
+const CreateArticleForm = forwardRef(({ onSubmitForm }, props, ref) => {
    const [formData, setFormData] = useState({
       content: {
          caption: "",
-         attachments: [],
+         attachment: [],
          hashtags: [],
       },
       audience: "public",
       status: "published",
-      project_id: "",
+      project_id: "675aa5d48107dd51e42c5b0f",
    });
-   const [caption, setCaption] = useState("");
-   const [files, setFiles] = useState([]);
+   const [fileKey, setFileKey] = useState(0);
 
-   const handleFileChange = (acceptedFiles) => {
-      setFiles(acceptedFiles);
-   };
+   //Lưu từng file những thuộc tính quan trọng rồi chuyển thành base64
+   const handleFileChange = async (event) => {
+      const files = Array.from(event.target.files);
+      const processedFiles = await Promise.all(
+         files.map(async (file) => {
+            return {
+               name: file.name,
+               size: file.size,
+               type: file.type,
+               lastModified: file.lastModified,
+               // Convert file to base64
+               data: await convertFileToBase64(file),
+            };
+         })
+      );
 
-   const handleSubmit = () => {
       setFormData({
          ...formData,
          content: {
             ...formData.content,
-            caption: caption,
+            attachment: processedFiles,
          },
       });
    };
 
-   console.log(files);
-   console.log(formData);
+   //convert to Base 64
+   const convertFileToBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+         const reader = new FileReader();
+         reader.onload = () => resolve(reader.result);
+         reader.onerror = reject;
+         reader.readAsDataURL(file);
+      });
+   };
 
-   // files.forEach((file, index) => {
-   //    formData.append(`file${index}`, file);
-   // });
+   const handleSubmit = async () => {
+      await onSubmitForm(formData);
+      await setFormData({
+         content: {
+            caption: "",
+            attachment: [],
+            hashtags: [],
+         },
+         audience: "public",
+         status: "published",
+         project_id: "675aa5d48107dd51e42c5b0f",
+      });
+      await setFileKey((prev) => prev + 1);
+   };
 
    return (
       <>
@@ -55,8 +84,16 @@ const CreateArticleForm = forwardRef((props, ref) => {
                   placeholder="Hire Talents For Your Project"
                   style={{ background: "#FFFFFF" }}
                   className="gap-2"
-                  // value={caption}
-                  onChange={(e) => setCaption(e.target.value)}
+                  value={formData.content.caption}
+                  onChange={(e) =>
+                     setFormData({
+                        ...formData,
+                        content: {
+                           ...formData.content,
+                           caption: e.target.value,
+                        },
+                     })
+                  }
                ></Input>
                {/* <NativeSelect.Root size="sm" width="240px">
                   <NativeSelect.Field placeholder="Select option">
@@ -69,8 +106,10 @@ const CreateArticleForm = forwardRef((props, ref) => {
                </NativeSelect.Root> */}
                <FileUpload.Root
                   maxW="xl"
+                  key={fileKey}
                   alignItems="stretch"
                   maxFiles={10}
+                  value={formData.content.attachment}
                   onChange={handleFileChange}
                >
                   <FileUpload.HiddenInput />

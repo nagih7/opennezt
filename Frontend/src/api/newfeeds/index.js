@@ -9,6 +9,9 @@ import {
    reactArticle,
    reactArticleFail,
    reactArticleSuccess,
+   createArticle,
+   createArticleSuccess,
+   createArticleFail,
 } from "states/modules/article";
 
 export const getListFeeds =
@@ -53,6 +56,21 @@ export const handleReactArticle =
          method: "post",
          apiPath: path,
          actionTypes: [reactArticle, reactArticleSuccess, reactArticleFail],
+         variables: data,
+         dispatch,
+         getState,
+      });
+   };
+
+export const handleCreateArticle =
+   ({ data }) =>
+   async (dispatch, getState) => {
+      const path = `article`;
+      console.log("data received", data);
+      return callApi({
+         method: "post",
+         apiPath: path,
+         actionTypes: [createArticle, createArticleSuccess, createArticleFail],
          variables: data,
          dispatch,
          getState,

@@ -6,7 +6,6 @@ const NewArticle = ({ onOpenForm }) => {
    const { authUser } = useSelector((state) => state.auth);
    const handleClick = (e) => {
       e.preventDefault();
-      console.log("Input clicked");
       onOpenForm();
    };
    return (

@@ -2,26 +2,55 @@ import FileUpload from '@/utils/classes/file-upload.js'
 import Article from '../../models/article.js'
 import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
-import {REACTIONS_ENUM} from '@/configs'
+import {REACTIONS_ENUM, LINK_STATIC_URL} from '@/configs'
+import {last} from 'lodash'
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa
 export const createArticle = async (user, requestBody) => {
-    //Nếu có ảnh thì loop
-    if (requestBody.content.attachment && requestBody.content.attachment.length > 0) {
+    const filesArray = requestBody.content.attachment
+
+    if (filesArray && filesArray.length > 0) {
         const listAttachment = []
-        await requestBody.content.attachment.forEach((attachment) => {
-            if (attachment instanceof FileUpload) {
-                //save ở đây là lưu ảnh vào ổ cứng và trả lại link
-                listAttachment.append(attachment.save('article-attachment'))
-            }
-        })
+
+        for (const file of filesArray) {
+            // Convert base64 to Buffer
+            const base64Data = file.data.split(';base64,').pop()
+            const buffer = Buffer.from(base64Data, 'base64')
+
+            // Create file from buffer
+            const fileUpload = new FileUpload({
+                buffer,
+                filename: file.name,
+                mimetype: file.type,
+            })
+
+            const savedFile = await fileUpload.save('article-attachment')
+            listAttachment.push(savedFile)
+        }
+
         requestBody.content.attachment = listAttachment
     }
+
     const newArticle = new Article(requestBody)
     newArticle.user_id = user._id
     await newArticle.save()
+    return newArticle
 }
+//Nếu có ảnh thì loop
+// if (requestBody.content.attachment && requestBody.content.attachment.length > 0) {
+//     const listAttachment = []
+//     await requestBody.content.attachment.forEach((attachment) => {
+//         if (attachment instanceof FileUpload) {
+//             //save ở đây là lưu ảnh vào ổ cứng và trả lại link
+//             listAttachment.append(attachment.save('article-attachment'))
+//         }
+//     })
+//     requestBody.content.attachment = listAttachment
+// }
+// const newArticle = new Article(requestBody)
+// newArticle.user_id = user._id
+// await newArticle.save()
 //End Create Article
 
 //Scroll Feed
@@ -54,6 +83,23 @@ export const getArticleList = async (user, requestQuery) => {
                 localField: 'project_id',
                 foreignField: '_id',
                 as: 'project',
+            },
+        },
+        {
+            $addFields: {
+                'content.attachment': {
+                    $map: {
+                        input: '$content.attachment',
+                        as: 'attachment',
+                        in: {
+                            $cond: {
+                                if: {$eq: [{$ifNull: ['$$attachment', '']}, '']},
+                                then: '$$attachment',
+                                else: {$concat: [LINK_STATIC_URL, '$$attachment']},
+                            },
+                        },
+                    },
+                },
             },
         },
         {
@@ -274,7 +320,14 @@ export const getCommentList = async (requestQuery) => {
 
 //Get Article By Id
 export const getArticleById = async (id) => {
-    const article = await Article.findById(id)
+    const article = await Article.findById(id).lean()
+
+    if (article?.content?.attachment) {
+        article.content.attachment = article.content.attachment.map((attachment) =>
+            attachment ? LINK_STATIC_URL + attachment : attachment
+        )
+    }
+
     return article
 }
 //End Get Article By Id

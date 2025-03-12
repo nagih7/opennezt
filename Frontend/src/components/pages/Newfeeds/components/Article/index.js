@@ -76,6 +76,7 @@ const Article = forwardRef(({ feed, reaction, onReaction, isLoading }, ref) => {
    //End of Posted Date Logic
    //==================================================================================================
 
+   console.log(content.attachment);
    return (
       <div
          className="bg-[#ffffff] w-[800px] max-h-full mb-8 rounded-md p-8"
@@ -112,7 +113,11 @@ const Article = forwardRef(({ feed, reaction, onReaction, isLoading }, ref) => {
             <p className="my-[6px]">{content.caption}</p>
          </div>
          <div>
-            <img src={anh_1} />
+            {content.attachment &&
+               content.attachment.length > 0 &&
+               content.attachment.map((img, index) => {
+                  return <img src={img} key={index} />;
+               })}
          </div>
          <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
             <div className="pr-[15px] flex gap-2">
