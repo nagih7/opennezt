@@ -42,7 +42,7 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
             from: 'users',
             localField: 'source_id',
             foreignField: '_id',
-            as: 'user_info',
+            as: 'source_info',
         },
     }
     const projectStage = {
@@ -50,7 +50,7 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
             _id: 1,  
             type_id: 1,
             type_name: { $ifNull: [{ $arrayElemAt: ['$type_info.name', 0] }, 'Unknown Type'] },  
-            user_name: { $ifNull: [{ $arrayElemAt: ['$user_info.name', 0] }, 'Unknown User'] },  
+            source_name: { $ifNull: [{ $arrayElemAt: ['$source_info.name', 0] }, 'Unknown User'] },  
             created_at: 1,
             updated_at: 1,
             metadata: 1,
@@ -88,7 +88,7 @@ export async function getNotifications(user) {
             from: 'users',
             localField: 'source_id',
             foreignField: '_id',
-            as: 'user_info',
+            as: 'source_info',
         },
     }
     const projectStage = {
@@ -96,7 +96,7 @@ export async function getNotifications(user) {
             _id: 1, 
             type_id: 1,
             type_name: { $ifNull: [{ $arrayElemAt: ['$type_info.name', 0] }, 'Unknown Type'] },  
-            user_name: { $ifNull: [{ $arrayElemAt: ['$user_info.name', 0] }, 'Unknown User'] },  
+            source_name: { $ifNull: [{ $arrayElemAt: ['$source_info.name', 0] }, 'Unknown User'] },  
             created_at: 1,
             updated_at: 1,
             metadata: 1,
@@ -130,8 +130,9 @@ export async function replyNotification(requestBody, io) {
     const {notification_id, type_id, status} = requestBody
     const type = await Type.findOne({_id: type_id})
     switch (type.name) {
-        case 'Reply Friend':
+        case 'Friend Request':
             await replyFriendRequest(notification_id, status, io)
+            console.log('replyFriendRequest')
             break
         case 'Project Invitation':
             await replyProjectInvitation(notification_id, status, io)
@@ -141,72 +142,99 @@ export async function replyNotification(requestBody, io) {
     }
 }
 
-export async function replyFriendRequest(notification_id, io) {
-    // Lấy thông tin notification
+export async function replyFriendRequest(notification_id, io, reject = false) {
+    // Get information notification
     const notification = await NotificationFeed.findById(notification_id)
     const type = await Type.findOne({name: 'Reply Friend'})
-
     if (!notification) {
         console.log('Notification not found!')
         return
     }
 
-    // Kiểm tra trạng thái của notification
+    // Check status notification
     if (notification.metadata.status === 'waiting') {
         const { user_id, source_id } = notification
 
-        // Kiểm tra xem 2 người đã là bạn chưa
-        const existingFriendship = await Friend.findOne({ user_id: user_id, friend_id: source_id })
+        if (reject) {
+            // If reject is true, handle rejection of the friend request
+            // Update notification status to 'rejected'
+            await NotificationFeed.updateOne(
+                { _id: notification_id },
+                {
+                    $set: {
+                        'metadata.status': 'rejected',
+                        'metadata.read': true,
+                    },
+                }
+            )
 
-        if (!existingFriendship) {
-            // Tạo quan hệ bạn bè 2 chiều
-            await Friend.create({ user_id: user_id, friend_id: source_id, status: 'accepted' })
-            await Friend.create({ user_id: source_id, friend_id: user_id, status: 'accepted' })
+            // Notify the sender that the friend request has been rejected
+            const user = await User.findById(user_id).select('name')
+            const senderSocketId = Object.keys(userSockets).find(
+                (socketId) => userSockets[socketId] === source_id.toString()
+            )
 
-            console.log(`Friendship created between ${user_id} and ${source_id}`)
-        }
-        // Tạo một cuộc trò chuyện giữa hai người
-        const conversation = new Conversation({
-            members: [
-                { user_id: user_id, role: 'user' },
-                { user_id: source_id, role: 'user' },
-            ],
-            type_id: type._id,
-            metadata: {
-                type: 'Reply Friend',
-                status: 'accepted',
-                read: true,
-                data: {},
-            },
-        })
-        await conversation.save()
-
-        // Cập nhật trạng thái thông báo
-        await NotificationFeed.updateOne(
-            { _id: notification_id },
-            {
-                $set: {
-                    'metadata.status': 'accepted',
-                    'metadata.read': true,
-                },
+            console.log('senderSocketId:', senderSocketId)
+            if (senderSocketId) {
+                io.to(senderSocketId).emit('reject_add_friend', user.name)
             }
-        )
 
-        // Gửi thông báo qua socket cho người gửi lời mời
-        const user = await User.findById(user_id).select('name')
-        const receiverSocketId = Object.keys(userSockets).find(
-            (socketId) => userSockets[socketId] === source_id.toString()
-        )
-        if (receiverSocketId) {
-            io.to(receiverSocketId).emit('confirm_add_friend', user.name)
+            console.log(`Friend request rejected: ${user_id} and ${source_id} are not friends.`)
+        } else {
+            // If reject is false, handle acceptance of the friend request
+
+            // Check if the user is already friends
+            const existingFriendship = await Friend.findOne({ user_id: user_id, friend_id: source_id })
+
+            if (!existingFriendship) {
+                // Create new friend relationship
+                await Friend.create({ user_id: user_id, friend_id: source_id, status: 'accepted' })
+                await Friend.create({ user_id: source_id, friend_id: user_id, status: 'accepted' })
+            }
+
+            // Create new conversation
+            const conversation = new Conversation({
+                members: [
+                    { user_id: user_id, role: 'user' },
+                    { user_id: source_id, role: 'user' },
+                ],
+                type_id: type._id,
+                metadata: {
+                    type: 'Reply Friend',
+                    status: 'accepted',
+                    read: true,
+                    data: {},
+                },
+            })
+            await conversation.save()
+
+            // Update notification status to 'accepted'
+            await NotificationFeed.updateOne(
+                { _id: notification_id },
+                {
+                    $set: {
+                        'metadata.status': 'accepted',
+                        'metadata.read': true,
+                    },
+                }
+            )
+
+            // Send notification to the user
+            const user = await User.findById(user_id).select('name')
+            const receiverSocketId = Object.keys(userSockets).find(
+                (socketId) => userSockets[socketId] === source_id.toString()
+            )
+            console.log('receiverSocketId:', receiverSocketId)
+            if (receiverSocketId) {
+                io.to(receiverSocketId).emit('confirm_add_friend', user.name)
+            }
+
+            console.log(`Friend request accepted: ${user_id} and ${source_id} are now friends.`)
         }
-
-        console.log(`Friend request accepted: ${user_id} and ${source_id} are now friends.`)
     } else {
         console.log('Notification is not in waiting state.')
     }
 }
-
 
 
 export async function replyProjectInvitation(notification_id, status, io) {
