@@ -18,20 +18,10 @@ import { useDispatch, useSelector } from "react-redux";
 import RightSidebar from "components/common/RightSidebar";
 import { updateReaction } from "states/modules/article";
 import CreateAricleForm from "./components/CreateAricleForm";
+import { set } from "lodash";
 
 function NewFeeds() {
    const dispatch = useDispatch();
-
-   const authUser = useSelector((state) => state.auth);
-
-   console.log(authUser);
-
-   const [isOpenForm, setIsOpenForm] = useState(false);
-
-   const handleOpenForm = useCallback(() => {
-      setIsOpenForm(true);
-      console.log("Opening Form");
-   }, []);
 
    const {
       feeds,
@@ -104,11 +94,21 @@ function NewFeeds() {
          });
       }
    }, [onetimefeeds, dispatch]);
-   //
+
    const reactionMap = useMemo(() => {
       return new Map(reactions.map((r) => [r.target_id.toString(), r.type]));
    }, [reactions]);
    //End Reaction User's Status
+   //Form Create Article
+   const [isOpenForm, setIsOpenForm] = useState(false);
+
+   const handleOpenForm = useCallback(() => {
+      setIsOpenForm(true);
+   }, []);
+
+   const handleCloseForm = useCallback(() => {
+      setIsOpenForm(false);
+   }, []);
 
    const handleReaction = useCallback(
       (articleId, formData) => {
@@ -123,17 +123,20 @@ function NewFeeds() {
 
    const handleFormSubmit = useCallback(
       (formData) => {
-         console.log("formData received " + JSON.stringify(formData));
          dispatch(handleCreateArticle({ data: formData }));
       },
       [dispatch]
    );
+   //End Form Create Article
    return (
       <div>
          <div className="flex gap-8 pt-4 ">
             <div className="pl-4">
                {isOpenForm ? (
-                  <CreateAricleForm onSubmitForm={handleFormSubmit} />
+                  <CreateAricleForm
+                     onSubmitForm={handleFormSubmit}
+                     onCloseForm={handleCloseForm}
+                  />
                ) : null}
                <NewArticle onOpenForm={handleOpenForm} />
                {feeds.map((feed, index) => {

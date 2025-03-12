@@ -4,8 +4,7 @@ import { useSelector } from "react-redux";
 import { Input } from "antd";
 const NewArticle = ({ onOpenForm }) => {
    const { authUser } = useSelector((state) => state.auth);
-   const handleClick = (e) => {
-      e.preventDefault();
+   const handleClick = () => {
       onOpenForm();
    };
    return (
