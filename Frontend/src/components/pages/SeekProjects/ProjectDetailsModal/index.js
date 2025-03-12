@@ -375,7 +375,7 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 							</p>
 						</div>
 						<div className="ml-5">
-							<p className="relative top-[1.25rem] text-xs mb-4 text-[#6F7F92]">Course Results: 70%</p>
+							<p className="relative top-[1.25rem] text-xs mb-4 text-[#6F7F92]">Project Results: 70%</p>
 							<p className="w-[8rem] h-[0.4rem] bg-gray-700 rounded-full overflow-hidden">
 								<div className="h-full bg-blue-600 rounded-full w-3/5"></div>
 							</p>
@@ -393,13 +393,13 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 								<svg xmlns="http://www.w3.org/2000/svg" className="w-[1.2rem] mr-2" width="24px" height="24px" viewBox="0 0 576 512"><path d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z" /></svg>
 								Overview
 							</button>
-							<button onClick={() => setChangetab("Curriculum")} className={`ml-[4.25rem] flex ${changetab == "Curriculum" ? " border-b-2 border-black " : " "}`}>
+							<button onClick={() => setChangetab("Project")} className={`ml-[4.25rem] flex ${changetab == "Curriculum" ? " border-b-2 border-black " : " "}`}>
 								<svg xmlns="http://www.w3.org/2000/svg" className="w-[1.2rem] mr-2" version="1.1" id="mdi-school" width="24" height="24" viewBox="0 0 24 24"><path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" /></svg>
-								Curriculum
+								Project
 							</button>
-							<button onClick={() => setChangetab("Instructor")} className={`ml-[4.25rem] flex ${changetab == "Instructor" ? " border-b-2 border-black " : " "}`}>
+							<button onClick={() => setChangetab("Creator")} className={`ml-[4.25rem] flex ${changetab == "Instructor" ? " border-b-2 border-black " : " "}`}>
 								<svg xmlns="http://www.w3.org/2000/svg" className="w-[1.2rem] mr-2" width="24" height="24" viewBox="0 0 448 512"><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm95.8 32.6L272 480l-32-136 32-56h-96l32 56-32 136-47.8-191.4C56.9 292 0 350.3 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-72.1-56.9-130.4-128.2-133.8z" /></svg>
-								Instructor
+								Creator
 							</button>
 							<button onClick={() => setChangetab("Reviews")} className={`ml-[4.25rem] flex ${changetab == "Reviews" ? " border-b-2 border-black " : " "}`}>
 								<svg fill="#000000" xmlns="http://www.w3.org/2000/svg" className="w-[1.2rem] mr-2" viewBox="0 0 24 24" width="24px" height="24px">    <path d="M 4 3 C 2.9 3 2 3.9 2 5 L 2 17 L 5 14 L 14 14 C 15.1 14 16 13.1 16 12 L 16 5 C 16 3.9 15.1 3 14 3 L 4 3 z M 18 8 L 18 12 C 18 14.206 16.206 16 14 16 L 8 16 L 8 17 C 8 18.1 8.9 19 10 19 L 19 19 L 22 22 L 22 10 C 22 8.9 21.1 8 20 8 L 18 8 z" /></svg>
@@ -411,7 +411,7 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 								<div className="p-4 bg-white">
 									<h2 className="text-2xl font-semibold mb-4">Description</h2>
 									<p className="text-[#9DA4A4] mb-4">
-										Have you ever wondered how a professional ice cream formula is written? Why certain ingredients are chosen and why in such a specific ratio? Why the ice cream we buy stays soft after days in the freezer?
+										Have you ever wondered how a professional ice cream formula is written? Why are certain ingredients chosen and in specific ratios? Why does store-bought ice cream stay soft after days in the freezer?
 									</p>
 									<p className="text-[#9DA4A4] mb-4">This is the occasion to give an answer to those questions!</p>
 									<p className="text-[#9DA4A4] mb-4">The class is meant for ice cream makers and pastry chefs, but any passionate hobbyist is most welcome!</p>
@@ -434,11 +434,11 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 							)
 
 							}
-							{changetab == "Curriculum" && (
+							{changetab == "Project" && (
 								<>
 									<div className="bg-white">
 										<button onClick={() => setDropsown(!dropdown)} className=" p-3 flex  ">
-											<h4 className="mb-0">Lesson in This Class</h4>
+											<h4 className="mb-0">Project Structure</h4>
 											<p className="mb-0 relative right-[-26.5rem] text-[#6F7F92]">{dropdown ? "▲" : "▼"}</p>
 										</button>
 
@@ -492,7 +492,7 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 									</div>
 								</>
 							)}
-							{changetab == "Instructor" && (
+							{changetab == "Creator" && (
 								<div className="bg-white">
 									<div className="p-5 flex">
 										<img className="w-[6rem] h-[6rem] rounded-[0.5rem]" src="https://randomuser.me/api/portraits/women/44.jpg" />
@@ -635,11 +635,11 @@ const ProjectDetailsModal = ({ isVisible, onClose, projectDetails }) => {
 							</div>
 						</div>
 						<div className="p-[2rem]">
-							<h4 className="font-bold">The Course Includes:</h4>
-							<p className="mt-7 text-[#6F7F92] flex"><svg xmlns="http://www.w3.org/2000/svg" className="mr-3 text-[#2F65B9]" fill="currentColor" version="1.1" id="mdi-book-open-page-variant-outline" width="24" height="24" viewBox="0 0 24 24"><path d="M19 1L14 6V17L19 12.5V1M21 5V18.5C19.9 18.15 18.7 18 17.5 18C15.8 18 13.35 18.65 12 19.5V6C10.55 4.9 8.45 4.5 6.5 4.5C4.55 4.5 2.45 4.9 1 6V20.65C1 20.9 1.25 21.15 1.5 21.15C1.6 21.15 1.65 21.1 1.75 21.1C3.1 20.45 5.05 20 6.5 20C8.45 20 10.55 20.4 12 21.5C13.35 20.65 15.8 20 17.5 20C19.15 20 20.85 20.3 22.25 21.05C22.35 21.1 22.4 21.1 22.5 21.1C22.75 21.1 23 20.85 23 20.6V6C22.4 5.55 21.75 5.25 21 5M10 18.41C8.75 18.09 7.5 18 6.5 18C5.44 18 4.18 18.19 3 18.5V7.13C3.91 6.73 5.14 6.5 6.5 6.5C7.86 6.5 9.09 6.73 10 7.13V18.41Z" /></svg>2 Detailed Lessons</p>
-							<p className="text-[#6F7F92] flex"><svg xmlns="http://www.w3.org/2000/svg" className="mr-3 text-[#2F65B9]" fill="currentColor" width="24" height="24" viewBox="0 0 576 512"><path d="M519.442 288.651c-41.519 0-59.5 31.593-82.058 31.593C377.409 320.244 432 144 432 144s-196.288 80-196.288-3.297c0-35.827 36.288-46.25 36.288-85.985C272 19.216 243.885 0 210.539 0c-34.654 0-66.366 18.891-66.366 56.346 0 41.364 31.711 59.277 31.711 81.75C175.885 207.719 0 166.758 0 166.758v333.237s178.635 41.047 178.635-28.662c0-22.473-40-40.107-40-81.471 0-37.456 29.25-56.346 63.577-56.346 33.673 0 61.788 19.216 61.788 54.717 0 39.735-36.288 50.158-36.288 85.985 0 60.803 129.675 25.73 181.23 25.73 0 0-34.725-120.101 25.827-120.101 35.962 0 46.423 36.152 86.308 36.152C556.712 416 576 387.99 576 354.443c0-34.199-18.962-65.792-56.558-65.792z" /></svg>Quizzes after 1</p>
-							<p className="text-[#6F7F92] flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="mr-3 text-[#2F65B9] bi bi-calendar-week-fill" viewBox="0 0 16 16">  <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zM9.5 7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm3 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zM2 10.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z" /></svg>15 weeks Of The Entire Course</p>
-							<p className="text-[#6F7F92] flex"><svg xmlns="http://www.w3.org/2000/svg" className="mr-3 text-[#2F65B9]" fill="currentColor" width="24" height="24" viewBox="0 0 448 512"><path d="M319.4 320.6L224 416l-95.4-95.4C57.1 323.7 0 382.2 0 454.4v9.6c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-9.6c0-72.2-57.1-130.7-128.6-133.8zM13.6 79.8l6.4 1.5v58.4c-7 4.2-12 11.5-12 20.3 0 8.4 4.6 15.4 11.1 19.7L3.5 242c-1.7 6.9 2.1 14 7.6 14h41.8c5.5 0 9.3-7.1 7.6-14l-15.6-62.3C51.4 175.4 56 168.4 56 160c0-8.8-5-16.1-12-20.3V87.1l66 15.9c-8.6 17.2-14 36.4-14 57 0 70.7 57.3 128 128 128s128-57.3 128-128c0-20.6-5.3-39.8-14-57l96.3-23.2c18.2-4.4 18.2-27.1 0-31.5l-190.4-46c-13-3.1-26.7-3.1-39.7 0L13.6 48.2c-18.1 4.4-18.1 27.2 0 31.6z" /></svg>26 Students participated</p>
+							<h4 className="font-bold">The Project Includes:</h4>
+							<p className="mt-7 text-[#6F7F92] flex"><svg xmlns="http://www.w3.org/2000/svg" className="mr-3 text-[#2F65B9]" fill="currentColor" version="1.1" id="mdi-book-open-page-variant-outline" width="24" height="24" viewBox="0 0 24 24"><path d="M19 1L14 6V17L19 12.5V1M21 5V18.5C19.9 18.15 18.7 18 17.5 18C15.8 18 13.35 18.65 12 19.5V6C10.55 4.9 8.45 4.5 6.5 4.5C4.55 4.5 2.45 4.9 1 6V20.65C1 20.9 1.25 21.15 1.5 21.15C1.6 21.15 1.65 21.1 1.75 21.1C3.1 20.45 5.05 20 6.5 20C8.45 20 10.55 20.4 12 21.5C13.35 20.65 15.8 20 17.5 20C19.15 20 20.85 20.3 22.25 21.05C22.35 21.1 22.4 21.1 22.5 21.1C22.75 21.1 23 20.85 23 20.6V6C22.4 5.55 21.75 5.25 21 5M10 18.41C8.75 18.09 7.5 18 6.5 18C5.44 18 4.18 18.19 3 18.5V7.13C3.91 6.73 5.14 6.5 6.5 6.5C7.86 6.5 9.09 6.73 10 7.13V18.41Z" /></svg>2 Main Modules</p>
+							<p className="text-[#6F7F92] flex"><svg xmlns="http://www.w3.org/2000/svg" className="mr-3 text-[#2F65B9]" fill="currentColor" width="24" height="24" viewBox="0 0 576 512"><path d="M519.442 288.651c-41.519 0-59.5 31.593-82.058 31.593C377.409 320.244 432 144 432 144s-196.288 80-196.288-3.297c0-35.827 36.288-46.25 36.288-85.985C272 19.216 243.885 0 210.539 0c-34.654 0-66.366 18.891-66.366 56.346 0 41.364 31.711 59.277 31.711 81.75C175.885 207.719 0 166.758 0 166.758v333.237s178.635 41.047 178.635-28.662c0-22.473-40-40.107-40-81.471 0-37.456 29.25-56.346 63.577-56.346 33.673 0 61.788 19.216 61.788 54.717 0 39.735-36.288 50.158-36.288 85.985 0 60.803 129.675 25.73 181.23 25.73 0 0-34.725-120.101 25.827-120.101 35.962 0 46.423 36.152 86.308 36.152C556.712 416 576 387.99 576 354.443c0-34.199-18.962-65.792-56.558-65.792z" /></svg>Quizzes after Each Module</p>
+							<p className="text-[#6F7F92] flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="mr-3 text-[#2F65B9] bi bi-calendar-week-fill" viewBox="0 0 16 16">  <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zM9.5 7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm3 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zM2 10.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z" /></svg>15 weeks Of The Entire Projects</p>
+							<p className="text-[#6F7F92] flex"><svg xmlns="http://www.w3.org/2000/svg" className="mr-3 text-[#2F65B9]" fill="currentColor" width="24" height="24" viewBox="0 0 448 512"><path d="M319.4 320.6L224 416l-95.4-95.4C57.1 323.7 0 382.2 0 454.4v9.6c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-9.6c0-72.2-57.1-130.7-128.6-133.8zM13.6 79.8l6.4 1.5v58.4c-7 4.2-12 11.5-12 20.3 0 8.4 4.6 15.4 11.1 19.7L3.5 242c-1.7 6.9 2.1 14 7.6 14h41.8c5.5 0 9.3-7.1 7.6-14l-15.6-62.3C51.4 175.4 56 168.4 56 160c0-8.8-5-16.1-12-20.3V87.1l66 15.9c-8.6 17.2-14 36.4-14 57 0 70.7 57.3 128 128 128s128-57.3 128-128c0-20.6-5.3-39.8-14-57l96.3-23.2c18.2-4.4 18.2-27.1 0-31.5l-190.4-46c-13-3.1-26.7-3.1-39.7 0L13.6 48.2c-18.1 4.4-18.1 27.2 0 31.6z" /></svg>26 Participants in the Project</p>
 							<p className="text-[#6F7F92] flex"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="mr-3 text-[#2F65B9]" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none" /><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>Assessments Yes</p>
 						</div>
 					</div>

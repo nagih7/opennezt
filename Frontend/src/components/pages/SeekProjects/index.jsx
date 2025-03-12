@@ -93,7 +93,7 @@ const SeekProjects = () => {
 			category: "Web Development",
 			instructor: "John Doe",
 			lessons: 12,
-			students: 1500,
+			Participants: 1500,
 			image: "https://wordpress.iqonic.design/product/wp/socialv/wp-content/uploads/2020/11/1-500x300.jpg",
 			description: "Learn React from scratch with hands-on projects and practical exercises.",
 			rating: 4.5,
@@ -104,7 +104,7 @@ const SeekProjects = () => {
 			category: "Programming",
 			instructor: "Jane Smith",
 			lessons: 18,
-			students: 2300,
+			Participants: 2300,
 			image: "https://wordpress.iqonic.design/product/wp/socialv/wp-content/uploads/2020/11/1-500x300.jpg",
 			description: "Master Python with deep dive into advanced concepts and real-world applications.",
 			rating: 4.8,
@@ -115,7 +115,7 @@ const SeekProjects = () => {
 			category: "Design",
 			instructor: "Michael Brown",
 			lessons: 10,
-			students: 1800,
+			Participants: 1800,
 			image: "https://wordpress.iqonic.design/product/wp/socialv/wp-content/uploads/2020/11/1-500x300.jpg",
 			description: "Understand the principles of UI/UX design and create user-friendly interfaces.",
 			rating: 4.2,
@@ -126,7 +126,7 @@ const SeekProjects = () => {
 			category: "AI & Data Science",
 			instructor: "Emily Wilson",
 			lessons: 22,
-			students: 2900,
+			Participants: 2900,
 			image: "https://wordpress.iqonic.design/product/wp/socialv/wp-content/uploads/2020/11/1-500x300.jpg",
 			description: "Learn machine learning from basics to advanced with real-world projects.",
 			rating: 4.9,
@@ -137,7 +137,7 @@ const SeekProjects = () => {
 			category: "Marketing",
 			instructor: "David Johnson",
 			lessons: 8,
-			students: 1200,
+			Participants: 1200,
 			image: "https://wordpress.iqonic.design/product/wp/socialv/wp-content/uploads/2020/11/1-500x300.jpg",
 			description: "Explore digital marketing strategies and grow your business online.",
 			rating: 4.3,
@@ -148,7 +148,7 @@ const SeekProjects = () => {
 			category: "Programming",
 			instructor: "Sarah Parker",
 			lessons: 15,
-			students: 2000,
+			Participants: 2000,
 			image: "https://wordpress.iqonic.design/product/wp/socialv/wp-content/uploads/2020/11/1-500x300.jpg",
 			description: "Deep dive into advanced JavaScript topics and best practices.",
 			rating: 4.6,
@@ -319,8 +319,8 @@ const SeekProjects = () => {
 												{course.title}
 											</h5>
 											<div className={`${isGrid ? "flex items-center justify-between mt-3 text-gray-600 text-xs md:text-sm" : "flex items-center mt-3 text-gray-600 text-xs md:text-sm"}`}>
-												<p className={`${isGrid ? "" : "mr-4"}`}>📖 {course.lessons} Lessons</p>
-												<p>👨‍🎓 {course.students} Students</p>
+												<p className={`${isGrid ? "" : "mr-4"}`}>📖 {course.lessons} Project</p>
+												<p>👨‍🎓 {course.Participants} Participants </p>
 											</div>
 										</div>
 									</div>
@@ -331,7 +331,7 @@ const SeekProjects = () => {
 
 				</div>
 				<div className="w-1/4 2xl:w-[23.25rem] bg-white p-4 rounded-md shadow-sm h-fit">
-					<h3 className="text-lg font-semibold mb-4 border-b border-[#DEDEDE] pb-4">Recent Courses</h3>
+					<h3 className="text-lg font-semibold mb-4 border-b border-[#DEDEDE] pb-4">Recent Project</h3>
 					<ul className="space-y-4">
 						{recentCourses.map((course, index) => (
 							<li key={index} className="flex items-center gap-3 relative left-[-1.75rem]">
