@@ -11,6 +11,7 @@ import UserManagement from "../UserManagement";
 import ExperienceLevelManage from "./components/ExperienceLevelManage";
 import CategoryManage from "./components/CategoryManage";
 import SkillManage from "./components/SkillManage";
+import OrganizationManage from "./components/OrganizationManage";
 
 function Manage() {
 	const [totalUsersView, setTotalUsers] = useState(0);
@@ -176,6 +177,7 @@ function Manage() {
 			<ExperienceLevelManage />
 			<CategoryManage />
 			<SkillManage />
+			<OrganizationManage />
 		</div>
 	);
 }

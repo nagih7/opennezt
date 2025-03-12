@@ -11,6 +11,7 @@ const manageSlice = createSlice({
 		categories: [],
 		skills: [],
 		skillCategories: [],
+		organizations: [],
 		paginationListRole: {
 			currentPage: 1,
 			perPage: 10,
@@ -42,6 +43,12 @@ const manageSlice = createSlice({
 			totalRecord: 0,
 		},
 		paginationListSkill: {
+			currentPage: 1,
+			perPage: 10,
+			totalPage: 1,
+			totalRecord: 0,
+		},
+		paginationListOrganization: {
 			currentPage: 1,
 			perPage: 10,
 			totalPage: 1,
@@ -84,6 +91,12 @@ const manageSlice = createSlice({
 		visibleModalDeleteSkill: false,
 		isLoadingDeleteSkill: false,
 		isLoadingGetSkillCategories: false,
+		// Organizations
+		isLoadingGetListOrganization: false,
+		visibleModalCreateOrUpdateOrganization: false,
+		isLoadingBtnCreateOrUpdateOrganization: false,
+		visibleModalDeleteOrganization: false,
+		isLoadingDeteleOrganization: false,
 	},
 	reducers: {
 		startRequestGetTotalUsers: (state) => ({
@@ -270,7 +283,7 @@ const manageSlice = createSlice({
 		getListExperienceLevelSuccess: (state, action) => ({
 			...state,
 			isLoadingGetListExperienceLevel: false,
-			experienceLevels: action.payload.data.experience_levels,
+			experienceLevels: action.payload.data.experienceLevels,
 			paginationListExperienceLevel: {
 				currentPage: action.payload.data.page,
 				perPage: action.payload.data.per_page,
@@ -439,6 +452,60 @@ const manageSlice = createSlice({
 			...state,
 			isLoadingGetSkillCategories: false,
 		}),
+		// Organizations
+		requestGetListOrganization: (state) => ({
+			...state,
+			isLoadingGetListOrganization: true,
+		}),
+		getListOrganizationSuccess: (state, action) => ({
+			...state,
+			isLoadingGetListOrganization: false,
+			organizations: action.payload.data.organizations,
+			paginationListOrganization: {
+				currentPage: action.payload.data.page,
+				perPage: action.payload.data.per_page,
+				totalPage: action.payload.data.last_page,
+				totalRecord: action.payload.data.total,
+			},
+		}),
+		getListOrganizationFail: (state) => ({
+			...state,
+			isLoadingGetListOrganization: false,
+		}),
+		setVisibleModalCreateOrUpdateOrganization: (state, action) => ({
+			...state,
+			visibleModalCreateOrUpdateOrganization: action.payload,
+		}),
+		setVisibleModalDeleteOrganization: (state, action) => ({
+			...state,
+			visibleModalDeleteOrganization: action.payload,
+		}),
+		requestCreateOrUpdateOrganization: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateOrganization: true,
+		}),
+		createOrUpdateOrganizationSuccess: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateOrganization: false,
+			visibleModalCreateOrUpdateOrganization: false,
+		}),
+		createOrUpdateOrganizationFail: (state) => ({
+			...state,
+			isLoadingBtnCreateOrUpdateOrganization: false,
+		}),
+		requestDeleteOrganization: (state) => ({
+			...state,
+			isLoadingDeteleOrganization: true,
+		}),
+		deleteOrganizationSuccess: (state) => ({
+			...state,
+			isLoadingDeteleOrganization: false,
+			visibleModalDeleteOrganization: false,
+		}),
+		deleteOrganizationFail: (state) => ({
+			...state,
+			isLoadingDeteleOrganization: false,
+		}),
 	},
 });
 
@@ -522,6 +589,18 @@ export const {
 	requestGetSkillCategories,
 	getSkillCategoriesSuccess,
 	getSkillCategoriesFail,
+	// Organizations
+	requestGetListOrganization,
+	getListOrganizationSuccess,
+	getListOrganizationFail,
+	setVisibleModalCreateOrUpdateOrganization,
+	setVisibleModalDeleteOrganization,
+	requestCreateOrUpdateOrganization,
+	createOrUpdateOrganizationSuccess,
+	createOrUpdateOrganizationFail,
+	requestDeleteOrganization,
+	deleteOrganizationSuccess,
+	deleteOrganizationFail,
 } = manageSlice.actions;
 
 export default manageSlice.reducer;

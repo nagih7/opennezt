@@ -16,12 +16,10 @@ import {
 import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
-import SelectCustom from "components/UI/Select";
-import { Select } from "antd";
+import SelectCustom from "components/UI/Select/index";
 
 function SkillManage() {
 	const dispatch = useDispatch();
-
 	const {
 		// CONFIG
 		skills,
@@ -66,6 +64,10 @@ function SkillManage() {
 		dispatch(getListSkill(dataFilter));
 	}, [dataFilter, dispatch]);
 
+	useEffect(() => {
+		dispatch(getSkillCategories());
+	}, [dispatch]);
+
 	// CREATE
 	const handleCreate = () => {
 		// CONFIG
@@ -74,7 +76,6 @@ function SkillManage() {
 			title: "Create skill",
 			type: "CREATE",
 		});
-		dispatch(getSkillCategories());
 	};
 
 	// UPDATE
@@ -119,7 +120,6 @@ function SkillManage() {
 	}, []);
 
 	const handleConfirmCreateOrUpdate = () => {
-		console.log(dataCreateOrUpdate);
 		// CONFIG
 		// let data = new FormData();
 		// data.append(`name`, dataCreateOrUpdate.name);
@@ -141,6 +141,12 @@ function SkillManage() {
 			key: "index",
 			render: (text, record, index) => <span>{index + 1}</span>,
 			width: "5rem",
+		},
+		{
+			title: "Category",
+			dataIndex: "category",
+			key: "category",
+			render: (text, record) => <span>{record.category.name}</span>,
 		},
 		{
 			title: "Name",

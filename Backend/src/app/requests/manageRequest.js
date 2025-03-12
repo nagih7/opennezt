@@ -115,6 +115,17 @@ export const createCategory = Joi.object({
                     return !category ? value : helpers.error('any.exists')
                 })
         ),
+    parent_id: Joi.string()
+        .trim()
+        .allow(null, '')
+        .label('Category ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const category = await Category.findById(new ObjectId(value))
+                    return category ? value : helpers.error('any.invalid')
+                })
+        ),
     description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
 })
 export const updateCategory = Joi.object({
@@ -165,4 +176,32 @@ export const updateSkill = Joi.object({
     name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
     description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
     metadata: Joi.object().label('Metadata'),
+})
+
+// ORGANIZATIONS
+export const createOrganization = Joi.object({
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    website: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Website'),
+    contact_email: Joi.string()
+        .trim()
+        .email()
+        .allow(null, '')
+        .label('Contact email')
+        .custom((value, helpers) => {
+            if (!value) {
+                return value
+            }
+            const email = value.split('@')
+            if (email.length !== 2) {
+                return helpers.error('any.invalid')
+            }
+            return value
+        }),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).allow(null, '').label('Description'),
+})
+export const updateOrganization = Joi.object({
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    website: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Website'),
+    contact_email: Joi.string().trim().email().allow(null, '').label('Contact email'),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).allow(null, '').label('Description'),
 })

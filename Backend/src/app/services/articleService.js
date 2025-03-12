@@ -283,7 +283,7 @@ export const getArticleById = async (id) => {
 export const shareArticle = async (id, user) => {
     //nhớ tìm hiểu lean
     const shareArticle = await Article.findById(id).lean()
-    const {_id, updated_at, created_at, ...articleData} = shareArticle
+    const {...articleData} = shareArticle
 
     const newArticle = await new Article({
         ...articleData,

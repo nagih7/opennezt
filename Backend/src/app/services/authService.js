@@ -1,16 +1,30 @@
 import moment from 'moment'
 import jwt from 'jsonwebtoken'
 import {User, Role} from '@/models'
-import {cache, LOGIN_EXPIRE_IN, LINK_STATIC_URL, TOKEN_TYPE, VERIFY_EMAIL_EXPIRE_IN} from '@/configs'
+import {
+    cache,
+    LOGIN_EXPIRE_IN,
+    LINK_STATIC_URL,
+    TOKEN_TYPE,
+    VERIFY_EMAIL_EXPIRE_IN,
+    LINKEDIN_URL,
+    LINKEDIN_RESPONSE_TYPE,
+    LINKEDIN_CLIENT_ID,
+    LINKEDIN_CLIENT_SECRET,
+    LINKEDIN_REDIRECT_URI,
+    LINKEDIN_SCOPE,
+    LINKEDIN_STATE,
+} from '@/configs'
 import {FileUpload} from '@/utils/classes'
 import {generateToken} from '@/utils/helpers'
+import axios from 'axios'
 
 export const tokenBlocklist = cache.create('t   oken-block-list')
 
 export async function checkValidLogin({email, password}) {
     const user = await User.findOne({email: email})
 
-    if (user) {
+    if (user && user.password) {
         const verified = user.verifyPassword(password)
         if (verified) {
             return user
@@ -36,7 +50,7 @@ export function authToken(user) {
     }
 }
 
-export async function register({avatar, ...requestBody}) {
+export async function register({...requestBody}) {
     const user = await User.findOne({email: requestBody.email})
     if (user && user.is_active === false) {
         // update user info
@@ -90,4 +104,45 @@ export async function updateProfile(currentUser, {name, email, phone, avatar}) {
     }
 
     await currentUser.save()
+}
+
+// ================== Social Login ================== //
+export async function loginWithLinkedIn() {
+    const url =
+        await `${LINKEDIN_URL}?response_type=${LINKEDIN_RESPONSE_TYPE}&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${LINKEDIN_REDIRECT_URI}&scope=${LINKEDIN_SCOPE}&state=${LINKEDIN_STATE}`
+    return url
+}
+
+export async function loginWithLinkedInCallback(code) {
+    const query = {
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: LINKEDIN_REDIRECT_URI,
+        client_id: LINKEDIN_CLIENT_ID,
+        client_secret: LINKEDIN_CLIENT_SECRET,
+    }
+    const response = await axios.post(
+        `https://www.linkedin.com/oauth/v2/accessToken?grant_type=${query.grant_type}&code=${query.code}&redirect_uri=${query.redirect_uri}&client_id=${query.client_id}&client_secret=${query.client_secret}`
+    )
+    const accessToken = response.data.access_token
+    const userInfo = await axios.get('https://api.linkedin.com/v2/userinfo', {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    })
+
+    const user = await User.findOne({email: userInfo.data.email})
+    if (!user) {
+        const newUser = new User({
+            name: userInfo.data.name,
+            email: userInfo.data.email,
+            is_active: true,
+        })
+        const userRole = await Role.findOne({name: 'User'})
+        newUser.role_id = userRole._id
+        await newUser.save()
+        return newUser
+    }
+
+    return user
 }

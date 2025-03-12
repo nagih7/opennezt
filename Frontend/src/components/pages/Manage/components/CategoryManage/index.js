@@ -7,6 +7,7 @@ import {
 	createOrUpdateCategory,
 	deleteCategory,
 	getListCategory,
+	getSkillCategories,
 } from "api/manage";
 import {
 	setVisibleModalCreateOrUpdateCategory,
@@ -15,6 +16,7 @@ import {
 import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
+import SelectCustom from "components/UI/Select/index";
 
 function CategoryManage() {
 	const dispatch = useDispatch();
@@ -22,6 +24,7 @@ function CategoryManage() {
 	const {
 		// CONFIG
 		categories,
+		skillCategories,
 		paginationListCategory,
 		isLoadingGetListCategory,
 		visibleModalCreateOrUpdateCategory,
@@ -40,6 +43,7 @@ function CategoryManage() {
 	});
 	const [dataCreateOrUpdate, setDataCreateOrUpdate] = useState({
 		// CONFIG
+		parent_id: "",
 		name: "",
 		description: "",
 	});
@@ -60,6 +64,10 @@ function CategoryManage() {
 		// CONFIG
 		dispatch(getListCategory(dataFilter));
 	}, [dataFilter, dispatch]);
+
+	useEffect(() => {
+		dispatch(getSkillCategories());
+	}, [dispatch]);
 
 	// CREATE
 	const handleCreate = () => {
@@ -95,6 +103,7 @@ function CategoryManage() {
 	useEffect(() => {
 		// CONFIG
 		setDataCreateOrUpdate({
+			parent_id: data.parent_id,
 			name: data.name,
 			description: data.description,
 		});
@@ -103,6 +112,7 @@ function CategoryManage() {
 	const handleReloadData = useCallback(() => {
 		setDataCreateOrUpdate({
 			// CONFIG
+			parent_id: "",
 			name: "",
 			description: "",
 		});
@@ -156,6 +166,12 @@ function CategoryManage() {
 	];
 
 	const handleChangeInput = (valueInput, type) => {
+		if (type === "parent_id") {
+			let data = _.cloneDeep(dataCreateOrUpdate);
+			data[type] = valueInput.value;
+			setDataCreateOrUpdate(data);
+			return;
+		}
 		let value = valueInput.target.value;
 		let data = _.cloneDeep(dataCreateOrUpdate);
 		data[type] = value;
@@ -166,6 +182,20 @@ function CategoryManage() {
 		// CONFIG
 		return (
 			<div className={styles.mainModalWrap}>
+				<div className={styles.inputWrapper}>
+					<div className={styles.label}>Category *</div>
+					<SelectCustom
+						style={{ height: "40px" }}
+						value={dataCreateOrUpdate.parent_id}
+						onChange={(e, option) =>
+							handleChangeInput(option, "parent_id")
+						}
+						options={skillCategories.map((item) => ({
+							value: item._id,
+							label: item.name,
+						}))}
+					/>
+				</div>
 				<div className={styles.inputWrapper}>
 					<div className={styles.label}>Name *</div>
 					<InputMASQ

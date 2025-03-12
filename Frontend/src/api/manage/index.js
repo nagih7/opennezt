@@ -9,15 +9,16 @@ import {
 	requestGetListType,
 	getListTypeSuccess,
 	getListTypeFail,
-	requestGetListIndustry,
-	getListIndustrySuccess,
-	getListIndustryFail,
 	requestCreateOrUpdateRole,
 	createOrUpdateRoleSuccess,
 	createOrUpdateRoleFail,
 	requestCreateOrUpdateType,
 	createOrUpdateTypeSuccess,
 	createOrUpdateTypeFail,
+	// INDUSTRY
+	requestGetListIndustry,
+	getListIndustrySuccess,
+	getListIndustryFail,
 	requestCreateOrUpdateIndustry,
 	createOrUpdateIndustrySuccess,
 	createOrUpdateIndustryFail,
@@ -63,6 +64,16 @@ import {
 	requestGetSkillCategories,
 	getSkillCategoriesSuccess,
 	getSkillCategoriesFail,
+	// ORGANIZATION
+	requestGetListOrganization,
+	getListOrganizationSuccess,
+	getListOrganizationFail,
+	requestCreateOrUpdateOrganization,
+	createOrUpdateOrganizationSuccess,
+	createOrUpdateOrganizationFail,
+	requestDeleteOrganization,
+	deleteOrganizationSuccess,
+	deleteOrganizationFail,
 } from "../../states/modules/manage";
 
 export const getTotalUsers = () => async (dispatch, getState) => {
@@ -451,6 +462,71 @@ export const getSkillCategories = () => async (dispatch, getState) => {
 			requestGetSkillCategories,
 			getSkillCategoriesSuccess,
 			getSkillCategoriesFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+// ORGANIZATION
+
+export const getListOrganization =
+	(dataFilter) => async (dispatch, getState) => {
+		let path = `manage/organizations?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
+
+		if (dataFilter.keySearch) {
+			path += `&q=${dataFilter.keySearch}`;
+		}
+
+		if (dataFilter.status && dataFilter.status.length > 0) {
+			path += `&status=${dataFilter.status}`;
+		}
+
+		if (dataFilter.order && dataFilter.column) {
+			path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+		}
+
+		return callApi({
+			method: "get",
+			apiPath: path,
+			actionTypes: [
+				requestGetListOrganization,
+				getListOrganizationSuccess,
+				getListOrganizationFail,
+			],
+			variables: {},
+			dispatch,
+			getState,
+		});
+	};
+export const createOrUpdateOrganization =
+	(data, action, id) => async (dispatch, getState) => {
+		let path = `manage/organizations`;
+		if (action === "UPDATE") {
+			path += `/${id}`;
+		}
+		return callApi({
+			method: action === "CREATE" ? "post" : "put",
+			apiPath: path,
+			actionTypes: [
+				requestCreateOrUpdateOrganization,
+				createOrUpdateOrganizationSuccess,
+				createOrUpdateOrganizationFail,
+			],
+			variables: data,
+			dispatch,
+			getState,
+		});
+	};
+export const deleteOrganization = (id) => async (dispatch, getState) => {
+	return callApi({
+		method: "delete",
+		apiPath: `manage/organizations/${id}`,
+		actionTypes: [
+			requestDeleteOrganization,
+			deleteOrganizationSuccess,
+			deleteOrganizationFail,
 		],
 		variables: {},
 		dispatch,

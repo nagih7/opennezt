@@ -9,13 +9,7 @@ import { useSelector } from "react-redux";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { logout } from "../../../../api/auth";
 import store from "states/configureStore";
-import { LOGOUT } from "../../../../utils/constains";
-import { FundOutlined } from "@ant-design/icons";
-import {
-	IconlyActivity,
-	IconlyLogout,
-	IconlySetting,
-} from "components/UI/Iconly";
+import { IconlyLogout, IconlySetting } from "components/UI/Iconly";
 import ProfileCardSidebar from "./components/ProfileCardSidebar";
 import appRouteMap from "router/appRouteMap";
 
@@ -37,8 +31,6 @@ function SideBar(props) {
 	const navigate = useNavigate();
 
 	const { authRole } = useSelector((state) => state.auth);
-	console.log("authRole", authRole);
-
 	const handleToggleMenu = (indexNavItem, menuNavItem) => {
 		if (menuNavItem.path) {
 			navigate(menuNavItem.path);

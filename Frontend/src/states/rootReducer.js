@@ -1,5 +1,6 @@
 import appReducer from "./modules/app";
 import authReducer from "./modules/auth";
+import userReducer from "./modules/user";
 import profileReducer from "./modules/profile";
 import homeReducer from "./modules/home";
 import employeeReducer from "./modules/employee";
@@ -13,19 +14,20 @@ import artificialIntelligenceReducer from "./modules/artificialIntelligence";
 import articleReducer from "./modules/article";
 
 const rootReducer = {
-   app: appReducer,
-   auth: authReducer,
+	app: appReducer,
+	auth: authReducer,
    article: articleReducer,
-   manage: manageReducer,
-   profile: profileReducer,
-   home: homeReducer,
-   employee: employeeReducer,
-   founder: founderReducer,
-   talent: talentReducer,
-   project: projectReducer,
-   chat: chatReducer,
-   notification: notificationReducer,
-   artificialIntelligence: artificialIntelligenceReducer,
+	user: userReducer,
+	manage: manageReducer,
+	profile: profileReducer,
+	home: homeReducer,
+	employee: employeeReducer,
+	founder: founderReducer,
+	talent: talentReducer,
+	project: projectReducer,
+	chat: chatReducer,
+	notification: notificationReducer,
+	artificialIntelligence: artificialIntelligenceReducer,
 };
 
 export default rootReducer;

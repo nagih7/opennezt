@@ -2,7 +2,6 @@ import createModel, {ObjectId} from './base'
 import {Schema} from 'mongoose'
 import User from './user'
 import Project from './project'
-import Reaction from './reaction'
 import {ARTICLE_AUDIENCE_ENUM, ARTICLE_STATUS_ENUM} from '@/configs'
 
 const Content = new Schema(

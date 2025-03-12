@@ -4,6 +4,7 @@ import { rootLoader } from "./rootLoader";
 
 import AppLayout from "components/layouts/AppLayout";
 import AuthLayout from "components/layouts/AuthLayout";
+import Certifications from "components/pages/EditProfile/components/Certifications";
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import("../components/pages/Auth/Login"));
@@ -26,12 +27,28 @@ const RecruitTalents = React.lazy(() =>
 const SeekProjects = React.lazy(() =>
 	import("../components/pages/SeekProjects")
 );
+const ProjectDetailsModal = React.lazy(() =>
+	import("../components/pages/SeekProjects/ProjectDetailsModal")
+);
 const NotificationManagement = React.lazy(() =>
 	import("../components/pages/NotificationManagement")
 );
 const VerifyAuth = React.lazy(() => import("../components/pages/Auth/Verify"));
 const ResetPassword = React.lazy(() =>
 	import("../components/pages/Auth/ResetPassword")
+);
+// ========== EDIT PROFILE COMPONENTS ========== //
+const ProfessionalBackground = React.lazy(() =>
+	import("../components/pages/EditProfile/components/ProfessionalBackground")
+);
+const Educations = React.lazy(() =>
+	import("../components/pages/EditProfile/components/Educations")
+);
+const Expertise = React.lazy(() =>
+	import("../components/pages/EditProfile/components/Expertise")
+);
+const WorkWithMe = React.lazy(() =>
+	import("../components/pages/EditProfile/components/WorkWithMe")
 );
 
 const router = createBrowserRouter([
@@ -137,7 +154,7 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_EMPLOYEE_PAGE"),
 	},
 	{
-		path: "/new-feed",
+		path: "/activity",
 		element: (
 			<AppLayout>
 				<Newfeeds />
@@ -178,6 +195,17 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_SEEK_PROJECT_PAGE"),
 	},
 	{
+		path: "seek-projects/:id", // Route động cho từng dự án
+		element: (
+			<AppLayout>
+				{" "}
+				<ProjectDetailsModal />
+			</AppLayout>
+		),
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_PROJECT_DETAIL_PAGE"),
+	},
+	{
 		path: "/notification-management",
 		element: (
 			<AppLayout>
@@ -186,6 +214,62 @@ const router = createBrowserRouter([
 		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROJECTS_NOTIFICATION_PAGE"),
+	},
+	// {
+	// 	path: "/about/edit-profile",
+	// 	element: (
+	// 		<AppLayout>
+	// 			<EditProfile />
+	// 		</AppLayout>
+	// 	),
+	// 	loader: ({ request }) =>
+	// 		rootLoader({ request }, true, "LOAD_EDIT_PROFILE_PAGE"),
+	// },
+	{
+		path: "/about/edit-profile/professional-background",
+		element: (
+			<AppLayout>
+				<ProfessionalBackground />
+			</AppLayout>
+		),
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_EDIT_PROFILE_PAGE"),
+	},
+	{
+		path: "/about/edit-profile/educations",
+		element: (
+			<AppLayout>
+				<Educations />
+			</AppLayout>
+		),
+	},
+	{
+		path: "/about/edit-profile/certifications",
+		element: (
+			<AppLayout>
+				<Certifications />
+			</AppLayout>
+		),
+	},
+	{
+		path: "/about/edit-profile/expertise",
+		element: (
+			<AppLayout>
+				<Expertise />
+			</AppLayout>
+		),
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_EDIT_PROFILE_PAGE"),
+	},
+	{
+		path: "/about/edit-profile/work-with-me",
+		element: (
+			<AppLayout>
+				<WorkWithMe />
+			</AppLayout>
+		),
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_EDIT_PROFILE_PAGE"),
 	},
 ]);
 

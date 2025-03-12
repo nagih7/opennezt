@@ -21,6 +21,9 @@ function NavItem(props) {
 		return is_active;
 	};
 
+	const isActive = location.pathname === route.path;
+	const iconColor = isActive ? "#fff" : "rgb(125, 141, 161)";
+
 	return (
 		<>
 			{route.children && route.children.length > 0 ? (
@@ -38,7 +41,9 @@ function NavItem(props) {
 				}
           `}>
 						<div className={styles.textWrap}>
-							<div className={styles.iconWrap}>{route.icon}</div>
+							<div className={styles.iconWrap}>
+								{React.cloneElement(route.icon, { color: iconColor })}
+							</div>
 							{isShowSideBar ? (
 								<span className={styles.text}>
 									{NAVBAR[route.label][language]}
@@ -124,7 +129,9 @@ function NavItem(props) {
 				}
           `}>
 						<div className={styles.textWrap}>
-							<div className={styles.iconWrap}>{route.icon}</div>
+							<div className={styles.iconWrap}>
+								{React.cloneElement(route.icon, { color: iconColor })}
+							</div>
 							{isShowSideBar ? (
 								<span className={styles.text}>
 									{NAVBAR[route.label][language]}

@@ -1,5 +1,6 @@
+import { createListCollection } from "@chakra-ui/react";
 import { createSlice } from "@reduxjs/toolkit";
-import { message } from "antd";
+import { toaster } from "components/UI/toaster";
 
 const profileSlice = createSlice({
 	name: "profile",
@@ -16,7 +17,23 @@ const profileSlice = createSlice({
 		},
 		loadingBtnUpdateInfoUser: false,
 		loadingBtnChangePassword: false,
-		loadingBtnChangeAvatar: false,
+		isLoadingBtnChangeAvatar: false,
+		// ========== Profile ========== //
+		profile: {},
+		isLoadingGetProfile: false,
+		isLoadingUpdateProfile: false,
+		isOpenAvatarPreview: false,
+		// ========== Education ========== //
+		isOpenModalCreateOrUpdateEducation: false,
+		isLoadingCreateOrUpdateEducation: false,
+		// ========== Certification ========== //
+		isOpenModalCreateOrUpdateCertification: false,
+		isLoadingCreateOrUpdateCertification: false,
+		// ========== Organization ========== //
+		organizationFramework: createListCollection({
+			items: [],
+		}),
+		isLoadingGetAllOrganizationFramework: false,
 	},
 	reducers: {
 		setErrorInfoUser: (state, action) => ({
@@ -32,14 +49,20 @@ const profileSlice = createSlice({
 			loadingBtnUpdateInfoUser: true,
 		}),
 		updateInfoUserSuccess: (state, action) => {
-			message.success(action.payload.message);
+			toaster.create({
+				title: `Update info user successfully.`,
+				type: "success",
+			});
 			return {
 				...state,
 				loadingBtnUpdateInfoUser: false,
 			};
 		},
 		updateInfoUserFail: (state, action) => {
-			message.error(action.payload.message);
+			toaster.create({
+				title: `${Object.values(action.payload.data.detail)[0]}`,
+				type: "error",
+			});
 			return {
 				...state,
 				loadingBtnUpdateInfoUser: false,
@@ -59,15 +82,18 @@ const profileSlice = createSlice({
 		}),
 		changeAvatarUser: (state) => ({
 			...state,
-			// loadingBtnChangeAvatar: true,
+			isLoadingBtnChangeAvatar: true,
 		}),
-		changeAvatarUserSuccess: (state) => ({
-			...state,
-			// loadingBtnChangeAvatar: false,
-		}),
+		changeAvatarUserSuccess: (state) => {
+			return {
+				...state,
+				isLoadingBtnChangeAvatar: false,
+				isOpenAvatarPreview: false,
+			};
+		},
 		changeAvatarUserFail: (state) => ({
 			...state,
-			// loadingBtnChangeAvatar: false,
+			isLoadingBtnChangeAvatar: false,
 		}),
 		changeBackgroundUser: (state) => ({
 			...state,
@@ -77,6 +103,142 @@ const profileSlice = createSlice({
 		}),
 		changeBackgroundUserFail: (state) => ({
 			...state,
+		}),
+
+		// ========== Profile ========== //
+		requestGetProfile: (state) => ({
+			...state,
+			isLoadingGetProfile: true,
+		}),
+		requestGetProfileSuccess: (state, action) => {
+			return {
+				...state,
+				profile: action.payload.data,
+				isLoadingGetProfile: false,
+			};
+		},
+		requestGetProfileFail: (state) => {
+			return {
+				...state,
+				isLoadingGetProfile: false,
+			};
+		},
+		requestUpdateProfessionalProfile: (state) => ({
+			...state,
+			isLoadingUpdateProfile: true,
+		}),
+		UpdateProfessionalProfileSuccess: (state) => {
+			toaster.create({
+				title: `Update professional profile successfully.`,
+				type: "success",
+			});
+			return {
+				...state,
+				isLoadingUpdateProfile: false,
+			};
+		},
+		UpdateProfessionalProfileFail: (state) => {
+			toaster.create({
+				title: `Update professional profile fail.`,
+				type: "error",
+			});
+			return {
+				...state,
+				isLoadingUpdateProfile: false,
+			};
+		},
+		setIsOpenAvatarPreview: (state, action) => ({
+			...state,
+			isOpenAvatarPreview: action.payload,
+		}),
+
+		// ========== Education ========== //
+		requestCreateOrUpdateEducation: (state) => ({
+			...state,
+			isLoadingCreateOrUpdateEducation: true,
+		}),
+		createOrUpdateEducationSuccess: (state, action) => {
+			toaster.create({
+				title: `${action.payload.message}`,
+				type: "success",
+			});
+			return {
+				...state,
+				isLoadingCreateOrUpdateEducation: false,
+				isOpenModalCreateOrUpdateEducation: false,
+				// formDataEducation: {
+				// 	school: "",
+				// 	degree: "",
+				// 	field_of_study: "",
+				// 	start_date: "",
+				// 	end_date: "",
+				// 	grade: "",
+				// },
+			};
+		},
+		createOrUpdateEducationFail: (state, action) => {
+			toaster.create({
+				title: `${Object.values(action.payload.data.detail)[0]}`,
+				type: "error",
+			});
+			return {
+				...state,
+				isLoadingCreateOrUpdateEducation: false,
+			};
+		},
+		setIsOpenModalCreateOrUpdateEducation: (state, action) => ({
+			...state,
+			isOpenModalCreateOrUpdateEducation: action.payload,
+		}),
+
+		// ========== Certification ========== //
+		requestCreateOrUpdateCertification: (state) => ({
+			...state,
+			isLoadingCreateOrUpdateCertification: true,
+		}),
+		createOrUpdateCertificationSuccess: (state, action) => {
+			toaster.create({
+				title: `${action.payload.message}`,
+				type: "success",
+			});
+			return {
+				...state,
+				isLoadingCreateOrUpdateCertification: false,
+				isOpenModalCreateOrUpdateCertification: false,
+			};
+		},
+		createOrUpdateCertificationFail: (state, action) => {
+			toaster.create({
+				title: `${Object.values(action.payload.data.detail)[0]}`,
+				type: "error",
+			});
+			return {
+				...state,
+				isLoadingCreateOrUpdateCertification: false,
+			};
+		},
+		setIsOpenModalCreateOrUpdateCertification: (state, action) => ({
+			...state,
+			isOpenModalCreateOrUpdateCertification: action.payload,
+		}),
+		// ========== Organization ========== //
+		requestgetOrganizationFramework: (state) => ({
+			...state,
+			isLoadingGetAllOrganizationFramework: true,
+		}),
+		requestgetOrganizationFrameworkSuccess: (state, action) => ({
+			...state,
+			isLoadingGetAllOrganizationFramework: false,
+			organizationFramework: createListCollection({
+				items: action.payload.data.map((organization) => ({
+					label: organization.name,
+					value: organization._id,
+				})),
+			}),
+		}),
+		requestgetOrganizationFrameworkFail: (state) => ({
+			...state,
+			isLoadingGetAllOrganizationFramework: false,
 		}),
 	},
 });
@@ -96,6 +258,28 @@ export const {
 	changeBackgroundUser,
 	changeBackgroundUserSuccess,
 	changeBackgroundUserFail,
+	// ========== Profile ========== //
+	requestGetProfile,
+	requestGetProfileSuccess,
+	requestGetProfileFail,
+	requestUpdateProfessionalProfile,
+	UpdateProfessionalProfileSuccess,
+	UpdateProfessionalProfileFail,
+	setIsOpenAvatarPreview,
+	// ========== Education ========== //
+	requestCreateOrUpdateEducation,
+	createOrUpdateEducationSuccess,
+	createOrUpdateEducationFail,
+	setIsOpenModalCreateOrUpdateEducation,
+	// ========== Certification ========== //
+	requestCreateOrUpdateCertification,
+	createOrUpdateCertificationSuccess,
+	createOrUpdateCertificationFail,
+	setIsOpenModalCreateOrUpdateCertification,
+	// ========== Organization ========== //
+	requestgetOrganizationFramework,
+	requestgetOrganizationFrameworkSuccess,
+	requestgetOrganizationFrameworkFail,
 } = profileSlice.actions;
 
 export default profileSlice.reducer;

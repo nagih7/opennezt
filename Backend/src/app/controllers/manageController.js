@@ -121,3 +121,21 @@ export async function skillCategories(req, res) {
     const result = await manageService.skillCategories()
     res.jsonify(result)
 }
+
+// ORGANIZATIONS
+export async function organizationReadRoot(req, res) {
+    const result = await manageService.organizationReadRoot(req.query)
+    res.jsonify(result)
+}
+export async function createOrganization(req, res) {
+    await manageService.createOrganization(req.body)
+    res.jsonify('Create organization successfully')
+}
+export async function updateOrganization(req, res) {
+    await manageService.updateOrganization(req.params.id, req.body)
+    res.jsonify('Update organization successfully')
+}
+export async function deleteOrganization(req, res) {
+    await manageService.deleteOrganization(req.params.id)
+    res.jsonify('Delete organization successfully')
+}

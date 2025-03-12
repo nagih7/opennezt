@@ -1,17 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import "./styles.scss";
-import { Popover, Radio } from "antd";
+import { Popover } from "antd";
 import contentInfo from "./components/PopoverProfile";
 import contentNotification from "./components/PopoverNotification";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useSelector, useDispatch } from "react-redux";
 import ChatList from "./components/ChatList";
 import MessageBoxList from "./components/MessageBoxList";
-import AvatarDefault from "assets/images/default/AvatarDefault.png";
 import { LANG } from "utils/constains";
 import { setLanguage } from "states/modules/app";
 import {
@@ -19,21 +16,7 @@ import {
 	IconlyNotification,
 	IconlySearch,
 } from "components/UI/Iconly";
-import {
-	Avatar,
-	AvatarGroup,
-	Button,
-	Image,
-	Input,
-	PopoverArrow,
-	PopoverBody,
-	PopoverContent,
-	PopoverRoot,
-	PopoverTitle,
-	PopoverTrigger,
-	Text,
-} from "@chakra-ui/react";
-import avt from "assets/images/background/avt.jpg";
+import { Avatar } from "@chakra-ui/react";
 import Logo from "assets/images/logo/OpenNezt_logo_black.png";
 
 const Header = () => {
@@ -203,7 +186,7 @@ const Header = () => {
 		// 	</div>
 		// </header>
 		<header className="bg-[#ffffff] w-full">
-			<div className="flex items-center h-[70px] px-4">
+			<div className="flex items-center h-[70px] pr-4">
 				<div className="h-full">
 					<img
 						src={Logo}
@@ -323,38 +306,11 @@ const Header = () => {
 							placement="bottomRight"
 							content={contentInfo}
 							trigger="click">
-							{/* <Image
-								src={authUser.avatar || AvatarDefault}
-								boxSize="40px"
-								borderRadius="full"
-								fit="cover"
-								alt={authUser.name}
-							/> */}
 							<Avatar.Root size={"md"}>
 								<Avatar.Fallback name={authUser.name} />
 								<Avatar.Image src={authUser.avatar} />
 							</Avatar.Root>
 						</Popover>
-						{/* <PopoverRoot>
-							<PopoverTrigger asChild>
-								<Button size="sm" variant="outline">
-									Click me
-								</Button>
-							</PopoverTrigger>
-							<PopoverContent>
-								<PopoverArrow />
-								<PopoverBody>
-									<PopoverTitle fontWeight="medium">
-										Naruto Form
-									</PopoverTitle>
-									<Text my="4">
-										Naruto is a Japanese manga series written and
-										illustrated by Masashi Kishimoto.
-									</Text>
-									<Input placeholder="Your fav. character" size="sm" />
-								</PopoverBody>
-							</PopoverContent>
-						</PopoverRoot> */}
 					</div>
 				</div>
 			</div>

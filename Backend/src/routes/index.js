@@ -10,6 +10,7 @@ import projectRouter from './projectRouter'
 import socketRoutes from './socket'
 import artificialIntelligenceRouter from './artificialIntelligenceRouter'
 import articleRouter from './articleRouter'
+import profileRouter from './profileRouter'
 
 function route(app, io) {
     socketRoutes(io)
@@ -18,10 +19,14 @@ function route(app, io) {
         next()
     })
 
+<<<<<<< HEAD
     app.use('/article', articleRouter)
+=======
+>>>>>>> 6fecf90de5887de522b390e325c5615e7e7f3ea0
     app.use('/auth', authRouter)
     app.use('/manage', manageRouteMap)
     app.use('/users', userRouter)
+    app.use('/profile', profileRouter)
     app.use('/home', homeRouter)
     app.use('/chat', chatrouter)
     app.use('/common', commonRouter)
@@ -29,6 +34,7 @@ function route(app, io) {
     app.use('/notification', notificationRouter)
     app.use('/project', projectRouter)
     app.use('/ai', artificialIntelligenceRouter)
+    app.use('/article', articleRouter)
 
     app.get('/', (req, res) => {
         res.json({
