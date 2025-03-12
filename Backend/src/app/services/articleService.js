@@ -294,3 +294,22 @@ export const shareArticle = async (id, user) => {
     await newArticle.save()
 }
 //End share article
+
+//Get Article's Reactions
+export const getArticleReactions = async (target_id) => {
+    const reactions = await Reaction.find({
+        target_id: target_id,
+    })
+    return reactions
+}
+//End Get Article's Reactions
+
+//Get User's Reactions
+export const getUserReactions = async (user_id, target_id) => {
+    const reactions = await Reaction.find({
+        user_id: user_id,
+        target_id: target_id,
+    })
+    return reactions
+}
+//End Get User's Reactions

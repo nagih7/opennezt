@@ -1,19 +1,86 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { IconlyMoreCircle } from "components/UI/Iconly";
 import anh_1 from "assets/images/background/cute-little-girl-with-handmaded-wings-running-outdoors-field-having-fun-copy.webp";
 import anh_angry from "assets/images/icon/logo/angry.png";
 import anh_like from "assets/images/icon/logo/like.png";
+import like from "assets/images/icon/reaction/like.png";
+import dislike from "assets/images/icon/reaction/dislike.png";
 import anh_happy from "assets/images/icon/logo/happy.png";
 import avt from "assets/images/background/avt.jpg";
 import { IconlyChat } from "components/UI/Iconly";
 import { IconlyHeart } from "components/UI/Iconly";
 import { IconlySend } from "components/UI/Iconly";
 import { IconlyEdit } from "components/UI/Iconly";
+import {
+   differenceInDays,
+   differenceInHours,
+   differenceInMinutes,
+   differenceInSeconds,
+} from "date-fns";
 
-const Article = ({ data }) => {
+const Article = forwardRef(({ feed, reaction, onReaction, isLoading }, ref) => {
+   const {
+      _id,
+      user,
+      project,
+      content,
+      reaction_count,
+      created_at,
+      comment_count,
+   } = feed;
+
+   const displayReaction = () => {
+      if (reaction == "like") {
+         return (
+            <div className="flex items-center gap-1 w-[25px]">
+               <img src={like}></img>
+            </div>
+         );
+      }
+      if (reaction == "dislike") {
+         return (
+            <div className="flex items-center gap-1 w-[25px]">
+               <img src={dislike}></img>
+            </div>
+         );
+      }
+      if (reaction == undefined) {
+         return (
+            <div className="flex items-center gap-1">
+               <IconlyHeart size={25} color={"#6f7f92"} />
+            </div>
+         );
+      }
+   };
+
+   const handleReactionClick = (type) => {
+      if (isLoading) return;
+      const data = new FormData();
+      data.append("type", type);
+      data.append("target_type", "article");
+      onReaction(_id, data);
+   };
+
+   //==================================================================================================
+   //Posted Date Logic
+   //==================================================================================================
+   const postedAt = new Date(created_at);
+   const postedDate = postedAt.toDateString();
+   const today = new Date();
+   const day = differenceInDays(today, postedAt);
+   const hour = differenceInHours(today, postedAt) % 24;
+   const minute = differenceInMinutes(today, postedAt) % 60;
+   const second = differenceInSeconds(today, postedAt) % 60;
+   //==================================================================================================
+   //End of Posted Date Logic
+   //==================================================================================================
+
    return (
-      <div className="bg-[#ffffff] w-[800px] max-h-full mb-8 rounded-md p-8">
+      <div
+         className="bg-[#ffffff] w-[800px] max-h-full mb-8 rounded-md p-8"
+         ref={ref}
+      >
          <div className="flex items-center gap-3">
             <div className="w-[65px]">
                <img src={avt} className="w-[65px]  rounded-full" />
@@ -21,25 +88,35 @@ const Article = ({ data }) => {
             <div className="flex justify-between items-center w-full">
                <div className="flex flex-col gap-2 w-9/12 text-base font-medium">
                   <div className="flex items-center gap-2">
-                     Vuong Manh Nghia
+                     {user[0].name}
                      <CheckCircleFilled className="text-[#3897f0]" />
                      <span className="text-sm">posted in</span>
-                     <span className="text-sm">Three Amigos</span>
+                     <span className="text-sm">{project[0]}</span>
                   </div>
-                  <span className="text-xs text-gray-500">5 mins ago</span>
+                  <span className="text-xs text-gray-500">
+                     {day <= 7
+                        ? day == 0
+                           ? hour == 0
+                              ? minute == 0
+                                 ? second + "s"
+                                 : minute + "m"
+                              : hour + "h"
+                           : day + "d"
+                        : postedDate}
+                  </span>
                </div>
                <IconlyMoreCircle size={30} color={"black"} className="w-3/12" />
             </div>
          </div>
          <div className="mt-6">
-            <p className="my-[6px]">{data.content.caption}</p>
+            <p className="my-[6px]">{content.caption}</p>
          </div>
          <div>
             <img src={anh_1} />
          </div>
          <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
-            <div className="pr-[15px]">
-               <ul className="flex relative top-2 gap-2 pl-0">
+            <div className="pr-[15px] flex gap-2">
+               {/* <ul className="flex relative top-2 gap-2 pl-0">
                   <li>
                      <img src={anh_angry} className="w-6 h-6" />
                   </li>
@@ -55,35 +132,53 @@ const Article = ({ data }) => {
                         className="absolute left-[30px] top-0 w-6 h-6"
                      />
                   </li>
-               </ul>
+               </ul> */}
+               <div
+                  className="flex items-center gap-1 w-[30px]"
+                  onClick={() => handleReactionClick("like")}
+               >
+                  <img src={like}></img>
+               </div>
+               <div
+                  className="flex items-center gap-1 w-[30px]"
+                  onClick={() => handleReactionClick("dislike")}
+               >
+                  <img src={dislike}></img>
+               </div>
             </div>
             <span className="text-[#6f7f92]">
-               <span>Reacted by </span>
+               {/* <span>Reacted by </span>
                <a
                   href="#"
                   className="text-black font-medium text-current no-underline"
                >
                   Vuong Manh Nghia
                </a>
-               <span> And</span>
+               <span> And</span> */}
                <span className="font-medium text-black">
-                  {" "}
-                  {data.reaction_count}
+                  {reaction_count > 0
+                     ? reaction_count > 1000
+                        ? Math.floor(reaction_count / 1000) + "k"
+                        : reaction_count
+                     : " "}{" "}
                </span>
             </span>
             <a
                href="#"
                className="text-current no-underline text-sm font-medium text-[#517ec5]"
             >
-               3 Comments
+               {comment_count == 0 ? "" : comment_count + "comments"}
             </a>
          </div>
          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 pt-[16px] text-[#6f7f92]">
-               <div className="flex items-center gap-1">
-                  <IconlyHeart size={25} color={"#6f7f92"} />
-                  <span className="text-sm">Like</span>
-               </div>
+               <a
+                  href="#"
+                  className="flex items-center gap-1 text-current no-underline"
+               >
+                  {displayReaction(reaction)}
+                  <span className="text-sm">React</span>
+               </a>
                <a
                   href="#"
                   className="flex items-center gap-1 text-current no-underline"
@@ -192,6 +287,8 @@ const Article = ({ data }) => {
          </div>
       </div>
    );
-};
+});
+
+Article.displayName = "Article";
 
 export default Article;

@@ -16,7 +16,7 @@ const Content = new Schema(
             type: [String],
             require: false,
         },
-        hastags: {
+        hashtags: {
             type: [String],
             require: false,
         },
