@@ -12,7 +12,7 @@ const ProjectAdditionalInfo = createModel('Project_Additional_Info', 'project_ad
     },
     description: {
         type: String,
-        required: true,
+        required: false,
         default: '',
     },
     content: {

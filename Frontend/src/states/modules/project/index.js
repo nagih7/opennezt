@@ -6,6 +6,9 @@ const projectSlice = createSlice({
 
 	initialState: {
 		title: "",
+		// ========== My projects ========== //
+		myProjects: [],
+		isLoadingGetMyProjects: false,
 		projects: [],
 		projectDetails: null,
 		projectsBySeek: [],
@@ -32,40 +35,34 @@ const projectSlice = createSlice({
 			...state,
 			title: "title",
 		}),
-		startRequestGetProjects: (state) => ({
+		// ========== My projects ========== //
+		requestGetMyProjects: (state) => ({
 			...state,
-			loadingGetProjects: true,
+			isLoadingGetMyProjects: true,
 		}),
-		startRequestGetProjectsSuccess: (state, action) => ({
+		getMyProjectsSuccess: (state, action) => ({
 			...state,
-			loadingGetProjects: false,
-			projects: action.payload.data,
+			myProjects: action.payload.data,
+			isLoadingGetMyProjects: false,
 		}),
-		startRequestGetProjectsFail: (state) => ({
+		getMyProjectsFail: (state) => ({
 			...state,
-			loadingGetProjects: false,
+			isLoadingGetMyProjects: false,
 		}),
-		startRequestCreateNewProject: (state) => ({
+
+		requestCreateNewProject: (state) => ({
 			...state,
 			loadingCreateNewProject: true,
-			resultCreateProject: null,
 		}),
-		startRequestCreateNewProjectSuccess: (state, action) => {
-			message.success("Create project successfully");
-			return {
-				...state,
-				loadingCreateNewProject: false,
-				resultCreateProject: true,
-			};
-		},
-		startRequestCreateNewProjectFail: (state) => {
-			message.error("Create project failed");
-			return {
-				...state,
-				loadingCreateNewProject: false,
-				resultCreateProject: false,
-			};
-		},
+		createNewProjectSuccess: (state, action) => ({
+			...state,
+			loadingCreateNewProject: false,
+		}),
+		createNewProjectFail: (state) => ({
+			...state,
+			loadingCreateNewProject: false,
+		}),
+		// ========== Projects ========== //
 		startGetProjectDetails: (state) => ({
 			...state,
 			loadingGetProjectDetails: true,
@@ -227,12 +224,17 @@ const projectSlice = createSlice({
 
 export const {
 	setTitle,
+	// ========== My projects ========== //
+	requestGetMyProjects,
+	getMyProjectsSuccess,
+	getMyProjectsFail,
+	requestCreateNewProject,
+	createNewProjectSuccess,
+	createNewProjectFail,
+	// ========== Projects ========== //
 	startRequestGetProjects,
 	startRequestGetProjectsSuccess,
 	startRequestGetProjectsFail,
-	startRequestCreateNewProject,
-	startRequestCreateNewProjectSuccess,
-	startRequestCreateNewProjectFail,
 	startGetProjectDetails,
 	startGetProjectDetailsSuccess,
 	startGetProjectDetailsFail,

@@ -35,3 +35,4 @@ export async function getRequestAddFriend(req, res) {
     const result = await notificationService.getRequestAddFriend(req.currentUser, req.params.user_id)
     res.jsonify(result)
 }
+
