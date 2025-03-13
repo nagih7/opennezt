@@ -60,4 +60,9 @@ authRouter.post(
     asyncHandler(authController.resetPassword)
 )
 
+// ================== Social Login ================== //
+authRouter.get('/linkedin', asyncHandler(authController.loginWithLinkedIn))
+
+authRouter.get('/linkedin/callback', asyncHandler(authController.loginWithLinkedInCallback))
+
 export default authRouter

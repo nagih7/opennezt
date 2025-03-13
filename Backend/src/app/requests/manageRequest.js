@@ -177,3 +177,31 @@ export const updateSkill = Joi.object({
     description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
     metadata: Joi.object().label('Metadata'),
 })
+
+// ORGANIZATIONS
+export const createOrganization = Joi.object({
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    website: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Website'),
+    contact_email: Joi.string()
+        .trim()
+        .email()
+        .allow(null, '')
+        .label('Contact email')
+        .custom((value, helpers) => {
+            if (!value) {
+                return value
+            }
+            const email = value.split('@')
+            if (email.length !== 2) {
+                return helpers.error('any.invalid')
+            }
+            return value
+        }),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).allow(null, '').label('Description'),
+})
+export const updateOrganization = Joi.object({
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    website: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Website'),
+    contact_email: Joi.string().trim().email().allow(null, '').label('Contact email'),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).allow(null, '').label('Description'),
+})

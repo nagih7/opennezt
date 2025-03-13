@@ -41,18 +41,6 @@ const NotificationFeed = createModel('NotificationFeed', 'notifications_feed', {
         type: ObjectId,
         required: true,
     },
-    // type: {
-    //     type: String,
-    //     required: true,
-    //     enum: [
-    //         'project_request',
-    //         'message',
-    //         'message_request',
-    //         'chat_invitation',
-    //         'friend_request',
-    //         'project_invitation',
-    //     ],
-    // },
     type_id: {
         type: ObjectId,
         ref: 'Type',

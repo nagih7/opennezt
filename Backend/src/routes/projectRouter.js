@@ -19,4 +19,14 @@ projectRouter.put('/background', asyncHandler(projectController.updateBackground
 
 projectRouter.get('/invitations/:user_id', asyncHandler(projectController.getInvitations))
 
+// ========== POST [Project] ========== //
+projectRouter.post(
+    '/',
+    asyncHandler(validate(projectRequest.createProject)),
+    asyncHandler(projectController.createProject)
+)
+
+// ========== DELETE [Project] ========== //
+projectRouter.delete('/:id', asyncHandler(projectController.deleteProject))
+
 export default projectRouter

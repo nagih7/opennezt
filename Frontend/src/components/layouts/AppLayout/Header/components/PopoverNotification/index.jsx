@@ -16,23 +16,22 @@ function PopoverNotification() {
 		(state) => state.notification
 	);
 	const { language } = useSelector((state) => state.app);
-
 	const navigate = useNavigate();
 
-	const handleReplyNotification = async (notification_id, type, status) => {
+	const handleReplyNotification = async (notification_id, type_id, status) => {
 		await store.dispatch(
-			replyNotification({ notification_id, type, status })
+			replyNotification({ notification_id, type_id, status })
 		);
 		if (!loadingReplyNotification) {
 			await store.dispatch(getNotifications());
 
 			// DISPATCH ACTIONS BASED ON NOTIFICATION TYPE
-			switch (type) {
-				case "project_invitation":
+			switch (type_name) {
+				case "Project Invitation":
 					store.dispatch(getProjects());
 					store.dispatch(getChatList());
 					break;
-				case "friend_request":
+				case "Friend Request":
 					store.dispatch(getChatList());
 					break;
 				default:
@@ -40,7 +39,6 @@ function PopoverNotification() {
 			}
 		}
 	};
-
 	const handleNavigateToNotification = () => {
 		navigate("/notification-management");
 	};
@@ -71,9 +69,9 @@ function PopoverNotification() {
 										</svg>
 									</div>
 									<div className={styles.contentWrap}>
-										{notification.type === "project_invitation" && (
+										{notification.type_name === "Project Invitation" && (
 											<div>
-												<b>{notification.metadata.source_name}</b>{" "}
+												<b>{notification.source_name}</b>{" "}
 												{
 													NOTIFICATIONS.INVITED_YOU_TO_JOIN_THE[
 														language
@@ -83,9 +81,9 @@ function PopoverNotification() {
 												{NOTIFICATIONS.PROJECT[language]}
 											</div>
 										)}
-										{notification.type === "friend_request" && (
+										{notification.type_name === "Friend Request" && (
 											<div>
-												<b>{notification.metadata.source_name}</b>{" "}
+												<b>{notification.source_name}</b>{" "}
 												{
 													NOTIFICATIONS.SENT_YOU_A_FRIEND_REQUEST[
 														language
@@ -107,7 +105,7 @@ function PopoverNotification() {
 											onClick={() =>
 												handleReplyNotification(
 													notification._id,
-													notification.type,
+													notification.type_id,
 													"accepted"
 												)
 											}>
@@ -120,7 +118,7 @@ function PopoverNotification() {
 											onClick={() =>
 												handleReplyNotification(
 													notification._id,
-													notification.type,
+													notification.type_id,
 													"rejected"
 												)
 											}>

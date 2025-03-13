@@ -1,24 +1,24 @@
 import callApi from "../callApi";
 import {
 	// INDUSTRY
-	requestGetAllIndustries,
-	getAllIndustriesSuccess,
-	getAllIndustriesFail,
+	requestgetIndustryFramework,
+	getIndustryFrameworkSuccess,
+	getIndustryFrameworkFail,
 	// EXPERIENCE_LEVEL
-	requestGetAllExperienceLevels,
-	getAllExperienceLevelsSuccess,
-	getAllExperienceLevelsFail,
+	requestgetExperienceLevelFramwork,
+	getExperienceLevelFramworkSuccess,
+	getExperienceLevelFramworkFail,
 } from "../../states/modules/user";
 
 // INDUSTRY
-export const getAllIndustries = () => async (dispatch, getState) => {
+export const getIndustryFramework = () => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
 		apiPath: "users/industries",
 		actionTypes: [
-			requestGetAllIndustries,
-			getAllIndustriesSuccess,
-			getAllIndustriesFail,
+			requestgetIndustryFramework,
+			getIndustryFrameworkSuccess,
+			getIndustryFrameworkFail,
 		],
 		variables: {},
 		dispatch,
@@ -27,14 +27,14 @@ export const getAllIndustries = () => async (dispatch, getState) => {
 };
 
 // EXPERIENCE LEVEL
-export const getAllExperienceLevels = () => async (dispatch, getState) => {
+export const getExperienceLevelFramwork = () => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
 		apiPath: "users/experience-levels",
 		actionTypes: [
-			requestGetAllExperienceLevels,
-			getAllExperienceLevelsSuccess,
-			getAllExperienceLevelsFail,
+			requestgetExperienceLevelFramwork,
+			getExperienceLevelFramworkSuccess,
+			getExperienceLevelFramworkFail,
 		],
 		variables: {},
 		dispatch,

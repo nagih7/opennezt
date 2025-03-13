@@ -1,6 +1,12 @@
-import createModel from './base'
+import createModel, {ObjectId} from './base'
 
 const Education = createModel('Education', 'educations', {
+    profile_id: {
+        type: ObjectId,
+        ref: 'Profile',
+        required: true,
+        index: true,
+    },
     school: {
         type: String,
         required: true,
@@ -15,25 +21,19 @@ const Education = createModel('Education', 'educations', {
     },
     start_date: {
         type: Date,
-        required: true,
+        required: false,
     },
     end_date: {
         type: Date,
-        required: true,
+        required: false,
     },
     grade: {
         type: String,
-        required: true,
+        required: false,
     },
     activities: {
         type: String,
-        required: true,
-        default: '',
-    },
-    description: {
-        type: String,
-        required: true,
-        default: '',
+        required: false,
     },
 })
 

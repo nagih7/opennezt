@@ -18,7 +18,7 @@ const User = createModel(
         },
         password: {
             type: String,
-            required: true,
+            required: false,
             set(password) {
                 const salt = bcrypt.genSaltSync(10)
                 return bcrypt.hashSync(password, salt)

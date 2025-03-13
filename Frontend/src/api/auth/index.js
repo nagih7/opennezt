@@ -21,7 +21,12 @@ import {
 	requestGetAuthRole,
 	getAuthRoleSuccess,
 	getAuthRoleFail,
+	requestLoginWithSocial,
+	loginWithSocialSuccess,
+	loginWithSocialFail,
 } from "../../states/modules/auth";
+
+const baseUrlApi = process.env.REACT_APP_API_URL;
 
 export const login = (data) => async (dispatch, getState) => {
 	return callApi({
@@ -135,3 +140,8 @@ export const resetPassword =
 			getState,
 		});
 	};
+
+// Login with social
+export const loginWithSocial = (social) => {
+	window.location.href = `${baseUrlApi}/auth/${social}`;
+};
