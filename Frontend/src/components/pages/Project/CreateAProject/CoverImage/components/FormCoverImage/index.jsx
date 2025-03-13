@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const FormCoverImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const handleFileChange = (event) => {
+  const handleFileChangee = (event) => {
     const file = event.target.files?.[0]; // Lấy file đầu tiên nếu có
     if (file) {
       setSelectedImage(URL.createObjectURL(file)); // Tạo URL tạm thời để hiển thị ảnh
@@ -47,7 +47,7 @@ const FormCoverImage = () => {
                     accept="image/*" // Chỉ cho phép chọn ảnh
                     id="fileInput"
                     className="hidden"
-                    onChange={handleFileChange} // Xử lý sự kiện khi người dùng chọn file
+                    onChange={handleFileChangee} // Xử lý sự kiện khi người dùng chọn file
                   />
                   <label
                     htmlFor="fileInput"
