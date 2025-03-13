@@ -9,112 +9,111 @@ import ActionBar from "../ActionBar";
 import SelectCustom from "components/UI/SelectCustom";
 
 const ProfessionalBackground = () => {
-	const dispatch = useDispatch();
-	// ========== STATE FROM REDUX STORE ========== //
-	const { profile } = useSelector((state) => state.profile);
-	const { industryFramework, experienceLevelFramework } = useSelector(
-		(state) => state.user
-	);
-	// ========== STATE MANAGEMENT ========== //
-	const [formData, setFormData] = useState({
-		industries: [],
-		experience_level: [],
-	});
-	// ========== USE EFFECT ========== //
-	useEffect(() => {
-		dispatch(getProfile());
-		dispatch(getIndustryFramework());
-		dispatch(getExperienceLevelFramwork());
-	}, [dispatch]);
+  const dispatch = useDispatch();
+  // ========== STATE FROM REDUX STORE ========== //
+  const { profile } = useSelector((state) => state.profile);
+  const { industryFramework, experienceLevelFramework } = useSelector(
+    (state) => state.user
+  );
+  // ========== STATE MANAGEMENT ========== //
+  const [formData, setFormData] = useState({
+    industries: [],
+    experience_level: [],
+  });
+  // ========== USE EFFECT ========== //
+  useEffect(() => {
+    dispatch(getProfile());
+    dispatch(getIndustryFramework());
+    dispatch(getExperienceLevelFramwork());
+  }, [dispatch]);
 
-	useEffect(() => {
-		if (profile) {
-			setFormData({
-				...formData,
-				industries: profile?.industries?.map((industry) => industry._id),
-				experience_level: [profile?.experience_level?._id],
-			});
-		}
-		// eslint-disable-next-line
-	}, [profile]);
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        ...formData,
+        industries: profile?.industries?.map((industry) => industry._id),
+        experience_level: [profile?.experience_level?._id],
+      });
+    }
+    // eslint-disable-next-line
+  }, [profile]);
 
-	// ========== HANDLE CHANGE FUNCTION ========== //
-	const handleChange = (event, nameSelect) => {
-		setFormData({
-			...formData,
-			[nameSelect]: event.value,
-		});
-	};
+  // ========== HANDLE CHANGE FUNCTION ========== //
+  const handleChange = (event, nameSelect) => {
+    setFormData({
+      ...formData,
+      [nameSelect]: event.value,
+    });
+  };
 
-	const handleSaveChanges = () => {
-		console.log(formData);
-		dispatch(
-			updateProfessionalProfile({
-				industry_ids: formData.industries,
-				experience_level_id: formData.experience_level[0],
-			})
-		);
-	};
-	// ========== COMPONENT RENDER ========== //
-	return (
-		<div className="flex gap-8 w-full py-8 px-[16px]">
-			<ProfileEditMenu />
-			<div className="w-8/12">
-				<div className="bg-[#ffffff] p-8 rounded-md">
-					{/* =========== Profile Card ========== */}
-					<ProfileCard />
-					{/* =========== Action Bar  ========== */}
-					<ActionBar />
-				</div>
-				<div className="bg-[#ffffff] p-8 rounded-md mt-8">
-					<div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
-						<div>
-							<h4 className="">Professional Background</h4>
-						</div>
-					</div>
-					<div>
-						<div className="px-[16px] flex flex-col gap-8">
-							<SelectCustom
-								multiple
-								required
-								label="Job Title"
-								placeholder="Ex: Software Engineer"
-								collection={industryFramework}
-								onChange={(event) => handleChange(event, "industries")}
-								canChange
-								value={formData.industries}
-							/>
-							<SelectCustom
-								required
-								label="Experience Level"
-								placeholder="Ex: Entry Level"
-								collection={experienceLevelFramework}
-								onChange={(event) =>
-									handleChange(event, "experience_level")
-								}
-								canChange
-								value={formData.experience_level}
-							/>
-							<div className="flex justify-end">
-								<div className="">
-									<Button
-										onClick={handleSaveChanges}
-										height={50}
-										className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-										borderRadius={4}
-										loading={false}
-										loadingText="Loading..."
-										spinnerPlacement="start">
-										SAVE CHANGES
-									</Button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+  const handleSaveChanges = () => {
+    console.log(formData);
+    dispatch(
+      updateProfessionalProfile({
+        industry_ids: formData.industries,
+        experience_level_id: formData.experience_level[0],
+      })
+    );
+  };
+  // ========== COMPONENT RENDER ========== //
+  return (
+    <div className="flex gap-8 w-full py-8 px-[16px]">
+      <ProfileEditMenu />
+      <div className="w-8/12">
+        <div className="bg-[#ffffff] p-8 rounded-md">
+          {/* =========== Profile Card ========== */}
+          <ProfileCard />
+          {/* =========== Action Bar  ========== */}
+          <ActionBar />
+        </div>
+        <div className="bg-[#ffffff] p-8 rounded-md mt-8">
+          <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
+            <div>
+              <h4 className="">Professional Background</h4>
+            </div>
+          </div>
+          <div>
+            <div className="px-[16px] flex flex-col gap-8">
+              <SelectCustom
+                multiple
+                required
+                label="Job Title"
+                placeholder="Ex: Software Engineer"
+                collection={industryFramework}
+                onChange={(event) => handleChange(event, "industries")}
+                canChange
+                value={formData.industries}
+              />
+              <SelectCustom
+                required
+                label="Experience Level"
+                placeholder="Ex: Entry Level"
+                collection={experienceLevelFramework}
+                onChange={(event) => handleChange(event, "experience_level")}
+                canChange
+                value={formData.experience_level}
+              />
+              <div className="flex justify-end">
+                <div className="">
+                  <Button
+                    onClick={handleSaveChanges}
+                    height={50}
+                    className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                    borderRadius={4}
+                    loading={false}
+                    loadingText="Loading..."
+                    spinnerPlacement="start"
+                  >
+                    SAVE CHANGES
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ProfessionalBackground;
