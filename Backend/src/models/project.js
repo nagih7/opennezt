@@ -4,6 +4,8 @@ const Project = createModel('Project', 'projects', {
     user_id: {
         type: ObjectId,
         required: true,
+        ref: 'User',
+        index: true,
     },
     name: {
         type: String,
@@ -21,35 +23,13 @@ const Project = createModel('Project', 'projects', {
         type: [ObjectId],
         ref: 'Industry',
         required: true,
+        index: true,
     },
     stage_id: {
         type: ObjectId,
         ref: 'Stage',
         required: true,
-    },
-    revenue_ids: {
-        type: [ObjectId],
-        ref: 'Revenue',
-        required: true,
-        default: [],
-    },
-    funding_source_ids: {
-        type: [ObjectId],
-        ref: 'Project_Funding_Source',
-        required: true,
-        default: [],
-    },
-    project_additional_info_ids: {
-        type: [ObjectId],
-        ref: 'Project_Additional_Info',
-        required: true,
-        default: [],
-    },
-    member_ids: {
-        type: [ObjectId],
-        ref: 'Project_Member',
-        required: true,
-        default: [],
+        index: true,
     },
     metadata: {
         type: Object,

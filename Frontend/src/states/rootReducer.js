@@ -11,10 +11,12 @@ import projectReducer from "./modules/project";
 import chatReducer from "./modules/chat";
 import notificationReducer from "./modules/notification";
 import artificialIntelligenceReducer from "./modules/artificialIntelligence";
+import articleReducer from "./modules/article";
 
 const rootReducer = {
 	app: appReducer,
 	auth: authReducer,
+   article: articleReducer,
 	user: userReducer,
 	manage: manageReducer,
 	profile: profileReducer,
