@@ -5,6 +5,16 @@ import { rootLoader } from "./rootLoader";
 import AppLayout from "components/layouts/AppLayout";
 import AuthLayout from "components/layouts/AuthLayout";
 import Certifications from "components/pages/EditProfile/components/Certifications";
+import Details from "components/pages/Project/CreateAProject/Details";
+import Industry from "components/pages/Project/CreateAProject/Industry";
+import Stage from "components/pages/Project/CreateAProject/Stage";
+import Revenue from "components/pages/Project/CreateAProject/Revenue";
+import FundingSources from "components/pages/Project/CreateAProject/FundingSources";
+import AdditonalInfo from "components/pages/Project/CreateAProject/AdditionalInfo";
+import Logo from "components/pages/Project/CreateAProject/Logo";
+import CoverImage from "components/pages/Project/CreateAProject/CoverImage";
+import Invites from "components/pages/Project/CreateAProject/Invites";
+import DetailProject from "components/pages/Project/DetailProject";
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import("../components/pages/Auth/Login"));
@@ -271,6 +281,106 @@ const router = createBrowserRouter([
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_EDIT_PROFILE_PAGE"),
 	},
+	{
+		path: "/project/details",
+		element: (
+		  <AppLayout>
+			<Details />
+		  </AppLayout>
+		),
+		loader: ({ request }) =>
+		  rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
+	  },
+	  {
+		path: "/project/industry",
+		element: (
+		  <AppLayout>
+			<Industry />
+		  </AppLayout>
+		),
+		loader: ({ request }) =>
+		  rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
+	  },
+	  {
+		path: "/project/stage",
+		element: (
+		  <AppLayout>
+			<Stage />
+		  </AppLayout>
+		),
+		loader: ({ request }) =>
+		  rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
+	  },
+	  {
+		path: "/project/revenue",
+		element: (
+		  <AppLayout>
+			<Revenue />
+		  </AppLayout>
+		),
+		loader: ({ request }) =>
+		  rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
+	  },
+	  {
+		path: "/project/funding-sources",
+		element: (
+		  <AppLayout>
+			<FundingSources />
+		  </AppLayout>
+		),
+		loader: ({ request }) =>
+		  rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
+	  },
+	  {
+		path: "/project/additional-info",
+		element: (
+		  <AppLayout>
+			<AdditonalInfo />
+		  </AppLayout>
+		),
+		loader: ({ request }) =>
+		  rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
+	  },
+	  {
+		path: "/project/logo",
+		element: (
+		  <AppLayout>
+			<Logo />
+		  </AppLayout>
+		),
+		loader: ({ request }) =>
+		  rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
+	  },
+	  {
+		path: "/project/cover-image",
+		element: (
+		  <AppLayout>
+			<CoverImage />
+		  </AppLayout>
+		),
+		loader: ({ request }) =>
+		  rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
+	  },
+	  {
+		path: "/project/invites",
+		element: (
+		  <AppLayout>
+			<Invites />
+		  </AppLayout>
+		),
+		loader: ({ request }) =>
+		  rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
+	  },
+	  {
+		path: "/project/detail-project",
+		element: (
+		  <AppLayout>
+			<DetailProject />
+		  </AppLayout>
+		),  
+		loader: ({ request }) =>
+		  rootLoader({ request }, true, "LOAD_DETAIL_PROJECT_PAGE"),
+	  },
 ]);
 
 export default router;
