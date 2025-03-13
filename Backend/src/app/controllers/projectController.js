@@ -20,6 +20,11 @@ export async function createProject(req, res) {
     await projectService.createProject(req.currentUser, req.body)
     res.status(201).jsonify('Create project successfully.')
 }
+// ========== GET [My Projects] ========== //
+export async function getMyProjects(req, res) {
+    const result = await projectService.getMyProjects(req.currentUser)
+    res.jsonify(result)
+}
 
 // ========== DELETE [Project] ========== //
 export async function deleteProject(req, res) {

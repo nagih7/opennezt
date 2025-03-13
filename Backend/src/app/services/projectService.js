@@ -152,6 +152,39 @@ export async function createProject(user, requestBody) {
     }
 }
 
+// ========== GET [My Projects] ========== //
+export async function getMyProjects(user) {
+    const projects = await Project.aggregate([
+        {
+            $match: {user_id: user._id},
+        },
+        {
+            $addFields: {
+                logo: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                        then: '$logo',
+                        else: {$concat: [LINK_STATIC_URL, '$logo']},
+                    },
+                },
+                background: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        then: '$background',
+                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                    },
+                },
+            },
+        },
+        {
+            $project: {
+                user_id: 0,
+            },
+        },
+    ])
+    return projects
+}
+
 // ========== DELETE [Project] ========== //
 export async function deleteProject(user, projectId) {
     await Project.deleteOne({user_id: user._id, _id: projectId})

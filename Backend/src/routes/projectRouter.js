@@ -25,6 +25,8 @@ projectRouter.post(
     asyncHandler(validate(projectRequest.createProject)),
     asyncHandler(projectController.createProject)
 )
+// ========== GET [My Projects] ========== //
+projectRouter.get('/', asyncHandler(projectController.getMyProjects))
 
 // ========== DELETE [Project] ========== //
 projectRouter.delete('/:id', asyncHandler(projectController.deleteProject))
