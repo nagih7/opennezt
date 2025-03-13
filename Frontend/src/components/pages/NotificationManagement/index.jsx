@@ -10,6 +10,7 @@ import moment from "moment";
 import {
 	getNotifications,
 	getTotalFriends,
+	getTypeName,
 	readRoot,
 	replyNotification,
 } from "api/notification";
@@ -34,7 +35,6 @@ function NotificationProject() {
 		perPage: 10,
 		order: null,
 	});
-
 	const { talentDetails, loadingGetTalentDetails } = useSelector(
 		(state) => state.talent
 	);
@@ -44,6 +44,7 @@ function NotificationProject() {
 	useEffect(() => {
 		store.dispatch(readRoot(dataFilter));
 		store.dispatch(getTotalFriends());
+		store.dispatch(getTypeName());
 	}, [dataFilter]);
 
 	const handleOpenTalentDetails = async (user_id) => {
@@ -51,9 +52,9 @@ function NotificationProject() {
 		await store.dispatch(getTalentDetails(user_id));
 	};
 
-	const handleReplyNotification = async (notification_id, type, status) => {
+	const handleReplyNotification = async (notification_id, type_id, status) => {
 		await store.dispatch(
-			replyNotification({ notification_id, type, status })
+			replyNotification({ notification_id, type_id, status })
 		);
 		await store.dispatch(getNotifications());
 		if (status === "accepted") {
@@ -63,60 +64,65 @@ function NotificationProject() {
 
 	const columns = [
 		{
-			title: REQUEST_BY[language],
-			dataIndex: "metadata",
-			key: "source_name",
-			render: (metadata, record) => (
-				<Button
-					type="link"
-					onClick={() => handleOpenTalentDetails(record.source_id)}
-					style={{ padding: 0, height: "auto" }}>
-					{metadata.source_name}
-				</Button>
-			),
+		  title: REQUEST_BY[language],
+		  dataIndex: "source_name",
+		  key: "source_name",
+		  render: (source_name, record) => {
+			if (!source_name) return null; // Kiểm tra nếu user_name không tồn tại
+			return (
+			  <Button
+				type="link"
+				onClick={() => handleOpenTalentDetails(record.source_name)}
+				style={{ padding: 0, height: "auto" }}>
+				{source_name}
+			  </Button>
+			);
+		  },
 		},
 		{
-			title: TYPE.TYPE[language],
-			dataIndex: "type",
-			key: "type",
-			// width: "10rem",
-			render: (type, record) => <div>{type.toUpperCase()}</div>,
+		  title: TYPE.TYPE[language],
+		  dataIndex: "type_name",
+		  key: "type_name",
+		  render: (type_name) => {
+			return <div>{type_name ? type_name.toUpperCase() : "Unknown Type"}</div>;
+		  },
 		},
 		{
-			title: REQUEST_AT[language],
-			dataIndex: "created_at",
-			key: "created_at",
-			render: (date) => moment(date).fromNow(),
+		  title: REQUEST_AT[language],
+		  dataIndex: "created_at",
+		  key: "created_at",
+		  render: (date) => moment(date).fromNow(),
 		},
 		{
-			title: STATUS.STATUS[language],
-			dataIndex: "metadata",
-			key: "status",
-
-			render: (metadata) => {
-				let color;
-				switch (metadata.status) {
-					case "waiting":
-						color = "gold";
-						break;
-					case "accepted":
-						color = "green";
-						break;
-					case "rejected":
-						color = "red";
-						break;
-					case "blocked":
-						color = "red";
-						break;
-					default:
-						color = "gray";
-				}
-				return (
-					<Tag color={color}>
-						{metadata.status ? metadata.status.toUpperCase() : ""}
-					</Tag>
-				);
-			},
+		  title: STATUS.STATUS[language],
+		  dataIndex: "metadata",
+		  key: "status",
+		  render: (metadata = {}) => { 
+			const status = metadata.status ?? "unknown"; 
+	  
+			let color;
+			switch (status) {
+			  case "waiting":
+				color = "gold";
+				break;
+			  case "accepted":
+				color = "green";
+				break;
+			  case "rejected":
+				color = "red";
+				break;
+			  case "blocked":
+				color = "red";
+				break;
+			  default:
+				color = "gray";
+			}
+			return (
+			  <Tag color={color}>
+				{status.toUpperCase()}
+			  </Tag>
+			);
+		  },
 		},
 		{
 			title: ACTIONS.ACTIONS[language],
@@ -124,39 +130,46 @@ function NotificationProject() {
 			fixed: "right",
 			align: "center",
 			width: "15rem",
-			render: (_, record) => (
+			render: (_, record) => {
+			  // Kiểm tra nếu metadata hoặc status không hợp lệ
+			  if (!record.metadata || !record.metadata.status) {
+				return <div>Status is invalid or missing</div>;
+			  }
+			  return (
 				<div className={styles.actionButtons}>
-					<Button
-						type="primary"
-						icon={<CheckOutlined />}
-						onClick={() =>
-							handleReplyNotification(
-								record._id,
-								record.type,
-								STATUS.ACCEPTED[language]
-							)
-						}
-						disabled={record.metadata.status !== "waiting"}>
-						{ACTIONS.ACCEPT[language]}
-					</Button>
-					<Button
-						type="default"
-						danger
-						icon={<CloseOutlined />}
-						onClick={() =>
-							handleReplyNotification(
-								record._id,
-								record.type,
-								STATUS.REJECTED[language]
-							)
-						}
-						disabled={record.metadata.status !== "waiting"}>
-						{ACTIONS.REJECT[language]}
-					</Button>
+				  <Button
+					type="primary"
+					icon={<CheckOutlined />}
+					onClick={() =>
+					  handleReplyNotification(
+						record._id,
+						record.type_id,
+						STATUS.ACCEPTED[language].toLowerCase()
+					  )
+					}
+					disabled={record.metadata?.status !== "waiting"}>
+					{ACTIONS.ACCEPT[language]}
+				  </Button>
+				  <Button
+					type="default"
+					danger
+					icon={<CloseOutlined />}
+					onClick={() =>
+					  handleReplyNotification(
+						record._id,
+						record.type_id,
+						STATUS.REJECTED[language].toLowerCase()
+					  )
+					}
+					disabled={record.metadata?.status !== "waiting"}>
+					{ACTIONS.REJECT[language]}
+				  </Button>
 				</div>
-			),
-		},
-	];
+			  );
+			},
+		  }
+	  ];
+	  
 
 	const changeCurrentPage = (page) => {
 		setDataFilter({ ...dataFilter, page: page });
