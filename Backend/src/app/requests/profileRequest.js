@@ -1,6 +1,14 @@
 import Joi from 'joi'
 import {MAX_STRING_SIZE} from '@/configs'
-import {Certification, Education, ObjectId, Organization, ProfileAdditionalInfo} from '@/models'
+import {
+    Certification,
+    Education,
+    ObjectId,
+    Organization,
+    Profile,
+    ProfileAdditionalInfo,
+    Skill,
+} from '@/models'
 import {AsyncValidate} from '@/utils/classes'
 
 // ========== PUT [Professional] ========== //
@@ -11,24 +19,29 @@ export const updateProfessionalProfile = Joi.object({
 
 // ========== POST [Education] ========== //
 export const createProfileEducations = Joi.object({
-    educations: Joi.array()
-        .items(
-            Joi.object({
-                school: Joi.string().trim().required().max(MAX_STRING_SIZE).label('School'),
-                degree: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Degree'),
-                field_of_study: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Field of Study'),
-                start_date: Joi.date().allow(null, '').label('Start Date'),
-                end_date: Joi.date().allow(null, '').label('End Date'),
-                grade: Joi.string().trim().allow(null, '').max(MAX_STRING_SIZE).label('Grade'),
-                activities: Joi.string().trim().allow(null, '').max(MAX_STRING_SIZE).label('Activities'),
-            })
-        )
-        .label('Profile Education')
-        .required(),
+    school: Joi.string()
+        .trim()
+        .required()
+        .max(MAX_STRING_SIZE)
+        .label('School')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async (req) => {
+                    const profile = await Profile.findOne({user_id: req.currentUser._id})
+                    const education = await Education.findOne({school: value, profile_id: profile._id})
+                    return education ? helpers.error('any.duplicate') : value
+                })
+        ),
+    degree: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Degree'),
+    field_of_study: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Field of study'),
+    start_date: Joi.date().required().label('Start date'),
+    end_date: Joi.date().required().label('End d    ate'),
+    grade: Joi.string().trim().allow(null, '').max(MAX_STRING_SIZE).label('Grade'),
+    activities: Joi.string().trim().allow(null, '').max(MAX_STRING_SIZE).label('Activities'),
 })
 // ========== PUT [Education] ========== //
 export const updateProfileEducation = Joi.object({
-    id: Joi.string()
+    _id: Joi.string()
         .trim()
         .required()
         .label('ID')
@@ -50,34 +63,27 @@ export const updateProfileEducation = Joi.object({
 
 // ========== POST [Certification] ========== //
 export const createProfileCertifications = Joi.object({
-    certifications: Joi.array()
-        .items(
-            Joi.object({
-                organization_id: Joi.string()
-                    .trim()
-                    .required()
-                    .label('Organization ID')
-                    .custom(
-                        (value, helpers) =>
-                            new AsyncValidate(value, async () => {
-                                const organization = await Organization.findById(new ObjectId(value))
-                                return organization ? value : helpers.error('any.empty')
-                            })
-                    ),
-                name: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Name'),
-                description: Joi.string().trim().allow('').max(MAX_STRING_SIZE).label('Description'),
-                issue_date: Joi.date().required().allow(null, '').label('Issue Date'),
-                expiration_date: Joi.date().required().allow(null, '').label('Expiration Date'),
-                is_lifetime: Joi.boolean().label('Is Lifetime'),
-                verification_url: Joi.string().trim().allow(null).label('Verification ID'),
-            })
-        )
-        .label('Profile Certification')
-        .required(),
+    organization_id: Joi.string()
+        .trim()
+        .required()
+        .label('Organization')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const organization = await Organization.findById(new ObjectId(value))
+                    return organization ? value : helpers.error('any.empty')
+                })
+        ),
+    name: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Name'),
+    description: Joi.string().trim().allow('').max(MAX_STRING_SIZE).label('Description'),
+    issue_date: Joi.date().required().label('Issue date'),
+    expiration_date: Joi.date().required().allow(null).label('Expiration date'),
+    is_lifetime: Joi.boolean().label('Is Lifetime'),
+    verification_url: Joi.string().trim().allow(null).label('Verification ID'),
 })
 // ========== PUT [Certification] ========== //
 export const updateProfileCertification = Joi.object({
-    id: Joi.string()
+    _id: Joi.string()
         .trim()
         .required()
         .label('ID')
@@ -105,6 +111,25 @@ export const updateProfileCertification = Joi.object({
     expiration_date: Joi.date().required().allow(null, '').label('Expiration Date'),
     is_lifetime: Joi.boolean().label('Is Lifetime'),
     verification_url: Joi.string().trim().allow(null).label('Verification ID'),
+})
+
+// ========== PUT [Skills] ========== //
+export const updateProfileSkills = Joi.object({
+    skills: Joi.array().items(
+        Joi.object({
+            _id: Joi.string()
+                .trim()
+                .required()
+                .label('ID')
+                .custom(
+                    (value, helpers) =>
+                        new AsyncValidate(value, async () => {
+                            const skill = await Skill.findById(new ObjectId(value))
+                            return skill ? value : helpers.error('any.empty')
+                        })
+                ),
+        })
+    ),
 })
 
 // ========== POST [Profile Additional Info] ========== //

@@ -23,7 +23,9 @@ const ProfessionalProfile = () => {
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Professional Background</h5>
 						<span
-							onClick={() => navigate("/about/edit-profile/professional-background")}
+							onClick={() =>
+								navigate("/about/edit-profile/professional-background")
+							}
 							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
 							<IconlyEditSquare size={20} color={"#ffffff"} />
 						</span>
@@ -101,7 +103,7 @@ const ProfessionalProfile = () => {
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Expertise</h5>
 						<span
-							onClick={() => navigate("/about/edit-profile/expertise")}
+							onClick={() => navigate("/about/edit-profile/skills")}
 							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
 							<IconlyEditSquare size={20} color={"#ffffff"} />
 						</span>
@@ -133,7 +135,9 @@ const ProfessionalProfile = () => {
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Work with me </h5>
 						<span
-							onClick={() => navigate("/about/edit-profile/work-with-me")}
+							onClick={() =>
+								navigate("/about/edit-profile/work-with-me")
+							}
 							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
 							<IconlyEditSquare size={20} color={"#ffffff"} />
 						</span>

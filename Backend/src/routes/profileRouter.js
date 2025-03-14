@@ -18,7 +18,7 @@ profileRouter.put(
 
 // ========== POST [Education] ========== //
 profileRouter.post(
-    '/educations',
+    '/education',
     asyncHandler(validate(profileRequest.createProfileEducations)),
     asyncHandler(profileController.createProfileEducation)
 )
@@ -33,7 +33,7 @@ profileRouter.delete('/education/:id', asyncHandler(profileController.deleteProf
 
 // ========== POST [Certification] ========== //
 profileRouter.post(
-    '/certifications',
+    '/certification',
     asyncHandler(validate(profileRequest.createProfileCertifications)),
     asyncHandler(profileController.createProfileCertifications)
 )
@@ -45,6 +45,13 @@ profileRouter.put(
 )
 // ========== DELETE [Certification] ========== //
 profileRouter.delete('/certification/:id', asyncHandler(profileController.deleteProfileCertification))
+
+// ========== PUT [Skills] ========== //
+profileRouter.put(
+    '/skills',
+    asyncHandler(validate(profileRequest.updateProfileSkills)),
+    asyncHandler(profileController.updateProfileSkills)
+)
 
 // ========== Organization ========== //
 profileRouter.get('/organizations', asyncHandler(profileController.getOrganizationFramework))

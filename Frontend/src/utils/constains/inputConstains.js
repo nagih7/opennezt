@@ -872,4 +872,25 @@ export const LANGUAGE = {
 	],
 };
 
+export const PROFILE_ADDITIONAL = {
+	EN: [
+		{ label: "Professional summary", value: "Professional summary" },
+		{ label: "My career goals", value: "My career goals" },
+		{ label: "What I can offer", value: "What I can offer" },
+		{ label: "My work expectations", value: "My work expectations" },
+	],
+	VI: [
+		{ label: "Tóm tắt chuyên môn", value: "Professional summary" },
+		{ label: "Mục tiêu nghề nghiệp của tôi", value: "My career goals" },
+		{ label: "Những gì tôi có thể cung cấp", value: "What I can offer" },
+		{ label: "Kỳ vọng công việc của tôi", value: "My work expectations" },
+	],
+	ZH: [
+		{ label: "专业总结", value: "Professional summary" },
+		{ label: "我的职业目标", value: "My career goals" },
+		{ label: "我能提供什么", value: "What I can offer" },
+		{ label: "我的工作期望", value: "My work expectations" },
+	],
+};
+
 export const AREA_OF_EXPERTISE_KEYS = Object.keys(AREA_OF_EXPERTISE);

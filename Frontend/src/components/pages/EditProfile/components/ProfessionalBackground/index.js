@@ -47,7 +47,6 @@ const ProfessionalBackground = () => {
 	};
 
 	const handleSaveChanges = () => {
-		console.log(formData);
 		dispatch(
 			updateProfessionalProfile({
 				industry_ids: formData.industries,
