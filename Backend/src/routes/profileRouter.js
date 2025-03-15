@@ -58,7 +58,7 @@ profileRouter.get('/organizations', asyncHandler(profileController.getOrganizati
 
 // ========== PATCH [Additional Info] ========== //
 profileRouter.post(
-    '/additional-infos',
+    '/additional-info',
     asyncHandler(validate(profileRequest.createProfileAdditionalInfos)),
     asyncHandler(profileController.createProfileAdditionalInfos)
 )

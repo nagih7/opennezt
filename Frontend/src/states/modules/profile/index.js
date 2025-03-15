@@ -262,15 +262,27 @@ const profileSlice = createSlice({
 			...state,
 			isLoadingCreateOrUpdateProfileAdditionalInfo: true,
 		}),
-		createOrUpdateProfileAdditionalInfoSuccess: (state) => ({
-			...state,
-			isLoadingCreateOrUpdateProfileAdditionalInfo: false,
-			isOpenModalCreateOrUpdateProfileAdditionalInfo: false,
-		}),
-		createOrUpdateProfileAdditionalInfoFail: (state) => ({
-			...state,
-			isLoadingCreateOrUpdateProfileAdditionalInfo: false,
-		}),
+		createOrUpdateProfileAdditionalInfoSuccess: (state, action) => {
+			toaster.create({
+				title: `${action.payload.message}`,
+				type: "success",
+			});
+			return {
+				...state,
+				isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+				isOpenModalCreateOrUpdateProfileAdditionalInfo: false,
+			};
+		},
+		createOrUpdateProfileAdditionalInfoFail: (state, action) => {
+			toaster.create({
+				title: `${Object.values(action.payload.data.detail)[0]}`,
+				type: "error",
+			});
+			return {
+				...state,
+				isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+			};
+		},
 		setIsOpenModalCreateOrUpdateProfileAdditionalInfo: (state, action) => ({
 			...state,
 			isOpenModalCreateOrUpdateProfileAdditionalInfo: action.payload,

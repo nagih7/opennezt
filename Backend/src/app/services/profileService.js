@@ -267,24 +267,24 @@ export async function getOrganizationFramework() {
 
 // ========== POST [Additional Info] ========== //
 export async function createProfileAdditionalInfos(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user.id})
-    const additionalInfos = requestBody.additional_infos.map((info) => ({
-        ...info,
+    const profile = await Profile.findOne({user_id: user._id})
+    const additionalInfo = new ProfileAdditionalInfo({
+        ...requestBody,
         profile_id: profile._id,
-    }))
-    await ProfileAdditionalInfo.insertMany(additionalInfos)
+    })
+    await additionalInfo.save()
 }
 
 // ========== PUT [Additional Info] ========== //
 export async function updateProfileAdditionalInfo(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({user_id: user._id})
     if (!profile) {
         throw new Error('Profile not found.')
     }
     const additionalInfo = await ProfileAdditionalInfo.findOneAndUpdate(
         {
             profile_id: profile._id,
-            _id: requestBody.id,
+            _id: requestBody._id,
         },
         requestBody,
         {new: true}

@@ -128,10 +128,10 @@ const Skills = () => {
 							collection={categoryFramework}
 							onChange={(event) => handleChangeCategory(event)}
 							canChange
-							value={formData.categories}
+							value={formData?.categories}
 						/>
 						<SelectCustom
-							disabled={formData.categories.length === 0}
+							disabled={formData?.categories?.length === 0}
 							required
 							label="Job Title"
 							placeholder="Ex: Software Engineer"
@@ -142,7 +142,7 @@ const Skills = () => {
 						/>
 						<SelectCustom
 							multiple
-							disabled={formData.subcategories.length === 0}
+							disabled={formData?.subcategories?.length === 0}
 							required
 							label="Experience Level"
 							placeholder="Ex: Entry Level"
@@ -154,7 +154,7 @@ const Skills = () => {
 						<div className="flex justify-end">
 							<div className="">
 								<Button
-									disabled={formData.skills.length === 0}
+									disabled={formData?.skills?.length === 0}
 									onClick={handleAddSkill}
 									height={50}
 									className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
@@ -198,7 +198,7 @@ const Skills = () => {
 							<div className="">
 								<Button
 									loading={isLoadingUpdateSkills}
-									disabled={mySkills.length === 0}
+									disabled={mySkills?.length === 0}
 									onClick={handleSaveChanges}
 									height={50}
 									className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"

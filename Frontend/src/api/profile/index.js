@@ -193,10 +193,10 @@ export const updateSkillProfile = (data) => async (dispatch, getState) => {
 
 // ========== Additional Info ========== //
 export const createOrUpdateProfileAdditionalInfo =
-	(data) => async (dispatch, getState) => {
+	(data, action) => async (dispatch, getState) => {
 		return callApi({
-			method: "put",
-			apiPath: `/profile/additional-infos`,
+			method: action === "create" ? "post" : "put",
+			apiPath: `/profile/additional-info`,
 			actionTypes: [
 				requestCreateOrUpdateProfileAdditionalInfo,
 				createOrUpdateProfileAdditionalInfoSuccess,

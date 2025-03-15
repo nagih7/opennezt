@@ -22,7 +22,6 @@ const ProfessionalBackground = () => {
 	});
 	// ========== USE EFFECT ========== //
 	useEffect(() => {
-		dispatch(getProfile());
 		dispatch(getIndustryFramework());
 		dispatch(getExperienceLevelFramwork());
 	}, [dispatch]);

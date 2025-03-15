@@ -29,7 +29,7 @@ export const createProfileEducations = Joi.object({
                 new AsyncValidate(value, async (req) => {
                     const profile = await Profile.findOne({user_id: req.currentUser._id})
                     const education = await Education.findOne({school: value, profile_id: profile._id})
-                    return education ? helpers.error('any.duplicate') : value
+                    return education ? helpers.error('any.exists') : value
                 })
         ),
     degree: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Degree'),
@@ -134,20 +134,30 @@ export const updateProfileSkills = Joi.object({
 
 // ========== POST [Profile Additional Info] ========== //
 export const createProfileAdditionalInfos = Joi.object({
-    additional_infos: Joi.array()
-        .items(
-            Joi.object({
-                name: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Name'),
-                description: Joi.string().trim().allow('').max(MAX_STRING_SIZE).label('Description'),
-                content: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Content'),
-            })
-        )
-        .label('Profile Additional Info')
-        .required(),
+    name: Joi.string()
+        .trim()
+        .required()
+        .max(MAX_STRING_SIZE)
+        .label('Name')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async (req) => {
+                    const profile = await Profile.findOne({user_id: req.currentUser._id})
+                    const additionalInfo = await ProfileAdditionalInfo.findOne({
+                        name: value,
+                        profile_id: profile._id,
+                    })
+                    return additionalInfo ? helpers.error('any.exists') : value
+                })
+        ),
+
+    description: Joi.string().trim().allow('').max(MAX_STRING_SIZE).label('Description'),
+    content: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Content'),
 })
+
 // ========== PUT [Profile Additional Info] ========== //
 export const updateProfileAdditionalInfo = Joi.object({
-    id: Joi.string()
+    _id: Joi.string()
         .trim()
         .required()
         .label('ID')

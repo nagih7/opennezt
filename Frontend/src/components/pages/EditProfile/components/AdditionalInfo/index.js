@@ -1,4 +1,11 @@
-import { Button, CloseButton, Dialog, Portal, Stack } from "@chakra-ui/react";
+import {
+	Button,
+	CloseButton,
+	createListCollection,
+	Dialog,
+	Portal,
+	Stack,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProfileCard from "../ProfileCard";
@@ -7,18 +14,25 @@ import ActionBar from "../ActionBar";
 import InputCustom from "components/UI/InputCustom";
 import moment from "moment";
 import { IconlyEdit } from "components/UI/Iconly";
-import { createOrUpdateEducation } from "api/profile";
-import { setIsOpenModalCreateOrUpdateEducation } from "states/modules/profile";
+import { createOrUpdateProfileAdditionalInfo } from "api/profile";
+import { setIsOpenModalCreateOrUpdateProfileAdditionalInfo } from "states/modules/profile";
+import { PROFILE_ADDITIONAL } from "utils/constains";
+import SelectCustom from "components/UI/SelectCustom";
+
+const AdditionalInfoFramework = createListCollection({
+	items: PROFILE_ADDITIONAL["EN"].map((item) => ({
+		label: item.label,
+		value: item.value,
+	})),
+});
 
 const AdditionalInfo = () => {
 	const dispatch = useDispatch();
 	// // ========== STATE FROM REDUX STORE ========== //
-	const { addtiadditional_infosonal } = useSelector(
-		(state) => state.profile.profile
-	);
+	const { additional_infos } = useSelector((state) => state.profile.profile);
 	const {
-		isOpenModalCreateOrUpdateEducation,
-		isLoadingCreateOrUpdateEducation,
+		isOpenModalCreateOrUpdateProfileAdditionalInfo,
+		isLoadingCreateOrUpdateProfileAdditionalInfo,
 	} = useSelector((state) => state.profile);
 	// // ========== STATE MANAGEMENT ========== //
 	const [action, setAction] = useState("");
@@ -27,6 +41,12 @@ const AdditionalInfo = () => {
 		content: "",
 	});
 	// ========== HANDLE CHANGE FUNCTION ========== //
+	const handleChangeSelect = (event, nameSelect) => {
+		setFormData({
+			...formData,
+			[nameSelect]: event.value[0],
+		});
+	};
 	const handleChange = (e) => {
 		setFormData({
 			...formData,
@@ -34,37 +54,30 @@ const AdditionalInfo = () => {
 		});
 	};
 
-	const handleAddEducation = () => {
-		dispatch(setIsOpenModalCreateOrUpdateEducation(true));
+	const handleAddProfileAdditionInfo = () => {
+		dispatch(setIsOpenModalCreateOrUpdateProfileAdditionalInfo(true));
 		setAction("create");
 		setFormData({
-			school: "",
-			degree: "",
-			field_of_study: "",
-			start_date: "",
-			end_date: "",
-			grade: "",
-			activities: "",
-			description: "",
+			name: "",
+			content: "",
 		});
 	};
 
-	const handleUpdateEducation = (education) => {
-		dispatch(setIsOpenModalCreateOrUpdateEducation(true));
+	const handleUpdateProfileAdditionalInfo = (info) => {
+		dispatch(setIsOpenModalCreateOrUpdateProfileAdditionalInfo(true));
 		setAction("update");
 		setFormData({
-			...education,
-			start_date: moment(education.start_date).format("YYYY-MM"),
-			end_date: moment(education.end_date).format("YYYY-MM"),
+			...info,
 		});
 	};
 
 	const handleSaveChanges = () => {
-		dispatch(createOrUpdateEducation(formData, action));
+		console.log("formData", formData);
+		dispatch(createOrUpdateProfileAdditionalInfo(formData, action));
 	};
 
 	const handleClose = () => {
-		dispatch(setIsOpenModalCreateOrUpdateEducation(false));
+		dispatch(setIsOpenModalCreateOrUpdateProfileAdditionalInfo(false));
 	};
 
 	// ========== COMPONENT RENDER ========== //
@@ -84,8 +97,8 @@ const AdditionalInfo = () => {
 							<h4 className="">More</h4>
 						</div>
 						<Button
-							disabled={isLoadingCreateOrUpdateEducation}
-							onClick={handleAddEducation}
+							disabled={isLoadingCreateOrUpdateProfileAdditionalInfo}
+							onClick={handleAddProfileAdditionInfo}
 							height={50}
 							className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
 							borderRadius={4}
@@ -97,13 +110,15 @@ const AdditionalInfo = () => {
 					</div>
 					<div>
 						<div>
-							{addtiadditional_infosonal?.map((info, index) => (
+							{additional_infos?.map((info, index) => (
 								<div key={index}>
 									<div className="bg-[#F4F2EE] rounded-[0.6rem]">
 										<div className="relative p-4 ">
 											<span
 												className="cursor-pointer absolute left-[56.25rem]"
-												onClick={() => handleUpdateEducation(info)}>
+												onClick={() =>
+													handleUpdateProfileAdditionalInfo(info)
+												}>
 												<IconlyEdit size={24} color={"#000"} />
 											</span>
 											<h4 className="flex font-bold">
@@ -123,7 +138,7 @@ const AdditionalInfo = () => {
 
 			<Dialog.Root
 				size={"lg"}
-				open={isOpenModalCreateOrUpdateEducation}
+				open={isOpenModalCreateOrUpdateProfileAdditionalInfo}
 				key={formData.profile_id}
 				placement={"center"}
 				motionPreset="slide-in-bottom">
@@ -140,14 +155,15 @@ const AdditionalInfo = () => {
 							</Dialog.Header>
 							<Dialog.Body>
 								<Stack direction="row" h="20">
-									<InputCustom
-										label="Name"
-										required
-										placeholder="Ex: What I can offer"
+									<SelectCustom
 										height="40px"
-										name="name"
-										onChange={handleChange}
+										required
+										label="Name"
+										placeholder="Ex: Ex: What I can offer"
+										collection={AdditionalInfoFramework}
+										onChange={(e) => handleChangeSelect(e, "name")}
 										value={formData.name}
+										name="name"
 									/>
 								</Stack>
 								<Stack direction="row" h="20">
@@ -170,7 +186,9 @@ const AdditionalInfo = () => {
 								<Button
 									onClick={handleSaveChanges}
 									borderRadius={4}
-									loading={isLoadingCreateOrUpdateEducation}
+									loading={
+										isLoadingCreateOrUpdateProfileAdditionalInfo
+									}
 									loadingText="Loading..."
 									spinnerPlacement="start">
 									SAVE CHANGES
