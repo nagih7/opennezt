@@ -19,6 +19,7 @@ import FormAdditionalInfo from "../CreateAProject/AdditionalInfo/components/Form
 import ContainerLogo from "../CreateAProject/Logo/components/ContainerLogo";
 import FormCoverImage from "../CreateAProject/CoverImage/components/FormCoverImage";
 import FormRevenue from "../CreateAProject/Revenue/components/FormRevenue";
+import { IconlyEditSquare } from "components/UI/Iconly";
 
 const DetailProject = () => {
   return (
@@ -82,64 +83,218 @@ const DetailProject = () => {
       <div className="px-[16px]">
         <div className="flex w-full gap-8">
           <div className="w-8/12 mt-8">
-            <Tabs.Root defaultValue="members">
-              <div className="px-2 py-8 bg-[#ffffff] rounded-md overflow-x-scroll scrollbar-hide">
-                <Tabs.List>
-                  <Tabs.Trigger value="detail">
-                    <div className="mr-[40px] mb-3">Detail</div>
-                  </Tabs.Trigger>
-                  <Tabs.Trigger value="stage">
-                    <div className="mr-[40px] mb-3">Stage</div>
-                  </Tabs.Trigger>
-                  <Tabs.Trigger value="revenue">
-                    <div className="mr-[40px] mb-3">Revenue</div>
-                  </Tabs.Trigger>
-                  <Tabs.Trigger value="funding-sources">
-                    <div className="mr-[40px] mb-3">Funding Sources</div>
-                  </Tabs.Trigger>
-                  <Tabs.Trigger value="additional-info">
-                    <div className="mr-[40px] mb-3"> Additional Info</div>
-                  </Tabs.Trigger>
-                  <Tabs.Trigger value="logo">
-                    <div className="mr-[40px] mb-3">Logo</div>
-                  </Tabs.Trigger>
-                  <Tabs.Trigger value="cover-image">
-                    <div className="mr-[40px] mb-3">Cover Image</div>
-                  </Tabs.Trigger>
-                </Tabs.List>
+            <div className="bg-[#ffffff] rounded-md">
+              <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
+                <h5 className="text-2xl font-normal">Detail</h5>
+                <Link
+                  to={"/project/edit-project/detail"}
+                  className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
+                >
+                  <IconlyEditSquare size={20} color={"#ffffff"} />
+                </Link>
               </div>
-              <div className="mt-8 bg-[#ffffff] rounded-md p-8">
-                <Tabs.Content value="detail">
-                  <DetailsBotton />
-                </Tabs.Content>
-                <Tabs.Content value="stage">
-                  <StageBotton />
-                </Tabs.Content>
-                <Tabs.Content value="revenue">
-                  <FormRevenue />
-                </Tabs.Content>
-                <Tabs.Content value="funding-sources">
-                  <FormFundingScources />
-                </Tabs.Content>
-                <Tabs.Content value="additional-info">
-                  <FormAdditionalInfo />
-                </Tabs.Content>
-                <Tabs.Content value="logo">
+              <div className="p-8">
+                <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      PROJECT NAME
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">OpenNezt</p>
+                    </div>
+                  </li>
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      PROJECT DESCRIPTION
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">hihi</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="bg-[#ffffff] rounded-md mt-8">
+              <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
+                <h5 className="text-2xl font-normal">Stage</h5>
+                <Link
+                  to={"/project/edit-project/stage"}
+                  className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
+                >
+                  <IconlyEditSquare size={20} color={"#ffffff"} />
+                </Link>
+              </div>
+              <div className="p-8">
+              <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      STAGE
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">...</p>
+                    </div>
+                  </li>
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      INDUSYTIES
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">...</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="bg-[#ffffff] rounded-md mt-8">
+              <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
+                <h5 className="text-2xl font-normal">Revenue</h5>
+                <Link
+                  to={"/project/edit-project/revenue"}
+                  className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
+                >
+                  <IconlyEditSquare size={20} color={"#ffffff"} />
+                </Link>
+              </div>
+              <div className="p-8">
+              <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      MONTH / YEAR
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">12 / 2025</p>
+                    </div>
+                  </li>
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      AMOUNT
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">...</p>
+                    </div>
+                  </li>
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      CURRENCY
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">...</p>
+                    </div>
+                  </li>
+                </ul>
+        
+              </div>
+            </div>
+            <div className="bg-[#ffffff] rounded-md mt-8">
+              <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
+                <h5 className="text-2xl font-normal">Funding Sources</h5>
+                <Link
+                  to={"/project/edit-project/funding-sources"}
+                  className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
+                >
+                  <IconlyEditSquare size={20} color={"#ffffff"} />
+                </Link>
+              </div>
+              <div className="p-8">
+              <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      NAME
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">OpenNezt</p>
+                    </div>
+                  </li>
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      AMOUNT
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">...</p>
+                    </div>
+                  </li>
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      CURRENCY
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">...</p>
+                    </div>
+                  </li>
+                </ul>
+               
+              </div>
+            </div>
+            <div className="bg-[#ffffff] rounded-md mt-8">
+              <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
+                <h5 className="text-2xl font-normal">Additional Info</h5>
+                <Link
+                  to={"/project/edit-project/additional-info"}
+                  className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
+                >
+                  <IconlyEditSquare size={20} color={"#ffffff"} />
+                </Link>
+              </div>
+              <div className="p-8">
+              <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      NAME
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">OpenNezt</p>
+                    </div>
+                  </li>
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      DESCRIPTION
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">...</p>
+                    </div>
+                  </li>
+                  <li className="px-[16px] mb-10">
+                    <div className="mb-2 text-sm font-medium uppercase">
+                      CONTENT
+                    </div>
+                    <div>
+                      <p className="mb-2 text-base font-medium text-black">...</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            {/* <div className="bg-[#ffffff] rounded-md mt-8">
+                  <div className="flex justify-between items-center ">
+                    <h5 className="text-2xl font-normal">Logo</h5>
+                    <Link
+                      to={"/project/edit-project/logo"}
+                      className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
+                    >
+                      <IconlyEditSquare size={20} color={"#ffffff"} />
+                    </Link>
+                  </div>
                   <div className="text-[#6f7f92]">
-                    <p className="mb-[16px]">
+                    <p className="my-[16px]">
                       Upload an image to use as a profile logo for this project.
                       The image will be shown on the main group page, and in
                       search results.
                     </p>
                   </div>
                   <ContainerLogo />
-                </Tabs.Content>
-                <Tabs.Content value="cover-image">
-                  <h2>Cover Image</h2>
+               
+                  <div className="flex justify-between items-center">
+                    <h5 className="text-2xl font-normal">Cover Image</h5>
+                    <Link
+                      to={"/project/edit-project/cover-image"}
+                      className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
+                    >
+                      <IconlyEditSquare size={20} color={"#ffffff"} />
+                    </Link>
+                  </div>
                   <FormCoverImage />
-                </Tabs.Content>
-              </div>
-            </Tabs.Root>
+               
+              </div> */}
           </div>
           <div className="w-4/12 mt-8">
             <div className="p-8 mb-8 bg-[#ffffff] rounded-md">

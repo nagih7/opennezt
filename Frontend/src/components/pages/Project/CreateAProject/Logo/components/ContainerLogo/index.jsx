@@ -3,14 +3,6 @@ import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
 const ContainerLogo = () => {
-  // const [selectedImage, setSelectedImage] = useState(null);
-
-  // const handleFileChange = (event) => {
-  //   const file = event.target.files?.[0]; // Lấy file đầu tiên nếu có
-  //   if (file) {
-  //     setSelectedImage(URL.createObjectURL(file)); // Tạo URL tạm thời để hiển thị ảnh
-  //   }
-  // };
   const [selectedImage, setSelectedImage] = useState(null);
   const [crop, setCrop] = useState({
     unit: "px",
@@ -36,8 +28,8 @@ const ContainerLogo = () => {
   const onCropChange = (newCrop) => {
     setCrop({
       ...newCrop,
-      width: Math.min(newCrop.width, 200), // Giới hạn max width
-      height: Math.min(newCrop.height, 200), // Giới hạn max height
+      width: Math.min(newCrop.width, 400), // Giới hạn max width
+      height: Math.min(newCrop.height, 400), // Giới hạn max height
     });
   };
 
@@ -95,17 +87,56 @@ const ContainerLogo = () => {
                     <p className="mb-[5px] text-[#6f7f92] font-medium">or</p>
                   </>
                 ) : (
-                  <div className="text-center">
-                    <img
-                      src={selectedImage}
-                      alt="Selected Preview"
-                      className="mt-2 rounded-md mb-[16px]"
-                      style={{
-                        maxWidth: "150px",
-                        maxHeight: "150px",
-                        objectFit: "cover",
-                      }}
-                    />
+                  // <div className="text-center">
+                  //   <img
+                  //     src={selectedImage}
+                  //     alt="Selected Preview"
+                  //     className="mt-2 rounded-md mb-[16px]"
+                  //     style={{
+                  //       maxWidth: "150px",
+                  //       maxHeight: "150px",
+                  //       objectFit: "cover",
+                  //     }}
+                  //   />
+                  // </div>
+                  <div className="flex flex-col items-center space-y-4 p-6">
+                    {/* Khu vực chọn và crop ảnh */}
+                    {selectedImage && (
+                      <div className="flex gap-4">
+                        {/* Khu vực crop */}
+                        <div className="overflow-hidden">
+                          <ReactCrop
+                            crop={crop}
+                            onChange={onCropChange}
+                            aspect={1} // Crop vuông
+                            minWidth={100} // Giới hạn min
+                            minHeight={100}
+                            className="max-w-[400px] max-h-full"
+                          >
+                            <img
+                              ref={imageRef}
+                              src={selectedImage}
+                              alt="Preview"
+                              className="max-w-[400px] max-h-[400px]"
+                            />
+                          </ReactCrop>
+                        </div>
+
+                        {/* Ảnh preview */}
+                        <div className="flex flex-col items-center gap-2">
+                          <canvas
+                            ref={previewCanvasRef}
+                            className="max-w-[150px] max-h-[150px] object-cover "
+                          />
+                          <label
+                            htmlFor=""
+                            className="px-[30px] py-[11px] cursor-pointer text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                          >
+                            CROP IMAGE
+                          </label>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
                 <div className="text-center">
@@ -123,48 +154,6 @@ const ContainerLogo = () => {
                     SELECT YOUR FILE
                   </label>
                 </div>
-              </div>
-              <div className="flex flex-col items-center space-y-4 p-6">
-                {/* <label className="text-blue-600 cursor-pointer font-semibold">
-                  Upload
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleFileChange}
-                  />
-                </label> */}
-
-                {/* Khu vực chọn và crop ảnh */}
-                {selectedImage && (
-                  <div className="flex gap-4">
-                    {/* Khu vực crop */}
-                    <div className="border rounded-md overflow-hidden">
-                      <ReactCrop
-                        crop={crop}
-                        onChange={onCropChange}
-                        aspect={1} // Crop vuông
-                        minWidth={400} // Giới hạn min
-                        minHeight={400}
-                      >
-                        <img
-                          ref={imageRef}
-                          src={selectedImage}
-                          alt="Preview"
-                          className="max-w-[300px] max-h-[300px]"
-                        />
-                      </ReactCrop>
-                    </div>
-
-                    {/* Ảnh preview */}
-                    <div className="flex flex-col items-center">
-                      <canvas
-                        ref={previewCanvasRef}
-                        className="w-[150px] h-[150px] object-cover rounded-md"
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>

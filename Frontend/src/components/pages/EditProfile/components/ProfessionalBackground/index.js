@@ -22,7 +22,6 @@ const ProfessionalBackground = () => {
 	});
 	// ========== USE EFFECT ========== //
 	useEffect(() => {
-		dispatch(getProfile());
 		dispatch(getIndustryFramework());
 		dispatch(getExperienceLevelFramwork());
 	}, [dispatch]);
@@ -47,7 +46,6 @@ const ProfessionalBackground = () => {
 	};
 
 	const handleSaveChanges = () => {
-		console.log(formData);
 		dispatch(
 			updateProfessionalProfile({
 				industry_ids: formData.industries,

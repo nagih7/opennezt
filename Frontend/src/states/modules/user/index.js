@@ -8,22 +8,36 @@ const userSlice = createSlice({
 		industryFramework: createListCollection({
 			items: [],
 		}),
-		isLoadingGetAllIndustry: false,
+		isLoadingGetIndustryFramwork: false,
 		// EXPERIENCE_LEVELS
 		experienceLevelFramework: createListCollection({
 			items: [],
 		}),
-		isLoadingGetAllExperienceLevel: false,
+		isLoadingGetExperienceLevelFramwork: false,
+		// CATEGORIES
+		categoryFramework: createListCollection({
+			items: [],
+		}),
+		subCategoryFramework: createListCollection({
+			items: [],
+		}),
+		isLoadingGetCategoryFramework: false,
+		isLoadingGetSubCategoryFramework: false,
+		// SKILLS
+		skillFramework: createListCollection({
+			items: [],
+		}),
+		isLoadingGetSkillFramework: false,
 	},
 	reducers: {
 		// INDUSTRIES
 		requestgetIndustryFramework: (state) => ({
 			...state,
-			isLoadingGetAllIndustry: true,
+			isLoadingGetIndustryFramwork: true,
 		}),
 		getIndustryFrameworkSuccess: (state, action) => ({
 			...state,
-			isLoadingGetAllIndustry: false,
+			isLoadingGetIndustryFramwork: false,
 			industryFramework: createListCollection({
 				items: action.payload.data.map((industry) => ({
 					label: industry.name,
@@ -33,16 +47,16 @@ const userSlice = createSlice({
 		}),
 		getIndustryFrameworkFail: (state) => ({
 			...state,
-			isLoadingGetAllIndustry: false,
+			isLoadingGetIndustryFramwork: false,
 		}),
 		// EXPERIENCE_LEVELS
 		requestgetExperienceLevelFramwork: (state) => ({
 			...state,
-			isLoadingGetAllExperienceLevel: true,
+			isLoadingGetExperienceLevelFramwork: true,
 		}),
 		getExperienceLevelFramworkSuccess: (state, action) => ({
 			...state,
-			isLoadingGetAllExperienceLevel: false,
+			isLoadingGetExperienceLevelFramwork: false,
 			experienceLevelFramework: createListCollection({
 				items: action.payload.data.map((experienceLevel) => ({
 					label: experienceLevel.name,
@@ -52,7 +66,63 @@ const userSlice = createSlice({
 		}),
 		getExperienceLevelFramworkFail: (state) => ({
 			...state,
-			isLoadingGetAllExperienceLevel: false,
+			isLoadingGetExperienceLevelFramwork: false,
+		}),
+		// CATEGORIES
+		requestGetCategoryFramework: (state) => ({
+			...state,
+			isLoadingGetAllCategory: true,
+		}),
+		getCategoryFrameworkSuccess: (state, action) => ({
+			...state,
+			isLoadingGetAllCategory: false,
+			categoryFramework: createListCollection({
+				items: action.payload.data.map((category) => ({
+					label: category.name,
+					value: category._id,
+				})),
+			}),
+		}),
+		getCategoryFrameworkFail: (state) => ({
+			...state,
+			isLoadingGetAllCategory: false,
+		}),
+		requestGetSubCategoryFramework: (state) => ({
+			...state,
+			isLoadingGetSubCategoryFramework: true,
+		}),
+		getSubCategoryFrameworkSuccess: (state, action) => ({
+			...state,
+			isLoadingGetSubCategoryFramework: false,
+			subCategoryFramework: createListCollection({
+				items: action.payload.data.map((category) => ({
+					label: category.name,
+					value: category._id,
+				})),
+			}),
+		}),
+		getSubCategoryFrameworkFail: (state) => ({
+			...state,
+			isLoadingGetSubCategoryFramework: false,
+		}),
+		// SKILLS
+		requestGetSkillFramework: (state) => ({
+			...state,
+			isLoadingGetSkillFramework: true,
+		}),
+		getSkillFrameworkSuccess: (state, action) => ({
+			...state,
+			isLoadingGetSkillFramework: false,
+			skillFramework: createListCollection({
+				items: action.payload.data.map((skill) => ({
+					label: skill.name,
+					value: skill._id,
+				})),
+			}),
+		}),
+		getSkillFrameworkFail: (state) => ({
+			...state,
+			isLoadingGetSkillFramework: false,
 		}),
 	},
 });
@@ -66,6 +136,17 @@ export const {
 	requestgetExperienceLevelFramwork,
 	getExperienceLevelFramworkSuccess,
 	getExperienceLevelFramworkFail,
+	// CATEGORIES
+	requestGetCategoryFramework,
+	getCategoryFrameworkSuccess,
+	getCategoryFrameworkFail,
+	requestGetSubCategoryFramework,
+	getSubCategoryFrameworkSuccess,
+	getSubCategoryFrameworkFail,
+	// SKILLS
+	requestGetSkillFramework,
+	getSkillFrameworkSuccess,
+	getSkillFrameworkFail,
 } = userSlice.actions;
 
 export default userSlice.reducer;

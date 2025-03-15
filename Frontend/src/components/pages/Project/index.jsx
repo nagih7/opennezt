@@ -535,9 +535,9 @@ function Project() {
                             </li>
                           </ul>
                           <div className="mt-7 mx-[-16px] w-full h-[47px] flex justify-center items-center">
-                            <a href="#" className="bg-[#eaeff8] text-[#2f65b9] hover:bg-[#2f65b9] hover:text-[#ffffff] transition duration- text-sm rounded-md font-semibold px-[28px] py-[15px] mx-[14px] no-underline">
+                            <Link to={"/project/detail-project"} className="bg-[#eaeff8] text-[#2f65b9] hover:bg-[#2f65b9] hover:text-[#ffffff] transition duration- text-sm rounded-md font-semibold px-[28px] py-[15px] mx-[14px] no-underline">
                               MANAGE PROJECT
-                            </a>
+                            </Link>
                           </div>
                         </div>
                       </div>
