@@ -63,16 +63,16 @@ const ProfileEditMenu = () => {
 							</li>
 							<li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
 								<Link
-									to={"/about/edit-profile/expertise"}
+									to={"/about/edit-profile/skills"}
 									className="text-[#6f7f92]  no-underline ">
-									Expertise
+									Skills
 								</Link>
 							</li>
 							<li className=" w-full text-sm py-[21px] ">
 								<Link
-									to={"/about/edit-profile/work-with-me"}
+									to={"/about/edit-profile/more"}
 									className="text-[#6f7f92]  no-underline ">
-									Work with me
+									More
 								</Link>
 							</li>
 						</ul>

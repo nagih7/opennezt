@@ -1000,52 +1000,126 @@ export const IconlyWork = ({ size, color }) => {
 	);
 };
 
-export const IconlyArrowRight2 = ({ size, color}) => {
-    return (
-		<svg width={size} height={size} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-		    <title>Iconly/Two-tone/Arrow - Right 2</title>
-		    <g id="Iconly/Two-tone/Arrow---Right-2" stroke="none" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
-		        <g id="Arrow---Right-2" transform="translate(12.000000, 12.000000) rotate(-90.000000) translate(-12.000000, -12.000000) translate(5.000000, 8.500000)" stroke={color} strokeWidth="1.5">
-		            <polyline id="Stroke-1" points="14 0 7 7 0 0"></polyline>
-		        </g>
-		    </g>
-		</svg> 
-		) 
-}
+export const IconlyArrowRight2 = ({ size, color }) => {
+	return (
+		<svg
+			width={size}
+			height={size}
+			viewBox="0 0 24 24"
+			version="1.1"
+			xmlns="http://www.w3.org/2000/svg"
+			xmlnsXlink="http://www.w3.org/1999/xlink">
+			<title>Iconly/Two-tone/Arrow - Right 2</title>
+			<g
+				id="Iconly/Two-tone/Arrow---Right-2"
+				stroke="none"
+				strokeWidth="1.5"
+				fill="none"
+				fillRule="evenodd"
+				strokeLinecap="round"
+				strokeLinejoin="round">
+				<g
+					id="Arrow---Right-2"
+					transform="translate(12.000000, 12.000000) rotate(-90.000000) translate(-12.000000, -12.000000) translate(5.000000, 8.500000)"
+					stroke={color}
+					strokeWidth="1.5">
+					<polyline id="Stroke-1" points="14 0 7 7 0 0"></polyline>
+				</g>
+			</g>
+		</svg>
+	);
+};
 
-export const IconlyCategory = ({ size, color}) => {
-    return (
-		<svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-		<path fillRule="evenodd" clipRule="evenodd" d="M2.60693 10.3931H9.60693V3.39307H2.60693V10.3931Z" stroke={color} strokeWidth="1.5" strokeLinecap="square"></path>
-		<path d="M2.60693 14.3936V21.3936H9.60693V14.3936H2.60693Z" stroke={color} strokeWidth="1.5" strokeLinecap="square"></path>
-		<path fillRule="evenodd" clipRule="evenodd" d="M13.6069 21.3931H20.6069V14.3931H13.6069V21.3931Z" stroke={color} strokeWidth="1.5" strokeLinecap="square"></path>
-		<path d="M14.6321 2.60645L12.8203 9.36793L19.5818 11.1797L21.3936 4.41818L14.6321 2.60645Z" stroke={color} strokeWidth="1.5" strokeLinecap="square"></path>
-		</svg> 
-		) 
-}
+export const IconlyCategory = ({ size, color }) => {
+	return (
+		<svg
+			width={size}
+			height={size}
+			viewBox="0 0 24 24"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg">
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M2.60693 10.3931H9.60693V3.39307H2.60693V10.3931Z"
+				stroke={color}
+				strokeWidth="1.5"
+				strokeLinecap="square"></path>
+			<path
+				d="M2.60693 14.3936V21.3936H9.60693V14.3936H2.60693Z"
+				stroke={color}
+				strokeWidth="1.5"
+				strokeLinecap="square"></path>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M13.6069 21.3931H20.6069V14.3931H13.6069V21.3931Z"
+				stroke={color}
+				strokeWidth="1.5"
+				strokeLinecap="square"></path>
+			<path
+				d="M14.6321 2.60645L12.8203 9.36793L19.5818 11.1797L21.3936 4.41818L14.6321 2.60645Z"
+				stroke={color}
+				strokeWidth="1.5"
+				strokeLinecap="square"></path>
+		</svg>
+	);
+};
 
-export const IconlyShow = ({ size, color}) => {
-    return (
-		<svg width={size} height={size} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-		    <title>Iconly/Light-Outline/Show</title>
-		    <g id="Iconly/Light-Outline/Show" stroke="none" strokeWidth="1.5" fill="none" fillRule="evenodd">
-		        <g id="Show" transform="translate(2.000000, 4.000000)" fill={color}>
-		            <path d="M10.0029,0.0005 C14.1389,0.0035 17.8529,2.9025 19.9389,7.7565 C20.0209,7.9455 20.0209,8.1595 19.9389,8.3485 C17.8539,13.2035 14.1389,16.1025 10.0029,16.1055 L9.9969,16.1055 C5.8609,16.1025 2.1469,13.2035 0.0609,8.3485 C-0.0201,8.1595 -0.0201,7.9455 0.0609,7.7565 C2.1469,2.9025 5.8619,0.0035 9.9969,0.0005 L10.0029,0.0005 Z M9.9999,1.5005 C6.5639,1.5015 3.4299,3.9445 1.5699,8.0525 C3.4299,12.1615 6.5629,14.6045 9.9999,14.6055 C13.4369,14.6045 16.5699,12.1615 18.4299,8.0525 C16.5699,3.9445 13.4369,1.5015 9.9999,1.5005 Z M9.9996,4.1413 C12.1566,4.1413 13.9116,5.8963 13.9116,8.0533 C13.9116,10.2093 12.1566,11.9633 9.9996,11.9633 C7.8426,11.9633 6.0886,10.2093 6.0886,8.0533 C6.0886,5.8963 7.8426,4.1413 9.9996,4.1413 Z M9.9996,5.6413 C8.6696,5.6413 7.5886,6.7233 7.5886,8.0533 C7.5886,9.3823 8.6696,10.4633 9.9996,10.4633 C11.3296,10.4633 12.4116,9.3823 12.4116,8.0533 C12.4116,6.7233 11.3296,5.6413 9.9996,5.6413 Z" id="Combined-Shape"></path>
-		        </g>
-		    </g>
-		</svg> 
-		) 
-}
+export const IconlyShow = ({ size, color }) => {
+	return (
+		<svg
+			width={size}
+			height={size}
+			viewBox="0 0 24 24"
+			version="1.1"
+			xmlns="http://www.w3.org/2000/svg"
+			xmlnsXlink="http://www.w3.org/1999/xlink">
+			<title>Iconly/Light-Outline/Show</title>
+			<g
+				id="Iconly/Light-Outline/Show"
+				stroke="none"
+				strokeWidth="1.5"
+				fill="none"
+				fillRule="evenodd">
+				<g id="Show" transform="translate(2.000000, 4.000000)" fill={color}>
+					<path
+						d="M10.0029,0.0005 C14.1389,0.0035 17.8529,2.9025 19.9389,7.7565 C20.0209,7.9455 20.0209,8.1595 19.9389,8.3485 C17.8539,13.2035 14.1389,16.1025 10.0029,16.1055 L9.9969,16.1055 C5.8609,16.1025 2.1469,13.2035 0.0609,8.3485 C-0.0201,8.1595 -0.0201,7.9455 0.0609,7.7565 C2.1469,2.9025 5.8619,0.0035 9.9969,0.0005 L10.0029,0.0005 Z M9.9999,1.5005 C6.5639,1.5015 3.4299,3.9445 1.5699,8.0525 C3.4299,12.1615 6.5629,14.6045 9.9999,14.6055 C13.4369,14.6045 16.5699,12.1615 18.4299,8.0525 C16.5699,3.9445 13.4369,1.5015 9.9999,1.5005 Z M9.9996,4.1413 C12.1566,4.1413 13.9116,5.8963 13.9116,8.0533 C13.9116,10.2093 12.1566,11.9633 9.9996,11.9633 C7.8426,11.9633 6.0886,10.2093 6.0886,8.0533 C6.0886,5.8963 7.8426,4.1413 9.9996,4.1413 Z M9.9996,5.6413 C8.6696,5.6413 7.5886,6.7233 7.5886,8.0533 C7.5886,9.3823 8.6696,10.4633 9.9996,10.4633 C11.3296,10.4633 12.4116,9.3823 12.4116,8.0533 C12.4116,6.7233 11.3296,5.6413 9.9996,5.6413 Z"
+						id="Combined-Shape"></path>
+				</g>
+			</g>
+		</svg>
+	);
+};
 
-export const IconlyStar = ({ size, color}) => {
-    return (
-		<svg width={size} height={size} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-		    <title>Iconly/Two-tone/Star</title>
-		    <g id="Iconly/Two-tone/Star" stroke="none" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
-		        <g id="Star" transform="translate(3.000000, 3.500000)" stroke={color} strokeWidth="1.5">
-		            <path d="M10.1042564,0.67700614 L11.9316681,4.32775597 C12.1107648,4.68615589 12.4564632,4.93467388 12.8573484,4.99218218 L16.9453359,5.58061527 C17.9553583,5.72643988 18.3572847,6.95054503 17.6263201,7.65194084 L14.6701824,10.4924399 C14.3796708,10.7717659 14.2474307,11.173297 14.3161539,11.5676396 L15.0137982,15.5778163 C15.1856062,16.5698344 14.1297683,17.3266846 13.2269958,16.8573759 L9.57321374,14.9626829 C9.21502023,14.7768079 8.78602103,14.7768079 8.42678626,14.9626829 L4.77300425,16.8573759 C3.87023166,17.3266846 2.81439382,16.5698344 2.98724301,15.5778163 L3.68384608,11.5676396 C3.75256926,11.173297 3.62032921,10.7717659 3.32981762,10.4924399 L0.373679928,7.65194084 C-0.357284727,6.95054503 0.0446417073,5.72643988 1.05466409,5.58061527 L5.14265161,4.99218218 C5.54353679,4.93467388 5.89027643,4.68615589 6.06937319,4.32775597 L7.89574356,0.67700614 C8.34765049,-0.225668713 9.65234951,-0.225668713 10.1042564,0.67700614 Z" id="Stroke-1"></path>
-		        </g>
-		    </g>
-		</svg> 
-		) 
-}
+export const IconlyStar = ({ size, color }) => {
+	return (
+		<svg
+			width={size}
+			height={size}
+			viewBox="0 0 24 24"
+			version="1.1"
+			xmlns="http://www.w3.org/2000/svg"
+			xmlnsXlink="http://www.w3.org/1999/xlink">
+			<title>Iconly/Two-tone/Star</title>
+			<g
+				id="Iconly/Two-tone/Star"
+				stroke="none"
+				strokeWidth="1.5"
+				fill="none"
+				fillRule="evenodd"
+				strokeLinecap="round"
+				strokeLinejoin="round">
+				<g
+					id="Star"
+					transform="translate(3.000000, 3.500000)"
+					stroke={color}
+					strokeWidth="1.5">
+					<path
+						d="M10.1042564,0.67700614 L11.9316681,4.32775597 C12.1107648,4.68615589 12.4564632,4.93467388 12.8573484,4.99218218 L16.9453359,5.58061527 C17.9553583,5.72643988 18.3572847,6.95054503 17.6263201,7.65194084 L14.6701824,10.4924399 C14.3796708,10.7717659 14.2474307,11.173297 14.3161539,11.5676396 L15.0137982,15.5778163 C15.1856062,16.5698344 14.1297683,17.3266846 13.2269958,16.8573759 L9.57321374,14.9626829 C9.21502023,14.7768079 8.78602103,14.7768079 8.42678626,14.9626829 L4.77300425,16.8573759 C3.87023166,17.3266846 2.81439382,16.5698344 2.98724301,15.5778163 L3.68384608,11.5676396 C3.75256926,11.173297 3.62032921,10.7717659 3.32981762,10.4924399 L0.373679928,7.65194084 C-0.357284727,6.95054503 0.0446417073,5.72643988 1.05466409,5.58061527 L5.14265161,4.99218218 C5.54353679,4.93467388 5.89027643,4.68615589 6.06937319,4.32775597 L7.89574356,0.67700614 C8.34765049,-0.225668713 9.65234951,-0.225668713 10.1042564,0.67700614 Z"
+						id="Stroke-1"></path>
+				</g>
+			</g>
+		</svg>
+	);
+};
