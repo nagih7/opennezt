@@ -149,11 +149,11 @@ const Certifications = () => {
 							<div>
 								{certifications.map((ceitification, index) => (
 									<div key={index}>
-										<div className="bg-[#F4F2EE] rounded-[0.6rem]">
+										<div className="bg-[#F4F2EE] rounded-[0.6rem] mt-3">
 											<div className="p-4 ">
-												<svg onClick={handleEdit} className="cursor-pointer relative left-[56.25rem]" xmlns="http://www.w3.org/2000/svg" version="1.1" id="mdi-pencil-outline" width="24" height="24" viewBox="0 0 24 24"><path d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z" /></svg>
+												<svg onClick={handleEdit} className="cursor-pointer float-right" xmlns="http://www.w3.org/2000/svg" version="1.1" id="mdi-pencil-outline" width="24" height="24" viewBox="0 0 24 24"><path d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z" /></svg>
 												<h4 className="flex font-bold">{ceitification.name}</h4>
-												<p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">{ceitification.issue_date} - {ceitification.expiration_date}</p>
+												<p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem] md:top-[-0.5rem]">{ceitification.issue_date} - {ceitification.expiration_date}</p>
 
 												<p className="flex "> Desciption: {ceitification.description}</p>
 
