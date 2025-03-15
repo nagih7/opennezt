@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { message } from "antd";
+import { toaster } from "components/UI/toaster";
 
 const projectSlice = createSlice({
 	name: "ProJect",
@@ -28,6 +28,19 @@ const projectSlice = createSlice({
 			stage: null,
 			name: null,
 			page: 0,
+		},
+
+		// ========== NEW ========== //
+		formCreateProject: {
+			name: "",
+			description: "",
+			industries: [],
+			stage: "",
+			revenues: [{ date: "", amount: "", currency: "" }],
+			funding_sources: [{ name: "", amount: "", currency: "" }],
+			additional_infos: [{ name: "", content: "" }],
+			logo: null,
+			background: null,
 		},
 	},
 	reducers: {
@@ -104,7 +117,11 @@ const projectSlice = createSlice({
 			resultUpdateProject: null,
 		}),
 		startRequestUpdateProjectSuccess: (state, action) => {
-			message.success("Update project successfully");
+			toaster.create({
+				title: "Update project successfully",
+				description: "You have successfully updated the project",
+				type: "success",
+			});
 			return {
 				...state,
 				loadingUpdateProject: false,
@@ -112,7 +129,11 @@ const projectSlice = createSlice({
 			};
 		},
 		startRequestUpdateProjectFail: (state) => {
-			message.error("Update project failed");
+			toaster.create({
+				title: "Update project failed",
+				description: "You have failed to update the project",
+				type: "error",
+			});
 			return {
 				...state,
 				loadingUpdateProject: false,
@@ -124,14 +145,22 @@ const projectSlice = createSlice({
 			loadingDeleteProject: true,
 		}),
 		startRequestDeleteProjectSuccess: (state) => {
-			message.success("Delete project successfully");
+			toaster.create({
+				title: "Delete project successfully",
+				description: "You have successfully deleted the project",
+				type: "success",
+			});
 			return {
 				...state,
 				loadingDeleteProject: false,
 			};
 		},
 		startRequestDeleteProjectFail: (state) => {
-			message.error("Delete project failed");
+			toaster.create({
+				title: "Delete project failed",
+				description: "You have failed to delete the project",
+				type: "error",
+			});
 			return {
 				...state,
 				loadingDeleteProject: false,
@@ -157,7 +186,11 @@ const projectSlice = createSlice({
 		}),
 
 		startRequestUpdateBackgroundSuccess: (state, action) => {
-			message.success("Update background successfully");
+			toaster.create({
+				title: "Update background successfully",
+				description: "You have successfully updated the background",
+				type: "success",
+			});
 			return {
 				...state,
 				loadingUpdateBackground: false,
@@ -165,7 +198,11 @@ const projectSlice = createSlice({
 		},
 
 		startRequestUpdateBackgroundFail: (state) => {
-			message.error("Update background failed");
+			toaster.create({
+				title: "Update background failed",
+				description: "You have failed to update the background",
+				type: "error",
+			});
 			return {
 				...state,
 				loadingUpdateBackground: false,
@@ -219,6 +256,13 @@ const projectSlice = createSlice({
 				page: 0,
 			},
 		}),
+
+		// ========== NEW ========== //
+		onChangeFormCreateProject: (state, action) => {
+			Object.keys(action.payload).forEach((key) => {
+				state.formCreateProject[key] = action.payload[key];
+			});
+		},
 	},
 });
 
@@ -258,6 +302,8 @@ export const {
 	startRequestGetProjectInvitationsFail,
 	setFormSeekProjects,
 	resetFormSeekProjects,
+	// ========== NEW ========== //
+	onChangeFormCreateProject,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

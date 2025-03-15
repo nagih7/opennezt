@@ -3,7 +3,6 @@ import Article from '../../models/article.js'
 import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
 import {REACTIONS_ENUM, LINK_STATIC_URL} from '@/configs'
-import {last} from 'lodash'
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa

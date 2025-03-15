@@ -44,21 +44,21 @@ export const createProject = Joi.object({
                     return project ? helpers.error('any.empty') : value
                 })
         ),
-
-    industry_ids: Joi.array()
+    description: Joi.string().trim().max(MAX_STRING_SIZE).allow('', null).label('Description'),
+    industries: Joi.array()
         .items(Joi.string().trim().required())
-        .label('Industry IDs')
+        .label('Industry')
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async () => {
-                    const industries = await Industry.find({_id: {$in: value}})
+                    const industries = await Industry.findById(new ObjectId(value))
                     return industries.length === value.length ? value : helpers.error('any.empty')
                 })
         ),
-    stage_id: Joi.string()
+    stage: Joi.string()
         .trim()
         .required()
-        .label('Stage ID')
+        .label('Stage')
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async () => {
@@ -75,7 +75,7 @@ export const createProject = Joi.object({
             })
         )
         .allow(null)
-        .label('Revenues'),
+        .label('Revenue'),
     funding_sources: Joi.array()
         .items(
             Joi.object({

@@ -2,6 +2,7 @@ import {Router} from 'express'
 import {asyncHandler} from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
 import validate from '@/app/middleware/common/validate'
+import * as projectMiddleware from '@/app/middleware/projectMiddleware'
 import * as projectRequest from '../app/requests/projectRequest'
 import * as projectController from '../app/controllers/projectController'
 
@@ -22,7 +23,8 @@ projectRouter.get('/invitations/:user_id', asyncHandler(projectController.getInv
 // ========== POST [Project] ========== //
 projectRouter.post(
     '/',
-    asyncHandler(validate(projectRequest.createProject)),
+    asyncHandler(projectMiddleware.decodeFormData),
+    // asyncHandler(validate(projectRequest.createProject)),
     asyncHandler(projectController.createProject)
 )
 // ========== GET [My Projects] ========== //

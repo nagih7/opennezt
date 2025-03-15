@@ -119,37 +119,38 @@ export async function getInvitations(userId, user_id) {
 
 // ========== POST [Project] ========== //
 export async function createProject(user, requestBody) {
-    const {revenues, funding_sources, additional_infos} = requestBody
-    // Project
-    const project = new Project({
-        user_id: user._id,
-        ...requestBody,
-    })
-    await project.save()
-    // Revenue
-    if (revenues?.length > 0) {
-        const revenueBulk = revenues.map((revenue) => ({
-            ...revenue,
-            project_id: project._id,
-        }))
-        await Revenue.insertMany(revenueBulk)
-    }
-    // Funding Source
-    if (funding_sources?.length > 0) {
-        project.funding_sources = funding_sources.map((funding_source) => ({
-            ...funding_source,
-            project_id: project._id,
-        }))
-        await FundingSource.insertMany(project.funding_sources)
-    }
-    // Additional Info
-    if (additional_infos?.length > 0) {
-        project.additional_infos = additional_infos.map((additional_info) => ({
-            ...additional_info,
-            project_id: project._id,
-        }))
-        await ProjectAdditionalInfo.insertMany(project.additional_infos)
-    }
+    await console.log('createProject', requestBody)
+    // const {revenues, funding_sources, additional_infos} = requestBody
+    // // Project
+    // const project = new Project({
+    //     user_id: user._id,
+    //     ...requestBody,
+    // })
+    // await project.save()
+    // // Revenue
+    // if (revenues?.length > 0) {
+    //     const revenueBulk = revenues.map((revenue) => ({
+    //         ...revenue,
+    //         project_id: project._id,
+    //     }))
+    //     await Revenue.insertMany(revenueBulk)
+    // }
+    // // Funding Source
+    // if (funding_sources?.length > 0) {
+    //     project.funding_sources = funding_sources.map((funding_source) => ({
+    //         ...funding_source,
+    //         project_id: project._id,
+    //     }))
+    //     await FundingSource.insertMany(project.funding_sources)
+    // }
+    // // Additional Info
+    // if (additional_infos?.length > 0) {
+    //     project.additional_infos = additional_infos.map((additional_info) => ({
+    //         ...additional_info,
+    //         project_id: project._id,
+    //     }))
+    //     await ProjectAdditionalInfo.insertMany(project.additional_infos)
+    // }
 }
 
 // ========== GET [My Projects] ========== //

@@ -6,15 +6,14 @@ import AppLayout from "components/layouts/AppLayout";
 import AuthLayout from "components/layouts/AuthLayout";
 import Certifications from "components/pages/EditProfile/components/Certifications";
 // Project
-import Details from "components/pages/Project/CreateAProject/Details";
-import Industry from "components/pages/Project/CreateAProject/Industry";
-import Stage from "components/pages/Project/CreateAProject/Stage";
-import Revenue from "components/pages/Project/CreateAProject/Revenue";
-import FundingSources from "components/pages/Project/CreateAProject/FundingSources";
-import AdditonalInfo from "components/pages/Project/CreateAProject/AdditionalInfo";
-import Logo from "components/pages/Project/CreateAProject/Logo";
-import CoverImage from "components/pages/Project/CreateAProject/CoverImage";
-import Invites from "components/pages/Project/CreateAProject/Invites";
+import Details from "components/pages/Project/CreateProject/Details";
+import Stage from "components/pages/Project/CreateProject/Stage";
+import Revenue from "components/pages/Project/CreateProject/Revenue";
+import FundingSources from "components/pages/Project/CreateProject/FundingSources";
+import AdditonalInfo from "components/pages/Project/CreateProject/AdditionalInfo";
+import Logo from "components/pages/Project/CreateProject/Logo";
+import Background from "components/pages/Project/CreateProject/Background";
+import Invites from "components/pages/Project/CreateProject/Invites";
 import DetailProject from "components/pages/Project/DetailProject";
 // EditProfile
 import EditDetail from "components/pages/EditProject/Components/Detail";
@@ -23,7 +22,7 @@ import EditRevenue from "components/pages/EditProject/Components/Revenue";
 import EditFundingSources from "components/pages/EditProject/Components/FundingSources";
 import EditAdditionalInfo from "components/pages/EditProject/Components/AdditionalInfo";
 import EditLogo from "components/pages/EditProject/Components/Logo";
-import EditCoverImage from "components/pages/EditProject/Components/CoverImage";
+import EditBackground from "components/pages/EditProject/Components/Background";
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import("../components/pages/Auth/Login"));
@@ -301,16 +300,6 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
 	},
 	{
-		path: "/project/industry",
-		element: (
-			<AppLayout>
-				<Industry />
-			</AppLayout>
-		),
-		loader: ({ request }) =>
-			rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
-	},
-	{
 		path: "/project/stage",
 		element: (
 			<AppLayout>
@@ -361,10 +350,10 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
 	},
 	{
-		path: "/project/cover-image",
+		path: "/project/background",
 		element: (
 			<AppLayout>
-				<CoverImage />
+				<Background />
 			</AppLayout>
 		),
 		loader: ({ request }) =>
@@ -451,10 +440,10 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_EDIT_PROJECT_PAGE"),
 	},
 	{
-		path: "/project/edit-project/cover-image",
+		path: "/project/edit-project/background",
 		element: (
 			<AppLayout>
-				<EditCoverImage />
+				<EditBackground />
 			</AppLayout>
 		),
 		loader: ({ request }) =>
