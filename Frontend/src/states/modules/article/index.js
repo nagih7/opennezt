@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { create } from "lodash";
+import { create, get } from "lodash";
 
 const articleSlice = createSlice({
    name: "article",
@@ -14,6 +14,15 @@ const articleSlice = createSlice({
       pagination: {
          nextCursor: new Date(),
          limit: 5,
+         hasMore: true,
+      },
+      comment: [],
+      isLoadingGetComments: false,
+      comment_reactions: [],
+      isLoadingGetUserCommentReactions: false,
+      comment_pagination: {
+         page: 1,
+         limit: 10,
          hasMore: true,
       },
    },
@@ -113,6 +122,36 @@ const articleSlice = createSlice({
          ...state,
          isLoadingCreateArticle: false,
       }),
+
+      //===================Comment===================
+      resetComment: (state) => ({
+         ...state,
+         comment: [],
+         pagination: {
+            limit: 10,
+            page: 1,
+            hasMore: true,
+         },
+      }),
+      getListComment: (state) => ({
+         ...state,
+         isLoadingGetComments: true,
+      }),
+      getListCommentSuccess: (state, action) => ({
+         ...state,
+         comment: [...state.comment, ...action.payload.data.commentList],
+         isLoadingGetComments: false,
+         comment_pagination: {
+            page: action.payload.data.pagination.currentPage + 1,
+            limit: 10,
+            hasMore: action.payload.data.pagination.hasMore,
+         },
+      }),
+      getListCommentFail: (state) => ({
+         ...state,
+         isLoadingGetComments: false,
+         comment: [],
+      }),
    },
 });
 
@@ -130,6 +169,10 @@ export const {
    createArticle,
    createArticleSuccess,
    createArticleFail,
+   resetComment,
+   getListComment,
+   getListCommentSuccess,
+   getListCommentFail,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;

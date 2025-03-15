@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { IconlyMoreCircle } from "components/UI/Iconly";
 import anh_1 from "assets/images/background/cute-little-girl-with-handmaded-wings-running-outdoors-field-having-fun-copy.webp";
@@ -12,6 +12,10 @@ import { IconlyChat } from "components/UI/Iconly";
 import { IconlyHeart } from "components/UI/Iconly";
 import { IconlySend } from "components/UI/Iconly";
 import { IconlyEdit } from "components/UI/Iconly";
+import { handleGetListComment } from "api/newfeeds";
+import { useDispatch, useSelector } from "react-redux";
+import { resetComment } from "states/modules/article";
+import { useRef, useCallback } from "react";
 import {
    differenceInDays,
    differenceInHours,
@@ -20,6 +24,8 @@ import {
 } from "date-fns";
 
 import Comment from "../Comment";
+import { use } from "react";
+import { first, set } from "lodash";
 
 const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    const {
@@ -31,6 +37,28 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       created_at,
       comment_count,
    } = feed;
+
+   const {
+      comment,
+      isLoadingGetComments,
+      comment_reactions,
+      comment_pagination,
+      isLoadingGetUserCommentReactions,
+   } = useSelector((state) => state.article);
+
+   const { hasMore, page, limit } = comment_pagination;
+
+   const dispatch = useDispatch();
+
+   const [dataFilter, setDataFilter] = useState({
+      articleId: _id,
+      limit: 10,
+      page: 1,
+   });
+
+   useEffect(() => {
+      dispatch(handleGetListComment(dataFilter));
+   }, [dispatch, dataFilter]);
 
    const displayReaction = () => {
       if (reaction == "like") {
@@ -64,7 +92,8 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       onReaction(_id, data);
    };
 
-   const handleCloseComment = () => {
+   const handleCloseComment = async () => {
+      await dispatch(resetComment());
       onClose();
    };
 
@@ -81,6 +110,58 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    //==================================================================================================
    //End of Posted Date Logic
    //==================================================================================================
+
+   //Xử lí bất đồng bộ
+   const isLoadingRef = useRef(isLoadingGetComments); // Tạo một ref để lưu trạng thái
+   const hasMoreRef = useRef(hasMore);
+   const pageRef = useRef(page);
+   const idRef = useRef(_id);
+   useEffect(() => {
+      if (idRef.current !== _id) {
+         idRef.current = _id;
+      }
+   });
+   useEffect(() => {
+      isLoadingRef.current = isLoadingGetComments; // Cập nhật giá trị ref mỗi khi trạng thái thay đổi
+   }, [isLoadingGetComments]);
+   useEffect(() => {
+      pageRef.current = page;
+   }, [page]);
+   useEffect(() => {
+      hasMoreRef.current = hasMore;
+   }, [hasMore]);
+   //Lướt xuống bài viết cuối thì load tiếp
+   const observerRef = useRef(null);
+
+   useEffect(() => {
+      observerRef.current = new IntersectionObserver(
+         (entries) => {
+            const first = entries[0];
+            if (
+               first.isIntersecting === true &&
+               hasMoreRef.current === true &&
+               isLoadingRef.current === false
+            ) {
+               setDataFilter({
+                  articleId: idRef.current,
+                  page: pageRef.current,
+                  limit: 10,
+               });
+            }
+         },
+         { root: null, rootMargin: "0px", threshold: 0.1 }
+      );
+   }, [hasMore, isLoadingGetComments, limit, page, _id]);
+   //End
+   const lastElementRef = useCallback((node) => {
+      if (observerRef.current) {
+         observerRef.current.disconnect();
+      }
+      if (node) {
+         observerRef.current?.observe(node);
+      }
+   }, []);
+   //Reaction User's Status
    return (
       <div
          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-hidden"
@@ -210,7 +291,15 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                   <span>Share</span>
                </div>
             </div>
-            <Comment />
+            {comment.map((cmt, index) => {
+               if (index === comment.length - 1) {
+                  return (
+                     <Comment key={index} comment={cmt} ref={lastElementRef} />
+                  );
+               } else {
+                  return <Comment key={index} comment={cmt} />;
+               }
+            })}
             <div className="flex items-center w-full justify-between p-[10px] rounded-md border-[1px] border-gray-200 gap-3 mt-[20px]">
                <div className="w-8 h-8">
                   <img src={avt} className="rounded-full w-8 h-8" />

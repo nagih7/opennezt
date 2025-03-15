@@ -3,6 +3,7 @@ import Article from '../../models/article.js'
 import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
 import {REACTIONS_ENUM, LINK_STATIC_URL} from '@/configs'
+import {ObjectId} from 'mongodb'
 import {last} from 'lodash'
 
 //Create Article
@@ -37,20 +38,6 @@ export const createArticle = async (user, requestBody) => {
     await newArticle.save()
     return newArticle
 }
-//Nếu có ảnh thì loop
-// if (requestBody.content.attachment && requestBody.content.attachment.length > 0) {
-//     const listAttachment = []
-//     await requestBody.content.attachment.forEach((attachment) => {
-//         if (attachment instanceof FileUpload) {
-//             //save ở đây là lưu ảnh vào ổ cứng và trả lại link
-//             listAttachment.append(attachment.save('article-attachment'))
-//         }
-//     })
-//     requestBody.content.attachment = listAttachment
-// }
-// const newArticle = new Article(requestBody)
-// newArticle.user_id = user._id
-// await newArticle.save()
 //End Create Article
 
 //Scroll Feed
@@ -129,56 +116,6 @@ export const getArticleList = async (user, requestQuery) => {
     }
 }
 //End Scroll Feed
-
-//Create Comment
-export const createComment = async (user, requestBody) => {
-    // Kiểm tra và xử lý hình ảnh trong content
-    if (requestBody.content && requestBody.content.images && requestBody.content.images.length > 0) {
-        const listImages = []
-        for (const image of requestBody.content.images) {
-            if (image instanceof FileUpload) {
-                const savedImage = await image.save('comment-images')
-                listImages.push(savedImage)
-            } else {
-                listImages.push(image) // Nếu là URL, thêm trực tiếp
-            }
-        }
-        requestBody.content.images = listImages // Gán danh sách hình ảnh đã xử lý
-    }
-
-    // Xử lý reactions (nếu có)
-    if (requestBody.reactions && Array.isArray(requestBody.reactions)) {
-        requestBody.reactions = requestBody.reactions.map((reaction) => {
-            if (!REACTIONS_ENUM.includes(reaction.type)) {
-                throw new Error(`Reaction type ${reaction.type} is not valid.`)
-            }
-            return {
-                user_id: reaction.user_id,
-                type: reaction.type,
-            }
-        })
-    } else {
-        requestBody.reactions = [] // Gán mặc định là mảng rỗng
-    }
-
-    // Tạo comment mới
-    const newComment = new Comment({
-        ...requestBody, // Sao chép các trường từ requestBody
-        user_id: user._id, // Gán user_id từ thông tin người dùng
-    })
-
-    // Lưu vào cơ sở dữ liệu
-    await newComment.save()
-
-    // const article = await Article.findById(requestBody.article_id)
-    // if (!article) {
-    //     throw new Error('Article not found')
-    // }
-
-    // article.comments.push(newComment._id)
-
-    return newComment // Trả về comment đã lưu
-}
 
 //Update Comment
 export const updateComment = async (user, requestBody) => {
@@ -287,37 +224,6 @@ export const reactArticle = async (id, user, requestBody) => {
 }
 //End Article Reaction
 
-//Get Reaction List
-export const getCommentList = async (requestQuery) => {
-    const {limit = 5, cursor} = requestQuery
-
-    const articleLimit = parseInt(limit)
-
-    const fixedCursor = cursor.replace(' ', '+')
-
-    // const query = fixedCursor
-    //     //`new Date(cursor)` chuyển cursor từ String sang Date
-    //     //Nếu giá trị create_at nhỏ hơn cursor thì gán bằng cursor
-    //     //Nếu lớn hơn thì rỗng
-    const articleList = await Article.find({
-        created_at: {$lt: new Date(fixedCursor)},
-    })
-        .sort({created_at: -1}) //Sắp xếp giảm dần theo thời gian
-        .limit(articleLimit)
-
-    //Tìm cursor mới cho phần load trang tiếp theo
-    //Nếu có phần tử trong articleList
-    //Gán phần thử cuối cùng trong articleList `articleList.length - 1`
-    const next_cursor = articleList.length > 0 ? articleList[articleList.length - 1].create_at : null
-
-    return {
-        articleList,
-        next_cursor, // Cursor cho lần tiếp theo
-        has_more: !!next_cursor, // Xác định còn dữ liệu không
-    }
-}
-//End Get Reaction List
-
 //Get Article By Id
 export const getArticleById = async (id) => {
     const article = await Article.findById(id).lean()
@@ -366,3 +272,112 @@ export const getUserReactions = async (user_id, target_id) => {
     return reactions
 }
 //End Get User's Reactions
+
+//Get Comment List
+export const getCommentList = async (user, requestQuery) => {
+    console.log(requestQuery)
+    const {articleId, page, limit = 10} = requestQuery
+    const skip = (page - 1) * limit
+    const commentLimit = parseInt(limit)
+
+    const commentList = await Comment.aggregate([
+        {
+            $match: {
+                article_id: new ObjectId(articleId),
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+            },
+        },
+        {
+            $addFields: {
+                'content.images': {
+                    $map: {
+                        input: '$content.images',
+                        as: 'image',
+                        in: {
+                            $cond: {
+                                if: {$eq: [{$ifNull: ['$$image', '']}, '']},
+                                then: '$$image',
+                                else: {$concat: [LINK_STATIC_URL, '$$image']},
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        {
+            $sort: {created_at: -1},
+        },
+        {
+            $skip: skip,
+        },
+        {
+            $limit: commentLimit + 1, // Lấy thêm 1 item để kiểm tra hasMore
+        },
+    ])
+
+    // Kiểm tra xem có còn comments không
+    const hasMore = commentList.length > commentLimit
+
+    // Nếu có comment phụ thì bỏ đi
+    if (hasMore) {
+        commentList.pop()
+    }
+
+    return {
+        commentList,
+        pagination: {
+            currentPage: parseInt(page),
+            limit: commentLimit,
+            hasMore,
+        },
+    }
+}
+
+//Create Comment
+export const createComment = async (user, requestBody) => {
+    const articleId = requestBody.article_id
+    const imageData = requestBody.content.image
+
+    if (imageData) {
+        const base64Data = imageData.data.split(';base64,').pop()
+        const buffer = Buffer.from(base64Data, 'base64')
+
+        const fileUpload = new FileUpload({
+            buffer,
+            filename: imageData.name,
+            mimetype: imageData.type,
+        })
+
+        const savedFile = await fileUpload.save('comment-images')
+        requestBody.content.image = savedFile // Store single image path
+    }
+
+    const newComment = new Comment({
+        ...requestBody,
+        user_id: user._id,
+        reaction_count: 0,
+    })
+
+    await newComment.save()
+
+    await Article.findByIdAndUpdate(articleId, {$inc: {comment_count: 1}})
+
+    return newComment
+}
+//End Create Comment
+
+//Get User Comment Reactions
+export const getUserCommentReactions = async (user_id, target_id) => {
+    const reactions = await Reaction.find({
+        user_id: user_id,
+        target_id: target_id,
+    })
+    return reactions
+}

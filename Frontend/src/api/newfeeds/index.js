@@ -12,6 +12,9 @@ import {
    createArticle,
    createArticleSuccess,
    createArticleFail,
+   getListCommentSuccess,
+   getListCommentFail,
+   getListComment,
 } from "states/modules/article";
 
 export const getListFeeds =
@@ -72,6 +75,29 @@ export const handleCreateArticle =
          apiPath: path,
          actionTypes: [createArticle, createArticleSuccess, createArticleFail],
          variables: data,
+         dispatch,
+         getState,
+      });
+   };
+
+export const handleGetListComment =
+   (
+      dataFilter = {
+         limit: 10,
+         page: 1,
+      }
+   ) =>
+   async (dispatch, getState) => {
+      let path = `article/list-comment?articleId=${dataFilter.articleId}&limit=${dataFilter.limit}&page=${dataFilter.page}`;
+      return callApi({
+         method: "get",
+         apiPath: path,
+         actionTypes: [
+            getListComment,
+            getListCommentSuccess,
+            getListCommentFail,
+         ],
+         variables: {},
          dispatch,
          getState,
       });
