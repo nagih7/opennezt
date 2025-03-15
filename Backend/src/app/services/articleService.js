@@ -203,7 +203,7 @@ export const reactArticle = async (id, user, requestBody) => {
         if (existingReaction) {
             if (existingReaction.type === type) {
                 await Reaction.deleteOne({_id: existingReaction._id})
-                comment.reaction_count += 1
+                comment.reaction_count -= 1
                 await comment.save()
             } else {
                 existingReaction.type = type
@@ -217,6 +217,7 @@ export const reactArticle = async (id, user, requestBody) => {
                 target_type: 'comment',
             })
             await newReaction.save()
+            comment.reaction_count += 1
 
             await comment.save()
         }

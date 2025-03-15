@@ -12,9 +12,14 @@ import { IconlyChat } from "components/UI/Iconly";
 import { IconlyHeart } from "components/UI/Iconly";
 import { IconlySend } from "components/UI/Iconly";
 import { IconlyEdit } from "components/UI/Iconly";
-import { handleGetListComment } from "api/newfeeds";
+import { useMemo } from "react";
+import {
+   handleGetListComment,
+   handleGetUserCommentReactions,
+   handleReactComment,
+} from "api/newfeeds";
 import { useDispatch, useSelector } from "react-redux";
-import { resetComment } from "states/modules/article";
+import { resetComment, updateCommentReaction } from "states/modules/article";
 import { useRef, useCallback } from "react";
 import {
    differenceInDays,
@@ -44,6 +49,8 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       comment_reactions,
       comment_pagination,
       isLoadingGetUserCommentReactions,
+      isLoadingReactComment,
+      onetimecomments,
    } = useSelector((state) => state.article);
 
    const { hasMore, page, limit } = comment_pagination;
@@ -162,6 +169,39 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       }
    }, []);
    //Reaction User's Status
+
+   //==============Reaction===============
+   useEffect(() => {
+      if (onetimecomments.length > 0) {
+         onetimecomments.forEach((cmt) => {
+            if (cmt._id) {
+               dispatch(handleGetUserCommentReactions(cmt._id));
+            }
+         });
+      }
+   }, [onetimecomments, dispatch]);
+
+   const reactionMap = useMemo(() => {
+      return new Map(
+         comment_reactions.map((r) => [r.target_id.toString(), r.type])
+      );
+   }, [comment_reactions]);
+
+   useEffect(() => {
+      console.log("aaaaaaaaaaaaaaaaa " + comment_reactions);
+   }, [comment_reactions]);
+
+   const handleCommentReaction = useCallback(
+      (commentId, formData) => {
+         const reactionType = formData.get("type");
+         dispatch(updateCommentReaction({ commentId, reactionType }));
+
+         //Gọi API để update server
+         dispatch(handleReactComment({ commentId, data: formData }));
+      },
+      [dispatch]
+   );
+   //===============End=================
    return (
       <div
          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-hidden"
@@ -294,10 +334,25 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
             {comment.map((cmt, index) => {
                if (index === comment.length - 1) {
                   return (
-                     <Comment key={index} comment={cmt} ref={lastElementRef} />
+                     <Comment
+                        key={index}
+                        comment={cmt}
+                        ref={lastElementRef}
+                        reaction={reactionMap.get(cmt._id)}
+                        onCommentReaction={handleCommentReaction}
+                        isLoading={isLoadingReactComment}
+                     />
                   );
                } else {
-                  return <Comment key={index} comment={cmt} />;
+                  return (
+                     <Comment
+                        key={index}
+                        comment={cmt}
+                        reaction={reactionMap.get(cmt._id)}
+                        onCommentReaction={handleCommentReaction}
+                        isLoading={isLoadingReactComment}
+                     />
+                  );
                }
             })}
             <div className="flex items-center w-full justify-between p-[10px] rounded-md border-[1px] border-gray-200 gap-3 mt-[20px]">
