@@ -1,23 +1,48 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import img_logo_project from "../../../../assets/images/background/1656677703-bpfull.jpg";
-import fb_img from "../../../../assets/images/background/left-banner.webp";
-import Logo from "../../../../assets/images/logo/OpenNezt_logo_black.png";
+import React, { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import img_logo_project from "../../../assets/images/background/1656677703-bpfull.jpg";
+import fb_img from "../../../assets/images/background/left-banner.webp";
+import Logo from "../../../assets/images/logo/OpenNezt_logo_black.png";
 import {
 	CheckCircleFilled,
 	CloseOutlined,
 	PlusOutlined,
 } from "@ant-design/icons";
 import { IconlyEditSquare } from "components/UI/Iconly";
+import { useDispatch, useSelector } from "react-redux";
+import { getMyProjectDetails } from "api/project";
+import { Image } from "@chakra-ui/react";
 
-const DetailProject = () => {
+const ProjectDetails = () => {
+	const { id } = useParams();
+	const dispatch = useDispatch();
+	// ========== STATE FROM REDUX ========== //
+	const project = useSelector((state) => state.project.myProjectDetails);
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
+	useEffect(() => {
+		dispatch(getMyProjectDetails(id));
+	}, [id, dispatch]);
+
 	return (
 		<div className="w-full h-full">
 			<div className="w-full">
-				<img
-					src="https://wordpress.iqonic.design/product/wp/socialv/wp-content/themes/socialv-themes/assets/images/redux/default-cover.jpg"
-					alt=""
-					className="h-[400px]"
+				<Image
+					src={
+						project.background ||
+						"https://wordpress.iqonic.design/product/wp/socialv/wp-content/themes/socialv-themes/assets/images/redux/default-cover.jpg"
+					}
+					alt={project.name}
+					aspectRatio={10 / 3}
+					width="100%"
+					objectFit="cover"
+					onError={(e) => {
+						e.target.src =
+							"https://wordpress.iqonic.design/product/wp/socialv/wp-content/themes/socialv-themes/assets/images/redux/default-cover.jpg";
+					}}
 				/>
 			</div>
 
@@ -31,18 +56,26 @@ const DetailProject = () => {
 										<div className="flex justify-between gap-3">
 											<div className="p-[4px] mt-[-60px] rounded-md bg-[#ffffff]">
 												<a href="#">
-													<img
-														src={img_logo_project}
-														alt=""
+													<Image
+														src={project.logo || img_logo_project}
 														className="w-[150px] h-[150px] rounded-md"
+														alt={project.name}
+														aspectRatio={4 / 4}
+														width="100%"
+														objectFit="cover"
+														onError={(e) => {
+															e.target.src = img_logo_project;
+														}}
 													/>
 												</a>
 											</div>
 											<div>
-												<h5>Project Name</h5>
-												<div>
-													<p>Project Description</p>
-												</div>
+												<h5>{project.name}</h5>
+												{project.description && (
+													<div>
+														<p>{project.description}</p>
+													</div>
+												)}
 											</div>
 										</div>
 									</div>
@@ -74,41 +107,7 @@ const DetailProject = () => {
 					<div className="w-8/12 mt-8">
 						<div className="bg-[#ffffff] rounded-md">
 							<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
-								<h5 className="text-2xl font-normal">Detail</h5>
-								<Link
-									to={"/project/edit-project/detail"}
-									className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
-									<IconlyEditSquare size={20} color={"#ffffff"} />
-								</Link>
-							</div>
-							<div className="p-8">
-								<ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
-									<li className="px-[16px] mb-10">
-										<div className="mb-2 text-sm font-medium uppercase">
-											PROJECT NAME
-										</div>
-										<div>
-											<p className="mb-2 text-base font-medium text-black">
-												OpenNezt
-											</p>
-										</div>
-									</li>
-									<li className="px-[16px] mb-10">
-										<div className="mb-2 text-sm font-medium uppercase">
-											PROJECT DESCRIPTION
-										</div>
-										<div>
-											<p className="mb-2 text-base font-medium text-black">
-												hihi
-											</p>
-										</div>
-									</li>
-								</ul>
-							</div>
-						</div>
-						<div className="bg-[#ffffff] rounded-md mt-8">
-							<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
-								<h5 className="text-2xl font-normal">Stage</h5>
+								<h5 className="text-2xl font-normal">STAGE</h5>
 								<Link
 									to={"/project/edit-project/stage"}
 									className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
@@ -119,7 +118,7 @@ const DetailProject = () => {
 								<ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
 									<li className="px-[16px] mb-10">
 										<div className="mb-2 text-sm font-medium uppercase">
-											STAGE
+											Hiển thị industry
 										</div>
 										<div>
 											<p className="mb-2 text-base font-medium text-black">
@@ -485,4 +484,4 @@ const DetailProject = () => {
 	);
 };
 
-export default DetailProject;
+export default ProjectDetails;
