@@ -4,6 +4,7 @@ import anh_angry from "assets/images/icon/logo/angry.png";
 import anh_like from "assets/images/icon/logo/like.png";
 import like from "assets/images/icon/reaction/like.png";
 import dislike from "assets/images/icon/reaction/dislike.png";
+import { Image } from "@chakra-ui/react";
 import {
    differenceInDays,
    differenceInHours,
@@ -89,7 +90,7 @@ const Comment = forwardRef(
                      <div className="flex items-center gap-1">
                         {reaction == "like" ? (
                            <span
-                              className="text-xs text-[#3897F0]"
+                              className="text-xs text-[#3897F0] font-semibold"
                               onClick={() => handleReaction("like")}
                            >
                               Like
@@ -140,6 +141,11 @@ const Comment = forwardRef(
                         </div>
                      </div>
                   </div>
+                  {comment.content.image ? (
+                     <div>
+                        <Image height="200px" src={comment.content.image} />
+                     </div>
+                  ) : null}
                </li>
             </ul>
          </div>

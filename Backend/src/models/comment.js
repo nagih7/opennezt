@@ -10,7 +10,7 @@ const Content = new Schema(
             required: true,
             default: '',
         },
-        images: {
+        image: {
             type: String,
             require: false,
         },

@@ -11,9 +11,9 @@ import avt from "assets/images/background/avt.jpg";
 import { IconlyChat } from "components/UI/Iconly";
 import { IconlyHeart } from "components/UI/Iconly";
 import { IconlySend } from "components/UI/Iconly";
-import { IconlyEdit } from "components/UI/Iconly";
 import { useMemo } from "react";
 import {
+   handleCreateComment,
    handleGetListComment,
    handleGetUserCommentReactions,
    handleReactComment,
@@ -31,6 +31,7 @@ import {
 import Comment from "../Comment";
 import { use } from "react";
 import { first, set } from "lodash";
+import NewCommentForm from "../NewCommentForm";
 
 const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    const {
@@ -187,10 +188,6 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       );
    }, [comment_reactions]);
 
-   useEffect(() => {
-      console.log("aaaaaaaaaaaaaaaaa " + comment_reactions);
-   }, [comment_reactions]);
-
    const handleCommentReaction = useCallback(
       (commentId, formData) => {
          const reactionType = formData.get("type");
@@ -202,6 +199,14 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       [dispatch]
    );
    //===============End=================
+   //Form
+   const handleFormSubmit = useCallback(
+      (formData) => {
+         dispatch(handleCreateComment({ data: formData }));
+      },
+      [dispatch]
+   );
+   //End
    return (
       <div
          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-hidden"
@@ -209,7 +214,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
          style={{ zIndex: 100 }}
       >
          <div
-            className="bg-[#ffffff] w-[800px] max-h-[90vh] mb-8 rounded-md p-8 overflow-y-auto"
+            className="bg-[#ffffff] w-[800px] max-h-[80vh] mb-8 rounded-md p-8 overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
          >
             <div className="flex items-center gap-3">
@@ -355,24 +360,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                   );
                }
             })}
-            <div className="flex items-center w-full justify-between p-[10px] rounded-md border-[1px] border-gray-200 gap-3 mt-[20px]">
-               <div className="w-8 h-8">
-                  <img src={avt} className="rounded-full w-8 h-8" />
-               </div>
-               <div className="flex items-center justify-between">
-                  <div>
-                     <input
-                        type="text"
-                        placeholder="Write a comment..."
-                        className="w-[630px] h-9 bg-[#ffffff] pr-[50px] outline-none"
-                     />
-                  </div>
-
-                  <button className="w-9 h-9 bg-[#f8f9fa] rounded-md flex items-center justify-center">
-                     <IconlyEdit size={20} color={"#6f7f92"} />
-                  </button>
-               </div>
-            </div>
+            <NewCommentForm article_id={_id} onSubmit={handleFormSubmit} />
          </div>
       </div>
    );
