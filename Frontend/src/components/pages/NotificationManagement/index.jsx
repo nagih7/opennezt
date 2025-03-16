@@ -72,7 +72,7 @@ function NotificationProject() {
 			return (
 			  <Button
 				type="link"
-				onClick={() => handleOpenTalentDetails(record.source_name)}
+				onClick={() => handleOpenTalentDetails(record.source_id)}
 				style={{ padding: 0, height: "auto" }}>
 				{source_name}
 			  </Button>

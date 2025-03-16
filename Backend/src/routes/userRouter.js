@@ -64,7 +64,7 @@ userRouter.get(
     asyncHandler(validate(userRequest.recuitTalents)),
     asyncHandler(userController.recuitTalents)
 )
-
+    
 userRouter.get('/talent-details/:id', asyncHandler(userController.getTalentDetails))
 
 // Industry

@@ -4,6 +4,7 @@ import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
 import {REACTIONS_ENUM, LINK_STATIC_URL} from '@/configs'
 import {last} from 'lodash'
+import { ar } from '@faker-js/faker'
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa
@@ -132,6 +133,8 @@ export const getArticleList = async (user, requestQuery) => {
 
 //Create Comment
 export const createComment = async (user, requestBody) => {
+    console.log(requestBody)
+
     // Kiểm tra và xử lý hình ảnh trong content
     if (requestBody.content && requestBody.content.images && requestBody.content.images.length > 0) {
         const listImages = []
@@ -143,7 +146,13 @@ export const createComment = async (user, requestBody) => {
                 listImages.push(image) // Nếu là URL, thêm trực tiếp
             }
         }
-        requestBody.content.images = listImages // Gán danh sách hình ảnh đã xử lý
+        // Gán danh sách hình ảnh đã xử lý
+        requestBody.content.images = listImages
+    }
+
+    // Kiểm tra cấu trúc content: đảm bảo content là một đối tượng, không phải mảng
+    if (Array.isArray(requestBody.content)) {
+        throw new Error('Content should be an object, not an array')
     }
 
     // Xử lý reactions (nếu có)
@@ -158,27 +167,36 @@ export const createComment = async (user, requestBody) => {
             }
         })
     } else {
-        requestBody.reactions = [] // Gán mặc định là mảng rỗng
+        requestBody.reactions = [] // Gán mặc định là mảng rỗng nếu không có reactions
     }
 
-    // Tạo comment mới
+    // Kiểm tra user_id hợp lệ
+    if (!user || !user._id) {
+        throw new Error('User ID is required')
+    }
+
+    // Kiểm tra parent_id hợp lệ (nếu có)
+    if (requestBody.parent_id) {
+        throw new Error('Invalid parent_id')
+    }
+
+    // Tạo comment mới với tất cả các trường trong requestBody
     const newComment = new Comment({
-        ...requestBody, // Sao chép các trường từ requestBody
-        user_id: user._id, // Gán user_id từ thông tin người dùng
+        article_id: requestBody.article_id,
+        user_id: user._id,
+        content: requestBody.content,
+        reactions: requestBody.reactions,
+        parent_id: requestBody.parent_id || null, // Gán null nếu không có parent_id
     })
+
+    console.log('New Comment:', newComment)
 
     // Lưu vào cơ sở dữ liệu
     await newComment.save()
 
-    // const article = await Article.findById(requestBody.article_id)
-    // if (!article) {
-    //     throw new Error('Article not found')
-    // }
-
-    // article.comments.push(newComment._id)
-
     return newComment // Trả về comment đã lưu
 }
+
 
 //Update Comment
 export const updateComment = async (user, requestBody) => {
@@ -288,33 +306,62 @@ export const reactArticle = async (id, user, requestBody) => {
 //End Article Reaction
 
 //Get Reaction List
-export const getCommentList = async (requestQuery) => {
-    const {limit = 5, cursor} = requestQuery
+export const getCommentList = async (requestQuery, article, _id) => {
+    console.log(article, requestQuery, _id)
+    const commentList = await Comment.aggregate([
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+            },
+        },
+        {
+            $lookup: {
+                from: 'reactions',
+                localField: '_id',
+                foreignField: 'target_id',
+                as: 'reactions',
+            },
+        },
+        {
+            $addFields: {
+                'reactions.type': {
+                    $filter: {
+                        input: '$reactions',
+                        as: 'reaction',
+                        cond: {$eq: ['$$reaction.target_type', 'comment']},
+                    },
+                },
+            },
+        },
+        // add Image
+        {
+            $addFields: {
+                'reactions.type': {
+                    $filter: {
+                        input: '$reactions.type',
+                        as: 'reaction',
+                        cond: {$eq: ['$$reaction.user_id', _id]},
+                    },
+                },
+            },
+        },
+        {
+            $match: {
+                article_id: article,
+            },
+        },
+        {
+            $sort: {created_at: -1},
+        },  
+        {
+            $limit: 10,
+        }
+    ])
 
-    const articleLimit = parseInt(limit)
-
-    const fixedCursor = cursor.replace(' ', '+')
-
-    // const query = fixedCursor
-    //     //`new Date(cursor)` chuyển cursor từ String sang Date
-    //     //Nếu giá trị create_at nhỏ hơn cursor thì gán bằng cursor
-    //     //Nếu lớn hơn thì rỗng
-    const articleList = await Article.find({
-        created_at: {$lt: new Date(fixedCursor)},
-    })
-        .sort({created_at: -1}) //Sắp xếp giảm dần theo thời gian
-        .limit(articleLimit)
-
-    //Tìm cursor mới cho phần load trang tiếp theo
-    //Nếu có phần tử trong articleList
-    //Gán phần thử cuối cùng trong articleList `articleList.length - 1`
-    const next_cursor = articleList.length > 0 ? articleList[articleList.length - 1].create_at : null
-
-    return {
-        articleList,
-        next_cursor, // Cursor cho lần tiếp theo
-        has_more: !!next_cursor, // Xác định còn dữ liệu không
-    }
+    return commentList
 }
 //End Get Reaction List
 
