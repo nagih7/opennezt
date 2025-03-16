@@ -131,3 +131,9 @@ export async function getSkills(req, res) {
     const result = await userService.getSkills(req.params.id)
     res.jsonify(result)
 }
+
+// Stage framework
+export async function getStages(req, res) {
+    const result = await userService.getStages()
+    res.jsonify(result)
+}

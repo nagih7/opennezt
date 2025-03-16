@@ -893,4 +893,78 @@ export const PROFILE_ADDITIONAL = {
 	],
 };
 
+export const CURRENCY = {
+	EN: [
+		{ label: "USD", value: "USD" },
+		{ label: "VND", value: "VND" },
+		{ label: "CNY", value: "CNY" },
+	],
+	VI: [
+		{ label: "USD", value: "USD" },
+		{ label: "VND", value: "VND" },
+		{ label: "CNY", value: "CNY" },
+	],
+	ZH: [
+		{ label: "USD", value: "USD" },
+		{ label: "VND", value: "VND" },
+		{ label: "CNY", value: "CNY" },
+	],
+};
+
+export const FUNDING_SOURCES = {
+	EN: [
+		{ label: "Angel", value: "Angel" },
+		{ label: "VC", value: "VC" },
+		{ label: "Bank", value: "Bank" },
+		{ label: "Crowdfunding", value: "Crowdfunding" },
+		{ label: "Accelerator", value: "Accelerator" },
+		{ label: "Incubator", value: "Incubator" },
+		{ label: "Government", value: "Government" },
+		{ label: "Family and Friends", value: "Family and Friends" },
+		{ label: "Others", value: "Others" },
+	],
+	VI: [
+		{ label: "Nhà tài trợ", value: "Angel" },
+		{ label: "VC", value: "VC" },
+		{ label: "Ngân hàng", value: "Bank" },
+		{ label: "Quyên góp từ cộng đồng", value: "Crowdfunding" },
+		{ label: "Chương trình tăng tốc", value: "Accelerator" },
+		{ label: "Chương trình ủy thác", value: "Incubator" },
+		{ label: "Chính phủ", value: "Government" },
+		{ label: "Gia đình và bạn bè", value: "Family and Friends" },
+		{ label: "Khác", value: "Others" },
+	],
+	ZH: [
+		{ label: "天使", value: "Angel" },
+		{ label: "风投", value: "VC" },
+		{ label: "银行", value: "Bank" },
+		{ label: "众筹", value: "Crowdfunding" },
+		{ label: "加速器", value: "Accelerator" },
+		{ label: "孵化器", value: "Incubator" },
+		{ label: "政府", value: "Government" },
+		{ label: "家人和朋友", value: "Family and Friends" },
+		{ label: "其他", value: "Others" },
+	],
+};
+
+export const PROJECT_ADDITIONAL_INFO = {
+	EN: [
+		{ label: "Project summary", value: "Project summary" },
+		{ label: "Project goals", value: "Project goals" },
+		{ label: "What we need", value: "What we need" },
+		{ label: "Our expectations", value: "Our expectations" },
+	],
+	VI: [
+		{ label: "Tóm tắt dự án", value: "Project summary" },
+		{ label: "Mục tiêu dự án", value: "Project goals" },
+		{ label: "Những gì chúng tôi cần", value: "What we need" },
+		{ label: "Kỳ vọng của chúng tôi", value: "Our expectations" },
+	],
+	ZH: [
+		{ label: "项目总结", value: "Project summary" },
+		{ label: "项目目标", value: "Project goals" },
+		{ label: "我们需要什么", value: "What we need" },
+		{ label: "我们的期望", value: "Our expectations" },
+	],
+};
 export const AREA_OF_EXPERTISE_KEYS = Object.keys(AREA_OF_EXPERTISE);

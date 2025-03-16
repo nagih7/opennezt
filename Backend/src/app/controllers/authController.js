@@ -34,7 +34,7 @@ export async function register(req, res) {
 
 export async function verifyEmail(req, res) {
     await authService.verifyEmail(req.currentUser)
-    res.redirect(`${process.env.APP_URL_CLIENT}`)
+    res.redirect(`${APP_URL_CLIENT}`)
 }
 
 export async function logout(req, res) {

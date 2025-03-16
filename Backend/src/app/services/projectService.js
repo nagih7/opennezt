@@ -119,10 +119,18 @@ export async function getInvitations(userId, user_id) {
 
 // ========== POST [Project] ========== //
 export async function createProject(user, requestBody) {
-    const {revenues, funding_sources, additional_infos} = requestBody
+    const {revenues, funding_sources, additional_infos, logo, background} = requestBody
     // Project
+    if (logo instanceof FileUpload) {
+        requestBody.logo = logo.save('project_logos')
+    }
+    if (background instanceof FileUpload) {
+        requestBody.background = background.save('project_backgrounds')
+    }
     const project = new Project({
         user_id: user._id,
+        industry_ids: requestBody.industries || [],
+        stage_id: requestBody.stage || '',
         ...requestBody,
     })
     await project.save()
@@ -150,6 +158,8 @@ export async function createProject(user, requestBody) {
         }))
         await ProjectAdditionalInfo.insertMany(project.additional_infos)
     }
+
+    return {project_id: project._id}
 }
 
 // ========== GET [My Projects] ========== //

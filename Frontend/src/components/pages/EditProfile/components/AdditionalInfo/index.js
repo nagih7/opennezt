@@ -72,7 +72,6 @@ const AdditionalInfo = () => {
 	};
 
 	const handleSaveChanges = () => {
-		console.log("formData", formData);
 		dispatch(createOrUpdateProfileAdditionalInfo(formData, action));
 	};
 
@@ -149,8 +148,8 @@ const AdditionalInfo = () => {
 							<Dialog.Header>
 								<Dialog.Title>
 									{action === "create"
-										? "Add education"
-										: "Update education"}
+										? "Add additional info"
+										: "Update additional info"}
 								</Dialog.Title>
 							</Dialog.Header>
 							<Dialog.Body>

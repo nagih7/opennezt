@@ -56,7 +56,7 @@ export const getMyProjects = () => async (dispatch, getState) => {
 export const createNewProject = (data) => async (dispatch, getState) => {
 	return callApi({
 		method: "post",
-		apiPath: "project",
+		apiPath: "projects",
 		actionTypes: [
 			requestCreateNewProject,
 			createNewProjectSuccess,

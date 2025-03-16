@@ -9,6 +9,7 @@ import {
     ExperienceLevel,
     Skill,
     Category,
+    Stage,
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
@@ -554,4 +555,10 @@ export async function getSkills(categoryId) {
         category_id: categoryId,
     }).select('name _id description')
     return skills
+}
+
+// Stage framework
+export async function getStages() {
+    const stages = await Stage.find().select('name _id description')
+    return stages
 }

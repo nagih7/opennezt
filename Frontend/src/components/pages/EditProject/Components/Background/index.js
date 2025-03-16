@@ -1,20 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Avatar, Button, Input } from "@chakra-ui/react";
-import { getProfile } from "api/profile";
-import { getExperienceLevelFramwork, getIndustryFramework } from "api/user";
-import { useDispatch, useSelector } from "react-redux";
-import { CheckCircleFilled } from "@ant-design/icons";
-import {
-	IconlyHome,
-	IconlyLogout,
-	IconlyMessage,
-	IconlyProfile,
-} from "components/UI/Iconly";
+import React from "react";
+import { Button } from "@chakra-ui/react";
 import ActionBar from "../../../EditProfile/components/ActionBar";
 import ProjectEditMenu from "../ProjectEditMenu";
 import ProjectCard from "../ProjectCard";
+// import FormCoverImage from "components/pages/Project/CreateProject/Background/components/FormCoverImage";
 
-const EditFundingSources = () => {
+const Background = () => {
 	return (
 		<div className="flex gap-8 w-full py-8 px-[16px]">
 			<ProjectEditMenu />
@@ -28,11 +19,11 @@ const EditFundingSources = () => {
 				<div className="bg-[#ffffff] p-8 rounded-md mt-8">
 					<div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
 						<div>
-							<h4 className=""> Funding Sources</h4>
+							<h4 className=""> Background</h4>
 						</div>
 					</div>
 					<div>
-						{/* <FormFundingScources /> */}
+						{/* <FormCoverImage /> */}
 						<div className="px-[16px] flex justify-end">
 							<div className="">
 								<Button
@@ -54,4 +45,4 @@ const EditFundingSources = () => {
 	);
 };
 
-export default EditFundingSources;
+export default Background;

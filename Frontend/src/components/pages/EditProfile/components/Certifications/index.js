@@ -14,6 +14,7 @@ import {
 	getOrganizationFramework,
 } from "api/profile";
 import { Checkbox } from "components/UI/checkbox";
+import { array } from "prop-types";
 
 const Certifications = () => {
 	const dispatch = useDispatch();
@@ -56,7 +57,6 @@ const Certifications = () => {
 	};
 
 	const handleAddCertification = () => {
-		console.log("handleAddCertification");
 		dispatch(setIsOpenModalCreateOrUpdateCertification(true));
 		setAction("create");
 		setFormData({
@@ -90,7 +90,10 @@ const Certifications = () => {
 					{
 						...rest,
 						expiration_date: null,
-						organization_id: Array(organization_id)[0],
+						organization_id:
+							typeof organization_id === "object"
+								? organization_id[0]
+								: Array(organization_id)[0],
 					},
 					action
 				)
@@ -99,7 +102,13 @@ const Certifications = () => {
 			const { organization_id, ...rest } = formData;
 			dispatch(
 				createOrUpdateCertification(
-					{ ...rest, organization_id: Array(organization_id)[0] },
+					{
+						...rest,
+						organization_id:
+							typeof organization_id === "object"
+								? organization_id[0]
+								: Array(organization_id)[0],
+					},
 					action
 				)
 			);
@@ -224,8 +233,8 @@ const Certifications = () => {
 							<Dialog.Header>
 								<Dialog.Title>
 									{action === "create"
-										? "Add education"
-										: "Update education"}
+										? "Add certification"
+										: "Update certification"}
 								</Dialog.Title>
 							</Dialog.Header>
 							<Dialog.Body gap={6}>
