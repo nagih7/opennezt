@@ -19,7 +19,6 @@ function route(app, io) {
         next()
     })
 
-    app.use('/article', articleRouter)
     app.use('/auth', authRouter)
     app.use('/manage', manageRouteMap)
     app.use('/users', userRouter)
@@ -29,7 +28,7 @@ function route(app, io) {
     app.use('/common', commonRouter)
     app.use('/subscribe', LandingPageRouter)
     app.use('/notification', notificationRouter)
-    app.use('/project', projectRouter)
+    app.use('/projects', projectRouter)
     app.use('/ai', artificialIntelligenceRouter)
     app.use('/article', articleRouter)
 

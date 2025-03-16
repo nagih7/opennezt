@@ -3,8 +3,11 @@ import Article from '../../models/article.js'
 import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
 import {REACTIONS_ENUM, LINK_STATIC_URL} from '@/configs'
+<<<<<<< HEAD
 import {last} from 'lodash'
 import { ar } from '@faker-js/faker'
+=======
+>>>>>>> 312ff598a4328dd6a547fed70c2e452138b93191
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa

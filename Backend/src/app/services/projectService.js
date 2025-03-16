@@ -119,10 +119,18 @@ export async function getInvitations(userId, user_id) {
 
 // ========== POST [Project] ========== //
 export async function createProject(user, requestBody) {
-    const {revenues, funding_sources, additional_infos} = requestBody
+    const {revenues, funding_sources, additional_infos, logo, background} = requestBody
     // Project
+    if (logo instanceof FileUpload) {
+        requestBody.logo = logo.save('project_logos')
+    }
+    if (background instanceof FileUpload) {
+        requestBody.background = background.save('project_backgrounds')
+    }
     const project = new Project({
         user_id: user._id,
+        industry_ids: requestBody.industries || [],
+        stage_id: requestBody.stage || '',
         ...requestBody,
     })
     await project.save()
@@ -150,6 +158,41 @@ export async function createProject(user, requestBody) {
         }))
         await ProjectAdditionalInfo.insertMany(project.additional_infos)
     }
+
+    return {project_id: project._id}
+}
+
+// ========== GET [My Projects] ========== //
+export async function getMyProjects(user) {
+    const projects = await Project.aggregate([
+        {
+            $match: {user_id: user._id},
+        },
+        {
+            $addFields: {
+                logo: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                        then: '$logo',
+                        else: {$concat: [LINK_STATIC_URL, '$logo']},
+                    },
+                },
+                background: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        then: '$background',
+                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                    },
+                },
+            },
+        },
+        {
+            $project: {
+                user_id: 0,
+            },
+        },
+    ])
+    return projects
 }
 
 // ========== DELETE [Project] ========== //

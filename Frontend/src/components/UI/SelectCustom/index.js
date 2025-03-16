@@ -9,6 +9,7 @@ import {
 
 const SelectCustom = ({ ...rest }) => {
 	const {
+		disabled,
 		collection,
 		onChange,
 		height,
@@ -21,8 +22,9 @@ const SelectCustom = ({ ...rest }) => {
 		value,
 	} = rest;
 	return (
-		<div>
+		<>
 			<SelectRoot
+				disabled={disabled}
 				value={value}
 				multiple={multiple || false}
 				height={height || 50}
@@ -72,7 +74,7 @@ const SelectCustom = ({ ...rest }) => {
 					</button>
 				</p>
 			)}
-		</div>
+		</>
 	);
 };
 

@@ -41,6 +41,13 @@ export async function deleteProfileCertification(req, res) {
     await profileService.deleteProfileCertification(req.currentUser, req.params.id)
     res.jsonify('Delete certification successfully.')
 }
+
+// ========== PUT [Skills] ========== //
+export async function updateProfileSkills(req, res) {
+    await profileService.updateProfileSkills(req.currentUser, req.body)
+    res.jsonify('Update skills successfully.')
+}
+
 // ========== GET [Organization] ========== //
 export async function getOrganizationFramework(req, res) {
     const organizations = await profileService.getOrganizationFramework()

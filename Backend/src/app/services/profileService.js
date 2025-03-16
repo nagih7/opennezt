@@ -160,16 +160,15 @@ export async function updateProfessionalProfile(user, requestBody) {
 
 // ========== POST [Education] ========== //
 export async function createProfileEducation(user, requestBody) {
-    const {educations} = requestBody
     const profile = await Profile.findOne({user_id: user.id})
     if (!profile) {
         throw new Error('Profile not found.')
     }
-    const educationsBulk = educations.map((education) => ({
-        ...education,
+    const education = new Education({
+        ...requestBody,
         profile_id: profile._id,
-    }))
-    await Education.insertMany(educationsBulk)
+    })
+    await education.save()
 }
 // ========== PUT [Education] ========== //
 export async function updateProfileEducation(user, requestBody) {
@@ -180,7 +179,7 @@ export async function updateProfileEducation(user, requestBody) {
     const education = await Education.findOneAndUpdate(
         {
             profile_id: profile._id,
-            _id: requestBody.id,
+            _id: requestBody._id,
         },
         requestBody,
         {new: true}
@@ -206,17 +205,15 @@ export async function deleteProfileEducation(user, educationId) {
 
 // ========== POST [Certification] ========== //
 export async function createProfileCertifications(user, requestBody) {
-    const {certifications} = requestBody
     const profile = await Profile.findOne({user_id: user.id})
     if (!profile) {
         throw new Error('Profile not found.')
     }
-
-    const certificationsBulk = certifications.map((certification) => ({
-        ...certification,
+    const certification = new Certification({
+        ...requestBody,
         profile_id: profile._id,
-    }))
-    await Certification.insertMany(certificationsBulk)
+    })
+    await certification.save()
 }
 // ========== PUT [Certification] ========== //
 export async function updateProfileCertification(user, requestBody) {
@@ -228,7 +225,7 @@ export async function updateProfileCertification(user, requestBody) {
     const certification = await Certification.findOneAndUpdate(
         {
             profile_id: profile._id,
-            _id: requestBody.id,
+            _id: requestBody._id,
         },
         requestBody,
         {new: true}
@@ -252,6 +249,16 @@ export async function deleteProfileCertification(user, certificationId) {
     }
 }
 
+// ========== PUT [Skills] ========== //
+export async function updateProfileSkills(user, requestBody) {
+    const skills = requestBody.skills.map((skill) => skill._id)
+    const profile = await Profile.findOne({user_id: user._id})
+    if (!profile) {
+        throw new Error('Profile not found.')
+    }
+    await Profile.findOneAndUpdate({user_id: user._id}, {skill_ids: skills})
+}
+
 // ========== [Organization] ========== //
 export async function getOrganizationFramework() {
     const organizations = await Organization.find().select('_id name description')
@@ -260,24 +267,24 @@ export async function getOrganizationFramework() {
 
 // ========== POST [Additional Info] ========== //
 export async function createProfileAdditionalInfos(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user.id})
-    const additionalInfos = requestBody.additional_infos.map((info) => ({
-        ...info,
+    const profile = await Profile.findOne({user_id: user._id})
+    const additionalInfo = new ProfileAdditionalInfo({
+        ...requestBody,
         profile_id: profile._id,
-    }))
-    await ProfileAdditionalInfo.insertMany(additionalInfos)
+    })
+    await additionalInfo.save()
 }
 
 // ========== PUT [Additional Info] ========== //
 export async function updateProfileAdditionalInfo(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({user_id: user._id})
     if (!profile) {
         throw new Error('Profile not found.')
     }
     const additionalInfo = await ProfileAdditionalInfo.findOneAndUpdate(
         {
             profile_id: profile._id,
-            _id: requestBody.id,
+            _id: requestBody._id,
         },
         requestBody,
         {new: true}

@@ -7,7 +7,13 @@ import {
     Conversation,
     Industry,
     ExperienceLevel,
+<<<<<<< HEAD
     Type,
+=======
+    Skill,
+    Category,
+    Stage,
+>>>>>>> 312ff598a4328dd6a547fed70c2e452138b93191
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
@@ -89,8 +95,7 @@ export async function remove(user) {
 }
 
 export async function createProfile(user, requestBody) {
-    await console.log('requestBody', requestBody)
-    requestBody.user_id = user._id
+    requestBody.user_id = await user._id
     // const founder = new Profile(requestBody)
     // await founder.save()
     // return founder
@@ -524,12 +529,44 @@ export async function checkSteps(user) {
     }
 }
 
+// Industry framework
 export async function getIndustries() {
     const industries = await Industry.find().select('name _id description')
     return industries
 }
 
+// Experience level framework
 export async function getExperienceLevels() {
     const experienceLevels = await ExperienceLevel.find().select('name _id description')
     return experienceLevels
+}
+
+// Category framework
+export async function getCategories() {
+    const categories = await Category.find({
+        parent_id: null,
+    }).select('name _id description')
+    return categories
+}
+
+// Subcategory framework
+export async function getSubCategories(categoryId) {
+    const subCategories = await Category.find({
+        parent_id: categoryId,
+    }).select('name _id description')
+    return subCategories
+}
+
+// Skills framework
+export async function getSkills(categoryId) {
+    const skills = await Skill.find({
+        category_id: categoryId,
+    }).select('name _id description')
+    return skills
+}
+
+// Stage framework
+export async function getStages() {
+    const stages = await Stage.find().select('name _id description')
+    return stages
 }
