@@ -1,22 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toaster } from "components/UI/toaster";
+import { last } from "lodash";
 
 const projectSlice = createSlice({
 	name: "ProJect",
 
 	initialState: {
 		title: "",
-		// ========== My projects ========== //
-		myProjects: [],
-		isLoadingGetMyProjects: false,
+
 		projects: [],
-		projectDetails: null,
+		projectDetails: {},
 		projectsBySeek: [],
 		projectInvitations: [],
 		resultCreateProject: null,
 		loadingGetProjects: false,
 		loadingGetProjectDetails: false,
-		loadingCreateNewProject: false,
 		loadingSeekProjects: false,
 		loadingUpdatePitchDeck: false,
 		loadingUpdateProject: false,
@@ -29,8 +27,10 @@ const projectSlice = createSlice({
 			name: null,
 			page: 0,
 		},
-
-		// ========== NEW ========== //
+		// ========== My projects ========== //
+		myProjects: [],
+		myProjectDetails: {},
+		isLoadingCreateNewProject: false,
 		formCreateProject: {
 			name: "",
 			description: "",
@@ -42,6 +42,14 @@ const projectSlice = createSlice({
 			logo: null,
 			background: null,
 		},
+		isLoadingGetListMyProjects: false,
+		isLoadingGetMyProjectDetails: false,
+		paginationListMyProjects: {
+			currentPage: 1,
+			perPage: 6,
+			totalPage: 1,
+			totalRecord: 0,
+		},
 	},
 	reducers: {
 		setTitle: (state) => ({
@@ -49,23 +57,30 @@ const projectSlice = createSlice({
 			title: "title",
 		}),
 		// ========== My projects ========== //
-		requestGetMyProjects: (state) => ({
+		requestGetListMyProjects: (state) => ({
 			...state,
-			isLoadingGetMyProjects: true,
+			isLoadingGetListMyProjects: true,
 		}),
-		getMyProjectsSuccess: (state, action) => ({
+		getListMyProjectsSuccess: (state, action) => ({
 			...state,
-			myProjects: action.payload.data,
-			isLoadingGetMyProjects: false,
+			myProjects: action.payload.data.projects,
+			isLoadingGetListMyProjects: false,
+			paginationListMyProjects: {
+				currentPage: action.payload.data.page,
+				perPage: action.payload.data.per_page,
+				totalPage: action.payload.data.last_page,
+				totalRecord: action.payload.data.total,
+			},
 		}),
-		getMyProjectsFail: (state) => ({
+		getListMyProjectsFail: (state) => ({
 			...state,
-			isLoadingGetMyProjects: false,
+			isLoadingGetListMyProjects: false,
 		}),
 
+		// ========== CREATE NEW PROJECT ========== //
 		requestCreateNewProject: (state) => ({
 			...state,
-			loadingCreateNewProject: true,
+			isLoadingCreateNewProject: true,
 		}),
 		createNewProjectSuccess: (state, action) => {
 			toaster.create({
@@ -73,10 +88,10 @@ const projectSlice = createSlice({
 				description: "You have successfully created the project",
 				type: "success",
 			});
-			window.location.href = `/project/details/${action.payload.data.project_id}`;
+			window.location.href = `/projects/details/${action.payload.data.project_id}`;
 			return {
 				...state,
-				loadingCreateNewProject: false,
+				isLoadingCreateNewProject: false,
 				resultCreateProject: true,
 			};
 		},
@@ -88,24 +103,38 @@ const projectSlice = createSlice({
 			});
 			return {
 				...state,
-				loadingCreateNewProject: false,
+				isLoadingCreateNewProject: false,
 				resultCreateProject: false,
 			};
 		},
-		// ========== Projects ========== //
-		startGetProjectDetails: (state) => ({
+		// ========== MY PROJECT DETAILS ========== //
+		requestGetMyProjectDetails: (state) => ({
+			...state,
+			isLoadingGetMyProjectDetails: true,
+		}),
+		getMyProjectDetailsSuccess: (state, action) => ({
+			...state,
+			myProjectDetails: action.payload.data,
+			isLoadingGetMyProjectDetails: false,
+		}),
+		getMyProjectDetailsFail: (state) => ({
+			...state,
+			isLoadingGetMyProjectDetails: false,
+		}),
+
+		// ========== PROJECT DETAILS ========== //
+		requestGetProjectDetails: (state) => ({
 			...state,
 			loadingGetProjectDetails: true,
 		}),
-		startGetProjectDetailsSuccess: (state, action) => ({
+		getProjectDetailsSuccess: (state, action) => ({
 			...state,
 			loadingGetProjectDetails: false,
-			projectDetails: action.payload.data,
+			// projectDetails: action.payload.data,
 		}),
-		startGetProjectDetailsFail: (state) => ({
+		getProjectDetailsFail: (state) => ({
 			...state,
 			loadingGetProjectDetails: false,
-			projectDetails: null,
 		}),
 
 		// Seek project
@@ -287,19 +316,22 @@ const projectSlice = createSlice({
 export const {
 	setTitle,
 	// ========== My projects ========== //
-	requestGetMyProjects,
-	getMyProjectsSuccess,
-	getMyProjectsFail,
+	requestGetListMyProjects,
+	getListMyProjectsSuccess,
+	getListMyProjectsFail,
 	requestCreateNewProject,
 	createNewProjectSuccess,
 	createNewProjectFail,
+	requestGetMyProjectDetails,
+	getMyProjectDetailsSuccess,
+	getMyProjectDetailsFail,
 	// ========== Projects ========== //
 	startRequestGetProjects,
 	startRequestGetProjectsSuccess,
 	startRequestGetProjectsFail,
-	startGetProjectDetails,
-	startGetProjectDetailsSuccess,
-	startGetProjectDetailsFail,
+	requestGetProjectDetails,
+	getProjectDetailsSuccess,
+	getProjectDetailsFail,
 	startRequestSeekProjects,
 	startRequestSeekProjectsSuccess,
 	startRequestSeekProjectsFail,

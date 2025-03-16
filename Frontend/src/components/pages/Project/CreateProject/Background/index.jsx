@@ -10,7 +10,7 @@ const CoverImage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX ========== //
-	const { formCreateProject, loadingCreateNewProject } = useSelector(
+	const { formCreateProject, isLoadingCreateNewProject } = useSelector(
 		(state) => state.project
 	);
 	// ========== STATE ========== //
@@ -213,7 +213,7 @@ const CoverImage = () => {
 									BACK TO PREVIOUS STEP
 								</button>
 								<Button
-									loading={loadingCreateNewProject}
+									loading={isLoadingCreateNewProject}
 									loadingText="Creating..."
 									onClick={handleConfirmCreateProject}
 									height={50}

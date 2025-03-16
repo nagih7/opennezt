@@ -1,11 +1,4 @@
 import React from "react";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PersonIcon from "@mui/icons-material/Person";
-import FolderIcon from "@mui/icons-material/Folder";
-import PersonSearchIcon from "@mui/icons-material/PersonSearch";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import PageviewIcon from "@mui/icons-material/Pageview";
-import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import { NAVBAR_LABEL } from "utils/constains";
 import {
 	IconlyActivity,
@@ -32,13 +25,6 @@ const manageRouteMap = [
 		routeActive: ["/admin/manage"],
 		permissions: ["manage_page"],
 	},
-	// {
-	// 	label: NAVBAR_LABEL.DASHBOARD,
-	// 	icon: <DashboardIcon className="material-icons" />,
-	// 	path: "/",
-	// 	routeActive: ["/"],
-	// 	permissions: [""],
-	// },
 	{
 		label: NAVBAR_LABEL.ABOUT_ME,
 		icon: <IconlyProfile size={24} />,
@@ -49,9 +35,9 @@ const manageRouteMap = [
 	{
 		label: NAVBAR_LABEL.PROJECT,
 		icon: <IconlyFolder size={24} />,
-		path: "/project",
-		routeActive: ["/project"],
-		permissions: ["project_page"],
+		path: "/projects",
+		routeActive: ["/projects"],
+		permissions: ["projects_page"],
 	},
 	{
 		label: NAVBAR_LABEL.RECRUIT_TALENTS,
