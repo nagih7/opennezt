@@ -28,7 +28,10 @@ projectRouter.post(
     asyncHandler(projectController.createProject)
 )
 // ========== GET [My Projects] ========== //
-projectRouter.get('/', asyncHandler(projectController.getMyProjects))
+projectRouter.get('/', asyncHandler(projectController.getListMyProjects))
+
+// ========== GET [Project Details] ========== //
+projectRouter.get('/:id', asyncHandler(projectController.getProjectDetails))
 
 // ========== DELETE [Project] ========== //
 projectRouter.delete('/:id', asyncHandler(projectController.deleteProject))

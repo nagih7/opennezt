@@ -1,25 +1,25 @@
 import callApi from "api/callApi";
 import {
 	// ========== My projects ========== //
-	requestGetMyProjects,
-	getMyProjectsSuccess,
-	getMyProjectsFail,
+	requestGetListMyProjects,
+	getListMyProjectsSuccess,
+	getListMyProjectsFail,
 	requestCreateNewProject,
 	createNewProjectSuccess,
 	createNewProjectFail,
+	requestGetMyProjectDetails,
+	getMyProjectDetailsSuccess,
+	getMyProjectDetailsFail,
 	// ========== project ========== //
 	startRequestGetProjects,
 	startRequestGetProjectsSuccess,
 	startRequestGetProjectsFail,
-	startRequestCreateNewProject,
-	startRequestCreateNewProjectSuccess,
-	startRequestCreateNewProjectFail,
 	startRequestSeekProjects,
 	startRequestSeekProjectsSuccess,
 	startRequestSeekProjectsFail,
-	startGetProjectDetails,
-	startGetProjectDetailsSuccess,
-	startGetProjectDetailsFail,
+	requestGetProjectDetails,
+	getProjectDetailsSuccess,
+	getProjectDetailsFail,
 	startRequestUpdateProject,
 	startRequestUpdateProjectSuccess,
 	startRequestUpdateProjectFail,
@@ -38,14 +38,25 @@ import {
 } from "../../states/modules/project";
 
 // ========== My projects ========== //
-export const getMyProjects = () => async (dispatch, getState) => {
+export const getListMyProjects = (dataFilter) => async (dispatch, getState) => {
+	let path = `projects?per_page=${dataFilter.perPage}&page=${dataFilter.currentPage}`;
+	if (dataFilter.keySearch) {
+		path += `&q=${dataFilter.keySearch}`;
+	}
+	if (dataFilter.status && dataFilter.status.length > 0) {
+		path += `&status=${dataFilter.status}`;
+	}
+
+	if (dataFilter.order && dataFilter.column) {
+		path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+	}
 	return callApi({
 		method: "get",
-		apiPath: "projects",
+		apiPath: path,
 		actionTypes: [
-			requestGetMyProjects,
-			getMyProjectsSuccess,
-			getMyProjectsFail,
+			requestGetListMyProjects,
+			getListMyProjectsSuccess,
+			getListMyProjectsFail,
 		],
 		variables: {},
 		dispatch,
@@ -68,6 +79,39 @@ export const createNewProject = (data) => async (dispatch, getState) => {
 	});
 };
 
+export const getMyProjectDetails =
+	(projectId) => async (dispatch, getState) => {
+		return callApi({
+			method: "get",
+			apiPath: `projects/${projectId}`,
+			actionTypes: [
+				requestGetMyProjectDetails,
+				getMyProjectDetailsSuccess,
+				getMyProjectDetailsFail,
+			],
+			variables: {},
+			dispatch,
+			getState,
+		});
+	};
+
+export const getProjectDetails = (projectId) => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: `projects/${projectId}`,
+		actionTypes: [
+			requestGetProjectDetails,
+			getProjectDetailsSuccess,
+			getProjectDetailsFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+// ====================================
+
 export const getProjects = () => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
@@ -76,21 +120,6 @@ export const getProjects = () => async (dispatch, getState) => {
 			startRequestGetProjects,
 			startRequestGetProjectsSuccess,
 			startRequestGetProjectsFail,
-		],
-		variables: {},
-		dispatch,
-		getState,
-	});
-};
-
-export const getProjectDetails = (projectId) => async (dispatch, getState) => {
-	return callApi({
-		method: "get",
-		apiPath: `users/project/${projectId}`,
-		actionTypes: [
-			startGetProjectDetails,
-			startGetProjectDetailsSuccess,
-			startGetProjectDetailsFail,
 		],
 		variables: {},
 		dispatch,

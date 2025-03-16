@@ -1,4 +1,3 @@
-import {APP_URL_CLIENT} from '@/configs'
 import * as projectService from '../services/projectService'
 
 export async function seekProjects(req, res) {
@@ -22,8 +21,14 @@ export async function createProject(req, res) {
     res.status(201).jsonify(result)
 }
 // ========== GET [My Projects] ========== //
-export async function getMyProjects(req, res) {
-    const result = await projectService.getMyProjects(req.currentUser)
+export async function getListMyProjects(req, res) {
+    const result = await projectService.getListMyProjects(req.currentUser, req.query)
+    res.jsonify(result)
+}
+
+// ========== GET [Project Details] ========== //
+export async function getProjectDetails(req, res) {
+    const result = await projectService.getProjectDetails(req.currentUser, req.params.id)
     res.jsonify(result)
 }
 
