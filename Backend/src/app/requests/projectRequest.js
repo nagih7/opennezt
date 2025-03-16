@@ -46,14 +46,19 @@ export const createProject = Joi.object({
         ),
     description: Joi.string().trim().max(MAX_STRING_SIZE).allow('', null).label('Description'),
     industries: Joi.array()
-        .items(Joi.string().trim().required())
+        .required()
         .label('Industry')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async () => {
-                    const industries = await Industry.findById(new ObjectId(value))
-                    return industries.length === value.length ? value : helpers.error('any.empty')
-                })
+        .items(
+            Joi.string()
+                .trim()
+                .required()
+                .custom(
+                    (value, helpers) =>
+                        new AsyncValidate(value, async () => {
+                            const industry = await Industry.findById(new ObjectId(value))
+                            return industry ? value : helpers.error('any.empty')
+                        })
+                )
         ),
     stage: Joi.string()
         .trim()
@@ -67,30 +72,21 @@ export const createProject = Joi.object({
                 })
         ),
     revenues: Joi.array()
+        .allow(null)
+        .label('Revenue')
         .items(
             Joi.object({
                 date: Joi.date().required().label('Date'),
                 amount: Joi.number().required().label('Amount'),
                 currency: Joi.string().trim().required().label('Currency'),
             })
-        )
-        .allow(null)
-        .label('Revenue'),
+        ),
+
     funding_sources: Joi.array()
         .items(
             Joi.object({
-                founding_source_id: Joi.string()
-                    .trim()
-                    .required()
-                    .label('Funding Source ID')
-                    .custom(
-                        (value, helpers) =>
-                            new AsyncValidate(value, async () => {
-                                const fundingSource = await FundingSource.findById(new ObjectId(value))
-                                return fundingSource ? value : helpers.error('any.empty')
-                            })
-                    ),
-                amount: Joi.number().required().label('Amount'),
+                name: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Name'),
+                amount: Joi.string().required().label('Amount'),
                 currency: Joi.string().trim().required().label('Currency'),
             })
         )
@@ -113,7 +109,7 @@ export const createProject = Joi.object({
     })
         .unknown(true)
         .instance(FileUpload)
-        .allow('', {})
+        .allow('', {}, 'null')
         .label('Logo'),
     background: Joi.object({
         mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
@@ -122,6 +118,6 @@ export const createProject = Joi.object({
     })
         .unknown(true)
         .instance(FileUpload)
-        .allow('', {})
+        .allow('', {}, 'null')
         .label('Background'),
 })

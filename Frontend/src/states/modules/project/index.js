@@ -67,14 +67,31 @@ const projectSlice = createSlice({
 			...state,
 			loadingCreateNewProject: true,
 		}),
-		createNewProjectSuccess: (state, action) => ({
-			...state,
-			loadingCreateNewProject: false,
-		}),
-		createNewProjectFail: (state) => ({
-			...state,
-			loadingCreateNewProject: false,
-		}),
+		createNewProjectSuccess: (state, action) => {
+			toaster.create({
+				title: "Create project successfully",
+				description: "You have successfully created the project",
+				type: "success",
+			});
+			window.location.href = `/project/details/${action.payload.data.project_id}`;
+			return {
+				...state,
+				loadingCreateNewProject: false,
+				resultCreateProject: true,
+			};
+		},
+		createNewProjectFail: (state, action) => {
+			toaster.create({
+				title: `${Object.values(action.payload.data.detail)[0]}`,
+				description: "You have failed to create the project",
+				type: "error",
+			});
+			return {
+				...state,
+				loadingCreateNewProject: false,
+				resultCreateProject: false,
+			};
+		},
 		// ========== Projects ========== //
 		startGetProjectDetails: (state) => ({
 			...state,
@@ -150,6 +167,7 @@ const projectSlice = createSlice({
 				description: "You have successfully deleted the project",
 				type: "success",
 			});
+
 			return {
 				...state,
 				loadingDeleteProject: false,

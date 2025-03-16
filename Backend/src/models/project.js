@@ -11,9 +11,15 @@ const Project = createModel('Project', 'projects', {
         type: String,
         required: true,
     },
+    description: {
+        type: String,
+        required: false,
+        default: '',
+    },
     logo: {
         type: String,
         required: false,
+        default: '',
     },
     background: {
         type: String,

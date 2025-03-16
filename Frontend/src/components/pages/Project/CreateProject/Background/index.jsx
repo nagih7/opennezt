@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { onChangeFormCreateProject } from "states/modules/project";
 import { createNewProject } from "api/project";
+import { Button } from "@chakra-ui/react";
 
 const CoverImage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX ========== //
-	const { formCreateProject } = useSelector((state) => state.project);
+	const { formCreateProject, loadingCreateNewProject } = useSelector(
+		(state) => state.project
+	);
 	// ========== STATE ========== //
 	const [selectedImage, setSelectedImage] = useState({});
 	// ========== USEEFFECT ========== //
@@ -47,32 +50,84 @@ const CoverImage = () => {
 		formData.append(
 			"revenues",
 			JSON.stringify(
-				// formCreateProject.revenues.map((revenue) => {
-				// 	return {
-				// 		...revenue,
-				// 		currency: revenue.currency[0],
-				// 	};
-				// })
-				formCreateProject.revenues.forEach((revenue, index, array) => {
-					Object.keys(revenue).forEach((key) => {
-						if (revenue[key] === "") {
-							delete array[index];
+				formCreateProject.revenues
+					.map((revenue) => {
+						let valid = true;
+						Object.keys(revenue).forEach((key) => {
+							if (
+								revenue[key] === "" ||
+								revenue[key] === null ||
+								revenue[key] === undefined ||
+								revenue[key].length === 0
+							) {
+								valid = false;
+							}
+						});
+						if (valid) {
+							return {
+								...revenue,
+								currency: revenue.currency[0],
+							};
 						}
-					});
-					return {
-						...revenue,
-						currency: revenue.currency[0],
-					};
-				})
+						return null;
+					})
+					.filter((item) => item !== null)
 			)
 		);
 		formData.append(
 			"funding_sources",
-			JSON.stringify(formCreateProject.funding_sources)
+			JSON.stringify(
+				formCreateProject.funding_sources
+					.map((source) => {
+						let valid = true;
+						Object.keys(source).forEach((key) => {
+							if (
+								source[key] === "" ||
+								source[key] === null ||
+								source[key] === undefined ||
+								source[key]?.length === 0
+							) {
+								valid = false;
+							}
+						});
+						if (valid) {
+							return {
+								...source,
+								name: source.name[0],
+								currency: source.currency[0],
+							};
+						}
+						return null;
+					})
+					.filter((item) => item !== null)
+			)
 		);
 		formData.append(
 			"additional_infos",
-			JSON.stringify(formCreateProject.additional_infos)
+			JSON.stringify(
+				formCreateProject.additional_infos
+					.map((info) => {
+						let valid = true;
+						Object.keys(info).forEach((key) => {
+							if (
+								info[key] === "" ||
+								info[key] === null ||
+								info[key] === undefined ||
+								info[key].length === 0
+							) {
+								valid = false;
+							}
+						});
+						if (valid) {
+							return {
+								...info,
+								name: info.name[0],
+							};
+						}
+						return null;
+					})
+					.filter((item) => item !== null)
+			)
 		);
 		formData.append("logo", formCreateProject.logo);
 		formData.append("background", formCreateProject.background);
@@ -80,7 +135,6 @@ const CoverImage = () => {
 		dispatch(createNewProject(formData));
 	};
 
-	const handleNextStep = () => {};
 	return (
 		<div className="w-full h-full">
 			<div className="px-[16px] ">
@@ -158,12 +212,14 @@ const CoverImage = () => {
 									className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold ">
 									BACK TO PREVIOUS STEP
 								</button>
-								<button
+								<Button
+									loading={loadingCreateNewProject}
+									loadingText="Creating..."
 									onClick={handleConfirmCreateProject}
 									height={50}
 									className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold">
 									CREATE PROJECT
-								</button>
+								</Button>
 							</div>
 						</div>
 					</div>

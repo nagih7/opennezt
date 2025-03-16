@@ -370,7 +370,7 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
 	},
 	{
-		path: "/project/detail-project",
+		path: "/project/details/:id",
 		element: (
 			<AppLayout>
 				<DetailProject />

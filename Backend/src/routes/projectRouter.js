@@ -24,7 +24,7 @@ projectRouter.get('/invitations/:user_id', asyncHandler(projectController.getInv
 projectRouter.post(
     '/',
     asyncHandler(projectMiddleware.decodeFormData),
-    // asyncHandler(validate(projectRequest.createProject)),
+    asyncHandler(validate(projectRequest.createProject)),
     asyncHandler(projectController.createProject)
 )
 // ========== GET [My Projects] ========== //
