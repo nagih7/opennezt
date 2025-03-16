@@ -36,6 +36,7 @@ import img_avatar_group from "assets/images/background/1656677703-bpfull.jpg";
 import { IconlyDocument, IconlyUser, IconlyPlus } from "components/UI/Iconly";
 import img_avatar from "assets/images/background/avt.jpg";
 import {PlusOutlined} from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const CreateProjectForm = React.lazy(() => import("./CreateProjectForm"));
 const UpdateProjectForm = React.lazy(() => import("./UpdateProjectForm"));
@@ -363,7 +364,7 @@ function Project() {
           objectFit: "cover",
         }}
       >
-        <span className="text-4xl font-medium">Group Directory</span>
+        <span className="text-4xl font-medium">Project Directory</span>
         <p className="mt-1">
           Good Communication is the key to cop-up with good ideas
         </p>
@@ -391,35 +392,35 @@ function Project() {
               <div>
                 <div className="mx-[-16px] px-[16px] mb-8">
                   <div className="flex items-center justify-between border-b-[1px] border-[#f3f4f5]">
-                    <div className="border-r-[1px] border-[#f3f4f5]">
-                      <ul className="flex mb-0 p-0">
-                        <li className="flex items-center gap-2 py-[26px] mr-12">
+                    <div className="flex border-r-[1px] border-[#f3f4f5] ">
+                      <ul className="flex mb-0 p-0 max-w-[600px] overflow-x-scroll scrollbar-hide">
+                        <li className="flex items-center gap-2 py-[26px] mr-6">
                           <a
                             href=""
                             className="no-underline text-black font-medium border-b-2 border-black"
                           >
-                            All Groups
+                            All Projects
                           </a>
                           <span className="bg-[#f07a3a] py-[2px] px-[6px] text-xs rounded-lg text-white font-medium">
                             10
                           </span>
                         </li>
-                        <li className="flex items-center gap-2 py-[26px] mr-12">
+                        <li className="flex items-center gap-2 py-[26px] mr-6">
                           <a
                             href=""
                             className="no-underline text-[#6f7f92] font-medium"
                           >
-                            My Groups
+                            My Projects
                           </a>
                           {/* <span className="bg-[#f07a3a] py-[2px] px-[6px] text-xs rounded-lg text-white font-medium">10</span> */}
                         </li>
-                        <li className="flex items-center gap-2 py-[26px] mr-12">
-                          <a
-                            href=""
+                        <li className="flex items-center gap-2 py-[26px] mr-6">
+                          <Link
+                            to={'/project/details'}
                             className="no-underline text-[#6f7f92] font-medium"
                           >
-                            Create a Gro
-                          </a>
+                            Create a Project
+                          </Link>
                           {/* <span className="bg-[#f07a3a] py-[2px] px-[6px] text-xs rounded-lg text-white font-medium">10</span> */}
                         </li>
                       </ul>
@@ -534,9 +535,9 @@ function Project() {
                             </li>
                           </ul>
                           <div className="mt-7 mx-[-16px] w-full h-[47px] flex justify-center items-center">
-                            <a href="#" className="bg-[#eaeff8] text-[#2f65b9] hover:bg-[#2f65b9] hover:text-[#ffffff] transition duration- text-sm rounded-md font-semibold px-[28px] py-[15px] mx-[14px] no-underline">
-                              JOIN GROUP
-                            </a>
+                            <Link to={"/project/detail-project"} className="bg-[#eaeff8] text-[#2f65b9] hover:bg-[#2f65b9] hover:text-[#ffffff] transition duration- text-sm rounded-md font-semibold px-[28px] py-[15px] mx-[14px] no-underline">
+                              MANAGE PROJECT
+                            </Link>
                           </div>
                         </div>
                       </div>
@@ -630,7 +631,7 @@ function Project() {
                           </ul>
                           <div className="mt-7 mx-[-16px] w-full h-[47px] flex justify-center items-center">
                             <a href="#" className="bg-[#f8eaea] text-[#f14646] hover:bg-[#f14646] hover:text-[#ffffff] transition duration- text-sm rounded-md font-semibold px-[28px] py-[15px] mx-[14px] no-underline">
-                              LEAVE GROUP
+                              LEAVE PROJECT
                             </a>
                           </div>
                         </div>
@@ -725,7 +726,7 @@ function Project() {
                           </ul>
                           <div className="mt-7 mx-[-16px] w-full h-[47px] flex justify-center items-center">
                             <a href="#" className="bg-[#eaeff8] text-[#2f65b9] hover:bg-[#2f65b9] hover:text-[#ffffff] transition duration- text-sm rounded-md font-semibold px-[28px] py-[15px] mx-[14px] no-underline">
-                              JOIN GROUP
+                              MANAGE PROJECT
                             </a>
                           </div>
                         </div>
@@ -820,7 +821,7 @@ function Project() {
                           </ul>
                           <div className="mt-7 mx-[-16px] w-full h-[47px] flex justify-center items-center">
                             <a href="#" className="bg-[#eaeff8] text-[#2f65b9] hover:bg-[#2f65b9] hover:text-[#ffffff] transition duration- text-sm rounded-md font-semibold px-[28px] py-[15px] mx-[14px] no-underline">
-                              JOIN GROUP
+                              MANAGE PROJECT
                             </a>
                           </div>
                         </div>
@@ -915,7 +916,7 @@ function Project() {
                           </ul>
                           <div className="mt-7 mx-[-16px] w-full h-[47px] flex justify-center items-center">
                             <a href="#" className="bg-[#eaeff8] text-[#2f65b9] hover:bg-[#2f65b9] hover:text-[#ffffff] transition duration- text-sm rounded-md font-semibold px-[28px] py-[15px] mx-[14px] no-underline">
-                              JOIN GROUP
+                              MANAGE PROJECT
                             </a>
                           </div>
                         </div>

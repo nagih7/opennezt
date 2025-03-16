@@ -1,11 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { message } from "antd";
+import { toaster } from "components/UI/toaster";
 
 const projectSlice = createSlice({
 	name: "ProJect",
 
 	initialState: {
 		title: "",
+		// ========== My projects ========== //
+		myProjects: [],
+		isLoadingGetMyProjects: false,
 		projects: [],
 		projectDetails: null,
 		projectsBySeek: [],
@@ -26,46 +29,70 @@ const projectSlice = createSlice({
 			name: null,
 			page: 0,
 		},
+
+		// ========== NEW ========== //
+		formCreateProject: {
+			name: "",
+			description: "",
+			industries: [],
+			stage: "",
+			revenues: [{ date: "", amount: "", currency: "" }],
+			funding_sources: [{ name: "", amount: "", currency: "" }],
+			additional_infos: [{ name: "", content: "" }],
+			logo: null,
+			background: null,
+		},
 	},
 	reducers: {
 		setTitle: (state) => ({
 			...state,
 			title: "title",
 		}),
-		startRequestGetProjects: (state) => ({
+		// ========== My projects ========== //
+		requestGetMyProjects: (state) => ({
 			...state,
-			loadingGetProjects: true,
+			isLoadingGetMyProjects: true,
 		}),
-		startRequestGetProjectsSuccess: (state, action) => ({
+		getMyProjectsSuccess: (state, action) => ({
 			...state,
-			loadingGetProjects: false,
-			projects: action.payload.data,
+			myProjects: action.payload.data,
+			isLoadingGetMyProjects: false,
 		}),
-		startRequestGetProjectsFail: (state) => ({
+		getMyProjectsFail: (state) => ({
 			...state,
-			loadingGetProjects: false,
+			isLoadingGetMyProjects: false,
 		}),
-		startRequestCreateNewProject: (state) => ({
+
+		requestCreateNewProject: (state) => ({
 			...state,
 			loadingCreateNewProject: true,
-			resultCreateProject: null,
 		}),
-		startRequestCreateNewProjectSuccess: (state, action) => {
-			message.success("Create project successfully");
+		createNewProjectSuccess: (state, action) => {
+			toaster.create({
+				title: "Create project successfully",
+				description: "You have successfully created the project",
+				type: "success",
+			});
+			window.location.href = `/project/details/${action.payload.data.project_id}`;
 			return {
 				...state,
 				loadingCreateNewProject: false,
 				resultCreateProject: true,
 			};
 		},
-		startRequestCreateNewProjectFail: (state) => {
-			message.error("Create project failed");
+		createNewProjectFail: (state, action) => {
+			toaster.create({
+				title: `${Object.values(action.payload.data.detail)[0]}`,
+				description: "You have failed to create the project",
+				type: "error",
+			});
 			return {
 				...state,
 				loadingCreateNewProject: false,
 				resultCreateProject: false,
 			};
 		},
+		// ========== Projects ========== //
 		startGetProjectDetails: (state) => ({
 			...state,
 			loadingGetProjectDetails: true,
@@ -107,7 +134,11 @@ const projectSlice = createSlice({
 			resultUpdateProject: null,
 		}),
 		startRequestUpdateProjectSuccess: (state, action) => {
-			message.success("Update project successfully");
+			toaster.create({
+				title: "Update project successfully",
+				description: "You have successfully updated the project",
+				type: "success",
+			});
 			return {
 				...state,
 				loadingUpdateProject: false,
@@ -115,7 +146,11 @@ const projectSlice = createSlice({
 			};
 		},
 		startRequestUpdateProjectFail: (state) => {
-			message.error("Update project failed");
+			toaster.create({
+				title: "Update project failed",
+				description: "You have failed to update the project",
+				type: "error",
+			});
 			return {
 				...state,
 				loadingUpdateProject: false,
@@ -127,14 +162,23 @@ const projectSlice = createSlice({
 			loadingDeleteProject: true,
 		}),
 		startRequestDeleteProjectSuccess: (state) => {
-			message.success("Delete project successfully");
+			toaster.create({
+				title: "Delete project successfully",
+				description: "You have successfully deleted the project",
+				type: "success",
+			});
+
 			return {
 				...state,
 				loadingDeleteProject: false,
 			};
 		},
 		startRequestDeleteProjectFail: (state) => {
-			message.error("Delete project failed");
+			toaster.create({
+				title: "Delete project failed",
+				description: "You have failed to delete the project",
+				type: "error",
+			});
 			return {
 				...state,
 				loadingDeleteProject: false,
@@ -160,7 +204,11 @@ const projectSlice = createSlice({
 		}),
 
 		startRequestUpdateBackgroundSuccess: (state, action) => {
-			message.success("Update background successfully");
+			toaster.create({
+				title: "Update background successfully",
+				description: "You have successfully updated the background",
+				type: "success",
+			});
 			return {
 				...state,
 				loadingUpdateBackground: false,
@@ -168,7 +216,11 @@ const projectSlice = createSlice({
 		},
 
 		startRequestUpdateBackgroundFail: (state) => {
-			message.error("Update background failed");
+			toaster.create({
+				title: "Update background failed",
+				description: "You have failed to update the background",
+				type: "error",
+			});
 			return {
 				...state,
 				loadingUpdateBackground: false,
@@ -222,17 +274,29 @@ const projectSlice = createSlice({
 				page: 0,
 			},
 		}),
+
+		// ========== NEW ========== //
+		onChangeFormCreateProject: (state, action) => {
+			Object.keys(action.payload).forEach((key) => {
+				state.formCreateProject[key] = action.payload[key];
+			});
+		},
 	},
 });
 
 export const {
 	setTitle,
+	// ========== My projects ========== //
+	requestGetMyProjects,
+	getMyProjectsSuccess,
+	getMyProjectsFail,
+	requestCreateNewProject,
+	createNewProjectSuccess,
+	createNewProjectFail,
+	// ========== Projects ========== //
 	startRequestGetProjects,
 	startRequestGetProjectsSuccess,
 	startRequestGetProjectsFail,
-	startRequestCreateNewProject,
-	startRequestCreateNewProjectSuccess,
-	startRequestCreateNewProjectFail,
 	startGetProjectDetails,
 	startGetProjectDetailsSuccess,
 	startGetProjectDetailsFail,
@@ -256,6 +320,8 @@ export const {
 	startRequestGetProjectInvitationsFail,
 	setFormSeekProjects,
 	resetFormSeekProjects,
+	// ========== NEW ========== //
+	onChangeFormCreateProject,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

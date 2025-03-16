@@ -1,5 +1,5 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {Project, NotificationFeed, ObjectId} from '@/models'
+import {Project, NotificationFeed, ObjectId, Revenue, FundingSource, ProjectAdditionalInfo} from '@/models'
 import {FileUpload} from '@/utils/classes'
 
 export async function seekProjects(user, requestQuery) {
@@ -115,4 +115,90 @@ export async function getInvitations(userId, user_id) {
         },
     ])
     return invitations
+}
+
+// ========== POST [Project] ========== //
+export async function createProject(user, requestBody) {
+    const {revenues, funding_sources, additional_infos, logo, background} = requestBody
+    // Project
+    if (logo instanceof FileUpload) {
+        requestBody.logo = logo.save('project_logos')
+    }
+    if (background instanceof FileUpload) {
+        requestBody.background = background.save('project_backgrounds')
+    }
+    const project = new Project({
+        user_id: user._id,
+        industry_ids: requestBody.industries || [],
+        stage_id: requestBody.stage || '',
+        ...requestBody,
+    })
+    await project.save()
+    // Revenue
+    if (revenues?.length > 0) {
+        const revenueBulk = revenues.map((revenue) => ({
+            ...revenue,
+            project_id: project._id,
+        }))
+        await Revenue.insertMany(revenueBulk)
+    }
+    // Funding Source
+    if (funding_sources?.length > 0) {
+        project.funding_sources = funding_sources.map((funding_source) => ({
+            ...funding_source,
+            project_id: project._id,
+        }))
+        await FundingSource.insertMany(project.funding_sources)
+    }
+    // Additional Info
+    if (additional_infos?.length > 0) {
+        project.additional_infos = additional_infos.map((additional_info) => ({
+            ...additional_info,
+            project_id: project._id,
+        }))
+        await ProjectAdditionalInfo.insertMany(project.additional_infos)
+    }
+
+    return {project_id: project._id}
+}
+
+// ========== GET [My Projects] ========== //
+export async function getMyProjects(user) {
+    const projects = await Project.aggregate([
+        {
+            $match: {user_id: user._id},
+        },
+        {
+            $addFields: {
+                logo: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                        then: '$logo',
+                        else: {$concat: [LINK_STATIC_URL, '$logo']},
+                    },
+                },
+                background: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        then: '$background',
+                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                    },
+                },
+            },
+        },
+        {
+            $project: {
+                user_id: 0,
+            },
+        },
+    ])
+    return projects
+}
+
+// ========== DELETE [Project] ========== //
+export async function deleteProject(user, projectId) {
+    await Project.deleteOne({user_id: user._id, _id: projectId})
+    await Revenue.deleteMany({project_id: projectId}).exec()
+    await FundingSource.deleteMany({project_id: projectId}).exec()
+    await ProjectAdditionalInfo.deleteMany({project_id: projectId}).exec()
 }

@@ -4,7 +4,7 @@ import loadHomeSaga from "../states/modules/home/saga";
 import loadProfileSaga from "../states/modules/profile/saga";
 import loadEmployeeSaga from "../states/modules/employee/saga";
 import loadAboutYouSaga from "../states/modules/aboutYou/saga";
-import loadNewfeedSaga from "../states/modules/newfeeds/saga";
+import loadNewfeedSaga from "../states/modules/article/saga";
 import loadfounderSaga from "../states/modules/founder/saga";
 import loadProjectSaga from "../states/modules/project/saga";
 import loadTalentSaga from "../states/modules/talent/saga";

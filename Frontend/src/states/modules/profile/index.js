@@ -29,11 +29,16 @@ const profileSlice = createSlice({
 		// ========== Certification ========== //
 		isOpenModalCreateOrUpdateCertification: false,
 		isLoadingCreateOrUpdateCertification: false,
+		// ========== Skills ========== //
+		isLoadingUpdateSkills: false,
 		// ========== Organization ========== //
 		organizationFramework: createListCollection({
 			items: [],
 		}),
 		isLoadingGetAllOrganizationFramework: false,
+		// ========== Additional Info ========== //
+		isOpenModalCreateOrUpdateProfileAdditionalInfo: false,
+		isLoadingCreateOrUpdateProfileAdditionalInfo: false,
 	},
 	reducers: {
 		setErrorInfoUser: (state, action) => ({
@@ -166,14 +171,6 @@ const profileSlice = createSlice({
 				...state,
 				isLoadingCreateOrUpdateEducation: false,
 				isOpenModalCreateOrUpdateEducation: false,
-				// formDataEducation: {
-				// 	school: "",
-				// 	degree: "",
-				// 	field_of_study: "",
-				// 	start_date: "",
-				// 	end_date: "",
-				// 	grade: "",
-				// },
 			};
 		},
 		createOrUpdateEducationFail: (state, action) => {
@@ -221,6 +218,26 @@ const profileSlice = createSlice({
 			...state,
 			isOpenModalCreateOrUpdateCertification: action.payload,
 		}),
+		// ========== Skills ========== //
+		requestUpdateSkills: (state) => ({
+			...state,
+			isLoadingUpdateSkills: true,
+		}),
+		updateSkillsSuccess: (state, action) => {
+			toaster.create({
+				title: `${action.payload.message}`,
+				type: "success",
+			});
+			return {
+				...state,
+				isLoadingUpdateSkills: false,
+			};
+		},
+		updateSkillsFail: (state) => ({
+			...state,
+			isLoadingUpdateSkills: false,
+		}),
+
 		// ========== Organization ========== //
 		requestgetOrganizationFramework: (state) => ({
 			...state,
@@ -239,6 +256,36 @@ const profileSlice = createSlice({
 		requestgetOrganizationFrameworkFail: (state) => ({
 			...state,
 			isLoadingGetAllOrganizationFramework: false,
+		}),
+		// ========== Additional Info ========== //
+		requestCreateOrUpdateProfileAdditionalInfo: (state) => ({
+			...state,
+			isLoadingCreateOrUpdateProfileAdditionalInfo: true,
+		}),
+		createOrUpdateProfileAdditionalInfoSuccess: (state, action) => {
+			toaster.create({
+				title: `${action.payload.message}`,
+				type: "success",
+			});
+			return {
+				...state,
+				isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+				isOpenModalCreateOrUpdateProfileAdditionalInfo: false,
+			};
+		},
+		createOrUpdateProfileAdditionalInfoFail: (state, action) => {
+			toaster.create({
+				title: `${Object.values(action.payload.data.detail)[0]}`,
+				type: "error",
+			});
+			return {
+				...state,
+				isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+			};
+		},
+		setIsOpenModalCreateOrUpdateProfileAdditionalInfo: (state, action) => ({
+			...state,
+			isOpenModalCreateOrUpdateProfileAdditionalInfo: action.payload,
 		}),
 	},
 });
@@ -276,10 +323,19 @@ export const {
 	createOrUpdateCertificationSuccess,
 	createOrUpdateCertificationFail,
 	setIsOpenModalCreateOrUpdateCertification,
+	// ========== Skills ========== //
+	requestUpdateSkills,
+	updateSkillsSuccess,
+	updateSkillsFail,
 	// ========== Organization ========== //
 	requestgetOrganizationFramework,
 	requestgetOrganizationFrameworkSuccess,
 	requestgetOrganizationFrameworkFail,
+	// ========== Additional Info ========== //
+	requestCreateOrUpdateProfileAdditionalInfo,
+	createOrUpdateProfileAdditionalInfoSuccess,
+	createOrUpdateProfileAdditionalInfoFail,
+	setIsOpenModalCreateOrUpdateProfileAdditionalInfo,
 } = profileSlice.actions;
 
 export default profileSlice.reducer;

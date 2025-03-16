@@ -15,6 +15,11 @@ export const getArticleById = async (req, res) => {
     res.status(200).jsonify(article)
 }
 
+export const getUserReactions = async (req, res) => {
+    const reactions = await articleService.getUserReactions(req.currentUser._id, req.params.id)
+    res.status(200).jsonify(reactions)
+}
+
 export async function getCommentList(req, res) {
     const commentList = await articleService.getCommentList(req.currentUser, req.query.value)
     res.status(200).jsonify(commentList)

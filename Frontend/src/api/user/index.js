@@ -8,6 +8,21 @@ import {
 	requestgetExperienceLevelFramwork,
 	getExperienceLevelFramworkSuccess,
 	getExperienceLevelFramworkFail,
+	// CATEGORIES
+	requestGetCategoryFramework,
+	getCategoryFrameworkSuccess,
+	getCategoryFrameworkFail,
+	requestGetSubCategoryFramework,
+	getSubCategoryFrameworkSuccess,
+	getSubCategoryFrameworkFail,
+	// SKILLS
+	requestGetSkillFramework,
+	getSkillFrameworkSuccess,
+	getSkillFrameworkFail,
+	// STAGES
+	requestGetStageFramework,
+	getStageFrameworkSuccess,
+	getStageFrameworkFail,
 } from "../../states/modules/user";
 
 // INDUSTRY
@@ -35,6 +50,70 @@ export const getExperienceLevelFramwork = () => async (dispatch, getState) => {
 			requestgetExperienceLevelFramwork,
 			getExperienceLevelFramworkSuccess,
 			getExperienceLevelFramworkFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+// CATEGORIES
+export const getCategoryFramework = () => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: "users/categories",
+		actionTypes: [
+			requestGetCategoryFramework,
+			getCategoryFrameworkSuccess,
+			getCategoryFrameworkFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+export const getSubCategoryFramework =
+	(categoryId) => async (dispatch, getState) => {
+		return callApi({
+			method: "get",
+			apiPath: `users/categories/${categoryId}`,
+			actionTypes: [
+				requestGetSubCategoryFramework,
+				getSubCategoryFrameworkSuccess,
+				getSubCategoryFrameworkFail,
+			],
+			variables: {},
+			dispatch,
+			getState,
+		});
+	};
+
+// SKILLS
+export const getSkillFramework = (categoryId) => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: `users/skills/${categoryId}`,
+		actionTypes: [
+			requestGetSkillFramework,
+			getSkillFrameworkSuccess,
+			getSkillFrameworkFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+// STAGES
+export const getStageFramework = () => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: "users/stages",
+		actionTypes: [
+			requestGetStageFramework,
+			getStageFrameworkSuccess,
+			getStageFrameworkFail,
 		],
 		variables: {},
 		dispatch,

@@ -8,14 +8,14 @@ const Content = new Schema(
     {
         caption: {
             type: String,
-            required: true,
+            required: false,
             default: '',
         },
         attachment: {
             type: [String],
             require: false,
         },
-        hastags: {
+        hashtags: {
             type: [String],
             require: false,
         },

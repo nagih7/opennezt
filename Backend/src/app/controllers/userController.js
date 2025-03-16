@@ -102,12 +102,38 @@ export async function checkSteps(req, res) {
     res.jsonify(result)
 }
 
+// Industry framework
 export async function getIndustries(req, res) {
     const result = await userService.getIndustries()
     res.jsonify(result)
 }
 
+// Experience level framework
 export async function getExperienceLevels(req, res) {
     const result = await userService.getExperienceLevels()
+    res.jsonify(result)
+}
+
+// Category framework
+export async function getCategories(req, res) {
+    const result = await userService.getCategories()
+    res.jsonify(result)
+}
+
+// Subcategory framework
+export async function getSubCategories(req, res) {
+    const result = await userService.getSubCategories(req.params.id)
+    res.jsonify(result)
+}
+
+// Skill framework
+export async function getSkills(req, res) {
+    const result = await userService.getSkills(req.params.id)
+    res.jsonify(result)
+}
+
+// Stage framework
+export async function getStages(req, res) {
+    const result = await userService.getStages()
     res.jsonify(result)
 }

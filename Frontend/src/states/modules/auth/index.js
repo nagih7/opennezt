@@ -26,6 +26,8 @@ const authSlice = createSlice({
 		isLoadingRegister: false,
 		isSuccessForgotPassword: false,
 		isLoadingResetPassword: false,
+
+		// Login with social
 	},
 	reducers: {
 		startRequestLogin: (state) => ({
@@ -166,6 +168,19 @@ const authSlice = createSlice({
 				resetPasswordSuccess: false,
 			};
 		},
+
+		// ================== Login with social ================== //
+		requestLoginWithSocial: (state) => ({
+			...state,
+		}),
+		loginWithSocialSuccess: (state, action) => {
+			return {
+				...state,
+			};
+		},
+		loginWithSocialFail: (state) => ({
+			...state,
+		}),
 	},
 });
 
@@ -194,6 +209,10 @@ export const {
 	startRequestResetPassword,
 	startRequestResetPasswordSuccess,
 	startRequestResetPasswordFail,
+	// Login with social
+	requestLoginWithSocial,
+	loginWithSocialSuccess,
+	loginWithSocialFail,
 } = authSlice.actions;
 
 export default authSlice.reducer;

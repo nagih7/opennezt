@@ -9,6 +9,7 @@ const InputCustom = ({ ...rest }) => {
 		required,
 		placeholder,
 		type,
+		name,
 		htmlFor,
 		height,
 		onChange,
@@ -20,6 +21,7 @@ const InputCustom = ({ ...rest }) => {
 		<Field.Root invalid>
 			<InputGroup width="full" startElement={startElement}>
 				<Input
+					name={name}
 					disabled={disabled}
 					ps={rest?.ps}
 					onChange={onChange}

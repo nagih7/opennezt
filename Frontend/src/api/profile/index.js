@@ -28,10 +28,18 @@ import {
 	requestCreateOrUpdateCertification,
 	createOrUpdateCertificationSuccess,
 	createOrUpdateCertificationFail,
+	// ========== Skills ========== //
+	requestUpdateSkills,
+	updateSkillsSuccess,
+	updateSkillsFail,
 	// ========== Organization ========== //
 	requestgetOrganizationFramework,
 	requestgetOrganizationFrameworkSuccess,
 	requestgetOrganizationFrameworkFail,
+	// ========== Additional Info ========== //
+	requestCreateOrUpdateProfileAdditionalInfo,
+	createOrUpdateProfileAdditionalInfoSuccess,
+	createOrUpdateProfileAdditionalInfoFail,
 } from "../../states/modules/profile";
 
 export const updateUser = (data) => async (dispatch, getState) => {
@@ -170,3 +178,32 @@ export const getOrganizationFramework = () => async (dispatch, getState) => {
 		getState,
 	});
 };
+
+export const updateSkillProfile = (data) => async (dispatch, getState) => {
+	console.log(data);
+	return callApi({
+		method: "put",
+		apiPath: `/profile/skills`,
+		actionTypes: [requestUpdateSkills, updateSkillsSuccess, updateSkillsFail],
+		variables: data,
+		dispatch,
+		getState,
+	});
+};
+
+// ========== Additional Info ========== //
+export const createOrUpdateProfileAdditionalInfo =
+	(data, action) => async (dispatch, getState) => {
+		return callApi({
+			method: action === "create" ? "post" : "put",
+			apiPath: `/profile/additional-info`,
+			actionTypes: [
+				requestCreateOrUpdateProfileAdditionalInfo,
+				createOrUpdateProfileAdditionalInfoSuccess,
+				createOrUpdateProfileAdditionalInfoFail,
+			],
+			variables: data,
+			dispatch,
+			getState,
+		});
+	};
