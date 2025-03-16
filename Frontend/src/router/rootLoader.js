@@ -27,6 +27,7 @@ export const rootLoader = async (
 	) {
 		await store.dispatch(getProfile());
 	}
+
 	var { auth } = store.getState();
 
 	if (

@@ -2,9 +2,8 @@ import FileUpload from '@/utils/classes/file-upload.js'
 import Article from '../../models/article.js'
 import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
-import {REACTIONS_ENUM, LINK_STATIC_URL} from '@/configs'
+import {LINK_STATIC_URL} from '@/configs'
 import {ObjectId} from 'mongodb'
-import {last} from 'lodash'
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa

@@ -19,6 +19,10 @@ import {
 	requestGetSkillFramework,
 	getSkillFrameworkSuccess,
 	getSkillFrameworkFail,
+	// STAGES
+	requestGetStageFramework,
+	getStageFrameworkSuccess,
+	getStageFrameworkFail,
 } from "../../states/modules/user";
 
 // INDUSTRY
@@ -94,6 +98,22 @@ export const getSkillFramework = (categoryId) => async (dispatch, getState) => {
 			requestGetSkillFramework,
 			getSkillFrameworkSuccess,
 			getSkillFrameworkFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+// STAGES
+export const getStageFramework = () => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: "users/stages",
+		actionTypes: [
+			requestGetStageFramework,
+			getStageFrameworkSuccess,
+			getStageFrameworkFail,
 		],
 		variables: {},
 		dispatch,

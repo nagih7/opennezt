@@ -77,6 +77,8 @@ userRouter.get('/categories', asyncHandler(userController.getCategories))
 userRouter.get('/categories/:id', asyncHandler(userController.getSubCategories))
 // Skill framework
 userRouter.get('/skills/:id', asyncHandler(userController.getSkills))
+// Stage framework
+userRouter.get('/stages', asyncHandler(userController.getStages))
 
 // URL dynamic
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))

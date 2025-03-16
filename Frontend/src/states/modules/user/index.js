@@ -28,6 +28,11 @@ const userSlice = createSlice({
 			items: [],
 		}),
 		isLoadingGetSkillFramework: false,
+		// STAGES
+		stageFramework: createListCollection({
+			items: [],
+		}),
+		isLoadingGetStageFramework: false,
 	},
 	reducers: {
 		// INDUSTRIES
@@ -124,6 +129,25 @@ const userSlice = createSlice({
 			...state,
 			isLoadingGetSkillFramework: false,
 		}),
+		// STAGES
+		requestGetStageFramework: (state) => ({
+			...state,
+			isLoadingGetStageFramework: true,
+		}),
+		getStageFrameworkSuccess: (state, action) => ({
+			...state,
+			isLoadingGetStageFramework: false,
+			stageFramework: createListCollection({
+				items: action.payload.data.map((stage) => ({
+					label: stage.name,
+					value: stage._id,
+				})),
+			}),
+		}),
+		getStageFrameworkFail: (state) => ({
+			...state,
+			isLoadingGetStageFramework: false,
+		}),
 	},
 });
 
@@ -147,6 +171,10 @@ export const {
 	requestGetSkillFramework,
 	getSkillFrameworkSuccess,
 	getSkillFrameworkFail,
+	// STAGES
+	requestGetStageFramework,
+	getStageFrameworkSuccess,
+	getStageFrameworkFail,
 } = userSlice.actions;
 
 export default userSlice.reducer;
