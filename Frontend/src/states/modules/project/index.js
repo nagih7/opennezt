@@ -67,7 +67,7 @@ const projectSlice = createSlice({
 			paginationListMyProjects: {
 				currentPage: action.payload.data.page,
 				perPage: action.payload.data.per_page,
-				totalPage: action.payload.data.last_page,
+				lastPage: action.payload.data.last_page,
 				totalRecord: action.payload.data.total,
 			},
 			isLoadingGetListMyProjects: false,

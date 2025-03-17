@@ -1,6 +1,7 @@
 import {LINK_STATIC_URL} from '@/configs'
 import {Project, NotificationFeed, ObjectId, Revenue, FundingSource, ProjectAdditionalInfo} from '@/models'
 import {FileUpload} from '@/utils/classes'
+import delay from '@/utils/classes/delay'
 
 export async function seekProjects(user, requestQuery) {
     const query = {user_id: {$ne: user._id}}
@@ -164,6 +165,8 @@ export async function createProject(user, requestBody) {
 
 // ========== GET [My Projects] ========== //
 export async function getListMyProjects(user, {q, page, per_page, field, order}) {
+    page = parseInt(page)
+    per_page = parseInt(per_page)
     q = q ? q : ''
     order = order === '-1' ? -1 : 1
 
@@ -176,10 +179,10 @@ export async function getListMyProjects(user, {q, page, per_page, field, order})
         $sort: {[field]: order},
     }
     const skipStage = {
-        $skip: (page - 1) * parseInt(per_page),
+        $skip: (page - 1) * per_page,
     }
     const limitStage = {
-        $limit: parseInt(per_page),
+        $limit: per_page,
     }
     const projectStage = {
         $project: {
@@ -223,7 +226,9 @@ export async function getListMyProjects(user, {q, page, per_page, field, order})
 
     const filter = {user_id: user._id, name: {$regex: q, $options: 'i'}}
     const total = await Project.countDocuments(filter)
-    return {total, page, per_page, projects}
+    const last_page = Math.ceil(total / per_page)
+    await delay(3000)
+    return {total, page, per_page, last_page, projects}
 }
 
 // ========== GET [Project Details] ========== //
