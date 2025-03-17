@@ -112,9 +112,9 @@ const AdditionalInfo = () => {
 							{additional_infos?.map((info, index) => (
 								<div key={index}>
 									<div className="bg-[#F4F2EE] rounded-[0.6rem]">
-										<div className="relative p-4 ">
+										<div className="relative p-4 mt-[2rem]">
 											<span
-												className="cursor-pointer absolute left-[56.25rem]"
+												className="cursor-pointer md:float-right 2xl:float-right"
 												onClick={() =>
 													handleUpdateProfileAdditionalInfo(info)
 												}>

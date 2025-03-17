@@ -12,7 +12,7 @@ import ProfileEditMenu from "../ProfileEditMenu";
 import ActionBar from "../ActionBar";
 import SelectCustom from "components/UI/SelectCustom";
 import { toaster } from "components/UI/toaster";
-
+import { Tag } from "antd";
 const Skills = () => {
 	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX STORE ========== //
@@ -167,29 +167,25 @@ const Skills = () => {
 							</div>
 						</div>
 					</div>
-					<div className="px-[16px] flex flex-col gap-8">
+					<div className="px-[16px] flex gap-8 mt-6 flex-wrap">
 						{/* =========== SKILLS ========== */}
 						{mySkills?.map((skill, index) => (
 							<div
 								key={index}
-								className="flex items-center justify-between">
-								<div className="flex gap-4">
-									<p className="text-[#2f65b9] font-semibold">
-										{skill.name}
-									</p>
-								</div>
-								<div>
-									<Button
-										height={30}
-										className="px-[16px] py-2 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-										borderRadius={4}
+								className="relative group">
+								<Tag className="relative bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-full flex-wrap text-[1rem] cursor-pointer">
+									<div
+										className="absolute top-[-6px] right-[-6px] text-blue-500 bg-white rounded-full px-[4px] hidden group-hover:block "
 										loading={false}
 										loadingText="Loading..."
 										spinnerPlacement="start"
 										onClick={() => handleRemoveSkill(skill)}>
-										REMOVE
-									</Button>
-								</div>
+										✕
+									</div>
+									{skill.name}
+
+								</Tag>
+
 							</div>
 						))}
 					</div>
@@ -212,7 +208,7 @@ const Skills = () => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</div >
 	);
 };
 

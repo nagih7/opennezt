@@ -165,9 +165,9 @@ const Certifications = () => {
 								{certifications?.map((certification, index) => (
 									<div key={index}>
 										<div className="bg-[#F4F2EE] rounded-[0.6rem]">
-											<div className="relative p-4">
+											<div className="relative p-4 mt-[2rem]">
 												<span
-													className="cursor-pointer absolute left-[56.25rem]"
+													className="cursor-pointer md:float-right 2xl:float-right"
 													onClick={() =>
 														handleUpdateCertification(
 															certification
@@ -176,7 +176,7 @@ const Certifications = () => {
 													<IconlyEdit size={24} color={"#000"} />
 												</span>
 												{certification.name && (
-													<h4 className="flex font-bold">
+													<h4 className="flex font-bold mb-[0.75rem]">
 														{certification.name}
 													</h4>
 												)}
@@ -184,13 +184,12 @@ const Certifications = () => {
 													<p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
 														{`${moment(
 															certification.issue_date
-														).format("MMM YYYY")} ${
-															certification.expiration_date
-																? `- ${moment(
-																		certification.expiration_date
-																  ).format("MMM YYYY")}`
-																: ""
-														}`}
+														).format("MMM YYYY")} ${certification.expiration_date
+															? `- ${moment(
+																certification.expiration_date
+															).format("MMM YYYY")}`
+															: ""
+															}`}
 													</p>
 												)}
 												{certification.description && (

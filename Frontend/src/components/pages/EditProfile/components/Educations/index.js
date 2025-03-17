@@ -127,16 +127,16 @@ const Educations = () => {
 							{educations?.map((education, index) => (
 								<div key={index}>
 									<div className="bg-[#F4F2EE] rounded-[0.6rem]">
-										<div className="relative p-4">
+										<div className="relative p-4 mt-[2rem]">
 											<span
-												className="cursor-pointer absolute left-[56.25rem]"
+												className="cursor-pointer  md:float-right 2xl:float-right"
 												onClick={() =>
 													handleUpdateEducation(education)
 												}>
 												<IconlyEdit size={24} color={"#000"} />
 											</span>
 											{education.school && (
-												<h4 className="flex font-bold">
+												<h4 className="flex font-bold mb-[0.75rem]">
 													{education.school}
 												</h4>
 											)}
@@ -145,13 +145,12 @@ const Educations = () => {
 													<p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
 														{`${moment(
 															education.start_date
-														).format("MMM YYYY")} ${
-															education.end_date
-																? `- ${moment(
-																		education.end_date
-																  ).format("MMM YYYY")}`
-																: ""
-														}`}
+														).format("MMM YYYY")} ${education.end_date
+															? `- ${moment(
+																education.end_date
+															).format("MMM YYYY")}`
+															: ""
+															}`}
 													</p>
 												)}
 											{education.field_of_study && (
