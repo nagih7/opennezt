@@ -19,6 +19,7 @@ import RightSidebar from "components/common/RightSidebar";
 import { updateReaction } from "states/modules/article";
 import CreateAricleForm from "./components/CreateAricleForm";
 import { set } from "lodash";
+import CommentList from "./components/CommentList";
 
 function NewFeeds() {
    const dispatch = useDispatch();
@@ -128,17 +129,42 @@ function NewFeeds() {
       [dispatch]
    );
    //End Form Create Article
+   //Comment Article
+   const [selectedArticle, setSelectedArticle] = useState({});
+   const [isOpenComment, setIsOpenComment] = useState(false);
+   const handleSelectArticle = useCallback(async (feed) => {
+      setSelectedArticle(feed);
+      setIsOpenComment(true);
+   }, []);
+   const handleCloseComment = useCallback(() => {
+      setIsOpenComment(false);
+      setSelectedArticle({});
+   }, []);
+
+   //End Comment Article
    return (
       <div>
-         <div className="flex gap-8 pt-4 ">
-            <div className="pl-4">
+         <div className="flex w-full gap-8 pt-4 px-[16px]">
+            <div className="w-8/12">
+               {isOpenComment ? (
+                  <CommentList
+                     key={selectedArticle._id}
+                     feed={selectedArticle}
+                     onClose={handleCloseComment}
+                     reaction={reactionMap.get(selectedArticle._id)}
+                     onReaction={handleReaction}
+                     isLoading={isLoadingReactArticle}
+                  />
+               ) : null}
                {isOpenForm ? (
                   <CreateAricleForm
                      onSubmitForm={handleFormSubmit}
                      onCloseForm={handleCloseForm}
                   />
                ) : null}
-               <NewArticle onOpenForm={handleOpenForm} />
+              <div>
+                <NewArticle onOpenForm={handleOpenForm} />
+              </div>
                {feeds.map((feed, index) => {
                   if (index === feeds.length - 1) {
                      return (
@@ -149,6 +175,7 @@ function NewFeeds() {
                            reaction={reactionMap.get(feed._id)}
                            onReaction={handleReaction}
                            isLoading={isLoadingReactArticle}
+                           onSelect={handleSelectArticle}
                         />
                      );
                   } else {
@@ -159,6 +186,7 @@ function NewFeeds() {
                            reaction={reactionMap.get(feed._id)}
                            onReaction={handleReaction}
                            isLoading={isLoadingReactArticle}
+                           onSelect={handleSelectArticle}
                         />
                      );
                   }
