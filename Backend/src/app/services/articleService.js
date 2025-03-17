@@ -249,7 +249,6 @@ export const shareArticle = async (id, user) => {
         user_id: user._id,
         parent_id: id,
     })
-    console.log(newArticle)
     await newArticle.save()
 }
 //End share article
@@ -275,7 +274,6 @@ export const getUserReactions = async (user_id, target_id) => {
 
 //Get Comment List
 export const getCommentList = async (user, requestQuery) => {
-    console.log(requestQuery)
     const {articleId, page, limit = 10} = requestQuery
     const skip = (page - 1) * limit
     const commentLimit = parseInt(limit)
@@ -296,17 +294,11 @@ export const getCommentList = async (user, requestQuery) => {
         },
         {
             $addFields: {
-                'content.images': {
-                    $map: {
-                        input: '$content.images',
-                        as: 'image',
-                        in: {
-                            $cond: {
-                                if: {$eq: [{$ifNull: ['$$image', '']}, '']},
-                                then: '$$image',
-                                else: {$concat: [LINK_STATIC_URL, '$$image']},
-                            },
-                        },
+                'content.image': {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$content.image', '']}, '']},
+                        then: '',
+                        else: {$concat: [LINK_STATIC_URL, '$content.image']},
                     },
                 },
             },
@@ -318,7 +310,7 @@ export const getCommentList = async (user, requestQuery) => {
             $skip: skip,
         },
         {
-            $limit: commentLimit + 1, // Lấy thêm 1 item để kiểm tra hasMore
+            $limit: commentLimit + 1,
         },
     ])
 
@@ -344,6 +336,7 @@ export const getCommentList = async (user, requestQuery) => {
 export const createComment = async (user, requestBody) => {
     const articleId = requestBody.article_id
     const imageData = requestBody.content.image
+    console.log(requestBody)
 
     if (imageData) {
         const base64Data = imageData.data.split(';base64,').pop()
@@ -356,6 +349,7 @@ export const createComment = async (user, requestBody) => {
         })
 
         const savedFile = await fileUpload.save('comment-images')
+        console.log(typeof savedFile + savedFile)
         requestBody.content.image = savedFile // Store single image path
     }
 

@@ -144,8 +144,8 @@ function NewFeeds() {
    //End Comment Article
    return (
       <div>
-         <div className="flex gap-8 pt-4 ">
-            <div className="pl-4">
+         <div className="flex w-full gap-8 pt-4 px-[16px]">
+            <div className="w-8/12">
                {isOpenComment ? (
                   <CommentList
                      key={selectedArticle._id}
@@ -162,7 +162,9 @@ function NewFeeds() {
                      onCloseForm={handleCloseForm}
                   />
                ) : null}
-               <NewArticle onOpenForm={handleOpenForm} />
+              <div>
+                <NewArticle onOpenForm={handleOpenForm} />
+              </div>
                {feeds.map((feed, index) => {
                   if (index === feeds.length - 1) {
                      return (

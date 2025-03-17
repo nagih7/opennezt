@@ -11,9 +11,9 @@ import avt from "assets/images/background/avt.jpg";
 import { IconlyChat } from "components/UI/Iconly";
 import { IconlyHeart } from "components/UI/Iconly";
 import { IconlySend } from "components/UI/Iconly";
-import { IconlyEdit } from "components/UI/Iconly";
 import { useMemo } from "react";
 import {
+   handleCreateComment,
    handleGetListComment,
    handleGetUserCommentReactions,
    handleReactComment,
@@ -31,6 +31,7 @@ import {
 import Comment from "../Comment";
 import { use } from "react";
 import { first, set } from "lodash";
+import NewCommentForm from "../NewCommentForm";
 
 const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    const {
@@ -70,21 +71,24 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    const displayReaction = () => {
       if (reaction == "like") {
          return (
-            <div className="flex items-center gap-1 w-[25px]">
-               <img src={like}></img>
-            </div>
-         );
-      }
-      if (reaction == "dislike") {
-         return (
-            <div className="flex items-center gap-1 w-[25px]">
-               <img src={dislike}></img>
+            <div
+               onClick={() => handleReactionClick("like")}
+               style={{ cursor: "pointer" }}
+            >
+               <IconlyHeart
+                  size={25}
+                  color={"#6f7f92"}
+                  backgroundColor={"#6f7f92"}
+               />
             </div>
          );
       }
       if (reaction == undefined) {
          return (
-            <div className="flex items-center gap-1">
+            <div
+               onClick={() => handleReactionClick("like")}
+               style={{ cursor: "pointer" }}
+            >
                <IconlyHeart size={25} color={"#6f7f92"} />
             </div>
          );
@@ -187,10 +191,6 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       );
    }, [comment_reactions]);
 
-   useEffect(() => {
-      console.log("aaaaaaaaaaaaaaaaa " + comment_reactions);
-   }, [comment_reactions]);
-
    const handleCommentReaction = useCallback(
       (commentId, formData) => {
          const reactionType = formData.get("type");
@@ -202,6 +202,14 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       [dispatch]
    );
    //===============End=================
+   //Form
+   const handleFormSubmit = useCallback(
+      (formData) => {
+         dispatch(handleCreateComment({ data: formData }));
+      },
+      [dispatch]
+   );
+   //End
    return (
       <div
          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-hidden"
@@ -209,7 +217,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
          style={{ zIndex: 100 }}
       >
          <div
-            className="bg-[#ffffff] w-[800px] max-h-[90vh] mb-8 rounded-md p-8 overflow-y-auto"
+            className="bg-[#ffffff] w-[800px] max-h-[80vh] mb-8 rounded-md p-8 overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
          >
             <div className="flex items-center gap-3">
@@ -246,7 +254,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
             <div className="mt-6">
                <p className="my-[6px]">{content.caption}</p>
             </div>
-            <div>
+            <div className="flex flex-wrap gap-2 ">
                {content.attachment &&
                   content.attachment.length > 0 &&
                   content.attachment.map((img, index) => {
@@ -254,76 +262,32 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                   })}
             </div>
             <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
-               <div className="pr-[15px] flex gap-2">
-                  {/* <ul className="flex relative top-2 gap-2 pl-0">
-                  <li>
-                     <img src={anh_angry} className="w-6 h-6" />
-                  </li>
-                  <li>
-                     <img
-                        src={anh_happy}
-                        className="absolute left-[15px] top-0 w-6 h-6"
-                     />
-                  </li>
-                  <li>
-                     <img
-                        src={anh_like}
-                        className="absolute left-[30px] top-0 w-6 h-6"
-                     />
-                  </li>
-               </ul> */}
-                  <div
-                     className="flex items-center gap-1 w-[30px]"
-                     onClick={() => handleReactionClick("like")}
-                  >
-                     <img src={like}></img>
-                  </div>
-                  <div
-                     className="flex items-center gap-1 w-[30px]"
-                     onClick={() => handleReactionClick("dislike")}
-                  >
-                     <img src={dislike}></img>
-                  </div>
-               </div>
-               <span className="text-[#6f7f92]">
-                  {/* <span>Reacted by </span>
-               <a
-                  
-                  className="text-black font-medium text-current no-underline"
-               >
-                  Vuong Manh Nghia
-               </a>
-               <span> And</span> */}
-                  <span className="font-medium text-black">
-                     {reaction_count > 0
-                        ? reaction_count > 1000
-                           ? Math.floor(reaction_count / 1000) + "k"
-                           : reaction_count
-                        : " "}{" "}
-                  </span>
-               </span>
-               <a
-                  href=""
-                  className="text-current no-underline text-sm font-medium text-[#517ec5]"
-               >
-                  {comment_count == 0 ? "" : comment_count + "comments"}
-               </a>
+               <span className="text-[#6f7f92]"></span>
             </div>
             <div className="flex items-center justify-between">
                <div className="flex items-center gap-3 pt-[16px] text-[#6f7f92]">
-                  <a
-                     href=""
-                     className="flex items-center gap-1 text-current no-underline"
-                  >
+                  <a className="flex items-center gap-1 text-current no-underline">
                      {displayReaction(reaction)}
-                     <span className="text-sm">React</span>
+                     <span className="text-sm">
+                        {reaction_count > 0
+                           ? reaction_count > 1000
+                              ? Math.floor(reaction_count / 1000) + "k"
+                              : reaction_count
+                           : " "}{" "}
+                     </span>
                   </a>
                   <a
-                     href=""
                      className="flex items-center gap-1 text-current no-underline"
+                     style={{ cursor: "pointer" }}
                   >
                      <IconlyChat size={20} color={"#6f7f92"} />
-                     <span className="text-sm">Comment</span>
+                     <span className="text-sm">
+                        {comment_count > 0
+                           ? comment_count > 1000
+                              ? Math.floor(comment_count / 1000) + "k"
+                              : comment_count
+                           : " "}{" "}
+                     </span>
                   </a>
                </div>
                <div className="flex items-center gap-1 pt-[16px] text-[#6f7f92]">
@@ -355,24 +319,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                   );
                }
             })}
-            <div className="flex items-center w-full justify-between p-[10px] rounded-md border-[1px] border-gray-200 gap-3 mt-[20px]">
-               <div className="w-8 h-8">
-                  <img src={avt} className="rounded-full w-8 h-8" />
-               </div>
-               <div className="flex items-center justify-between">
-                  <div>
-                     <input
-                        type="text"
-                        placeholder="Write a comment..."
-                        className="w-[630px] h-9 bg-[#ffffff] pr-[50px] outline-none"
-                     />
-                  </div>
-
-                  <button className="w-9 h-9 bg-[#f8f9fa] rounded-md flex items-center justify-center">
-                     <IconlyEdit size={20} color={"#6f7f92"} />
-                  </button>
-               </div>
-            </div>
+            <NewCommentForm article_id={_id} onSubmit={handleFormSubmit} />
          </div>
       </div>
    );

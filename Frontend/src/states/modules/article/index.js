@@ -27,6 +27,7 @@ const articleSlice = createSlice({
          hasMore: true,
       },
       isLoadingReactComment: false,
+      isLoadingCreateComment: false,
    },
    // reducers: ở đây có chức năng là nhận vào state hiện tại và action, sau đó trả về một state mới
    reducers: {
@@ -219,6 +220,18 @@ const articleSlice = createSlice({
          ...state,
          isLoadingReactComment: false,
       }),
+      createComment: (state) => ({
+         ...state,
+         isLoadingCreateComment: true,
+      }),
+      createCommentSuccess: (state) => ({
+         ...state,
+         isLoadingCreateComment: false,
+      }),
+      createCommentFail: (state) => ({
+         ...state,
+         isLoadingCreateComment: true,
+      }),
    },
 });
 
@@ -247,6 +260,9 @@ export const {
    reactComment,
    reactCommentSuccess,
    reactCommentFail,
+   createComment,
+   createCommentSuccess,
+   createCommentFail,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;

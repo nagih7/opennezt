@@ -21,6 +21,9 @@ import {
    reactComment,
    reactCommentSuccess,
    reactCommentFail,
+   createComment,
+   createCommentSuccess,
+   createCommentFail,
 } from "states/modules/article";
 
 export const getListFeeds =
@@ -134,6 +137,20 @@ export const handleReactComment =
          method: "post",
          apiPath: path,
          actionTypes: [reactComment, reactCommentSuccess, reactCommentFail],
+         variables: data,
+         dispatch,
+         getState,
+      });
+   };
+
+export const handleCreateComment =
+   ({ data }) =>
+   async (dispatch, getState) => {
+      const path = `article/create-comment`;
+      return callApi({
+         method: "post",
+         apiPath: path,
+         actionTypes: [createComment, createCommentSuccess, createCommentFail],
          variables: data,
          dispatch,
          getState,
