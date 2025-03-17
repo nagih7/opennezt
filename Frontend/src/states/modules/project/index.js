@@ -63,14 +63,14 @@ const projectSlice = createSlice({
 		}),
 		getListMyProjectsSuccess: (state, action) => ({
 			...state,
-			myProjects: action.payload.data.projects,
-			isLoadingGetListMyProjects: false,
+			myProjects: [...state.myProjects, ...action.payload.data.projects],
 			paginationListMyProjects: {
 				currentPage: action.payload.data.page,
 				perPage: action.payload.data.per_page,
 				totalPage: action.payload.data.last_page,
 				totalRecord: action.payload.data.total,
 			},
+			isLoadingGetListMyProjects: false,
 		}),
 		getListMyProjectsFail: (state) => ({
 			...state,

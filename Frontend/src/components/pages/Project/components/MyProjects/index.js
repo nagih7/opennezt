@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import img_background_group from "assets/images/background/62beb9f3ab302-bp-cover-image.jpg";
 import img_avatar_group from "assets/images/background/1656677703-bpfull.jpg";
 import { IconlyDocument, IconlyUser } from "components/UI/Iconly";
@@ -9,14 +9,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { getListMyProjects } from "api/project";
 import { Button, Image } from "@chakra-ui/react";
 
-const MyProjects = () => {
+const MyProjects = ({ isBottom }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	// ========== STATE FROM REDUX ========== //
-	const { myProjects, paginationListMyProjects } = useSelector(
-		(state) => state.project
-	);
+	const { myProjects, paginationListMyProjects, isLoadingGetListMyProjects } =
+		useSelector((state) => state.project);
+	// ========== STATE ========== //
+	// const [dataFilter, setDataFilter] = useState({
+	// 	perPage: 10,
+	// 	page: 1,
+	// });
 
 	// ========== USE EFFECT ========== //
 	useEffect(() => {
@@ -24,9 +28,29 @@ const MyProjects = () => {
 		// eslint-disable-next-line
 	}, [dispatch]);
 
+	// Theo dõi sự kiện scroll
+	useEffect(() => {
+		if (isBottom && isLoadingGetListMyProjects === false) {
+			// Call API hoặc load thêm dữ liệu
+			dispatch(
+				getListMyProjects({
+					...paginationListMyProjects,
+					currentPage: parseInt(paginationListMyProjects.currentPage) + 1,
+				})
+			);
+		}
+	}, [
+		isBottom,
+		dispatch,
+		paginationListMyProjects,
+		isLoadingGetListMyProjects,
+	]);
+
 	const handleNavigateToProjectDetails = (project) => {
 		navigate(`/projects/details/${project._id}`);
 	};
+
+	console.log(myProjects);
 
 	return (
 		<div className="grid grid-cols-2 gap-8">
