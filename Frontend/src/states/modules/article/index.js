@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { create } from "lodash";
+import { create, get, update } from "lodash";
 
 const articleSlice = createSlice({
    name: "article",
@@ -16,6 +16,18 @@ const articleSlice = createSlice({
          limit: 5,
          hasMore: true,
       },
+      comment: [],
+      onetimecomments: [],
+      isLoadingGetComments: false,
+      comment_reactions: [],
+      isLoadingGetUserCommentReactions: false,
+      comment_pagination: {
+         page: 1,
+         limit: 10,
+         hasMore: true,
+      },
+      isLoadingReactComment: false,
+      isLoadingCreateComment: false,
    },
    // reducers: ở đây có chức năng là nhận vào state hiện tại và action, sau đó trả về một state mới
    reducers: {
@@ -113,6 +125,113 @@ const articleSlice = createSlice({
          ...state,
          isLoadingCreateArticle: false,
       }),
+
+      //===================Comment===================
+      resetComment: (state) => ({
+         ...state,
+         comment: [],
+         pagination: {
+            limit: 10,
+            page: 1,
+            hasMore: true,
+         },
+      }),
+      getListComment: (state) => ({
+         ...state,
+         isLoadingGetComments: true,
+      }),
+      getListCommentSuccess: (state, action) => ({
+         ...state,
+         comment: [...state.comment, ...action.payload.data.commentList],
+         onetimecomments: [...action.payload.data.commentList],
+         isLoadingGetComments: false,
+         comment_pagination: {
+            page: action.payload.data.pagination.currentPage + 1,
+            limit: 10,
+            hasMore: action.payload.data.pagination.hasMore,
+         },
+      }),
+      getListCommentFail: (state) => ({
+         ...state,
+         isLoadingGetComments: false,
+         comment: [],
+      }),
+      getUserCommentReactions: (state) => ({
+         ...state,
+         isLoadingGetUserCommentReactions: true,
+      }),
+      getUserCommentReactionsSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetUserCommentReactions: false,
+         comment_reactions: [
+            ...state.comment_reactions,
+            ...action.payload.data,
+         ],
+      }),
+      getUserCommentReactionsFail: (state) => ({
+         ...state,
+         isLoadingGetUserCommentReactions: false,
+         comment_reactions: [],
+      }),
+      updateCommentReaction: (state, action) => {
+         const { commentId, reactionType } = action.payload;
+
+         //Bài viết cần chỉnh sửa reaction count
+         const commentIndex = state.comment.findIndex(
+            (cmt) => cmt._id.toString() === commentId
+         );
+
+         const existingReactionIndex = state.comment_reactions.findIndex(
+            (r) => r.target_id.toString() === commentId
+         );
+         //nếu không tìm thấy trả về -1
+         //tìm thấy thì thay đổi kiểu reaction
+         if (existingReactionIndex !== -1) {
+            if (
+               state.comment_reactions[existingReactionIndex].type ===
+               reactionType
+            ) {
+               state.comment_reactions.splice(existingReactionIndex, 1);
+               if (commentIndex !== -1) {
+                  state.comment[commentIndex].reaction_count -= 1;
+               }
+            } else {
+               state.comment[existingReactionIndex].type = reactionType;
+            }
+         } else {
+            state.comment_reactions.push({
+               target_id: commentId,
+               type: reactionType,
+            });
+            if (commentIndex !== -1) {
+               state.comment[commentIndex].reaction_count += 1;
+            }
+         }
+      },
+      reactComment: (state) => ({
+         ...state,
+         isLoadingReactComment: true,
+      }),
+      reactCommentSuccess: (state) => ({
+         ...state,
+         isLoadingReactComment: false,
+      }),
+      reactCommentFail: (state) => ({
+         ...state,
+         isLoadingReactComment: false,
+      }),
+      createComment: (state) => ({
+         ...state,
+         isLoadingCreateComment: true,
+      }),
+      createCommentSuccess: (state) => ({
+         ...state,
+         isLoadingCreateComment: false,
+      }),
+      createCommentFail: (state) => ({
+         ...state,
+         isLoadingCreateComment: true,
+      }),
    },
 });
 
@@ -130,6 +249,20 @@ export const {
    createArticle,
    createArticleSuccess,
    createArticleFail,
+   resetComment,
+   getListComment,
+   getListCommentSuccess,
+   getListCommentFail,
+   getUserCommentReactions,
+   getUserCommentReactionsSuccess,
+   getUserCommentReactionsFail,
+   updateCommentReaction,
+   reactComment,
+   reactCommentSuccess,
+   reactCommentFail,
+   createComment,
+   createCommentSuccess,
+   createCommentFail,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;

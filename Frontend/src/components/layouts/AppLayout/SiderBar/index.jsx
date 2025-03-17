@@ -67,17 +67,6 @@ function SideBar(props) {
 			className={`${styles.sideBarWrap} ${
 				!isShowSideBar ? styles.sideBarWrapClose : ""
 			} border-t-2 border-gray-100`}>
-			{/* <div className={`${styles.navbarWrap}`}>
-				<ul className={`${styles.menuNav}`}>
-					<li
-						className={`${styles.menuNavItem} ${styles.logout}`}
-						onClick={() => handleConfirmLogOut()}>
-						<LogoutIcon style={{ color: "#7d8da1" }} />
-						{LOGOUT[language]}
-					</li>
-				</ul>
-			</div> */}
-
 			<div className="relative flex flex-col h-full">
 				<div className="flex-1 max-h-[610px] 2xl:max-h-full overflow-y-scroll scrollbar-hide bg-[#ffffff] p-8">
 					<ProfileCardSidebar />
@@ -127,38 +116,6 @@ function SideBar(props) {
 								  })}
 						</div>
 					</div>
-					{/* FORUM */}
-					{/* <div className="border-b-[1px] border-gray-200 mt-6">
-						<span className="text-xs font-semibold text-gray-400">
-							FORUM
-						</span>
-						<div className="flex flex-col gap-2 mt-2 mb-6 text-sm font-semibold">
-							<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
-								<FundOutlined />
-								All Forums
-							</div>
-							<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
-								<FundOutlined />
-								Forum Single
-							</div>
-							<div className="flex items-center px-3 py-[10px]  gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
-								<FundOutlined />
-								Topic Single
-							</div>
-						</div>
-					</div> */}
-					{/* ORTHER */}
-					{/* <div className="mt-6">
-						<span className="text-xs font-semibold text-gray-400">
-							OTHERS
-						</span>
-						<div className="flex flex-col gap-2 mt-2 mb-6 text-sm font-semibold">
-							<div className="flex items-center px-3 py-[10px] gap-2 text-gray-500 hover:bg-blue-50 hover:text-[#2f65b9] cursor-pointer rounded-md">
-								<FundOutlined />
-								Membership
-							</div>
-						</div>
-					</div> */}
 				</div>
 				<div className="bottom-0 left-0 w-[270px] py-4 px-3 bg-[#ffffff] text-gray-500">
 					<div className="flex items-center w-[240px] p-3 bg-[#f8f9fa] ] rounded-md gap-10">
