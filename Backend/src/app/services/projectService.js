@@ -362,6 +362,67 @@ export async function getProjectDetails(user, projectId) {
     return project[0]
 }
 
+// ========== PATCH [Project - Basic] ========== //
+export async function updateBasic(user, requestBody) {
+    await Project.updateOne(
+        {user_id: user._id, _id: requestBody.project_id},
+        {name: requestBody.name, description: requestBody.description}
+    )
+}
+
+// ========== PATCH [Project - Sector] ========== //
+export async function updateSector(user, requestBody) {
+    await Project.updateOne(
+        {user_id: user._id, _id: requestBody.project_id},
+        {industry_ids: requestBody.industries, stage_id: requestBody.stage}
+    )
+}
+
+// ========== PATCH [Project - Revenue] ========== //
+export async function updateRevenue(user, requestBody) {
+    const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+
+    const {revenues} = requestBody
+    await Revenue.deleteMany({project_id: project._id}).exec()
+    if (revenues?.length > 0) {
+        const revenueBulk = revenues.map((revenue) => ({
+            ...revenue,
+            project_id: project._id,
+        }))
+        await Revenue.insertMany(revenueBulk)
+    }
+}
+
+// ========== PATCH [Project - FundingSource] ========== //
+export async function updateFundingSource(user, requestBody) {
+    const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+
+    const {funding_sources} = requestBody
+    await FundingSource.deleteMany({project_id: project._id}).exec()
+    if (funding_sources?.length > 0) {
+        project.funding_sources = funding_sources.map((funding_source) => ({
+            ...funding_source,
+            project_id: project._id,
+        }))
+        await FundingSource.insertMany(project.funding_sources)
+    }
+}
+
+// ========== PATCH [Project - AdditionalInfo] ========== //
+export async function updateAdditionalInfo(user, requestBody) {
+    const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+
+    const {additional_infos} = requestBody
+    await ProjectAdditionalInfo.deleteMany({project_id: project._id}).exec()
+    if (additional_infos?.length > 0) {
+        project.additional_infos = additional_infos.map((additional_info) => ({
+            ...additional_info,
+            project_id: project._id,
+        }))
+        await ProjectAdditionalInfo.insertMany(project.additional_infos)
+    }
+}
+
 // ========== DELETE [Project] ========== //
 export async function deleteProject(user, projectId) {
     await Project.deleteOne({user_id: user._id, _id: projectId})
