@@ -104,7 +104,7 @@ const ProjectDetails = () => {
 
 			<div className="px-[16px]">
 				<div className="flex w-full gap-8">
-					<div className="w-8/12 mt-8">
+					<div className="w-10/12 mt-8">
 						<div className="bg-[#ffffff] rounded-md">
 							<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 								<h5 className="text-2xl font-normal">STAGE</h5>
@@ -463,7 +463,7 @@ const ProjectDetails = () => {
 							<img
 								src={fb_img}
 								alt="logo-fb_img"
-								className="w-[375px] h-[450px] rounded-md mt-4"
+								className="w-full h-[450px] rounded-md mt-4"
 							/>
 							<img
 								src={Logo}
