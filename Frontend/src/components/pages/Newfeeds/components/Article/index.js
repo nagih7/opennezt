@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { IconlyMoreCircle } from "components/UI/Iconly";
 import anh_1 from "assets/images/background/cute-little-girl-with-handmaded-wings-running-outdoors-field-having-fun-copy.webp";
@@ -34,21 +34,24 @@ const Article = forwardRef(
       const displayReaction = () => {
          if (reaction == "like") {
             return (
-               <div className="flex items-center gap-1 w-[25px]">
-                  <img src={like}></img>
-               </div>
-            );
-         }
-         if (reaction == "dislike") {
-            return (
-               <div className="flex items-center gap-1 w-[25px]">
-                  <img src={dislike}></img>
+               <div
+                  onClick={() => handleReactionClick("like")}
+                  style={{ cursor: "pointer" }}
+               >
+                  <IconlyHeart
+                     size={25}
+                     color={"#6f7f92"}
+                     backgroundColor={"#6f7f92"}
+                  />
                </div>
             );
          }
          if (reaction == undefined) {
             return (
-               <div className="flex items-center gap-1">
+               <div
+                  onClick={() => handleReactionClick("like")}
+                  style={{ cursor: "pointer" }}
+               >
                   <IconlyHeart size={25} color={"#6f7f92"} />
                </div>
             );
@@ -83,7 +86,7 @@ const Article = forwardRef(
 
       return (
          <div
-            className="bg-[#ffffff] w-[800px] max-h-full mb-8 rounded-md p-8"
+            className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8"
             ref={ref}
          >
             <div className="flex items-center gap-3">
@@ -120,7 +123,7 @@ const Article = forwardRef(
             <div className="mt-6">
                <p className="my-[6px]">{content.caption}</p>
             </div>
-            <div>
+            <div className="flex flex-wrap gap-2 ">
                {content.attachment &&
                   content.attachment.length > 0 &&
                   content.attachment.map((img, index) => {
@@ -128,68 +131,32 @@ const Article = forwardRef(
                   })}
             </div>
             <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
-               <div className="pr-[15px] flex gap-2">
-                  {/* <ul className="flex relative top-2 gap-2 pl-0">
-                  <li>
-                     <img src={anh_angry} className="w-6 h-6" />
-                  </li>
-                  <li>
-                     <img
-                        src={anh_happy}
-                        className="absolute left-[15px] top-0 w-6 h-6"
-                     />
-                  </li>
-                  <li>
-                     <img
-                        src={anh_like}
-                        className="absolute left-[30px] top-0 w-6 h-6"
-                     />
-                  </li>
-               </ul> */}
-                  <div
-                     className="flex items-center gap-1 w-[30px]"
-                     onClick={() => handleReactionClick("like")}
-                  >
-                     <img src={like}></img>
-                  </div>
-                  <div
-                     className="flex items-center gap-1 w-[30px]"
-                     onClick={() => handleReactionClick("dislike")}
-                  >
-                     <img src={dislike}></img>
-                  </div>
-               </div>
-               <span className="text-[#6f7f92]">
-                  {/* <span>Reacted by </span>
-               <a
-                  
-                  className="text-black font-medium text-current no-underline"
-               >
-                  Vuong Manh Nghia
-               </a>
-               <span> And</span> */}
-                  <span className="font-medium text-black">
-                     {reaction_count > 0
-                        ? reaction_count > 1000
-                           ? Math.floor(reaction_count / 1000) + "k"
-                           : reaction_count
-                        : " "}{" "}
-                  </span>
-               </span>
-               <a className="text-current no-underline text-sm font-medium text-[#517ec5]">
-                  {comment_count == 0 ? "" : comment_count + "comments"}
-               </a>
+               <span className="text-[#6f7f92]"></span>
             </div>
             <div className="flex items-center justify-between">
                <div className="flex items-center gap-3 pt-[16px] text-[#6f7f92]">
                   <a className="flex items-center gap-1 text-current no-underline">
                      {displayReaction(reaction)}
-                     <span className="text-sm">React</span>
+                     <span className="text-sm">
+                        {reaction_count > 0
+                           ? reaction_count > 1000
+                              ? Math.floor(reaction_count / 1000) + "k"
+                              : reaction_count
+                           : " "}{" "}
+                     </span>
                   </a>
-                  <a className="flex items-center gap-1 text-current no-underline">
+                  <a
+                     className="flex items-center gap-1 text-current no-underline"
+                     onClick={handleSetClick}
+                     style={{ cursor: "pointer" }}
+                  >
                      <IconlyChat size={20} color={"#6f7f92"} />
-                     <span className="text-sm" onClick={handleSetClick}>
-                        Comment
+                     <span className="text-sm">
+                        {comment_count > 0
+                           ? comment_count > 1000
+                              ? Math.floor(comment_count / 1000) + "k"
+                              : comment_count
+                           : " "}{" "}
                      </span>
                   </a>
                </div>
@@ -215,69 +182,6 @@ const Article = forwardRef(
                      <IconlyEdit size={20} color={"#6f7f92"} />
                   </button>
                </div>
-            </div>
-            <div className="pt-[20px]">
-               <ul className="pl-0">
-                  <li>
-                     <div className="flex items-center gap-2">
-                        <div className="w-[40px] h-[40px]">
-                           <img src={avt} className="rounded-full" />
-                        </div>
-                        <div className="flex items-center">
-                           <a className="flex items-center gap-1 text-sm font-medium no-underline text-black">
-                              <span className="hover:text-[#3897f0]">
-                                 Vuong Manh Nghia
-                              </span>
-                              <CheckCircleFilled className="text-[#3897f0] w-[14px] h-[14px]" />
-                           </a>
-                           <div className="pl-3">
-                              <span className="text-[#6f7f92] text-xs">
-                                 replied
-                              </span>
-                              <a className="text-[#6f7f92] text-xs no-underline hover:underline">
-                                 <span> 2 years ago</span>
-                              </a>
-                           </div>
-                        </div>
-                     </div>
-                     <div className="flex flex-col justify-center py-[12px] bg-[#f8f9fa] rounded-md px-[16px] ml-[56px] my-[5px]">
-                        <p className="text-sm mb-0">superb!! Great Work..</p>
-                     </div>
-                     <div className="flex items-center gap-3 py-[5px] ml-[56px]">
-                        <div className="flex items-center gap-1">
-                           <img src={anh_like} className="w-[18px] h-[18px]" />
-                           <span className="text-xs text-[#6f7f92]">Like</span>
-                        </div>
-                        <a className="no-underline text-[#6f7f92] text-xs font-medium">
-                           Reply
-                        </a>
-                        <div>
-                           <div className="flex items-center gap-2">
-                              <div>
-                                 <div>
-                                    <ul className="pl-0">
-                                       <li>
-                                          <img
-                                             src={anh_angry}
-                                             className="w-[18px] h-[18px]"
-                                          />
-                                       </li>
-                                    </ul>
-                                 </div>
-                              </div>
-                              <span className="text-xs text-[#6f7f92]">
-                                 Reacted by
-                                 <a className="no-underline ml-[2px] text-black font-medium">
-                                    Marvin McKinney
-                                 </a>{" "}
-                                 And
-                                 <span className="text-black"> 1 Other</span>
-                              </span>
-                           </div>
-                        </div>
-                     </div>
-                  </li>
-               </ul>
             </div>
          </div>
       );

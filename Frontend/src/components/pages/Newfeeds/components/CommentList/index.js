@@ -71,21 +71,24 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    const displayReaction = () => {
       if (reaction == "like") {
          return (
-            <div className="flex items-center gap-1 w-[25px]">
-               <img src={like}></img>
-            </div>
-         );
-      }
-      if (reaction == "dislike") {
-         return (
-            <div className="flex items-center gap-1 w-[25px]">
-               <img src={dislike}></img>
+            <div
+               onClick={() => handleReactionClick("like")}
+               style={{ cursor: "pointer" }}
+            >
+               <IconlyHeart
+                  size={25}
+                  color={"#6f7f92"}
+                  backgroundColor={"#6f7f92"}
+               />
             </div>
          );
       }
       if (reaction == undefined) {
          return (
-            <div className="flex items-center gap-1">
+            <div
+               onClick={() => handleReactionClick("like")}
+               style={{ cursor: "pointer" }}
+            >
                <IconlyHeart size={25} color={"#6f7f92"} />
             </div>
          );
@@ -251,7 +254,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
             <div className="mt-6">
                <p className="my-[6px]">{content.caption}</p>
             </div>
-            <div>
+            <div className="flex flex-wrap gap-2 ">
                {content.attachment &&
                   content.attachment.length > 0 &&
                   content.attachment.map((img, index) => {
@@ -259,76 +262,32 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                   })}
             </div>
             <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
-               <div className="pr-[15px] flex gap-2">
-                  {/* <ul className="flex relative top-2 gap-2 pl-0">
-                  <li>
-                     <img src={anh_angry} className="w-6 h-6" />
-                  </li>
-                  <li>
-                     <img
-                        src={anh_happy}
-                        className="absolute left-[15px] top-0 w-6 h-6"
-                     />
-                  </li>
-                  <li>
-                     <img
-                        src={anh_like}
-                        className="absolute left-[30px] top-0 w-6 h-6"
-                     />
-                  </li>
-               </ul> */}
-                  <div
-                     className="flex items-center gap-1 w-[30px]"
-                     onClick={() => handleReactionClick("like")}
-                  >
-                     <img src={like}></img>
-                  </div>
-                  <div
-                     className="flex items-center gap-1 w-[30px]"
-                     onClick={() => handleReactionClick("dislike")}
-                  >
-                     <img src={dislike}></img>
-                  </div>
-               </div>
-               <span className="text-[#6f7f92]">
-                  {/* <span>Reacted by </span>
-               <a
-                  
-                  className="text-black font-medium text-current no-underline"
-               >
-                  Vuong Manh Nghia
-               </a>
-               <span> And</span> */}
-                  <span className="font-medium text-black">
-                     {reaction_count > 0
-                        ? reaction_count > 1000
-                           ? Math.floor(reaction_count / 1000) + "k"
-                           : reaction_count
-                        : " "}{" "}
-                  </span>
-               </span>
-               <a
-                  href=""
-                  className="text-current no-underline text-sm font-medium text-[#517ec5]"
-               >
-                  {comment_count == 0 ? "" : comment_count + "comments"}
-               </a>
+               <span className="text-[#6f7f92]"></span>
             </div>
             <div className="flex items-center justify-between">
                <div className="flex items-center gap-3 pt-[16px] text-[#6f7f92]">
-                  <a
-                     href=""
-                     className="flex items-center gap-1 text-current no-underline"
-                  >
+                  <a className="flex items-center gap-1 text-current no-underline">
                      {displayReaction(reaction)}
-                     <span className="text-sm">React</span>
+                     <span className="text-sm">
+                        {reaction_count > 0
+                           ? reaction_count > 1000
+                              ? Math.floor(reaction_count / 1000) + "k"
+                              : reaction_count
+                           : " "}{" "}
+                     </span>
                   </a>
                   <a
-                     href=""
                      className="flex items-center gap-1 text-current no-underline"
+                     style={{ cursor: "pointer" }}
                   >
                      <IconlyChat size={20} color={"#6f7f92"} />
-                     <span className="text-sm">Comment</span>
+                     <span className="text-sm">
+                        {comment_count > 0
+                           ? comment_count > 1000
+                              ? Math.floor(comment_count / 1000) + "k"
+                              : comment_count
+                           : " "}{" "}
+                     </span>
                   </a>
                </div>
                <div className="flex items-center gap-1 pt-[16px] text-[#6f7f92]">
