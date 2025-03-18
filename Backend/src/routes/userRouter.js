@@ -67,10 +67,18 @@ userRouter.get(
 
 userRouter.get('/talent-details/:id', asyncHandler(userController.getTalentDetails))
 
-// Industry
+// Industry framework
 userRouter.get('/industries', asyncHandler(userController.getIndustries))
-// Experience Level
+// Experience Level framework
 userRouter.get('/experience-levels', asyncHandler(userController.getExperienceLevels))
+// Category framework
+userRouter.get('/categories', asyncHandler(userController.getCategories))
+// Sub Category framework
+userRouter.get('/categories/:id', asyncHandler(userController.getSubCategories))
+// Skill framework
+userRouter.get('/skills/:id', asyncHandler(userController.getSkills))
+// Stage framework
+userRouter.get('/stages', asyncHandler(userController.getStages))
 
 // URL dynamic
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))

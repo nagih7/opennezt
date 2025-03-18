@@ -56,7 +56,7 @@ function AppLayout(props) {
                   className={`${styles.mainContentWrap} w-full flex flex-col  items-center`}
                 >
                   <LazyLoading>{children}</LazyLoading>
-                  {/* <Footer /> */}
+                  <Footer />
                 </main>
               </div>
             </div>

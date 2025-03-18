@@ -1,106 +1,201 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+   useState,
+   useEffect,
+   useRef,
+   useMemo,
+   useCallback,
+} from "react";
 import "./styles.scss";
 import Article from "./components/Article";
-import { getListFeeds } from "api/newfeeds";
+import NewArticle from "./components/NewAricle";
+import {
+   getListFeeds,
+   getUserReactionsList,
+   handleReactArticle,
+   handleCreateArticle,
+} from "../../../api/newfeeds";
 import { useDispatch, useSelector } from "react-redux";
 import RightSidebar from "components/common/RightSidebar";
+import { updateReaction } from "states/modules/article";
+import CreateAricleForm from "./components/CreateAricleForm";
+import { set } from "lodash";
+import CommentList from "./components/CommentList";
 
 function NewFeeds() {
-  const dispatch = useDispatch();
+   const dispatch = useDispatch();
 
-  // const { feeds, isLoadingGetFeeds, pagination } = useSelector(
-  //    (state) => state.article
-  // );
-  //   const { nextCursor, limit, hasMore } = pagination;
+   const {
+      feeds,
+      onetimefeeds,
+      reactions,
+      isLoadingGetFeeds,
+      isLoadingReactArticle,
+      pagination,
+   } = useSelector((state) => state.article);
 
-  //   const [dataFilter, setDataFilter] = useState({
-  //     cursor: nextCursor,
-  //     limit: limit,
-  //   });
+   const { nextCursor, limit, hasMore } = pagination;
 
-  //   useEffect(() => {
-  //     dispatch(getListFeeds(dataFilter));
-  //   }, [dataFilter, dispatch]);
+   const [dataFilter, setDataFilter] = useState({
+      cursor: nextCursor,
+      limit: limit,
+   });
 
-  // const [feeds, setFeeds] = useState([]);
-  // const [selectedFeed, setSelectedFeed] = useState(null);
-  // const popupRef = useRef(null);
+   useEffect(() => {
+      dispatch(getListFeeds(dataFilter));
+   }, [dataFilter, dispatch]);
 
-  // const handleFeedClick = (feed) => {
-  //    setSelectedFeed(feed);
-  // };
+   //Xử lí bất đồng bộ
+   const isLoadingRef = useRef(isLoadingGetFeeds); // Tạo một ref để lưu trạng thái
+   const cursorRef = useRef(nextCursor);
+   useEffect(() => {
+      isLoadingRef.current = isLoadingGetFeeds; // Cập nhật giá trị ref mỗi khi trạng thái thay đổi
+   }, [isLoadingGetFeeds]);
+   useEffect(() => {
+      cursorRef.current = nextCursor;
+   }, [nextCursor]);
+   //End
+   //Lướt xuống bài viết cuối thì load tiếp
+   const observerRef = useRef(null);
 
-  // const closePopup = () => {
-  //    setSelectedFeed(null);
-  // };
+   useEffect(() => {
+      observerRef.current = new IntersectionObserver(
+         (entries) => {
+            const first = entries[0];
+            if (
+               first.isIntersecting === true &&
+               hasMore === true &&
+               isLoadingRef.current === false
+            ) {
+               setDataFilter({
+                  cursor: cursorRef.current,
+                  limit: limit,
+               });
+            }
+         },
+         { root: null, rootMargin: "0px", threshold: 0.1 }
+      );
+   }, [hasMore, isLoadingGetFeeds, nextCursor, limit]);
+   //End
+   const lastElementRef = useCallback((node) => {
+      if (observerRef.current) {
+         observerRef.current.disconnect();
+      }
+      if (node) {
+         observerRef.current?.observe(node);
+      }
+   }, []);
+   //Reaction User's Status
+   // Tải trạng thái reaction của người dùng hiện tại
+   useEffect(() => {
+      if (onetimefeeds.length > 0) {
+         onetimefeeds.forEach((feed) => {
+            if (feed._id) {
+               dispatch(getUserReactionsList(feed._id));
+            }
+         });
+      }
+   }, [onetimefeeds, dispatch]);
 
-  // useEffect(() => {
-  //    if (!selectedFeed) return;
+   const reactionMap = useMemo(() => {
+      return new Map(reactions.map((r) => [r.target_id.toString(), r.type]));
+   }, [reactions]);
+   //End Reaction User's Status
+   //Form Create Article
+   const [isOpenForm, setIsOpenForm] = useState(false);
 
-  //    const handleClickOutside = (event) => {
-  //       if (popupRef.current && !popupRef.current.contains(event.target)) {
-  //          closePopup();
-  //       }
-  //    };
+   const handleOpenForm = useCallback(() => {
+      setIsOpenForm(true);
+   }, []);
 
-  //    document.addEventListener("mousedown", handleClickOutside);
-  //    return () => {
-  //       document.removeEventListener("mousedown", handleClickOutside);
-  //    };
-  // }, [selectedFeed]);
+   const handleCloseForm = useCallback(() => {
+      setIsOpenForm(false);
+   }, []);
 
-  return (
-    // <div className="newfeed-container">
-    // 	<h1 className="newfeed-title">Startup News</h1>
-    // 	<div className="feed-grid">
-    // 		{feeds.map((feed) => (
-    // 			<div
-    // 				key={feed.id}
-    // 				className="feed-card"
-    // 				onClick={() => handleFeedClick(feed)}>
-    // 				<img
-    // 					src={feed.image}
-    // 					alt={feed.title}
-    // 					className="feed-image"
-    // 				/>
-    // 				<div className="feed-content">
-    // 					<h2 className="feed-title">{feed.title}</h2>
-    // 					<p className="feed-description">{feed.description}</p>
-    // 					<span className="feed-date">{feed.date}</span>
-    // 				</div>
-    // 			</div>
-    // 		))}
-    // 	</div>
+   const handleReaction = useCallback(
+      (articleId, formData) => {
+         const reactionType = formData.get("type");
+         dispatch(updateReaction({ articleId, reactionType }));
 
-    // 	{selectedFeed && (
-    // 		<div className="feed-popup">
-    // 			<div className="popup-content" ref={popupRef}>
-    // 				<button className="close-button" onClick={closePopup}>
-    // 					&times;
-    // 				</button>
-    // 				<img
-    // 					src={selectedFeed.image}
-    // 					alt={selectedFeed.title}
-    // 					className="popup-image"
-    // 				/>
-    // 				<h2 className="popup-title">{selectedFeed.title}</h2>
-    // 				<p className="popup-details">{selectedFeed.details}</p>
-    // 				<button className="connect-button">View Details</button>
-    // 			</div>
-    // 		</div>
-    // 	)}
-    // </div>
-    <div className="flex gap-8 pt-4 mr-4">
-      <div className="pl-4">
-        {Array(5)
-          .fill(0)
-          .map((_, index) => (
-            <Article key={index} />
-          ))}
+         //Gọi API để update server
+         dispatch(handleReactArticle({ articleId, data: formData }));
+      },
+      [dispatch]
+   );
+
+   const handleFormSubmit = useCallback(
+      (formData) => {
+         dispatch(handleCreateArticle({ data: formData }));
+      },
+      [dispatch]
+   );
+   //End Form Create Article
+   //Comment Article
+   const [selectedArticle, setSelectedArticle] = useState({});
+   const [isOpenComment, setIsOpenComment] = useState(false);
+   const handleSelectArticle = useCallback(async (feed) => {
+      setSelectedArticle(feed);
+      setIsOpenComment(true);
+   }, []);
+   const handleCloseComment = useCallback(() => {
+      setIsOpenComment(false);
+      setSelectedArticle({});
+   }, []);
+
+   //End Comment Article
+   return (
+      <div>
+         <div className="flex w-full gap-8 pt-4 px-[16px]">
+            <div className="w-8/12">
+               {isOpenComment ? (
+                  <CommentList
+                     key={selectedArticle._id}
+                     feed={selectedArticle}
+                     onClose={handleCloseComment}
+                     reaction={reactionMap.get(selectedArticle._id)}
+                     onReaction={handleReaction}
+                     isLoading={isLoadingReactArticle}
+                  />
+               ) : null}
+               {isOpenForm ? (
+                  <CreateAricleForm
+                     onSubmitForm={handleFormSubmit}
+                     onCloseForm={handleCloseForm}
+                  />
+               ) : null}
+              <div>
+                <NewArticle onOpenForm={handleOpenForm} />
+              </div>
+               {feeds.map((feed, index) => {
+                  if (index === feeds.length - 1) {
+                     return (
+                        <Article
+                           key={feed._id}
+                           ref={lastElementRef}
+                           feed={feed}
+                           reaction={reactionMap.get(feed._id)}
+                           onReaction={handleReaction}
+                           isLoading={isLoadingReactArticle}
+                           onSelect={handleSelectArticle}
+                        />
+                     );
+                  } else {
+                     return (
+                        <Article
+                           key={feed._id}
+                           feed={feed}
+                           reaction={reactionMap.get(feed._id)}
+                           onReaction={handleReaction}
+                           isLoading={isLoadingReactArticle}
+                           onSelect={handleSelectArticle}
+                        />
+                     );
+                  }
+               })}
+            </div>
+            <RightSidebar />
+         </div>
       </div>
-      <RightSidebar />
-    </div>
-  );
+   );
 }
 
 export default NewFeeds;

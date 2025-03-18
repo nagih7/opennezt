@@ -1,20 +1,13 @@
-import { Link } from "@chakra-ui/react";
-import { getProfile } from "api/profile";
 import RightSidebar from "components/common/RightSidebar";
 import { IconlyEditSquare } from "components/UI/Iconly";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const ProfessionalProfile = () => {
-	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	// ========== STATE FROM REDUX STORE ========== //
 	const { profile } = useSelector((state) => state.profile);
-	// ========== USE EFFECT ========== //
-	useEffect(() => {
-		dispatch(getProfile());
-	}, [dispatch]);
 
 	return (
 		<div className="flex gap-8">
@@ -23,7 +16,9 @@ const ProfessionalProfile = () => {
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Professional Background</h5>
 						<span
-							onClick={() => navigate("/about/edit-profile/professional-background")}
+							onClick={() =>
+								navigate("/about/edit-profile/professional-background")
+							}
 							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
 							<IconlyEditSquare size={20} color={"#ffffff"} />
 						</span>
@@ -101,7 +96,7 @@ const ProfessionalProfile = () => {
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Expertise</h5>
 						<span
-							onClick={() => navigate("/about/edit-profile/expertise")}
+							onClick={() => navigate("/about/edit-profile/skills")}
 							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
 							<IconlyEditSquare size={20} color={"#ffffff"} />
 						</span>
@@ -133,7 +128,7 @@ const ProfessionalProfile = () => {
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Work with me </h5>
 						<span
-							onClick={() => navigate("/about/edit-profile/work-with-me")}
+							onClick={() => navigate("/about/edit-profile/more")}
 							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
 							<IconlyEditSquare size={20} color={"#ffffff"} />
 						</span>

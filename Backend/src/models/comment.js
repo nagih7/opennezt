@@ -2,7 +2,6 @@ import createModel, {ObjectId} from './base'
 import {Schema} from 'mongoose'
 import User from './user'
 import Article from './article'
-import {REACTIONS_ENUM} from '@/configs'
 
 const Content = new Schema(
     {
@@ -11,8 +10,8 @@ const Content = new Schema(
             required: true,
             default: '',
         },
-        images: {
-            type: [String],
+        image: {
+            type: String,
             require: false,
         },
     },
@@ -20,19 +19,6 @@ const Content = new Schema(
         _id: false,
     }
 )
-
-const Reaction = new Schema({
-    user_id: {
-        type: ObjectId,
-        ref: User,
-        required: true,
-    },
-    type: {
-        type: String,
-        required: true,
-        enum: REACTIONS_ENUM,
-    },
-})
 
 const Comment = createModel('Comment', 'comments', {
     user_id: {
@@ -50,10 +36,10 @@ const Comment = createModel('Comment', 'comments', {
         ref: 'Comment',
         required: false,
     },
-    reactions: {
-        type: Reaction,
+    reaction_count: {
+        type: Number,
         required: true,
-        default: [],
+        default: 0,
     },
     content: {
         type: Content,

@@ -7,26 +7,26 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
 
 const Verify = () => {
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
 
-	const { authRegister } = useSelector((state) => state.auth);
+   const { authRegister } = useSelector((state) => state.auth);
 
-	useEffect(() => {
-		dispatch(resetRegister);
-		// eslint-disable-next-line
-	}, []);
+   useEffect(() => {
+      dispatch(resetRegister);
+      // eslint-disable-next-line
+   }, []);
 
-	useEffect(() => {
-		if (authRegister && !authRegister.email) {
-			navigate("/login");
-		}
-	}, [authRegister, navigate]);
+   useEffect(() => {
+      if (authRegister && !authRegister.email) {
+         navigate("/login");
+      }
+   }, [authRegister, navigate]);
 
-	const handleNavigateToLogin = () => {
-		dispatch(resetAuthRegister());
-		navigate("/login");
-	};
+   const handleNavigateToLogin = () => {
+      dispatch(resetAuthRegister());
+      navigate("/login");
+   };
 
 	return (
 		<div className={styles.verifyAuthenticationWrap}>
@@ -43,9 +43,9 @@ const Verify = () => {
 							target="_blank"
 							rel="noopener noreferrer">
 							{authRegister.email}
-						</a>
+						</a> 
 					</span>
-					<span lassName={styles.verifyText}>
+					<span className={styles.verifyText}>
 						Please check your email to verify your account.
 					</span>
 				</div>
@@ -57,6 +57,7 @@ const Verify = () => {
 			</div>
 		</div>
 	);
+
 };
 
 export default Verify;

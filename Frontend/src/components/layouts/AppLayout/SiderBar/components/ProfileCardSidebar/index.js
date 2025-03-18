@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Avatar } from "@chakra-ui/react";
 
 const ProfileCardSidebar = () => {
+
 	const navigate = useNavigate();
 	const { authUser } = useSelector((state) => state.auth);
 

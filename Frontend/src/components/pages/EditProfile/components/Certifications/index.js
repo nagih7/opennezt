@@ -1,0 +1,333 @@
+import { Button, CloseButton, Dialog, Portal, Stack } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import ProfileCard from "../ProfileCard";
+import ProfileEditMenu from "../ProfileEditMenu";
+import ActionBar from "../ActionBar";
+import InputCustom from "components/UI/InputCustom";
+import { setIsOpenModalCreateOrUpdateCertification } from "states/modules/profile";
+import moment from "moment";
+import { IconlyEdit } from "components/UI/Iconly";
+import SelectCustom from "components/UI/SelectCustom";
+import {
+	createOrUpdateCertification,
+	getOrganizationFramework,
+} from "api/profile";
+import { Checkbox } from "components/UI/checkbox";
+import { array } from "prop-types";
+
+const Certifications = () => {
+	const dispatch = useDispatch();
+	// ========== STATE FROM REDUX STORE ========== //
+	const { certifications } = useSelector((state) => state.profile.profile);
+	const {
+		isOpenModalCreateOrUpdateCertification,
+		isLoadingCreateOrUpdateCertification,
+		organizationFramework,
+	} = useSelector((state) => state.profile);
+	// ========== STATE MANAGEMENT ========== //
+
+	const [action, setAction] = useState("");
+	const [formData, setFormData] = useState({
+		organization_id: "",
+		name: "",
+		description: "",
+		issue_date: "",
+		expiration_date: "",
+		is_lifetime: false,
+		verification_url: "",
+	});
+	// ========== USE EFFECT ========== //
+	useEffect(() => {
+		dispatch(getOrganizationFramework());
+	}, [dispatch]);
+	// ========== HANDLE CHANGE FUNCTION ========== //
+	const handleChange = (e, nameSelect) => {
+		if (nameSelect) {
+			setFormData({
+				...formData,
+				[nameSelect]: e.value,
+			});
+		} else {
+			setFormData({
+				...formData,
+				[e.target.name]: e.target.value,
+			});
+		}
+	};
+
+	const handleAddCertification = () => {
+		dispatch(setIsOpenModalCreateOrUpdateCertification(true));
+		setAction("create");
+		setFormData({
+			organization_id: "",
+			name: "",
+			description: "",
+			issue_date: "",
+			expiration_date: "",
+			is_lifetime: false,
+			verification_url: "",
+		});
+	};
+
+	const handleUpdateCertification = (certification) => {
+		dispatch(setIsOpenModalCreateOrUpdateCertification(true));
+		setAction("update");
+		setFormData({
+			...certification,
+			issue_date: moment(certification.issue_date).format("YYYY-MM"),
+			expiration_date: moment(certification.expiration_date).format(
+				"YYYY-MM"
+			),
+		});
+	};
+
+	const handleSaveChanges = () => {
+		if (formData.is_lifetime) {
+			const { organization_id, expiration_date, ...rest } = formData;
+			dispatch(
+				createOrUpdateCertification(
+					{
+						...rest,
+						expiration_date: null,
+						organization_id:
+							typeof organization_id === "object"
+								? organization_id[0]
+								: Array(organization_id)[0],
+					},
+					action
+				)
+			);
+		} else {
+			const { organization_id, ...rest } = formData;
+			dispatch(
+				createOrUpdateCertification(
+					{
+						...rest,
+						organization_id:
+							typeof organization_id === "object"
+								? organization_id[0]
+								: Array(organization_id)[0],
+					},
+					action
+				)
+			);
+		}
+	};
+
+	const onCheckedChange = (event, nameSelect) => {
+		if (event.checked === true) {
+			setFormData({
+				...formData,
+				expiration_date: "",
+			});
+		}
+		setFormData({
+			...formData,
+			[nameSelect]: event.checked,
+		});
+	};
+
+	const handleClose = () => {
+		dispatch(setIsOpenModalCreateOrUpdateCertification(false));
+	};
+
+	// ========== COMPONENT RENDER ========== //
+	return (
+		<div className="flex gap-8 w-full py-8 px-[16px]">
+			<ProfileEditMenu />
+			<div className="w-8/12">
+				<div className="bg-[#ffffff] p-8 rounded-md">
+					{/* =========== Profile Card ========== */}
+					<ProfileCard />
+					{/* =========== Action Bar  ========== */}
+					<ActionBar />
+				</div>
+				<div className="bg-[#ffffff] p-8 rounded-md mt-8">
+					<div className="pb-[20px] mb-8 border-b-[1px] border-gray-200 flex justify-between">
+						<div>
+							<h4 className="">Certifications</h4>
+						</div>
+						<Button
+							onClick={handleAddCertification}
+							height={50}
+							className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+							borderRadius={4}
+							loading={false}
+							loadingText="Loading..."
+							spinnerPlacement="start">
+							Add Certification
+						</Button>
+					</div>
+					<div>
+						<div className="px-[16px]">
+							<div>
+								{certifications?.map((certification, index) => (
+									<div key={index}>
+										<div className="bg-[#F4F2EE] rounded-[0.6rem]">
+											<div className="relative p-4 mt-[2rem]">
+												<span
+													className="cursor-pointer md:float-right 2xl:float-right"
+													onClick={() =>
+														handleUpdateCertification(
+															certification
+														)
+													}>
+													<IconlyEdit size={24} color={"#000"} />
+												</span>
+												{certification.name && (
+													<h4 className="flex font-bold mb-[0.75rem]">
+														{certification.name}
+													</h4>
+												)}
+												{certification.issue_date && (
+													<p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
+														{`${moment(
+															certification.issue_date
+														).format("MMM YYYY")} ${certification.expiration_date
+															? `- ${moment(
+																certification.expiration_date
+															).format("MMM YYYY")}`
+															: ""
+															}`}
+													</p>
+												)}
+												{certification.description && (
+													<p className="flex ">
+														{" "}
+														Desciption:{" "}
+														{certification.description}
+													</p>
+												)}
+												{certification.verification_url && (
+													<p className="flex ">
+														Verification URL:
+														<a
+															href={`https://${certification.verification_url}`}
+															target="_blank"
+															rel="noreferrer">
+															https://
+															{certification.verification_url}
+														</a>
+													</p>
+												)}
+											</div>
+										</div>
+									</div>
+								))}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<Dialog.Root
+				size={"lg"}
+				open={isOpenModalCreateOrUpdateCertification}
+				placement={"center"}
+				motionPreset="slide-in-bottom">
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<Dialog.Content>
+							<Dialog.Header>
+								<Dialog.Title>
+									{action === "create"
+										? "Add certification"
+										: "Update certification"}
+								</Dialog.Title>
+							</Dialog.Header>
+							<Dialog.Body gap={6}>
+								<Stack gap="6">
+									<Stack direction="row">
+										<SelectCustom
+											required
+											label="Organization"
+											collection={organizationFramework}
+											height="40px"
+											placeholder="Ex: AWS"
+											onChange={(e) =>
+												handleChange(e, "organization_id")
+											}
+											value={formData.organization_id}
+											name="organization_id"
+										/>
+									</Stack>
+									<Stack direction="row">
+										<InputCustom
+											label="Name"
+											required
+											placeholder="Ex: AWS Certified Solutions Architect"
+											height="40px"
+											name="name"
+											onChange={handleChange}
+											value={formData.name}
+										/>
+									</Stack>
+									<Checkbox
+										onCheckedChange={(event) =>
+											onCheckedChange(event, "is_lifetime")
+										}>
+										Certified for life
+									</Checkbox>
+									<Stack direction="row">
+										<InputCustom
+											type="month"
+											label="Issue Date"
+											required
+											height="40px"
+											name="issue_date"
+											onChange={handleChange}
+											value={formData.issue_date}
+										/>
+										<InputCustom
+											type="month"
+											disabled={formData.is_lifetime}
+											label="Expiration Date"
+											required
+											height="40px"
+											name="expiration_date"
+											onChange={handleChange}
+											value={formData.expiration_date}
+										/>
+									</Stack>
+									<Stack direction="row">
+										<InputCustom
+											ps="4.5rem"
+											label="Verification URL"
+											startElement="https://"
+											placeholder="www.yourcertification.com"
+											height="40px"
+											name="verification_url"
+											onChange={handleChange}
+											value={formData.verification_url}
+										/>
+									</Stack>
+								</Stack>
+							</Dialog.Body>
+							<Dialog.Footer>
+								<Dialog.ActionTrigger asChild>
+									<Button variant="outline" onClick={handleClose}>
+										Cancel
+									</Button>
+								</Dialog.ActionTrigger>
+								<Button
+									onClick={handleSaveChanges}
+									borderRadius={4}
+									loading={isLoadingCreateOrUpdateCertification}
+									loadingText="Loading..."
+									spinnerPlacement="start">
+									SAVE CHANGES
+								</Button>
+							</Dialog.Footer>
+							<Dialog.CloseTrigger asChild>
+								<CloseButton onClick={handleClose} size="sm" />
+							</Dialog.CloseTrigger>
+						</Dialog.Content>
+					</Dialog.Positioner>
+				</Portal>
+			</Dialog.Root>
+		</div>
+	);
+};
+
+export default Certifications;
