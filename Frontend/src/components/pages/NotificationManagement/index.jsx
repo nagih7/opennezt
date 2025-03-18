@@ -35,7 +35,7 @@ function NotificationProject() {
 		perPage: 10,
 		order: null,
 	});
-	const { talentDetails, loadingGetTalentDetails } = useSelector(
+	const { talentDetails, isLoadingGetTalentDetails } = useSelector(
 		(state) => state.talent
 	);
 	const { notifications, totalFriends, paginationListNotification } =
@@ -64,65 +64,63 @@ function NotificationProject() {
 
 	const columns = [
 		{
-		  title: REQUEST_BY[language],
-		  dataIndex: "source_name",
-		  key: "source_name",
-		  render: (source_name, record) => {
-			if (!source_name) return null; // Kiểm tra nếu user_name không tồn tại
-			return (
-			  <Button
-				type="link"
-				onClick={() => handleOpenTalentDetails(record.source_name)}
-				style={{ padding: 0, height: "auto" }}>
-				{source_name}
-			  </Button>
-			);
-		  },
+			title: REQUEST_BY[language],
+			dataIndex: "source_name",
+			key: "source_name",
+			render: (source_name, record) => {
+				if (!source_name) return null; // Kiểm tra nếu user_name không tồn tại
+				return (
+					<Button
+						type="link"
+						onClick={() => handleOpenTalentDetails(record.source_name)}
+						style={{ padding: 0, height: "auto" }}>
+						{source_name}
+					</Button>
+				);
+			},
 		},
 		{
-		  title: TYPE.TYPE[language],
-		  dataIndex: "type_name",
-		  key: "type_name",
-		  render: (type_name) => {
-			return <div>{type_name ? type_name.toUpperCase() : "Unknown Type"}</div>;
-		  },
+			title: TYPE.TYPE[language],
+			dataIndex: "type_name",
+			key: "type_name",
+			render: (type_name) => {
+				return (
+					<div>{type_name ? type_name.toUpperCase() : "Unknown Type"}</div>
+				);
+			},
 		},
 		{
-		  title: REQUEST_AT[language],
-		  dataIndex: "created_at",
-		  key: "created_at",
-		  render: (date) => moment(date).fromNow(),
+			title: REQUEST_AT[language],
+			dataIndex: "created_at",
+			key: "created_at",
+			render: (date) => moment(date).fromNow(),
 		},
 		{
-		  title: STATUS.STATUS[language],
-		  dataIndex: "metadata",
-		  key: "status",
-		  render: (metadata = {}) => { 
-			const status = metadata.status ?? "unknown"; 
-	  
-			let color;
-			switch (status) {
-			  case "waiting":
-				color = "gold";
-				break;
-			  case "accepted":
-				color = "green";
-				break;
-			  case "rejected":
-				color = "red";
-				break;
-			  case "blocked":
-				color = "red";
-				break;
-			  default:
-				color = "gray";
-			}
-			return (
-			  <Tag color={color}>
-				{status.toUpperCase()}
-			  </Tag>
-			);
-		  },
+			title: STATUS.STATUS[language],
+			dataIndex: "metadata",
+			key: "status",
+			render: (metadata = {}) => {
+				const status = metadata.status ?? "unknown";
+
+				let color;
+				switch (status) {
+					case "waiting":
+						color = "gold";
+						break;
+					case "accepted":
+						color = "green";
+						break;
+					case "rejected":
+						color = "red";
+						break;
+					case "blocked":
+						color = "red";
+						break;
+					default:
+						color = "gray";
+				}
+				return <Tag color={color}>{status.toUpperCase()}</Tag>;
+			},
 		},
 		{
 			title: ACTIONS.ACTIONS[language],
@@ -131,45 +129,44 @@ function NotificationProject() {
 			align: "center",
 			width: "15rem",
 			render: (_, record) => {
-			  // Kiểm tra nếu metadata hoặc status không hợp lệ
-			  if (!record.metadata || !record.metadata.status) {
-				return <div>Status is invalid or missing</div>;
-			  }
-			  return (
-				<div className={styles.actionButtons}>
-				  <Button
-					type="primary"
-					icon={<CheckOutlined />}
-					onClick={() =>
-					  handleReplyNotification(
-						record._id,
-						record.type_id,
-						STATUS.ACCEPTED[language].toLowerCase()
-					  )
-					}
-					disabled={record.metadata?.status !== "waiting"}>
-					{ACTIONS.ACCEPT[language]}
-				  </Button>
-				  <Button
-					type="default"
-					danger
-					icon={<CloseOutlined />}
-					onClick={() =>
-					  handleReplyNotification(
-						record._id,
-						record.type_id,
-						STATUS.REJECTED[language].toLowerCase()
-					  )
-					}
-					disabled={record.metadata?.status !== "waiting"}>
-					{ACTIONS.REJECT[language]}
-				  </Button>
-				</div>
-			  );
+				// Kiểm tra nếu metadata hoặc status không hợp lệ
+				if (!record.metadata || !record.metadata.status) {
+					return <div>Status is invalid or missing</div>;
+				}
+				return (
+					<div className={styles.actionButtons}>
+						<Button
+							type="primary"
+							icon={<CheckOutlined />}
+							onClick={() =>
+								handleReplyNotification(
+									record._id,
+									record.type_id,
+									STATUS.ACCEPTED[language].toLowerCase()
+								)
+							}
+							disabled={record.metadata?.status !== "waiting"}>
+							{ACTIONS.ACCEPT[language]}
+						</Button>
+						<Button
+							type="default"
+							danger
+							icon={<CloseOutlined />}
+							onClick={() =>
+								handleReplyNotification(
+									record._id,
+									record.type_id,
+									STATUS.REJECTED[language].toLowerCase()
+								)
+							}
+							disabled={record.metadata?.status !== "waiting"}>
+							{ACTIONS.REJECT[language]}
+						</Button>
+					</div>
+				);
 			},
-		  }
-	  ];
-	  
+		},
+	];
 
 	const changeCurrentPage = (page) => {
 		setDataFilter({ ...dataFilter, page: page });
@@ -228,7 +225,7 @@ function NotificationProject() {
 			</div>
 			<div className={styles.notificationsTableWrap}>
 				<TableCustom
-					loading={loadingGetTalentDetails}
+					loading={isLoadingGetTalentDetails}
 					columns={columns}
 					dataSource={notifications}
 					rowKey="_id"

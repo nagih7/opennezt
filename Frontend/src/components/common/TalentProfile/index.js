@@ -7,7 +7,7 @@ import TalentProfileCardSkeleton from "components/skeleton/TalentProfileCardSkel
 import { useSelector } from "react-redux";
 
 const TalentProfile = () => {
-	const { talentDetails, loadingGetTalentDetails } = useSelector(
+	const { talentDetails, isLoadingGetTalentDetails } = useSelector(
 		(state) => state.talent
 	);
 	const { loadingGetRequestAddFriend } = useSelector(
@@ -16,12 +16,12 @@ const TalentProfile = () => {
 
 	return (
 		<div className={styles.talentProfileWrap}>
-			{loadingGetRequestAddFriend && loadingGetTalentDetails ? (
+			{loadingGetRequestAddFriend && isLoadingGetTalentDetails ? (
 				<TalentProfileCardSkeleton />
 			) : (
 				talentDetails && <TalentProfileCard talent={talentDetails} />
 			)}
-			{loadingGetTalentDetails ? (
+			{isLoadingGetTalentDetails ? (
 				<TalentProfileSkeleton />
 			) : (
 				talentDetails &&

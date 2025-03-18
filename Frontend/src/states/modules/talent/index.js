@@ -5,24 +5,31 @@ const talentSlice = createSlice({
 	initialState: {
 		talents: [],
 		talentDetails: null,
+		// RECRUIT TALENTS
 		formRecruitTalents: {
-			keyword: null,
-			sector: null,
+			keySearch: null,
+			industry: null,
 			experience_level: null,
-			education_level: null,
-			commitment: null,
-			location: null,
-			language: null,
+			category: null,
+			subcategory: null,
+			skill: null,
 			page: 0,
+			perPage: 6,
 		},
-		loadingRecruitTalents: false,
-		loadingGetTalentDetails: false,
+		isLoadingRecruitTalents: false,
+		paginationRecruitTalents: {
+			currentPage: 1,
+			perPage: 10,
+			totalPage: 1,
+			totalRecord: 0,
+		},
+		isLoadingGetTalentDetails: false,
 		loadingSkipTalent: false,
 	},
 	reducers: {
 		startRequestRecruitTalents: (state) => ({
 			...state,
-			loadingRecruitTalents: true,
+			isLoadingRecruitTalents: true,
 			talents: [],
 		}),
 		startRequestRecruitTalentsSuccess: (state, action) => ({
@@ -32,12 +39,12 @@ const talentSlice = createSlice({
 				...state.formRecruitTalents,
 				page: action.payload.data.page,
 			},
-			loadingRecruitTalents: false,
+			isLoadingRecruitTalents: false,
 		}),
 		startRequestRecruitTalentsFail: (state) => ({
 			...state,
 			talents: [],
-			loadingRecruitTalents: false,
+			isLoadingRecruitTalents: false,
 		}),
 		startRequestSkipTalent: (state) => ({
 			...state,
@@ -56,33 +63,19 @@ const talentSlice = createSlice({
 		}),
 		startRequestGetDetailTalent: (state) => ({
 			...state,
-			loadingGetTalentDetails: true,
+			isLoadingGetTalentDetails: true,
 		}),
 		startRequestGetDetailTalentSuccess: (state, action) => ({
 			...state,
 			talentDetails: action.payload.data,
-			loadingGetTalentDetails: false,
+			isLoadingGetTalentDetails: false,
 		}),
 		startRequestGetDetailTalentFail: (state) => ({
 			...state,
 			talentDetails: null,
-			loadingGetTalentDetails: false,
+			isLoadingGetTalentDetails: false,
 		}),
 
-		// formRecruitTalents
-		setFormRecruitTalents: (state, action) => {
-			const { event, nameSelect } = action.payload;
-			if (nameSelect) {
-				return {
-					...state,
-					formRecruitTalents: {
-						...state.formRecruitTalents,
-						[nameSelect]: event.value,
-						page: 0,
-					},
-				};
-			}
-		},
 		resetFormRecruitTalents: (state) => ({
 			...state,
 			formRecruitTalents: {
@@ -96,6 +89,42 @@ const talentSlice = createSlice({
 				page: 0,
 			},
 		}),
+
+		// ========== NEW ========== //
+		requestRecruitTalents: (state) => ({
+			...state,
+			isLoadingRecruitTalents: true,
+		}),
+		recruitTalentsSuccess: (state, action) => ({
+			...state,
+			talents: action.payload.data.talents,
+			paginationRecruitTalents: {
+				currentPage: action.payload.data.page,
+				perPage: action.payload.data.perPage,
+				totalPage: action.payload.data.totalPage,
+				totalRecord: action.payload.data.totalRecord,
+			},
+			isLoadingRecruitTalents: false,
+		}),
+		recruitTalentsFail: (state) => ({
+			...state,
+			talents: [],
+			isLoadingRecruitTalents: false,
+		}),
+
+		setFormRecruitTalents: async (state, action) => {
+			const { event, nameSelect } = action.payload;
+			if (nameSelect) {
+				return {
+					...state,
+					formRecruitTalents: {
+						...state.formRecruitTalents,
+						[nameSelect]: event.value[0],
+						page: 0,
+					},
+				};
+			}
+		},
 	},
 });
 
@@ -109,8 +138,12 @@ export const {
 	startRequestGetDetailTalent,
 	startRequestGetDetailTalentSuccess,
 	startRequestGetDetailTalentFail,
-	setFormRecruitTalents,
 	resetFormRecruitTalents,
+	// ========== NEW ========== //
+	requestRecruitTalents,
+	recruitTalentsSuccess,
+	recruitTalentsFail,
+	setFormRecruitTalents,
 } = talentSlice.actions;
 
 export default talentSlice.reducer;

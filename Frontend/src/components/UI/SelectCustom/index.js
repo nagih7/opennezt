@@ -20,10 +20,12 @@ const SelectCustom = ({ ...rest }) => {
 		multiple,
 		canChange,
 		value,
+		name,
 	} = rest;
 	return (
 		<>
 			<SelectRoot
+				name={name}
 				disabled={disabled}
 				value={value}
 				multiple={multiple || false}
