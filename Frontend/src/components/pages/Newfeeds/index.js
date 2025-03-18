@@ -145,7 +145,7 @@ function NewFeeds() {
    return (
       <div>
          <div className="flex w-full gap-8 pt-4 px-[16px]">
-            <div className="w-8/12">
+            <div className="w-10/12">
                {isOpenComment ? (
                   <CommentList
                      key={selectedArticle._id}

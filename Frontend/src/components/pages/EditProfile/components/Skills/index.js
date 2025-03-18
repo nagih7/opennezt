@@ -177,8 +177,8 @@ const Skills = () => {
 									<div
 										className="absolute top-[-6px] right-[-6px] text-blue-500 bg-white rounded-full px-[4px] hidden group-hover:block "
 										loading={false}
-										loadingText="Loading..."
-										spinnerPlacement="start"
+										// loadingText="Loading..."
+										// spinnerPlacement="start"
 										onClick={() => handleRemoveSkill(skill)}>
 										✕
 									</div>
