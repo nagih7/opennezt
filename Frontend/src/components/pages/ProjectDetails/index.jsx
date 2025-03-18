@@ -108,7 +108,7 @@ const ProjectDetails = () => {
           <div className="w-10/12 mt-8">
             <div className="bg-[#ffffff] rounded-md">
               <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
-                <h5 className="text-2xl font-normal">Stage</h5>
+                <h5 className="mb-0">Stage</h5>
                 <Link
                   to={"/project/edit-project/stage"}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
@@ -142,7 +142,9 @@ const ProjectDetails = () => {
                     </div>
                     <div>
                       <p className="mb-2 text-base font-medium text-black">
-                        {project?.stage?.name || "N/A"}
+                        {project?.stage
+                          ?.map((stageItem) => stageItem.name)
+                          .join(", ") || "N/A"}
                       </p>
                     </div>
                   </li>
@@ -151,7 +153,7 @@ const ProjectDetails = () => {
             </div>
             <div className="bg-[#ffffff] rounded-md mt-8">
               <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
-                <h5 className="text-2xl font-normal">Revenue</h5>
+                <h5 className="mb-0">Revenue</h5>
                 <Link
                   to={"/project/edit-project/revenue"}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
@@ -259,7 +261,7 @@ const ProjectDetails = () => {
             </div>
             <div className="bg-[#ffffff] rounded-md mt-8">
               <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
-                <h5 className="text-2xl font-normal">Funding Sources</h5>
+                <h5 className="mb-0">Funding Sources</h5>
                 <Link
                   to={"/project/edit-project/funding-sources"}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
@@ -343,7 +345,7 @@ const ProjectDetails = () => {
             </div>
             <div className="bg-[#ffffff] rounded-md mt-8">
               <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
-                <h5 className="text-2xl font-normal">Additional Info</h5>
+                <h5 className="mb-0">More</h5>
                 <Link
                   to={"/project/edit-project/additional-info"}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
@@ -355,12 +357,14 @@ const ProjectDetails = () => {
                 <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
                   <li className="px-[16px] mb-10">
                     <div className="mb-2 text-sm font-medium uppercase">
-                      NAME
+                      {project?.additional_infos
+                        ?.map((additional_info) => additional_info.name)
+                        .join(", ") || "N/A"}
                     </div>
                     <div>
                       <p className="mb-2 text-base font-medium text-black">
                         {project?.additional_infos
-                          ?.map((additional_info) => additional_info.name)
+                          ?.map((additional_info) => additional_info.content)
                           .join(", ") || "N/A"}
                       </p>
                     </div>
@@ -379,7 +383,7 @@ const ProjectDetails = () => {
                       </p>
                     </div>
                   </li> */}
-                  <li className="px-[16px] mb-10">
+                  {/* <li className="px-[16px] mb-10">
                     <div className="mb-2 text-sm font-medium uppercase">
                       CONTENT
                     </div>
@@ -390,7 +394,7 @@ const ProjectDetails = () => {
                           .join(", ") || "N/A"}
                       </p>
                     </div>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </div>
