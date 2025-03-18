@@ -28,6 +28,8 @@ const articleSlice = createSlice({
       },
       isLoadingReactComment: false,
       isLoadingCreateComment: false,
+      isLoadingUpdateArticle: false,
+      isLoadingDeleteArticle: false,
    },
    // reducers: ở đây có chức năng là nhận vào state hiện tại và action, sau đó trả về một state mới
    reducers: {
@@ -232,6 +234,30 @@ const articleSlice = createSlice({
          ...state,
          isLoadingCreateComment: true,
       }),
+      updateArticle: (state) => ({
+         ...state,
+         isLoadingUpdateArticle: true,
+      }),
+      updateArticleSuccess: (state) => ({
+         ...state,
+         isLoadingUpdateArticle: false,
+      }),
+      updateArticleFail: (state) => ({
+         ...state,
+         isLoadingUpdateArticle: false,
+      }),
+      deleteArticle: (state) => ({
+         ...state,
+         isLoadingDeleteArticle: true,
+      }),
+      deleteArticleSuccess: (state) => ({
+         ...state,
+         isLoadingDeleteArticle: false,
+      }),
+      deleteArticleFail: (state) => ({
+         ...state,
+         isLoadingDeleteArticle: false,
+      }),
    },
 });
 
@@ -263,6 +289,12 @@ export const {
    createComment,
    createCommentSuccess,
    createCommentFail,
+   updateArticle,
+   updateArticleSuccess,
+   updateArticleFail,
+   deleteArticle,
+   deleteArticleSuccess,
+   deleteArticleFail,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;
