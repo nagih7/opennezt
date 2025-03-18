@@ -346,6 +346,7 @@ export async function getProjectDetails(user, projectId) {
                         else: {$concat: [LINK_STATIC_URL, '$background']},
                     },
                 },
+                stage: {$arrayElemAt: ['$stage', 0]},
             },
         },
         {
