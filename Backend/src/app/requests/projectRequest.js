@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import {MAX_STRING_SIZE} from '@/configs'
 import {AsyncValidate, FileUpload} from '@/utils/classes'
-import {Industry, ObjectId, Project, Stage, User} from '@/models'
+import {Industry, ObjectId, Project, Role, Stage, User} from '@/models'
 
 export const requestAddFriend = Joi.object({
     user_id: Joi.string()
@@ -209,4 +209,38 @@ export const updateAdditionalInfo = Joi.object({
         )
         .label('Profile Additional Info')
         .allow(null),
+})
+
+// ========== POST [Project - Invite] ========== //
+export const inviteMember = Joi.object({
+    user_id: Joi.string()
+        .required()
+        .label('User ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const user = await User.findById(value)
+                    return user ? value : helpers.error('any.empty')
+                })
+        ),
+    team_role_id: Joi.string()
+        .required()
+        .label('Team Role ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const role = await Role.findById(value)
+                    return role ? value : helpers.error('any.empty')
+                })
+        ),
+    role_id: Joi.string()
+        .required()
+        .label('Role ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const role = await Role.findById(value)
+                    return role ? value : helpers.error('any.empty')
+                })
+        ),
 })

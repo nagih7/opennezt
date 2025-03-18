@@ -67,3 +67,9 @@ export async function deleteProject(req, res) {
     await projectService.deleteProject(req.currentUser, req.params.id)
     res.status(200).jsonify('Delete project successfully.')
 }
+
+// ========== POST [Project - Invite] ========== //
+export async function inviteMember(req, res) {
+    await projectService.inviteMember(req.currentUser, req.params.id, req.body)
+    res.status(200).jsonify('Invite member successfully.')
+}

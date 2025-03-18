@@ -71,4 +71,11 @@ projectRouter.patch(
 // ========== DELETE [Project] ========== //
 projectRouter.delete('/:id/delete', asyncHandler(projectController.deleteProject))
 
+// ========== POST [Project - Invite] ========== //
+projectRouter.post(
+    '/:id/invite-member',
+    asyncHandler(validate(projectRequest.inviteMember)),
+    asyncHandler(projectController.inviteMember)
+)
+
 export default projectRouter
