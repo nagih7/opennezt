@@ -1,5 +1,13 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {Project, NotificationFeed, ObjectId, Revenue, FundingSource, ProjectAdditionalInfo} from '@/models'
+import {
+    Project,
+    NotificationFeed,
+    ObjectId,
+    Revenue,
+    FundingSource,
+    ProjectAdditionalInfo,
+    Type,
+} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import delay from '@/utils/classes/delay'
 
@@ -346,6 +354,7 @@ export async function getProjectDetails(user, projectId) {
                         else: {$concat: [LINK_STATIC_URL, '$background']},
                     },
                 },
+                stage: {$arrayElemAt: ['$stage', 0]},
             },
         },
         {
@@ -429,4 +438,26 @@ export async function deleteProject(user, projectId) {
     await Revenue.deleteMany({project_id: projectId}).exec()
     await FundingSource.deleteMany({project_id: projectId}).exec()
     await ProjectAdditionalInfo.deleteMany({project_id: projectId}).exec()
+}
+
+// ========== POST [Project - Invite] ========== //
+export async function inviteMember(user, projectId, requestBody) {
+    const {user_id, team_role_id, role_id} = requestBody
+    const typeNotification = await Type.findOne({class: 'notification', name: 'Project Invitation'})
+
+    const notification = new NotificationFeed({
+        source_id: user._id,
+        user_id: new ObjectId(user_id),
+        type_id: typeNotification._id,
+        additional_info: {
+            project_id: projectId,
+            team_role_id,
+            role_id,
+        },
+        metadata: {
+            status: 'waiting',
+            read: false,
+        },
+    })
+    await notification.save()
 }

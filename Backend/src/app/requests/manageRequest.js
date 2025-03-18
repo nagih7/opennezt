@@ -44,8 +44,8 @@ export const createType = Joi.object({
         .label('Name')
         .custom(
             (value, helpers) =>
-                new AsyncValidate(value, async function () {
-                    const type = await Type.findOne({name: value})
+                new AsyncValidate(value, async function (req) {
+                    const type = await Type.findOne({name: value, class: req.body.class})
                     return !type ? value : helpers.error('any.exists')
                 })
         ),
