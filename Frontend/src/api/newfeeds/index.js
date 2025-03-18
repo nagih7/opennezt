@@ -44,21 +44,22 @@ export const getListFeeds =
       });
    };
 
-export const getUserReactionsList = (id) => async (dispatch, getState) => {
-   const path = `article/user-reactions/${id}`;
-   return callApi({
-      method: "get",
-      apiPath: path,
-      actionTypes: [
-         getUserReactions,
-         getUserReactionsSuccess,
-         getUserReactionsFail,
-      ],
-      variables: {},
-      dispatch,
-      getState,
-   });
-};
+export const getUserReactionsList =
+   (articleIds) => async (dispatch, getState) => {
+      const path = `article/user-reactions/${articleIds.join(",")}`;
+      return callApi({
+         method: "get",
+         apiPath: path,
+         actionTypes: [
+            getUserReactions,
+            getUserReactionsSuccess,
+            getUserReactionsFail,
+         ],
+         variables: {},
+         dispatch,
+         getState,
+      });
+   };
 
 export const handleReactArticle =
    ({ articleId, data }) =>

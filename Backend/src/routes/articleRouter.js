@@ -11,7 +11,7 @@ articleRouter.get('/article-list', asyncHandler(articleController.getArticleList
 
 articleRouter.get('/article-by-id/:id', asyncHandler(articleController.getArticleById))
 
-articleRouter.get('/user-reactions/:id', asyncHandler(articleController.getUserReactions))
+articleRouter.get('/user-reactions/:target_ids', asyncHandler(articleController.getUserReactions))
 
 articleRouter.get('/user-comment-reactions/:id', asyncHandler(articleController.getUserCommentReactions))
 

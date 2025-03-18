@@ -263,11 +263,15 @@ export const getArticleReactions = async (target_id) => {
 //End Get Article's Reactions
 
 //Get User's Reactions
-export const getUserReactions = async (user_id, target_id) => {
+export const getUserReactions = async (user_id, target_ids) => {
+    // Chuyển đổi string thành array và map thành ObjectId
+    const targetIdArray = target_ids.split(',').map((id) => new ObjectId(id))
+
     const reactions = await Reaction.find({
         user_id: user_id,
-        target_id: target_id,
+        target_id: {$in: targetIdArray},
     })
+
     return reactions
 }
 //End Get User's Reactions

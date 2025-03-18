@@ -1,12 +1,6 @@
 import React, { forwardRef, useState } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { IconlyMoreCircle } from "components/UI/Iconly";
-import anh_1 from "assets/images/background/cute-little-girl-with-handmaded-wings-running-outdoors-field-having-fun-copy.webp";
-import anh_angry from "assets/images/icon/logo/angry.png";
-import anh_like from "assets/images/icon/logo/like.png";
-import like from "assets/images/icon/reaction/like.png";
-import dislike from "assets/images/icon/reaction/dislike.png";
-import anh_happy from "assets/images/icon/logo/happy.png";
 import avt from "assets/images/background/avt.jpg";
 import { IconlyChat } from "components/UI/Iconly";
 import { IconlyHeart } from "components/UI/Iconly";
@@ -115,7 +109,7 @@ const Article = forwardRef(
                   </div>
                   <IconlyMoreCircle
                      size={30}
-                     color={"black"}
+                     color={"#6f7f92"}
                      className="w-3/12"
                   />
                </div>
