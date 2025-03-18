@@ -4,6 +4,7 @@ import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
 import {LINK_STATIC_URL} from '@/configs'
 import {ObjectId} from 'mongodb'
+import {valid} from 'joi'
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa
@@ -14,21 +15,11 @@ export const createArticle = async (user, requestBody) => {
         const listAttachment = []
 
         for (const file of filesArray) {
-            // Convert base64 to Buffer
-            const base64Data = file.data.split(';base64,').pop()
-            const buffer = Buffer.from(base64Data, 'base64')
-
-            // Create file from buffer
-            const fileUpload = new FileUpload({
-                buffer,
-                filename: file.name,
-                mimetype: file.type,
-            })
-
-            const savedFile = await fileUpload.save('article-attachment')
-            listAttachment.push(savedFile)
+            if (file instanceof FileUpload) {
+                const savedFile = await file.save('article-attachment')
+                listAttachment.push(savedFile)
+            }
         }
-
         requestBody.content.attachment = listAttachment
     }
 
@@ -147,17 +138,68 @@ export const deleteComment = async (user, requestBody) => {
 }
 
 //Delete Article
-export const deleteArticle = async (id) => {
-    await Article.findByIdAndDelete(id)
+export const deleteArticle = async (user, id) => {
+    const validArticle = await Article.findById(id)
+
+    if (!validArticle) {
+        return "can't find article"
+    }
+
+    if (validArticle.user_id.toString() === user._id.toString()) {
+        await Article.findByIdAndDelete(id)
+        return 'Delete Article Success'
+    }
+
+    return "You don't have permission to delete"
 }
 //End Delete Article
 
 //Update Article
-export const updateArticle = async (id, requestBody) => {
-    //Phải dùng ... không nếu để requestBody thì sẽ bị lưu trong db là một trường có tên là requestBody
-    const updatedArticle = await Article.findByIdAndUpdate(id, {$set: {...requestBody}}, {new: true})
-    return updatedArticle
+export const updateArticle = async (user_id, id, requestBody) => {
+    const validArticle = await Article.findById(id)
+
+    if (!validArticle) {
+        throw new Error('Article not found')
+    }
+
+    if (validArticle.user_id.toString() === user_id.toString()) {
+        const filesArray = requestBody.content.attachment
+
+        if (filesArray && filesArray.length > 0) {
+            const listAttachment = []
+
+            for (const file of filesArray) {
+                // Nếu là string (URL), chỉ lấy phần path sau 'uploads'
+                if (typeof file === 'string') {
+                    const uploadIndex = file.indexOf('uploads')
+                    if (uploadIndex !== -1) {
+                        listAttachment.push(file.substring(uploadIndex))
+                    } else {
+                        listAttachment.push(file)
+                    }
+                    continue
+                }
+
+                // Nếu là FileUpload instance, lưu mới
+                if (file instanceof FileUpload) {
+                    const savedFile = await file.save('article-attachment')
+                    listAttachment.push(savedFile)
+                    continue
+                }
+            }
+
+            requestBody.content.attachment = listAttachment
+        }
+
+        const updatedArticle = await Article.findByIdAndUpdate(id, {...requestBody}, {new: true})
+
+        return updatedArticle
+    }
+
+    throw new Error("You don't have permission to edit this article")
 }
+//Phải dùng ... không nếu để requestBody thì sẽ bị lưu trong db là một trường có tên là requestBody
+
 //End Update Article
 
 //Article Reaction
@@ -263,11 +305,15 @@ export const getArticleReactions = async (target_id) => {
 //End Get Article's Reactions
 
 //Get User's Reactions
-export const getUserReactions = async (user_id, target_id) => {
+export const getUserReactions = async (user_id, target_ids) => {
+    // Chuyển đổi string thành array và map thành ObjectId
+    const targetIdArray = target_ids.split(',').map((id) => new ObjectId(id))
+
     const reactions = await Reaction.find({
         user_id: user_id,
-        target_id: target_id,
+        target_id: {$in: targetIdArray},
     })
+
     return reactions
 }
 //End Get User's Reactions
@@ -336,7 +382,6 @@ export const getCommentList = async (user, requestQuery) => {
 export const createComment = async (user, requestBody) => {
     const articleId = requestBody.article_id
     const imageData = requestBody.content.image
-    console.log(requestBody)
 
     if (imageData) {
         const base64Data = imageData.data.split(';base64,').pop()

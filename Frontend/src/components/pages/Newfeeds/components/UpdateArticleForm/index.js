@@ -1,11 +1,9 @@
 import React, { forwardRef, useEffect } from "react";
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import {
    Box,
    FileUpload,
    Icon,
-   Image,
-   Text,
    Field,
    Input,
    NativeSelect,
@@ -25,17 +23,8 @@ import {
    IconlyUser,
 } from "components/UI/Iconly";
 
-const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm }, ref) => {
-   const [formData, setFormData] = useState({
-      content: {
-         caption: "",
-         attachment: [],
-         hashtags: [],
-      },
-      audience: "public",
-      status: "published",
-      project_id: "675aa5d48107dd51e42c5b0f",
-   });
+const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit }, ref) => {
+   const [formData, setFormData] = useState(feed);
    const [fileKey, setFileKey] = useState(0);
    const { authUser } = useSelector((state) => state.auth);
    const [isOpenImages, setIsOpenImages] = useState(false);
@@ -44,35 +33,89 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm }, ref) => {
       setIsOpenImages(!isOpenImages);
    };
 
+   //Tạo ref để lưu ảnh hiện tại
+   const imagesRef = useRef([...formData.content.attachment] || []);
+
+   //Nếu có ảnh thì bật form lên
+   useEffect(() => {
+      if (imagesRef.current.length > 0) {
+         setIsOpenImages(true);
+      }
+   }, [imagesRef]);
+
    const handleFileChange = async (event) => {
-      const files = Array.from(event.target.files);
+      //Ảnh được chọn trong form
+      const files = await Array.from(event.target.files);
+      if (files.length === 0) return;
+
+      //newImages là ảnh được gửi từ db
+      const newImages = [...imagesRef.current];
+      //lọc từng phần tử files mới
+      files.forEach((file) => {
+         //lọc từng phần tử trong ref(là những ảnh hiện tại đang có)
+         //so sánh với phẩn tử mới với phần tử cũ nếu trùng tên thì bỏ còn lại giữ
+         if (!newImages.some((img) => img.name === file.name)) {
+            newImages.push(file);
+         }
+      });
+
+      //Khác thì set lại giá trị
+      if (newImages.length !== imagesRef.current.length) {
+         imagesRef.current = newImages;
+         // Nếu muốn update formData với ảnh mới
+         setFormData({
+            ...formData,
+            content: {
+               ...formData.content,
+               attachment: newImages,
+            },
+         });
+      }
+   };
+
+   const renderPreviewImages = () => {
+      return imagesRef.current.map((image, index) => (
+         <div key={index} className="relative">
+            <img
+               src={
+                  typeof image === "string" ? image : URL.createObjectURL(image)
+               }
+               alt={`Preview ${index}`}
+               className="w-20 h-20 object-cover rounded-md"
+            />
+            <button
+               className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+               onClick={() => handleRemoveImage(index)}
+            >
+               ×
+            </button>
+         </div>
+      ));
+   };
+
+   const handleSubmit = async () => {
+      onSubmit(feed._id, formData);
+      await setFileKey((prev) => prev + 1);
+      handleClose();
+   };
+
+   const handleRemoveImage = (index) => {
+      // Xóa ảnh từ imagesRef
+      const newImages = imagesRef.current.filter((_, i) => i !== index);
+      imagesRef.current = newImages;
+
+      // Cập nhật formData để re-render UI
       setFormData({
          ...formData,
          content: {
             ...formData.content,
-            attachment: files,
+            attachment: newImages,
          },
       });
    };
 
-   const handleSubmit = async () => {
-      await onSubmitForm(formData);
-      await setFormData({
-         content: {
-            caption: "",
-            attachment: [],
-            hashtags: [],
-         },
-         audience: "public",
-         status: "published",
-         project_id: "675aa5d48107dd51e42c5b0f",
-      });
-      await setFileKey((prev) => prev + 1);
-      handleClick();
-   };
-
-   const handleClick = () => {
-      onCloseForm();
+   const handleClose = () => {
+      onClose();
    };
 
    return (
@@ -86,10 +129,10 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm }, ref) => {
                   <div className="flex justify-between w-full border-b-2 border-gray-200 pb-2">
                      <span> </span>
                      <span className="text-2xl font-bold text-center">
-                        Create Post
+                        Edit Post
                      </span>
                      <div
-                        onClick={handleClick}
+                        onClick={handleClose}
                         className=" bg-[#aaadb1] flex justify-center cursor-pointer items-center p-2 rounded-full"
                      >
                         <CloseOutlined />
@@ -145,8 +188,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm }, ref) => {
                         <FileUpload.Root
                            key={fileKey}
                            alignItems="stretch"
-                           maxFiles={10}
-                           value={formData.content.attachment}
+                           maxFiles={5}
                            onChange={handleFileChange}
                            maxW="100%" // Use full width
                         >
@@ -167,33 +209,11 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm }, ref) => {
                                  </Box>
                               </FileUpload.DropzoneContent>
                            </FileUpload.Dropzone>
-                           <FileUpload.List>
-                              {(file) => (
-                                 <Box
-                                    key={file.id}
-                                    p={2}
-                                    mb={2}
-                                    border="1px"
-                                    borderColor="gray.200"
-                                    borderRadius="md"
-                                 >
-                                    {file.type &&
-                                    file.type.startsWith("image/") ? (
-                                       <Image
-                                          src={URL.createObjectURL(file)}
-                                          alt={file.name}
-                                          boxSize="100px"
-                                          objectFit="cover"
-                                       />
-                                    ) : (
-                                       <Text>{file.name}</Text>
-                                    )}
-                                 </Box>
-                              )}
-                           </FileUpload.List>
+                           <div>{renderPreviewImages()}</div>
                         </FileUpload.Root>
                      </div>
                   </div>
+
                   {/* <NativeSelect.Root size="sm" width="240px">
 >>>>>>> 638522b5ad26b2a4fa6f97e3a677712d7c644fe0
                   <NativeSelect.Field placeholder="Select option">
@@ -207,8 +227,11 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm }, ref) => {
 
                   <div className=" flex items-center justify-between border border-gray-200 rounded-md p-3 w-full">
                      <span>Add to your post</span>
-                     <div className="flex gap-3" onClick={handleClickImage}>
-                        <div className="cursor-pointer">
+                     <div className="flex gap-3">
+                        <div
+                           className="cursor-pointer"
+                           onClick={handleClickImage}
+                        >
                            <IconlyImage2 size={30} color={"#000000"} />
                         </div>
                         <div className="cursor-pointer">
@@ -222,8 +245,8 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm }, ref) => {
 
                   <div className="flex gap-3 w-full">
                      <Button
-                        onClick={handleSubmit}
                         className="rounded-md bg-[#2f65b9] w-full"
+                        onClick={handleSubmit}
                      >
                         Post
                      </Button>
@@ -235,5 +258,5 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm }, ref) => {
    );
 });
 
-CreateArticleForm.displayName = "CreateArticleForm";
-export default CreateArticleForm;
+UpdateArticleForm.displayName = "UpdateArticleForm";
+export default UpdateArticleForm;
