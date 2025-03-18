@@ -48,4 +48,11 @@ notificationRouter.get('/total-friends', asyncHandler(notificationController.get
 
 notificationRouter.get('/', asyncHandler(notificationController.getNotifications))
 
+// ========== PUT [Notification - Reply Invitation Member] ========== //
+notificationRouter.put(
+    '/reply/invite-member',
+    asyncHandler(validate(notificationRequest.replyInvitationMember)),
+    asyncHandler(notificationController.replyInvitationMember)
+)
+
 export default notificationRouter

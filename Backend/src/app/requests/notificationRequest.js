@@ -38,7 +38,7 @@ export const requestAddFriend = Joi.object({
         }),
     metadata: Joi.object({
         read: Joi.boolean().default(false),
-        status: Joi.string().valid('waiting', 'accepted', 'rejected')
+        status: Joi.string().valid('waiting', 'accepted', 'rejected'),
     }).label('Metadata'),
 })
 
@@ -65,7 +65,7 @@ export const replyNotification = Joi.object({
         .custom(async (value, helpers) => {
             const notification = await NotificationFeed.findById(value)
             if (!notification) {
-                return helpers.error('any.empty', { message: 'Notification not found' })
+                return helpers.error('any.empty', {message: 'Notification not found'})
             }
             return value
         }),
@@ -76,14 +76,13 @@ export const replyNotification = Joi.object({
         .custom(async (value, helpers) => {
             const type = await Type.findById(value)
             if (!type) {
-                return helpers.error('any.empty', { message: 'Type not found' })
+                return helpers.error('any.empty', {message: 'Type not found'})
             }
             return value
         }),
 
     status: Joi.string().valid('waiting', 'accepted', 'rejected').required().label('Status'),
 })
-
 
 export const projectInvitation = Joi.object({
     project_id: Joi.string()
@@ -109,6 +108,31 @@ export const projectInvitation = Joi.object({
                 new AsyncValidate(value, async () => {
                     const user = await User.findById(value)
                     return user ? value : helpers.error('any.empty')
+                })
+        ),
+})
+
+// ========== PUT [Notification - Reply Invitation Member] ========== //
+export const replyInvitationMember = Joi.object({
+    notification_id: Joi.string()
+        .required()
+        .label('Notification')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const notification = await NotificationFeed.findById(value)
+                    return notification ? value : helpers.error('any.empty')
+                })
+        ),
+
+    action_id: Joi.string()
+        .required()
+        .label('Action')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const action = await Type.findById(value)
+                    return action ? value : helpers.error('any.empty')
                 })
         ),
 })

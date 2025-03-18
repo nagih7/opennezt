@@ -1,5 +1,13 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {Project, NotificationFeed, ObjectId, Revenue, FundingSource, ProjectAdditionalInfo} from '@/models'
+import {
+    Project,
+    NotificationFeed,
+    ObjectId,
+    Revenue,
+    FundingSource,
+    ProjectAdditionalInfo,
+    Type,
+} from '@/models'
 import {FileUpload} from '@/utils/classes'
 import delay from '@/utils/classes/delay'
 
@@ -346,6 +354,7 @@ export async function getProjectDetails(user, projectId) {
                         else: {$concat: [LINK_STATIC_URL, '$background']},
                     },
                 },
+                stage: {$arrayElemAt: ['$stage', 0]},
             },
         },
         {
@@ -362,10 +371,93 @@ export async function getProjectDetails(user, projectId) {
     return project[0]
 }
 
+// ========== PATCH [Project - Basic] ========== //
+export async function updateBasic(user, requestBody) {
+    await Project.updateOne(
+        {user_id: user._id, _id: requestBody.project_id},
+        {name: requestBody.name, description: requestBody.description}
+    )
+}
+
+// ========== PATCH [Project - Sector] ========== //
+export async function updateSector(user, requestBody) {
+    await Project.updateOne(
+        {user_id: user._id, _id: requestBody.project_id},
+        {industry_ids: requestBody.industries, stage_id: requestBody.stage}
+    )
+}
+
+// ========== PATCH [Project - Revenue] ========== //
+export async function updateRevenue(user, requestBody) {
+    const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+
+    const {revenues} = requestBody
+    await Revenue.deleteMany({project_id: project._id}).exec()
+    if (revenues?.length > 0) {
+        const revenueBulk = revenues.map((revenue) => ({
+            ...revenue,
+            project_id: project._id,
+        }))
+        await Revenue.insertMany(revenueBulk)
+    }
+}
+
+// ========== PATCH [Project - FundingSource] ========== //
+export async function updateFundingSource(user, requestBody) {
+    const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+
+    const {funding_sources} = requestBody
+    await FundingSource.deleteMany({project_id: project._id}).exec()
+    if (funding_sources?.length > 0) {
+        project.funding_sources = funding_sources.map((funding_source) => ({
+            ...funding_source,
+            project_id: project._id,
+        }))
+        await FundingSource.insertMany(project.funding_sources)
+    }
+}
+
+// ========== PATCH [Project - AdditionalInfo] ========== //
+export async function updateAdditionalInfo(user, requestBody) {
+    const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+
+    const {additional_infos} = requestBody
+    await ProjectAdditionalInfo.deleteMany({project_id: project._id}).exec()
+    if (additional_infos?.length > 0) {
+        project.additional_infos = additional_infos.map((additional_info) => ({
+            ...additional_info,
+            project_id: project._id,
+        }))
+        await ProjectAdditionalInfo.insertMany(project.additional_infos)
+    }
+}
+
 // ========== DELETE [Project] ========== //
 export async function deleteProject(user, projectId) {
     await Project.deleteOne({user_id: user._id, _id: projectId})
     await Revenue.deleteMany({project_id: projectId}).exec()
     await FundingSource.deleteMany({project_id: projectId}).exec()
     await ProjectAdditionalInfo.deleteMany({project_id: projectId}).exec()
+}
+
+// ========== POST [Project - Invite] ========== //
+export async function inviteMember(user, projectId, requestBody) {
+    const {user_id, team_role_id, role_id} = requestBody
+    const typeNotification = await Type.findOne({class: 'notification', name: 'Project Invitation'})
+
+    const notification = new NotificationFeed({
+        source_id: user._id,
+        user_id: new ObjectId(user_id),
+        type_id: typeNotification._id,
+        additional_info: {
+            project_id: projectId,
+            team_role_id,
+            role_id,
+        },
+        metadata: {
+            status: 'waiting',
+            read: false,
+        },
+    })
+    await notification.save()
 }

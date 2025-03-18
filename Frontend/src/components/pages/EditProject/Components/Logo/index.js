@@ -3,7 +3,7 @@ import { Button } from "@chakra-ui/react";
 import ActionBar from "../../../EditProfile/components/ActionBar";
 import ProjectEditMenu from "../ProjectEditMenu";
 import ProjectCard from "../ProjectCard";
-import ContainerLogo from "components/pages/Project/CreateProject/Logo/components/ContainerLogo";
+import ContainerLogo from "components/pages/CreateProject/Logo/components/ContainerLogo";
 
 const EditLogo = () => {
 	return (

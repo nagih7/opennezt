@@ -36,3 +36,8 @@ export async function getRequestAddFriend(req, res) {
     res.jsonify(result)
 }
 
+// ========== PUT [Notification - Reply Invitation Member] ========== //
+export async function replyInvitationMember(req, res) {
+    await notificationService.replyInvitationMember(req.currentUser, req.body, req.io)
+    res.jsonify('Reply invitation member successfully.')
+}
