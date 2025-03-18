@@ -24,6 +24,12 @@ import {
    createComment,
    createCommentSuccess,
    createCommentFail,
+   updateArticle,
+   updateArticleSuccess,
+   updateArticleFail,
+   deleteArticle,
+   deleteArticleSuccess,
+   deleteArticleFail,
 } from "states/modules/article";
 
 export const getListFeeds =
@@ -153,6 +159,34 @@ export const handleCreateComment =
          apiPath: path,
          actionTypes: [createComment, createCommentSuccess, createCommentFail],
          variables: data,
+         dispatch,
+         getState,
+      });
+   };
+
+export const handleUpdateArticle =
+   ({ id, data }) =>
+   async (dispatch, getState) => {
+      const path = `article/article-update/${id}`;
+      return callApi({
+         method: "put",
+         apiPath: path,
+         actionTypes: [updateArticle, updateArticleSuccess, updateArticleFail],
+         variables: data,
+         dispatch,
+         getState,
+      });
+   };
+
+export const handleDeleteArticle =
+   ({ id }) =>
+   async (dispatch, getState) => {
+      const path = `article/${id}`;
+      return callApi({
+         method: "delete",
+         apiPath: path,
+         actionTypes: [deleteArticle, deleteArticleSuccess, deleteArticleFail],
+         variables: {},
          dispatch,
          getState,
       });

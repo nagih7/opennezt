@@ -1,6 +1,6 @@
 import React, { forwardRef, useState } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
-import { IconlyMoreCircle } from "components/UI/Iconly";
+import { IconlyDelete, IconlyMoreCircle } from "components/UI/Iconly";
 import avt from "assets/images/background/avt.jpg";
 import { IconlyChat } from "components/UI/Iconly";
 import { IconlyHeart } from "components/UI/Iconly";
@@ -14,7 +14,10 @@ import {
 } from "date-fns";
 
 const Article = forwardRef(
-   ({ feed, reaction, onReaction, isLoading, onSelect }, ref) => {
+   (
+      { feed, reaction, onReaction, isLoading, onSelect, onEdit, onDelete },
+      ref
+   ) => {
       const {
          _id,
          user,
@@ -64,6 +67,20 @@ const Article = forwardRef(
          onSelect(feed);
       };
 
+      const handleEdit = () => {
+         onEdit(feed);
+      };
+
+      const [isConfirmDelete, setIsConfirmDelete] = useState(false);
+
+      const openFormDelete = () => {
+         setIsConfirmDelete(true);
+      };
+
+      const handleDelete = () => {
+         onDelete(_id);
+      };
+
       //==================================================================================================
       //Posted Date Logic
       //==================================================================================================
@@ -107,11 +124,20 @@ const Article = forwardRef(
                            : postedDate}
                      </span>
                   </div>
-                  <IconlyMoreCircle
-                     size={30}
-                     color={"#6f7f92"}
-                     className="w-3/12"
-                  />
+                  <div onClick={handleEdit}>
+                     <IconlyMoreCircle
+                        size={30}
+                        color={"#6f7f92"}
+                        className="w-3/12"
+                     />
+                  </div>
+                  <div onClick={handleDelete}>
+                     <IconlyDelete
+                        size={30}
+                        color={"#6f7f92"}
+                        className="w-3/12"
+                     />
+                  </div>
                </div>
             </div>
             <div className="mt-6">
