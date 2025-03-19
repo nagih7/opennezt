@@ -397,9 +397,6 @@ export async function getRequestAddFriend(user, user_id) {
     })
 
     return request
-<<<<<<< HEAD
-}
-=======
 }
 
 // ========== PUT [Notification - Reply Invitation Member] ========== //
@@ -444,4 +441,3 @@ export async function replyInvitationMember(user, requestBody, io) {
         await member.save()
     }
 }
->>>>>>> 354d915774e3206d226924bd75d7c1492052b782
