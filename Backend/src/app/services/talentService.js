@@ -57,5 +57,5 @@ export async function recruitTalents(
         {$limit: per_page},
     ])
 
-    return talents
+    return {talents}
 }
