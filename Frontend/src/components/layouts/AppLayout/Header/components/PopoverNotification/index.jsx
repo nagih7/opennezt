@@ -7,7 +7,6 @@ import { CheckOutlined, CloseOutlined } from "@mui/icons-material";
 import store from "states/configureStore";
 import { replyNotification, getNotifications } from "api/notification";
 import { useNavigate } from "react-router-dom";
-import { getProjects } from "api/project";
 import { getChatList } from "api/chat";
 import { NOTIFICATIONS, ACTIONS, STATUS } from "utils/constains/appConstains";
 
@@ -28,7 +27,6 @@ function PopoverNotification() {
 			// DISPATCH ACTIONS BASED ON NOTIFICATION TYPE
 			switch (type_name) {
 				case "Project Invitation":
-					store.dispatch(getProjects());
 					store.dispatch(getChatList());
 					break;
 				case "Friend Request":
@@ -69,7 +67,8 @@ function PopoverNotification() {
 										</svg>
 									</div>
 									<div className={styles.contentWrap}>
-										{notification.type_name === "Project Invitation" && (
+										{notification.type_name ===
+											"Project Invitation" && (
 											<div>
 												<b>{notification.source_name}</b>{" "}
 												{

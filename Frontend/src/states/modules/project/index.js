@@ -326,9 +326,6 @@ export const {
 	getMyProjectDetailsSuccess,
 	getMyProjectDetailsFail,
 	// ========== Projects ========== //
-	startRequestGetProjects,
-	startRequestGetProjectsSuccess,
-	startRequestGetProjectsFail,
 	requestGetProjectDetails,
 	getProjectDetailsSuccess,
 	getProjectDetailsFail,

@@ -152,15 +152,3 @@ export const sendProjectInvitation = (data) => async (dispatch, getState) => {
 		getState,
 	});
 };
-
-// Type name
-export const getTypeName = () => async (dispatch, getState) => {
-	return callApi({
-		method: "get",
-		apiPath: "notification/type-name",
-		actionTypes: [],
-		variables: {},
-		dispatch,
-		getState,
-	});
-};

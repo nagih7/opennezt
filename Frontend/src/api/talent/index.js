@@ -24,19 +24,19 @@ export const recruitTalents = (dataFilter) => async (dispatch, getState) => {
 		path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
 	}
 	if (dataFilter.industry) {
-		path += `&industry=${dataFilter.industry}`;
+		path += `&industry_id=${dataFilter.industry}`;
 	}
 	if (dataFilter.experienceLevel) {
-		path += `&experience_level=${dataFilter.experienceLevel}`;
+		path += `&experience_level_id=${dataFilter.experienceLevel}`;
 	}
 	if (dataFilter.category) {
-		path += `&category=${dataFilter.category}`;
+		path += `&category_id=${dataFilter.category}`;
 	}
 	if (dataFilter.subcategory) {
-		path += `&subcategory=${dataFilter.subcategory}`;
+		path += `&subcategory_id=${dataFilter.subcategory}`;
 	}
 	if (dataFilter.skill) {
-		path += `&skill=${dataFilter.skill}`;
+		path += `&skill_id=${dataFilter.skill}`;
 	}
 
 	return callApi({

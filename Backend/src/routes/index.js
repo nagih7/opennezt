@@ -11,6 +11,7 @@ import socketRoutes from './socket'
 import artificialIntelligenceRouter from './artificialIntelligenceRouter'
 import articleRouter from './articleRouter'
 import profileRouter from './profileRouter'
+import talentRouter from './talentRouter'
 
 function route(app, io) {
     socketRoutes(io)
@@ -31,6 +32,7 @@ function route(app, io) {
     app.use('/projects', projectRouter)
     app.use('/ai', artificialIntelligenceRouter)
     app.use('/article', articleRouter)
+    app.use('/talents', talentRouter)
 
     app.get('/', (req, res) => {
         res.json({
