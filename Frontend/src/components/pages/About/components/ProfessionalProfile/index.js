@@ -3,12 +3,10 @@ import { IconlyEditSquare } from "components/UI/Iconly";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 const ProfessionalProfile = () => {
 	const navigate = useNavigate();
 	// ========== STATE FROM REDUX STORE ========== //
 	const { profile } = useSelector((state) => state.profile);
-	console.log(profile)
 
 	const formatDate = (dateString) => {
 		if (!dateString) return "N/A";
@@ -16,20 +14,24 @@ const ProfessionalProfile = () => {
 		return `${date.getMonth() + 1}/${date.getFullYear()}`;
 	};
 
-	const groupedSkills = profile.skills.reduce((acc, skill) => {
-		let key = skill.category.name;
-		if (!acc[key]) {
-			acc[key] = {
-				category: skill.category,
-				skills: []
-			};
-		}
-		acc[key].skills.push({ name: skill.name, description: skill.description, _id: skill._id });
-		return acc;
-	}, {});
+	const groupedSkills =
+		profile?.skills?.reduce((acc, skill) => {
+			let key = skill.category.name;
+			if (!acc[key]) {
+				acc[key] = {
+					category: skill.category,
+					skills: [],
+				};
+			}
+			acc[key].skills.push({
+				name: skill.name,
+				description: skill.description,
+				_id: skill._id,
+			});
+			return acc;
+		}, {}) || {};
 
 	const result = Object.values(groupedSkills);
-
 
 	return (
 		<div className="flex gap-8">
@@ -47,7 +49,6 @@ const ProfessionalProfile = () => {
 					</div>
 					<div className="p-8">
 						<ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
-
 							<li className="px-[16px] mb-10">
 								<div className="mb-2 text-sm font-medium">INDUSTRY</div>
 								<div>
@@ -68,7 +69,6 @@ const ProfessionalProfile = () => {
 									</p>
 								</div>
 							</li>
-
 						</ul>
 					</div>
 				</div>
@@ -76,9 +76,7 @@ const ProfessionalProfile = () => {
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Eduaction</h5>
 						<span
-							onClick={() =>
-								navigate("/about/edit-profile/educations")
-							}
+							onClick={() => navigate("/about/edit-profile/educations")}
 							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
 							<IconlyEditSquare size={20} color={"#ffffff"} />
 						</span>
@@ -86,26 +84,44 @@ const ProfessionalProfile = () => {
 					<div className="p-8">
 						<ul className=" p-0 mb-0 mx-[-16px] text-[#6f7f92]">
 							<li className="px-[16px] mb-10 ">
-
-								<div className=" ">
+								<div className="">
 									<p className="mb-2 text-base font-medium text-black">
 										{profile?.educations?.length > 0 ? (
 											profile.educations.map((education, index) => (
-												<div key={index} className="p-3  rounded-lg  mt-2 mr-1 bg-[#F4F2EE] rounded-[0.6rem]">
-													<h4 className="font-semibold">{education.school || "N/A"}</h4>
-													<p>Degree: {education.degree || "N/A"}</p>
-													<p>Field of Study: {education.field_of_study || "N/A"}</p>
-													<p>Years: {formatDate(education.start_date || "N/A")} - {formatDate(education.end_date || "N/A")}</p>
+												<div
+													key={index}
+													className="p-3  rounded-lg  mt-2 mr-1 bg-[#F4F2EE] rounded-[0.6rem]">
+													<h4 className="font-semibold">
+														{education.school || "N/A"}
+													</h4>
+													<p>
+														Degree: {education.degree || "N/A"}
+													</p>
+													<p>
+														Field of Study:{" "}
+														{education.field_of_study || "N/A"}
+													</p>
+													<p>
+														Years:{" "}
+														{formatDate(
+															education.start_date || "N/A"
+														)}{" "}
+														-{" "}
+														{formatDate(
+															education.end_date || "N/A"
+														)}
+													</p>
 													<p>Grade: {education.grade || "N/A"}</p>
 												</div>
 											))
 										) : (
-											<p className="text-gray-500">No education information available.</p>
+											<p className="text-gray-500">
+												No education information available.
+											</p>
 										)}
 									</p>
 								</div>
 							</li>
-
 						</ul>
 					</div>
 				</div>
@@ -123,24 +139,35 @@ const ProfessionalProfile = () => {
 					<div className="p-8">
 						<ul className=" p-0 mb-0 mx-[-16px] text-[#6f7f92]">
 							<li className="px-[16px] mb-10">
-
 								<div>
 									<p className="mb-2 text-base font-medium text-black">
 										{profile?.certifications?.length > 0 ? (
-											profile.certifications.map((certification, index) => (
-												<div key={index} className="p-3  rounded-lg  mt-2 mr-1 bg-[#F4F2EE] rounded-[0.6rem]">
-													<h4 className="font-semibold">{certification.name || "N/A"}</h4>
-													<p>Certificate Expiration: {formatDate(certification.issue_date || "N/A")}</p>
-
-												</div>
-											))
+											profile.certifications.map(
+												(certification, index) => (
+													<div
+														key={index}
+														className="p-3  rounded-lg  mt-2 mr-1 bg-[#F4F2EE] rounded-[0.6rem]">
+														<h4 className="font-semibold">
+															{certification.name || "N/A"}
+														</h4>
+														<p>
+															Certificate Expiration:{" "}
+															{formatDate(
+																certification.issue_date ||
+																	"N/A"
+															)}
+														</p>
+													</div>
+												)
+											)
 										) : (
-											<p className="text-gray-500">No education information available.</p>
+											<p className="text-gray-500">
+												No education information available.
+											</p>
 										)}
 									</p>
 								</div>
 							</li>
-
 						</ul>
 					</div>
 				</div>
@@ -159,12 +186,12 @@ const ProfessionalProfile = () => {
 								{result?.map((re, idx) => (
 									<li className="px-[16px] mb-10" key={idx}>
 										<div className="mb-2 text-sm font-medium uppercase">
-											{re.category.name}
+											{re?.category?.name}
 										</div>
 										<div>
 											<p className="mb-2 text-base font-medium text-black">
 												{re?.skills
-													?.map((skill) => skill.name)
+													?.map((skill) => skill?.name)
 													.join(", ") || "N/A"}
 											</p>
 										</div>
@@ -210,7 +237,6 @@ const ProfessionalProfile = () => {
 						)}
 					</div>
 				</div>
-
 			</div>
 			<RightSidebar />
 		</div>
