@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect } from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
    Box,
    FileUpload,
@@ -10,8 +10,6 @@ import {
    Button,
    Textarea,
 } from "@chakra-ui/react";
-import { LuUpload } from "react-icons/lu";
-import { last, set } from "lodash";
 import { CloseOutlined } from "@mui/icons-material";
 import { Avatar } from "antd";
 import { useSelector } from "react-redux";
@@ -22,6 +20,7 @@ import {
    Iconlyuser,
    IconlyUser,
 } from "components/UI/Iconly";
+import { filter } from "lodash";
 
 const CreateArticleForm = forwardRef(
    ({ onSubmitForm, onCloseForm, isLoadingCreateArticle }, ref) => {
@@ -37,39 +36,76 @@ const CreateArticleForm = forwardRef(
       });
       const [fileKey, setFileKey] = useState(0);
       const { authUser } = useSelector((state) => state.auth);
-      const [isOpenImages, setIsOpenImages] = useState(false);
 
-      const handleClickImage = () => {
-         setIsOpenImages(!isOpenImages);
-      };
+      //Images
 
-      const handleFileChange = async (event) => {
-         const files = Array.from(event.target.files);
+      const handleFileChange = (event) => {
+         const newFiles = Array.from(event.target.files);
+
+         const filteredFiles = newFiles.filter((newFile) => {
+            const isDuplicate = formData.content.attachment.some(
+               (existingFiles) => existingFiles.name === newFile.name
+            );
+            return !isDuplicate;
+         });
          setFormData({
             ...formData,
             content: {
                ...formData.content,
-               attachment: files,
+               attachment: [...formData.content.attachment, ...filteredFiles],
             },
          });
       };
 
+      const renderPreviewImages = () => {
+         return (
+            <div className="relative">
+               {" "}
+               {formData.content.attachment.length > 0 && (
+                  <button
+                     className="absolute top-2 right-2 text-[30px] text-[#6f7f92] rounded-full w-6 h-6 flex items-center justify-center z-[999999]"
+                     onClick={() => handleRemoveImage()}
+                  >
+                     ×
+                  </button>
+               )}
+               <div>
+                  {formData.content.attachment.map((image, index) => (
+                     <div key={index} className="relative">
+                        <img
+                           src={
+                              typeof image === "string"
+                                 ? image
+                                 : URL.createObjectURL(image)
+                           }
+                           alt={`Preview ${index}`}
+                           className="w-full auto object-cover rounded-md"
+                        />
+                     </div>
+                  ))}
+               </div>
+            </div>
+         );
+      };
+
+      const handleRemoveImage = () => {
+         setFileKey((prev) => prev + 1);
+         setFormData({
+            ...formData,
+            content: {
+               ...formData.content,
+               attachment: [],
+            },
+         });
+      };
+
+      useEffect(() => {
+         console.log(formData);
+      }, [formData]);
+      //End Images
       const handleSubmit = async () => {
          await onSubmitForm(formData);
-         setFormData({
-            content: {
-               caption: "",
-               attachment: [],
-               hashtags: [],
-            },
-            audience: "public",
-            status: "published",
-            project_id: "675aa5d48107dd51e42c5b0f",
-         });
          setFileKey((prev) => prev + 1);
-         if (isLoadingCreateArticle === false) {
-            handleClick();
-         }
       };
 
       const handleClick = () => {
@@ -78,7 +114,7 @@ const CreateArticleForm = forwardRef(
 
       return (
          <>
-            <div className="fixed inset-0 flex justify-center items-center z-[999999] bg-gray-900 bg-opacity-50">
+            <div className="fixed inset-0 flex justify-center items-center z-[999998] bg-gray-900 bg-opacity-50">
                <div className="bg-[#ffffff] w-[600px] p-8 rounded-md mb-4">
                   <div
                      label="Caption"
@@ -138,38 +174,10 @@ const CreateArticleForm = forwardRef(
                               })
                            }
                         ></Textarea>
-                        <div
-                           className={`w-full border-3 border-dashed ${
-                              isOpenImages ? "" : "hidden"
-                           }  border-gray-200 rounded-md`}
-                        >
-                           <FileUpload.Root
-                              key={fileKey}
-                              alignItems="stretch"
-                              maxFiles={10}
-                              value={formData.content.attachment}
-                              onChange={handleFileChange}
-                              maxW="100%" // Use full width
-                           >
-                              <FileUpload.HiddenInput maxWidth="xl" />
-                              <FileUpload.Dropzone
-                                 maxWidth="100%" // Adjust to full width
-                                 style={{ height: "100%", width: "100%" }} // Make it full width and height
-                              >
-                                 <Icon
-                                    as={LuUpload}
-                                    size="md"
-                                    color="fg.muted"
-                                 ></Icon>
-                                 <FileUpload.DropzoneContent maxWidth="100%">
-                                    <Box>Drag and drop files here</Box>
-                                    <Box color="fg.muted">
-                                       .png, .jpg up to 5MB
-                                    </Box>
-                                 </FileUpload.DropzoneContent>
-                              </FileUpload.Dropzone>
-                              <FileUpload.List></FileUpload.List>
-                           </FileUpload.Root>
+                        <div>
+                           <div className="overflow-y-auto">
+                              {renderPreviewImages()}
+                           </div>
                         </div>
                      </div>
                      {/* <NativeSelect.Root size="sm" width="240px">
@@ -185,11 +193,25 @@ const CreateArticleForm = forwardRef(
                      <div className=" flex items-center justify-between border border-gray-200 rounded-md p-3 w-full">
                         <span>Add to your post</span>
                         <div className="flex gap-3">
-                           <div
-                              className="cursor-pointer"
-                              onClick={handleClickImage}
-                           >
-                              <IconlyImage2 size={30} color={"#000000"} />
+                           <div className="cursor-pointer">
+                              <FileUpload.Root
+                                 key={fileKey}
+                                 alignItems="stretch"
+                                 maxFiles={10}
+                                 value={formData.content.attachment}
+                                 onChange={handleFileChange}
+                                 maxW="100%" // Use full width
+                              >
+                                 <FileUpload.HiddenInput maxWidth="xl" />
+                                 <FileUpload.Trigger asChild>
+                                    <div className="cursor-pointer p-0 flex items-center justify-center">
+                                       <IconlyImage2
+                                          size={30}
+                                          color={"#000000"}
+                                       />
+                                    </div>
+                                 </FileUpload.Trigger>
+                              </FileUpload.Root>{" "}
                            </div>
                            <div className="cursor-pointer">
                               <IconlyLocation size={30} color={"#000000"} />
@@ -216,12 +238,6 @@ const CreateArticleForm = forwardRef(
                               Post
                            </Button>
                         )}
-                        <Button
-                           loading
-                           className="rounded-md bg-[#0866FF] w-full hover:bg-[#3897F0] font-medium text-[#FFFFFF] text-[15px]"
-                        >
-                           Post
-                        </Button>
                      </div>
                   </div>
                </div>

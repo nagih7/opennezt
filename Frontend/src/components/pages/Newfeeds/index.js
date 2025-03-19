@@ -152,6 +152,10 @@ function NewFeeds() {
       [dispatch]
    );
 
+   useEffect(() => {
+      console.log(isLoadingCreateArticle);
+   }, [isLoadingCreateArticle]);
+
    const handleFormSubmit = useCallback(
       async (formData) => {
          const newFormData = new FormData();
@@ -167,13 +171,14 @@ function NewFeeds() {
          newFormData.append("status", formData.status);
          newFormData.append("project_id", formData.project_id);
          dispatch(handleCreateArticle({ data: newFormData }));
-
-         setTimeout(() => {
-            dispatch(resetFeeds());
-            handleCloseForm();
-         }, 1000);
+         if (!isLoadingCreateArticle) {
+            setTimeout(() => {
+               dispatch(resetFeeds());
+               handleCloseForm();
+            }, 1000);
+         }
       },
-      [dispatch, handleCloseForm]
+      [dispatch, isLoadingCreateArticle, handleCloseForm]
    );
    //End Form Create Article
 
