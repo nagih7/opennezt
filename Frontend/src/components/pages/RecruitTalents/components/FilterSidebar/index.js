@@ -27,7 +27,7 @@ const FilterSidebar = () => {
 	const [dataFilter, setDataFilter] = useState({
 		keySearch: "",
 		industry: "",
-		experience_level: "",
+		experienceLevel: "",
 		category: "",
 		subcategory: "",
 		skill: "",
@@ -92,10 +92,10 @@ const FilterSidebar = () => {
 			{experienceLevelFramework?.items?.length > 0 && (
 				<div className="bg-[#ffffff] rounded-md mb-8">
 					<SelectCustom
-						onChange={(e) => handleChange(e, "experience_level")}
+						onChange={(e) => handleChange(e, "experienceLevel")}
 						height="40px"
 						collection={experienceLevelFramework}
-						name="experience_level"
+						name="experienceLevel"
 						label="Experience Level"
 						placeholder="Ex: Entry, Mid, Senior, etc."
 					/>

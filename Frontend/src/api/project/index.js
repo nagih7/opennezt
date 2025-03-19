@@ -11,9 +11,6 @@ import {
 	getMyProjectDetailsSuccess,
 	getMyProjectDetailsFail,
 	// ========== project ========== //
-	startRequestGetProjects,
-	startRequestGetProjectsSuccess,
-	startRequestGetProjectsFail,
 	startRequestSeekProjects,
 	startRequestSeekProjectsSuccess,
 	startRequestSeekProjectsFail,
@@ -111,21 +108,6 @@ export const getProjectDetails = (projectId) => async (dispatch, getState) => {
 };
 
 // ====================================
-
-export const getProjects = () => async (dispatch, getState) => {
-	return callApi({
-		method: "get",
-		apiPath: "users/projects",	
-		actionTypes: [
-			startRequestGetProjects,
-			startRequestGetProjectsSuccess,
-			startRequestGetProjectsFail,
-		],
-		variables: {},
-		dispatch,
-		getState,
-	});
-};
 
 export const seekProjects =
 	(requestSeekProjects) => async (dispatch, getState) => {
