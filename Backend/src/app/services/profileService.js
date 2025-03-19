@@ -154,7 +154,13 @@ export async function getProfile(user) {
 export async function updateProfessionalProfile(user, requestBody) {
     const profile = await Profile.findOneAndUpdate({user_id: user.id}, requestBody, {new: true})
     if (!profile) {
-        throw new Error('Profile not found.')
+        const newProfile = new Profile({
+            ...requestBody,
+            user_id: user.id,
+        })
+        await newProfile.save()
+    } else {
+        await Profile.findOneAndUpdate({user_id: user.id}, requestBody)
     }
 }
 
@@ -162,13 +168,22 @@ export async function updateProfessionalProfile(user, requestBody) {
 export async function createProfileEducation(user, requestBody) {
     const profile = await Profile.findOne({user_id: user.id})
     if (!profile) {
-        throw new Error('Profile not found.')
+        const newProfile = new Profile({
+            user_id: user.id,
+        })
+        await newProfile.save()
+        const education = new Education({
+            ...requestBody,
+            profile_id: newProfile._id,
+        })
+        await education.save()
+    } else {
+        const education = new Education({
+            ...requestBody,
+            profile_id: profile._id,
+        })
+        await education.save()
     }
-    const education = new Education({
-        ...requestBody,
-        profile_id: profile._id,
-    })
-    await education.save()
 }
 // ========== PUT [Education] ========== //
 export async function updateProfileEducation(user, requestBody) {
@@ -254,9 +269,14 @@ export async function updateProfileSkills(user, requestBody) {
     const skills = requestBody.skills.map((skill) => skill._id)
     const profile = await Profile.findOne({user_id: user._id})
     if (!profile) {
-        throw new Error('Profile not found.')
+        const newProfile = new Profile({
+            user_id: user._id,
+            skill_ids: skills,
+        })
+        await newProfile.save()
+    } else {
+        await Profile.findOneAndUpdate({user_id: user._id}, {skill_ids: skills})
     }
-    await Profile.findOneAndUpdate({user_id: user._id}, {skill_ids: skills})
 }
 
 // ========== [Organization] ========== //
