@@ -18,7 +18,12 @@ import {
 } from "../../../api/newfeeds";
 import { useDispatch, useSelector } from "react-redux";
 import RightSidebar from "components/common/RightSidebar";
-import { updateReaction } from "states/modules/article";
+import {
+   updateDeletedArticle,
+   updateReaction,
+   updateUpdatedArticle,
+   resetFeeds,
+} from "states/modules/article";
 import CreateAricleForm from "./components/CreateAricleForm";
 import CommentList from "./components/CommentList";
 import UpdateArticleForm from "./components/UpdateArticleForm";
@@ -161,6 +166,7 @@ function NewFeeds() {
          newFormData.append("status", formData.status);
          newFormData.append("project_id", formData.project_id);
          dispatch(handleCreateArticle({ data: newFormData }));
+         dispatch(resetFeeds());
       },
       [dispatch]
    );
@@ -207,13 +213,15 @@ function NewFeeds() {
          newFormData.append("status", formData.status);
          newFormData.append("project_id", formData.project_id);
          dispatch(handleUpdateArticle({ id: id, data: newFormData }));
+         dispatch(updateUpdatedArticle(formData));
       },
       [dispatch]
    );
    //End Update Article
    //Delete Article
-   const handleDetele = useCallback(
+   const handleDelete = useCallback(
       (id) => {
+         dispatch(updateDeletedArticle(id));
          dispatch(handleDeleteArticle({ id }));
       },
       [dispatch]
@@ -261,7 +269,7 @@ function NewFeeds() {
                            isLoading={isLoadingReactArticle}
                            onSelect={handleSelectArticle}
                            onEdit={handleOpenUpdateForm}
-                           onDelete={handleDetele}
+                           onDelete={handleDelete}
                         />
                      );
                   } else {
@@ -274,7 +282,7 @@ function NewFeeds() {
                            isLoading={isLoadingReactArticle}
                            onSelect={handleSelectArticle}
                            onEdit={handleOpenUpdateForm}
-                           onDelete={handleDetele}
+                           onDelete={handleDelete}
                         />
                      );
                   }

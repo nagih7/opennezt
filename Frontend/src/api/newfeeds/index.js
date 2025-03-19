@@ -85,7 +85,6 @@ export const handleCreateArticle =
    ({ data }) =>
    async (dispatch, getState) => {
       const path = `article`;
-      console.log("data received", data);
       return callApi({
          method: "post",
          apiPath: path,

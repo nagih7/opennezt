@@ -195,20 +195,22 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm }, ref) => {
                      </div>
                   </div>
                   {/* <NativeSelect.Root size="sm" width="240px">
->>>>>>> 638522b5ad26b2a4fa6f97e3a677712d7c644fe0
-                  <NativeSelect.Field placeholder="Select option">
-                     <option value="react">React</option>
-                     <option value="vue">Vue</option>
-                     <option value="angular">Angular</option>
-                     <option value="svelte">Svelte</option>
-                  </NativeSelect.Field>
-                  <NativeSelect.Indicator />
-               </NativeSelect.Root> */}
+                     <NativeSelect.Field placeholder="Select option">
+                        <option value="react">React</option>
+                        <option value="vue">Vue</option>
+                        <option value="angular">Angular</option>
+                        <option value="svelte">Svelte</option>
+                     </NativeSelect.Field>
+                     <NativeSelect.Indicator />
+                  </NativeSelect.Root> */}
 
                   <div className=" flex items-center justify-between border border-gray-200 rounded-md p-3 w-full">
                      <span>Add to your post</span>
-                     <div className="flex gap-3" onClick={handleClickImage}>
-                        <div className="cursor-pointer">
+                     <div className="flex gap-3">
+                        <div
+                           className="cursor-pointer"
+                           onClick={handleClickImage}
+                        >
                            <IconlyImage2 size={30} color={"#000000"} />
                         </div>
                         <div className="cursor-pointer">

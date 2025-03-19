@@ -147,7 +147,16 @@ const Article = forwardRef(
                {content.attachment &&
                   content.attachment.length > 0 &&
                   content.attachment.map((img, index) => {
-                     return <img src={img} key={index} />;
+                     return (
+                        <img
+                           key={index}
+                           src={
+                              typeof img === "string"
+                                 ? img
+                                 : URL.createObjectURL(img)
+                           }
+                        />
+                     );
                   })}
             </div>
             <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
