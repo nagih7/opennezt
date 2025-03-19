@@ -66,7 +66,7 @@ const ProfessionalProfile = () => {
 					<SelectCustom
 						multiple
 						required
-						label="Job Title"
+						label="Industry"
 						placeholder="Ex: Software Engineer"
 						collection={industryFramework}
 						onChange={(event) => handleChange(event, "industries")}

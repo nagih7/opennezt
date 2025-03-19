@@ -123,7 +123,7 @@ const Skills = () => {
 					<div className="px-[16px] flex flex-col gap-8">
 						<SelectCustom
 							required
-							label="Job Title"
+							label="Category"
 							placeholder="Ex: Software Engineer"
 							collection={categoryFramework}
 							onChange={(event) => handleChangeCategory(event)}
@@ -133,7 +133,7 @@ const Skills = () => {
 						<SelectCustom
 							disabled={formData?.categories?.length === 0}
 							required
-							label="Job Title"
+							label="Sub Category"
 							placeholder="Ex: Software Engineer"
 							collection={subCategoryFramework}
 							onChange={(event) => handleChangeSubCategory(event)}
@@ -170,9 +170,7 @@ const Skills = () => {
 					<div className="px-[16px] flex gap-8 mt-6 flex-wrap">
 						{/* =========== SKILLS ========== */}
 						{mySkills?.map((skill, index) => (
-							<div
-								key={index}
-								className="relative group">
+							<div key={index} className="relative group">
 								<Tag className="relative bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-full flex-wrap text-[1rem] cursor-pointer">
 									<div
 										className="absolute top-[-6px] right-[-6px] text-blue-500 bg-white rounded-full px-[4px] hidden group-hover:block "
@@ -183,9 +181,7 @@ const Skills = () => {
 										✕
 									</div>
 									{skill.name}
-
 								</Tag>
-
 							</div>
 						))}
 					</div>
@@ -208,7 +204,7 @@ const Skills = () => {
 					</div>
 				</div>
 			</div>
-		</div >
+		</div>
 	);
 };
 
