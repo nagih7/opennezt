@@ -3,7 +3,7 @@ import logo from "assets/images/logo/OpenNezt_logo_black.png";
 
 function Footer() {
   return (
-    <footer className="w-full">
+    <footer className="w-full pt-8" >
       <div className="bg-[#ffffff] px-[16px] py-[80px] ">
         <div className="flex gap-8 w-full">
           <div className="w-4/12">
