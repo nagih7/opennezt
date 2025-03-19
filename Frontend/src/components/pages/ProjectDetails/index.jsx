@@ -108,7 +108,7 @@ const ProjectDetails = () => {
           <div className="w-10/12 mt-8">
             <div className="bg-[#ffffff] rounded-md">
               <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
-                <h5 className="mb-0">Stage</h5>
+                <h5 className="mb-0">Secter</h5>
                 <Link
                   to={"/project/edit-project/stage"}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
@@ -142,9 +142,7 @@ const ProjectDetails = () => {
                     </div>
                     <div>
                       <p className="mb-2 text-base font-medium text-black">
-                        {project?.stage
-                          ?.map((stageItem) => stageItem.name)
-                          .join(", ") || "N/A"}
+                        {project?.stage?.name || "N/A"}
                       </p>
                     </div>
                   </li>

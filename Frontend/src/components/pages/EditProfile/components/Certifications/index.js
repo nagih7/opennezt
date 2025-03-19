@@ -7,7 +7,7 @@ import ActionBar from "../ActionBar";
 import InputCustom from "components/UI/InputCustom";
 import { setIsOpenModalCreateOrUpdateCertification } from "states/modules/profile";
 import moment from "moment";
-import { IconlyEdit } from "components/UI/Iconly";
+import { IconlyEdit, IconlyDelete } from "components/UI/Iconly";
 import SelectCustom from "components/UI/SelectCustom";
 import {
 	createOrUpdateCertification,
@@ -166,6 +166,7 @@ const Certifications = () => {
 									<div key={index}>
 										<div className="bg-[#F4F2EE] rounded-[0.6rem]">
 											<div className="relative p-4 mt-[2rem]">
+												<span className="cursor-pointer  md:float-right 2xl:float-right"><IconlyDelete size={24} color={"#000"} /></span>
 												<span
 													className="cursor-pointer md:float-right 2xl:float-right"
 													onClick={() =>

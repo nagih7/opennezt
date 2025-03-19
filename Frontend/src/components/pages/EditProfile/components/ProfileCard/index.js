@@ -17,7 +17,7 @@ const ProfileCard = () => {
 			</div>
 			<div>
 				<h4 className="flex items-center">
-					Vuong Manh Nghia
+					{authUser?.name}
 					<CheckCircleFilled className="text-[#3897f0] ml-2" />
 				</h4>
 				<span className="text-[#6f7f92]">

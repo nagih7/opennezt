@@ -272,9 +272,9 @@ const SeekProjects = () => {
 		// </div>
 
 		<>
-			<div className="pt-[35px] flex gap-6 ">
-				<div className="bg-gray-100 w-3/4 2xl:relative 2xl:left-[-1rem] 2xl:w-[70rem] ">
-					<div className="flex items-center gap-4 p-4 bg-white border rounded-lg shadow-sm ml-[1.9rem] flex-col md:flex-row  justify-between">
+			<div className="pt-[35px] px-[16px] flex gap-8">
+				<div className="bg-gray-100 w-10/12 2xl:relative 2xl:left-[-1rem] 2xl:w-[70rem] ">
+					<div className="flex items-center gap-4 p-4 ml-0 bg-white border rounded-lg shadow-sm  flex-col md:flex-row  justify-between">
 						<p className="mt-2 mb-0 text-lg text-gray-600">
 							All Projects
 						</p>
@@ -329,11 +329,11 @@ const SeekProjects = () => {
 							isGrid
 								? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
 								: "flex flex-col"
-						} gap-6 mt-4`}>
+						} gap-6 pl-0 mt-4`}>
 						{courses.map((course, index) => (
 							<li
 								key={index}
-								className="rounded-sm cursor-pointer group">
+								className="rounded-sm cursor-pointer  group">
 								<Link
 									className="no-underline"
 									to={`/seek-projects/${course.id}`}>
@@ -397,10 +397,10 @@ const SeekProjects = () => {
 														? "flex items-center justify-between mt-3 text-gray-600 text-xs md:text-sm"
 														: "flex items-center mt-3 text-gray-600 text-xs md:text-sm"
 												}`}>
-												<p className={`${isGrid ? "" : "mr-4"}`}>
+												<p className={`${isGrid ? "" : "mr-4"} text-nowrap text-xs"`}>
 													📖 {course.lessons} Project
 												</p>
-												<p>
+												<p className="text-nowrap text-xs">
 													👨‍🎓 {course.Participants} Participants{" "}
 												</p>
 											</div>
@@ -411,7 +411,7 @@ const SeekProjects = () => {
 						))}
 					</ul>
 				</div>
-				<div className="w-1/4 2xl:w-[23.25rem] bg-white p-4 rounded-md shadow-sm h-fit">
+				<div className="w-4/12 2xl:w-[23.25rem] bg-white p-4 rounded-md shadow-sm h-fit">
 					<h3 className="text-lg font-semibold mb-4 border-b border-[#DEDEDE] pb-4">
 						Recent Project
 					</h3>

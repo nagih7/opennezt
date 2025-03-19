@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { useSocket } from "context/SocketContext";
 import { getChatList } from "api/chat";
 import { getNotifications } from "api/notification";
-import { getProjects } from "api/project";
 import { message } from "antd";
 
 export const RealtimeContext = React.createContext();
@@ -61,7 +60,6 @@ export const RealtimeProvider = ({ children }) => {
 				),
 				duration: 10,
 			});
-			dispatch(getProjects());
 			dispatch(getChatList());
 		});
 	};

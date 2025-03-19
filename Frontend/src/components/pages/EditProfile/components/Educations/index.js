@@ -8,6 +8,7 @@ import InputCustom from "components/UI/InputCustom";
 import { setIsOpenModalCreateOrUpdateEducation } from "states/modules/profile";
 import moment from "moment";
 import { IconlyEdit } from "components/UI/Iconly";
+import { IconlyDelete } from "components/UI/Iconly"
 import { createOrUpdateEducation } from "api/profile";
 
 const Educations = () => {
@@ -31,6 +32,7 @@ const Educations = () => {
 			[e.target.name]: e.target.value,
 		});
 	};
+
 
 	const handleAddCertification = () => {
 		dispatch(setIsOpenModalCreateOrUpdateEducation(true));
@@ -57,7 +59,9 @@ const Educations = () => {
 				: "",
 		});
 	};
-
+	const hangdleDeleteEducation = () => {
+		setAction("delete")
+	}
 	const handleSaveChanges = () => {
 		if (formData.is_lifetime) {
 			const { organization_id, expiration_date, ...rest } = formData;
@@ -128,6 +132,7 @@ const Educations = () => {
 								<div key={index}>
 									<div className="bg-[#F4F2EE] rounded-[0.6rem]">
 										<div className="relative p-4 mt-[2rem]">
+											<span className="cursor-pointer  md:float-right 2xl:float-right"><IconlyDelete size={24} color={"#000"} /></span>
 											<span
 												className="cursor-pointer  md:float-right 2xl:float-right"
 												onClick={() =>
@@ -135,6 +140,7 @@ const Educations = () => {
 												}>
 												<IconlyEdit size={24} color={"#000"} />
 											</span>
+
 											{education.school && (
 												<h4 className="flex font-bold mb-[0.75rem]">
 													{education.school}
