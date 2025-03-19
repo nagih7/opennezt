@@ -7,13 +7,9 @@ import {
     Conversation,
     Industry,
     ExperienceLevel,
-<<<<<<< HEAD
-    Type,
-=======
     Skill,
     Category,
     Stage,
->>>>>>> 312ff598a4328dd6a547fed70c2e452138b93191
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
