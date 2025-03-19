@@ -12,6 +12,7 @@ import {
    differenceInMinutes,
    differenceInSeconds,
 } from "date-fns";
+import { Button } from "@chakra-ui/react";
 
 const Article = forwardRef(
    (
@@ -73,8 +74,8 @@ const Article = forwardRef(
 
       const [isConfirmDelete, setIsConfirmDelete] = useState(false);
 
-      const openFormDelete = () => {
-         setIsConfirmDelete(true);
+      const handleClickDelete = () => {
+         setIsConfirmDelete(!isConfirmDelete);
       };
 
       const handleDelete = () => {
@@ -100,6 +101,39 @@ const Article = forwardRef(
             className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8"
             ref={ref}
          >
+            {isConfirmDelete ? (
+               <div
+                  className="fixed inset-0 flex justify-center items-center z-[999999] bg-gray-900 bg-opacity-50"
+                  onClick={handleClickDelete}
+               >
+                  <div className="bg-[#ffffff] w-[600px] p-8 rounded-md mb-4">
+                     <div className="flex items-center justify-center border-b-[0.5px] border-[#6f7f92] p-2 font-medium">
+                        Delete Post?
+                     </div>
+                     <span className="text-sm p-2">
+                        {`Are you sure wan't to delete this post. After delete
+                        you are not able to get it back`}
+                     </span>
+                     <div>
+                        <div className="flex justify-end gap-1">
+                           <Button
+                              onClick={handleClickDelete}
+                              className="rounded-md bg-[#FFFFFF] hover:bg-gray-300 font-medium text-[15px]"
+                           >
+                              Cancel
+                           </Button>
+                           <Button
+                              onClick={handleDelete}
+                              className="rounded-md bg-[#0866FF] hover:bg-[#3897F0] font-medium text-[#FFFFFF] text-[15px]"
+                           >
+                              Delete
+                           </Button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            ) : null}
+
             <div className="flex items-center gap-3">
                <div className="w-[65px]">
                   <img src={avt} className="w-[65px]  rounded-full" />
@@ -131,7 +165,7 @@ const Article = forwardRef(
                         className="w-3/12"
                      />
                   </div>
-                  <div onClick={handleDelete}>
+                  <div onClick={handleClickDelete}>
                      <IconlyDelete
                         size={30}
                         color={"#6f7f92"}

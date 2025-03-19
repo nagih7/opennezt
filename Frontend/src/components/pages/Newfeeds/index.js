@@ -37,6 +37,7 @@ function NewFeeds() {
       reactions,
       isLoadingGetFeeds,
       isLoadingReactArticle,
+      isLoadingCreateArticle,
       pagination,
    } = useSelector((state) => state.article);
 
@@ -152,7 +153,7 @@ function NewFeeds() {
    );
 
    const handleFormSubmit = useCallback(
-      (formData) => {
+      async (formData) => {
          const newFormData = new FormData();
          newFormData.append("caption", formData.content.caption);
          formData.content.attachment.forEach((file) => {
@@ -166,9 +167,13 @@ function NewFeeds() {
          newFormData.append("status", formData.status);
          newFormData.append("project_id", formData.project_id);
          dispatch(handleCreateArticle({ data: newFormData }));
-         dispatch(resetFeeds());
+
+         setTimeout(() => {
+            dispatch(resetFeeds());
+            handleCloseForm();
+         }, 1000);
       },
-      [dispatch]
+      [dispatch, handleCloseForm]
    );
    //End Form Create Article
 
@@ -231,7 +236,6 @@ function NewFeeds() {
       <div>
          <div className="flex w-full gap-8 pt-4 px-[16px]">
             <div className="w-10/12">
-        
                {isOpenUpdateForm ? (
                   <UpdateArticleForm
                      feed={selectedArticle}
@@ -253,6 +257,7 @@ function NewFeeds() {
                   <CreateAricleForm
                      onSubmitForm={handleFormSubmit}
                      onCloseForm={handleCloseForm}
+                     isLoadingCreateArticle={isLoadingCreateArticle}
                   />
                ) : null}
                <div>
