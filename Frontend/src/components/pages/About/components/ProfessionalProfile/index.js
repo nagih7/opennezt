@@ -3,12 +3,10 @@ import { IconlyEditSquare } from "components/UI/Iconly";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 const ProfessionalProfile = () => {
 	const navigate = useNavigate();
 	// ========== STATE FROM REDUX STORE ========== //
 	const { profile } = useSelector((state) => state.profile);
-	console.log(profile);
 
 	const formatDate = (dateString) => {
 		if (!dateString) return "N/A";
@@ -16,21 +14,22 @@ const ProfessionalProfile = () => {
 		return `${date.getMonth() + 1}/${date.getFullYear()}`;
 	};
 
-	const groupedSkills = profile?.skills?.reduce((acc, skill) => {
-		let key = skill.category.name;
-		if (!acc[key]) {
-			acc[key] = {
-				category: skill.category,
-				skills: [],
-			};
-		}
-		acc[key].skills.push({
-			name: skill.name,
-			description: skill.description,
-			_id: skill._id,
-		});
-		return acc;
-	}, {});
+	const groupedSkills =
+		profile?.skills?.reduce((acc, skill) => {
+			let key = skill.category.name;
+			if (!acc[key]) {
+				acc[key] = {
+					category: skill.category,
+					skills: [],
+				};
+			}
+			acc[key].skills.push({
+				name: skill.name,
+				description: skill.description,
+				_id: skill._id,
+			});
+			return acc;
+		}, {}) || {};
 
 	const result = Object.values(groupedSkills);
 
