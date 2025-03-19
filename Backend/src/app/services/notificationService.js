@@ -1,4 +1,4 @@
-import {NotificationFeed, Friend, ObjectId, Project, User, Conversation, Type} from '@/models'
+import {NotificationFeed, Friend, ObjectId, Project, User, Conversation, Type, ProjectMember} from '@/models'
 import {userSockets} from '@/routes/socket'
 
 export async function filter(user, {q = '', page = 1, per_page = 20, order = 1}) {
@@ -9,25 +9,26 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
 
     // Tạo bộ lọc
     const matchStage = {
-        $match: 
-        {user_id: userId}
+        $match: {user_id: userId},
     }
 
     if (q.trim().length > 0) {
-        matchStage.$match.$or = [{
-            type: {$exists: true, $regex: q, $options: 'i'}
-        }]
+        matchStage.$match.$or = [
+            {
+                type: {$exists: true, $regex: q, $options: 'i'},
+            },
+        ]
     }
 
     // Các bước trong pipeline
     const orderStage = {
-        $sort: {created_at: order}
+        $sort: {created_at: order},
     }
     const skipStage = {
-        $skip: (page - 1) * per_page
+        $skip: (page - 1) * per_page,
     }
     const limitStage = {
-        $limit: per_page
+        $limit: per_page,
     }
     const lookupTypeStage = {
         $lookup: {
@@ -35,7 +36,7 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
             localField: 'type_id',
             foreignField: '_id',
             as: 'type_info',
-        }, 
+        },
     }
     const lookupUserStage = {
         $lookup: {
@@ -47,7 +48,7 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
     }
     const projectStage = {
         $project: {
-            _id: 1,  
+            _id: 1,
             type_id: 1,
             source_id: 1,
             type_name: { $ifNull: [{ $arrayElemAt: ['$type_info.name', 0] }, 'Unknown Type'] },  
@@ -55,18 +56,18 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
             created_at: 1,
             updated_at: 1,
             metadata: 1,
-        }
+        },
     }
 
     // Lấy dữ liệu
     const notifications = await NotificationFeed.aggregate([
-        matchStage, 
-        lookupTypeStage,    // Thêm bước lookup type
-        lookupUserStage,    // Thêm bước lookup user
-        orderStage, 
-        skipStage, 
-        limitStage, 
-        projectStage
+        matchStage,
+        lookupTypeStage, // Thêm bước lookup type
+        lookupUserStage, // Thêm bước lookup user
+        orderStage,
+        skipStage,
+        limitStage,
+        projectStage,
     ])
 
     // Đếm số lượng chính xác
@@ -82,7 +83,7 @@ export async function getNotifications(user) {
             localField: 'type_id',
             foreignField: '_id',
             as: 'type_info',
-        }, 
+        },
     }
     const lookupUserStage = {
         $lookup: {
@@ -94,7 +95,7 @@ export async function getNotifications(user) {
     }
     const projectStage = {
         $project: {
-            _id: 1, 
+            _id: 1,
             type_id: 1,
             source_id: 1,
             type_name: { $ifNull: [{ $arrayElemAt: ['$type_info.name', 0] }, 'Unknown Type'] },  
@@ -102,7 +103,7 @@ export async function getNotifications(user) {
             created_at: 1,
             updated_at: 1,
             metadata: 1,
-        }
+        },
     }
     const notifications = await NotificationFeed.aggregate([
         {
@@ -154,13 +155,13 @@ export async function replyFriendRequest(notification_id, status, io) {
 
     // Check status notification
     if (notification.metadata.status === 'waiting') {
-        const { user_id, source_id } = notification
+        const {user_id, source_id} = notification
 
         if (status === 'rejected') {
             // If reject is true, handle rejection of the friend request
             // Update notification status to 'rejected'
             await NotificationFeed.updateOne(
-                { _id: notification_id },
+                {_id: notification_id},
                 {
                     $set: {
                         'metadata.status': 'rejected',
@@ -184,19 +185,19 @@ export async function replyFriendRequest(notification_id, status, io) {
             // If reject is false, handle acceptance of the friend request
 
             // Check if the user is already friends
-            const existingFriendship = await Friend.findOne({ user_id: user_id, friend_id: source_id })
+            const existingFriendship = await Friend.findOne({user_id: user_id, friend_id: source_id})
 
             if (!existingFriendship) {
                 // Create new friend relationship
-                await Friend.create({ user_id: user_id, friend_id: source_id, status: 'accepted' })
-                await Friend.create({ user_id: source_id, friend_id: user_id, status: 'accepted' })
+                await Friend.create({user_id: user_id, friend_id: source_id, status: 'accepted'})
+                await Friend.create({user_id: source_id, friend_id: user_id, status: 'accepted'})
             }
 
             // Create new conversation
             const conversation = new Conversation({
                 members: [
-                    { user_id: user_id, role: 'user' },
-                    { user_id: source_id, role: 'user' },
+                    {user_id: user_id, role: 'user'},
+                    {user_id: source_id, role: 'user'},
                 ],
                 type_id: type._id,
                 metadata: {
@@ -210,7 +211,7 @@ export async function replyFriendRequest(notification_id, status, io) {
 
             // Update notification status to 'accepted'
             await NotificationFeed.updateOne(
-                { _id: notification_id },
+                {_id: notification_id},
                 {
                     $set: {
                         'metadata.status': 'accepted',
@@ -235,7 +236,6 @@ export async function replyFriendRequest(notification_id, status, io) {
         console.log('Notification is not in waiting state.')
     }
 }
-
 
 export async function replyProjectInvitation(notification_id, status, io) {
     if (status === 'accepted') {
@@ -397,4 +397,51 @@ export async function getRequestAddFriend(user, user_id) {
     })
 
     return request
+<<<<<<< HEAD
 }
+=======
+}
+
+// ========== PUT [Notification - Reply Invitation Member] ========== //
+export async function replyInvitationMember(user, requestBody, io) {
+    const {notification_id, action} = requestBody
+    const notification = await NotificationFeed.findById(notification_id)
+
+    if (notification.metadata.status === 'waiting') {
+        const {user_id, source_id, additional_info} = notification
+        notification.metadata.status = action.toLowerCase()
+        notification.metadata.read = true
+        notification.markModified('metadata')
+        await notification.save()
+
+        if (action.toLowerCase() === 'confirm') {
+            // THÊM THÀNH VIÊN VÀO DỰ ÁN
+            await addProjectMember(
+                additional_info.project_id,
+                user_id,
+                additional_info.team_role_id,
+                additional_info.role_id
+            )
+        }
+
+        // const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === source_id)
+        // if (userSocketId) {
+        //     io.to(userSocketId).emit('confirm_project_invitation', user.name)
+        // }
+    } else if (action.toLowerCase() === 'delete') {
+        // XÓA THÔNG BÁO
+        await NotificationFeed.deleteOne({_id: notification_id})
+    }
+
+    // THÊM THÀNH VIÊN VÀO DỰ ÁN
+    const addProjectMember = async (project_id, user_id, team_role_id, role_id) => {
+        const member = new ProjectMember({
+            project_id: project_id,
+            user_id: user_id,
+            team_role_id,
+            role_id,
+        })
+        await member.save()
+    }
+}
+>>>>>>> 354d915774e3206d226924bd75d7c1492052b782

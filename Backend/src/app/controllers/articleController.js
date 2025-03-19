@@ -16,12 +16,17 @@ export const getArticleById = async (req, res) => {
 }
 
 export const getUserReactions = async (req, res) => {
-    const reactions = await articleService.getUserReactions(req.currentUser._id, req.params.id)
+    const reactions = await articleService.getUserReactions(req.currentUser._id, req.params.target_ids)
+    res.status(200).jsonify(reactions)
+}
+
+export const getUserCommentReactions = async (req, res) => {
+    const reactions = await articleService.getUserCommentReactions(req.currentUser._id, req.params.id)
     res.status(200).jsonify(reactions)
 }
 
 export async function getCommentList(req, res) {
-    const commentList = await articleService.getCommentList(req.currentUser, req.query.value)
+    const commentList = await articleService.getCommentList(req.currentUser, req.query)
     res.status(200).jsonify(commentList)
 }
 
@@ -46,17 +51,13 @@ export const reactArticle = async (req, res) => {
 }
 
 export const updateArticle = async (req, res) => {
-    await articleService.updateArticle(req.params.id, req.body)
-    res.status(200).jsonify('Update Article Success')
+    const updatedArticle = await articleService.updateArticle(req.currentUser._id, req.params.id, req.body)
+    res.status(200).jsonify(updatedArticle)
 }
 
 export const deleteArticle = async (req, res) => {
-    try {
-        await articleService.deleteArticle(req.params.id)
-        res.status(200).jsonify('Delete Article Success')
-    } catch (err) {
-        res.status(500).jsonify('Error While Deleting Article')
-    }
+    const deletedArticle = await articleService.deleteArticle(req.currentUser, req.params.id)
+    res.status(200).jsonify(deletedArticle)
 }
 
 export const shareArticle = async (req, res) => {

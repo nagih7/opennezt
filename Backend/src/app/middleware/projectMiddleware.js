@@ -32,6 +32,5 @@ export const decodeFormData = async (req, res, next) => {
         logo: await logoDecoded,
         background: await backgroundDecoded,
     }
-    console.log('middleware', req.body)
     next()
 }

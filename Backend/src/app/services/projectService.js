@@ -1,6 +1,15 @@
 import {LINK_STATIC_URL} from '@/configs'
-import {Project, NotificationFeed, ObjectId, Revenue, FundingSource, ProjectAdditionalInfo} from '@/models'
+import {
+    Project,
+    NotificationFeed,
+    ObjectId,
+    Revenue,
+    FundingSource,
+    ProjectAdditionalInfo,
+    Type,
+} from '@/models'
 import {FileUpload} from '@/utils/classes'
+import delay from '@/utils/classes/delay'
 
 export async function seekProjects(user, requestQuery) {
     const query = {user_id: {$ne: user._id}}
@@ -163,10 +172,171 @@ export async function createProject(user, requestBody) {
 }
 
 // ========== GET [My Projects] ========== //
-export async function getMyProjects(user) {
+export async function getListMyProjects(user, {q, page, per_page, field, order}) {
+    page = parseInt(page)
+    per_page = parseInt(per_page)
+    q = q ? q : ''
+    order = order === '-1' ? -1 : 1
+
+    const matchStage = {
+        $match: {
+            $and: [{user_id: user._id}, {name: {$regex: q, $options: 'i'}}],
+        },
+    }
+    const sortStage = {
+        $sort: {[field]: order},
+    }
+    const skipStage = {
+        $skip: (page - 1) * per_page,
+    }
+    const limitStage = {
+        $limit: per_page,
+    }
+    const projectStage = {
+        $project: {
+            _id: 1,
+            user_id: 0,
+            description: 0,
+            industry_ids: 0,
+            stage_id: 0,
+            created_at: 0,
+            updated_at: 0,
+        },
+    }
+
+    const addFieldsStage = {
+        $addFields: {
+            logo: {
+                $cond: {
+                    if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                    then: '$logo',
+                    else: {$concat: [LINK_STATIC_URL, '$logo']},
+                },
+            },
+            background: {
+                $cond: {
+                    if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                    then: '$background',
+                    else: {$concat: [LINK_STATIC_URL, '$background']},
+                },
+            },
+        },
+    }
+
     const projects = await Project.aggregate([
+        matchStage,
+        sortStage,
+        skipStage,
+        limitStage,
+        addFieldsStage,
+        projectStage,
+    ])
+
+    const filter = {user_id: user._id, name: {$regex: q, $options: 'i'}}
+    const total = await Project.countDocuments(filter)
+    const last_page = Math.ceil(total / per_page)
+    await delay(3000)
+    return {total, page, per_page, last_page, projects}
+}
+
+// ========== GET [Project Details] ========== //
+export async function getProjectDetails(user, projectId) {
+    const project = await Project.aggregate([
         {
-            $match: {user_id: user._id},
+            $match: {
+                _id: new ObjectId(projectId),
+                user_id: user._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'industries',
+                localField: 'industry_ids',
+                foreignField: '_id',
+                as: 'industries',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'stages',
+                localField: 'stage_id',
+                foreignField: '_id',
+                as: 'stage',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'revenues',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'revenues',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'funding_sources',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'funding_sources',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'project_additional_infos',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'additional_infos',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
         },
         {
             $addFields: {
@@ -184,15 +354,82 @@ export async function getMyProjects(user) {
                         else: {$concat: [LINK_STATIC_URL, '$background']},
                     },
                 },
+                stage: {$arrayElemAt: ['$stage', 0]},
             },
         },
         {
             $project: {
                 user_id: 0,
+                created_at: 0,
+                updated_at: 0,
+                industry_ids: 0,
+                stage_id: 0,
             },
         },
     ])
-    return projects
+
+    return project[0]
+}
+
+// ========== PATCH [Project - Basic] ========== //
+export async function updateBasic(user, requestBody) {
+    await Project.updateOne(
+        {user_id: user._id, _id: requestBody.project_id},
+        {name: requestBody.name, description: requestBody.description}
+    )
+}
+
+// ========== PATCH [Project - Sector] ========== //
+export async function updateSector(user, requestBody) {
+    await Project.updateOne(
+        {user_id: user._id, _id: requestBody.project_id},
+        {industry_ids: requestBody.industries, stage_id: requestBody.stage}
+    )
+}
+
+// ========== PATCH [Project - Revenue] ========== //
+export async function updateRevenue(user, requestBody) {
+    const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+
+    const {revenues} = requestBody
+    await Revenue.deleteMany({project_id: project._id}).exec()
+    if (revenues?.length > 0) {
+        const revenueBulk = revenues.map((revenue) => ({
+            ...revenue,
+            project_id: project._id,
+        }))
+        await Revenue.insertMany(revenueBulk)
+    }
+}
+
+// ========== PATCH [Project - FundingSource] ========== //
+export async function updateFundingSource(user, requestBody) {
+    const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+
+    const {funding_sources} = requestBody
+    await FundingSource.deleteMany({project_id: project._id}).exec()
+    if (funding_sources?.length > 0) {
+        project.funding_sources = funding_sources.map((funding_source) => ({
+            ...funding_source,
+            project_id: project._id,
+        }))
+        await FundingSource.insertMany(project.funding_sources)
+    }
+}
+
+// ========== PATCH [Project - AdditionalInfo] ========== //
+export async function updateAdditionalInfo(user, requestBody) {
+    const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+
+    const {additional_infos} = requestBody
+    await ProjectAdditionalInfo.deleteMany({project_id: project._id}).exec()
+    if (additional_infos?.length > 0) {
+        project.additional_infos = additional_infos.map((additional_info) => ({
+            ...additional_info,
+            project_id: project._id,
+        }))
+        await ProjectAdditionalInfo.insertMany(project.additional_infos)
+    }
 }
 
 // ========== DELETE [Project] ========== //
@@ -201,4 +438,26 @@ export async function deleteProject(user, projectId) {
     await Revenue.deleteMany({project_id: projectId}).exec()
     await FundingSource.deleteMany({project_id: projectId}).exec()
     await ProjectAdditionalInfo.deleteMany({project_id: projectId}).exec()
+}
+
+// ========== POST [Project - Invite] ========== //
+export async function inviteMember(user, projectId, requestBody) {
+    const {user_id, team_role_id, role_id} = requestBody
+    const typeNotification = await Type.findOne({class: 'notification', name: 'Project Invitation'})
+
+    const notification = new NotificationFeed({
+        source_id: user._id,
+        user_id: new ObjectId(user_id),
+        type_id: typeNotification._id,
+        additional_info: {
+            project_id: projectId,
+            team_role_id,
+            role_id,
+        },
+        metadata: {
+            status: 'waiting',
+            read: false,
+        },
+    })
+    await notification.save()
 }

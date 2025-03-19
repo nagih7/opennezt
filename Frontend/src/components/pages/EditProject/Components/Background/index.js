@@ -3,7 +3,7 @@ import { Button } from "@chakra-ui/react";
 import ActionBar from "../../../EditProfile/components/ActionBar";
 import ProjectEditMenu from "../ProjectEditMenu";
 import ProjectCard from "../ProjectCard";
-// import FormCoverImage from "components/pages/Project/CreateProject/Background/components/FormCoverImage";
+// import FormCoverImage from "components/pages/CreateProject/Background/components/FormCoverImage";
 
 const Background = () => {
 	return (

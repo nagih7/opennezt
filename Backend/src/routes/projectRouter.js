@@ -28,9 +28,54 @@ projectRouter.post(
     asyncHandler(projectController.createProject)
 )
 // ========== GET [My Projects] ========== //
-projectRouter.get('/', asyncHandler(projectController.getMyProjects))
+projectRouter.get('/', asyncHandler(projectController.getListMyProjects))
+
+// ========== GET [Project Details] ========== //
+projectRouter.get('/:id', asyncHandler(projectController.getProjectDetails))
+
+// ========== PATCH [Project - Basic] ========== //
+projectRouter.patch(
+    '/:id/basic',
+    asyncHandler(validate(projectRequest.updateBasic)),
+    asyncHandler(projectController.updateBasic)
+)
+
+// ========== PATCH [Project - Sector] ========== //
+projectRouter.patch(
+    '/:id/sector',
+    asyncHandler(validate(projectRequest.updateSector)),
+    asyncHandler(projectController.updateSector)
+)
+
+// ========== PATCH [Project - Revenue] ========== //
+projectRouter.patch(
+    '/:id/revenue',
+    asyncHandler(validate(projectRequest.updateRevenue)),
+    asyncHandler(projectController.updateRevenue)
+)
+
+// ========== PATCH [Project - FundingSource] ========== //
+projectRouter.patch(
+    '/:id/funding-source',
+    asyncHandler(validate(projectRequest.updateFundingSource)),
+    asyncHandler(projectController.updateFundingSource)
+)
+
+// ========== PATCH [Project - AdditionalInfo] ========== //
+projectRouter.patch(
+    '/:id/additional-info',
+    asyncHandler(validate(projectRequest.updateAdditionalInfo)),
+    asyncHandler(projectController.updateAdditionalInfo)
+)
 
 // ========== DELETE [Project] ========== //
-projectRouter.delete('/:id', asyncHandler(projectController.deleteProject))
+projectRouter.delete('/:id/delete', asyncHandler(projectController.deleteProject))
+
+// ========== POST [Project - Invite] ========== //
+projectRouter.post(
+    '/:id/invite-member',
+    asyncHandler(validate(projectRequest.inviteMember)),
+    asyncHandler(projectController.inviteMember)
+)
 
 export default projectRouter

@@ -7,7 +7,7 @@ import anh_avt from "assets/images/background/avt.jpg";
 
 function RightSidebar() {
   return (
-    <div className="">
+    <div className="w-4/12">
       <div className="bg-[#ffffff] p-8 rounded-md mb-4">
         <div className="flex flex-col">
           <span className="text-xl font-semibold border-b-[1px] border-gray-200 pb-3">
@@ -121,7 +121,7 @@ function RightSidebar() {
         <img
           src={fb_img}
           alt="logo-fb_img"
-          className="w-[375px] h-[450px] rounded-md mt-4"
+          className="w-full h-[450px] rounded-md mt-4"
         />
         <img
           src={Logo}

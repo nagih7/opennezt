@@ -6,15 +6,15 @@ import AppLayout from "components/layouts/AppLayout";
 import AuthLayout from "components/layouts/AuthLayout";
 import Certifications from "components/pages/EditProfile/components/Certifications";
 // Project
-import Details from "components/pages/Project/CreateProject/Details";
-import Stage from "components/pages/Project/CreateProject/Stage";
-import Revenue from "components/pages/Project/CreateProject/Revenue";
-import FundingSources from "components/pages/Project/CreateProject/FundingSources";
-import AdditonalInfo from "components/pages/Project/CreateProject/AdditionalInfo";
-import Logo from "components/pages/Project/CreateProject/Logo";
-import Background from "components/pages/Project/CreateProject/Background";
-import Invites from "components/pages/Project/CreateProject/Invites";
-import DetailProject from "components/pages/Project/DetailProject";
+import Details from "components/pages/CreateProject/Details";
+import Stage from "components/pages/CreateProject/Stage";
+import Revenue from "components/pages/CreateProject/Revenue";
+import FundingSources from "components/pages/CreateProject/FundingSources";
+import AdditonalInfo from "components/pages/CreateProject/AdditionalInfo";
+import Logo from "components/pages/CreateProject/Logo";
+import Background from "components/pages/CreateProject/Background";
+import Invites from "components/pages/CreateProject/Invites";
+import ProjectDetails from "components/pages/ProjectDetails";
 // EditProfile
 import EditDetail from "components/pages/EditProject/Components/Detail";
 import EditStage from "components/pages/EditProject/Components/Stage";
@@ -183,7 +183,7 @@ const router = createBrowserRouter([
 	},
 
 	{
-		path: "/project",
+		path: "/projects",
 		element: (
 			<AppLayout>
 				<Project />
@@ -370,14 +370,14 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_CREATE_PROJECT_PAGE"),
 	},
 	{
-		path: "/project/details/:id",
+		path: "/projects/details/:id",
 		element: (
 			<AppLayout>
-				<DetailProject />
+				<ProjectDetails />
 			</AppLayout>
 		),
 		loader: ({ request }) =>
-			rootLoader({ request }, true, "LOAD_DETAIL_PROJECT_PAGE"),
+			rootLoader({ request }, true, "LOAD_PROJECT_DETAILS_PAGE"),
 	},
 	{
 		path: "/project/edit-project/detail",
