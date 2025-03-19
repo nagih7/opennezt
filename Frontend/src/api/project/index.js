@@ -115,7 +115,7 @@ export const getProjectDetails = (projectId) => async (dispatch, getState) => {
 export const getProjects = () => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
-		apiPath: "users/projects",
+		apiPath: "users/projects",	
 		actionTypes: [
 			startRequestGetProjects,
 			startRequestGetProjectsSuccess,

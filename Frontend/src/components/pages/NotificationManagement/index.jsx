@@ -10,7 +10,6 @@ import moment from "moment";
 import {
 	getNotifications,
 	getTotalFriends,
-	getTypeName,
 	readRoot,
 	replyNotification,
 } from "api/notification";
@@ -44,7 +43,6 @@ function NotificationProject() {
 	useEffect(() => {
 		store.dispatch(readRoot(dataFilter));
 		store.dispatch(getTotalFriends());
-		store.dispatch(getTypeName());
 	}, [dataFilter]);
 
 	const handleOpenTalentDetails = async (user_id) => {
