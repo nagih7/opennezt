@@ -1,8 +1,12 @@
 import React from "react";
 import { IconlyHeart, IconlyShow, IconlyStar } from "components/UI/Iconly";
 import img_bag from "assets/images/background/bag.jpg";
+import { useSelector } from "react-redux";
 
 const ListTalents = () => {
+	const { talents } = useSelector((state) => state.talent);
+
+	console.log(talents);
 	return (
 		<div className="grid grid-cols-3 gap-8">
 			<div
