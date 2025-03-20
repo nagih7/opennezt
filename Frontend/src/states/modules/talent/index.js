@@ -7,13 +7,13 @@ const talentSlice = createSlice({
 		talentDetails: null,
 		// RECRUIT TALENTS
 		formRecruitTalents: {
-			keySearch: null,
-			industry: null,
-			experience_level: null,
-			category: null,
-			subcategory: null,
-			skill: null,
-			page: 0,
+			keySearch: "",
+			industry: "",
+			experienceLevel: "",
+			category: "",
+			subcategory: "",
+			skill: "",
+			page: 1,
 			perPage: 6,
 		},
 		isLoadingRecruitTalents: false,
@@ -76,20 +76,6 @@ const talentSlice = createSlice({
 			isLoadingGetTalentDetails: false,
 		}),
 
-		resetFormRecruitTalents: (state) => ({
-			...state,
-			formRecruitTalents: {
-				keyword: null,
-				sector: null,
-				experience_level: null,
-				education_level: null,
-				commitment: null,
-				location: null,
-				language: null,
-				page: 0,
-			},
-		}),
-
 		// ========== NEW ========== //
 		requestRecruitTalents: (state) => ({
 			...state,
@@ -112,7 +98,7 @@ const talentSlice = createSlice({
 			isLoadingRecruitTalents: false,
 		}),
 
-		setFormRecruitTalents: async (state, action) => {
+		setFormRecruitTalents: (state, action) => {
 			const { event, nameSelect } = action.payload;
 			if (nameSelect) {
 				return {
@@ -120,10 +106,18 @@ const talentSlice = createSlice({
 					formRecruitTalents: {
 						...state.formRecruitTalents,
 						[nameSelect]: event.value[0],
-						page: 0,
+						page: 1,
 					},
 				};
 			}
+			return {
+				...state,
+				formRecruitTalents: {
+					...state.formRecruitTalents,
+					[event.target.name]: event.target.value,
+					page: 1,
+				},
+			};
 		},
 	},
 });
@@ -138,7 +132,6 @@ export const {
 	startRequestGetDetailTalent,
 	startRequestGetDetailTalentSuccess,
 	startRequestGetDetailTalentFail,
-	resetFormRecruitTalents,
 	// ========== NEW ========== //
 	requestRecruitTalents,
 	recruitTalentsSuccess,

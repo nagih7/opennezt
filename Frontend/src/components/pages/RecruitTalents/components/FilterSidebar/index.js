@@ -10,6 +10,8 @@ import {
 } from "api/user";
 import { recruitTalents } from "api/talent";
 import { setFormRecruitTalents } from "states/modules/talent";
+import InputCustom from "components/UI/InputCustom";
+import { debounce } from "lodash";
 
 const FilterSidebar = () => {
 	const dispatch = useDispatch();
@@ -24,6 +26,7 @@ const FilterSidebar = () => {
 	const { formRecruitTalents } = useSelector((state) => state.talent);
 
 	// ========== STATE ========== //
+	const [inputTimer, setInputTimer] = useState(null);
 	const [dataFilter, setDataFilter] = useState({
 		keySearch: "",
 		industry: "",
@@ -37,8 +40,10 @@ const FilterSidebar = () => {
 
 	// ========== USE EFFECT ========== //
 	useEffect(() => {
-		dispatch(recruitTalents(dataFilter));
-	}, [dispatch, dataFilter]);
+		dispatch(recruitTalents(formRecruitTalents));
+		setDataFilter(formRecruitTalents);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dispatch]);
 
 	useEffect(() => {
 		if (industryFramework?.items?.length === 0) {
@@ -57,7 +62,32 @@ const FilterSidebar = () => {
 	}, [dispatch, categoryFramework]);
 
 	// ========== ONCHANGE FUNCTION ========== //
-	const handleChange = async (event, nameSelect) => {
+	const handleChangeInput = (event) => {
+		setDataFilter((prev) => ({
+			...prev,
+			[event.target.name]: event.target.value,
+		}));
+
+		// Xóa timer cũ nếu có
+		if (inputTimer) {
+			clearTimeout(inputTimer);
+		}
+
+		// Đặt timer mới
+		setInputTimer(
+			setTimeout(() => {
+				dispatch(setFormRecruitTalents({ event }));
+				dispatch(
+					recruitTalents({
+						...formRecruitTalents,
+						keySearch: event.target.value,
+					})
+				);
+			}, 300)
+		);
+	};
+
+	const handleChangeSelect = async (event, nameSelect) => {
 		setDataFilter({ ...dataFilter, [nameSelect]: event.value[0] });
 		dispatch(setFormRecruitTalents({ event, nameSelect }));
 		switch (nameSelect) {
@@ -75,65 +105,83 @@ const FilterSidebar = () => {
 		}
 	};
 
+	// console.log("dataFilter", dataFilter);
+	// console.log("formRecruitTalents", formRecruitTalents);
+
 	return (
 		<>
+			<div className="bg-[#ffffff] rounded-md mb-8">
+				<InputCustom
+					height="40px"
+					placeholder="Search by name, email, etc."
+					value={dataFilter.keySearch}
+					onChange={handleChangeInput}
+					label="Search"
+					name="keySearch"
+				/>
+			</div>
 			{industryFramework?.items?.length > 0 && (
 				<div className="bg-[#ffffff] rounded-md mb-8">
 					<SelectCustom
-						onChange={(e) => handleChange(e, "industry")}
+						onChange={(e) => handleChangeSelect(e, "industry")}
 						height="40px"
 						collection={industryFramework}
 						name="industry"
 						label="Industry"
-						placeholder="Ex: Technology, Finance, etc."
+						// placeholder="Ex: Technology, Finance, etc."
+						value={[formRecruitTalents.industry]}
 					/>
 				</div>
 			)}
 			{experienceLevelFramework?.items?.length > 0 && (
 				<div className="bg-[#ffffff] rounded-md mb-8">
 					<SelectCustom
-						onChange={(e) => handleChange(e, "experienceLevel")}
+						onChange={(e) => handleChangeSelect(e, "experienceLevel")}
 						height="40px"
 						collection={experienceLevelFramework}
 						name="experienceLevel"
 						label="Experience Level"
-						placeholder="Ex: Entry, Mid, Senior, etc."
+						// placeholder="Ex: Entry, Mid, Senior, etc."
+						value={[formRecruitTalents.experienceLevel]}
 					/>
 				</div>
 			)}
 			{categoryFramework?.items?.length > 0 && (
 				<div className="bg-[#ffffff] rounded-md mb-8">
 					<SelectCustom
-						onChange={(e) => handleChange(e, "category")}
+						onChange={(e) => handleChangeSelect(e, "category")}
 						height="40px"
 						collection={categoryFramework}
 						name="category"
 						label="Category"
-						placeholder="Ex: Web Development, Mobile Development, etc."
+						// placeholder="Ex: Web Development, Mobile Development, etc."
+						value={[formRecruitTalents.category]}
 					/>
 				</div>
 			)}
 			{subCategoryFramework?.items?.length > 0 && (
 				<div className="bg-[#ffffff] rounded-md mb-8">
 					<SelectCustom
-						onChange={(e) => handleChange(e, "subcategory")}
+						onChange={(e) => handleChangeSelect(e, "subcategory")}
 						height="40px"
 						collection={subCategoryFramework}
 						name="subcategory"
 						label="Sub Category"
-						placeholder="Ex: Frontend, Backend, etc."
+						// placeholder="Ex: Frontend, Backend, etc."
+						value={[formRecruitTalents.subcategory]}
 					/>
 				</div>
 			)}
 			{skillFramework?.items?.length > 0 && (
 				<div className="bg-[#ffffff] rounded-md mb-8">
 					<SelectCustom
-						onChange={(e) => handleChange(e, "skill")}
+						onChange={(e) => handleChangeSelect(e, "skill")}
 						height="40px"
 						collection={skillFramework}
 						name="skill"
 						label="Skill"
-						placeholder="Ex: React, Node, etc."
+						// placeholder="Ex: React, Node, etc."
+						value={[formRecruitTalents.skill]}
 					/>
 				</div>
 			)}
