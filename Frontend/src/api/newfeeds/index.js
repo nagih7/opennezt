@@ -12,9 +12,9 @@ import {
    createArticle,
    createArticleSuccess,
    createArticleFail,
+   getListComment,
    getListCommentSuccess,
    getListCommentFail,
-   getListComment,
    getUserCommentReactions,
    getUserCommentReactionsSuccess,
    getUserCommentReactionsFail,
@@ -85,7 +85,6 @@ export const handleCreateArticle =
    ({ data }) =>
    async (dispatch, getState) => {
       const path = `article`;
-      console.log("data received", data);
       return callApi({
          method: "post",
          apiPath: path,
