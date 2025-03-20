@@ -62,20 +62,20 @@ function NotificationProject() {
 
 	const columns = [
 		{
-			title: REQUEST_BY[language],
-			dataIndex: "source_name",
-			key: "source_name",
-			render: (source_name, record) => {
-				if (!source_name) return null; // Kiểm tra nếu user_name không tồn tại
-				return (
-					<Button
-						type="link"
-						onClick={() => handleOpenTalentDetails(record.source_name)}
-						style={{ padding: 0, height: "auto" }}>
-						{source_name}
-					</Button>
-				);
-			},
+		  title: REQUEST_BY[language],
+		  dataIndex: "source_name",
+		  key: "source_name",
+		  render: (source_name, record) => {
+			if (!source_name) return null; // Kiểm tra nếu user_name không tồn tại
+			return (
+			  <Button
+				type="link"
+				onClick={() => handleOpenTalentDetails(record.source_id)}
+				style={{ padding: 0, height: "auto" }}>
+				{source_name}
+			  </Button>
+			);
+		  },
 		},
 		{
 			title: TYPE.TYPE[language],

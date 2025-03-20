@@ -410,9 +410,13 @@ export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
     return {total: talents.length, page: requestRecuitTalents.page + 1, per_page, talents}
 }
 
-export async function getTalentDetails(user, id) {
+export async function getTalentDetails(user, _id) {
+    console.log('id', user._id, _id)
+    // const type = await Type.findOne({name: 'Friend Request'})
     const detailTalent = await User.aggregate([
-        {$match: {_id: new ObjectId(id)}},
+        {
+            $match: {_id: _id}
+        },
         {
             $lookup: {
                 from: 'founder_profiles',
@@ -436,8 +440,8 @@ export async function getTalentDetails(user, id) {
                         $match: {
                             type: 'friend_request',
                             $and: [
-                                {$or: [{user_id: user._id}, {user_id: new ObjectId(id)}]},
-                                {$or: [{source_id: user._id}, {source_id: new ObjectId(id)}]},
+                                {$or: [{user_id: user._id}, {user_id: _id}]},
+                                {$or: [{source_id: user._id}, {source_id: _id}]},
                             ],
                         },
                     },
