@@ -93,7 +93,7 @@ const ProfessionalProfile = () => {
 											profile.educations.map((education, index) => (
 												<div
 													key={index}
-													className="p-3  rounded-lg  mt-2 mr-1 bg-[#F4F2EE] rounded-[0.6rem]">
+													className="p-3  rounded-lg  mt-2 mr-1 shadow rounded-[0.6rem]">
 													<h4 className="font-semibold">
 														{education.school || "N/A"}
 													</h4>
@@ -149,7 +149,7 @@ const ProfessionalProfile = () => {
 												(certification, index) => (
 													<div
 														key={index}
-														className="p-3  rounded-lg  mt-2 mr-1 bg-[#F4F2EE] rounded-[0.6rem]">
+														className="p-3  rounded-lg  mt-2 mr-1 shadow rounded-[0.6rem]">
 														<h4 className="font-semibold">
 															{certification.name || "N/A"}
 														</h4>

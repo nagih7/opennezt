@@ -42,7 +42,7 @@ const EditAdditionalInfo = () => {
 						<div className="px-[16px]">
 							{Array.isArray(project?.additional_infos) ? (
 								project.additional_infos.map((pro, index) => (
-									<div key={index} className="bg-[#F4F2EE] rounded-[0.6rem] mt-[2rem] p-4">
+									<div key={index} className="shadow rounded-[0.6rem] mt-[2rem] p-4">
 
 										<div className="relative flex justify-end space-x-2">
 											<span className="cursor-pointer">
