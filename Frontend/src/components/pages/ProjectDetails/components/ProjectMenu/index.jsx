@@ -62,12 +62,12 @@ const ProjectMenu = () => {
             <span className="text-[#6f7f92] text-sm font-medium">Media</span>
           </li>
           <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
-            <a
-              href="#"
+            <Link
+              to={"/project/details/setting"}
               className="no-underline bg-[#f8f9fa] mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2"
             >
               <IconlySetting size={20} color={"#6f7f92"} />
-            </a>
+            </Link>
             <span className="text-[#6f7f92] text-sm font-medium">Setting</span>
           </li>
           {/* <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
