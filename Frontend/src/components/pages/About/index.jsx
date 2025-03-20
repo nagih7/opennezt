@@ -9,6 +9,7 @@ import { updateFounderProfile } from "api/founder";
 import ProfileOverview from "./components/ProfileOverview";
 import ProfileMenu from "./components/ProfileMenu";
 import ProfessionalProfile from "./components/ProfessionalProfile";
+import Friends from "./components/Friends";
 import { Image } from "@chakra-ui/react";
 
 const EditProfilePopup = React.lazy(() =>
@@ -102,7 +103,7 @@ const About = () => {
 			)
 		);
 	};
-
+	const [changeTab, setChangeTab] = useState("About")
 	return (
 		<div className="relative bg-[#ffffff] w-full max-h-full mb-8">
 			<Image
@@ -122,9 +123,15 @@ const About = () => {
 			<div className="absolute w-full top-[275px] px-[16px]">
 				<ProfileOverview />
 				{/* =================  */}
-				<ProfileMenu />
+				<ProfileMenu changeTab={changeTab} setChangeTab={setChangeTab} />
 				{/* =================  */}
-				<ProfessionalProfile />
+				{changeTab == "About" && (
+					<ProfessionalProfile />
+				)}
+				{changeTab == "Friends" && (
+					<Friends />
+				)}
+
 			</div>
 		</div>
 	);

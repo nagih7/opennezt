@@ -130,7 +130,7 @@ const Educations = () => {
 						<div className="px-[16px]">
 							{educations?.map((education, index) => (
 								<div key={index}>
-									<div className="bg-[#F4F2EE] rounded-[0.6rem]">
+									<div className=" shadow rounded-[0.6rem]">
 										<div className="relative p-4 mt-[2rem]">
 											<span className="cursor-pointer  md:float-right 2xl:float-right"><IconlyDelete size={24} color={"#000"} /></span>
 											<span

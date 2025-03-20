@@ -111,7 +111,7 @@ const AdditionalInfo = () => {
 						<div>
 							{additional_infos?.map((info, index) => (
 								<div key={index}>
-									<div className="bg-[#F4F2EE] rounded-[0.6rem]">
+									<div className="shadow rounded-[0.6rem]">
 										<div className="relative p-4 mt-[2rem]">
 											<span
 												className="cursor-pointer md:float-right 2xl:float-right"
