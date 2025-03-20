@@ -33,6 +33,16 @@ const articleSlice = createSlice({
    },
    // reducers: ở đây có chức năng là nhận vào state hiện tại và action, sau đó trả về một state mới
    reducers: {
+      resetFeeds: (state) => ({
+         ...state,
+         pagination: {
+            nextCursor: new Date(),
+            limit: 5,
+            hasMore: true,
+         },
+         feeds: [],
+         reactions: [],
+      }),
       getList: (state) => ({
          ...state,
          isLoadingGetFeeds: true,
@@ -234,6 +244,12 @@ const articleSlice = createSlice({
          ...state,
          isLoadingCreateComment: true,
       }),
+      updateUpdatedArticle: (state, action) => ({
+         ...state,
+         feeds: state.feeds.map((article) =>
+            article._id === action.payload._id ? action.payload : article
+         ),
+      }),
       updateArticle: (state) => ({
          ...state,
          isLoadingUpdateArticle: true,
@@ -245,6 +261,10 @@ const articleSlice = createSlice({
       updateArticleFail: (state) => ({
          ...state,
          isLoadingUpdateArticle: false,
+      }),
+      updateDeletedArticle: (state, action) => ({
+         ...state,
+         feeds: state.feeds.filter((article) => article._id !== action.payload),
       }),
       deleteArticle: (state) => ({
          ...state,
@@ -262,6 +282,7 @@ const articleSlice = createSlice({
 });
 
 export const {
+   resetFeeds,
    getList,
    getListSuccess,
    getListFail,
@@ -289,9 +310,11 @@ export const {
    createComment,
    createCommentSuccess,
    createCommentFail,
+   updateUpdatedArticle,
    updateArticle,
    updateArticleSuccess,
    updateArticleFail,
+   updateDeletedArticle,
    deleteArticle,
    deleteArticleSuccess,
    deleteArticleFail,

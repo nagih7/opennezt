@@ -125,7 +125,7 @@ export const updateProfileSkills = Joi.object({
                     (value, helpers) =>
                         new AsyncValidate(value, async () => {
                             const skill = await Skill.findById(new ObjectId(value))
-                            return skill ? value : helpers.error('any.empty')
+                            return skill ? skill : helpers.error('any.empty')
                         })
                 ),
         })
