@@ -29,7 +29,7 @@ const ProfessionalProfile = () => {
 	}, {});
 
 	const result = Object.values(groupedSkills);
-
+	console.log(result)
 
 	return (
 		<div className="flex gap-8">
