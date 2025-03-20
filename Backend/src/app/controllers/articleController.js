@@ -30,6 +30,11 @@ export async function getCommentList(req, res) {
     res.status(200).jsonify(commentList)
 }
 
+export async function getReplyCommentList(req, res) {
+    const commentList = await articleService.getReplyCommentList(req.currentUser, req.query)
+    res.status(200).jsonify(commentList)
+}
+
 export async function createComment(req, res) {
     const comment = await articleService.createComment(req.currentUser, req.body)
     res.status(200).jsonify(comment)
@@ -63,4 +68,9 @@ export const deleteArticle = async (req, res) => {
 export const shareArticle = async (req, res) => {
     await articleService.shareArticle(req.params.id, req.currentUser)
     res.status(200).jsonify('Share Article Success')
+}
+
+export const replyComment = async (req, res) => {
+    const replyComment = await articleService.replyComment(req.query, req.currentUser, req.body)
+    res.status(200).jsonify(replyComment)
 }

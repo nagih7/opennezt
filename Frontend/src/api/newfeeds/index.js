@@ -30,6 +30,9 @@ import {
    deleteArticle,
    deleteArticleSuccess,
    deleteArticleFail,
+   getListReplyComment,
+   getListReplyCommentSuccess,
+   getListReplyCommentFail,
 } from "states/modules/article";
 
 export const getListFeeds =
@@ -185,6 +188,29 @@ export const handleDeleteArticle =
          method: "delete",
          apiPath: path,
          actionTypes: [deleteArticle, deleteArticleSuccess, deleteArticleFail],
+         variables: {},
+         dispatch,
+         getState,
+      });
+   };
+
+export const handleGetListReplyComment =
+   ({
+      dataFilter = {
+         limit: 3,
+         page: 1,
+      },
+   }) =>
+   async (dispatch, getState) => {
+      const path = `article/list-reply-comment?articleId=${dataFilter.article_id}&parentId=${dataFilter.parent_id}&page=${dataFilter.page}&limit=${dataFilter.limit}`;
+      return callApi({
+         method: "get",
+         apiPath: path,
+         actionTypes: [
+            getListReplyComment,
+            getListReplyCommentSuccess,
+            getListReplyCommentFail,
+         ],
          variables: {},
          dispatch,
          getState,

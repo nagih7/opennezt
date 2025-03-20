@@ -17,6 +17,7 @@ import {
    handleGetListComment,
    handleGetUserCommentReactions,
    handleReactComment,
+   handleGetListReplyComment,
 } from "api/newfeeds";
 import { useDispatch, useSelector } from "react-redux";
 import { resetComment, updateCommentReaction } from "states/modules/article";
@@ -32,6 +33,8 @@ import Comment from "../Comment";
 import { use } from "react";
 import { first, set } from "lodash";
 import NewCommentForm from "../NewCommentForm";
+import { Pagination } from "antd";
+import { resetReply } from "states/modules/article";
 
 const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    const {
@@ -105,6 +108,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
 
    const handleCloseComment = async () => {
       await dispatch(resetComment());
+      dispatch(resetReply());
       onClose();
    };
 
@@ -210,6 +214,102 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       [dispatch]
    );
    //End
+   //Reply Comment Logic
+   const replyCommentState = useSelector((state) => state.article);
+   const [replyCommentList, setReplyCommentList] = useState({
+      // [parent_id]: {
+      //    replyComments: [],
+      //    pagination: {
+      //       page: 1,
+      //       limit: 3,
+      //       hasMore: true,
+      //    },
+      //    isLoading: false,
+      // },
+   });
+
+   const {
+      reply_comments_pagination,
+      isLoadingGetReplyComments,
+      replyComments,
+   } = replyCommentState;
+
+   useEffect(() => {
+      if (replyComments && replyComments.length > 0) {
+         const parentId = replyComments[0].parent_id;
+
+         setReplyCommentList((prevState) => {
+            // Kiểm tra xem parentId đã tồn tại trong state chưa
+            const existingReplies = prevState[parentId]?.replyComments || [];
+
+            // Lọc ra những comments mới để tránh trùng lặp
+            const newReplies = replyComments.filter(
+               (newReply) =>
+                  !existingReplies.some(
+                     (existing) => existing._id === newReply._id
+                  )
+            );
+
+            return {
+               ...prevState,
+               [parentId]: {
+                  replyComments: [...existingReplies, ...newReplies],
+                  pagination: reply_comments_pagination,
+               },
+            };
+         });
+      }
+   }, [replyComments, isLoadingGetReplyComments, reply_comments_pagination]);
+
+   const [replyDataFilter, setReplyDataFilter] = useState({
+      limit: 3,
+      page: 1,
+      hasMore: true,
+      article_id: feed._id,
+      parent_id: "",
+   });
+
+   const getParentId = useCallback(
+      (comment) => {
+         if (comment._id && replyCommentList[comment._id]) {
+            if (replyCommentList[comment._id].pagination.hasMore === true) {
+               setReplyDataFilter((prev) => ({
+                  ...prev,
+                  parent_id: comment._id,
+                  limit: replyCommentList[comment._id].pagination?.limit || 3,
+                  hasMore:
+                     replyCommentList[comment._id].pagination?.hasMore ?? true,
+                  page: replyCommentList[comment._id].pagination?.page || 1,
+               }));
+            }
+         } else {
+            // Nếu comment là comment gốc hoặc chưa có trong replyCommentList
+            setReplyDataFilter((prev) => ({
+               ...prev,
+               parent_id: comment._id,
+               limit: 3,
+               hasMore: true,
+               page: 1,
+            }));
+         }
+         // Nếu comment là reply comment (có parent_id), lấy pagination của parent
+      },
+      [replyCommentList]
+   );
+
+   const hideReplies = useCallback((comment) => {
+      setReplyCommentList((prevState) => ({
+         ...prevState,
+         [comment._id]: {},
+      }));
+   }, []);
+
+   useEffect(() => {
+      if (replyDataFilter.parent_id) {
+         dispatch(handleGetListReplyComment({ dataFilter: replyDataFilter }));
+      }
+   }, [replyDataFilter, dispatch]);
+   //End reply comment logic
    return (
       <div
          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-hidden"
@@ -217,7 +317,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
          style={{ zIndex: 100 }}
       >
          <div
-            className="bg-[#ffffff] w-[800px] max-h-[80vh] mb-8 rounded-md p-8 overflow-y-auto"
+            className="bg-[#ffffff] w-[50vw] max-h-[90vh] mb-8 rounded-md p-8 overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
          >
             <div className="flex items-center gap-3">
@@ -305,6 +405,9 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                         reaction={reactionMap.get(cmt._id)}
                         onCommentReaction={handleCommentReaction}
                         isLoading={isLoadingReactComment}
+                        setParentId={getParentId}
+                        replyCommentList={replyCommentList[cmt._id]}
+                        hideReplies={hideReplies}
                      />
                   );
                } else {
@@ -315,6 +418,9 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                         reaction={reactionMap.get(cmt._id)}
                         onCommentReaction={handleCommentReaction}
                         isLoading={isLoadingReactComment}
+                        setParentId={getParentId}
+                        replyCommentList={replyCommentList[cmt._id]}
+                        hideReplies={hideReplies}
                      />
                   );
                }

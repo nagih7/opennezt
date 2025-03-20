@@ -169,7 +169,7 @@ export const IconlySend = ({ size, color }) => {
    );
 };
 
-export const IconlyEdit = ({ size, color }) => {
+export const IconlyEdit = ({ size, color, backgroundColor }) => {
    return (
       <svg
          width={size}
@@ -184,7 +184,7 @@ export const IconlyEdit = ({ size, color }) => {
             id="Iconly/Two-tone/Edit"
             stroke="none"
             strokeWidth="1.5"
-            fill="none"
+            fill={backgroundColor || "none"}
             fillRule="evenodd"
             strokeLinecap="round"
             strokeLinejoin="round"

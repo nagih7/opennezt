@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useState, useRef, useEffect } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { IconlyDelete, IconlyMoreCircle } from "components/UI/Iconly";
 import avt from "assets/images/background/avt.jpg";
@@ -69,6 +69,7 @@ const Article = forwardRef(
       };
 
       const handleEdit = () => {
+         handleClickMore();
          onEdit(feed);
       };
 
@@ -78,9 +79,33 @@ const Article = forwardRef(
          setIsConfirmDelete(!isConfirmDelete);
       };
 
-      const handleDelete = () => {
+      const handleDelete = async () => {
          onDelete(_id);
       };
+
+      //
+      const [isShowMore, setIsShowMore] = useState(false);
+      const handleClickMore = () => {
+         setIsShowMore(!isShowMore);
+      };
+      const dropdownRef = useRef(null);
+
+      useEffect(() => {
+         const handleClickOutside = (event) => {
+            if (
+               dropdownRef.current &&
+               !dropdownRef.current.contains(event.target)
+            ) {
+               setIsShowMore(false);
+            }
+         };
+
+         document.addEventListener("mousedown", handleClickOutside);
+         return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+         };
+      }, []);
+      //
 
       //==================================================================================================
       //Posted Date Logic
@@ -158,19 +183,46 @@ const Article = forwardRef(
                            : postedDate}
                      </span>
                   </div>
-                  <div onClick={handleEdit}>
-                     <IconlyMoreCircle
-                        size={30}
-                        color={"#6f7f92"}
-                        className="w-3/12"
-                     />
-                  </div>
-                  <div onClick={handleClickDelete}>
-                     <IconlyDelete
-                        size={30}
-                        color={"#6f7f92"}
-                        className="w-3/12"
-                     />
+                  {/* */}
+
+                  <div>
+                     <div className="relative" ref={dropdownRef}>
+                        <div
+                           className="flex text-2xl items-start pr-4"
+                           style={{ cursor: "pointer" }}
+                           onClick={handleClickMore}
+                        >
+                           ...
+                        </div>
+                        {isShowMore && (
+                           <div className="absolute top-full right-0 bg-white shadow-lg rounded-md z-[99999] min-w-[200px] border border-gray-100">
+                              <ul className="p-0 m-2">
+                                 <li
+                                    className="px-3 hover:bg-gray-100 flex items-center gap-2 cursor-pointer"
+                                    onClick={handleClickDelete}
+                                 >
+                                    <IconlyDelete size={25} color={"#6f7f92"} />
+                                    <span className="text-sm p-2">
+                                       Delete post
+                                    </span>
+                                 </li>
+                                 <li
+                                    className="px-3 hover:bg-gray-100 flex items-center gap-2 cursor-pointer"
+                                    onClick={handleEdit}
+                                 >
+                                    <IconlyEdit
+                                       size={25}
+                                       color={"#6f7f92"}
+                                       backgroundColor={"#6f7f92"}
+                                    />
+                                    <span className="text-sm p-2">
+                                       Edit post
+                                    </span>
+                                 </li>
+                              </ul>
+                           </div>
+                        )}
+                     </div>
                   </div>
                </div>
             </div>
@@ -228,7 +280,7 @@ const Article = forwardRef(
                   <span>Share</span>
                </div>
             </div>
-            <div className="flex items-center w-full justify-between p-[10px] rounded-md border-[1px] border-gray-200 gap-3 mt-[20px]">
+            {/* <div className="flex items-center w-full justify-between p-[10px] rounded-md border-[1px] border-gray-200 gap-3 mt-[20px]">
                <div className="w-8 h-8">
                   <img src={avt} className="rounded-full w-8 h-8" />
                </div>
@@ -245,7 +297,7 @@ const Article = forwardRef(
                      <IconlyEdit size={20} color={"#6f7f92"} />
                   </button>
                </div>
-            </div>
+            </div> */}
          </div>
       );
    }
