@@ -8,7 +8,7 @@ const ListTalents = () => {
 
 	return (
 		<div className="grid grid-cols-3 gap-8">
-			{talents.map((talent) => (
+			{talents?.map((talent) => (
 				<div
 					key={talent.user._id}
 					className="relative group h-[380px]"

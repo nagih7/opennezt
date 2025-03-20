@@ -33,6 +33,9 @@ const ProfessionalProfile = () => {
 
 	const result = Object.values(groupedSkills);
 
+	console.log(result)
+
+
 	return (
 		<div className="flex gap-8">
 			<div className="w-10/12">
@@ -154,7 +157,7 @@ const ProfessionalProfile = () => {
 															Certificate Expiration:{" "}
 															{formatDate(
 																certification.issue_date ||
-																	"N/A"
+																"N/A"
 															)}
 														</p>
 													</div>

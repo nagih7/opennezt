@@ -16,10 +16,19 @@ const EditRevenue = () => {
 					<ActionBar />
 				</div>
 				<div className="bg-[#ffffff] p-8 rounded-md mt-8">
-					<div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
+					<div className="pb-[20px] mb-8 border-b-[1px] border-gray-200 flex justify-between">
 						<div>
 							<h4 className=""> Revenue</h4>
 						</div>
+						<Button
+							height={50}
+							className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+							borderRadius={4}
+							loading={false}
+							loadingText="Loading..."
+							spinnerPlacement="start">
+							Add Certification
+						</Button>
 					</div>
 					<div>
 						<div>

@@ -22,9 +22,8 @@ const ProjectEditMenu = () => {
 						Profile Settings
 					</div>
 					<div
-						className={`transition-transform duration-300 ${
-							isOpen ? "rotate-180" : "rotate-0"
-						}`}>
+						className={`transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"
+							}`}>
 						{isOpen ? (
 							<IconlyArrowUp2 size={18} color={"#ffffff"} />
 						) : (
@@ -34,9 +33,8 @@ const ProjectEditMenu = () => {
 				</div>
 			</h6>
 			<div
-				className={`mt-3 bg-[#ffffff] overflow-hidden transition-all duration-500 ease-in-out ${
-					isOpen ? "max-h-screen" : "max-h-0"
-				}`}>
+				className={`mt-3 bg-[#ffffff] overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? "max-h-screen" : "max-h-0"
+					}`}>
 				<div className="px-[24px]">
 					<div className="px-[24px]">
 						<ul className="flex flex-col items-center pl-0 mb-0">
@@ -51,7 +49,7 @@ const ProjectEditMenu = () => {
 								<Link
 									to={"/project/edit-project/stage"}
 									className="text-[#6f7f92]  no-underline ">
-									Stage
+									Sector
 								</Link>
 							</li>
 							<li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
