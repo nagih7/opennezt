@@ -18,7 +18,12 @@ import {
 } from "../../../api/newfeeds";
 import { useDispatch, useSelector } from "react-redux";
 import RightSidebar from "components/common/RightSidebar";
-import { updateReaction } from "states/modules/article";
+import {
+   updateDeletedArticle,
+   updateReaction,
+   updateUpdatedArticle,
+   resetFeeds,
+} from "states/modules/article";
 import CreateAricleForm from "./components/CreateAricleForm";
 import CommentList from "./components/CommentList";
 import UpdateArticleForm from "./components/UpdateArticleForm";
@@ -32,6 +37,7 @@ function NewFeeds() {
       reactions,
       isLoadingGetFeeds,
       isLoadingReactArticle,
+      isLoadingCreateArticle,
       pagination,
    } = useSelector((state) => state.article);
 
@@ -146,8 +152,12 @@ function NewFeeds() {
       [dispatch]
    );
 
+   useEffect(() => {
+      console.log(isLoadingCreateArticle);
+   }, [isLoadingCreateArticle]);
+
    const handleFormSubmit = useCallback(
-      (formData) => {
+      async (formData) => {
          const newFormData = new FormData();
          newFormData.append("caption", formData.content.caption);
          formData.content.attachment.forEach((file) => {
@@ -161,8 +171,14 @@ function NewFeeds() {
          newFormData.append("status", formData.status);
          newFormData.append("project_id", formData.project_id);
          dispatch(handleCreateArticle({ data: newFormData }));
+         if (!isLoadingCreateArticle) {
+            setTimeout(() => {
+               dispatch(resetFeeds());
+               handleCloseForm();
+            }, 1000);
+         }
       },
-      [dispatch]
+      [dispatch, isLoadingCreateArticle, handleCloseForm]
    );
    //End Form Create Article
 
@@ -207,13 +223,15 @@ function NewFeeds() {
          newFormData.append("status", formData.status);
          newFormData.append("project_id", formData.project_id);
          dispatch(handleUpdateArticle({ id: id, data: newFormData }));
+         dispatch(updateUpdatedArticle(formData));
       },
       [dispatch]
    );
    //End Update Article
    //Delete Article
-   const handleDetele = useCallback(
+   const handleDelete = useCallback(
       (id) => {
+         dispatch(updateDeletedArticle(id));
          dispatch(handleDeleteArticle({ id }));
       },
       [dispatch]
@@ -223,7 +241,6 @@ function NewFeeds() {
       <div>
          <div className="flex w-full gap-8 pt-4 px-[16px]">
             <div className="w-10/12">
-        
                {isOpenUpdateForm ? (
                   <UpdateArticleForm
                      feed={selectedArticle}
@@ -245,6 +262,7 @@ function NewFeeds() {
                   <CreateAricleForm
                      onSubmitForm={handleFormSubmit}
                      onCloseForm={handleCloseForm}
+                     isLoadingCreateArticle={isLoadingCreateArticle}
                   />
                ) : null}
                <div>
@@ -262,7 +280,7 @@ function NewFeeds() {
                            isLoading={isLoadingReactArticle}
                            onSelect={handleSelectArticle}
                            onEdit={handleOpenUpdateForm}
-                           onDelete={handleDetele}
+                           onDelete={handleDelete}
                         />
                      );
                   } else {
@@ -275,7 +293,7 @@ function NewFeeds() {
                            isLoading={isLoadingReactArticle}
                            onSelect={handleSelectArticle}
                            onEdit={handleOpenUpdateForm}
-                           onDelete={handleDetele}
+                           onDelete={handleDelete}
                         />
                      );
                   }
