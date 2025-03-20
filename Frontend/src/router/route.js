@@ -24,6 +24,7 @@ import EditAdditionalInfo from "components/pages/EditProject/Components/Addition
 import EditLogo from "components/pages/EditProject/Components/Logo";
 import EditBackground from "components/pages/EditProject/Components/Background";
 import Members from "components/pages/ProjectDetails/components/Members";
+import Setting from "components/pages/ProjectDetails/components/Setting";
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import("../components/pages/Auth/Login"));
@@ -459,6 +460,16 @@ const router = createBrowserRouter([
 		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROJECT_MEMBERS_PAGE"),
+	},
+	{
+		path: "/project/details/setting",
+		element: (
+			<AppLayout>
+				<Setting />
+			</AppLayout>
+		),
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_PROJECT_SETTING_PAGE"),
 	}
 ]);
 
