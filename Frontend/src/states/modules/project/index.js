@@ -15,7 +15,6 @@ const projectSlice = createSlice({
 		resultCreateProject: null,
 		loadingGetProjects: false,
 		loadingGetProjectDetails: false,
-		loadingSeekProjects: false,
 		loadingUpdatePitchDeck: false,
 		loadingUpdateProject: false,
 		resultUpdateProject: null,
@@ -54,6 +53,12 @@ const projectSlice = createSlice({
 			stage: "",
 			page: 1,
 			perPage: 6,
+		},
+		paginationSeekProjects: {
+			currentPage: 1,
+			perPage: 6,
+			totalPage: 1,
+			totalRecord: 0,
 		},
 	},
 	reducers: {
@@ -145,20 +150,30 @@ const projectSlice = createSlice({
 		// ========== SEEK PROJECTS ========== //
 		requestSeekProjects: (state) => ({
 			...state,
-			loadingSeekProjects: true,
+			isLoadingSeekProjects: true,
 		}),
 		seekProjectsSuccess: (state, action) => ({
 			...state,
 			projectsBySeek: action.payload.data.projects,
-			loadingSeekProjects: false,
+			isLoadingSeekProjects: false,
 			filterSeekProjects: {
 				...state.filterSeekProjects,
 				page: action.payload.page,
 			},
+			paginationSeekProjects: {
+				currentPage: action.payload.data.page,
+				perPage: action.payload.data.per_page,
+				totalPage: action.payload.data.last_page,
+				totalRecord: action.payload.data.total,
+			},
 		}),
 		seekProjectsFail: (state) => ({
 			...state,
-			loadingSeekProjects: false,
+			isLoadingSeekProjects: false,
+		}),
+		setFilterSeekProjects: (state, action) => ({
+			...state,
+			filterSeekProjects: action.payload,
 		}),
 
 		// ////////////////////////////////
@@ -338,6 +353,7 @@ export const {
 	requestSeekProjects,
 	seekProjectsSuccess,
 	seekProjectsFail,
+	setFilterSeekProjects,
 	// ////////////////////////////////
 	startRequestUpdateProject,
 	startRequestUpdateProjectSuccess,

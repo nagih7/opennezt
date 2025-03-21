@@ -431,16 +431,34 @@ export async function getProjectsToTag(user, requestQuery) {
 }
 
 // ========== GET [Project - Seek] ========== //
-export async function seekProjects(user, requestQuery) {
-    const query = {user_id: {$ne: user._id}}
-    const per_page = 6
+export async function seekProjects(user, {q, page, per_page, field, order, industry, stage}) {
+    q = q ? q : ''
+    industry = industry ? industry : ''
+    stage = stage ? stage : ''
+    order = order === '-1' ? -1 : 1
+
+    const matchStage = {
+        $match: {
+            $and: [
+                {name: {$regex: q, $options: 'i'}},
+                {user_id: {$ne: user._id}},
+                {industry_ids: industry ? {$in: [new ObjectId(industry)]} : {$ne: null}},
+                {stage_id: stage ? new ObjectId(stage) : {$ne: null}},
+            ],
+        },
+    }
+    const sortStage = {
+        $sort: {[field]: order},
+    }
+    const skipStage = {
+        $skip: (page - 1) * per_page,
+    }
+    const limitStage = {
+        $limit: per_page,
+    }
 
     const projects = await Project.aggregate([
-        {
-            $match: {
-                user_id: {$ne: user._id},
-            },
-        },
+        matchStage,
         {
             $lookup: {
                 from: 'users',
@@ -506,6 +524,9 @@ export async function seekProjects(user, requestQuery) {
                 },
             },
         },
+        sortStage,
+        skipStage,
+        limitStage,
         {
             $project: {
                 user: 1,
@@ -520,5 +541,11 @@ export async function seekProjects(user, requestQuery) {
         },
     ])
 
-    return {total: projects.length, page: requestQuery.page + 1, per_page, projects}
+    const filter = {
+        name: {$regex: q, $options: 'i'},
+        user_id: {$ne: user._id},
+    }
+    const total = await Project.countDocuments(filter)
+
+    return {total, page, per_page, projects}
 }

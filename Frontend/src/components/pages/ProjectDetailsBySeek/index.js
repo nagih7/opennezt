@@ -787,7 +787,7 @@ const ProjectDetailsBySeek = ({ isVisible, onClose, projectDetails }) => {
 									</div>
 									{modal == true && (
 										<>
-											<div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 bg-[#777778] z-[9999]">
+											<div className="fixed inset-0 bg-opacity-50 flex items-center justify-center  bg-[#777778] z-[9999]">
 												<div className="bg-white p-6 rounded-lg w-[38rem] shadow-lg">
 													<h2 className="mb-4 text-xl font-bold">
 														Write A Review
