@@ -29,7 +29,11 @@ articleRouter.get('/list-comments', asyncHandler(articleController.getCommentLis
 
 articleRouter.get('/list-reply-comment', asyncHandler(articleController.getReplyCommentList))
 
-articleRouter.post('/create-comment', asyncHandler(articleController.createComment))
+articleRouter.post(
+    '/create-comment',
+    asyncHandler(articleMiddleware.decodeFormCommentData),
+    asyncHandler(articleController.createComment)
+)
 
 articleRouter.put('/update-comment', asyncHandler(articleController.updateComment))
 

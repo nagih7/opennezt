@@ -1,9 +1,5 @@
 import React, { forwardRef, useState } from "react";
 import avt from "assets/images/background/avt.jpg";
-import anh_angry from "assets/images/icon/logo/angry.png";
-import anh_like from "assets/images/icon/logo/like.png";
-import like from "assets/images/icon/reaction/like.png";
-import dislike from "assets/images/icon/reaction/dislike.png";
 import { Image } from "@chakra-ui/react";
 import {
    differenceInDays,
@@ -110,12 +106,22 @@ const Comment = forwardRef(
                   </div>
                   <div className="flex flex-col justify-center py-[12px] bg-[#f8f9fa] rounded-md px-[16px] ml-[56px] my-[5px]">
                      <p className="text-sm mb-0">{content.caption}</p>
+                     {comment.content.image ? (
+                        <div className="flex p-2 ">
+                           <Image
+                              width="15vw"
+                              className="rounded-md"
+                              src={comment.content.image}
+                           />
+                        </div>
+                     ) : null}
                   </div>
                   <div className="flex items-center gap-3 py-[5px] ml-[56px]">
                      <div className="flex items-center gap-1">
                         {reaction == "like" ? (
                            <span
                               className="text-xs text-[#3897F0] font-semibold"
+                              style={{ cursor: "pointer" }}
                               onClick={() => handleReaction("like")}
                            >
                               Like
@@ -123,6 +129,7 @@ const Comment = forwardRef(
                         ) : (
                            <span
                               className="text-xs text-[#6f7f92]"
+                              style={{ cursor: "pointer" }}
                               onClick={() => handleReaction("like")}
                            >
                               Like
@@ -154,11 +161,6 @@ const Comment = forwardRef(
                         </div>
                      </div>
                   </div>
-                  {comment.content.image ? (
-                     <div>
-                        <Image height="200px" src={comment.content.image} />
-                     </div>
-                  ) : null}
                </li>
             </ul>
 

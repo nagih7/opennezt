@@ -47,7 +47,6 @@ const CreateArticleForm = forwardRef(
          keySearch: "",
       });
 
-      console.log("aaaaaaaaaaaaaaaaaaaaaaa");
       useEffect(() => {
          dispatch(getProjectsToTag(dataFilter));
       }, [dataFilter, dispatch]);
@@ -265,7 +264,53 @@ const CreateArticleForm = forwardRef(
                                              />
                                           </InputGroup>
                                        </Dialog.Header>
-                                       {/* ...existing content... */}
+                                       <div>
+                                          {" "}
+                                          <Dialog.Body>
+                                             {" "}
+                                             {projectsToTag?.map(
+                                                (project, index) => (
+                                                   <div
+                                                      className="mx-[-16px] px-[16px]"
+                                                      key={index}
+                                                   >
+                                                      {" "}
+                                                      <div className=" rounded-md w-full max-w-[600px] p-4">
+                                                         {" "}
+                                                         <div
+                                                            className="bg-[#ffffff] border-[1px] rounded-md w-full max-w-[600px] p-4 cursor-pointer"
+                                                            onClick={() =>
+                                                               handleSelectProject(
+                                                                  project
+                                                               )
+                                                            }
+                                                         >
+                                                            {" "}
+                                                            <div className="flex items-center gap-4">
+                                                               {" "}
+                                                               <div className="flex-grow flex flex-col justify-between">
+                                                                  {" "}
+                                                                  <h5 className="text-lg font-semibold">
+                                                                     {" "}
+                                                                     <a
+                                                                        href="#"
+                                                                        className="text-black no-underline"
+                                                                     >
+                                                                        {" "}
+                                                                        {
+                                                                           project.name
+                                                                        }{" "}
+                                                                     </a>{" "}
+                                                                  </h5>{" "}
+                                                               </div>{" "}
+                                                            </div>{" "}
+                                                         </div>{" "}
+                                                      </div>{" "}
+                                                   </div>
+                                                )
+                                             )}{" "}
+                                          </Dialog.Body>{" "}
+                                       </div>{" "}
                                        <Dialog.Footer className="flex justify-end gap-3 mt-4">
                                           <Dialog.ActionTrigger>
                                              <Button

@@ -20,3 +20,20 @@ export const decodeFormData = async (req, res, next) => {
     }
     next()
 }
+
+export const decodeFormCommentData = async (req, res, next) => {
+    const {article_id, caption, image} = req.body
+
+    const captionDecode = caption
+    const article_idDecode = article_id
+    const imageDecode = image
+
+    req.body = {
+        content: {
+            caption: await captionDecode,
+            image: await imageDecode,
+        },
+        article_id: article_idDecode,
+    }
+    next()
+}

@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
-import { IconlyMoreCircle } from "components/UI/Iconly";
-import anh_1 from "assets/images/background/cute-little-girl-with-handmaded-wings-running-outdoors-field-having-fun-copy.webp";
-import anh_angry from "assets/images/icon/logo/angry.png";
-import anh_like from "assets/images/icon/logo/like.png";
-import like from "assets/images/icon/reaction/like.png";
-import dislike from "assets/images/icon/reaction/dislike.png";
-import anh_happy from "assets/images/icon/logo/happy.png";
 import avt from "assets/images/background/avt.jpg";
 import { IconlyChat } from "components/UI/Iconly";
 import { IconlyHeart } from "components/UI/Iconly";
@@ -30,10 +23,7 @@ import {
 } from "date-fns";
 
 import Comment from "../Comment";
-import { use } from "react";
-import { first, set } from "lodash";
 import NewCommentForm from "../NewCommentForm";
-import { Pagination } from "antd";
 import { resetReply } from "states/modules/article";
 
 const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
@@ -68,7 +58,22 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    });
 
    useEffect(() => {
-      dispatch(handleGetListComment(dataFilter));
+      if (comment.length === 0) {
+         dispatch(
+            handleGetListComment({
+               articleId: feed._id,
+               page: 1,
+               limit: limit,
+            })
+         );
+      }
+   }, [dispatch, comment, feed, limit]);
+
+   useEffect(() => {
+      // Chỉ gọi API khi cursor thay đổi (không phải lần đầu load)
+      if (dataFilter.page !== 1) {
+         dispatch(handleGetListComment(dataFilter));
+      }
    }, [dispatch, dataFilter]);
 
    const displayReaction = () => {
@@ -103,7 +108,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    };
 
    const handleCloseComment = async () => {
-      await dispatch(resetComment());
+      dispatch(resetComment());
       dispatch(resetReply());
       onClose();
    };
@@ -144,34 +149,39 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    //Lướt xuống bài viết cuối thì load tiếp
    const observerRef = useRef(null);
 
-   useEffect(() => {
-      observerRef.current = new IntersectionObserver(
-         (entries) => {
-            const first = entries[0];
-            if (
-               first.isIntersecting === true &&
-               hasMoreRef.current === true &&
-               isLoadingRef.current === false
-            ) {
-               setDataFilter({
-                  articleId: idRef.current,
-                  page: pageRef.current,
-                  limit: 10,
-               });
-            }
-         },
-         { root: null, rootMargin: "0px", threshold: 0.1 }
-      );
-   }, [hasMore, isLoadingGetComments, limit, page, _id]);
-   //End
-   const lastElementRef = useCallback((node) => {
-      if (observerRef.current) {
-         observerRef.current.disconnect();
-      }
-      if (node) {
-         observerRef.current?.observe(node);
-      }
-   }, []);
+   const lastElementRef = useCallback(
+      (node) => {
+         // Ngắt kết nối observer cũ
+         if (observerRef.current) {
+            observerRef.current.disconnect();
+            observerRef.current = null;
+         }
+
+         // Tạo observer mới nếu có node và hasMore
+         if (node && hasMore) {
+            observerRef.current = new IntersectionObserver(
+               (entries) => {
+                  const first = entries[0];
+                  if (
+                     first.isIntersecting &&
+                     hasMore &&
+                     !isLoadingRef.current
+                  ) {
+                     setDataFilter({
+                        articleId: feed._id,
+                        page: pageRef.current,
+                        limit: limit,
+                     });
+                  }
+               },
+               { threshold: 0.1 }
+            );
+
+            observerRef.current.observe(node);
+         }
+      },
+      [hasMore, feed, limit]
+   );
    //Reaction User's Status
 
    //==============Reaction===============
@@ -196,10 +206,9 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    }, [comment_reactions]);
 
    const handleCommentReaction = useCallback(
-      (commentId, formData) => {
+      async (commentId, formData) => {
          const reactionType = formData.get("type");
          dispatch(updateCommentReaction({ commentId, reactionType }));
-
          //Gọi API để update server
          dispatch(handleReactComment({ commentId, data: formData }));
       },
@@ -209,7 +218,11 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    //Form
    const handleFormSubmit = useCallback(
       (formData) => {
-         dispatch(handleCreateComment({ data: formData }));
+         const newFormData = new FormData();
+         newFormData.append("article_id", formData.article_id);
+         newFormData.append("caption", formData.content.caption);
+         newFormData.append("image", formData.content.image);
+         dispatch(handleCreateComment({ data: newFormData }));
       },
       [dispatch]
    );

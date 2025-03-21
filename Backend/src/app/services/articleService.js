@@ -465,19 +465,11 @@ export const createComment = async (user, requestBody) => {
     const articleId = requestBody.article_id
     const imageData = requestBody.content.image
 
-    if (imageData) {
-        const base64Data = imageData.data.split(';base64,').pop()
-        const buffer = Buffer.from(base64Data, 'base64')
-
-        const fileUpload = new FileUpload({
-            buffer,
-            filename: imageData.name,
-            mimetype: imageData.type,
-        })
-
-        const savedFile = await fileUpload.save('comment-images')
-        console.log(typeof savedFile + savedFile)
-        requestBody.content.image = savedFile // Store single image path
+    if (typeof imageData === 'string') {
+        requestBody.content.image = imageData.indexOf('uploads')
+    }
+    if (imageData instanceof FileUpload) {
+        requestBody.content.image = imageData.save('article-attachment')
     }
 
     const newComment = new Comment({
