@@ -194,8 +194,8 @@ export async function getListMyProjects(user, {q, page, per_page, field, order})
     return {total, page, per_page, last_page, projects}
 }
 
-// ========== GET [Project Details] ========== //
-export async function getProjectDetails(user, projectId) {
+// ========== GET [My Project Details] ========== //
+export async function getMyProjectDetails(user, projectId) {
     const project = await Project.aggregate([
         {
             $match: {
@@ -311,6 +311,169 @@ export async function getProjectDetails(user, projectId) {
                 },
                 stage: {$arrayElemAt: ['$stage', 0]},
             },
+        },
+        {
+            $project: {
+                user_id: 0,
+                created_at: 0,
+                updated_at: 0,
+                industry_ids: 0,
+                stage_id: 0,
+            },
+        },
+    ])
+
+    return project[0]
+}
+
+// ========== GET [Project Details] ========== //
+export async function getProjectDetails(user, projectId) {
+    const project = await Project.aggregate([
+        {
+            $match: {
+                _id: new ObjectId(projectId),
+                user_id: {$ne: user._id},
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'industries',
+                localField: 'industry_ids',
+                foreignField: '_id',
+                as: 'industries',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'stages',
+                localField: 'stage_id',
+                foreignField: '_id',
+                as: 'stage',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'revenues',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'revenues',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'funding_sources',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'funding_sources',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'project_additional_infos',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'additional_infos',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                logo: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                        then: '$logo',
+                        else: {$concat: [LINK_STATIC_URL, '$logo']},
+                    },
+                },
+                background: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        then: '$background',
+                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                    },
+                },
+                stage: {$arrayElemAt: ['$stage', 0]},
+            },
+        },
+        {
+            $unwind: '$user',
         },
         {
             $project: {

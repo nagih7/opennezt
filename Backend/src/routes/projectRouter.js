@@ -86,6 +86,9 @@ projectRouter.get(
 // ========== GET [My Projects] ========== //
 projectRouter.get('/', asyncHandler(projectController.getListMyProjects))
 
+// ========== GET [My Project Details] ========== //
+projectRouter.get('/me/:id', asyncHandler(projectController.getMyProjectDetails))
+
 // ========== GET [Project Details] ========== //
 projectRouter.get('/:id', asyncHandler(projectController.getProjectDetails))
 

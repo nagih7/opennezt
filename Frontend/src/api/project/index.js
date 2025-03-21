@@ -83,7 +83,7 @@ export const getMyProjectDetails =
 	(projectId) => async (dispatch, getState) => {
 		return callApi({
 			method: "get",
-			apiPath: `projects/${projectId}`,
+			apiPath: `projects/me/${projectId}`,
 			actionTypes: [
 				requestGetMyProjectDetails,
 				getMyProjectDetailsSuccess,
