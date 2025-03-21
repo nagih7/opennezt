@@ -78,11 +78,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                onClick={() => handleReactionClick("like")}
                style={{ cursor: "pointer" }}
             >
-               <IconlyHeart
-                  size={25}
-                  color={"#6f7f92"}
-                  backgroundColor={"#6f7f92"}
-               />
+               <IconlyHeart size={25} color={"red"} backgroundColor={"red"} />
             </div>
          );
       }
@@ -372,11 +368,6 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                               : postedDate}
                         </span>
                      </div>
-                     <IconlyMoreCircle
-                        size={30}
-                        color={"black"}
-                        className="w-3/12"
-                     />
                   </div>
                </div>
                <div className="mt-6">
