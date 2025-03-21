@@ -83,7 +83,7 @@ export const getMyProjectDetails =
 	(projectId) => async (dispatch, getState) => {
 		return callApi({
 			method: "get",
-			apiPath: `projects/${projectId}`,
+			apiPath: `projects/me/${projectId}`,
 			actionTypes: [
 				requestGetMyProjectDetails,
 				getMyProjectDetailsSuccess,
@@ -112,7 +112,17 @@ export const getProjectDetails = (projectId) => async (dispatch, getState) => {
 
 // =========== SEEK PROJECTS =========== //
 export const seekProjects = (dataFilter) => async (dispatch, getState) => {
-	const path = `projects/seek`;
+	let path = `projects/seek?page=${dataFilter.page}&per_page=${dataFilter.perPage}`;
+
+	if (dataFilter.keySearch) {
+		path += `&q=${dataFilter.keySearch}`;
+	}
+	if (dataFilter.industry) {
+		path += `&industry=${dataFilter.industry}`;
+	}
+	if (dataFilter.stage) {
+		path += `&stage=${dataFilter.stage}`;
+	}
 
 	return callApi({
 		method: "get",

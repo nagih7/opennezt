@@ -194,8 +194,8 @@ export async function getListMyProjects(user, {q, page, per_page, field, order})
     return {total, page, per_page, last_page, projects}
 }
 
-// ========== GET [Project Details] ========== //
-export async function getProjectDetails(user, projectId) {
+// ========== GET [My Project Details] ========== //
+export async function getMyProjectDetails(user, projectId) {
     const project = await Project.aggregate([
         {
             $match: {
@@ -326,6 +326,169 @@ export async function getProjectDetails(user, projectId) {
     return project[0]
 }
 
+// ========== GET [Project Details] ========== //
+export async function getProjectDetails(user, projectId) {
+    const project = await Project.aggregate([
+        {
+            $match: {
+                _id: new ObjectId(projectId),
+                user_id: {$ne: user._id},
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'industries',
+                localField: 'industry_ids',
+                foreignField: '_id',
+                as: 'industries',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'stages',
+                localField: 'stage_id',
+                foreignField: '_id',
+                as: 'stage',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'revenues',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'revenues',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'funding_sources',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'funding_sources',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'project_additional_infos',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'additional_infos',
+                pipeline: [
+                    {
+                        $project: {
+                            // _id: 0,
+                            // name: 1,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                logo: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                        then: '$logo',
+                        else: {$concat: [LINK_STATIC_URL, '$logo']},
+                    },
+                },
+                background: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        then: '$background',
+                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                    },
+                },
+                stage: {$arrayElemAt: ['$stage', 0]},
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $project: {
+                user_id: 0,
+                created_at: 0,
+                updated_at: 0,
+                industry_ids: 0,
+                stage_id: 0,
+            },
+        },
+    ])
+
+    return project[0]
+}
+
 // ========== PATCH [Project - Basic] ========== //
 export async function updateBasic(user, requestBody) {
     await Project.updateOne(
@@ -431,16 +594,34 @@ export async function getProjectsToTag(user, requestQuery) {
 }
 
 // ========== GET [Project - Seek] ========== //
-export async function seekProjects(user, requestQuery) {
-    const query = {user_id: {$ne: user._id}}
-    const per_page = 6
+export async function seekProjects(user, {q, page, per_page, field, order, industry, stage}) {
+    q = q ? q : ''
+    industry = industry ? industry : ''
+    stage = stage ? stage : ''
+    order = order === '-1' ? -1 : 1
+
+    const matchStage = {
+        $match: {
+            $and: [
+                {name: {$regex: q, $options: 'i'}},
+                {user_id: {$ne: user._id}},
+                {industry_ids: industry ? {$in: [new ObjectId(industry)]} : {$ne: null}},
+                {stage_id: stage ? new ObjectId(stage) : {$ne: null}},
+            ],
+        },
+    }
+    const sortStage = {
+        $sort: {[field]: order},
+    }
+    const skipStage = {
+        $skip: (page - 1) * per_page,
+    }
+    const limitStage = {
+        $limit: per_page,
+    }
 
     const projects = await Project.aggregate([
-        {
-            $match: {
-                user_id: {$ne: user._id},
-            },
-        },
+        matchStage,
         {
             $lookup: {
                 from: 'users',
@@ -506,6 +687,9 @@ export async function seekProjects(user, requestQuery) {
                 },
             },
         },
+        sortStage,
+        skipStage,
+        limitStage,
         {
             $project: {
                 user: 1,
@@ -520,5 +704,11 @@ export async function seekProjects(user, requestQuery) {
         },
     ])
 
-    return {total: projects.length, page: requestQuery.page + 1, per_page, projects}
+    const filter = {
+        name: {$regex: q, $options: 'i'},
+        user_id: {$ne: user._id},
+    }
+    const total = await Project.countDocuments(filter)
+
+    return {total, page, per_page, projects}
 }

@@ -1,19 +1,74 @@
-import { Button, Input, Popover, Portal, Text } from "@chakra-ui/react";
+import {
+	Button,
+	Popover,
+	Portal,
+	Stack,
+	StackSeparator,
+} from "@chakra-ui/react";
 import { SearchOutlined } from "@mui/icons-material";
 import { seekProjects } from "api/project";
+import { getIndustryFramework, getStageFramework } from "api/user";
 import { IconlyFilter } from "components/UI/Iconly";
 import SelectCustom from "components/UI/SelectCustom";
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import Filter from "./../../../UserManagement/components/Filter/index";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilterSeekProjects } from "states/modules/project";
 
 const FilterHeader = ({ action, setAction }) => {
 	const dispatch = useDispatch();
+	// ========== STATE FROM REDUX ========== //
+	const { industryFramework, stageFramework } = useSelector(
+		(state) => state.user
+	);
+	const { isLoadingSeekProjects } = useSelector((state) => state.project);
+
+	// ========== STATE ========== //
+	const [dataFilter, setDataFilter] = useState({
+		keySearch: "",
+		industry: "",
+		stage: "",
+		page: 1,
+		perPage: 6,
+	});
+
 	// ========== USE EFFECT ========== //
 	useEffect(() => {
-		dispatch(seekProjects());
+		dispatch(seekProjects(dataFilter));
+		// eslint-disable-next-line
 	}, [dispatch]);
 
+	useEffect(() => {
+		if (industryFramework.items.length === 0) {
+			dispatch(getIndustryFramework());
+		}
+	}, [dispatch, industryFramework.items]);
+
+	useEffect(() => {
+		if (stageFramework.items.length === 0) {
+			dispatch(getStageFramework());
+		}
+	}, [dispatch, stageFramework.items]);
+
+	// ========== HANDLE FUNCTION ========== //
+	const onChangeFilter = (event, name) => {
+		setDataFilter({
+			...dataFilter,
+			[name]: event.value[0],
+		});
+	};
+
+	const handleSaveFilter = () => {
+		dispatch(seekProjects(dataFilter));
+		dispatch(setFilterSeekProjects(dataFilter));
+	};
+
+	const handleKeyDown = (event) => {
+		if (event.key === "Enter") {
+			handleSaveFilter();
+		}
+	};
+
+	// ========== RENDER ========== //
 	return (
 		<div className="flex flex-col items-center justify-between gap-4 p-4 ml-0 bg-white border rounded-lg shadow-sm md:flex-row">
 			<div className="flex flex-1 text-lg text-gray-600">
@@ -35,7 +90,30 @@ const FilterHeader = ({ action, setAction }) => {
 							<Popover.Content>
 								<Popover.Arrow />
 								<Popover.Body>
-									<SelectCustom height="40px" />
+									<Stack separator={<StackSeparator />}>
+										<SelectCustom
+											onChange={(e) => onChangeFilter(e, "industry")}
+											label="Industry"
+											collection={industryFramework}
+											height="40px"
+											value={[dataFilter.industry]}
+										/>
+										<SelectCustom
+											onChange={(e) => onChangeFilter(e, "stage")}
+											label="Stage"
+											collection={stageFramework}
+											height="40px"
+											value={[dataFilter.stage]}
+										/>
+										<Button
+											loading={isLoadingSeekProjects}
+											onClick={handleSaveFilter}
+											borderRadius={4}
+											loadingText="Loading..."
+											spinnerPlacement="start">
+											Apply
+										</Button>
+									</Stack>
 								</Popover.Body>
 							</Popover.Content>
 						</Popover.Positioner>
@@ -44,16 +122,23 @@ const FilterHeader = ({ action, setAction }) => {
 			</div>
 
 			<div className="flex gap-2 md:w-auto">
-				<div className="flex items-center">
+				<div className="flex items-center overflow-hidden border rounded-sm">
 					<input
 						height={"100%"}
 						type="text"
 						placeholder="Search project..."
-						className="px-4 py-2 outline-none w-64 bg-white border rounded-sm md:w-[13rem]"
+						className="px-3 py-2 outline-none w-64 bg-white border-none  md:w-[13rem]"
+						onChange={(e) =>
+							setDataFilter({ ...dataFilter, keySearch: e.target.value })
+						}
+						onKeyDown={(e) => handleKeyDown(e)}
 					/>
-					<button className="bg-[#2F65B9] px-4 py-2 text-white  rounded-sm">
+					<Button
+						loading={isLoadingSeekProjects}
+						onClick={handleSaveFilter}
+						className="bg-[#2F65B9] px-4 py-2 text-white">
 						<SearchOutlined />
-					</button>
+					</Button>
 				</div>
 				<button
 					onClick={() => setAction("grid")}
