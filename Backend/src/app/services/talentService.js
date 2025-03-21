@@ -57,5 +57,17 @@ export async function recruitTalents(
         {$limit: per_page},
     ])
 
-    return {talents}
+    const filter = {
+        $and: [
+            {user_id: {$ne: new ObjectId(currentUser._id)}},
+            {industry_ids: industry_id ? {$in: [new ObjectId(industry_id)]} : {$ne: null}},
+            {experience_level_id: experience_level_id ? new ObjectId(experience_level_id) : {$ne: null}},
+            {category_ids: category_id ? {$in: [new ObjectId(category_id)]} : {$ne: null}},
+            {skill_ids: skill_id ? {$in: [new ObjectId(skill_id)]} : {$ne: null}},
+        ],
+    }
+
+    const total = await Profile.countDocuments(filter)
+    const total_page = Math.ceil(total / per_page)
+    return {total, page, per_page, total_page, talents}
 }

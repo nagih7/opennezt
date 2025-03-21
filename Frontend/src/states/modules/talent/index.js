@@ -86,9 +86,9 @@ const talentSlice = createSlice({
 			talents: action.payload.data.talents,
 			paginationRecruitTalents: {
 				currentPage: action.payload.data.page,
-				perPage: action.payload.data.perPage,
-				totalPage: action.payload.data.totalPage,
-				totalRecord: action.payload.data.totalRecord,
+				perPage: action.payload.data.per_page,
+				totalPage: action.payload.data.total_page,
+				totalRecord: action.payload.data.total,
 			},
 			isLoadingRecruitTalents: false,
 		}),

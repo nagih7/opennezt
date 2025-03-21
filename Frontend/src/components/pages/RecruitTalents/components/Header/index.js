@@ -1,10 +1,25 @@
 import { IconlyCategory } from "components/UI/Iconly";
 import React from "react";
+import { useSelector } from "react-redux";
 
 const RecruitTalentsHeader = () => {
+	const { talents, formRecruitTalents, paginationRecruitTalents } =
+		useSelector((state) => state.talent);
+
 	return (
 		<div className="flex justify-between items-center bg-[#ffffff] rounded-md p-[16px] mb-8">
-			<p className="mb-0">Showing 1–16 of 16 results</p>
+			<p className="mb-0">
+				Showing{" "}
+				{(paginationRecruitTalents.currentPage - 1) *
+					paginationRecruitTalents.perPage +
+					1}
+				-
+				{(paginationRecruitTalents.currentPage - 1) *
+					paginationRecruitTalents.perPage +
+					talents.length}{" "}
+				{""}
+				of {paginationRecruitTalents.totalRecord} results
+			</p>
 			<div className="flex items-center">
 				<div className="px-[13px] py-[10px]">
 					<ul className="flex items-center gap-2 pl-0 m-0">

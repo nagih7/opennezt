@@ -93,16 +93,16 @@ const FilterSidebar = () => {
 		switch (nameSelect) {
 			case "category":
 				dispatch(getSubCategoryFramework(event.value[0]));
-				dispatch(recruitTalents(formRecruitTalents));
 				break;
 			case "subcategory":
 				dispatch(getSkillFramework(event.value[0]));
-				dispatch(recruitTalents(formRecruitTalents));
 				break;
 			default:
-				dispatch(recruitTalents(formRecruitTalents));
 				break;
 		}
+		dispatch(
+			recruitTalents({ ...formRecruitTalents, [nameSelect]: event.value[0] })
+		);
 	};
 
 	// console.log("dataFilter", dataFilter);
