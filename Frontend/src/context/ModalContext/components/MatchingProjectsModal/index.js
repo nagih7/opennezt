@@ -3,7 +3,6 @@ import styles from "./styles.module.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { Modal } from "antd";
 import { setOpenModalMatchingProjects } from "states/modules/artificialIntelligence";
-import ProjectDetailsModal from "components/pages/SeekProjects/ProjectDetailsModal";
 import LazyLoading from "components/UI/LazyLoading";
 import { getProjectDetails } from "api/project";
 import { getRequestAddFriend } from "api/notification";
@@ -43,15 +42,7 @@ const MatchingProjectsModal = () => {
 						}))}
 				</div>
 			</Modal>
-			{projectDetails && projectDetails.name && (
-				<LazyLoading>
-					<ProjectDetailsModal
-						isVisible={isModalVisible}
-						onClose={() => setIsModalVisible(false)}
-						projectDetails={projectDetails}
-					/>
-				</LazyLoading>
-			)}
+			{projectDetails && projectDetails.name && <LazyLoading></LazyLoading>}
 		</>
 	);
 };

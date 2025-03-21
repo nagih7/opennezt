@@ -5,6 +5,7 @@ import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 const PaginationCustom = ({ pagination, onPageChange }) => {
 	return (
 		<Pagination.Root
+			page={pagination.currentPage}
 			count={pagination.totalRecord}
 			pageSize={pagination.perPage}
 			defaultPage={pagination.currentPage}

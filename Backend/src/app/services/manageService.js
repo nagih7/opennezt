@@ -93,11 +93,10 @@ export async function roleReadRoot({q, page, per_page, field, order}) {
 }
 export async function createRole(requestBody) {
     const role = new Role({
+        type_id: requestBody.type_id,
         name: requestBody.name,
         description: requestBody.description,
     })
-    const type = await Type.findOne({class: 'account', name: 'Account'})
-    role.type_id = type._id
     await role.save()
 }
 export async function updateRole(id, requestBody) {
@@ -105,6 +104,7 @@ export async function updateRole(id, requestBody) {
         {_id: id},
         {
             $set: {
+                type_id: requestBody.type_id,
                 name: requestBody.name,
                 description: requestBody.description,
             },

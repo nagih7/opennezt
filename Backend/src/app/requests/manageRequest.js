@@ -14,6 +14,18 @@ export const readRoot = Joi.object({
 
 // ROLE
 export const createRole = Joi.object({
+    type_id: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Type ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const type = await Type.findById(new ObjectId(value))
+                    return type ? value : helpers.error('any.empty')
+                })
+        ),
     name: Joi.string()
         .trim()
         .max(MAX_STRING_SIZE)
@@ -21,8 +33,8 @@ export const createRole = Joi.object({
         .label('Name')
         .custom(
             (value, helpers) =>
-                new AsyncValidate(value, async function () {
-                    const role = await Role.findOne({name: value})
+                new AsyncValidate(value, async function (req) {
+                    const role = await Role.findOne({name: value, type_id: new ObjectId(req.body.type_id)})
                     return !role ? value : helpers.error('any.exists')
                 })
         ),
@@ -30,6 +42,18 @@ export const createRole = Joi.object({
 })
 
 export const updateRole = Joi.object({
+    type_id: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Type ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const type = await Type.findById(new ObjectId(value))
+                    return type ? value : helpers.error('any.empty')
+                })
+        ),
     name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
     description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
 })

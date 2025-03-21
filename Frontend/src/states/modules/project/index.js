@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { seekProjects } from "api/project";
 import { toaster } from "components/UI/toaster";
 import { last } from "lodash";
 
@@ -10,23 +11,16 @@ const projectSlice = createSlice({
 
 		projects: [],
 		projectDetails: {},
-		projectsBySeek: [],
 		projectInvitations: [],
 		resultCreateProject: null,
 		loadingGetProjects: false,
 		loadingGetProjectDetails: false,
-		loadingSeekProjects: false,
 		loadingUpdatePitchDeck: false,
 		loadingUpdateProject: false,
 		resultUpdateProject: null,
 		loadingDeleteProject: false,
 		loadingGetProjectInvitations: false,
-		formSeekProjects: {
-			industry: null,
-			stage: null,
-			name: null,
-			page: 0,
-		},
+
 		// ========== My projects ========== //
 		myProjects: [],
 		myProjectDetails: {},
@@ -45,6 +39,22 @@ const projectSlice = createSlice({
 		isLoadingGetListMyProjects: false,
 		isLoadingGetMyProjectDetails: false,
 		paginationListMyProjects: {
+			currentPage: 1,
+			perPage: 6,
+			totalPage: 1,
+			totalRecord: 0,
+		},
+		// ========== SEEK PROJECTS ========== //
+		projectsBySeek: [],
+		isLoadingSeekProjects: false,
+		filterSeekProjects: {
+			keySearch: "",
+			industry: "",
+			stage: "",
+			page: 1,
+			perPage: 6,
+		},
+		paginationSeekProjects: {
 			currentPage: 1,
 			perPage: 6,
 			totalPage: 1,
@@ -137,26 +147,36 @@ const projectSlice = createSlice({
 			loadingGetProjectDetails: false,
 		}),
 
-		// Seek project
-		startRequestSeekProjects: (state) => ({
+		// ========== SEEK PROJECTS ========== //
+		requestSeekProjects: (state) => ({
 			...state,
-			loadingSeekProjects: true,
+			isLoadingSeekProjects: true,
 		}),
-
-		startRequestSeekProjectsSuccess: (state, action) => ({
+		seekProjectsSuccess: (state, action) => ({
 			...state,
 			projectsBySeek: action.payload.data.projects,
-			formSeekProjects: {
-				...state.formSeekProjects,
-				page: action.payload.data.page,
+			isLoadingSeekProjects: false,
+			filterSeekProjects: {
+				...state.filterSeekProjects,
+				page: action.payload.page,
 			},
-			loadingSeekProjects: false,
+			paginationSeekProjects: {
+				currentPage: action.payload.data.page,
+				perPage: action.payload.data.per_page,
+				totalPage: action.payload.data.last_page,
+				totalRecord: action.payload.data.total,
+			},
 		}),
-		startRequestSeekProjectsFail: (state) => ({
+		seekProjectsFail: (state) => ({
 			...state,
-			projectsBySeek: [],
-			loadingSeekProjects: false,
+			isLoadingSeekProjects: false,
 		}),
+		setFilterSeekProjects: (state, action) => ({
+			...state,
+			filterSeekProjects: action.payload,
+		}),
+
+		// ////////////////////////////////
 		startRequestUpdateProject: (state) => ({
 			...state,
 			loadingUpdateProject: true,
@@ -329,9 +349,12 @@ export const {
 	requestGetProjectDetails,
 	getProjectDetailsSuccess,
 	getProjectDetailsFail,
-	startRequestSeekProjects,
-	startRequestSeekProjectsSuccess,
-	startRequestSeekProjectsFail,
+	// ========== SEEK PROJECTS ========== //
+	requestSeekProjects,
+	seekProjectsSuccess,
+	seekProjectsFail,
+	setFilterSeekProjects,
+	// ////////////////////////////////
 	startRequestUpdateProject,
 	startRequestUpdateProjectSuccess,
 	startRequestUpdateProjectFail,

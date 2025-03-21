@@ -1,7 +1,7 @@
 import {Role, Type} from '@/models'
 
 async function roleSeeder(session) {
-    const accountType = await Type.findOne({class: 'account'})
+    const accountType = await Type.findOne({class: 'role', name: 'Account'})
     if (accountType) {
         const roles = [
             {

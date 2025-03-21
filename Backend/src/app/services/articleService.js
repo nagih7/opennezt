@@ -5,6 +5,7 @@ import Comment from '../../models/comment.js'
 import {LINK_STATIC_URL} from '@/configs'
 import {ObjectId} from 'mongodb'
 import {valid} from 'joi'
+import delay from '@/utils/classes/delay.js'
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa
@@ -26,6 +27,7 @@ export const createArticle = async (user, requestBody) => {
     const newArticle = new Article(requestBody)
     newArticle.user_id = user._id
     await newArticle.save()
+    await delay(2000)
     return newArticle
 }
 //End Create Article
@@ -192,7 +194,7 @@ export const updateArticle = async (user_id, id, requestBody) => {
         }
 
         const updatedArticle = await Article.findByIdAndUpdate(id, {...requestBody}, {new: true})
-
+        await delay(2000)
         return updatedArticle
     }
 
@@ -295,6 +297,25 @@ export const shareArticle = async (id, user) => {
 }
 //End share article
 
+//Replycomment
+export const replyComment = async (requestQuery, user, requestBody) => {
+    const {article_id, comment_id} = requestQuery
+    const parentComment = await Comment.findById(comment_id)
+    const updatedArticle = await Article.findById(article_id)
+
+    const newComment = await new Comment({
+        ...requestBody,
+        user_id: user._id,
+        parent_id: comment_id,
+        article_id: article_id,
+    })
+    updatedArticle.comment_count += 1
+    parentComment.reply_count += 1
+    await parentComment.save()
+    await updatedArticle.save()
+    await newComment.save()
+    return newComment
+}
 //Get Article's Reactions
 export const getArticleReactions = async (target_id) => {
     const reactions = await Reaction.find({
@@ -328,6 +349,67 @@ export const getCommentList = async (user, requestQuery) => {
         {
             $match: {
                 article_id: new ObjectId(articleId),
+                parent_id: null,
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+            },
+        },
+        {
+            $addFields: {
+                'content.image': {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$content.image', '']}, '']},
+                        then: '',
+                        else: {$concat: [LINK_STATIC_URL, '$content.image']},
+                    },
+                },
+            },
+        },
+        {
+            $sort: {created_at: -1},
+        },
+        {
+            $skip: skip,
+        },
+        {
+            $limit: commentLimit + 1,
+        },
+    ])
+
+    // Kiểm tra xem có còn comments không
+    const hasMore = commentList.length > commentLimit
+
+    // Nếu có comment phụ thì bỏ đi
+    if (hasMore) {
+        commentList.pop()
+    }
+
+    return {
+        commentList,
+        pagination: {
+            currentPage: parseInt(page),
+            limit: commentLimit,
+            hasMore,
+        },
+    }
+}
+
+export const getReplyCommentList = async (user, requestQuery) => {
+    const {articleId, parentId, page, limit = 3} = requestQuery
+    const skip = (page - 1) * limit
+    const commentLimit = parseInt(limit)
+
+    const commentList = await Comment.aggregate([
+        {
+            $match: {
+                article_id: new ObjectId(articleId),
+                parent_id: new ObjectId(parentId),
             },
         },
         {
@@ -413,10 +495,15 @@ export const createComment = async (user, requestBody) => {
 //End Create Comment
 
 //Get User Comment Reactions
-export const getUserCommentReactions = async (user_id, target_id) => {
+
+export const getUserCommentReactions = async (user_id, target_ids) => {
+    // Chuyển đổi string thành array và map thành ObjectId
+    const targetIdArray = target_ids.split(',').map((id) => new ObjectId(id))
+
     const reactions = await Reaction.find({
         user_id: user_id,
-        target_id: target_id,
+        target_id: {$in: targetIdArray},
     })
+
     return reactions
 }

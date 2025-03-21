@@ -27,11 +27,9 @@ projectRouter.post(
     asyncHandler(validate(projectRequest.createProject)),
     asyncHandler(projectController.createProject)
 )
-// ========== GET [My Projects] ========== //
-projectRouter.get('/', asyncHandler(projectController.getListMyProjects))
 
-// ========== GET [Project Details] ========== //
-projectRouter.get('/:id', asyncHandler(projectController.getProjectDetails))
+// ========== GET [Project - Tag] ==============//
+projectRouter.get('/tags', asyncHandler(projectController.getProjectsToTag))
 
 // ========== PATCH [Project - Basic] ========== //
 projectRouter.patch(
@@ -77,5 +75,18 @@ projectRouter.post(
     asyncHandler(validate(projectRequest.inviteMember)),
     asyncHandler(projectController.inviteMember)
 )
+
+// ========== GET [Project - Seek] ========== //
+projectRouter.get(
+    '/seek',
+    asyncHandler(validate(projectRequest.seekProjects)),
+    asyncHandler(projectController.seekProjects)
+)
+
+// ========== GET [My Projects] ========== //
+projectRouter.get('/', asyncHandler(projectController.getListMyProjects))
+
+// ========== GET [Project Details] ========== //
+projectRouter.get('/:id', asyncHandler(projectController.getProjectDetails))
 
 export default projectRouter
