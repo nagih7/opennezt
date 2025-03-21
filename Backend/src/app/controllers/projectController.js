@@ -1,10 +1,5 @@
 import * as projectService from '../services/projectService'
 
-export async function seekProjects(req, res) {
-    const result = await projectService.seekProjects(req.currentUser, req.query)
-    res.jsonify(result)
-}
-
 export async function updateBackground(req, res) {
     await projectService.updateBackground(req.currentUser, req.body)
     res.status(200).jsonify('Update background successfully.')
@@ -77,5 +72,10 @@ export async function inviteMember(req, res) {
 // ========== GET [Project - TAGS] ========== //
 export async function getProjectsToTag(req, res) {
     const result = await projectService.getProjectsToTag(req.currentUser, req.query)
+}
+
+// ========== GET [Project - Seek] ========== //
+export async function seekProjects(req, res) {
+    const result = await projectService.seekProjects(req.currentUser, req.query)
     res.jsonify(result)
 }

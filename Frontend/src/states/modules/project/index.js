@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { seekProjects } from "api/project";
 import { toaster } from "components/UI/toaster";
 import { last } from "lodash";
 
@@ -10,7 +11,6 @@ const projectSlice = createSlice({
 
 		projects: [],
 		projectDetails: {},
-		projectsBySeek: [],
 		projectInvitations: [],
 		resultCreateProject: null,
 		loadingGetProjects: false,
@@ -21,12 +21,7 @@ const projectSlice = createSlice({
 		resultUpdateProject: null,
 		loadingDeleteProject: false,
 		loadingGetProjectInvitations: false,
-		formSeekProjects: {
-			industry: null,
-			stage: null,
-			name: null,
-			page: 0,
-		},
+
 		// ========== My projects ========== //
 		myProjects: [],
 		myProjectDetails: {},
@@ -49,6 +44,16 @@ const projectSlice = createSlice({
 			perPage: 6,
 			totalPage: 1,
 			totalRecord: 0,
+		},
+		// ========== SEEK PROJECTS ========== //
+		projectsBySeek: [],
+		isLoadingSeekProjects: false,
+		filterSeekProjects: {
+			keySearch: "",
+			industry: "",
+			stage: "",
+			page: 1,
+			perPage: 6,
 		},
 	},
 	reducers: {
@@ -137,26 +142,26 @@ const projectSlice = createSlice({
 			loadingGetProjectDetails: false,
 		}),
 
-		// Seek project
-		startRequestSeekProjects: (state) => ({
+		// ========== SEEK PROJECTS ========== //
+		requestSeekProjects: (state) => ({
 			...state,
 			loadingSeekProjects: true,
 		}),
-
-		startRequestSeekProjectsSuccess: (state, action) => ({
+		seekProjectsSuccess: (state, action) => ({
 			...state,
 			projectsBySeek: action.payload.data.projects,
-			formSeekProjects: {
-				...state.formSeekProjects,
-				page: action.payload.data.page,
+			loadingSeekProjects: false,
+			filterSeekProjects: {
+				...state.filterSeekProjects,
+				page: action.payload.page,
 			},
-			loadingSeekProjects: false,
 		}),
-		startRequestSeekProjectsFail: (state) => ({
+		seekProjectsFail: (state) => ({
 			...state,
-			projectsBySeek: [],
 			loadingSeekProjects: false,
 		}),
+
+		// ////////////////////////////////
 		startRequestUpdateProject: (state) => ({
 			...state,
 			loadingUpdateProject: true,
@@ -329,9 +334,11 @@ export const {
 	requestGetProjectDetails,
 	getProjectDetailsSuccess,
 	getProjectDetailsFail,
-	startRequestSeekProjects,
-	startRequestSeekProjectsSuccess,
-	startRequestSeekProjectsFail,
+	// ========== SEEK PROJECTS ========== //
+	requestSeekProjects,
+	seekProjectsSuccess,
+	seekProjectsFail,
+	// ////////////////////////////////
 	startRequestUpdateProject,
 	startRequestUpdateProjectSuccess,
 	startRequestUpdateProjectFail,

@@ -11,6 +11,7 @@ import {
 import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
+import SelectCustom from "components/UI/Select/index";
 
 function RoleManage() {
 	const dispatch = useDispatch();
@@ -18,6 +19,7 @@ function RoleManage() {
 	const {
 		// CONFIG
 		roles,
+		types,
 		paginationListRole,
 		isLoadingGetListRole,
 		visibleModalCreateOrUpdateRole,
@@ -38,6 +40,7 @@ function RoleManage() {
 		// CONFIG
 		name: "",
 		description: "",
+		type_id: "",
 	});
 	const [configModal, setConfigModal] = useState({
 		title: "Create role",
@@ -99,6 +102,7 @@ function RoleManage() {
 			// CONFIG
 			name: "",
 			description: "",
+			type_id: "",
 		});
 	}, []);
 
@@ -138,6 +142,12 @@ function RoleManage() {
 			sorter: (a, b) => a.age - b.age,
 		},
 		{
+			title: "Type",
+			dataIndex: "type",
+			key: "type",
+			render: (text, record) => <span>{record.type}</span>,
+		},
+		{
 			title: "Description",
 			dataIndex: "description",
 			key: "description",
@@ -148,6 +158,12 @@ function RoleManage() {
 	];
 
 	const handleChangeInput = (valueInput, type) => {
+		if (type === "type_id") {
+			let data = _.cloneDeep(dataCreateOrUpdate);
+			data[type] = valueInput.value;
+			setDataCreateOrUpdate(data);
+			return;
+		}
 		let value = valueInput.target.value;
 		let data = _.cloneDeep(dataCreateOrUpdate);
 		data[type] = value;
@@ -158,6 +174,18 @@ function RoleManage() {
 		// CONFIG
 		return (
 			<div className={styles.mainModalWrap}>
+				<div className={styles.inputWrapper}>
+					<div className={styles.label}>Category *</div>
+					<SelectCustom
+						style={{ height: "40px" }}
+						value={dataCreateOrUpdate.type_id}
+						onChange={(e, option) => handleChangeInput(option, "type_id")}
+						options={types.map((item) => ({
+							value: item._id,
+							label: item.name,
+						}))}
+					/>
+				</div>
 				<div className={styles.inputWrapper}>
 					<div className={styles.label}>Name *</div>
 					<InputMASQ

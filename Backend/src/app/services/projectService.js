@@ -7,69 +7,11 @@ import {
     FundingSource,
     ProjectAdditionalInfo,
     Type,
+    ProjectMember,
+    Role,
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
 import delay from '@/utils/classes/delay'
-
-export async function seekProjects(user, requestQuery) {
-    const query = {user_id: {$ne: user._id}}
-    const per_page = 6
-
-    if (requestQuery.industry) {
-        query.industry = {
-            $regex: requestQuery.industry,
-            $options: 'i',
-        }
-    }
-    if (requestQuery.stage) {
-        query.stage = {
-            $regex: requestQuery.stage,
-            $options: 'i',
-        }
-    }
-    if (requestQuery.name) {
-        query.name = {
-            $regex: requestQuery.name,
-            $options: 'i',
-        }
-    }
-
-    const projects = await Project.aggregate([
-        {
-            $match: query,
-        },
-        {
-            $addFields: {
-                background: {
-                    $cond: {
-                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
-                        then: '$background',
-                        else: {$concat: [LINK_STATIC_URL, '$background']},
-                    },
-                },
-            },
-        },
-        {
-            $skip: per_page * requestQuery.page,
-        },
-        {
-            $limit: per_page,
-        },
-        {
-            $project: {
-                related_industries: 1,
-                stage: 1,
-                background: 1,
-                user_id: 1,
-                created_at: 1,
-                name: 1,
-                _id: 1,
-            },
-        },
-    ])
-
-    return {total: projects.length, page: requestQuery.page + 1, per_page, projects}
-}
 
 export async function updateBackground(user, requestBody) {
     if (requestBody.background instanceof FileUpload) {
@@ -167,6 +109,19 @@ export async function createProject(user, requestBody) {
         }))
         await ProjectAdditionalInfo.insertMany(project.additional_infos)
     }
+
+    const roleType = await Type.findOne({class: 'role', name: 'project_role'})
+    const teamRoleType = await Type.findOne({class: 'role', name: 'project_team_role'})
+    const founderRole = await Role.findOne({type_id: roleType._id, name: 'Founder'})
+    const founderTeamRole = await Role.findOne({type_id: teamRoleType._id, name: 'Founder'})
+
+    const owner = new ProjectMember({
+        project_id: project._id,
+        user_id: user._id,
+        role_id: founderRole._id,
+        team_role_id: founderTeamRole._id,
+    })
+    await owner.save()
 
     return {project_id: project._id}
 }
@@ -473,4 +428,97 @@ export async function getProjectsToTag(user, requestQuery) {
         .limit(5)
 
     return projects
+}
+
+// ========== GET [Project - Seek] ========== //
+export async function seekProjects(user, requestQuery) {
+    const query = {user_id: {$ne: user._id}}
+    const per_page = 6
+
+    const projects = await Project.aggregate([
+        {
+            $match: {
+                user_id: {$ne: user._id},
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'stages',
+                localField: 'stage_id',
+                foreignField: '_id',
+                as: 'stage',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'articles',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'articles',
+            },
+        },
+        {
+            $lookup: {
+                from: 'project_members',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'members',
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $unwind: '$stage',
+        },
+        {
+            $addFields: {
+                background: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        then: '$background',
+                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                    },
+                },
+            },
+        },
+        {
+            $project: {
+                user: 1,
+                stage: 1,
+                articles: 1,
+                members: 1,
+                background: 1,
+                created_at: 1,
+                name: 1,
+                _id: 1,
+            },
+        },
+    ])
+
+    return {total: projects.length, page: requestQuery.page + 1, per_page, projects}
 }
