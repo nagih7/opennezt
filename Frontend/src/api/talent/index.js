@@ -15,7 +15,6 @@ import {
 
 // ========== RECRUIT TALENTS ========== //
 export const recruitTalents = (dataFilter) => async (dispatch, getState) => {
-	console.log("dataFilter", dataFilter);
 	let path = `talents/recruit?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
 	if (dataFilter.keySearch) {
 		path += `&q=${dataFilter.keySearch}`;

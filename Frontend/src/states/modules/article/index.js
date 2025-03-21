@@ -39,6 +39,8 @@ const articleSlice = createSlice({
          limit: 10,
          hasMore: true,
       },
+      projectsToTag: [],
+      isLoadingMyProjectToTag: false,
    },
    // reducers: ở đây có chức năng là nhận vào state hiện tại và action, sau đó trả về một state mới
    reducers: {
@@ -333,6 +335,21 @@ const articleSlice = createSlice({
          ...state,
          isLoadingGetReplyComments: false,
       }),
+      // Project tag to new article
+      requestGetProjectsToTag: (state) => ({
+         ...state,
+         isLoadingMyProjectToTag: true,
+      }),
+      getProjectsToTagSuccess: (state, action) => ({
+         ...state,
+         projectsToTag: action.payload.data,
+         isLoadingMyProjectToTag: false,
+      }),
+      getProjectsToTagFail: (state) => ({
+         ...state,
+         projectsToTag: [],
+         isLoadingMyProjectToTag: false,
+      }),
    },
 });
 
@@ -380,6 +397,9 @@ export const {
    getListReplyComment,
    getListReplyCommentSuccess,
    getListReplyCommentFail,
+   requestGetProjectsToTag,
+   getProjectsToTagSuccess,
+   getProjectsToTagFail,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;

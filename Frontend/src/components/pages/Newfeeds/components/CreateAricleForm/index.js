@@ -1,29 +1,26 @@
 import React, { forwardRef, useEffect } from "react";
 import { useState, useRef } from "react";
 import {
-   Box,
    FileUpload,
-   Icon,
-   Image,
-   Text,
-   NativeSelect,
+   Input,
+   InputGroup,
    Button,
    Textarea,
+   Dialog,
+   Portal,
+   CloseButton,
 } from "@chakra-ui/react";
+import { LuUpload, LuSearch } from "react-icons/lu";
+import { debounce, last, set } from "lodash";
 import { CloseOutlined } from "@mui/icons-material";
 import { Avatar } from "antd";
-import { useSelector } from "react-redux";
-import {
-   IconlyAddUser,
-   IconlyImage2,
-   IconlyLocation,
-   Iconlyuser,
-   IconlyUser,
-} from "components/UI/Iconly";
-import { filter } from "lodash";
+import { useSelector, useDispatch } from "react-redux";
+import { IconlyAddUser, IconlyImage2, IconlyWork } from "components/UI/Iconly";
+import { useNavigate } from "react-router-dom";
+import { getProjectsToTag } from "api/newfeeds";
 
 const CreateArticleForm = forwardRef(
-   ({ onSubmitForm, onCloseForm, isLoadingCreateArticle }, ref) => {
+   ({ onSubmitForm, onCloseForm, isLoadingCreateArticle }, ref, isBottom) => {
       const [formData, setFormData] = useState({
          content: {
             caption: "",
@@ -32,35 +29,54 @@ const CreateArticleForm = forwardRef(
          },
          audience: "public",
          status: "published",
-         project_id: "675aa5d48107dd51e42c5b0f",
+         project_id: "",
       });
       const [fileKey, setFileKey] = useState(0);
       const { authUser } = useSelector((state) => state.auth);
 
-      //Images
+      // Project Logic ==========================================
+      const [isModalOpen, setIsModalOpen] = useState(false);
+      const [selectedProject, setSelectedProject] = useState(null);
+      const navigate = useNavigate();
+      const dispatch = useDispatch();
+      const { projectsToTag, isLoadingMyProjectToTag } = useSelector(
+         (state) => state.article
+      );
 
-      const handleFileChange = (event) => {
-         const newFiles = Array.from(event.target.files);
+      const [dataFilter, setDataFilter] = useState({
+         keySearch: "",
+      });
 
-         const filteredFiles = newFiles.filter((newFile) => {
-            const isDuplicate = formData.content.attachment.some(
-               (existingFiles) => existingFiles.name === newFile.name
-            );
-            return !isDuplicate;
-         });
+      console.log("aaaaaaaaaaaaaaaaaaaaaaa");
+      useEffect(() => {
+         dispatch(getProjectsToTag(dataFilter));
+      }, [dataFilter, dispatch]);
+
+      const handleSelectProject = (project) => {
+         setSelectedProject(project);
          setFormData({
             ...formData,
-            content: {
-               ...formData.content,
-               attachment: [...formData.content.attachment, ...filteredFiles],
-            },
+            project_id: project._id,
          });
+         setIsModalOpen(false);
       };
+
+      const handleSearch = debounce((e) => {
+         dispatch(getProjectsToTag({ keySearch: e.target.value }));
+      }, 300);
+
+      const handleModalOpen = () => {
+         setIsModalOpen(true);
+      };
+
+      const handleModalClose = () => {
+         setIsModalOpen(false);
+      };
+      //=========================================================
 
       const renderPreviewImages = () => {
          return (
             <div className="relative">
-               {" "}
                {formData.content.attachment.length > 0 && (
                   <button
                      className="absolute top-2 right-2 text-[30px] text-[#6f7f92] rounded-full w-6 h-6 flex items-center justify-center z-[999999]"
@@ -107,6 +123,24 @@ const CreateArticleForm = forwardRef(
             </div>
          );
       };
+      //Images
+      const handleFileChange = (event) => {
+         const newFiles = Array.from(event.target.files);
+
+         const filteredFiles = newFiles.filter((newFile) => {
+            const isDuplicate = formData.content.attachment.some(
+               (existingFiles) => existingFiles.name === newFile.name
+            );
+            return !isDuplicate;
+         });
+         setFormData({
+            ...formData,
+            content: {
+               ...formData.content,
+               attachment: [...formData.content.attachment, ...filteredFiles],
+            },
+         });
+      };
 
       const handleRemoveImage = () => {
          setFileKey((prev) => prev + 1);
@@ -119,9 +153,6 @@ const CreateArticleForm = forwardRef(
          });
       };
 
-      useEffect(() => {
-         console.log(formData);
-      }, [formData]);
       //End Images
       const handleSubmit = async () => {
          await onSubmitForm(formData);
@@ -134,12 +165,12 @@ const CreateArticleForm = forwardRef(
 
       return (
          <>
-            <div className="fixed inset-0 flex justify-center items-center z-[999998]">
+            <div className="fixed inset-0 flex justify-center items-center z-[999]">
                <div
-                  className="fixed inset-0 flex bg-gray-900 bg-opacity-50"
+                  className="fixed inset-0  bg-gray-900 bg-opacity-50"
                   onClick={handleClick}
                ></div>
-               <div className="bg-[#ffffff] w-[600px] p-8 rounded-md mb-4 z-[10]">
+               <div className="bg-[#ffffff] justify-center items-center w-[600px] p-8 rounded-md mb-4 z-10">
                   <div
                      label="Caption"
                      className="flex flex-col justify-center items-center gap-3"
@@ -151,7 +182,7 @@ const CreateArticleForm = forwardRef(
                         </span>
                         <div
                            onClick={handleClick}
-                           className=" flex justify-center cursor-pointer items-center p-2 rounded-full w-9 h-9"
+                           className="flex justify-center cursor-pointer items-center p-2 rounded-full w-9 h-9"
                         >
                            <CloseOutlined />
                         </div>
@@ -203,17 +234,99 @@ const CreateArticleForm = forwardRef(
                               {renderPreviewImages()}
                            </div>
                         </div>
-                     </div>
-                     {/* <NativeSelect.Root size="sm" width="240px">
-                     <NativeSelect.Field placeholder="Select option">
-                        <option value="react">React</option>
-                        <option value="vue">Vue</option>
-                        <option value="angular">Angular</option>
-                        <option value="svelte">Svelte</option>
-                     </NativeSelect.Field>
-                     <NativeSelect.Indicator />
-                  </NativeSelect.Root> */}
+                        <div>
+                           <Dialog.Root
+                              open={isModalOpen}
+                              onClose={handleModalClose}
+                              style={{ width: "100%" }}
+                              zIndex={9999}
+                              motionPreset="slide-in-left"
+                              placement={"center"}
+                           >
+                              <Portal>
+                                 <Dialog.Backdrop />
+                                 <Dialog.Positioner>
+                                    <Dialog.Content>
+                                       <Dialog.Header>
+                                          <Dialog.Title>
+                                             Tag your project
+                                          </Dialog.Title>
+                                       </Dialog.Header>
+                                       <Dialog.Header>
+                                          <InputGroup
+                                             flex="1"
+                                             startElement={<LuSearch />}
+                                          >
+                                             <Input
+                                                placeholder="Search project"
+                                                onChange={(e) =>
+                                                   handleSearch(e)
+                                                }
+                                             />
+                                          </InputGroup>
+                                       </Dialog.Header>
+                                       <div>
+                                          <Dialog.Body>
+                                             {projectsToTag?.map(
+                                                (project, index) => (
+                                                   <div
+                                                      className="mx-[-16px] px-[16px]"
+                                                      key={index}
+                                                   >
+                                                      <div className=" rounded-md w-full max-w-[600px] p-4">
+                                                         <div
+                                                            className="bg-[#ffffff] border-[1px] rounded-md w-full max-w-[600px] p-4 cursor-pointer"
+                                                            onClick={() =>
+                                                               handleSelectProject(
+                                                                  project
+                                                               )
+                                                            }
+                                                         >
+                                                            <div className="flex items-center gap-4">
+                                                               <div className="flex-grow flex flex-col justify-between">
+                                                                  <h5 className="text-lg font-semibold">
+                                                                     <a
+                                                                        href="#"
+                                                                        className="text-black no-underline"
+                                                                     >
+                                                                        {
+                                                                           project.name
+                                                                        }
+                                                                     </a>
+                                                                  </h5>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                )
+                                             )}
+                                          </Dialog.Body>
+                                       </div>
 
+                                       <Dialog.Footer>
+                                          <Dialog.ActionTrigger>
+                                             <Button
+                                                variant="outline"
+                                                onClick={handleModalClose}
+                                             >
+                                                Cancel
+                                             </Button>
+                                          </Dialog.ActionTrigger>
+                                          <Button>Save</Button>
+                                       </Dialog.Footer>
+                                       <Dialog.CloseTrigger asChild>
+                                          <CloseButton
+                                             size="sm"
+                                             onClick={handleModalClose}
+                                          />
+                                       </Dialog.CloseTrigger>
+                                    </Dialog.Content>
+                                 </Dialog.Positioner>
+                              </Portal>
+                           </Dialog.Root>
+                        </div>
+                     </div>
                      <div className=" flex items-center justify-between border border-gray-200 rounded-md p-3 w-full">
                         <span>Add to your post</span>
                         <div className="flex gap-3">
@@ -237,8 +350,11 @@ const CreateArticleForm = forwardRef(
                                  </FileUpload.Trigger>
                               </FileUpload.Root>
                            </div>
-                           <div className="cursor-pointer">
-                              <IconlyLocation size={30} color={"#000000"} />
+                           <div
+                              className="cursor-pointer"
+                              onClick={handleModalOpen}
+                           >
+                              <IconlyWork size={30} color={"#000000"} />
                            </div>
                            <div className="cursor-pointer">
                               <IconlyAddUser size={30} color={"#000000"} />

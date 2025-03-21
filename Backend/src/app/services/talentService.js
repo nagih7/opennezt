@@ -1,6 +1,6 @@
 // import {LINK_STATIC_URL} from '@/configs'
 
-import {Profile} from '@/models'
+import {Category, ObjectId, Profile} from '@/models'
 
 // =========== GET [Recruit Talents] =========== //
 export async function recruitTalents(
@@ -10,13 +10,25 @@ export async function recruitTalents(
     q = q ? q : ''
     order = order === '-1' ? -1 : 1
 
+    if (category_id && !subcategory_id) {
+        const category = await Category.find({parent_id: new ObjectId(category_id)})
+        subcategory_id = category.map((item) => item._id)
+    } else if (category_id && subcategory_id) {
+        subcategory_id = [subcategory_id]
+    }
+
     const matchProfileStage = {
         $match: {
             $and: [
-                {industry_ids: industry_id ? {$in: industry_id} : {$ne: null}},
-                {experience_level_id: experience_level_id ? experience_level_id : {$ne: null}},
-                {category_ids: category_id ? {$in: category_id} : {$ne: null}},
-                {skill_ids: skill_id ? {$in: skill_id} : {$ne: null}},
+                {user_id: {$ne: new ObjectId(currentUser._id)}},
+                {industry_ids: industry_id ? {$in: [new ObjectId(industry_id)]} : {$ne: null}},
+                {experience_level_id: experience_level_id ? new ObjectId(experience_level_id) : {$ne: null}},
+                {
+                    category_ids: subcategory_id
+                        ? {$in: [...subcategory_id.map((id) => new ObjectId(id))]}
+                        : {$ne: null},
+                },
+                {skill_ids: skill_id ? {$in: [new ObjectId(skill_id)]} : {$ne: null}},
             ],
         },
     }
@@ -29,113 +41,44 @@ export async function recruitTalents(
 
     const talents = await Profile.aggregate([
         matchProfileStage,
-        // {
-        //     $lookup: {
-        //         from: 'users',
-        //         localField: 'user_id',
-        //         foreignField: '_id',
-        //         as: 'user',
-        //     },
-        // },
-        // {
-        //     $unwind: '$user',
-        // },
-        // matchUserStage,
-        // {
-        //     $lookup: {
-        //         from: 'users',
-        //         localField: 'user_id',
-        //         foreignField: '_id',
-        //         as: 'user',
-        //     },
-        // },
-        // {
-        //     $unwind: '$user',
-        // },
-        // {
-        //     $lookup: {
-        //         from: 'profiles',
-        //         localField: 'user.profile_id',
-        //         foreignField: '_id',
-        //         as: 'user.profile',
-        //     },
-        // },
-        // {
-        //     $unwind: '$user.profile',
-        // },
-        // {
-        //     $lookup: {
-        //         from: 'industries',
-        //         localField: 'user.profile.industry_id',
-        //         foreignField: '_id',
-        //         as: 'industry',
-        //     },
-        // },
-        // {
-        //     $unwind: '$industry',
-        // },
-        // {
-        //     $lookup: {
-        //         from: 'experience_levels',
-        //         localField: 'user.profile.experience_level_id',
-        //         foreignField: '_id',
-        //         as: 'experience_level',
-        //     },
-        // },
-        // {
-        //     $unwind: '$experience_level',
-        // },
-        // {
-        //     $lookup: {
-        //         from: 'categories',
-        //         localField: 'user.profile.category_id',
-        //         foreignField: '_id',
-        //         as: 'category',
-        //     },
-        // },
-        // {
-        //     $unwind: '$category',
-        // },
-        // {
-        //     $lookup: {
-        //         from: 'subcategories',
-        //         localField: 'user.profile.subcategory_id',
-        //         foreignField: '_id',
-        //         as: 'subcategory',
-        //     },
-        // },
-        // {
-        //     $unwind: '$subcategory',
-        // },
-        // {
-        //     $lookup: {
-        //         from: 'skills',
-        //         localField: 'user.profile.skill_id',
-        //         foreignField: '_id',
-        //         as: 'skill',
-        //     },
-        // },
-        // {
-        //     $unwind: '$skill',
-        // },
-
-        // {
-        //     $project: {
-        //         _id: 1,
-        //         user_id: 1,
-        //         user: {
-        //             _id: '$user._id',
-        //             profile_id: '$user.profile._id',
-        //             first_name: '$user.first_name',
-        //             last_name: '$user.last_name',
-        //             email: '$user.email',
-        //             phone: '$user.phone',
-        //             profile: '$user.profile.first_name' + ' ' + '$user.profile.last_name',
-        //             industry: '$industry.name',
-        //         },
-        //     },
-        // },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [matchUserStage, {$project: {name: 1, email: 1, avatar: 1, background: 1}}],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $project: {
+                _id: 1,
+                user: 1,
+                industry_ids: 1,
+                experience_level_id: 1,
+                category_ids: 1,
+                skill_ids: 1,
+            },
+        },
+        {$sort: {[field]: order}},
+        {$skip: (page - 1) * per_page},
+        {$limit: per_page},
     ])
 
-    return talents
+    const filter = {
+        $and: [
+            {user_id: {$ne: new ObjectId(currentUser._id)}},
+            {industry_ids: industry_id ? {$in: [new ObjectId(industry_id)]} : {$ne: null}},
+            {experience_level_id: experience_level_id ? new ObjectId(experience_level_id) : {$ne: null}},
+            {category_ids: category_id ? {$in: [new ObjectId(category_id)]} : {$ne: null}},
+            {skill_ids: skill_id ? {$in: [new ObjectId(skill_id)]} : {$ne: null}},
+        ],
+    }
+
+    const total = await Profile.countDocuments(filter)
+    const total_page = Math.ceil(total / per_page)
+    return {total, page, per_page, total_page, talents}
 }

@@ -50,8 +50,9 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
         $project: {
             _id: 1,
             type_id: 1,
-            type_name: {$ifNull: [{$arrayElemAt: ['$type_info.name', 0]}, 'Unknown Type']},
-            source_name: {$ifNull: [{$arrayElemAt: ['$source_info.name', 0]}, 'Unknown User']},
+            source_id: 1,
+            type_name: { $ifNull: [{ $arrayElemAt: ['$type_info.name', 0] }, 'Unknown Type'] },  
+            source_name: { $ifNull: [{ $arrayElemAt: ['$source_info.name', 0] }, 'Unknown User'] },  
             created_at: 1,
             updated_at: 1,
             metadata: 1,
@@ -96,8 +97,9 @@ export async function getNotifications(user) {
         $project: {
             _id: 1,
             type_id: 1,
-            type_name: {$ifNull: [{$arrayElemAt: ['$type_info.name', 0]}, 'Unknown Type']},
-            source_name: {$ifNull: [{$arrayElemAt: ['$source_info.name', 0]}, 'Unknown User']},
+            source_id: 1,
+            type_name: { $ifNull: [{ $arrayElemAt: ['$type_info.name', 0] }, 'Unknown Type'] },  
+            source_name: { $ifNull: [{ $arrayElemAt: ['$source_info.name', 0] }, 'Unknown User'] },  
             created_at: 1,
             updated_at: 1,
             metadata: 1,
@@ -133,7 +135,6 @@ export async function replyNotification(requestBody, io) {
     switch (type.name) {
         case 'Friend Request':
             await replyFriendRequest(notification_id, status, io)
-            console.log('replyFriendRequest')
             break
         case 'Project Invitation':
             await replyProjectInvitation(notification_id, status, io)
@@ -143,7 +144,7 @@ export async function replyNotification(requestBody, io) {
     }
 }
 
-export async function replyFriendRequest(notification_id, io, reject = false) {
+export async function replyFriendRequest(notification_id, status, io) {
     // Get information notification
     const notification = await NotificationFeed.findById(notification_id)
     const type = await Type.findOne({name: 'Reply Friend'})
@@ -156,7 +157,7 @@ export async function replyFriendRequest(notification_id, io, reject = false) {
     if (notification.metadata.status === 'waiting') {
         const {user_id, source_id} = notification
 
-        if (reject) {
+        if (status === 'rejected') {
             // If reject is true, handle rejection of the friend request
             // Update notification status to 'rejected'
             await NotificationFeed.updateOne(
@@ -175,7 +176,6 @@ export async function replyFriendRequest(notification_id, io, reject = false) {
                 (socketId) => userSockets[socketId] === source_id.toString()
             )
 
-            console.log('senderSocketId:', senderSocketId)
             if (senderSocketId) {
                 io.to(senderSocketId).emit('reject_add_friend', user.name)
             }

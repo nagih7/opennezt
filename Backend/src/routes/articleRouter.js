@@ -25,7 +25,7 @@ articleRouter.post(
     asyncHandler(articleController.createArticle)
 )
 
-articleRouter.get('/list-comment', asyncHandler(articleController.getCommentList))
+articleRouter.get('/list-comments', asyncHandler(articleController.getCommentList))
 
 articleRouter.get('/list-reply-comment', asyncHandler(articleController.getReplyCommentList))
 

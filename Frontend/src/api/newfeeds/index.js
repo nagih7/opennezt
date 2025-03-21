@@ -33,6 +33,9 @@ import {
    getListReplyComment,
    getListReplyCommentSuccess,
    getListReplyCommentFail,
+   requestGetProjectsToTag,
+   getProjectsToTagSuccess,
+   getProjectsToTagFail,
 } from "states/modules/article";
 
 export const getListFeeds =
@@ -106,7 +109,7 @@ export const handleGetListComment =
       }
    ) =>
    async (dispatch, getState) => {
-      let path = `article/list-comment?articleId=${dataFilter.articleId}&limit=${dataFilter.limit}&page=${dataFilter.page}`;
+      let path = `article/list-comments?articleId=${dataFilter.articleId}&limit=${dataFilter.limit}&page=${dataFilter.page}`;
       return callApi({
          method: "get",
          apiPath: path,
@@ -216,3 +219,22 @@ export const handleGetListReplyComment =
          getState,
       });
    };
+
+export const getProjectsToTag = (dataFilter) => async (dispatch, getState) => {
+   let path = `projects/tags`;
+   if (dataFilter.keySearch) {
+      path += `?keySearch=${dataFilter.keySearch}`;
+   }
+   return callApi({
+      method: "get",
+      apiPath: path,
+      actionTypes: [
+         requestGetProjectsToTag,
+         getProjectsToTagSuccess,
+         getProjectsToTagFail,
+      ],
+      variables: {},
+      dispatch,
+      getState,
+   });
+};

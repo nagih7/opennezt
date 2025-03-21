@@ -266,16 +266,18 @@ export async function deleteProfileCertification(user, certificationId) {
 
 // ========== PUT [Skills] ========== //
 export async function updateProfileSkills(user, requestBody) {
-    const skills = requestBody.skills.map((skill) => skill._id)
+    const skills = [...new Set(requestBody.skills.map((skill) => skill._id._id.toString()))]
+    const categories = [...new Set(requestBody.skills.map((skill) => skill._id.category_id.toString()))]
     const profile = await Profile.findOne({user_id: user._id})
     if (!profile) {
         const newProfile = new Profile({
             user_id: user._id,
             skill_ids: skills,
+            category_ids: categories,
         })
         await newProfile.save()
     } else {
-        await Profile.findOneAndUpdate({user_id: user._id}, {skill_ids: skills})
+        await Profile.findOneAndUpdate({user_id: user._id}, {skill_ids: skills, category_ids: categories})
     }
 }
 
