@@ -181,11 +181,15 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    //==============Reaction===============
    useEffect(() => {
       if (onetimecomments.length > 0) {
-         onetimecomments.forEach((cmt) => {
-            if (cmt._id) {
-               dispatch(handleGetUserCommentReactions(cmt._id));
-            }
-         });
+         // Lấy tất cả article IDs
+         const commentIds = onetimecomments
+            .filter((comment) => comment._id)
+            .map((comment) => comment._id);
+
+         // Gọi API một lần với array của IDs
+         if (commentIds.length > 0) {
+            dispatch(handleGetUserCommentReactions(commentIds));
+         }
       }
    }, [onetimecomments, dispatch]);
 
@@ -297,13 +301,6 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       [replyCommentList]
    );
 
-   const hideReplies = useCallback((comment) => {
-      setReplyCommentList((prevState) => ({
-         ...prevState,
-         [comment._id]: {},
-      }));
-   }, []);
-
    useEffect(() => {
       if (replyDataFilter.parent_id) {
          dispatch(handleGetListReplyComment({ dataFilter: replyDataFilter }));
@@ -312,120 +309,153 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    //End reply comment logic
    return (
       <div
-         className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-hidden"
-         onClick={handleCloseComment}
+         className="fixed inset-0 flex items-center justify-center overflow-hidden"
          style={{ zIndex: 100 }}
       >
          <div
-            className="bg-[#ffffff] w-[50vw] max-h-[90vh] mb-8 rounded-md p-8 overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-         >
-            <div className="flex items-center gap-3">
-               <div className="w-[65px]">
-                  <img src={avt} className="w-[65px]  rounded-full" />
-               </div>
-               <div className="flex justify-between items-center w-full">
-                  <div className="flex flex-col gap-2 w-9/12 text-base font-medium">
-                     <div className="flex items-center gap-2">
-                        {user[0].name}
-                        <CheckCircleFilled className="text-[#3897f0]" />
-                        <span className="text-sm">posted about</span>
-                        <span className="text-sm">{project[0]}</span>
-                     </div>
-                     <span className="text-xs text-gray-500">
-                        {day <= 7
-                           ? day == 0
-                              ? hour == 0
-                                 ? minute == 0
-                                    ? second + "s"
-                                    : minute + "m"
-                                 : hour + "h"
-                              : day + "d"
-                           : postedDate}
-                     </span>
+            className="fixed inset-0 bg-black bg-opacity-50"
+            onClick={handleCloseComment}
+         ></div>
+         <div className="flex flex-col bg-[#ffffff] w-[50vw] max-h-[85vh] mb-8 rounded-md relative z-10">
+            <div className="flex items-center w-full p-[10px] justify-center rounded-md border-[1px] border-gray-200 gap-3">
+               {feed.parent_id ? (
+                  <span className="text-lg">{`${feed.user[0].name}'s share post`}</span>
+               ) : (
+                  <span className="text-lg font-semibold">{`${feed.user[0].name}'s post`}</span>
+               )}
+            </div>
+            {/* Add a scrollable container for the content */}
+            <div
+               className="flex-1 overflow-y-auto p-8 pb-24"
+               style={{
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#CBD5E1 #F1F5F9",
+                  "&::-webkit-scrollbar": {
+                     width: "8px",
+                  },
+                  "&::-webkit-scrollbar-track": {
+                     background: "#F1F5F9",
+                     borderRadius: "4px",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                     background: "#CBD5E1",
+                     borderRadius: "4px",
+                  },
+                  "&::-webkit-scrollbar-thumb:hover": {
+                     background: "#94A3B8",
+                  },
+               }}
+            >
+               <div className="flex items-center gap-3">
+                  <div className="w-[65px]">
+                     <img src={avt} className="w-[65px]  rounded-full" />
                   </div>
-                  <IconlyMoreCircle
-                     size={30}
-                     color={"black"}
-                     className="w-3/12"
-                  />
-               </div>
-            </div>
-            <div className="mt-6">
-               <p className="my-[6px]">{content.caption}</p>
-            </div>
-            <div className="flex flex-wrap gap-2 ">
-               {content.attachment &&
-                  content.attachment.length > 0 &&
-                  content.attachment.map((img, index) => {
-                     return <img src={img} key={index} />;
-                  })}
-            </div>
-            <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
-               <span className="text-[#6f7f92]"></span>
-            </div>
-            <div className="flex items-center justify-between">
-               <div className="flex items-center gap-3 pt-[16px] text-[#6f7f92]">
-                  <a className="flex items-center gap-1 text-current no-underline">
-                     {displayReaction(reaction)}
-                     <span className="text-sm">
-                        {reaction_count > 0
-                           ? reaction_count > 1000
-                              ? Math.floor(reaction_count / 1000) + "k"
-                              : reaction_count
-                           : " "}{" "}
-                     </span>
-                  </a>
-                  <a
-                     className="flex items-center gap-1 text-current no-underline"
-                     style={{ cursor: "pointer" }}
-                  >
-                     <IconlyChat size={20} color={"#6f7f92"} />
-                     <span className="text-sm">
-                        {comment_count > 0
-                           ? comment_count > 1000
-                              ? Math.floor(comment_count / 1000) + "k"
-                              : comment_count
-                           : " "}{" "}
-                     </span>
-                  </a>
-               </div>
-               <div className="flex items-center gap-1 pt-[16px] text-[#6f7f92]">
-                  <IconlySend size={22} color={"#6f7f92"} />
-                  <span>Share</span>
-               </div>
-            </div>
-            {comment.map((cmt, index) => {
-               if (index === comment.length - 1) {
-                  return (
-                     <Comment
-                        key={index}
-                        comment={cmt}
-                        ref={lastElementRef}
-                        reaction={reactionMap.get(cmt._id)}
-                        onCommentReaction={handleCommentReaction}
-                        isLoading={isLoadingReactComment}
-                        setParentId={getParentId}
-                        replyCommentList={replyCommentList[cmt._id]}
-                        hideReplies={hideReplies}
+                  <div className="flex justify-between items-center w-full">
+                     <div className="flex flex-col gap-2 w-9/12 text-base font-medium">
+                        <div className="flex items-center gap-2">
+                           {user[0].name}
+                           <CheckCircleFilled className="text-[#3897f0]" />
+                           <span className="text-sm">posted in</span>
+                           <span className="">
+                              {project[0]?.name || "no name"}
+                           </span>
+                        </div>
+                        <span className="text-xs text-gray-500">
+                           {day <= 7
+                              ? day == 0
+                                 ? hour == 0
+                                    ? minute == 0
+                                       ? second + "s"
+                                       : minute + "m"
+                                    : hour + "h"
+                                 : day + "d"
+                              : postedDate}
+                        </span>
+                     </div>
+                     <IconlyMoreCircle
+                        size={30}
+                        color={"black"}
+                        className="w-3/12"
                      />
-                  );
-               } else {
-                  return (
-                     <Comment
-                        key={index}
-                        comment={cmt}
-                        reaction={reactionMap.get(cmt._id)}
-                        onCommentReaction={handleCommentReaction}
-                        isLoading={isLoadingReactComment}
-                        setParentId={getParentId}
-                        replyCommentList={replyCommentList[cmt._id]}
-                        hideReplies={hideReplies}
-                     />
-                  );
-               }
-            })}
-            <NewCommentForm article_id={_id} onSubmit={handleFormSubmit} />
+                  </div>
+               </div>
+               <div className="mt-6">
+                  <p className="my-[6px]">{content.caption}</p>
+               </div>
+               <div className="flex flex-wrap gap-2 ">
+                  {content.attachment &&
+                     content.attachment.length > 0 &&
+                     content.attachment.map((img, index) => {
+                        return <img src={img} key={index} />;
+                     })}
+               </div>
+               <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
+                  <span className="text-[#6f7f92]"></span>
+               </div>
+               <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 pt-[16px] text-[#6f7f92]">
+                     <a className="flex items-center gap-1 text-current no-underline">
+                        {displayReaction(reaction)}
+                        <span className="text-sm">
+                           {reaction_count > 0
+                              ? reaction_count > 1000
+                                 ? Math.floor(reaction_count / 1000) + "k"
+                                 : reaction_count
+                              : " "}{" "}
+                        </span>
+                     </a>
+                     <a
+                        className="flex items-center gap-1 text-current no-underline"
+                        style={{ cursor: "pointer" }}
+                     >
+                        <IconlyChat size={20} color={"#6f7f92"} />
+                        <span className="text-sm">
+                           {comment_count > 0
+                              ? comment_count > 1000
+                                 ? Math.floor(comment_count / 1000) + "k"
+                                 : comment_count
+                              : " "}{" "}
+                        </span>
+                     </a>
+                  </div>
+                  <div className="flex items-center gap-1 pt-[16px] text-[#6f7f92]">
+                     <IconlySend size={22} color={"#6f7f92"} />
+                     <span>Share</span>
+                  </div>
+               </div>
+               {comment.map((cmt, index) => {
+                  if (index === comment.length - 1) {
+                     return (
+                        <Comment
+                           key={index}
+                           comment={cmt}
+                           ref={lastElementRef}
+                           reaction={reactionMap.get(cmt._id)}
+                           onCommentReaction={handleCommentReaction}
+                           isLoading={isLoadingReactComment}
+                           setParentId={getParentId}
+                           replyCommentList={replyCommentList[cmt._id]}
+                        />
+                     );
+                  } else {
+                     return (
+                        <Comment
+                           key={index}
+                           comment={cmt}
+                           reaction={reactionMap.get(cmt._id)}
+                           onCommentReaction={handleCommentReaction}
+                           isLoading={isLoadingReactComment}
+                           setParentId={getParentId}
+                           replyCommentList={replyCommentList[cmt._id]}
+                        />
+                     );
+                  }
+               })}
+            </div>
+            {/* Comment form container */}
+            <div className="sticky bottom-0 left-0 right-0 border-gray-200 bg-white p-2 shadow-md rounded-md">
+               <NewCommentForm article_id={_id} onSubmit={handleFormSubmit} />
+            </div>
          </div>
       </div>
    );

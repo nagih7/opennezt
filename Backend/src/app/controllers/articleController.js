@@ -1,8 +1,8 @@
 import * as articleService from '../services/articleService.js'
 
 export const createArticle = async (req, res) => {
-    await articleService.createArticle(req.currentUser, req.body)
-    res.status(201).jsonify('Create Article Success.')
+    const newAricle = await articleService.createArticle(req.currentUser, req.body)
+    res.status(200).jsonify(newAricle)
 }
 
 export const getArticleList = async (req, res) => {
@@ -21,7 +21,7 @@ export const getUserReactions = async (req, res) => {
 }
 
 export const getUserCommentReactions = async (req, res) => {
-    const reactions = await articleService.getUserCommentReactions(req.currentUser._id, req.params.id)
+    const reactions = await articleService.getUserCommentReactions(req.currentUser._id, req.params.target_ids)
     res.status(200).jsonify(reactions)
 }
 

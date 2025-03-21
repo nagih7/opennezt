@@ -24,7 +24,6 @@ const Comment = forwardRef(
          isLoading,
          setParentId,
          replyCommentList,
-         hideReplies,
       },
       ref
    ) => {
@@ -55,10 +54,6 @@ const Comment = forwardRef(
 
       const handleSetParentId = () => {
          setParentId(comment);
-      };
-
-      const handleHideReplies = () => {
-         hideReplies(comment);
       };
 
       const handleToggleReplies = () => {

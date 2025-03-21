@@ -495,10 +495,15 @@ export const createComment = async (user, requestBody) => {
 //End Create Comment
 
 //Get User Comment Reactions
-export const getUserCommentReactions = async (user_id, target_id) => {
+
+export const getUserCommentReactions = async (user_id, target_ids) => {
+    // Chuyển đổi string thành array và map thành ObjectId
+    const targetIdArray = target_ids.split(',').map((id) => new ObjectId(id))
+
     const reactions = await Reaction.find({
         user_id: user_id,
-        target_id: target_id,
+        target_id: {$in: targetIdArray},
     })
+
     return reactions
 }

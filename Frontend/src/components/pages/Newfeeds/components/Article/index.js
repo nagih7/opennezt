@@ -165,11 +165,13 @@ const Article = forwardRef(
                </div>
                <div className="flex justify-between items-center w-full">
                   <div className="flex flex-col gap-2 w-9/12 text-base font-medium">
-                     <div className="flex items-center gap-2">
+                     <div className="flex items-center gap-1">
                         {user[0].name}
                         <CheckCircleFilled className="text-[#3897f0]" />
                         <span className="text-sm">posted in</span>
-                        <span className="text-sm">{project[0]}</span>
+                        <span className="">
+                           {project[0]?.name || "no name"}
+                        </span>
                      </div>
                      <span className="text-xs text-gray-500">
                         {day <= 7
@@ -280,24 +282,6 @@ const Article = forwardRef(
                   <span>Share</span>
                </div>
             </div>
-            {/* <div className="flex items-center w-full justify-between p-[10px] rounded-md border-[1px] border-gray-200 gap-3 mt-[20px]">
-               <div className="w-8 h-8">
-                  <img src={avt} className="rounded-full w-8 h-8" />
-               </div>
-               <div className="flex items-center justify-between">
-                  <div>
-                     <input
-                        type="text"
-                        placeholder="Write a comment..."
-                        className="w-[630px] h-9 bg-[#ffffff] pr-[50px] outline-none"
-                     />
-                  </div>
-
-                  <button className="w-9 h-9 bg-[#f8f9fa] rounded-md flex items-center justify-center">
-                     <IconlyEdit size={20} color={"#6f7f92"} />
-                  </button>
-               </div>
-            </div> */}
          </div>
       );
    }
