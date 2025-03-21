@@ -18,6 +18,7 @@ export const NAVBAR_LABEL = {
 	RECRUIT_TALENTS: "RECRUIT_TALENTS",
 	SEEK_PROJECTS: "SEEK_PROJECTS",
 	NOTIFICATIONS: "NOTIFICATIONS",
+	MESSAGES: "MESSAGES",
 };
 
 export const NAVBAR = {
@@ -65,6 +66,11 @@ export const NAVBAR = {
 		EN: "Notifications",
 		VI: "Thông báo",
 		ZH: "通知",
+	},
+	MESSAGES: {
+		EN: "Messages",
+		VI: "Tin nhắn",
+		ZH: "消息",
 	},
 };
 

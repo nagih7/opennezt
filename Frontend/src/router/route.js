@@ -39,6 +39,7 @@ const UserManagement = React.lazy(() =>
 	import("../components/pages/UserManagement")
 );
 const About = React.lazy(() => import("../components/pages/About"));
+const Message = React.lazy(() => import("../components/pages/Message"));
 const Newfeeds = React.lazy(() => import("../components/pages/Newfeeds"));
 const Project = React.lazy(() => import("../components/pages/Project"));
 const RecruitTalents = React.lazy(() =>
@@ -470,6 +471,15 @@ const router = createBrowserRouter([
 		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROJECT_SETTING_PAGE"),
+	},
+	{
+		path:"/messages",
+		element:(
+			<AppLayout>
+				<Message />
+			</AppLayout>
+		),
+		loader:({request})=>rootLoader({request},true,"LOAD_MESSAGES_PAGE")
 	}
 ]);
 
