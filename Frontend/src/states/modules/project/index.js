@@ -140,7 +140,7 @@ const projectSlice = createSlice({
 		getProjectDetailsSuccess: (state, action) => ({
 			...state,
 			loadingGetProjectDetails: false,
-			// projectDetails: action.payload.data,
+			projectDetails: action.payload.data,
 		}),
 		getProjectDetailsFail: (state) => ({
 			...state,

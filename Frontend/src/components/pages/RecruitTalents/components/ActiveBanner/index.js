@@ -25,7 +25,9 @@ const RecruitTalentActiveBanner = () => {
 					<li>
 						<span className="flex items-center">
 							<IconlyArrowRight2 size={18} color={"#ffffff"} />
-							<span className="text-sm font-semibold">PRODUCT</span>
+							<span className="text-sm font-semibold">
+								RECRUIT TALENTS
+							</span>
 						</span>
 					</li>
 				</ul>

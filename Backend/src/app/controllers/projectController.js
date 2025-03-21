@@ -21,6 +21,12 @@ export async function getListMyProjects(req, res) {
     res.jsonify(result)
 }
 
+// ========== GET [My Project Details] ========== //
+export async function getMyProjectDetails(req, res) {
+    const result = await projectService.getMyProjectDetails(req.currentUser, req.params.id)
+    res.jsonify(result)
+}
+
 // ========== GET [Project Details] ========== //
 export async function getProjectDetails(req, res) {
     const result = await projectService.getProjectDetails(req.currentUser, req.params.id)
