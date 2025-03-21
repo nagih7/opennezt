@@ -1181,3 +1181,11 @@ export const IconlyFilter = ({ size, color }) => {
 		</svg>
 	);
 };
+
+export const IconlyArrowLeft2 = ({ size, color}) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path d="M15.75 19L8.75 12L15.75 5" stroke={color} strokeWidth="1.5" strokeLinecap="square"></path>
+		</svg> 
+		) 
+}

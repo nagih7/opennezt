@@ -25,6 +25,8 @@ import EditLogo from "components/pages/EditProject/Components/Logo";
 import EditBackground from "components/pages/EditProject/Components/Background";
 import Members from "components/pages/ProjectDetails/components/Members";
 import Setting from "components/pages/ProjectDetails/components/Setting";
+import NewConversation from "components/pages/Message/components/NewConversation";
+import Conversation from "components/pages/Message/components/Conversation";
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import("../components/pages/Auth/Login"));
@@ -471,7 +473,6 @@ const router = createBrowserRouter([
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROJECT_SETTING_PAGE"),
 	},
-<<<<<<< HEAD
 	{
 		path:"/messages",
 		element:(
@@ -480,9 +481,25 @@ const router = createBrowserRouter([
 			</AppLayout>
 		),
 		loader:({request})=>rootLoader({request},true,"LOAD_MESSAGES_PAGE")
+	},
+	{
+		path:"/messages/new-conversation",
+		element:(
+			<AppLayout>
+				<NewConversation />
+			</AppLayout>
+		),
+		loader:({request})=>rootLoader({request},true,"LOAD_NEW_CONVERSATION_PAGE")
+	},
+	{
+		path:"/messages/conversation",
+		element:(
+			<AppLayout>
+				<Conversation />
+			</AppLayout>
+		),
+		loader:({request})=>rootLoader({request},true,"LOAD_CONVERSATION_PAGE")
 	}
-=======
->>>>>>> 1acafffdb61dc133566296d175cb04607c1cb518
 ]);
 
 export default router;
