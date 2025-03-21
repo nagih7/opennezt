@@ -2,6 +2,7 @@ import Joi from 'joi'
 import {MAX_STRING_SIZE} from '@/configs'
 import {AsyncValidate, FileUpload} from '@/utils/classes'
 import {Industry, ObjectId, Project, Role, Stage, User} from '@/models'
+import {tryValidateOrDefault} from '@/utils/helpers'
 
 export const requestAddFriend = Joi.object({
     user_id: Joi.string()
@@ -240,8 +241,11 @@ export const inviteMember = Joi.object({
 
 // ========== PATCH [Project - Seek] ========== //
 export const seekProjects = Joi.object({
+    q: tryValidateOrDefault(Joi.string().trim(), ''),
+    page: tryValidateOrDefault(Joi.number().integer().min(1), 1),
+    per_page: tryValidateOrDefault(Joi.number().integer().min(1).max(100), 20),
+    field: tryValidateOrDefault(Joi.valid('created_at', 'name', 'email', 'phone', 'active'), 'created_at'),
+    order: tryValidateOrDefault(Joi.valid('1', '-1'), '-1'),
     industry: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Industry'),
     stage: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Stage'),
-    name: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Name'),
-    page: Joi.number().integer().min(0).default(0).label('Page'),
 })
