@@ -1,6 +1,6 @@
 // import {LINK_STATIC_URL} from '@/configs'
 
-import {ObjectId, Profile} from '@/models'
+import {Category, ObjectId, Profile} from '@/models'
 
 // =========== GET [Recruit Talents] =========== //
 export async function recruitTalents(
@@ -10,13 +10,24 @@ export async function recruitTalents(
     q = q ? q : ''
     order = order === '-1' ? -1 : 1
 
+    if (category_id && !subcategory_id) {
+        const category = await Category.find({parent_id: new ObjectId(category_id)})
+        subcategory_id = category.map((item) => item._id)
+    } else if (category_id && subcategory_id) {
+        subcategory_id = [subcategory_id]
+    }
+
     const matchProfileStage = {
         $match: {
             $and: [
                 {user_id: {$ne: new ObjectId(currentUser._id)}},
                 {industry_ids: industry_id ? {$in: [new ObjectId(industry_id)]} : {$ne: null}},
                 {experience_level_id: experience_level_id ? new ObjectId(experience_level_id) : {$ne: null}},
-                {category_ids: category_id ? {$in: [new ObjectId(category_id)]} : {$ne: null}},
+                {
+                    category_ids: subcategory_id
+                        ? {$in: [...subcategory_id.map((id) => new ObjectId(id))]}
+                        : {$ne: null},
+                },
                 {skill_ids: skill_id ? {$in: [new ObjectId(skill_id)]} : {$ne: null}},
             ],
         },
