@@ -7,6 +7,12 @@
 	// border-color: currentColor;
 }
 
+@layer utilities {
+	.unset {
+		all: unset;
+	}
+}
+
 ::before,
 ::after {
 	--tw-content: "";

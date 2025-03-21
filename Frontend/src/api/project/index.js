@@ -14,6 +14,10 @@ import {
 	requestSeekProjects,
 	seekProjectsSuccess,
 	seekProjectsFail,
+	// ========== Apply to join project ========== //
+	requestApplyToJoinProject,
+	applyToJoinProjectSuccess,
+	applyToJoinProjectFail,
 	//  //////////////////////
 	requestGetProjectDetails,
 	getProjectDetailsSuccess,
@@ -78,7 +82,7 @@ export const createNewProject = (data) => async (dispatch, getState) => {
 	});
 };
 
-// ========== GET PROJECT DETAILS ========== //
+// ========== GET MY PROJECT DETAILS ========== //
 export const getMyProjectDetails =
 	(projectId) => async (dispatch, getState) => {
 		return callApi({
@@ -95,6 +99,7 @@ export const getMyProjectDetails =
 		});
 	};
 
+// ========== GET PROJECT DETAILS ========== //
 export const getProjectDetails = (projectId) => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
@@ -133,6 +138,23 @@ export const seekProjects = (dataFilter) => async (dispatch, getState) => {
 		getState,
 	});
 };
+
+// =========== APPLY TO JOIN PROJECT =========== //
+export const applyToJoinProject =
+	(projectId, formRequest) => async (dispatch, getState) => {
+		return callApi({
+			method: "post",
+			apiPath: `projects/${projectId}/apply`,
+			actionTypes: [
+				requestApplyToJoinProject,
+				applyToJoinProjectSuccess,
+				applyToJoinProjectFail,
+			],
+			variables: formRequest,
+			dispatch,
+			getState,
+		});
+	};
 
 export const updateProject = (data) => async (dispatch, getState) => {
 	return callApi({

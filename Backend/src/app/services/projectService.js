@@ -328,6 +328,7 @@ export async function getMyProjectDetails(user, projectId) {
 
 // ========== GET [Project Details] ========== //
 export async function getProjectDetails(user, projectId) {
+    const typeNotification = await Type.findOne({class: 'notification', name: 'project_application'})
     const project = await Project.aggregate([
         {
             $match: {
@@ -454,6 +455,38 @@ export async function getProjectDetails(user, projectId) {
             },
         },
         {
+            $lookup: {
+                from: 'project_members',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'members',
+            },
+        },
+        {
+            $lookup: {
+                from: 'articles',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'articles',
+            },
+        },
+        {
+            $lookup: {
+                from: 'notifications_feed',
+                localField: '_id',
+                foreignField: 'additional_info.project_id',
+                as: 'applied',
+                // pipeline: [
+                //     {
+                //         $match: {
+                //             source_id: user._id,
+                //             type_id: typeNotification._id,
+                //         },
+                //     },
+                // ],
+            },
+        },
+        {
             $addFields: {
                 logo: {
                     $cond: {
@@ -474,6 +507,12 @@ export async function getProjectDetails(user, projectId) {
         },
         {
             $unwind: '$user',
+        },
+        {
+            $unwind: {
+                path: '$applied',
+                preserveNullAndEmptyArrays: true,
+            },
         },
         {
             $project: {
@@ -711,4 +750,27 @@ export async function seekProjects(user, {q, page, per_page, field, order, indus
     const total = await Project.countDocuments(filter)
 
     return {total, page, per_page, projects}
+}
+
+// ========== POST [Project - Apply to join project] ========== //
+export async function applyToJoinProject(user, projectId, requestBody) {
+    const {teamRole, role} = requestBody
+    const project = await Project.findById(new ObjectId(projectId))
+    const typeNotification = await Type.findOne({class: 'notification', name: 'project_application'})
+    const notification = new NotificationFeed({
+        source_id: user._id,
+        user_id: project.user_id,
+        type_id: typeNotification._id,
+        additional_info: {
+            project_id: project._id,
+            team_role_id: teamRole,
+            role_id: role,
+        },
+        metadata: {
+            status: 'waiting',
+            read: false,
+        },
+    })
+
+    await notification.save()
 }

@@ -10,7 +10,7 @@ const ProjectOverview = () => {
 	const { projectDetails } = useSelector((state) => state.project);
 
 	return (
-		<div className="col-span-2  p-6 w-[46rem] ml-[0.75rem] 2xl:w-[52rem] 2xl:relative 2xl:left-[9rem]">
+		<div className="col-span-2  p-6 w-[46rem] ml-[0.75rem] 2xl:w-[52rem] 2xl:relative 2xl:left-[9rem] ">
 			<div className="bg-[#E3F1F6] pl-4 py-3 border-l-2 border-[#0098CB]">
 				<p className="relative top-[0.6rem] text-[#1599CC]   ">
 					You finished this project. This project has been blocked

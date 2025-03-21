@@ -86,3 +86,9 @@ export async function seekProjects(req, res) {
     const result = await projectService.seekProjects(req.currentUser, req.query)
     res.jsonify(result)
 }
+
+// ========== POST [Project - Apply to join project] ========== //
+export async function applyToJoinProject(req, res) {
+    await projectService.applyToJoinProject(req.currentUser, req.params.id, req.body)
+    res.status(200).jsonify('Apply to join project successfully.')
+}
