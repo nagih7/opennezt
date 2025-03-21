@@ -1,10 +1,57 @@
-import { Image } from "@chakra-ui/react";
-import React from "react";
-import { useSelector } from "react-redux";
+import {
+	Alert,
+	Blockquote,
+	Button,
+	CloseButton,
+	Dialog,
+	Image,
+	Portal,
+	Stack,
+} from "@chakra-ui/react";
+import { applyToJoinProject } from "api/project";
+import { getProjectRoleFramework } from "api/user";
+import { IconlyInfoSquare, IconlyTickSquare } from "components/UI/Iconly";
+import SelectCustom from "components/UI/SelectCustom";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setOpenModalConfirmApply } from "states/modules/project";
 
 const ProjectMoreInfo = () => {
+	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX STORE ========== //
-	const { projectDetails } = useSelector((state) => state.project);
+	const { projectDetails, isOpenModalConfirmApply } = useSelector(
+		(state) => state.project
+	);
+	const { projectRoleFramework, projectTeamRoleFramework } = useSelector(
+		(state) => state.user
+	);
+
+	// ========== STATE ========== //
+	const [formRequest, setFormRequest] = useState({
+		teamRole: "",
+		role: "",
+	});
+
+	// ========== HANDLE FUNCTION ========== //
+	const handleOpenModalConfirmApply = () => {
+		dispatch(getProjectRoleFramework());
+		dispatch(setOpenModalConfirmApply(true));
+	};
+
+	const handleCloseModalConfirmApply = () => {
+		dispatch(setOpenModalConfirmApply(false));
+	};
+
+	const handleConfirmApply = () => {
+		dispatch(applyToJoinProject(projectDetails._id, formRequest));
+	};
+
+	const handleChangeFormRequest = (e, name) => {
+		setFormRequest((prev) => ({
+			...prev,
+			[name]: e.value[0],
+		}));
+	};
 
 	// ========== RENDER ========== //
 	return (
@@ -19,22 +66,17 @@ const ProjectMoreInfo = () => {
 				width="100%"
 			/>
 			<div className="bg-[#EAEFF8] h-[7.5rem]">
-				<div className="">
-					<p className="bg-[#E3F5F1] flex relative top-[1.75rem] p-6 w-[21rem] right-[-1.5rem] border-l-[3px] border-[#00C792] text-[#00C792]">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="mt-[0.2rem] mr-1"
-							fill="currentColor"
-							version="1.1"
-							id="mdi-checkbox-marked-circle-outline"
-							width="18"
-							height="18"
-							viewBox="0 0 24 24">
-							<path d="M20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4C12.76,4 13.5,4.11 14.2,4.31L15.77,2.74C14.61,2.26 13.34,2 12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12M7.91,10.08L6.5,11.5L11,16L21,6L19.59,4.58L11,13.17L7.91,10.08Z" />
-						</svg>
-						Passed
+				{projectDetails?.applied ? (
+					<p className="bg-[#E3F5F1] flex relative top-[1.75rem] p-6 w-[21rem] right-[-1.5rem] border-l-[3px] border-[#00C792] text-[#00C792] items-center gap-1">
+						<IconlyTickSquare size={20} color={"#00C792"} />
+						Applied
 					</p>
-				</div>
+				) : (
+					<p className="bg-[#ffffff] flex relative top-[1.75rem] p-6 w-[21rem] right-[-1.5rem] border-l-[3px] border-[#ffe41b] text-[#ffe41b] items-center gap-1">
+						<IconlyInfoSquare size={20} color={"#ffe41b"} />
+						Not Applied
+					</p>
+				)}
 			</div>
 			<div className="p-[2rem]">
 				<h4 className="font-bold">The Project Includes:</h4>
@@ -105,6 +147,111 @@ const ProjectMoreInfo = () => {
 					{projectDetails?.revenues?.slice(-1)[0].currency})
 				</p>
 			</div>
+			{projectDetails && !projectDetails?.applied && (
+				<Button
+					className="px-4 py-2 mt-4 text-white rounded-sm"
+					// loading={isLoadingSeekProjects}
+					onClick={handleOpenModalConfirmApply}
+					width={"100%"}
+					height={"3rem"}
+					borderRadius={4}
+					loadingText="Loading..."
+					spinnerPlacement="start">
+					Apply
+				</Button>
+			)}
+			<Dialog.Root
+				size={"lg"}
+				open={isOpenModalConfirmApply}
+				placement={"center"}
+				onClose={handleCloseModalConfirmApply}
+				motionPreset="slide-in-bottom">
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<Dialog.Content>
+							<Dialog.Header>
+								<Dialog.Title>Confirm</Dialog.Title>
+							</Dialog.Header>
+							<Dialog.Body>
+								<Stack>
+									<Alert.Root status="info">
+										<Alert.Indicator />
+										<Alert.Title>
+											Would you like to request to join this project?
+										</Alert.Title>
+									</Alert.Root>
+									<Stack
+										spacing={4}
+										className="flex flex-col gap-4 my-4">
+										<SelectCustom
+											height="40px"
+											label="Team Role"
+											required
+											collection={projectTeamRoleFramework}
+											onChange={(e) =>
+												handleChangeFormRequest(e, "teamRole")
+											}
+											value={formRequest.teamRole}
+										/>
+										<SelectCustom
+											height="40px"
+											label="Role"
+											required
+											collection={projectRoleFramework}
+											onChange={(e) =>
+												handleChangeFormRequest(e, "role")
+											}
+											value={formRequest.role}
+										/>
+									</Stack>
+
+									<Blockquote.Root
+										colorPalette="yellow"
+										style={{
+											borderInlineStartWidth: "4px",
+											borderInlineStartColor: "#fef08a",
+										}}>
+										<Blockquote.Content cite="OpenNezt">
+											If you would like to request to participate in
+											this project, please let me know what position
+											you would like to participate in.
+										</Blockquote.Content>
+										<Blockquote.Caption>
+											— <cite>OpenNezt</cite>
+										</Blockquote.Caption>
+									</Blockquote.Root>
+								</Stack>
+							</Dialog.Body>
+							<Dialog.Footer>
+								<Dialog.ActionTrigger asChild>
+									<Button
+										variant="outline"
+										onClick={handleCloseModalConfirmApply}>
+										Cancel
+									</Button>
+								</Dialog.ActionTrigger>
+								<Button
+									onClick={handleConfirmApply}
+									borderRadius={4}
+									// loading={
+									// 	isLoadingCreateOrUpdateProfileAdditionalInfo
+									// }
+									loadingText="Loading..."
+									spinnerPlacement="start">
+									CONFIRM
+								</Button>
+							</Dialog.Footer>
+							<Dialog.CloseTrigger asChild>
+								<CloseButton
+									size="sm"
+									onClick={handleCloseModalConfirmApply}
+								/>
+							</Dialog.CloseTrigger>
+						</Dialog.Content>
+					</Dialog.Positioner>
+				</Portal>
+			</Dialog.Root>
 		</div>
 	);
 };

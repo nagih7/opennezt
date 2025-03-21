@@ -33,6 +33,14 @@ const userSlice = createSlice({
 			items: [],
 		}),
 		isLoadingGetStageFramework: false,
+		// PROJECT ROLE
+		projectRoleFramework: createListCollection({
+			items: [],
+		}),
+		projectTeamRoleFramework: createListCollection({
+			items: [],
+		}),
+		isLoadingGetProjectRoleFramework: false,
 	},
 	reducers: {
 		// INDUSTRIES
@@ -148,6 +156,31 @@ const userSlice = createSlice({
 			...state,
 			isLoadingGetStageFramework: false,
 		}),
+		// PROJECT ROLE
+		requestGetProjectRoleFramework: (state) => ({
+			...state,
+			isLoadingGetProjectRoleFramework: true,
+		}),
+		getProjectRoleFrameworkSuccess: (state, action) => ({
+			...state,
+			isLoadingGetProjectRoleFramework: false,
+			projectRoleFramework: createListCollection({
+				items: action.payload.data.roles.map((role) => ({
+					label: role.name,
+					value: role._id,
+				})),
+			}),
+			projectTeamRoleFramework: createListCollection({
+				items: action.payload.data.teamRoles.map((role) => ({
+					label: role.name,
+					value: role._id,
+				})),
+			}),
+		}),
+		getProjectRoleFrameworkFail: (state) => ({
+			...state,
+			isLoadingGetProjectRoleFramework: false,
+		}),
 	},
 });
 
@@ -175,6 +208,10 @@ export const {
 	requestGetStageFramework,
 	getStageFrameworkSuccess,
 	getStageFrameworkFail,
+	// PROJECT ROLE
+	requestGetProjectRoleFramework,
+	getProjectRoleFrameworkSuccess,
+	getProjectRoleFrameworkFail,
 } = userSlice.actions;
 
 export default userSlice.reducer;

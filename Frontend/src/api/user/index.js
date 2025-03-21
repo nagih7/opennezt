@@ -23,6 +23,10 @@ import {
 	requestGetStageFramework,
 	getStageFrameworkSuccess,
 	getStageFrameworkFail,
+	// PROJECT ROLE
+	requestGetProjectRoleFramework,
+	getProjectRoleFrameworkSuccess,
+	getProjectRoleFrameworkFail,
 } from "../../states/modules/user";
 
 // INDUSTRY
@@ -114,6 +118,22 @@ export const getStageFramework = () => async (dispatch, getState) => {
 			requestGetStageFramework,
 			getStageFrameworkSuccess,
 			getStageFrameworkFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+// PROJECT ROLE
+export const getProjectRoleFramework = () => async (dispatch, getState) => {
+	return callApi({
+		method: "get",
+		apiPath: "users/roles/project",
+		actionTypes: [
+			requestGetProjectRoleFramework,
+			getProjectRoleFrameworkSuccess,
+			getProjectRoleFrameworkFail,
 		],
 		variables: {},
 		dispatch,
