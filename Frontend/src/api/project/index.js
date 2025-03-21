@@ -10,10 +10,11 @@ import {
 	requestGetMyProjectDetails,
 	getMyProjectDetailsSuccess,
 	getMyProjectDetailsFail,
-	// ========== project ========== //
-	startRequestSeekProjects,
-	startRequestSeekProjectsSuccess,
-	startRequestSeekProjectsFail,
+	// ========== Seek projects ========== //
+	requestSeekProjects,
+	seekProjectsSuccess,
+	seekProjectsFail,
+	//  //////////////////////
 	requestGetProjectDetails,
 	getProjectDetailsSuccess,
 	getProjectDetailsFail,
@@ -61,6 +62,7 @@ export const getListMyProjects = (dataFilter) => async (dispatch, getState) => {
 	});
 };
 
+// ========== CREATE NEW PROJECT ========== //
 export const createNewProject = (data) => async (dispatch, getState) => {
 	return callApi({
 		method: "post",
@@ -76,6 +78,7 @@ export const createNewProject = (data) => async (dispatch, getState) => {
 	});
 };
 
+// ========== GET PROJECT DETAILS ========== //
 export const getMyProjectDetails =
 	(projectId) => async (dispatch, getState) => {
 		return callApi({
@@ -107,24 +110,19 @@ export const getProjectDetails = (projectId) => async (dispatch, getState) => {
 	});
 };
 
-// ====================================
+// =========== SEEK PROJECTS =========== //
+export const seekProjects = (dataFilter) => async (dispatch, getState) => {
+	const path = `projects/seek`;
 
-export const seekProjects =
-	(requestSeekProjects) => async (dispatch, getState) => {
-		requestSeekProjects = new URLSearchParams(requestSeekProjects).toString();
-		return callApi({
-			method: "get",
-			apiPath: `project/seek-projects?${requestSeekProjects}`,
-			actionTypes: [
-				startRequestSeekProjects,
-				startRequestSeekProjectsSuccess,
-				startRequestSeekProjectsFail,
-			],
-			variables: {},
-			dispatch,
-			getState,
-		});
-	};
+	return callApi({
+		method: "get",
+		apiPath: path,
+		actionTypes: [requestSeekProjects, seekProjectsSuccess, seekProjectsFail],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
 
 export const updateProject = (data) => async (dispatch, getState) => {
 	return callApi({
