@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { IconlyEdit } from "components/UI/Iconly";
+import { IconlyImage2 } from "components/UI/Iconly";
 import avt from "assets/images/background/avt.jpg";
 import { useSelector } from "react-redux";
 import { Button, FileUpload, FileUploadList } from "@chakra-ui/react";
@@ -73,20 +73,23 @@ const NewCommentForm = ({ article_id, onSubmit }) => {
    };
 
    return (
-      <div className="sticky bottom-0 left-0 right-0 bg-white py-2">
+      <div>
          <div
-            className="flex items-center w-full justify-between p-[10px] rounded-md border-[1px] border-gray-200 gap-3 mt-[20px]"
+            className="flex items-center w-full p-[10px] justify-between rounded-md border-[1px] border-gray-200 gap-3"
             onKeyDown={handleKeyDown}
          >
-            <div className="w-8 h-8">
-               {authUser?.avatar ? (
-                  <img src={authUser.avatar} className="rounded-full w-8 h-8" />
-               ) : (
-                  <img src={avt} className="rounded-full w-8 h-8" />
-               )}
-            </div>
-            <div className="flex items-center justify-between">
-               <div>
+            <div className="flex">
+               <div className="w-8 h-8">
+                  {authUser?.avatar ? (
+                     <img
+                        src={authUser.avatar}
+                        className="rounded-full w-8 h-8"
+                     />
+                  ) : (
+                     <img src={avt} className="rounded-full w-8 h-8" />
+                  )}
+               </div>
+               <div className="pl-3">
                   <input
                      type="text"
                      placeholder="Write a comment..."
@@ -103,7 +106,9 @@ const NewCommentForm = ({ article_id, onSubmit }) => {
                      value={formData.content.caption}
                   />
                </div>
+            </div>
 
+            <div className="flex items-center ">
                <div className="w-9 h-9 bg-[#f8f9fa] rounded-md flex items-center justify-center">
                   <FileUpload.Root
                      accept="image/*"
@@ -113,9 +118,9 @@ const NewCommentForm = ({ article_id, onSubmit }) => {
                   >
                      <FileUpload.HiddenInput />
                      <FileUpload.Trigger asChild>
-                        <Button variant="outline" size="sm">
-                           <LuFileImage />
-                        </Button>
+                        <div className="cursor-pointer p-0 flex items-center justify-center">
+                           <IconlyImage2 size={30} color={"#000000"} />
+                        </div>
                      </FileUpload.Trigger>
                      <FileUploadList />
                   </FileUpload.Root>

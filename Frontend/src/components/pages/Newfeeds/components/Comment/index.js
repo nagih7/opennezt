@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import avt from "assets/images/background/avt.jpg";
 import anh_angry from "assets/images/icon/logo/angry.png";
 import anh_like from "assets/images/icon/logo/like.png";
@@ -12,15 +12,29 @@ import {
    differenceInSeconds,
 } from "date-fns";
 
+import ReplyComment from "../ReplyComment";
 import { CheckCircleFilled } from "@ant-design/icons";
 
 const Comment = forwardRef(
-   ({ comment, reaction, onCommentReaction, isLoading }, ref) => {
-      if (!comment || !comment.user || !comment.user[0]) {
+   (
+      {
+         comment,
+         reaction,
+         onCommentReaction,
+         isLoading,
+         setParentId,
+         replyCommentList,
+      },
+      ref
+   ) => {
+      const [showReplies, setShowReplies] = useState(false);
+
+      if (!comment?._id || !comment?.user?.[0]) {
          return null;
       }
+
       const { _id, content, user, created_at } = comment;
-      const userData = user[0]; // Tách user data ra biến riêng
+      const userData = user[0];
 
       const postedAt = new Date(created_at);
       const postedDate = postedAt.toDateString();
@@ -36,6 +50,17 @@ const Comment = forwardRef(
          data.append("type", type);
          data.append("target_type", "comment");
          onCommentReaction(_id, data);
+      };
+
+      const handleSetParentId = () => {
+         setParentId(comment);
+      };
+
+      const handleToggleReplies = () => {
+         if (!showReplies && setParentId && comment) {
+            setParentId(comment);
+         }
+         setShowReplies(!showReplies);
       };
 
       return (
@@ -126,18 +151,6 @@ const Comment = forwardRef(
                                     : " "}{" "}
                               </a>
                            </span>
-                           {/* <div>
-                           <div>
-                              <ul className="pl-0">
-                                 <li>
-                                    <img
-                                       src={anh_angry}
-                                       className="w-[18px] h-[18px]"
-                                    />
-                                 </li>
-                              </ul>
-                           </div>
-                        </div> */}
                         </div>
                      </div>
                   </div>
@@ -148,6 +161,44 @@ const Comment = forwardRef(
                   ) : null}
                </li>
             </ul>
+
+            {/* Reply Comments Section */}
+            {replyCommentList && showReplies && (
+               <div className="ml-[56px]">
+                  <div className="border-l-2 border-gray-200 pl-4">
+                     {replyCommentList.replyComments.map((reply) => (
+                        <ReplyComment
+                           key={reply._id}
+                           reply={reply}
+                           onReplyReaction={onCommentReaction}
+                        />
+                     ))}
+                  </div>
+
+                  {replyCommentList.pagination?.hasMore && (
+                     <button
+                        onClick={handleSetParentId}
+                        className="text-[#6f7f92] text-sm font-medium hover:text-[#3897f0] mt-2"
+                     >
+                        View more replies...
+                     </button>
+                  )}
+               </div>
+            )}
+
+            {/* Reply Toggle Button */}
+            <div className="ml-[56px] mt-2">
+               <span
+                  onClick={handleToggleReplies}
+                  className="text-[#6f7f92] text-sm cursor-pointer hover:text-[#3897f0]"
+               >
+                  {replyCommentList && replyCommentList.replyComments.length > 0
+                     ? showReplies
+                        ? `Hide replies (${replyCommentList.replyComments.length})`
+                        : `Show replies (${replyCommentList.replyComments.length})`
+                     : `Show replies (${comment.reply_count})`}
+               </span>
+            </div>
          </div>
       );
    }

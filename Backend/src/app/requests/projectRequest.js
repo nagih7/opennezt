@@ -23,13 +23,6 @@ export const requestAddFriend = Joi.object({
     }).required(),
 })
 
-export const seekProjects = Joi.object({
-    industry: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Industry'),
-    stage: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Stage'),
-    name: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Name'),
-    page: Joi.number().integer().min(0).default(0).label('Page'),
-})
-
 // ========== POST [Project] ========== //
 export const createProject = Joi.object({
     name: Joi.string()
@@ -243,4 +236,12 @@ export const inviteMember = Joi.object({
                     return role ? value : helpers.error('any.empty')
                 })
         ),
+})
+
+// ========== PATCH [Project - Seek] ========== //
+export const seekProjects = Joi.object({
+    industry: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Industry'),
+    stage: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Stage'),
+    name: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Name'),
+    page: Joi.number().integer().min(0).default(0).label('Page'),
 })

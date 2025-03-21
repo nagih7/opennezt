@@ -14,7 +14,10 @@ articleRouter.get('/article-by-id/:id', asyncHandler(articleController.getArticl
 
 articleRouter.get('/user-reactions/:target_ids', asyncHandler(articleController.getUserReactions))
 
-articleRouter.get('/user-comment-reactions/:id', asyncHandler(articleController.getUserCommentReactions))
+articleRouter.get(
+    '/user-comment-reactions/:target_ids',
+    asyncHandler(articleController.getUserCommentReactions)
+)
 
 articleRouter.post(
     '/',
@@ -23,6 +26,8 @@ articleRouter.post(
 )
 
 articleRouter.get('/list-comments', asyncHandler(articleController.getCommentList))
+
+articleRouter.get('/list-reply-comment', asyncHandler(articleController.getReplyCommentList))
 
 articleRouter.post('/create-comment', asyncHandler(articleController.createComment))
 
@@ -33,6 +38,8 @@ articleRouter.delete('/delete-comment', asyncHandler(articleController.deleteCom
 articleRouter.post('/article-reaction/:id', asyncHandler(articleController.reactArticle))
 
 articleRouter.post('/share-article/:id', asyncHandler(articleController.shareArticle))
+
+articleRouter.post('/reply-comment', asyncHandler(articleController.replyComment))
 
 articleRouter.put(
     '/article-update/:id',

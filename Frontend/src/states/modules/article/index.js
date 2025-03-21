@@ -11,6 +11,7 @@ const articleSlice = createSlice({
       isLoadingGetUserReactions: false,
       isLoadingReactArticle: false,
       isLoadingCreateArticle: false,
+      isOpenCreateForm: false,
       pagination: {
          nextCursor: new Date(),
          limit: 5,
@@ -29,20 +30,20 @@ const articleSlice = createSlice({
       isLoadingReactComment: false,
       isLoadingCreateComment: false,
       isLoadingUpdateArticle: false,
+      isOpenUpdateForm: false,
       isLoadingDeleteArticle: false,
+      replyComments: [],
+      isLoadingGetReplyComments: false,
+      reply_comments_pagination: {
+         page: 1,
+         limit: 10,
+         hasMore: true,
+      },
+      projectsToTag: [],
+      isLoadingMyProjectToTag: false,
    },
    // reducers: ở đây có chức năng là nhận vào state hiện tại và action, sau đó trả về một state mới
    reducers: {
-      resetFeeds: (state) => ({
-         ...state,
-         pagination: {
-            nextCursor: new Date(),
-            limit: 5,
-            hasMore: true,
-         },
-         feeds: [],
-         reactions: [],
-      }),
       getList: (state) => ({
          ...state,
          isLoadingGetFeeds: true,
@@ -125,6 +126,14 @@ const articleSlice = createSlice({
             }
          }
       },
+      openCreateForm: (state) => ({
+         ...state,
+         isOpenCreateForm: true,
+      }),
+      closeCreateForm: (state) => ({
+         ...state,
+         isOpenCreateForm: false,
+      }),
       createArticle: (state) => ({
          ...state,
          isLoadingCreateArticle: true,
@@ -132,10 +141,19 @@ const articleSlice = createSlice({
       createArticleSuccess: (state) => ({
          ...state,
          isLoadingCreateArticle: false,
+         isOpenCreateForm: false,
+         pagination: {
+            nextCursor: new Date(),
+            limit: 5,
+            hasMore: true,
+         },
+         feeds: [],
+         reactions: [],
       }),
       createArticleFail: (state) => ({
          ...state,
          isLoadingCreateArticle: false,
+         isOpenCreateForm: false,
       }),
 
       //===================Comment===================
@@ -250,6 +268,14 @@ const articleSlice = createSlice({
             article._id === action.payload._id ? action.payload : article
          ),
       }),
+      openUpdateForm: (state) => ({
+         ...state,
+         isOpenUpdateForm: true,
+      }),
+      closeUpdateForm: (state) => ({
+         ...state,
+         isOpenUpdateForm: false,
+      }),
       updateArticle: (state) => ({
          ...state,
          isLoadingUpdateArticle: true,
@@ -257,10 +283,12 @@ const articleSlice = createSlice({
       updateArticleSuccess: (state) => ({
          ...state,
          isLoadingUpdateArticle: false,
+         isOpenUpdateForm: false,
       }),
       updateArticleFail: (state) => ({
          ...state,
          isLoadingUpdateArticle: false,
+         isOpenUpdateForm: false,
       }),
       updateDeletedArticle: (state, action) => ({
          ...state,
@@ -278,11 +306,54 @@ const articleSlice = createSlice({
          ...state,
          isLoadingDeleteArticle: false,
       }),
+      resetReply: (state) => ({
+         ...state,
+         isLoadingGetReplyComments: false,
+         replyComments: [],
+         reply_comments_pagination: {
+            page: 1,
+            limit: 3,
+            hasMore: true,
+         },
+      }),
+
+      getListReplyComment: (state) => ({
+         ...state,
+         isLoadingGetReplyComments: true,
+      }),
+      getListReplyCommentSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetReplyComments: false,
+         replyComments: [...action.payload.data.commentList],
+         reply_comments_pagination: {
+            page: action.payload.data.pagination.currentPage + 1,
+            limit: 3,
+            hasMore: action.payload.data.pagination.hasMore,
+         },
+      }),
+      getListReplyCommentFail: (state) => ({
+         ...state,
+         isLoadingGetReplyComments: false,
+      }),
+      // Project tag to new article
+      requestGetProjectsToTag: (state) => ({
+         ...state,
+         isLoadingMyProjectToTag: true,
+      }),
+      getProjectsToTagSuccess: (state, action) => ({
+         ...state,
+         projectsToTag: action.payload.data,
+         isLoadingMyProjectToTag: false,
+      }),
+      getProjectsToTagFail: (state) => ({
+         ...state,
+         projectsToTag: [],
+         isLoadingMyProjectToTag: false,
+      }),
    },
 });
 
 export const {
-   resetFeeds,
    getList,
    getListSuccess,
    getListFail,
@@ -293,6 +364,8 @@ export const {
    reactArticle,
    reactArticleSuccess,
    reactArticleFail,
+   openCreateForm,
+   closeCreateForm,
    createArticle,
    createArticleSuccess,
    createArticleFail,
@@ -311,6 +384,8 @@ export const {
    createCommentSuccess,
    createCommentFail,
    updateUpdatedArticle,
+   openUpdateForm,
+   closeUpdateForm,
    updateArticle,
    updateArticleSuccess,
    updateArticleFail,
@@ -318,6 +393,13 @@ export const {
    deleteArticle,
    deleteArticleSuccess,
    deleteArticleFail,
+   resetReply,
+   getListReplyComment,
+   getListReplyCommentSuccess,
+   getListReplyCommentFail,
+   requestGetProjectsToTag,
+   getProjectsToTagSuccess,
+   getProjectsToTagFail,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;

@@ -47,8 +47,8 @@ const RecruitTalents = React.lazy(() =>
 const SeekProjects = React.lazy(() =>
 	import("../components/pages/SeekProjects")
 );
-const ProjectDetailsModal = React.lazy(() =>
-	import("../components/pages/SeekProjects/ProjectDetailsModal")
+const ProjectDetailsBySeek = React.lazy(() =>
+	import("../components/pages/ProjectDetailsBySeek")
 );
 const NotificationManagement = React.lazy(() =>
 	import("../components/pages/NotificationManagement")
@@ -215,11 +215,10 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_SEEK_PROJECT_PAGE"),
 	},
 	{
-		path: "seek-projects/:id", // Route động cho từng dự án
+		path: "seek-projects/:id",
 		element: (
 			<AppLayout>
-				{" "}
-				<ProjectDetailsModal />
+				<ProjectDetailsBySeek />
 			</AppLayout>
 		),
 		loader: ({ request }) =>
@@ -470,7 +469,7 @@ const router = createBrowserRouter([
 		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROJECT_SETTING_PAGE"),
-	}
+	},
 ]);
 
 export default router;
