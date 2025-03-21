@@ -30,6 +30,9 @@ projectRouter.post(
 // ========== GET [My Projects] ========== //
 projectRouter.get('/', asyncHandler(projectController.getListMyProjects))
 
+// ========== ==============//
+projectRouter.get('/tags', asyncHandler(projectController.getProjectsToTag))
+
 // ========== GET [Project Details] ========== //
 projectRouter.get('/:id', asyncHandler(projectController.getProjectDetails))
 

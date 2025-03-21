@@ -461,3 +461,16 @@ export async function inviteMember(user, projectId, requestBody) {
     })
     await notification.save()
 }
+
+// ========== GET [Project - TAGS] ========== //
+export async function getProjectsToTag(user, requestQuery) {
+    const key = requestQuery.keySearch || ''
+    const projects = await Project.find({
+        user_id: user._id,
+        name: {$regex: key, $options: 'i'},
+    })
+        .select({name: 1, _id: 1})
+        .limit(5)
+
+    return projects
+}
