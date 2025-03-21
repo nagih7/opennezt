@@ -28,14 +28,8 @@ projectRouter.post(
     asyncHandler(projectController.createProject)
 )
 
-// ========== GET [My Projects] ========== //
-projectRouter.get('/', asyncHandler(projectController.getListMyProjects))
-
-// ========== ==============//
+// ========== GET [Project - Tag] ==============//
 projectRouter.get('/tags', asyncHandler(projectController.getProjectsToTag))
-
-// ========== GET [Project Details] ========== //
-projectRouter.get('/:id', asyncHandler(projectController.getProjectDetails))
 
 // ========== PATCH [Project - Basic] ========== //
 projectRouter.patch(

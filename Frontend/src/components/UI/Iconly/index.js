@@ -199,7 +199,6 @@ export const IconlyEdit = ({ size, color, backgroundColor }) => {
          </g>
       </svg>
    );
-};
 
 export const IconlyDelete = ({ size, color }) => {
 	return (

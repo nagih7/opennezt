@@ -72,6 +72,7 @@ export async function inviteMember(req, res) {
 // ========== GET [Project - TAGS] ========== //
 export async function getProjectsToTag(req, res) {
     const result = await projectService.getProjectsToTag(req.currentUser, req.query)
+    res.jsonify(result)
 }
 
 // ========== GET [Project - Seek] ========== //
