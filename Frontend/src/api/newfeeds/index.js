@@ -30,6 +30,12 @@ import {
    deleteArticle,
    deleteArticleSuccess,
    deleteArticleFail,
+   getListReplyComment,
+   getListReplyCommentSuccess,
+   getListReplyCommentFail,
+   requestGetProjectsToTag,
+   getProjectsToTagSuccess,
+   getProjectsToTagFail,
 } from "states/modules/article";
 
 export const getListFeeds =
@@ -103,7 +109,7 @@ export const handleGetListComment =
       }
    ) =>
    async (dispatch, getState) => {
-      let path = `article/list-comment?articleId=${dataFilter.articleId}&limit=${dataFilter.limit}&page=${dataFilter.page}`;
+      let path = `article/list-comments?articleId=${dataFilter.articleId}&limit=${dataFilter.limit}&page=${dataFilter.page}`;
       return callApi({
          method: "get",
          apiPath: path,
@@ -190,3 +196,45 @@ export const handleDeleteArticle =
          getState,
       });
    };
+
+export const handleGetListReplyComment =
+   ({
+      dataFilter = {
+         limit: 3,
+         page: 1,
+      },
+   }) =>
+   async (dispatch, getState) => {
+      const path = `article/list-reply-comment?articleId=${dataFilter.article_id}&parentId=${dataFilter.parent_id}&page=${dataFilter.page}&limit=${dataFilter.limit}`;
+      return callApi({
+         method: "get",
+         apiPath: path,
+         actionTypes: [
+            getListReplyComment,
+            getListReplyCommentSuccess,
+            getListReplyCommentFail,
+         ],
+         variables: {},
+         dispatch,
+         getState,
+      });
+   };
+
+export const getProjectsToTag = (dataFilter) => async (dispatch, getState) => {
+   let path = `projects/tags`;
+   if (dataFilter.keySearch) {
+      path += `?keySearch=${dataFilter.keySearch}`;
+   }
+   return callApi({
+      method: "get",
+      apiPath: path,
+      actionTypes: [
+         requestGetProjectsToTag,
+         getProjectsToTagSuccess,
+         getProjectsToTagFail,
+      ],
+      variables: {},
+      dispatch,
+      getState,
+   });
+};

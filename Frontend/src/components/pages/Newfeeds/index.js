@@ -22,7 +22,10 @@ import {
    updateDeletedArticle,
    updateReaction,
    updateUpdatedArticle,
-   resetFeeds,
+   openCreateForm,
+   closeCreateForm,
+   openUpdateForm,
+   closeUpdateForm,
 } from "states/modules/article";
 import CreateAricleForm from "./components/CreateAricleForm";
 import CommentList from "./components/CommentList";
@@ -38,6 +41,9 @@ function NewFeeds() {
       isLoadingGetFeeds,
       isLoadingReactArticle,
       isLoadingCreateArticle,
+      isLoadingUpdateArticle,
+      isOpenCreateForm,
+      isOpenUpdateForm,
       pagination,
    } = useSelector((state) => state.article);
 
@@ -131,15 +137,14 @@ function NewFeeds() {
    }, [reactions]);
    //End Reaction User's Status
    //Form Create Article
-   const [isOpenForm, setIsOpenForm] = useState(false);
 
    const handleOpenForm = useCallback(() => {
-      setIsOpenForm(true);
-   }, []);
+      dispatch(openCreateForm());
+   }, [dispatch]);
 
    const handleCloseForm = useCallback(() => {
-      setIsOpenForm(false);
-   }, []);
+      dispatch(closeCreateForm());
+   }, [dispatch]);
 
    const handleReaction = useCallback(
       (articleId, formData) => {
@@ -151,10 +156,6 @@ function NewFeeds() {
       },
       [dispatch]
    );
-
-   useEffect(() => {
-      console.log(isLoadingCreateArticle);
-   }, [isLoadingCreateArticle]);
 
    const handleFormSubmit = useCallback(
       async (formData) => {
@@ -171,14 +172,8 @@ function NewFeeds() {
          newFormData.append("status", formData.status);
          newFormData.append("project_id", formData.project_id);
          dispatch(handleCreateArticle({ data: newFormData }));
-         if (!isLoadingCreateArticle) {
-            setTimeout(() => {
-               dispatch(resetFeeds());
-               handleCloseForm();
-            }, 1000);
-         }
       },
-      [dispatch, isLoadingCreateArticle, handleCloseForm]
+      [dispatch]
    );
    //End Form Create Article
 
@@ -198,18 +193,19 @@ function NewFeeds() {
    //End Comment Article
 
    //Update Article
-   const [isOpenUpdateForm, setIsOpenUpdateForm] = useState(false);
-   const handleOpenUpdateForm = useCallback(async (feed) => {
-      setSelectedArticle(feed);
-      setIsOpenUpdateForm(true);
-   }, []);
+   const handleOpenUpdateForm = useCallback(
+      async (feed) => {
+         setSelectedArticle(feed);
+         dispatch(openUpdateForm());
+      },
+      [dispatch]
+   );
    const handleCloseUpdateForm = useCallback(async () => {
       setSelectedArticle({});
-      setIsOpenUpdateForm(false);
-   }, []);
-
+      dispatch(closeUpdateForm());
+   }, [dispatch]);
    const handleUpdateFormSubmit = useCallback(
-      (id, formData) => {
+      async (id, formData) => {
          const newFormData = new FormData();
          newFormData.append("caption", formData.content.caption);
          formData.content.attachment.forEach((file) => {
@@ -246,6 +242,7 @@ function NewFeeds() {
                      feed={selectedArticle}
                      onClose={handleCloseUpdateForm}
                      onSubmit={handleUpdateFormSubmit}
+                     isLoadingUpdateArticle={isLoadingUpdateArticle}
                   />
                ) : null}
                {isOpenComment ? (
@@ -258,7 +255,7 @@ function NewFeeds() {
                      isLoading={isLoadingReactArticle}
                   />
                ) : null}
-               {isOpenForm ? (
+               {isOpenCreateForm ? (
                   <CreateAricleForm
                      onSubmitForm={handleFormSubmit}
                      onCloseForm={handleCloseForm}

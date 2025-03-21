@@ -41,6 +41,11 @@ const Comment = createModel('Comment', 'comments', {
         required: true,
         default: 0,
     },
+    reply_count: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
     content: {
         type: Content,
         required: true,

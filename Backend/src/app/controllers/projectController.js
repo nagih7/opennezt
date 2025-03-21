@@ -69,6 +69,11 @@ export async function inviteMember(req, res) {
     res.status(200).jsonify('Invite member successfully.')
 }
 
+// ========== GET [Project - TAGS] ========== //
+export async function getProjectsToTag(req, res) {
+    const result = await projectService.getProjectsToTag(req.currentUser, req.query)
+}
+
 // ========== GET [Project - Seek] ========== //
 export async function seekProjects(req, res) {
     const result = await projectService.seekProjects(req.currentUser, req.query)
