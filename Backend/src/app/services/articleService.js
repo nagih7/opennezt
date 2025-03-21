@@ -10,6 +10,8 @@ import delay from '@/utils/classes/delay.js'
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa
 export const createArticle = async (user, requestBody) => {
+    console.log(requestBody)
+
     const filesArray = requestBody.content.attachment
 
     if (filesArray && filesArray.length > 0) {
@@ -22,6 +24,10 @@ export const createArticle = async (user, requestBody) => {
             }
         }
         requestBody.content.attachment = listAttachment
+    }
+
+    if (!requestBody.project_id) {
+        requestBody.project_id = null
     }
 
     const newArticle = new Article(requestBody)
