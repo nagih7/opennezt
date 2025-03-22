@@ -54,6 +54,10 @@ const UpdateArticleForm = forwardRef(
     const { projectsToTag, isLoadingMyProjectToTag } = useSelector(
       (state) => state.article
     );
+    const [projectNameState, setProjectNameState] = useState(
+      projectsToTag?.find((project) => project._id === formData.project_id)
+        ?.name || ""
+    );
 
     const [dataFilter, setDataFilter] = useState({
       keySearch: "",
@@ -63,20 +67,34 @@ const UpdateArticleForm = forwardRef(
       (project) => project._id === formData.project_id
     )?.name;
 
-    console.log("projectName", selectedProjectName)
+    console.log("projectName", selectedProjectName);
 
     useEffect(() => {
       dispatch(getProjectsToTag(dataFilter));
     }, [dataFilter, dispatch]);
+
+    useEffect(() => {
+      // Khởi tạo tên dự án khi có dữ liệu
+      if (formData.project_id && projectsToTag?.length > 0) {
+        const projectName = projectsToTag.find(
+          (project) => project._id === formData.project_id
+        )?.name;
+        if (projectName) setProjectNameState(projectName);
+      }
+    }, [projectsToTag, formData.project_id]);
 
     const handleSelectProject = (project) => {
       setSelectedProject(project);
       setFormData({
         ...formData,
         project_id: project._id,
+        project_name: project.name,
       });
+      setProjectNameState(project.name);
       setIsModalOpen(false);
     };
+
+    console.log("formData", formData);
 
     const handleSearch = debounce((e) => {
       dispatch(getProjectsToTag({ keySearch: e.target.value }));
@@ -95,6 +113,7 @@ const UpdateArticleForm = forwardRef(
         ...formData,
         project_id: null,
       });
+      setProjectNameState("");
     };
     // =====================================================================
 
@@ -163,7 +182,6 @@ const UpdateArticleForm = forwardRef(
     const handleSubmit = async () => {
       await onSubmit(feed._id, formData);
       setFileKey((prev) => prev + 1);
-      window.location.reload();
     };
 
     const handleClose = () => {
@@ -207,8 +225,8 @@ const UpdateArticleForm = forwardRef(
                   >
                     <span className="font-semibold ">
                       {authUser.name}{" "}
-                      {selectedProjectName
-                        ? `in project ${selectedProjectName}`
+                      {projectNameState
+                        ? `in project ${projectNameState}`
                         : ""}
                     </span>
                   </div>
