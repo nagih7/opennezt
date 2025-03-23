@@ -21,6 +21,12 @@ export async function getListMyProjects(req, res) {
     res.jsonify(result)
 }
 
+// ========== GET [My Project Details] ========== //
+export async function getMyProjectDetails(req, res) {
+    const result = await projectService.getMyProjectDetails(req.currentUser, req.params.id)
+    res.jsonify(result)
+}
+
 // ========== GET [Project Details] ========== //
 export async function getProjectDetails(req, res) {
     const result = await projectService.getProjectDetails(req.currentUser, req.params.id)
@@ -79,4 +85,10 @@ export async function getProjectsToTag(req, res) {
 export async function seekProjects(req, res) {
     const result = await projectService.seekProjects(req.currentUser, req.query)
     res.jsonify(result)
+}
+
+// ========== POST [Project - Apply to join project] ========== //
+export async function applyToJoinProject(req, res) {
+    await projectService.applyToJoinProject(req.currentUser, req.params.id, req.body)
+    res.status(200).jsonify('Apply to join project successfully.')
 }

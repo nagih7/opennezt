@@ -10,6 +10,8 @@ import {
     Skill,
     Category,
     Stage,
+    Type,
+    Role,
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {LINK_STATIC_URL} from '@/configs'
@@ -415,7 +417,7 @@ export async function getTalentDetails(user, _id) {
     // const type = await Type.findOne({name: 'Friend Request'})
     const detailTalent = await User.aggregate([
         {
-            $match: {_id: _id}
+            $match: {_id: _id},
         },
         {
             $lookup: {
@@ -565,4 +567,13 @@ export async function getSkills(categoryId) {
 export async function getStages() {
     const stages = await Stage.find().select('name _id description')
     return stages
+}
+
+// Project role framework
+export async function getProjectRoles() {
+    const roleType = await Type.findOne({class: 'role', name: 'project_role'})
+    const teamRoleType = await Type.findOne({class: 'role', name: 'project_team_role'})
+    const projectRoles = await Role.find({type_id: roleType._id}).select('name _id description')
+    const projectTeamRoles = await Role.find({type_id: teamRoleType._id}).select('name _id description')
+    return {roles: projectRoles, teamRoles: projectTeamRoles}
 }

@@ -60,6 +60,9 @@ const projectSlice = createSlice({
 			totalPage: 1,
 			totalRecord: 0,
 		},
+		// ========== APPLY TO JOIN PROJECT ========== //
+		isLoadingApplyToJoinProject: false,
+		isOpenModalConfirmApply: false,
 	},
 	reducers: {
 		setTitle: (state) => ({
@@ -140,7 +143,7 @@ const projectSlice = createSlice({
 		getProjectDetailsSuccess: (state, action) => ({
 			...state,
 			loadingGetProjectDetails: false,
-			// projectDetails: action.payload.data,
+			projectDetails: action.payload.data,
 		}),
 		getProjectDetailsFail: (state) => ({
 			...state,
@@ -174,6 +177,43 @@ const projectSlice = createSlice({
 		setFilterSeekProjects: (state, action) => ({
 			...state,
 			filterSeekProjects: action.payload,
+		}),
+
+		// ========== APPLY TO JOIN PROJECT ========== //
+		requestApplyToJoinProject: (state) => ({
+			...state,
+			isLoadingApplyToJoinProject: true,
+		}),
+		applyToJoinProjectSuccess: (state) => {
+			toaster.create({
+				title: "Apply to join project successfully",
+				description: "You have successfully applied to join the project",
+				type: "success",
+			});
+			return {
+				...state,
+				isLoadingApplyToJoinProject: false,
+				isOpenModalConfirmApply: false,
+				projectDetails: {
+					...state.projectDetails,
+					applied: true,
+				},
+			};
+		},
+		applyToJoinProjectFail: (state) => {
+			toaster.create({
+				title: "Apply to join project failed",
+				description: "You have failed to apply to join the project",
+				type: "error",
+			});
+			return {
+				...state,
+				isLoadingApplyToJoinProject: false,
+			};
+		},
+		setOpenModalConfirmApply: (state, action) => ({
+			...state,
+			isOpenModalConfirmApply: action.payload,
 		}),
 
 		// ////////////////////////////////
@@ -354,6 +394,11 @@ export const {
 	seekProjectsSuccess,
 	seekProjectsFail,
 	setFilterSeekProjects,
+	// ========== APPLY TO JOIN PROJECT ========== //
+	requestApplyToJoinProject,
+	applyToJoinProjectSuccess,
+	applyToJoinProjectFail,
+	setOpenModalConfirmApply,
 	// ////////////////////////////////
 	startRequestUpdateProject,
 	startRequestUpdateProjectSuccess,

@@ -64,7 +64,7 @@ userRouter.get(
     asyncHandler(validate(userRequest.recuitTalents)),
     asyncHandler(userController.recuitTalents)
 )
-    
+
 userRouter.get('/talent-details/:id', asyncHandler(userController.getTalentDetails))
 
 // Industry framework
@@ -79,6 +79,8 @@ userRouter.get('/categories/:id', asyncHandler(userController.getSubCategories))
 userRouter.get('/skills/:id', asyncHandler(userController.getSkills))
 // Stage framework
 userRouter.get('/stages', asyncHandler(userController.getStages))
+// Project role framework
+userRouter.get('/roles/project', asyncHandler(userController.getProjectRoles))
 
 // URL dynamic
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))

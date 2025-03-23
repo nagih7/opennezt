@@ -249,3 +249,27 @@ export const seekProjects = Joi.object({
     industry: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Industry'),
     stage: Joi.string().trim().max(MAX_STRING_SIZE).allow('').label('Stage'),
 })
+
+// ========== PATCH [Project - Apply to join project] ========== //
+export const applyToJoinProject = Joi.object({
+    teamRole: Joi.string()
+        .required()
+        .label('Team Role ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const role = await Role.findById(value)
+                    return role ? value : helpers.error('any.empty')
+                })
+        ),
+    role: Joi.string()
+        .required()
+        .label('Role ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const role = await Role.findById(value)
+                    return role ? value : helpers.error('any.empty')
+                })
+        ),
+})

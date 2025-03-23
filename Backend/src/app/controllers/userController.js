@@ -137,3 +137,9 @@ export async function getStages(req, res) {
     const result = await userService.getStages()
     res.jsonify(result)
 }
+
+// Project role framework
+export async function getProjectRoles(req, res) {
+    const result = await userService.getProjectRoles()
+    res.jsonify(result)
+}
