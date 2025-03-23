@@ -36,6 +36,9 @@ import {
    requestGetProjectsToTag,
    getProjectsToTagSuccess,
    getProjectsToTagFail,
+   replyComment,
+   replyCommentSuccess,
+   replyCommentFail,
 } from "states/modules/article";
 
 export const getListFeeds =
@@ -238,3 +241,18 @@ export const getProjectsToTag = (dataFilter) => async (dispatch, getState) => {
       getState,
    });
 };
+
+export const handleReplyComment =
+   ({ data }) =>
+   async (dispatch, getState) => {
+      console.log(data);
+      let path = `article/reply-comment`;
+      return callApi({
+         method: "post",
+         apiPath: path,
+         actionTypes: [replyComment, replyCommentSuccess, replyCommentFail],
+         variables: data,
+         dispatch,
+         getState,
+      });
+   };

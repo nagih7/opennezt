@@ -43,7 +43,11 @@ articleRouter.post('/article-reaction/:id', asyncHandler(articleController.react
 
 articleRouter.post('/share-article/:id', asyncHandler(articleController.shareArticle))
 
-articleRouter.post('/reply-comment', asyncHandler(articleController.replyComment))
+articleRouter.post(
+    '/reply-comment',
+    asyncHandler(articleMiddleware.decodeFormReplyCommentData),
+    asyncHandler(articleController.replyComment)
+)
 
 articleRouter.put(
     '/article-update/:id',

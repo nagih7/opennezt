@@ -298,10 +298,22 @@ export const shareArticle = async (id, user) => {
 //End share article
 
 //Replycomment
-export const replyComment = async (requestQuery, user, requestBody) => {
-    const {article_id, comment_id} = requestQuery
+export const replyComment = async (user, requestBody) => {
+    console.log(requestBody)
+    const {comment_id, article_id} = requestBody
     const parentComment = await Comment.findById(comment_id)
     const updatedArticle = await Article.findById(article_id)
+    const imageData = requestBody.content.image
+    if (typeof imageData === 'string') {
+        if (imageData === '') {
+            requestBody.content.image = imageData
+        } else {
+            requestBody.content.image = imageData.indexOf('uploads')
+        }
+    }
+    if (imageData instanceof FileUpload) {
+        requestBody.content.image = imageData.save('article-attachment')
+    }
 
     const newComment = await new Comment({
         ...requestBody,
@@ -466,7 +478,11 @@ export const createComment = async (user, requestBody) => {
     const imageData = requestBody.content.image
 
     if (typeof imageData === 'string') {
-        requestBody.content.image = imageData.indexOf('uploads')
+        if (imageData === '') {
+            requestBody.content.image = imageData
+        } else {
+            requestBody.content.image = imageData.indexOf('uploads')
+        }
     }
     if (imageData instanceof FileUpload) {
         requestBody.content.image = imageData.save('article-attachment')

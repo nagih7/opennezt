@@ -55,7 +55,7 @@ function NewFeeds() {
    });
 
    useEffect(() => {
-      if (feeds.length === 0) {
+      if (feeds.length === 0 && hasMore === true) {
          dispatch(
             getListFeeds({
                cursor: new Date(),
@@ -63,7 +63,7 @@ function NewFeeds() {
             })
          );
       }
-   }, [dispatch, feeds.length, limit]);
+   }, [dispatch, feeds.length, limit, hasMore]);
 
    useEffect(() => {
       // Chỉ gọi API khi cursor thay đổi (không phải lần đầu load)

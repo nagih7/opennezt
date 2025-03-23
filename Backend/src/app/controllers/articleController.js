@@ -71,6 +71,6 @@ export const shareArticle = async (req, res) => {
 }
 
 export const replyComment = async (req, res) => {
-    const replyComment = await articleService.replyComment(req.query, req.currentUser, req.body)
+    const replyComment = await articleService.replyComment(req.currentUser, req.body)
     res.status(200).jsonify(replyComment)
 }

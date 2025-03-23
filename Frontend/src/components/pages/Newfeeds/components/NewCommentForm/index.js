@@ -4,9 +4,14 @@ import avt from "assets/images/background/avt.jpg";
 import { useSelector } from "react-redux";
 import { FileUpload } from "@chakra-ui/react";
 import { useState } from "react";
-import { resetComment } from "states/modules/article";
+import { resetComment, resetReply } from "states/modules/article";
 import { useDispatch } from "react-redux";
-const NewCommentForm = ({ article_id, onSubmit }) => {
+const NewCommentForm = ({
+   article_id,
+   onSubmit,
+   selectedComment,
+   isCommentOrReply,
+}) => {
    const dispatch = useDispatch();
    const authUser = useSelector((state) => state.auth.authUser);
    const [formData, setFormData] = useState({
@@ -16,6 +21,7 @@ const NewCommentForm = ({ article_id, onSubmit }) => {
          image: "",
       },
    });
+
    const [fileKey, setFileKey] = useState(0);
 
    const handleFileChange = async (event) => {
@@ -32,7 +38,11 @@ const NewCommentForm = ({ article_id, onSubmit }) => {
 
    const handleSubmit = async () => {
       await onSubmit(formData);
-      dispatch(resetComment());
+      if (isCommentOrReply === "reply") {
+         dispatch(resetReply());
+      } else {
+         dispatch(resetComment());
+      }
       setFormData({
          article_id: article_id,
          content: {
@@ -108,23 +118,42 @@ const NewCommentForm = ({ article_id, onSubmit }) => {
                </div>
             </div>
             <div className="flex items-center bg-[#F8F9FA] p-3 rounded-md w-full justify-between">
-               <div className="flex-2">
+               <div className="flex-2 w-full">
                   <div className="flex-2 pb-2 w-full">
-                     <input
-                        type="text"
-                        placeholder="Write a comment..."
-                        className="w-full h-9 bg-[#F8F9FA] pr-[50px] outline-none "
-                        onChange={(e) =>
-                           setFormData({
-                              ...formData,
-                              content: {
-                                 ...formData.content,
-                                 caption: e.target.value,
-                              },
-                           })
-                        }
-                        value={formData.content.caption}
-                     />
+                     {isCommentOrReply === "reply" ? (
+                        <input
+                           type="text"
+                           placeholder={`Replying to ${selectedComment.user[0].name} ...`}
+                           className="w-full h-9 bg-[#F8F9FA] pr-[50px] outline-none "
+                           onChange={(e) =>
+                              setFormData({
+                                 ...formData,
+                                 content: {
+                                    ...formData.content,
+                                    caption: e.target.value,
+                                 },
+                              })
+                           }
+                           value={formData.content.caption}
+                        />
+                     ) : (
+                        <input
+                           type="text"
+                           placeholder="Write a comment..."
+                           className="w-full h-9 bg-[#F8F9FA] pr-[50px] outline-none "
+                           onChange={(e) =>
+                              setFormData({
+                                 ...formData,
+                                 content: {
+                                    ...formData.content,
+                                    caption: e.target.value,
+                                 },
+                              })
+                           }
+                           value={formData.content.caption}
+                        />
+                     )}
+
                      <div className="p-1">
                         {formData.content.image && handlePreviewImage()}
                      </div>
@@ -145,13 +174,19 @@ const NewCommentForm = ({ article_id, onSubmit }) => {
                      </FileUpload.Root>
                   </div>
                </div>
-               <div
-                  className="flex"
-                  onClick={handleSubmit}
-                  style={{ cursor: "pointer" }}
-               >
-                  <IconlySend size={30} color={"#6f7f92"} />
-               </div>
+               {formData.content.image || formData.content.caption ? (
+                  <div
+                     className="flex"
+                     onClick={handleSubmit}
+                     style={{ cursor: "pointer" }}
+                  >
+                     <IconlySend size={30} color={"#6f7f92"} />
+                  </div>
+               ) : (
+                  <div className="flex" style={{ cursor: "pointer" }}>
+                     <IconlySend size={30} color={"#6f7f92"} />
+                  </div>
+               )}
             </div>
          </div>
       </div>

@@ -11,6 +11,7 @@ import {
    handleGetUserCommentReactions,
    handleReactComment,
    handleGetListReplyComment,
+   handleReplyComment,
 } from "api/newfeeds";
 import { useDispatch, useSelector } from "react-redux";
 import { resetComment, updateCommentReaction } from "states/modules/article";
@@ -58,7 +59,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    });
 
    useEffect(() => {
-      if (comment.length === 0) {
+      if (comment.length === 0 && hasMore === true) {
          dispatch(
             handleGetListComment({
                articleId: feed._id,
@@ -67,7 +68,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
             })
          );
       }
-   }, [dispatch, comment, feed, limit]);
+   }, [dispatch, comment, feed, limit, hasMore]);
 
    useEffect(() => {
       // Chỉ gọi API khi cursor thay đổi (không phải lần đầu load)
@@ -216,15 +217,28 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    );
    //===============End=================
    //Form
+   const [isCommentOrReply, setIsCommentOrReply] = useState("comment");
+   const [selectedComment, setSelectedComment] = useState({});
+
    const handleFormSubmit = useCallback(
       (formData) => {
-         const newFormData = new FormData();
-         newFormData.append("article_id", formData.article_id);
-         newFormData.append("caption", formData.content.caption);
-         newFormData.append("image", formData.content.image);
-         dispatch(handleCreateComment({ data: newFormData }));
+         if (isCommentOrReply === "reply") {
+            const newFormData = new FormData();
+            newFormData.append("article_id", formData.article_id);
+            newFormData.append("comment_id", selectedComment._id);
+            newFormData.append("caption", formData.content.caption);
+            newFormData.append("image", formData.content.image);
+            dispatch(handleReplyComment({ data: newFormData }));
+         }
+         if (isCommentOrReply === "comment") {
+            const newFormData = new FormData();
+            newFormData.append("article_id", formData.article_id);
+            newFormData.append("caption", formData.content.caption);
+            newFormData.append("image", formData.content.image);
+            dispatch(handleCreateComment({ data: newFormData }));
+         }
       },
-      [dispatch]
+      [dispatch, isCommentOrReply, selectedComment]
    );
    //End
    //Reply Comment Logic
@@ -315,6 +329,15 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
          dispatch(handleGetListReplyComment({ dataFilter: replyDataFilter }));
       }
    }, [replyDataFilter, dispatch]);
+
+   const handleClickReply = useCallback(async () => {
+      setIsCommentOrReply("reply");
+   }, []);
+
+   const selectComment = useCallback((comment) => {
+      setSelectedComment(comment);
+   }, []);
+
    //End reply comment logic
    return (
       <div
@@ -439,6 +462,8 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                            isLoading={isLoadingReactComment}
                            setParentId={getParentId}
                            replyCommentList={replyCommentList[cmt._id]}
+                           handleClickReply={handleClickReply}
+                           selectComment={selectComment}
                         />
                      );
                   } else {
@@ -451,6 +476,8 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                            isLoading={isLoadingReactComment}
                            setParentId={getParentId}
                            replyCommentList={replyCommentList[cmt._id]}
+                           handleClickReply={handleClickReply}
+                           selectComment={selectComment}
                         />
                      );
                   }
@@ -458,7 +485,12 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
             </div>
             {/* Comment form container */}
             <div className="sticky bottom-0 left-0 right-0 border-gray-200 bg-white p-2 shadow-md rounded-md">
-               <NewCommentForm article_id={_id} onSubmit={handleFormSubmit} />
+               <NewCommentForm
+                  article_id={_id}
+                  onSubmit={handleFormSubmit}
+                  selectedComment={selectedComment}
+                  isCommentOrReply={isCommentOrReply}
+               />
             </div>
          </div>
       </div>

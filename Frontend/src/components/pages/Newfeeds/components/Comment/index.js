@@ -20,6 +20,8 @@ const Comment = forwardRef(
          isLoading,
          setParentId,
          replyCommentList,
+         handleClickReply,
+         selectComment,
       },
       ref
    ) => {
@@ -59,6 +61,10 @@ const Comment = forwardRef(
          setShowReplies(!showReplies);
       };
 
+      const handleReply = () => {
+         selectComment(comment);
+         handleClickReply();
+      };
       return (
          <div className="pt-[20px]">
             <ul className="pl-0">
@@ -137,7 +143,7 @@ const Comment = forwardRef(
                         )}
                      </div>
                      <a
-                        href=""
+                        onClick={handleReply}
                         className="no-underline text-[#6f7f92] text-xs font-medium"
                      >
                         Reply

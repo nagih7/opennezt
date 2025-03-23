@@ -41,6 +41,8 @@ const articleSlice = createSlice({
       },
       projectsToTag: [],
       isLoadingMyProjectToTag: false,
+      isLoadingReplyComment: false,
+      repliedComment: {},
    },
    // reducers: ở đây có chức năng là nhận vào state hiện tại và action, sau đó trả về một state mới
    reducers: {
@@ -160,7 +162,7 @@ const articleSlice = createSlice({
       resetComment: (state) => ({
          ...state,
          comment: [],
-         pagination: {
+         comment_pagination: {
             limit: 10,
             page: 1,
             hasMore: true,
@@ -350,6 +352,21 @@ const articleSlice = createSlice({
          projectsToTag: [],
          isLoadingMyProjectToTag: false,
       }),
+      replyComment: (state) => ({
+         ...state,
+         isLoadingReplyComment: true,
+         repliedComment: {},
+      }),
+      replyCommentSuccess: (state, action) => ({
+         ...state,
+         repliedComment: action.payload.data,
+         isLoadingReplyComment: false,
+      }),
+      replyCommentFail: (state) => ({
+         ...state,
+         repliedComment: {},
+         isLoadingReplyComment: false,
+      }),
    },
 });
 
@@ -400,6 +417,9 @@ export const {
    requestGetProjectsToTag,
    getProjectsToTagSuccess,
    getProjectsToTagFail,
+   replyComment,
+   replyCommentSuccess,
+   replyCommentFail,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;
