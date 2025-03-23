@@ -20,14 +20,6 @@ projectRouter.put('/background', asyncHandler(projectController.updateBackground
 
 projectRouter.get('/invitations/:user_id', asyncHandler(projectController.getInvitations))
 
-// ========== POST [Project] ========== //
-projectRouter.post(
-    '/',
-    asyncHandler(projectMiddleware.decodeFormData),
-    asyncHandler(validate(projectRequest.createProject)),
-    asyncHandler(projectController.createProject)
-)
-
 // ========== GET [Project - Tag] ==============//
 projectRouter.get('/tags', asyncHandler(projectController.getProjectsToTag))
 
@@ -81,6 +73,23 @@ projectRouter.get(
     '/seek',
     asyncHandler(validate(projectRequest.seekProjects)),
     asyncHandler(projectController.seekProjects)
+)
+// ========== POST [Project - Apply to join project] ========== //
+projectRouter.post(
+    '/:id/apply',
+    asyncHandler(validate(projectRequest.applyToJoinProject)),
+    asyncHandler(projectController.applyToJoinProject)
+)
+
+// ========== GET [My Project Details] ========== //
+projectRouter.get('/me/:id', asyncHandler(projectController.getMyProjectDetails))
+
+// ========== POST [Project] ========== //
+projectRouter.post(
+    '/',
+    asyncHandler(projectMiddleware.decodeFormData),
+    asyncHandler(validate(projectRequest.createProject)),
+    asyncHandler(projectController.createProject)
 )
 
 // ========== GET [My Projects] ========== //

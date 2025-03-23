@@ -1338,3 +1338,55 @@ export const IconlyFilter = ({ size, color }) => {
       </svg>
    );
 };
+
+export const IconlyTickSquare = ({ size, color }) => {
+	return (
+		<svg
+			width={size}
+			height={size}
+			viewBox="0 0 25 25"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M8.62012 11.7931C10.7101 13.1141 12.2701 15.4741 12.2701 15.4741H12.3001C12.3001 15.4741 15.6201 9.60607 21.7801 5.99707"
+				stroke={color}
+				strokeWidth="1.5"
+				strokeLinecap="square"></path>
+			<path
+				d="M16.8587 4.68016C15.4407 3.79616 13.7647 3.28516 11.9697 3.28516C6.85973 3.28516 2.71973 7.42616 2.71973 12.5342C2.71973 17.6432 6.85973 21.7842 11.9697 21.7842C17.0797 21.7842 21.2197 17.6432 21.2197 12.5342C21.2197 10.6612 20.6637 8.91716 19.7057 7.46116"
+				stroke={color}
+				strokeWidth="1.5"
+				strokeLinecap="square"></path>
+		</svg>
+	);
+};
+
+export const IconlyInfoSquare = ({ size, color }) => {
+	return (
+		<svg
+			width={size}
+			height={size}
+			viewBox="0 0 25 25"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg">
+			<path
+				d="M15.277 21.5942C19.878 20.9122 21.5 18.3462 21.5 12.5372C21.5 5.60023 19.187 3.28723 12.25 3.28723C5.313 3.28723 3 5.60023 3 12.5372C3 19.2875 5.19013 21.6593 11.6997 21.7822"
+				stroke={color}
+				strokeWidth="1.5"
+				strokeLinecap="round"
+				strokeLinejoin="round"></path>
+			<path
+				d="M12.25 16.4324V12.5374"
+				stroke={color}
+				strokeWidth="1.5"
+				strokeLinecap="round"
+				strokeLinejoin="round"></path>
+			<path
+				d="M12.255 9.03735H12.246"
+				stroke={color}
+				strokeWidth="1.5"
+				strokeLinecap="round"
+				strokeLinejoin="round"></path>
+		</svg>
+	);
+};

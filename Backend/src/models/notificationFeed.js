@@ -36,15 +36,18 @@ const NotificationFeed = createModel('NotificationFeed', 'notifications_feed', {
     user_id: {
         type: ObjectId,
         required: true,
+        index: true,
     },
     source_id: {
         type: ObjectId,
         required: true,
+        index: true,
     },
     type_id: {
         type: ObjectId,
         ref: 'Type',
         required: true,
+        index: true,
     },
     additional_info: {
         type: additional_info,
