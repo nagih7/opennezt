@@ -62,10 +62,10 @@ const BannerActive = () => {
 					</p>
 				</div>
 				<div className="ml-5">
-					<p className="relative top-[1.25rem] text-xs mb-4 text-[#6F7F92]">
+					<p className="relative top-[1rem] text-xs mb-[1.6rem] text-[#6F7F92]">
 						Project Results: 70%
 					</p>
-					<p className="w-[8rem] h-[0.4rem] bg-gray-700 rounded-full overflow-hidden">
+					<p className="w-[8rem] h-[0.6rem] bg-gray-700 rounded-full overflow-hidden">
 						<div className="w-3/5 h-full bg-blue-600 rounded-full"></div>
 					</p>
 				</div>

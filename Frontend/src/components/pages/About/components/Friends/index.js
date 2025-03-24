@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import RightSidebar from "components/common/RightSidebar";
 import NotificationBadge from "./NotificationBadge";
 import { IconlyDelete } from "components/UI/Iconly";
-
+import { message } from "antd"
 const Friends = () => {
     const [activeTab, setActiveTab] = useState("Friendships");
     const [orderBy, setOrderBy] = useState("Last Active");
@@ -37,10 +37,12 @@ const Friends = () => {
     const handleAcceptRequest = (user) => {
         setFriendsList((prevFriends) => sortList([...prevFriends, user]));
         setFriendRequests((prevRequests) => prevRequests.filter((req) => req.id !== user.id));
+        message.success("Accept successfully")
     };
 
     const handleDeleteRequest = (user) => {
         setFriendRequests((prevRequests) => prevRequests.filter((req) => req.id !== user.id));
+        message.success("Delete successfully")
     };
 
     return (
