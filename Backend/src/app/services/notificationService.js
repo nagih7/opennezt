@@ -51,8 +51,8 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
             _id: 1,
             type_id: 1,
             source_id: 1,
-            type_name: { $ifNull: [{ $arrayElemAt: ['$type_info.name', 0] }, 'Unknown Type'] },  
-            source_name: { $ifNull: [{ $arrayElemAt: ['$source_info.name', 0] }, 'Unknown User'] },  
+            type_name: {$ifNull: [{$arrayElemAt: ['$type_info.name', 0]}, 'Unknown Type']},
+            source_name: {$ifNull: [{$arrayElemAt: ['$source_info.name', 0]}, 'Unknown User']},
             created_at: 1,
             updated_at: 1,
             metadata: 1,
@@ -98,8 +98,8 @@ export async function getNotifications(user) {
             _id: 1,
             type_id: 1,
             source_id: 1,
-            type_name: { $ifNull: [{ $arrayElemAt: ['$type_info.name', 0] }, 'Unknown Type'] },  
-            source_name: { $ifNull: [{ $arrayElemAt: ['$source_info.name', 0] }, 'Unknown User'] },  
+            type_name: {$ifNull: [{$arrayElemAt: ['$type_info.name', 0]}, 'Unknown Type']},
+            source_name: {$ifNull: [{$arrayElemAt: ['$source_info.name', 0]}, 'Unknown User']},
             created_at: 1,
             updated_at: 1,
             metadata: 1,
@@ -342,7 +342,6 @@ export async function requestAddFriend(user, requestBody, io) {
     if (!userSocketId) {
         console.error('Không tìm thấy userSocketId cho user_id:', user_id)
         console.log('Danh sách userSockets:', userSockets)
-        console.log('Notification:', type._id)
         return
     }
 

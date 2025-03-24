@@ -125,7 +125,6 @@ export const getListRole =
 	};
 export const createOrUpdateRole =
 	(data, action, id) => async (dispatch, getState) => {
-		console.log(data);
 		let path = `manage/roles`;
 		if (action === "UPDATE") {
 			path += `/${id}`;

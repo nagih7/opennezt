@@ -31,26 +31,6 @@ export async function resetPassword(req, res) {
     res.status(201).jsonify('Reset password successfully.')
 }
 
-export async function createProfile(req, res) {
-    const isExist = await Profile.findOne({user_id: req.currentUser._id})
-    if (isExist) {
-        res.status(200).jsonify('Profile is already exist.')
-    } else {
-        const result = await userService.createProfile(req.currentUser, req.body)
-        res.status(201).jsonify(result)
-    }
-}
-
-export async function getFounderProfile(req, res) {
-    const result = await userService.getFounderProfile(req.currentUser._id)
-    res.jsonify(result)
-}
-
-export async function updateFounderProfile(req, res) {
-    const result = await userService.updateFounderProfile(req.currentUser, req.body)
-    res.status(201).jsonify(result)
-}
-
 export async function createProject(req, res) {
     await userService.createProject(req.currentUser, req.body)
     res.status(201).jsonify('Create project successfully.')
@@ -95,11 +75,6 @@ export async function updateBackground(req, res) {
 export async function updateAvatar(req, res) {
     await userService.updateAvatar(req.currentUser, req.body)
     res.status(200).jsonify('Update avatar successfully.')
-}
-
-export async function checkSteps(req, res) {
-    const result = await userService.checkSteps(req.currentUser)
-    res.jsonify(result)
 }
 
 // Industry framework

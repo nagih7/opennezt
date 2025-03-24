@@ -50,9 +50,7 @@ const ProfessionalProfile = () => {
 			[nameSelect]: event.value,
 		});
 	}, 300);
-	const handleSaveChanges = () => {
-		console.log(formData);
-	};
+	const handleSaveChanges = () => {};
 	// ========== COMPONENT RENDER ========== //
 	return (
 		<>

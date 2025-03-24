@@ -10,16 +10,6 @@ const projectRouter = Router()
 
 projectRouter.use(asyncHandler(requireAuthentication))
 
-projectRouter.get(
-    '/seek-projects',
-    asyncHandler(validate(projectRequest.seekProjects)),
-    asyncHandler(projectController.seekProjects)
-)
-
-projectRouter.put('/background', asyncHandler(projectController.updateBackground))
-
-projectRouter.get('/invitations/:user_id', asyncHandler(projectController.getInvitations))
-
 // ========== GET [Project - Tag] ==============//
 projectRouter.get('/tags', asyncHandler(projectController.getProjectsToTag))
 

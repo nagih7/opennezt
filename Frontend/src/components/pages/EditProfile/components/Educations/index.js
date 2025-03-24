@@ -8,14 +8,13 @@ import InputCustom from "components/UI/InputCustom";
 import { setIsOpenModalCreateOrUpdateEducation } from "states/modules/profile";
 import moment from "moment";
 import { IconlyEdit } from "components/UI/Iconly";
-import { IconlyDelete } from "components/UI/Iconly"
+import { IconlyDelete } from "components/UI/Iconly";
 import { createOrUpdateEducation } from "api/profile";
 
 const Educations = () => {
 	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX STORE ========== //
 	const { educations } = useSelector((state) => state.profile.profile);
-	console.log(educations);
 	const {
 		isOpenModalCreateOrUpdateEducation,
 		isLoadingCreateOrUpdateEducation,
@@ -32,7 +31,6 @@ const Educations = () => {
 			[e.target.name]: e.target.value,
 		});
 	};
-
 
 	const handleAddCertification = () => {
 		dispatch(setIsOpenModalCreateOrUpdateEducation(true));
@@ -60,8 +58,8 @@ const Educations = () => {
 		});
 	};
 	const hangdleDeleteEducation = () => {
-		setAction("delete")
-	}
+		setAction("delete");
+	};
 	const handleSaveChanges = () => {
 		if (formData.is_lifetime) {
 			const { organization_id, expiration_date, ...rest } = formData;
@@ -132,9 +130,11 @@ const Educations = () => {
 								<div key={index}>
 									<div className=" shadow rounded-[0.6rem]">
 										<div className="relative p-4 mt-[2rem]">
-											<span className="cursor-pointer  md:float-right 2xl:float-right"><IconlyDelete size={24} color={"#000"} /></span>
+											<span className="cursor-pointer md:float-right 2xl:float-right">
+												<IconlyDelete size={24} color={"#000"} />
+											</span>
 											<span
-												className="cursor-pointer  md:float-right 2xl:float-right"
+												className="cursor-pointer md:float-right 2xl:float-right"
 												onClick={() =>
 													handleUpdateEducation(education)
 												}>
@@ -151,12 +151,13 @@ const Educations = () => {
 													<p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
 														{`${moment(
 															education.start_date
-														).format("MMM YYYY")} ${education.end_date
-															? `- ${moment(
-																education.end_date
-															).format("MMM YYYY")}`
-															: ""
-															}`}
+														).format("MMM YYYY")} ${
+															education.end_date
+																? `- ${moment(
+																		education.end_date
+																  ).format("MMM YYYY")}`
+																: ""
+														}`}
 													</p>
 												)}
 											{education.field_of_study && (
