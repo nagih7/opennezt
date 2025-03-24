@@ -393,7 +393,6 @@ export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
 }
 
 export async function getTalentDetails(user, _id) {
-    console.log('id', user._id, _id)
     // const type = await Type.findOne({name: 'Friend Request'})
     const detailTalent = await User.aggregate([
         {

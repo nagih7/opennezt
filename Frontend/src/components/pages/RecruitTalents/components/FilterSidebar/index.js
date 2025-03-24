@@ -105,9 +105,6 @@ const FilterSidebar = () => {
 		);
 	};
 
-	// console.log("dataFilter", dataFilter);
-	// console.log("formRecruitTalents", formRecruitTalents);
-
 	return (
 		<>
 			<div className="bg-[#ffffff] rounded-md mb-8">

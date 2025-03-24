@@ -147,7 +147,6 @@ export const createOrUpdateEducation =
 // ========== Certification ========== //
 export const createOrUpdateCertification =
 	(data, action) => async (dispatch, getState) => {
-		console.log(data, action);
 		const method = action === "create" ? "post" : "put";
 		return callApi({
 			method: method,

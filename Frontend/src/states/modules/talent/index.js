@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const talentSlice = createSlice({
-	name: "talent",
+	name: "Talent",
 	initialState: {
 		talents: [],
 		talentDetails: null,

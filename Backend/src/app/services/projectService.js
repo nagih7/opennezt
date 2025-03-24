@@ -13,61 +13,6 @@ import {
 import {FileUpload} from '@/utils/classes'
 import delay from '@/utils/classes/delay'
 
-export async function updateBackground(user, requestBody) {
-    if (requestBody.background instanceof FileUpload) {
-        const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
-        if (project.background) {
-            FileUpload.remove(project.background)
-        }
-        project.background = requestBody.background.save('background_projects')
-        await project.save()
-    }
-}
-
-export async function getInvitations(userId, user_id) {
-    const invitations = await NotificationFeed.aggregate([
-        {
-            $match: {
-                source_id: userId,
-                user_id: new ObjectId(user_id),
-                type: 'project_invitation',
-                'metadata.status': {$in: ['waiting', 'accepted']},
-            },
-        },
-        {
-            $lookup: {
-                from: 'projects',
-                localField: 'metadata.project_id',
-                foreignField: '_id',
-                as: 'project',
-            },
-        },
-        {
-            $unwind: '$project',
-        },
-        {
-            $addFields: {
-                'metadata.project': {
-                    name: '$project.name',
-                    _id: '$project._id',
-                },
-            },
-        },
-        {
-            $project: {
-                _id: 0,
-                created_at: 1,
-                type: 1,
-                metadata: {
-                    status: 1,
-                    project: 1,
-                },
-            },
-        },
-    ])
-    return invitations
-}
-
 // ========== POST [Project] ========== //
 export async function createProject(user, requestBody) {
     const {revenues, funding_sources, additional_infos, logo, background} = requestBody
@@ -190,7 +135,6 @@ export async function getListMyProjects(user, {q, page, per_page, field, order})
     const filter = {user_id: user._id, name: {$regex: q, $options: 'i'}}
     const total = await Project.countDocuments(filter)
     const last_page = Math.ceil(total / per_page)
-    await delay(3000)
     return {total, page, per_page, last_page, projects}
 }
 
@@ -476,14 +420,14 @@ export async function getProjectDetails(user, projectId) {
                 localField: '_id',
                 foreignField: 'additional_info.project_id',
                 as: 'applied',
-                // pipeline: [
-                //     {
-                //         $match: {
-                //             source_id: user._id,
-                //             type_id: typeNotification._id,
-                //         },
-                //     },
-                // ],
+                pipeline: [
+                    {
+                        $match: {
+                            source_id: user._id,
+                            type_id: typeNotification._id,
+                        },
+                    },
+                ],
             },
         },
         {

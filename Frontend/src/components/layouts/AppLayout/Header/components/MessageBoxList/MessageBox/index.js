@@ -11,7 +11,6 @@ import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import GroupsIcon from "@mui/icons-material/Groups";
 import MicIcon from "@mui/icons-material/Mic";
 import { Avatar, message, Modal, Tooltip } from "antd";
-import { getProjectInvitations } from "api/project";
 import { closeChatBox, comfirmSendMessage } from "states/modules/chat";
 import MessageBoxContent from "./MessageBoxContent";
 import { ACTIONS } from "utils/constains";
@@ -84,7 +83,6 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 
 	const handleSendProjectInvitation = async () => {
 		setModalProjectInvitation(true);
-		dispatch(getProjectInvitations(converse.conversation.members[0]._id));
 	};
 
 	const handleCloseChatBox = (conversation) => {

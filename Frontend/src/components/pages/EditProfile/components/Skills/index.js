@@ -59,7 +59,6 @@ const Skills = () => {
 	};
 
 	const handleChangeSkill = (event) => {
-		console.log("items", event.items);
 		setFormData({
 			...formData,
 			skills: event.value,
@@ -96,7 +95,6 @@ const Skills = () => {
 	};
 
 	const handleSaveChanges = () => {
-		console.log("mySkills", mySkills);
 		dispatch(
 			updateSkillProfile({
 				skills: mySkills,

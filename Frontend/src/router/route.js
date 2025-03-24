@@ -14,7 +14,7 @@ import AdditonalInfo from "components/pages/CreateProject/AdditionalInfo";
 import Logo from "components/pages/CreateProject/Logo";
 import Background from "components/pages/CreateProject/Background";
 import Invites from "components/pages/CreateProject/Invites";
-import ProjectDetails from "components/pages/ProjectDetails";
+import MyProjectDetails from "components/pages/MyProjectDetails";
 // EditProfile
 import EditDetail from "components/pages/EditProject/Components/Detail";
 import EditStage from "components/pages/EditProject/Components/Stage";
@@ -23,8 +23,8 @@ import EditFundingSources from "components/pages/EditProject/Components/FundingS
 import EditAdditionalInfo from "components/pages/EditProject/Components/AdditionalInfo";
 import EditLogo from "components/pages/EditProject/Components/Logo";
 import EditBackground from "components/pages/EditProject/Components/Background";
-import Members from "components/pages/ProjectDetails/components/Members";
-import Setting from "components/pages/ProjectDetails/components/Setting";
+import Members from "components/pages/MyProjectDetails/components/Members";
+import ProjectManage from "components/pages/MyProjectDetails/components/ProjectManage";
 import NewConversation from "components/pages/Message/components/NewConversation";
 import Conversation from "components/pages/Message/components/Conversation";
 
@@ -363,7 +363,7 @@ const router = createBrowserRouter([
 		path: "/projects/details/:id",
 		element: (
 			<AppLayout>
-				<ProjectDetails />
+				<MyProjectDetails />
 			</AppLayout>
 		),
 		loader: ({ request }) =>
@@ -453,7 +453,7 @@ const router = createBrowserRouter([
 		path: "/project/details/setting",
 		element: (
 			<AppLayout>
-				<Setting />
+				<ProjectManage />
 			</AppLayout>
 		),
 		loader: ({ request }) =>
