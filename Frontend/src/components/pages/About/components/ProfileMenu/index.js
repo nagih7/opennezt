@@ -9,7 +9,7 @@ import {
 	IconlyUser,
 } from "components/UI/Iconly";
 import React from "react";
-
+import { Link } from "react-router-dom"
 const ProfileMenu = ({ changeTab, setChangeTab }) => {
 
 	return (
@@ -53,16 +53,18 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
 						Groups
 					</span>
 				</li>
-				<li onClick={() => setChangeTab("Notifications")} className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
-					<a
-						href="#"
-						className={`no-underline  ${changeTab === "Notifications" ? "bg-[#4374c0]" : "bg-[#F4F5F6]"}   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}>
-						<IconlyNotification size={20} color={"#042713"} />
-					</a>
-					<span className={` ${changeTab === "Notifications" ? "text-[#4374c0]" : "text-[#6f7f92]"} text-sm font-medium`}>
-						Notifications
-					</span>
-				</li>
+				<Link className="no-underline" to={"/notification-management"}>
+					<li onClick={() => setChangeTab("Notifications")} className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
+						<a
+							href="#"
+							className={`no-underline  ${changeTab === "Notifications" ? "bg-[#4374c0]" : "bg-[#F4F5F6]"}   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}>
+							<IconlyNotification size={20} color={"#042713"} />
+						</a>
+						<span className={` ${changeTab === "Notifications" ? "text-[#4374c0]" : "text-[#6f7f92]"} text-sm font-medium`}>
+							Notifications
+						</span>
+					</li>
+				</Link>
 				<li onClick={() => setChangeTab("Messages")} className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
 					<a
 						href="#"
