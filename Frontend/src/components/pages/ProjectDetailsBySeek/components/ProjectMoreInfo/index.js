@@ -19,9 +19,11 @@ import { setOpenModalConfirmApply } from "states/modules/project";
 const ProjectMoreInfo = () => {
 	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX STORE ========== //
-	const { projectDetails, isOpenModalConfirmApply } = useSelector(
-		(state) => state.project
-	);
+	const {
+		projectDetails,
+		isOpenModalConfirmApply,
+		isLoadingGetProjectDetails,
+	} = useSelector((state) => state.project);
 	const { projectRoleFramework, projectTeamRoleFramework } = useSelector(
 		(state) => state.user
 	);
@@ -132,34 +134,38 @@ const ProjectMoreInfo = () => {
 					{/* 26 Participants in the Project */}
 					{projectDetails?.members?.length} Participants in the Project
 				</p>
-				<p className="text-[#6F7F92] flex">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="currentColor"
-						className="mr-3 text-[#2F65B9]"
-						height="24"
-						viewBox="0 0 24 24"
-						width="24">
-						<path d="M0 0h24v24H0z" fill="none" />
-						<path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-					</svg>
-					Revenue {projectDetails?.revenues?.slice(-1)[0].amount} (
-					{projectDetails?.revenues?.slice(-1)[0].currency})
-				</p>
+				{projectDetails?.revenues?.length > 0 && (
+					<p className="text-[#6F7F92] flex">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="currentColor"
+							className="mr-3 text-[#2F65B9]"
+							height="24"
+							viewBox="0 0 24 24"
+							width="24">
+							<path d="M0 0h24v24H0z" fill="none" />
+							<path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+						</svg>
+						Revenue {projectDetails?.revenues?.slice(-1)[0]?.amount} (
+						{projectDetails?.revenues?.slice(-1)[0]?.currency})
+					</p>
+				)}
 			</div>
-			{projectDetails && !projectDetails?.applied && (
-				<Button
-					className="px-4 py-2 mt-4 text-white rounded-sm"
-					// loading={isLoadingSeekProjects}
-					onClick={handleOpenModalConfirmApply}
-					width={"100%"}
-					height={"3rem"}
-					borderRadius={4}
-					loadingText="Loading..."
-					spinnerPlacement="start">
-					Apply
-				</Button>
-			)}
+			{projectDetails &&
+				projectDetails?.applied === false &&
+				isLoadingGetProjectDetails === false && (
+					<Button
+						className="px-4 py-2 mt-4 text-white rounded-sm"
+						// loading={isLoadingSeekProjects}
+						onClick={handleOpenModalConfirmApply}
+						width={"100%"}
+						height={"3rem"}
+						borderRadius={4}
+						loadingText="Loading..."
+						spinnerPlacement="start">
+						Apply
+					</Button>
+				)}
 			<Dialog.Root
 				size={"lg"}
 				open={isOpenModalConfirmApply}

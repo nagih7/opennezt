@@ -36,7 +36,6 @@ const ForgotPassword = React.lazy(() =>
 );
 const Profile = React.lazy(() => import("../components/pages/Profile"));
 const Manage = React.lazy(() => import("../components/pages/Manage"));
-const Home = React.lazy(() => import("../components/pages/Home"));
 const UserManagement = React.lazy(() =>
 	import("../components/pages/UserManagement")
 );
@@ -52,9 +51,6 @@ const SeekProjects = React.lazy(() =>
 );
 const ProjectDetailsBySeek = React.lazy(() =>
 	import("../components/pages/ProjectDetailsBySeek")
-);
-const NotificationManagement = React.lazy(() =>
-	import("../components/pages/NotificationManagement")
 );
 const VerifyAuth = React.lazy(() => import("../components/pages/Auth/Verify"));
 const ResetPassword = React.lazy(() =>
@@ -144,7 +140,7 @@ const router = createBrowserRouter([
 		path: "/",
 		element: (
 			<AppLayout>
-				<Home />
+				<Newfeeds />
 			</AppLayout>
 		),
 		loader: ({ request }) => rootLoader({ request }, true, "LOAD_HOME_PAGE"),
@@ -226,16 +222,6 @@ const router = createBrowserRouter([
 		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROJECT_DETAIL_PAGE"),
-	},
-	{
-		path: "/notification-management",
-		element: (
-			<AppLayout>
-				<NotificationManagement />
-			</AppLayout>
-		),
-		loader: ({ request }) =>
-			rootLoader({ request }, true, "LOAD_PROJECTS_NOTIFICATION_PAGE"),
 	},
 	// {
 	// 	path: "/about/edit-profile",
@@ -474,32 +460,35 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_PROJECT_SETTING_PAGE"),
 	},
 	{
-		path:"/messages",
-		element:(
+		path: "/messages",
+		element: (
 			<AppLayout>
 				<Message />
 			</AppLayout>
 		),
-		loader:({request})=>rootLoader({request},true,"LOAD_MESSAGES_PAGE")
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_MESSAGES_PAGE"),
 	},
 	{
-		path:"/messages/new-conversation",
-		element:(
+		path: "/messages/new-conversation",
+		element: (
 			<AppLayout>
 				<NewConversation />
 			</AppLayout>
 		),
-		loader:({request})=>rootLoader({request},true,"LOAD_NEW_CONVERSATION_PAGE")
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_NEW_CONVERSATION_PAGE"),
 	},
 	{
-		path:"/messages/conversation",
-		element:(
+		path: "/messages/conversation",
+		element: (
 			<AppLayout>
 				<Conversation />
 			</AppLayout>
 		),
-		loader:({request})=>rootLoader({request},true,"LOAD_CONVERSATION_PAGE")
-	}
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_CONVERSATION_PAGE"),
+	},
 ]);
 
 export default router;

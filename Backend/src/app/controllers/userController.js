@@ -97,11 +97,6 @@ export async function updateAvatar(req, res) {
     res.status(200).jsonify('Update avatar successfully.')
 }
 
-export async function checkSteps(req, res) {
-    const result = await userService.checkSteps(req.currentUser)
-    res.jsonify(result)
-}
-
 // Industry framework
 export async function getIndustries(req, res) {
     const result = await userService.getIndustries()

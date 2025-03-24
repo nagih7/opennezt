@@ -4,7 +4,6 @@ import { getChatList } from "api/chat";
 import { getNotifications } from "api/notification";
 import { seekProjects } from "api/project";
 // import { getFounderProfile } from "api/founder";
-// import { checkSteps } from "api/home";
 // import { recruitTalents } from "api/talent";
 import { getAuthRole } from "api/auth";
 
@@ -17,7 +16,6 @@ export const AppProvider = ({ children }) => {
 		dispatch(getAuthRole());
 		dispatch(getChatList());
 		dispatch(getNotifications());
-		// dispatch(checkSteps());
 		// dispatch(getFounderProfile());
 		// dispatch(
 		// 	recruitTalents({

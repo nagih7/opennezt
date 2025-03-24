@@ -10,11 +10,10 @@ const projectSlice = createSlice({
 		title: "",
 
 		projects: [],
-		projectDetails: {},
+
 		projectInvitations: [],
 		resultCreateProject: null,
 		loadingGetProjects: false,
-		loadingGetProjectDetails: false,
 		loadingUpdatePitchDeck: false,
 		loadingUpdateProject: false,
 		resultUpdateProject: null,
@@ -44,6 +43,10 @@ const projectSlice = createSlice({
 			totalPage: 1,
 			totalRecord: 0,
 		},
+		// ========== PROJECT DETAILS ========== //
+		projectDetails: {},
+		isLoadingGetProjectDetails: false,
+
 		// ========== SEEK PROJECTS ========== //
 		projectsBySeek: [],
 		isLoadingSeekProjects: false,
@@ -138,16 +141,16 @@ const projectSlice = createSlice({
 		// ========== PROJECT DETAILS ========== //
 		requestGetProjectDetails: (state) => ({
 			...state,
-			loadingGetProjectDetails: true,
+			isLoadingGetProjectDetails: true,
 		}),
 		getProjectDetailsSuccess: (state, action) => ({
 			...state,
-			loadingGetProjectDetails: false,
+			isLoadingGetProjectDetails: false,
 			projectDetails: action.payload.data,
 		}),
 		getProjectDetailsFail: (state) => ({
 			...state,
-			loadingGetProjectDetails: false,
+			isLoadingGetProjectDetails: false,
 		}),
 
 		// ========== SEEK PROJECTS ========== //

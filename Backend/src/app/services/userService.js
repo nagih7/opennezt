@@ -514,19 +514,6 @@ export async function updateAvatar(user, requestBody) {
     await user.save()
 }
 
-export async function checkSteps(user) {
-    const founderProfile = await Profile.findOne(
-        {user_id: user._id},
-        {user_id: 0, created_at: 0, updated_at: 0}
-    )
-    const project = await Project.findOne({user_id: user._id}, {user_id: 0, created_at: 0, updated_at: 0})
-
-    return {
-        founderProfile: founderProfile ? true : false,
-        project: project ? true : false,
-    }
-}
-
 // Industry framework
 export async function getIndustries() {
     const industries = await Industry.find().select('name _id description')

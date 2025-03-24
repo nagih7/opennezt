@@ -525,6 +525,12 @@ export async function getProjectDetails(user, projectId) {
         },
     ])
 
+    if (project[0]?.applied) {
+        project[0].applied = true
+    } else {
+        project[0].applied = false
+    }
+
     return project[0]
 }
 

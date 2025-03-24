@@ -22,8 +22,6 @@ userRouter.put(
     asyncHandler(userController.updateBackground)
 )
 
-userRouter.get('/check-steps', asyncHandler(userController.checkSteps))
-
 userRouter.get('/users', asyncHandler(validate(userRequest.readRoot)), asyncHandler(userController.readRoot))
 
 userRouter.patch(
