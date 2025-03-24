@@ -38,8 +38,8 @@ const Article = forwardRef(
                >
                   <IconlyHeart
                      size={25}
-                     color={"#6f7f92"}
-                     backgroundColor={"#6f7f92"}
+                     color={"red"}
+                     backgroundColor={"red"}
                   />
                </div>
             );

@@ -298,10 +298,22 @@ export const shareArticle = async (id, user) => {
 //End share article
 
 //Replycomment
-export const replyComment = async (requestQuery, user, requestBody) => {
-    const {article_id, comment_id} = requestQuery
+export const replyComment = async (user, requestBody) => {
+    console.log(requestBody)
+    const {comment_id, article_id} = requestBody
     const parentComment = await Comment.findById(comment_id)
     const updatedArticle = await Article.findById(article_id)
+    const imageData = requestBody.content.image
+    if (typeof imageData === 'string') {
+        if (imageData === '') {
+            requestBody.content.image = imageData
+        } else {
+            requestBody.content.image = imageData.indexOf('uploads')
+        }
+    }
+    if (imageData instanceof FileUpload) {
+        requestBody.content.image = imageData.save('article-attachment')
+    }
 
     const newComment = await new Comment({
         ...requestBody,
@@ -465,19 +477,15 @@ export const createComment = async (user, requestBody) => {
     const articleId = requestBody.article_id
     const imageData = requestBody.content.image
 
-    if (imageData) {
-        const base64Data = imageData.data.split(';base64,').pop()
-        const buffer = Buffer.from(base64Data, 'base64')
-
-        const fileUpload = new FileUpload({
-            buffer,
-            filename: imageData.name,
-            mimetype: imageData.type,
-        })
-
-        const savedFile = await fileUpload.save('comment-images')
-        console.log(typeof savedFile + savedFile)
-        requestBody.content.image = savedFile // Store single image path
+    if (typeof imageData === 'string') {
+        if (imageData === '') {
+            requestBody.content.image = imageData
+        } else {
+            requestBody.content.image = imageData.indexOf('uploads')
+        }
+    }
+    if (imageData instanceof FileUpload) {
+        requestBody.content.image = imageData.save('article-attachment')
     }
 
     const newComment = new Comment({
