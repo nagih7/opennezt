@@ -92,26 +92,6 @@ export async function remove(user) {
     await User.deleteOne({_id: user._id})
 }
 
-export async function createProfile(user, requestBody) {
-    requestBody.user_id = await user._id
-    // const founder = new Profile(requestBody)
-    // await founder.save()
-    // return founder
-    return requestBody
-}
-
-export async function getFounderProfile(userId) {
-    const founder = await Profile.findOne({user_id: userId})
-    return founder
-}
-
-export async function updateFounderProfile(user, requestBody) {
-    const founder = await Profile.findOne({user_id: user._id})
-    founder.set(requestBody)
-    await founder.save()
-    return founder
-}
-
 export async function createProject(user, {pitch_deck, background, ...requestBody}) {
     if (pitch_deck instanceof FileUpload) {
         requestBody.pitch_deck = pitch_deck.save('pitch_decks')
@@ -413,7 +393,6 @@ export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
 }
 
 export async function getTalentDetails(user, _id) {
-    console.log('id', user._id, _id)
     // const type = await Type.findOne({name: 'Friend Request'})
     const detailTalent = await User.aggregate([
         {
@@ -512,19 +491,6 @@ export async function updateAvatar(user, requestBody) {
         user.avatar = requestBody.avatar.save('avatars')
     }
     await user.save()
-}
-
-export async function checkSteps(user) {
-    const founderProfile = await Profile.findOne(
-        {user_id: user._id},
-        {user_id: 0, created_at: 0, updated_at: 0}
-    )
-    const project = await Project.findOne({user_id: user._id}, {user_id: 0, created_at: 0, updated_at: 0})
-
-    return {
-        founderProfile: founderProfile ? true : false,
-        project: project ? true : false,
-    }
 }
 
 // Industry framework

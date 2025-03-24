@@ -22,8 +22,6 @@ userRouter.put(
     asyncHandler(userController.updateBackground)
 )
 
-userRouter.get('/check-steps', asyncHandler(userController.checkSteps))
-
 userRouter.get('/users', asyncHandler(validate(userRequest.readRoot)), asyncHandler(userController.readRoot))
 
 userRouter.patch(
@@ -49,15 +47,6 @@ userRouter.put('/project', asyncHandler(userController.updateProject))
 userRouter.delete('/project', asyncHandler(userController.deleteProject))
 
 // Founder Profile
-userRouter.post(
-    '/founder-profile',
-    asyncHandler(validate(userRequest.createProfile)),
-    asyncHandler(userController.createProfile)
-)
-
-userRouter.get('/get-founder-profile', asyncHandler(userController.getFounderProfile))
-
-userRouter.put('/founder-profile', asyncHandler(userController.updateFounderProfile))
 
 userRouter.get(
     '/recruit-talents',

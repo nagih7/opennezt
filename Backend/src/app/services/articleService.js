@@ -4,7 +4,6 @@ import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
 import {LINK_STATIC_URL} from '@/configs'
 import {ObjectId} from 'mongodb'
-import {valid} from 'joi'
 import delay from '@/utils/classes/delay.js'
 import Project from '@/models/project.js'
 

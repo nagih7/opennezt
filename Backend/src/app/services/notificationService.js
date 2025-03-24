@@ -357,7 +357,6 @@ export async function requestAddFriend(user, requestBody, io) {
     if (!userSocketId) {
         console.error('Không tìm thấy userSocketId cho user_id:', user_id)
         console.log('Danh sách userSockets:', userSockets)
-        console.log('Notification:', type._id)
         return
     }
 

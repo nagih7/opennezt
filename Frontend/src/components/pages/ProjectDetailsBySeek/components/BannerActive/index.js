@@ -1,3 +1,4 @@
+import { Avatar } from "@chakra-ui/react";
 import React from "react";
 import {
 	FaChevronRight,
@@ -29,18 +30,10 @@ const BannerActive = () => {
 			</div>
 
 			<div className="flex items-center mt-[-0.5rem] relative top-[5.8rem] ml-8 text-white 2xl:ml-[7rem]">
-				<img
-					src={
-						projectDetails?.logo ||
-						"https://randomuser.me/api/portraits/women/44.jpg"
-					}
-					onError={(e) => {
-						e.target.src =
-							"https://randomuser.me/api/portraits/women/44.jpg";
-					}}
-					alt={projectDetails?.name}
-					className="w-10 h-10 mr-3 rounded-full"
-				/>
+				<Avatar.Root size="md" className="w-10 h-10 mr-3 rounded-full">
+					<Avatar.Fallback name={projectDetails?.user?.name} />
+					<Avatar.Image src={projectDetails?.user?.avatar} />
+				</Avatar.Root>
 				<div>
 					<p className="relative top-[1.25rem] text-xs mb-4 text-[#6F7F92]">
 						Created by
@@ -69,10 +62,10 @@ const BannerActive = () => {
 					</p>
 				</div>
 				<div className="ml-5">
-					<p className="relative top-[1.25rem] text-xs mb-4 text-[#6F7F92]">
+					<p className="relative top-[1rem] text-xs mb-[1.6rem] text-[#6F7F92]">
 						Project Results: 70%
 					</p>
-					<p className="w-[8rem] h-[0.4rem] bg-gray-700 rounded-full overflow-hidden">
+					<p className="w-[8rem] h-[0.6rem] bg-gray-700 rounded-full overflow-hidden">
 						<div className="w-3/5 h-full bg-blue-600 rounded-full"></div>
 					</p>
 				</div>

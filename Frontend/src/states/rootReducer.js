@@ -5,7 +5,6 @@ import profileReducer from "./modules/profile";
 import homeReducer from "./modules/home";
 import employeeReducer from "./modules/employee";
 import manageReducer from "./modules/manage";
-import founderReducer from "./modules/founder";
 import talentReducer from "./modules/talent";
 import projectReducer from "./modules/project";
 import chatReducer from "./modules/chat";
@@ -16,13 +15,12 @@ import articleReducer from "./modules/article";
 const rootReducer = {
 	app: appReducer,
 	auth: authReducer,
-   article: articleReducer,
+	article: articleReducer,
 	user: userReducer,
 	manage: manageReducer,
 	profile: profileReducer,
 	home: homeReducer,
 	employee: employeeReducer,
-	founder: founderReducer,
 	talent: talentReducer,
 	project: projectReducer,
 	chat: chatReducer,
