@@ -1182,6 +1182,15 @@ export const IconlyFilter = ({ size, color }) => {
 	);
 };
 
+<<<<<<< HEAD
+export const IconlyArrowLeft2 = ({ size, color}) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path d="M15.75 19L8.75 12L15.75 5" stroke={color} strokeWidth="1.5" strokeLinecap="square"></path>
+		</svg> 
+		) 
+}
+=======
 export const IconlyTickSquare = ({ size, color }) => {
 	return (
 		<svg
@@ -1233,3 +1242,4 @@ export const IconlyInfoSquare = ({ size, color }) => {
 		</svg>
 	);
 };
+>>>>>>> af6025b472d6d4a6bbd65836684c76a6b22576a4
