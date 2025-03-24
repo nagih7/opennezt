@@ -97,13 +97,13 @@ const ProjectDetails = () => {
           </div>
         </div>
       </div>
-      <div className="w-full px-[16px] pt-8">
+      <div className="w-full px-[16px]">
         {/* ProjectMenu */}
         <ProjectMenu />
       </div>
       <div className="px-[16px]">
         <div className="flex w-full gap-8">
-          <div className="w-10/12 mt-8">
+          <div className="w-10/12">
             <div className="bg-[#ffffff] rounded-md">
               <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                 <h5 className="mb-0">Secter</h5>
@@ -426,7 +426,7 @@ const ProjectDetails = () => {
                
               </div> */}
           </div>
-          <div className="w-4/12 mt-8">
+          <div className="w-4/12">
             {/* RightProject */}
             <RightProject />
           </div>
