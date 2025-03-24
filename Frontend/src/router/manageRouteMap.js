@@ -3,8 +3,10 @@ import { NAVBAR_LABEL } from "utils/constains";
 import {
 	IconlyActivity,
 	IconlyAddUser,
+	IconlyChat,
 	IconlyFolder,
 	IconlyGraph,
+	IconlyMessage,
 	IconlyNotification,
 	IconlyProfile,
 	IconlyWork,
@@ -60,6 +62,13 @@ const manageRouteMap = [
 		routeActive: ["/notification-management"],
 		permissions: ["notification_management_page"],
 	},
+	{
+		label: NAVBAR_LABEL.MESSAGES,
+		icon: <IconlyChat size={24} />,
+		path: "/messages",
+		routeActive: ["/messages"],
+		permissions: ["messages_page"],
+	}
 ];
 
 export default manageRouteMap;

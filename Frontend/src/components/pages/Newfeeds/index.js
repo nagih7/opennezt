@@ -234,70 +234,68 @@ function NewFeeds() {
    );
    //End Delete Article
    return (
-      <div>
-         <div className="flex w-full gap-8 pt-4 px-[16px]">
-            <div className="w-10/12">
-               {isOpenUpdateForm ? (
-                  <UpdateArticleForm
-                     feed={selectedArticle}
-                     onClose={handleCloseUpdateForm}
-                     onSubmit={handleUpdateFormSubmit}
-                     isLoadingUpdateArticle={isLoadingUpdateArticle}
-                  />
-               ) : null}
-               {isOpenComment ? (
-                  <CommentList
-                     key={selectedArticle._id}
-                     feed={selectedArticle}
-                     onClose={handleCloseComment}
-                     reaction={reactionMap.get(selectedArticle._id)}
-                     onReaction={handleReaction}
-                     isLoading={isLoadingReactArticle}
-                  />
-               ) : null}
-               {isOpenCreateForm ? (
-                  <CreateAricleForm
-                     onSubmitForm={handleFormSubmit}
-                     onCloseForm={handleCloseForm}
-                     isLoadingCreateArticle={isLoadingCreateArticle}
-                  />
-               ) : null}
-               <div>
-                  <NewArticle onOpenForm={handleOpenForm} />
-               </div>
-               {feeds.map((feed, index) => {
-                  if (index === feeds.length - 1) {
-                     return (
-                        <Article
-                           key={feed._id}
-                           ref={lastElementRef}
-                           feed={feed}
-                           reaction={reactionMap.get(feed._id)}
-                           onReaction={handleReaction}
-                           isLoading={isLoadingReactArticle}
-                           onSelect={handleSelectArticle}
-                           onEdit={handleOpenUpdateForm}
-                           onDelete={handleDelete}
-                        />
-                     );
-                  } else {
-                     return (
-                        <Article
-                           key={feed._id}
-                           feed={feed}
-                           reaction={reactionMap.get(feed._id)}
-                           onReaction={handleReaction}
-                           isLoading={isLoadingReactArticle}
-                           onSelect={handleSelectArticle}
-                           onEdit={handleOpenUpdateForm}
-                           onDelete={handleDelete}
-                        />
-                     );
-                  }
-               })}
+      <div className="flex w-full gap-8 pt-4 px-[16px]">
+         <div className="w-10/12">
+            {isOpenUpdateForm ? (
+               <UpdateArticleForm
+                  feed={selectedArticle}
+                  onClose={handleCloseUpdateForm}
+                  onSubmit={handleUpdateFormSubmit}
+                  isLoadingUpdateArticle={isLoadingUpdateArticle}
+               />
+            ) : null}
+            {isOpenComment ? (
+               <CommentList
+                  key={selectedArticle._id}
+                  feed={selectedArticle}
+                  onClose={handleCloseComment}
+                  reaction={reactionMap.get(selectedArticle._id)}
+                  onReaction={handleReaction}
+                  isLoading={isLoadingReactArticle}
+               />
+            ) : null}
+            {isOpenCreateForm ? (
+               <CreateAricleForm
+                  onSubmitForm={handleFormSubmit}
+                  onCloseForm={handleCloseForm}
+                  isLoadingCreateArticle={isLoadingCreateArticle}
+               />
+            ) : null}
+            <div>
+               <NewArticle onOpenForm={handleOpenForm} />
             </div>
-            <RightSidebar />
+            {feeds.map((feed, index) => {
+               if (index === feeds.length - 1) {
+                  return (
+                     <Article
+                        key={feed._id}
+                        ref={lastElementRef}
+                        feed={feed}
+                        reaction={reactionMap.get(feed._id)}
+                        onReaction={handleReaction}
+                        isLoading={isLoadingReactArticle}
+                        onSelect={handleSelectArticle}
+                        onEdit={handleOpenUpdateForm}
+                        onDelete={handleDelete}
+                     />
+                  );
+               } else {
+                  return (
+                     <Article
+                        key={feed._id}
+                        feed={feed}
+                        reaction={reactionMap.get(feed._id)}
+                        onReaction={handleReaction}
+                        isLoading={isLoadingReactArticle}
+                        onSelect={handleSelectArticle}
+                        onEdit={handleOpenUpdateForm}
+                        onDelete={handleDelete}
+                     />
+                  );
+               }
+            })}
          </div>
+         <RightSidebar />
       </div>
    );
 }
