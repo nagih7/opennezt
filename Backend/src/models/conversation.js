@@ -1,8 +1,28 @@
+import { Schema } from 'mongoose'
 import createModel, {ObjectId} from './base'
+import { fa } from '@faker-js/faker'
+
+const member_ids = new Schema(
+    {
+        user_id: {
+            type: ObjectId,
+            ref: 'User',
+            required: false,
+        },
+        role_id: {
+            type: ObjectId,
+            ref: 'Role',
+            required: false,
+        },
+    },
+    {
+        _id: false,
+    }
+)
 
 const Conversation = createModel('Conversation', 'conversations', {
     member_ids: {
-        type: [ObjectId],
+        type: [member_ids],
         ref: 'Conversation_Member',
         required: true,
     },

@@ -1,5 +1,7 @@
 import {NotificationFeed, Friend, ObjectId, Project, User, Conversation, Type, ProjectMember} from '@/models'
 import {userSockets} from '@/routes/socket'
+import {last} from 'lodash'
+import {me} from '../controllers/authController'
 
 export async function filter(user, {q = '', page = 1, per_page = 20, order = 1}) {
     order = order === '-1' ? -1 : 1
@@ -51,8 +53,8 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
             _id: 1,
             type_id: 1,
             source_id: 1,
-            type_name: { $ifNull: [{ $arrayElemAt: ['$type_info.name', 0] }, 'Unknown Type'] },  
-            source_name: { $ifNull: [{ $arrayElemAt: ['$source_info.name', 0] }, 'Unknown User'] },  
+            type_name: {$ifNull: [{$arrayElemAt: ['$type_info.name', 0]}, 'Unknown Type']},
+            source_name: {$ifNull: [{$arrayElemAt: ['$source_info.name', 0]}, 'Unknown User']},
             created_at: 1,
             updated_at: 1,
             metadata: 1,
@@ -98,8 +100,8 @@ export async function getNotifications(user) {
             _id: 1,
             type_id: 1,
             source_id: 1,
-            type_name: { $ifNull: [{ $arrayElemAt: ['$type_info.name', 0] }, 'Unknown Type'] },  
-            source_name: { $ifNull: [{ $arrayElemAt: ['$source_info.name', 0] }, 'Unknown User'] },  
+            type_name: {$ifNull: [{$arrayElemAt: ['$type_info.name', 0]}, 'Unknown Type']},
+            source_name: {$ifNull: [{$arrayElemAt: ['$source_info.name', 0]}, 'Unknown User']},
             created_at: 1,
             updated_at: 1,
             metadata: 1,
@@ -193,21 +195,32 @@ export async function replyFriendRequest(notification_id, status, io) {
                 await Friend.create({user_id: source_id, friend_id: user_id, status: 'accepted'})
             }
 
+            const roleUserId = await User.findOne({_id : user_id}).select('role_id')
+            const roleSourceId = await User.findOne({_id : source_id}).select('role_id')
             // Create new conversation
             const conversation = new Conversation({
-                members: [
-                    {user_id: user_id, role: 'user'},
-                    {user_id: source_id, role: 'user'},
+                member_ids: [
+                    {
+                        user_id: user_id,
+                        conversation_id: null,
+                        role_id: roleUserId,
+                        notification_enabled: true,
+                    },
+                    {
+                        user_id: source_id,
+                        conversation_id: null,
+                        role_id: roleSourceId,
+                        notification_enabled: true,
+                    },
                 ],
                 type_id: type._id,
-                metadata: {
-                    type: 'Reply Friend',
-                    status: 'accepted',
-                    read: true,
-                    data: {},
-                },
+                name: 'Friend Chat',
+                image: '',
+                last_message_id: null,
+                metadata: {},
             })
             await conversation.save()
+            console.log('Conversation created:', conversation)
 
             // Update notification status to 'accepted'
             await NotificationFeed.updateOne(

@@ -17,6 +17,7 @@ const ChatList = () => {
 
 	// NEW
 	const handleGetChatHistory = (conversation) => {
+		console.log(conversation);
 		dispatch(getChatHistory(conversation._id));
 	};
 

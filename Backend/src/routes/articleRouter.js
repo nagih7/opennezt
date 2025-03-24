@@ -29,7 +29,11 @@ articleRouter.get('/list-comments', asyncHandler(articleController.getCommentLis
 
 articleRouter.get('/list-reply-comment', asyncHandler(articleController.getReplyCommentList))
 
-articleRouter.post('/create-comment', asyncHandler(articleController.createComment))
+articleRouter.post(
+    '/create-comment',
+    asyncHandler(articleMiddleware.decodeFormCommentData),
+    asyncHandler(articleController.createComment)
+)
 
 articleRouter.put('/update-comment', asyncHandler(articleController.updateComment))
 
@@ -39,7 +43,11 @@ articleRouter.post('/article-reaction/:id', asyncHandler(articleController.react
 
 articleRouter.post('/share-article/:id', asyncHandler(articleController.shareArticle))
 
-articleRouter.post('/reply-comment', asyncHandler(articleController.replyComment))
+articleRouter.post(
+    '/reply-comment',
+    asyncHandler(articleMiddleware.decodeFormReplyCommentData),
+    asyncHandler(articleController.replyComment)
+)
 
 articleRouter.put(
     '/article-update/:id',

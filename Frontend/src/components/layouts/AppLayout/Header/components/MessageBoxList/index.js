@@ -9,6 +9,8 @@ const MessageBoxList = () => {
 
 	const { conversations } = useSelector((state) => state.chat);
 
+	console.log(conversations);
+
 	const sendMessage = useCallback(
 		(message) => {
 			socket.emit("message", message);
