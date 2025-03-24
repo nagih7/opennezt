@@ -92,26 +92,6 @@ export async function remove(user) {
     await User.deleteOne({_id: user._id})
 }
 
-export async function createProfile(user, requestBody) {
-    requestBody.user_id = await user._id
-    // const founder = new Profile(requestBody)
-    // await founder.save()
-    // return founder
-    return requestBody
-}
-
-export async function getFounderProfile(userId) {
-    const founder = await Profile.findOne({user_id: userId})
-    return founder
-}
-
-export async function updateFounderProfile(user, requestBody) {
-    const founder = await Profile.findOne({user_id: user._id})
-    founder.set(requestBody)
-    await founder.save()
-    return founder
-}
-
 export async function createProject(user, {pitch_deck, background, ...requestBody}) {
     if (pitch_deck instanceof FileUpload) {
         requestBody.pitch_deck = pitch_deck.save('pitch_decks')
