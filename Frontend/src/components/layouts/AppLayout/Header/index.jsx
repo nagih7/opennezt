@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
-import "./styles.scss";
+// import "./styles.scss";
 import { Popover } from "antd";
 import contentInfo from "./components/PopoverProfile";
 import contentNotification from "./components/PopoverNotification";
@@ -110,81 +110,6 @@ const Header = () => {
 	};
 
 	return (
-		// <header className={styles.headerWrap}>
-		// 	<div className={styles.headerLeftWrap}></div>
-		// 	<div className={`${styles.headerRightWrap}`}>
-		// 		<Radio.Group
-		// 			style={{ marginRight: "10px" }}
-		// 			value={language}
-		// 			onChange={handleChangeLanguage}>
-		// 			{LANG.map((item, index) => (
-		// 				<Radio.Button key={index} value={item.label}>
-		// 					{item.label}
-		// 				</Radio.Button>
-		// 			))}
-		// 		</Radio.Group>
-		// 		<div
-		// 			className={`${styles.itemHeaderRight}`}
-		// 			onClick={() => openFullScreen()}>
-		// 			<div className={`${styles.iconWrap}`}>
-		// 				{isFullScreen ? <ZoomInMapIcon /> : <ZoomOutMapIcon />}
-		// 			</div>
-		// 		</div>
-
-		// 		<Popover
-		// 			className={`popover-info-wrap`}
-		// 			placement="bottomRight"
-		// 			content={contentNotification}
-		// 			trigger="click">
-		// 			<div
-		// 				className={`${styles.itemHeaderRight} ${styles.notificationAnimationWrap}`}>
-		// 				<div className={`${styles.iconWrap}`}>
-		// 					<NotificationsIcon />
-		// 				</div>
-		// 			</div>
-		// 		</Popover>
-
-		// 		<div className={styles.popover} ref={chatListRef}>
-		// 			<div
-		// 				onClick={() => showChatList()}
-		// 				className={`${styles.itemHeaderRight} ${styles.messageAnimationWrap}`}>
-		// 				<div className={`${styles.iconWrap}`}>
-		// 					<ChatBubbleOutlineIcon />
-		// 				</div>
-		// 			</div>
-		// 			<div
-		// 				className={`${styles.chatListWrap} ${
-		// 					isShowChatList ? styles.visible : ""
-		// 				}`}>
-		// 				<ChatList />
-		// 			</div>
-
-		// 			<MessageBoxList />
-		// 		</div>
-		// 		<div
-		// 			onClick={() => setIsShowChatList(false)}
-		// 			className={`${styles.itemHeaderRight}`}>
-		// 			<Popover
-		// 				className={`popover-info-wrap`}
-		// 				placement="bottomRight"
-		// 				content={contentInfo}
-		// 				trigger="click">
-		// 				<div className={styles.infoWrap}>
-		// 					<div className={styles.avatarWrap}>
-		// 						<img
-		// 							src={authUser.avatar || AvatarDefault}
-		// 							alt={authUser.name}
-		// 							onError={(e) => {
-		// 								e.target.onerror = null;
-		// 								e.target.src = AvatarDefault;
-		// 							}}
-		// 						/>
-		// 					</div>
-		// 				</div>
-		// 			</Popover>
-		// 		</div>
-		// 	</div>
-		// </header>
 		<header className="bg-[#ffffff] w-full">
 			<div className="flex items-center h-[70px] pr-4">
 				<div className="h-full">
@@ -195,54 +120,7 @@ const Header = () => {
 					/>
 				</div>
 				<div className="flex items-center justify-between flex-1">
-					<div className="flex items-center gap-4 text-sm font-semibold text-[#6f7f92]">
-						{/* <div>HOME</div>
-						<div className="flex items-center text-[#2f65b9]">
-							COMMUNITY
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="undefined">
-								<path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-							</svg>
-						</div>
-						<div className="flex items-center">
-							PAGES
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="undefined">
-								<path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-							</svg>
-						</div>
-						<div className="flex items-center">
-							BLOG
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="undefined">
-								<path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-							</svg>
-						</div>
-						<div className="flex items-center">
-							SHOP
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="undefined">
-								<path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-							</svg>
-						</div>
-						<div>COUESER</div> */}
-					</div>
+					<div className="flex items-center gap-4 text-sm font-semibold text-[#6f7f92]"></div>
 					<div className="flex items-center gap-4">
 						<form
 							action=""

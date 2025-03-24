@@ -42,7 +42,6 @@ const Stage = () => {
 
 	// ========== ONCHANGE FUNCTION ========== //
 	const handleChange = (event, nameSelect) => {
-		console.log(event);
 		if (nameSelect) {
 			setFormData({ ...formData, [nameSelect]: event.value });
 		}

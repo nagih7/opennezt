@@ -1,42 +1,33 @@
 import callApi from "api/callApi";
 import {
-	// ========== My projects ========== //
+	// ========== MY PROJECTS ========== //
 	requestGetListMyProjects,
 	getListMyProjectsSuccess,
 	getListMyProjectsFail,
+	// ========== CREATE NEW PROJECT ========== //
 	requestCreateNewProject,
 	createNewProjectSuccess,
 	createNewProjectFail,
+	// ========== MY PROJECT DETAILS ========== //
 	requestGetMyProjectDetails,
 	getMyProjectDetailsSuccess,
 	getMyProjectDetailsFail,
-	// ========== Seek projects ========== //
+	// ========== DELETE MY PROJECT ========== //
+	requestDeleteMyProject,
+	deleteMyProjectSuccess,
+	deleteMyProjectFail,
+	// ========== SEEK PROJECTS ========== //
 	requestSeekProjects,
 	seekProjectsSuccess,
 	seekProjectsFail,
-	// ========== Apply to join project ========== //
+	// ========== APPLY TO JOIN PROJECT ========== //
 	requestApplyToJoinProject,
 	applyToJoinProjectSuccess,
 	applyToJoinProjectFail,
-	//  //////////////////////
+	// ========== PROJECT DETAILS ========== //
 	requestGetProjectDetails,
 	getProjectDetailsSuccess,
 	getProjectDetailsFail,
-	startRequestUpdateProject,
-	startRequestUpdateProjectSuccess,
-	startRequestUpdateProjectFail,
-	startRequestDeleteProject,
-	startRequestDeleteProjectSuccess,
-	startRequestDeleteProjectFail,
-	startUpdateRequestStatus,
-	startUpdateRequestStatusSuccess,
-	startUpdateRequestStatusFail,
-	startRequestUpdateBackground,
-	startRequestUpdateBackgroundSuccess,
-	startRequestUpdateBackgroundFail,
-	startRequestGetProjectInvitations,
-	startRequestGetProjectInvitationsSuccess,
-	startRequestGetProjectInvitationsFail,
 } from "../../states/modules/project";
 
 // ========== My projects ========== //
@@ -99,6 +90,22 @@ export const getMyProjectDetails =
 		});
 	};
 
+// ========== DELETE MY PROJECT ========== //
+export const deleteMyProject = (projectId) => async (dispatch, getState) => {
+	return callApi({
+		method: "delete",
+		apiPath: `projects/${projectId}/delete`,
+		actionTypes: [
+			requestDeleteMyProject,
+			deleteMyProjectSuccess,
+			deleteMyProjectFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
 // ========== GET PROJECT DETAILS ========== //
 export const getProjectDetails = (projectId) => async (dispatch, getState) => {
 	return callApi({
@@ -151,87 +158,6 @@ export const applyToJoinProject =
 				applyToJoinProjectFail,
 			],
 			variables: formRequest,
-			dispatch,
-			getState,
-		});
-	};
-
-export const updateProject = (data) => async (dispatch, getState) => {
-	return callApi({
-		method: "put",
-		apiPath: "users/project",
-		actionTypes: [
-			startRequestUpdateProject,
-			startRequestUpdateProjectSuccess,
-			startRequestUpdateProjectFail,
-		],
-		variables: data,
-		dispatch,
-		getState,
-	});
-};
-
-export const deleteProject = (projectId) => async (dispatch, getState) => {
-	return callApi({
-		method: "delete",
-		apiPath: "users/project",
-		actionTypes: [
-			startRequestDeleteProject,
-			startRequestDeleteProjectSuccess,
-			startRequestDeleteProjectFail,
-		],
-		variables: { projectId },
-		dispatch,
-		getState,
-	});
-};
-
-export const responseRequestToJoinProject =
-	(requestData) => async (dispatch, getState) => {
-		return callApi({
-			method: "put",
-			apiPath: `project/response-request`,
-			actionTypes: [
-				startUpdateRequestStatus,
-				startUpdateRequestStatusSuccess,
-				startUpdateRequestStatusFail,
-			],
-			variables: {
-				request_id: requestData.request_id,
-				status: requestData.status,
-			},
-			dispatch,
-			getState,
-		});
-	};
-
-export const updateBackgroundProject =
-	(formData) => async (dispatch, getState) => {
-		return callApi({
-			method: "put",
-			apiPath: "/project/background",
-			actionTypes: [
-				startRequestUpdateBackground,
-				startRequestUpdateBackgroundSuccess,
-				startRequestUpdateBackgroundFail,
-			],
-			variables: formData,
-			dispatch,
-			getState,
-		});
-	};
-
-export const getProjectInvitations =
-	(user_id) => async (dispatch, getState) => {
-		return callApi({
-			method: "get",
-			apiPath: `project/invitations/${user_id}`,
-			actionTypes: [
-				startRequestGetProjectInvitations,
-				startRequestGetProjectInvitationsSuccess,
-				startRequestGetProjectInvitationsFail,
-			],
-			variables: {},
 			dispatch,
 			getState,
 		});
