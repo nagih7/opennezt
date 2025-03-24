@@ -149,7 +149,9 @@ export async function replyNotification(requestBody, io) {
 export async function replyFriendRequest(notification_id, status, io) {
     // Get information notification
     const notification = await NotificationFeed.findById(notification_id)
-    const type = await Type.findOne({name: 'Reply Friend'})
+    const type = await Type.findOne({name: 'Reply Friend'}) //Type name reply friend
+    const typeNameDirectChat = await Type.findOne({name: 'Direct'}) //Type name direct chat
+    // const typeNameGroupChat = await Type.findOne({name: 'Group'}) //Type name group chat
     if (!notification) {
         console.log('Notification not found!')
         return
@@ -195,25 +197,25 @@ export async function replyFriendRequest(notification_id, status, io) {
                 await Friend.create({user_id: source_id, friend_id: user_id, status: 'accepted'})
             }
 
-            const roleUserId = await User.findOne({_id : user_id}).select('role_id')
-            const roleSourceId = await User.findOne({_id : source_id}).select('role_id')
+            const roleUserId = await User.findOne({_id : user_id})
+            const roleSourceId = await User.findOne({_id : source_id})
             // Create new conversation
             const conversation = new Conversation({
                 member_ids: [
                     {
                         user_id: user_id,
                         conversation_id: null,
-                        role_id: roleUserId,
+                        role_id: roleUserId.role_id,
                         notification_enabled: true,
                     },
                     {
                         user_id: source_id,
                         conversation_id: null,
-                        role_id: roleSourceId,
+                        role_id: roleSourceId.role_id,
                         notification_enabled: true,
                     },
                 ],
-                type_id: type._id,
+                type_id: typeNameDirectChat._id,
                 name: 'Friend Chat',
                 image: '',
                 last_message_id: null,

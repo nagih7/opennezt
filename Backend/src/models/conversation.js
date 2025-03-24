@@ -7,12 +7,12 @@ const member_ids = new Schema(
         user_id: {
             type: ObjectId,
             ref: 'User',
-            required: false,
+            required: true,
         },
         role_id: {
             type: ObjectId,
             ref: 'Role',
-            required: false,
+            required: true,
         },
     },
     {

@@ -58,7 +58,7 @@ function NotificationProject() {
 		if (status === "accepted") {
 			await store.dispatch(getChatList());
 		}
-	};
+	};	
 
 	const columns = [
 		{
