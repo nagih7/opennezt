@@ -10,7 +10,15 @@ import {
 } from "@chakra-ui/react";
 import { applyToJoinProject } from "api/project";
 import { getProjectRoleFramework } from "api/user";
-import { IconlyIndustry, IconlyInfoSquare, IconlyTickSquare, IconlyEarlyStage, IconlyFundingSource, IconlyParticipants, IconlyRevenue } from "components/UI/Iconly";
+import {
+	IconlyIndustry,
+	IconlyInfoSquare,
+	IconlyTickSquare,
+	IconlyEarlyStage,
+	IconlyFundingSource,
+	IconlyParticipants,
+	IconlyRevenue,
+} from "components/UI/Iconly";
 import SelectCustom from "components/UI/SelectCustom";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -90,22 +98,24 @@ const ProjectMoreInfo = () => {
 					<IconlyEarlyStage color={"#2F65B9"} />
 					{projectDetails?.stage?.name}
 				</p>
-				<p className="text-[#6F7F92] flex">
-					<IconlyFundingSource color={"#2F65B9"} />
-					{projectDetails?.funding_sources?.length} Funding Sources
-				</p>
+				{projectDetails?.fundingSources?.length > 0 && (
+					<p className="text-[#6F7F92] flex">
+						<IconlyFundingSource color={"#2F65B9"} />
+						{projectDetails?.funding_sources?.length} Funding Sources
+					</p>
+				)}
 				<p className="text-[#6F7F92] flex">
 					<IconlyParticipants color={"#2F65B9"} />
 					{/* 26 Participants in the Project */}
 					{projectDetails?.members?.length} Participants in the Project
 				</p>
-<<<<<<< HEAD
-				<p className="text-[#6F7F92] flex">
-					<IconlyRevenue color={"#2F65B9"} />
-					Revenue {projectDetails?.revenues?.slice(-1)[0].amount} (
-					{projectDetails?.revenues?.slice(-1)[0].currency})
-				</p>
-=======
+				{projectDetails?.revenues?.length > 0 && (
+					<p className="text-[#6F7F92] flex">
+						<IconlyRevenue color={"#2F65B9"} />
+						Revenue {projectDetails?.revenues?.slice(-1)[0]?.amount} (
+						{projectDetails?.revenues?.slice(-1)[0]?.currency})
+					</p>
+				)}
 				{projectDetails?.revenues?.length > 0 && (
 					<p className="text-[#6F7F92] flex">
 						<svg
@@ -122,7 +132,6 @@ const ProjectMoreInfo = () => {
 						{projectDetails?.revenues?.slice(-1)[0]?.currency})
 					</p>
 				)}
->>>>>>> 8648648e8866875da7fac14056d00b7c50c73078
 			</div>
 			{projectDetails &&
 				projectDetails?.applied === false &&
@@ -213,9 +222,6 @@ const ProjectMoreInfo = () => {
 								<Button
 									onClick={handleConfirmApply}
 									borderRadius={4}
-									// loading={
-									// 	isLoadingCreateOrUpdateProfileAdditionalInfo
-									// }
 									loadingText="Loading..."
 									spinnerPlacement="start">
 									CONFIRM
