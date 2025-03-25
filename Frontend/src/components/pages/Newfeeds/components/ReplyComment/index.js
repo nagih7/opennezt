@@ -9,7 +9,7 @@ import {
    differenceInSeconds,
 } from "date-fns";
 
-const ReplyComment = ({ reply, onReplyReaction }) => {
+const ReplyComment = ({ reply, reaction, handleReactionReplyComment }) => {
    if (!reply?._id || !reply?.user?.[0]) return null;
 
    const { _id, content, user, created_at } = reply;
@@ -23,15 +23,14 @@ const ReplyComment = ({ reply, onReplyReaction }) => {
    const minute = differenceInMinutes(today, postedAt) % 60;
    const second = differenceInSeconds(today, postedAt) % 60;
 
-   const handleReaction = (type) => {
-      if (onReplyReaction) {
+   const reactReplyComment = (type) => {
+      if (handleReactionReplyComment) {
          const data = new FormData();
          data.append("type", type);
          data.append("target_type", "comment");
-         onReplyReaction(_id, data);
+         handleReactionReplyComment(reply, data);
       }
    };
-
    return (
       <div className="mb-3">
          <div className="flex items-center gap-2">
@@ -74,18 +73,38 @@ const ReplyComment = ({ reply, onReplyReaction }) => {
             </div>
          </div>
 
-         <div className="flex flex-col justify-center py-[12px] bg-[#f8f9fa] rounded-md px-[16px] ml-[40px] my-[5px]">
+         <div className="flex flex-col justify-center py-[12px] bg-[#f8f9fa] rounded-md px-[16px] ml-[56px] my-[5px]">
             <p className="text-sm mb-0">{content.caption}</p>
+            {content.image ? (
+               <div className="flex p-2 ">
+                  <Image
+                     width="15vw"
+                     className="rounded-md"
+                     src={content.image}
+                  />
+               </div>
+            ) : null}
          </div>
 
          <div className="flex items-center gap-3 py-[5px] ml-[40px]">
             <div className="flex items-center gap-1">
-               <span
-                  className="text-xs text-[#6f7f92] hover:text-[#3897F0]"
-                  onClick={() => handleReaction("like")}
-               >
-                  Like
-               </span>
+               {reaction == "like" ? (
+                  <span
+                     className="text-xs text-[#3897F0] font-semibold"
+                     style={{ cursor: "pointer" }}
+                     onClick={() => reactReplyComment("like")}
+                  >
+                     Like
+                  </span>
+               ) : (
+                  <span
+                     className="text-xs text-[#6f7f92]"
+                     style={{ cursor: "pointer" }}
+                     onClick={() => reactReplyComment("like")}
+                  >
+                     Like
+                  </span>
+               )}
             </div>
             <div>
                <div className="flex items-center gap-2">
@@ -104,12 +123,6 @@ const ReplyComment = ({ reply, onReplyReaction }) => {
                </div>
             </div>
          </div>
-
-         {content.image && (
-            <div className="ml-[40px]">
-               <Image height="150px" src={content.image} />
-            </div>
-         )}
       </div>
    );
 };

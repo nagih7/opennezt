@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useCallback, useState } from "react";
 import avt from "assets/images/background/avt.jpg";
 import { Image } from "@chakra-ui/react";
 import {
@@ -16,12 +16,14 @@ const Comment = forwardRef(
       {
          comment,
          reaction,
+         replyReactionMap,
          onCommentReaction,
          isLoading,
          setParentId,
          replyCommentList,
          handleClickReply,
          selectComment,
+         handleReactionReplyComment,
       },
       ref
    ) => {
@@ -65,6 +67,7 @@ const Comment = forwardRef(
          selectComment(comment);
          handleClickReply();
       };
+
       return (
          <div className="pt-[20px]">
             <ul className="pl-0">
@@ -178,7 +181,11 @@ const Comment = forwardRef(
                         <ReplyComment
                            key={reply._id}
                            reply={reply}
+                           reaction={replyReactionMap.get(reply._id)}
                            onReplyReaction={onCommentReaction}
+                           handleReactionReplyComment={
+                              handleReactionReplyComment
+                           }
                         />
                      ))}
                   </div>
@@ -200,11 +207,14 @@ const Comment = forwardRef(
                   onClick={handleToggleReplies}
                   className="text-[#6f7f92] text-sm cursor-pointer hover:text-[#3897f0]"
                >
-                  {replyCommentList && replyCommentList.replyComments.length > 0
-                     ? showReplies
-                        ? `Hide replies (${replyCommentList.replyComments.length})`
-                        : `Show replies (${replyCommentList.replyComments.length})`
-                     : `Show replies (${comment.reply_count})`}
+                  {comment.reply_count > 0
+                     ? replyCommentList &&
+                       replyCommentList.replyComments.length > 0
+                        ? showReplies
+                           ? `Hide replies (${replyCommentList.replyComments.length})`
+                           : `Show replies (${replyCommentList.replyComments.length})`
+                        : `Show replies (${comment.reply_count})`
+                     : null}
                </span>
             </div>
          </div>
