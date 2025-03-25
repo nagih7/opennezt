@@ -36,7 +36,7 @@ const ChatList = () => {
 
 	const handleSearchQuery = (value) => {
 		setSearchQuery(value);
-	};
+	};	
 
 	return (
 		<div className={styles.chatPopoverWrap}>
@@ -53,8 +53,8 @@ const ChatList = () => {
 			<div className={styles.chatListWrap}>
 				{chatList.length > 0 ? (
 					chatList.map((conversation, index) => {
-						switch (conversation.metadata.type) {
-							case "direct":
+						switch (conversation?.metadata?.type) {
+							case "Direct":
 								return (
 									<div
 										className={styles.chatItem}
@@ -65,10 +65,10 @@ const ChatList = () => {
 										<div className={styles.avatar}>
 											<img
 												src={
-													conversation.members[0].avatar ||
+													conversation?.members[0]?.avatar ||
 													AvatarDefault
 												}
-												alt={conversation.members[0].name}
+												alt={conversation?.members[0]?.name}
 												onError={(e) => {
 													e.target.onerror = null;
 													e.target.src = AvatarDefault;
@@ -77,12 +77,12 @@ const ChatList = () => {
 										</div>
 										<div className={styles.chatContent}>
 											<div className={styles.chatName}>
-												{conversation.members[0].name}
+												{conversation?.members[0]?.name}
 											</div>
 										</div>
 									</div>
 								);
-							case "group":
+							case "Group":
 								return (
 									<div
 										className={styles.chatItem}
@@ -92,7 +92,7 @@ const ChatList = () => {
 										}>
 										<div
 											className={
-												conversation.members.length > 1
+												conversation?.members?.length > 1
 													? styles.avatarGroup
 													: styles.avatar
 											}>
@@ -105,7 +105,7 @@ const ChatList = () => {
 														backgroundColor: "#fde3cf",
 													},
 												}}>
-												{conversation.members.map(
+												{conversation?.members?.map(
 													(member, index) => (
 														<Tooltip
 															title={member.name}
@@ -124,7 +124,7 @@ const ChatList = () => {
 										</div>
 										<div className={styles.chatContent}>
 											<div className={styles.chatName}>
-												{conversation.metadata.data.project.name}
+												{conversation?.metadata?.data.project.name}
 											</div>
 										</div>
 									</div>

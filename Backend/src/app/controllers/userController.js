@@ -1,4 +1,3 @@
-import {Profile} from '@/models'
 import * as userService from '../services/userService'
 
 export async function readRoot(req, res) {

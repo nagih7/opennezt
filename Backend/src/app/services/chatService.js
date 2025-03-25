@@ -8,13 +8,13 @@ export async function getChatList(user, input_value) {
     const chatList = await Conversation.aggregate([
         {
             $match: {
-                members: {$elemMatch: {user_id: user._id}},
+                member_ids: {$elemMatch: {user_id: user._id}},
             },
         },
         {
             $lookup: {
                 from: 'users',
-                localField: 'members.user_id',
+                localField: 'member_ids.user_id',
                 foreignField: '_id',
                 as: 'members',
                 pipeline: [
@@ -57,6 +57,19 @@ export async function getChatList(user, input_value) {
             },
         },
         {
+            $lookup: {
+                from: 'types',
+                localField: 'type_id',
+                foreignField: '_id',
+                as: 'type',
+            }
+        },
+        {
+            $addFields: {
+                'metadata.type': {$arrayElemAt: ['$type.name', 0]},
+            }
+        },
+        {
             $unwind: {
                 path: '$metadata.data.project',
                 preserveNullAndEmptyArrays: true, // giữ lại các bản ghi không có project
@@ -68,7 +81,6 @@ export async function getChatList(user, input_value) {
                 $expr: {$gt: [{$size: '$members'}, 0]},
             },
         },
-
         {
             $project: {
                 _id: 1,
@@ -87,6 +99,7 @@ export async function getChatList(user, input_value) {
             $sort: {updated_at: -1},
         },
     ])
+    console.log('chat', chatList)
 
     return chatList
 }
@@ -100,13 +113,13 @@ export async function getChatHistory(user, requestParams) {
         {
             $match: {
                 _id: new ObjectId(requestParams.conversation_id),
-                members: {$elemMatch: {user_id: user._id}},
+                member_ids: {$elemMatch: {user_id: user._id}},
             },
         },
         {
             $lookup: {
                 from: 'users',
-                localField: 'members.user_id',
+                localField: 'member_ids.user_id',
                 foreignField: '_id',
                 as: 'members',
                 pipeline: [
