@@ -1,9 +1,10 @@
 import Joi from 'joi'
-import {Category, ExperienceLevel, Industry, ObjectId, Skill} from '../../models'
+import {Category, ExperienceLevel, Industry, ObjectId, Skill, User} from '../../models'
 import {MAX_STRING_SIZE} from '@/configs'
 import {AsyncValidate} from '@/utils/classes'
 import {tryValidateOrDefault} from '@/utils/helpers'
 
+// ========== GET [Recruit Talents] ========== //
 export const recruitTalents = Joi.object({
     q: tryValidateOrDefault(Joi.string().trim(), ''),
     page: tryValidateOrDefault(Joi.number().integer().min(1), 1),
@@ -64,6 +65,22 @@ export const recruitTalents = Joi.object({
                 new AsyncValidate(value, async () => {
                     const skill = await Skill.findById(new ObjectId(value))
                     return skill ? value : helpers.error('any.invalid')
+                })
+        ),
+})
+
+// ========== GET [Talent Details] ========== //
+export const getTalentDetails = Joi.object({
+    id: Joi.string()
+        .trim()
+        .required()
+        .label('Talent')
+        .max(MAX_STRING_SIZE)
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const talent = await User.findById(new ObjectId(value))
+                    return talent ? value : helpers.error('any.invalid')
                 })
         ),
 })
