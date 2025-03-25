@@ -88,3 +88,9 @@ export async function accessToProject(req, res) {
     await projectService.accessToProject(req.currentUser, req.params.id)
     res.status(200).jsonify('Access to project successfully.')
 }
+
+// ========== GET [My Project Access] ========== //
+export async function getMyProjectAccess(req, res) {
+    const result = await projectService.getMyProjectAccess(req.currentUser)
+    res.jsonify(result)
+}

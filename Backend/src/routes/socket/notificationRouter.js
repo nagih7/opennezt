@@ -6,4 +6,5 @@ const notificationRouter = (socket) => {
     })
 }
 
+
 export default notificationRouter

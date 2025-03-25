@@ -57,4 +57,11 @@ articleRouter.put(
 
 articleRouter.delete('/:id', asyncHandler(articleController.deleteArticle))
 
+// Update project name after update article
+articleRouter.put('/update-project-name/:project_id', asyncHandler(articleController.updateProjectName))
+
+articleRouter.post('/bookmark-article', asyncHandler(articleController.bookmarkArticle))
+
+articleRouter.get('/user-bookmarks/:article_ids', asyncHandler(articleController.getUserBookmarks))
+
 export default articleRouter

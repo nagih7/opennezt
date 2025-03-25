@@ -5,6 +5,8 @@ import Comment from '../../models/comment.js'
 import {LINK_STATIC_URL} from '@/configs'
 import {ObjectId} from 'mongodb'
 import delay from '@/utils/classes/delay.js'
+import Project from '@/models/project.js'
+import Bookmark from '@/models/bookmark.js'
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa
@@ -21,6 +23,10 @@ export const createArticle = async (user, requestBody) => {
             }
         }
         requestBody.content.attachment = listAttachment
+    }
+
+    if (!requestBody.project_id) {
+        requestBody.project_id = null
     }
 
     const newArticle = new Article(requestBody)
@@ -163,6 +169,7 @@ export const updateArticle = async (user_id, id, requestBody) => {
         throw new Error('Article not found')
     }
 
+    // Kiểm tra quyền sở hữu bài viết
     if (validArticle.user_id.toString() === user_id.toString()) {
         const filesArray = requestBody.content.attachment
 
@@ -192,6 +199,18 @@ export const updateArticle = async (user_id, id, requestBody) => {
             requestBody.content.attachment = listAttachment
         }
 
+        // Kiểm tra nếu project_id thay đổi và update project mảng
+        if (requestBody.project_id && requestBody.project_id !== validArticle.project_id.toString()) {
+            const updatedProject = await Project.findById(requestBody.project_id) // Lấy project mới theo ID
+            if (updatedProject) {
+                // Cập nhật lại mảng project với project mới
+                requestBody.project = [updatedProject] // Mảng chứa 1 project mới
+            } else {
+                throw new Error('Project not found')
+            }
+        }
+
+        // Cập nhật bài viết với mảng project mới nếu có thay đổi
         const updatedArticle = await Article.findByIdAndUpdate(id, {...requestBody}, {new: true})
         await delay(2000)
         return updatedArticle
@@ -199,6 +218,7 @@ export const updateArticle = async (user_id, id, requestBody) => {
 
     throw new Error("You don't have permission to edit this article")
 }
+
 //Phải dùng ... không nếu để requestBody thì sẽ bị lưu trong db là một trường có tên là requestBody
 
 //End Update Article
@@ -298,7 +318,6 @@ export const shareArticle = async (id, user) => {
 
 //Replycomment
 export const replyComment = async (user, requestBody) => {
-    console.log(requestBody)
     const {comment_id, article_id} = requestBody
     const parentComment = await Comment.findById(comment_id)
     const updatedArticle = await Article.findById(article_id)
@@ -513,4 +532,45 @@ export const getUserCommentReactions = async (user_id, target_ids) => {
     })
 
     return reactions
+}
+
+// Update project name after update article
+export const updateProjectName = async (project_id) => {
+    const articles = await Article.find({project_id: project_id})
+}
+
+export const bookmarkArticle = async (requestBody, user) => {
+    const {article_id, marked} = requestBody
+    const user_id = user._id.toString()
+
+    const existingBookmark = await Bookmark.findOne({
+        article_id: article_id,
+        user_id: user_id,
+    })
+
+    if (existingBookmark) {
+        existingBookmark.marked = marked
+        await existingBookmark.save()
+        return existingBookmark
+    } else {
+        const newBookmark = new Bookmark({
+            user_id: user_id,
+            article_id: article_id,
+            marked: marked,
+        })
+        await newBookmark.save()
+        return newBookmark
+    }
+}
+
+export const getUserBookmarks = async (user, article_ids) => {
+    const user_id = user._id
+    const articleIdsArray = article_ids.split(',').map((id) => new Object(id))
+
+    const bookMarks = await Bookmark.find({
+        user_id: user_id,
+        article_id: {$in: articleIdsArray},
+    })
+
+    return bookMarks
 }

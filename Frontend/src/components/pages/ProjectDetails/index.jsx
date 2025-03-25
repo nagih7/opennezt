@@ -13,7 +13,6 @@ const ProjectDetails = () => {
   const dispatch = useDispatch();
   // ========== STATE FROM REDUX ========== //
   const project = useSelector((state) => state.project.myProjectDetails);
-  console.log("project", project);
 
   useEffect(() => {
     window.scrollTo(0, 0);
