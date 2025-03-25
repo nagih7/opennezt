@@ -10,7 +10,15 @@ import {
 } from "@chakra-ui/react";
 import { applyToJoinProject } from "api/project";
 import { getProjectRoleFramework } from "api/user";
-import { IconlyIndustry, IconlyInfoSquare, IconlyTickSquare, IconlyEarlyStage, IconlyFundingSource, IconlyParticipants, IconlyRevenue } from "components/UI/Iconly";
+import {
+	IconlyIndustry,
+	IconlyInfoSquare,
+	IconlyTickSquare,
+	IconlyEarlyStage,
+	IconlyFundingSource,
+	IconlyParticipants,
+	IconlyRevenue,
+} from "components/UI/Iconly";
 import SelectCustom from "components/UI/SelectCustom";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -90,15 +98,18 @@ const ProjectMoreInfo = () => {
 					<IconlyEarlyStage color={"#2F65B9"} />
 					{projectDetails?.stage?.name}
 				</p>
-				<p className="text-[#6F7F92] flex">
-					<IconlyFundingSource color={"#2F65B9"} />
-					{projectDetails?.funding_sources?.length} Funding Sources
-				</p>
+				{projectDetails?.fundingSources?.length > 0 && (
+					<p className="text-[#6F7F92] flex">
+						<IconlyFundingSource color={"#2F65B9"} />
+						{projectDetails?.funding_sources?.length} Funding Sources
+					</p>
+				)}
 				<p className="text-[#6F7F92] flex">
 					<IconlyParticipants color={"#2F65B9"} />
 					{/* 26 Participants in the Project */}
 					{projectDetails?.members?.length} Participants in the Project
 				</p>
+
 
 				<p className="text-[#6F7F92] flex">
 					<IconlyRevenue color={"#2F65B9"} />
@@ -198,9 +209,6 @@ const ProjectMoreInfo = () => {
 								<Button
 									onClick={handleConfirmApply}
 									borderRadius={4}
-									// loading={
-									// 	isLoadingCreateOrUpdateProfileAdditionalInfo
-									// }
 									loadingText="Loading..."
 									spinnerPlacement="start">
 									CONFIRM

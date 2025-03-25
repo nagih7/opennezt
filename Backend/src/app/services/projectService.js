@@ -11,7 +11,6 @@ import {
     Role,
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
-import delay from '@/utils/classes/delay'
 
 // ========== POST [Project] ========== //
 export async function createProject(user, requestBody) {

@@ -39,6 +39,27 @@ const Manage = React.lazy(() => import("../components/pages/Manage"));
 const UserManagement = React.lazy(() =>
 	import("../components/pages/UserManagement")
 );
+const RoleManage = React.lazy(() =>
+	import("../components/pages/Manage/components/RoleManage")
+);
+const TypeManage = React.lazy(() =>
+	import("../components/pages/Manage/components/TypeManage")
+);
+const IndustryManage = React.lazy(() =>
+	import("../components/pages/Manage/components/IndustryManage")
+);
+const ExperienceLevelManage = React.lazy(() =>
+	import("../components/pages/Manage/components/ExperienceLevelManage")
+);
+const CategoryManage = React.lazy(() =>
+	import("../components/pages/Manage/components/CategoryManage")
+);
+const SkillManage = React.lazy(() =>
+	import("../components/pages/Manage/components/SkillManage")
+);
+const OrganizationManage = React.lazy(() =>
+	import("../components/pages/Manage/components/OrganizationManage")
+);
 const About = React.lazy(() => import("../components/pages/About"));
 const Message = React.lazy(() => import("../components/pages/Message"));
 const Newfeeds = React.lazy(() => import("../components/pages/Newfeeds"));
@@ -139,6 +160,70 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_MANAGE_PAGE"),
 	},
 	{
+		path: "admin/manage/users",
+		element: (
+			<AppLayout>
+				<UserManagement />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/roles",
+		element: (
+			<AppLayout>
+				<RoleManage />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/types",
+		element: (
+			<AppLayout>
+				<TypeManage />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/industries",
+		element: (
+			<AppLayout>
+				<IndustryManage />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/experience-levels",
+		element: (
+			<AppLayout>
+				<ExperienceLevelManage />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/categories",
+		element: (
+			<AppLayout>
+				<CategoryManage />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/skills",
+		element: (
+			<AppLayout>
+				<SkillManage />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/organizations",
+		element: (
+			<AppLayout>
+				<OrganizationManage />
+			</AppLayout>
+		),
+	},
+	{
 		path: "/",
 		element: (
 			<AppLayout>
@@ -163,16 +248,6 @@ const router = createBrowserRouter([
 					rootLoader({ request }, true, "LOAD_ABOUT_PAGE"),
 			},
 		],
-	},
-	{
-		path: "admin/user-management",
-		element: (
-			<AppLayout>
-				<UserManagement />
-			</AppLayout>
-		),
-		loader: ({ request }) =>
-			rootLoader({ request }, true, "LOAD_EMPLOYEE_PAGE"),
 	},
 	{
 		path: "/activity",
