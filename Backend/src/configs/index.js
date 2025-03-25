@@ -1,5 +1,6 @@
 export * from './constants'
 export * from './linkedin'
+export * from './typeConstants'
 
 export {default as db} from './mongodb'
 export {default as cache} from './caching'

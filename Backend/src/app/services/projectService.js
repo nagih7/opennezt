@@ -1,4 +1,4 @@
-import {LINK_STATIC_URL} from '@/configs'
+import {ACCESS_TYPE, LINK_STATIC_URL, NOTIFICATION_TYPE, PROJECT_ACCESS, PROJECT_APPLICATION} from '@/configs'
 import {
     Project,
     NotificationFeed,
@@ -9,6 +9,7 @@ import {
     Type,
     ProjectMember,
     Role,
+    ActivityLog,
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
 
@@ -234,6 +235,22 @@ export async function getMyProjectDetails(user, projectId) {
                         },
                     },
                 ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'project_members',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'members',
+            },
+        },
+        {
+            $lookup: {
+                from: 'articles',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'articles',
             },
         },
         {
@@ -544,6 +561,7 @@ export async function deleteProject(user, projectId) {
     await Revenue.deleteMany({project_id: projectId}).exec()
     await FundingSource.deleteMany({project_id: projectId}).exec()
     await ProjectAdditionalInfo.deleteMany({project_id: projectId}).exec()
+    await ProjectMember.deleteMany({project_id: projectId}).exec()
 }
 
 // ========== POST [Project - Invite] ========== //
@@ -705,7 +723,7 @@ export async function seekProjects(user, {q, page, per_page, field, order, indus
 export async function applyToJoinProject(user, projectId, requestBody) {
     const {teamRole, role} = requestBody
     const project = await Project.findById(new ObjectId(projectId))
-    const typeNotification = await Type.findOne({class: 'notification', name: 'project_application'})
+    const typeNotification = await Type.findOne({class: NOTIFICATION_TYPE, name: PROJECT_APPLICATION})
     const notification = new NotificationFeed({
         source_id: user._id,
         user_id: project.user_id,
@@ -722,4 +740,200 @@ export async function applyToJoinProject(user, projectId, requestBody) {
     })
 
     await notification.save()
+}
+
+// ========== POST [Project Access] ========== //
+export async function accessToProject(user, projectId) {
+    const project = await Project.findById(new ObjectId(projectId))
+    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROJECT_ACCESS})
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        'data.project_id': project._id,
+        type_id: accessType._id,
+    })
+    if (oldActivity) {
+        // Update timestamp
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        // Create new activity
+        const activity = new ActivityLog({
+            user_id: user._id,
+            type_id: accessType._id,
+            data: {project_id: project._id, owner_id: project.user_id},
+            metadata: {},
+        })
+        await activity.save()
+    }
+}
+
+// ========== GET [My Project Access] ========== //
+export async function getMyProjectAccess(user) {
+    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROJECT_ACCESS})
+    const activities = await ActivityLog.aggregate([
+        {
+            $match: {
+                user_id: user._id,
+                type_id: accessType._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'projects',
+                localField: 'data.project_id',
+                foreignField: '_id',
+                as: 'project',
+                pipeline: [
+                    {
+                        $addFields: {
+                            logo: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                                    then: '$logo',
+                                    else: {$concat: [LINK_STATIC_URL, '$logo']},
+                                },
+                            },
+                            background: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                                    then: '$background',
+                                    else: {$concat: [LINK_STATIC_URL, '$background']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            logo: 1,
+                            background: 1,
+                            created_at: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$project',
+        },
+        // {
+        //     $addFields: {
+        //         timestamp: '$created_at',
+        //     },
+        // },
+        {
+            $limit: 10,
+        },
+        {
+            $sort: {timestamp: -1},
+        },
+        {
+            $project: {
+                timestamp: 1,
+                project: 1,
+            },
+        },
+    ])
+
+    return activities
+}
+
+// ========== GET [Access to My Projects] ========== //
+export async function getAccessToMyProjects(user) {
+    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROJECT_ACCESS})
+    const activities = await ActivityLog.aggregate([
+        {
+            $match: {
+                'data.owner_id': user._id,
+                type_id: accessType._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'projects',
+                localField: 'data.project_id',
+                foreignField: '_id',
+                as: 'project',
+                pipeline: [
+                    {
+                        $addFields: {
+                            logo: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                                    then: '$logo',
+                                    else: {$concat: [LINK_STATIC_URL, '$logo']},
+                                },
+                            },
+                            background: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                                    then: '$background',
+                                    else: {$concat: [LINK_STATIC_URL, '$background']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            logo: 1,
+                            background: 1,
+                            created_at: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$project',
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $limit: 10,
+        },
+        {
+            $sort: {timestamp: -1},
+        },
+        {
+            $project: {
+                timestamp: 1,
+                project: 1,
+                user: 1,
+            },
+        },
+    ])
+
+    return activities
 }

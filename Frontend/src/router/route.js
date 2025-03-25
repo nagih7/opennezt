@@ -67,6 +67,9 @@ const Project = React.lazy(() => import("../components/pages/Project"));
 const RecruitTalents = React.lazy(() =>
 	import("../components/pages/RecruitTalents")
 );
+const TalentDetails = React.lazy(() =>
+	import("../components/pages/TalentDetails")
+);
 const SeekProjects = React.lazy(() =>
 	import("../components/pages/SeekProjects")
 );
@@ -92,7 +95,7 @@ const AdditionalInfo = React.lazy(() =>
 );
 const NotificationManagement = React.lazy(() =>
 	import("../components/pages/NotificationManagement")
-)
+);
 const router = createBrowserRouter([
 	{
 		path: "/login",
@@ -281,6 +284,14 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_RECRUIT_TALENTS_PAGE"),
 	},
 	{
+		path: "/talents/:id/details",
+		element: (
+			<AppLayout>
+				<TalentDetails />
+			</AppLayout>
+		),
+	},
+	{
 		path: "/seek-projects",
 		element: (
 			<AppLayout>
@@ -291,7 +302,7 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_SEEK_PROJECT_PAGE"),
 	},
 	{
-		path: "seek-projects/:id",
+		path: "projects/:id/details",
 		element: (
 			<AppLayout>
 				<ProjectDetailsBySeek />

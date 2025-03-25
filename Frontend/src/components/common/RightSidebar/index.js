@@ -2,9 +2,19 @@ import React from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
 import fb_img from "assets/images/background/left-banner.webp";
 import Logo from "assets/images/logo/OpenNezt_logo_black.png";
-import anh_avt from "assets/images/background/avt.jpg";
+import moment from "moment";
+import { Avatar } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
-function RightSidebar() {
+function RightSidebar({ activities, action }) {
+	const navigate = useNavigate();
+
+	// ========== HANDLE FUNCTION ========== //
+	const handleViewTalentDetails = (user) => {
+		navigate(`/talents/${user._id}/details`);
+	};
+
+	// ========== RENDER COMPONENT ========== //
 	return (
 		<div className="w-4/12">
 			<div className="bg-[#ffffff] p-8 rounded-md mb-4">
@@ -21,120 +31,31 @@ function RightSidebar() {
 				<span className="mb-3 text-xl font-semibold">
 					Latest Activities
 				</span>
-				<div className="border-gray-200 border-t-[1px]">
-					<div className="flex items-center gap-3 my-3">
-						<img
-							src={anh_avt}
-							className="w-[50px] h-[50px] rounded-full"
-						/>
-						<p className="text-[#6f7f92] text-sm mb-0">
-							<a href="#" className="text-black no-underline">
-								Vuong Manh Nghia
-							</a>
-							<CheckCircleFilled className="text-[#3897f0] mx-1" />
-							changed their profile picture
-							<br />
-							<a href="#" className="no-underline text-[#6f7f92]">
-								<span className="text-xs">7 hours ago</span>
-							</a>
-						</p>
-					</div>
-					<div className="flex items-center gap-3 border-gray-200 border-t-[1px]">
+				{activities?.map((activity, index) => (
+					<div
+						className="border-gray-200 border-t-[1px] cursor-pointer"
+						key={index}
+						onClick={() => handleViewTalentDetails(activity.user)}>
 						<div className="flex items-center gap-3 my-3">
-							<img
-								src={anh_avt}
-								className="w-[50px] h-[50px] rounded-full"
-							/>
+							<Avatar.Root className="w-[50px] h-[50px] rounded-full">
+								<Avatar.Fallback name={activity.user.name} />
+								<Avatar.Image src={activity.user.avatar} />
+							</Avatar.Root>
 							<p className="text-[#6f7f92] text-sm mb-0">
 								<a href="#" className="text-black no-underline">
-									Vuong Manh Nghia
+									{activity.user.name}
 								</a>
 								<CheckCircleFilled className="text-[#3897f0] mx-1" />
-								changed their profile picture
-								<br />
+								{action(activity.project.name)}
 								<a href="#" className="no-underline text-[#6f7f92]">
-									<span className="text-xs">7 hours ago</span>
+									<span className="text-xs">
+										{moment().fromNow(activity.timestamp)}
+									</span>
 								</a>
 							</p>
 						</div>
 					</div>
-					<div className="flex items-center gap-3 border-gray-200 border-t-[1px]">
-						<div className="flex items-center gap-3 my-3">
-							<img
-								src={anh_avt}
-								className="w-[50px] h-[50px] rounded-full"
-							/>
-							<p className="text-[#6f7f92] text-sm mb-0">
-								<a href="#" className="text-black no-underline">
-									Vuong Manh Nghia
-								</a>
-								<CheckCircleFilled className="text-[#3897f0] mx-1" />
-								changed their profile picture
-								<br />
-								<a href="#" className="no-underline text-[#6f7f92]">
-									<span className="text-xs">7 hours ago</span>
-								</a>
-							</p>
-						</div>
-					</div>
-					<div className="flex items-center gap-3 border-gray-200 border-t-[1px]">
-						<div className="flex items-center gap-3 my-3">
-							<img
-								src={anh_avt}
-								className="w-[50px] h-[50px] rounded-full"
-							/>
-							<p className="text-[#6f7f92] text-sm mb-0">
-								<a href="#" className="text-black no-underline">
-									Vuong Manh Nghia
-								</a>
-								<CheckCircleFilled className="text-[#3897f0] mx-1" />
-								changed their profile picture
-								<br />
-								<a href="#" className="no-underline text-[#6f7f92]">
-									<span className="text-xs">7 hours ago</span>
-								</a>
-							</p>
-						</div>
-					</div>
-					<div className="flex items-center gap-3 border-gray-200 border-t-[1px]">
-						<div className="flex items-center gap-3 my-3">
-							<img
-								src={anh_avt}
-								className="w-[50px] h-[50px] rounded-full"
-							/>
-							<p className="text-[#6f7f92] text-sm mb-0">
-								<a href="#" className="text-black no-underline">
-									Vuong Manh Nghia
-								</a>
-								<CheckCircleFilled className="text-[#3897f0] mx-1" />
-								changed their profile picture
-								<br />
-								<a href="#" className="no-underline text-[#6f7f92]">
-									<span className="text-xs">7 hours ago</span>
-								</a>
-							</p>
-						</div>
-					</div>
-					<div className="flex items-center gap-3 border-gray-200 border-t-[1px]">
-						<div className="flex items-center gap-3 mt-3">
-							<img
-								src={anh_avt}
-								className="w-[50px] h-[50px] rounded-full"
-							/>
-							<p className="text-[#6f7f92] text-sm mb-0">
-								<a href="#" className="text-black no-underline">
-									Vuong Manh Nghia
-								</a>
-								<CheckCircleFilled className="text-[#3897f0] mx-1" />
-								changed their profile picture
-								<br />
-								<a href="#" className="no-underline text-[#6f7f92]">
-									<span className="text-xs">7 hours ago</span>
-								</a>
-							</p>
-						</div>
-					</div>
-				</div>
+				))}
 			</div>
 			<div className="relative w-full">
 				<img

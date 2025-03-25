@@ -32,7 +32,7 @@ import {
 
 // ========== My projects ========== //
 export const getListMyProjects = (dataFilter) => async (dispatch, getState) => {
-	let path = `projects?per_page=${dataFilter.perPage}&page=${dataFilter.currentPage}`;
+	let path = `projects/me?per_page=${dataFilter.perPage}&page=${dataFilter.currentPage}`;
 	if (dataFilter.keySearch) {
 		path += `&q=${dataFilter.keySearch}`;
 	}
@@ -61,7 +61,7 @@ export const getListMyProjects = (dataFilter) => async (dispatch, getState) => {
 export const createNewProject = (data) => async (dispatch, getState) => {
 	return callApi({
 		method: "post",
-		apiPath: "projects",
+		apiPath: "projects/me/create",
 		actionTypes: [
 			requestCreateNewProject,
 			createNewProjectSuccess,
@@ -78,7 +78,7 @@ export const getMyProjectDetails =
 	(projectId) => async (dispatch, getState) => {
 		return callApi({
 			method: "get",
-			apiPath: `projects/me/${projectId}`,
+			apiPath: `projects/me/${projectId}/details`,
 			actionTypes: [
 				requestGetMyProjectDetails,
 				getMyProjectDetailsSuccess,
@@ -110,7 +110,7 @@ export const deleteMyProject = (projectId) => async (dispatch, getState) => {
 export const getProjectDetails = (projectId) => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
-		apiPath: `projects/${projectId}`,
+		apiPath: `projects/${projectId}/details`,
 		actionTypes: [
 			requestGetProjectDetails,
 			getProjectDetailsSuccess,

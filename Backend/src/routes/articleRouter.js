@@ -57,4 +57,10 @@ articleRouter.put(
 
 articleRouter.delete('/:id', asyncHandler(articleController.deleteArticle))
 
+// Update project name after update article
+articleRouter.put(
+    '/update-project-name/:project_id',
+    asyncHandler(articleController.updateProjectName)
+)
+
 export default articleRouter

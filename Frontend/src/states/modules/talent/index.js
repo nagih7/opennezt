@@ -3,9 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const talentSlice = createSlice({
 	name: "Talent",
 	initialState: {
-		talents: [],
-		talentDetails: null,
 		// RECRUIT TALENTS
+		talents: [],
 		formRecruitTalents: {
 			keySearch: "",
 			industry: "",
@@ -23,60 +22,12 @@ const talentSlice = createSlice({
 			totalPage: 1,
 			totalRecord: 0,
 		},
+		// TALENT DETAILS
+		talentDetails: null,
 		isLoadingGetTalentDetails: false,
-		loadingSkipTalent: false,
 	},
 	reducers: {
-		startRequestRecruitTalents: (state) => ({
-			...state,
-			isLoadingRecruitTalents: true,
-			talents: [],
-		}),
-		startRequestRecruitTalentsSuccess: (state, action) => ({
-			...state,
-			talents: action.payload.data.talents,
-			formRecruitTalents: {
-				...state.formRecruitTalents,
-				page: action.payload.data.page,
-			},
-			isLoadingRecruitTalents: false,
-		}),
-		startRequestRecruitTalentsFail: (state) => ({
-			...state,
-			talents: [],
-			isLoadingRecruitTalents: false,
-		}),
-		startRequestSkipTalent: (state) => ({
-			...state,
-			loadingSkipTalent: true,
-			talents: {},
-		}),
-		startRequestSkipTalentSuccess: (state, action) => ({
-			...state,
-			talents: action.payload.data,
-			loadingSkipTalent: false,
-		}),
-		startRequestSkipTalentFail: (state) => ({
-			...state,
-			talents: {},
-			loadingSkipTalent: false,
-		}),
-		startRequestGetDetailTalent: (state) => ({
-			...state,
-			isLoadingGetTalentDetails: true,
-		}),
-		startRequestGetDetailTalentSuccess: (state, action) => ({
-			...state,
-			talentDetails: action.payload.data,
-			isLoadingGetTalentDetails: false,
-		}),
-		startRequestGetDetailTalentFail: (state) => ({
-			...state,
-			talentDetails: null,
-			isLoadingGetTalentDetails: false,
-		}),
-
-		// ========== NEW ========== //
+		// ========== RECRUIT TALENTS ========== //
 		requestRecruitTalents: (state) => ({
 			...state,
 			isLoadingRecruitTalents: true,
@@ -119,24 +70,35 @@ const talentSlice = createSlice({
 				},
 			};
 		},
+
+		// ========== TALENT DETAILS ========== //
+		requestGetTalentDetails: (state) => ({
+			...state,
+			isLoadingGetTalentDetails: true,
+		}),
+		getTalentDetailsSuccess: (state, action) => ({
+			...state,
+			talentDetails: action.payload.data,
+			isLoadingGetTalentDetails: false,
+		}),
+		getTalentDetailsFail: (state) => ({
+			...state,
+			talentDetails: null,
+			isLoadingGetTalentDetails: false,
+		}),
 	},
 });
 
 export const {
-	startRequestRecruitTalents,
-	startRequestRecruitTalentsSuccess,
-	startRequestRecruitTalentsFail,
-	startRequestSkipTalent,
-	startRequestSkipTalentSuccess,
-	startRequestSkipTalentFail,
-	startRequestGetDetailTalent,
-	startRequestGetDetailTalentSuccess,
-	startRequestGetDetailTalentFail,
-	// ========== NEW ========== //
+	// ========== RECRUIT TALENTS ========== //
 	requestRecruitTalents,
 	recruitTalentsSuccess,
 	recruitTalentsFail,
 	setFormRecruitTalents,
+	// ========== TALENT DETAILS ========== //
+	requestGetTalentDetails,
+	getTalentDetailsSuccess,
+	getTalentDetailsFail,
 } = talentSlice.actions;
 
 export default talentSlice.reducer;
