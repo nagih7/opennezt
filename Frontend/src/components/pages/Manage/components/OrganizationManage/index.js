@@ -15,7 +15,7 @@ import {
 import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
-import SelectCustom from "components/UI/Select/index";
+import store from "states/configureStore";
 
 function OrganizationManage() {
 	const dispatch = useDispatch();
@@ -91,8 +91,9 @@ function OrganizationManage() {
 		setData(dataSelect);
 		dispatch(setVisibleModalDeleteOrganization(true));
 	};
-	const handleConfirmDelete = () => {
-		dispatch(deleteOrganization(data._id));
+	const handleConfirmDelete = async () => {
+		await store.dispatch(deleteOrganization(data._id));
+		await store.dispatch(getListOrganization(dataFilter));
 	};
 
 	useEffect(() => {
@@ -115,18 +116,21 @@ function OrganizationManage() {
 		});
 	}, []);
 
-	const handleConfirmCreateOrUpdate = () => {
-		// CONFIG
-		// let data = new FormData();
-		// data.append(`name`, dataCreateOrUpdate.name);
-		// data.append(`description`, dataCreateOrUpdate.description);
-
+	const handleConfirmCreateOrUpdate = async () => {
 		if (configModal.type === "CREATE") {
-			dispatch(createOrUpdateOrganization(dataCreateOrUpdate, "CREATE"));
+			await store.dispatch(
+				createOrUpdateOrganization(dataCreateOrUpdate, "CREATE")
+			);
+			await store.dispatch(getListOrganization(dataFilter));
 		} else {
 			dispatch(
-				createOrUpdateOrganization(dataCreateOrUpdate, "UPDATE", data._id)
+				await store.createOrUpdateOrganization(
+					dataCreateOrUpdate,
+					"UPDATE",
+					data._id
+				)
 			);
+			await store.dispatch(getListOrganization(dataFilter));
 		}
 		// }
 	};
@@ -182,50 +186,70 @@ function OrganizationManage() {
 		// CONFIG
 		return (
 			<div className={styles.mainModalWrap}>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Name *</div>
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter name..."}
 						onChange={(e) => handleChangeInput(e, "name")}
 						// onBlur={() => validateBlur("name")}
 						value={dataCreateOrUpdate.name}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
 						// error={errorCreateOrUpdateEmployee.name}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Name *
+					</label>
 				</div>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Website *</div>
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter website..."}
 						onChange={(e) => handleChangeInput(e, "website")}
-						// onBlur={() => validateBlur("name")}
+						// onBlur={() => validateBlur("email")}
 						value={dataCreateOrUpdate.website}
-						// error={errorCreateOrUpdateEmployee.name}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
+						// error={errorCreateOrUpdateEmployee.email}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Website *
+					</label>
 				</div>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Contact email *</div>
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter contact email..."}
 						onChange={(e) => handleChangeInput(e, "contact_email")}
-						// onBlur={() => validateBlur("name")}
+						// onBlur={() => validateBlur("email")}
 						value={dataCreateOrUpdate.contact_email}
-						// error={errorCreateOrUpdateEmployee.name}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
+						// error={errorCreateOrUpdateEmployee.email}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Contact email *
+					</label>
 				</div>
 
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Description *</div>
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter description..."}
 						onChange={(e) => handleChangeInput(e, "description")}
 						// onBlur={() => validateBlur("email")}
 						value={dataCreateOrUpdate.description}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
 						// error={errorCreateOrUpdateEmployee.email}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Description *
+					</label>
 				</div>
 				<div className={styles.btnWrap}>
 					<ButtonMASQ

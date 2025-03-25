@@ -15,6 +15,7 @@ import {
 import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
+import store from "states/configureStore";
 
 function ExperienceLevelManage() {
 	const dispatch = useDispatch();
@@ -50,13 +51,6 @@ function ExperienceLevelManage() {
 		type: "CREATE",
 	});
 
-	// useEffect(() => {
-	// 	setDataCreateOrUpdate({
-	// 		name: data.name,
-	// 		description: data.description,
-	// 	});
-	// }, [data]);
-
 	useEffect(() => {
 		// CONFIG
 		dispatch(getListExperienceLevel(dataFilter));
@@ -88,9 +82,10 @@ function ExperienceLevelManage() {
 		setData(dataSelect);
 		dispatch(setVisibleModalDeleteExperienceLevel(true));
 	};
-	const handleConfirmDelete = () => {
+	const handleConfirmDelete = async () => {
 		// CONFIG
-		dispatch(deleteExperienceLevel(data._id));
+		await store.dispatch(deleteExperienceLevel(data._id));
+		await store.dispatch(getListExperienceLevel(dataFilter));
 	};
 
 	useEffect(() => {
@@ -109,22 +104,22 @@ function ExperienceLevelManage() {
 		});
 	}, []);
 
-	const handleConfirmCreateOrUpdate = () => {
-		// let data = new FormData();
-		// data.append(`name`, dataCreateOrUpdate.name);
-		// data.append(`description`, dataCreateOrUpdate.description);
-
+	const handleConfirmCreateOrUpdate = async () => {
 		// CONFIG
 		if (configModal.type === "CREATE") {
-			dispatch(createOrUpdateExperienceLevel(dataCreateOrUpdate, "CREATE"));
+			await store.dispatch(
+				createOrUpdateExperienceLevel(dataCreateOrUpdate, "CREATE")
+			);
+			await store.dispatch(getListExperienceLevel(dataFilter));
 		} else {
-			dispatch(
+			await store.dispatch(
 				createOrUpdateExperienceLevel(
 					dataCreateOrUpdate,
 					"UPDATE",
 					data._id
 				)
 			);
+			await store.dispatch(getListExperienceLevel(dataFilter));
 		}
 		// }
 	};
@@ -171,27 +166,37 @@ function ExperienceLevelManage() {
 		// CONFIG
 		return (
 			<div className={styles.mainModalWrap}>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Name *</div>
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter name..."}
 						onChange={(e) => handleChangeInput(e, "name")}
 						// onBlur={() => validateBlur("name")}
 						value={dataCreateOrUpdate.name}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
 						// error={errorCreateOrUpdateEmployee.name}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Name *
+					</label>
 				</div>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Description *</div>
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter description..."}
 						onChange={(e) => handleChangeInput(e, "description")}
 						// onBlur={() => validateBlur("email")}
 						value={dataCreateOrUpdate.description}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
 						// error={errorCreateOrUpdateEmployee.email}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Description *
+					</label>
 				</div>
 				<div className={styles.btnWrap}>
 					<ButtonMASQ

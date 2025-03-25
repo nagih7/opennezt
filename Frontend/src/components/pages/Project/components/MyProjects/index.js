@@ -18,8 +18,9 @@ const MyProjects = ({ isBottom, setIsBottom }) => {
 		useSelector((state) => state.project);
 	// ========== USE EFFECT ========== //
 	useEffect(() => {
-		dispatch(getListMyProjects(paginationListMyProjects));
-
+		if (!myProjects || myProjects.length === 0) {
+			dispatch(getListMyProjects(paginationListMyProjects));
+		}
 		// eslint-disable-next-line
 	}, [dispatch]);
 
