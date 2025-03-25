@@ -10,7 +10,6 @@ import Project from '@/models/project.js'
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa
 export const createArticle = async (user, requestBody) => {
-    console.log(requestBody)
 
     const filesArray = requestBody.content.attachment
 
@@ -199,7 +198,6 @@ export const updateArticle = async (user_id, id, requestBody) => {
 
             requestBody.content.attachment = listAttachment
         }
-        console.log('hi')
 
         // Kiểm tra nếu project_id thay đổi và update project mảng
         if (requestBody.project_id && requestBody.project_id !== validArticle.project_id.toString()) {
@@ -211,7 +209,6 @@ export const updateArticle = async (user_id, id, requestBody) => {
                 throw new Error('Project not found')
             }
         }
-        console.log('hiiu')
 
 
         // Cập nhật bài viết với mảng project mới nếu có thay đổi
@@ -322,7 +319,6 @@ export const shareArticle = async (id, user) => {
 
 //Replycomment
 export const replyComment = async (user, requestBody) => {
-    console.log(requestBody)
     const {comment_id, article_id} = requestBody
     const parentComment = await Comment.findById(comment_id)
     const updatedArticle = await Article.findById(article_id)

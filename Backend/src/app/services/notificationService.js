@@ -1,7 +1,5 @@
 import {NotificationFeed, Friend, ObjectId, Project, User, Conversation, Type, ProjectMember} from '@/models'
 import {userSockets} from '@/routes/socket'
-import {last} from 'lodash'
-import {me} from '../controllers/authController'
 
 export async function filter(user, {q = '', page = 1, per_page = 20, order = 1}) {
     order = order === '-1' ? -1 : 1
@@ -149,9 +147,7 @@ export async function replyNotification(requestBody, io) {
 export async function replyFriendRequest(notification_id, status, io) {
     // Get information notification
     const notification = await NotificationFeed.findById(notification_id)
-    const type = await Type.findOne({name: 'Reply Friend'}) //Type name reply friend
     const typeNameDirectChat = await Type.findOne({name: 'Direct'}) //Type name direct chat
-    // const typeNameGroupChat = await Type.findOne({name: 'Group'}) //Type name group chat
     if (!notification) {
         console.log('Notification not found!')
         return
@@ -238,7 +234,6 @@ export async function replyFriendRequest(notification_id, status, io) {
             const receiverSocketId = Object.keys(userSockets).find(
                 (socketId) => userSockets[socketId] === source_id.toString()
             )
-            console.log('receiverSocketId', receiverSocketId)
             if (receiverSocketId) {
                 io.to(receiverSocketId).emit('confirm_add_friend', user.name)
             }
@@ -352,8 +347,6 @@ export async function requestAddFriend(user, requestBody, io) {
     const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === user_id)
 
     if (!userSocketId) {
-        console.error('Không tìm thấy userSocketId cho user_id:', user_id)
-        console.log('Danh sách userSockets:', userSockets)
         return
     }
 

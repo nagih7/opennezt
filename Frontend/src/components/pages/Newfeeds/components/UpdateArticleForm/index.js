@@ -67,8 +67,6 @@ const UpdateArticleForm = forwardRef(
       (project) => project._id === formData.project_id
     )?.name;
 
-    console.log("projectName", selectedProjectName);
-
     useEffect(() => {
       dispatch(getProjectsToTag(dataFilter));
     }, [dataFilter, dispatch]);
@@ -93,8 +91,6 @@ const UpdateArticleForm = forwardRef(
       setProjectNameState(project.name);
       setIsModalOpen(false);
     };
-
-    console.log("formData", formData);
 
     const handleSearch = debounce((e) => {
       dispatch(getProjectsToTag({ keySearch: e.target.value }));
