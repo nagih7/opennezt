@@ -19,6 +19,9 @@ export default function createModel(name, collection, definition, options) {
     if (ttlValue) {
         schema.index({created_at: 1}, {expireAfterSeconds: ttlValue})
     }
+    if (ttlValue && hasTimestamps) {
+        schema.index({timestamp: 1}, {expireAfterSeconds: ttlValue})
+    }
 
     return mongoose.model(name, schema, collection)
 }
