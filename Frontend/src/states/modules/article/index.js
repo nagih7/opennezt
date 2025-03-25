@@ -43,6 +43,8 @@ const articleSlice = createSlice({
       isLoadingMyProjectToTag: false,
       isLoadingReplyComment: false,
       repliedComment: {},
+      reply_comment_reactions: [],
+      isLoadingGetReplyCommentReactions: false,
    },
    // reducers: ở đây có chức năng là nhận vào state hiện tại và action, sau đó trả về một state mới
    reducers: {
@@ -321,6 +323,7 @@ const articleSlice = createSlice({
 
       getListReplyComment: (state) => ({
          ...state,
+         replyComments: [],
          isLoadingGetReplyComments: true,
       }),
       getListReplyCommentSuccess: (state, action) => ({
@@ -366,6 +369,26 @@ const articleSlice = createSlice({
          ...state,
          repliedComment: {},
          isLoadingReplyComment: false,
+      }),
+      resetReplyReaction: (state) => ({
+         ...state,
+         reply_comment_reactions: [],
+         isLoadingGetReplyCommentReactions: false,
+      }),
+      getUserReplyCommentReactions: (state) => ({
+         ...state,
+         reply_comment_reactions: [],
+         isLoadingGetReplyCommentReactions: true,
+      }),
+      getUserReplyCommentReactionsSuccess: (state, action) => ({
+         ...state,
+         reply_comment_reactions: [...action.payload.data],
+         isLoadingGetReplyCommentReactions: false,
+      }),
+      getUserReplyCommentReactionsFail: (state) => ({
+         ...state,
+         reply_comment_reactions: [],
+         isLoadingGetReplyCommentReactions: false,
       }),
    },
 });
@@ -420,6 +443,10 @@ export const {
    replyComment,
    replyCommentSuccess,
    replyCommentFail,
+   resetReplyReaction,
+   getUserReplyCommentReactions,
+   getUserReplyCommentReactionsSuccess,
+   getUserReplyCommentReactionsFail,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;

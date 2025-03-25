@@ -12,9 +12,14 @@ import {
    handleReactComment,
    handleGetListReplyComment,
    handleReplyComment,
+   handleGetUserReplyCommentReactions,
 } from "api/newfeeds";
 import { useDispatch, useSelector } from "react-redux";
-import { resetComment, updateCommentReaction } from "states/modules/article";
+import {
+   resetComment,
+   resetReplyReaction,
+   updateCommentReaction,
+} from "states/modules/article";
 import { useRef, useCallback } from "react";
 import {
    differenceInDays,
@@ -26,6 +31,7 @@ import {
 import Comment from "../Comment";
 import NewCommentForm from "../NewCommentForm";
 import { resetReply } from "states/modules/article";
+import store from "states/configureStore";
 
 const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    const {
@@ -111,6 +117,9 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    const handleCloseComment = async () => {
       dispatch(resetComment());
       dispatch(resetReply());
+      dispatch(resetReplyReaction());
+      setReplyCommentList({});
+      setReplyCommentReactions([]);
       onClose();
    };
 
@@ -259,6 +268,8 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       reply_comments_pagination,
       isLoadingGetReplyComments,
       replyComments,
+      reply_comment_reactions,
+      isLoadingGetReplyCommentReactions,
    } = replyCommentState;
 
    useEffect(() => {
@@ -338,7 +349,132 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       setSelectedComment(comment);
    }, []);
 
-   //End reply comment logic
+   const [replyCommentReactions, setReplyCommentReactions] = useState([]);
+
+   useEffect(() => {
+      if (replyComments.length > 0) {
+         const replyCommentIds = replyComments
+            .filter((replyCmt) => replyCmt._id)
+            .map((replyCmt) => replyCmt._id);
+
+         if (replyCommentIds.length > 0) {
+            dispatch(handleGetUserReplyCommentReactions(replyCommentIds));
+         }
+      }
+   }, [dispatch, replyComments]);
+
+   useEffect(() => {
+      setReplyCommentReactions((prevState) => {
+         return [...prevState, ...reply_comment_reactions];
+      });
+   }, [reply_comment_reactions]);
+
+   const replyReactionMap = useMemo(() => {
+      return new Map(
+         replyCommentReactions.map((r) => [r.target_id.toString(), r.type])
+      );
+   }, [replyCommentReactions]); //End reply comment logic
+
+   const updateReplyCommentReactions = useCallback(
+      (reply, type) => {
+         const replyCommentIndex = replyCommentList[
+            reply.parent_id
+         ]?.replyComments.findIndex(
+            (replyCmt) => replyCmt._id.toString() === reply._id.toString()
+         );
+
+         const existingReactionIndex = replyCommentReactions.findIndex(
+            (reaction) => reaction.target_id.toString() === reply._id.toString()
+         );
+
+         if (existingReactionIndex !== -1) {
+            // Nếu đã có reaction
+            if (replyCommentReactions[existingReactionIndex].type === type) {
+               // Nếu click cùng loại reaction -> xóa reaction
+               setReplyCommentReactions((prevReactions) =>
+                  prevReactions.filter(
+                     (_, index) => index !== existingReactionIndex
+                  )
+               );
+
+               // Giảm reaction_count
+               if (replyCommentIndex !== -1) {
+                  setReplyCommentList((prevState) => ({
+                     ...prevState,
+                     [reply.parent_id]: {
+                        ...prevState[reply.parent_id],
+                        replyComments: prevState[
+                           reply.parent_id
+                        ].replyComments.map((comment, idx) =>
+                           idx === replyCommentIndex
+                              ? {
+                                   ...comment,
+                                   reaction_count: Math.max(
+                                      0,
+                                      comment.reaction_count - 1
+                                   ),
+                                }
+                              : comment
+                        ),
+                     },
+                  }));
+               }
+            } else {
+               // Nếu click khác loại reaction -> update loại reaction
+               setReplyCommentReactions((prevReactions) => {
+                  const updatedReactions = [...prevReactions];
+                  updatedReactions[existingReactionIndex] = {
+                     ...updatedReactions[existingReactionIndex],
+                     type: type,
+                  };
+                  return updatedReactions;
+               });
+            }
+         } else {
+            // Nếu chưa có reaction -> thêm mới
+            setReplyCommentReactions((prevReactions) => [
+               ...prevReactions,
+               {
+                  target_id: reply._id,
+                  type: type,
+               },
+            ]);
+
+            // Tăng reaction_count
+            if (replyCommentIndex !== -1) {
+               setReplyCommentList((prevState) => ({
+                  ...prevState,
+                  [reply.parent_id]: {
+                     ...prevState[reply.parent_id],
+                     replyComments: prevState[
+                        reply.parent_id
+                     ].replyComments.map((comment, idx) =>
+                        idx === replyCommentIndex
+                           ? {
+                                ...comment,
+                                reaction_count: comment.reaction_count + 1,
+                             }
+                           : comment
+                     ),
+                  },
+               }));
+            }
+         }
+      },
+      [replyCommentList, replyCommentReactions]
+   );
+
+   const handleReactionReplyComment = useCallback(
+      async (reply, formData) => {
+         const type = await formData.get("type");
+         await store.dispatch(
+            handleReactComment({ commentId: reply._id, data: formData })
+         );
+         updateReplyCommentReactions(reply, type);
+      },
+      [updateReplyCommentReactions]
+   );
+
    return (
       <div
          className="fixed inset-0 flex items-center justify-center overflow-hidden"
@@ -458,12 +594,16 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                            comment={cmt}
                            ref={lastElementRef}
                            reaction={reactionMap.get(cmt._id)}
+                           replyReactionMap={replyReactionMap}
                            onCommentReaction={handleCommentReaction}
                            isLoading={isLoadingReactComment}
                            setParentId={getParentId}
                            replyCommentList={replyCommentList[cmt._id]}
                            handleClickReply={handleClickReply}
                            selectComment={selectComment}
+                           handleReactionReplyComment={
+                              handleReactionReplyComment
+                           }
                         />
                      );
                   } else {
@@ -472,12 +612,16 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                            key={index}
                            comment={cmt}
                            reaction={reactionMap.get(cmt._id)}
+                           replyReactionMap={replyReactionMap}
                            onCommentReaction={handleCommentReaction}
                            isLoading={isLoadingReactComment}
                            setParentId={getParentId}
                            replyCommentList={replyCommentList[cmt._id]}
                            handleClickReply={handleClickReply}
                            selectComment={selectComment}
+                           handleReactionReplyComment={
+                              handleReactionReplyComment
+                           }
                         />
                      );
                   }

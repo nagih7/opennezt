@@ -39,6 +39,9 @@ import {
    replyComment,
    replyCommentSuccess,
    replyCommentFail,
+   getUserReplyCommentReactions,
+   getUserReplyCommentReactionsSuccess,
+   getUserReplyCommentReactionsFail,
 } from "states/modules/article";
 
 export const getListFeeds =
@@ -129,7 +132,7 @@ export const handleGetListComment =
 
 export const handleGetUserCommentReactions =
    (id) => async (dispatch, getState) => {
-      const path = `article/user-comment-reactions/${id}`;
+      const path = `article/user-comment-reactions/${id.join(",")}`;
       return callApi({
          method: "get",
          apiPath: path,
@@ -252,6 +255,23 @@ export const handleReplyComment =
          apiPath: path,
          actionTypes: [replyComment, replyCommentSuccess, replyCommentFail],
          variables: data,
+         dispatch,
+         getState,
+      });
+   };
+
+export const handleGetUserReplyCommentReactions =
+   (id) => async (dispatch, getState) => {
+      const path = `article/user-comment-reactions/${id.join(",")}`;
+      return callApi({
+         method: "get",
+         apiPath: path,
+         actionTypes: [
+            getUserReplyCommentReactions,
+            getUserReplyCommentReactionsSuccess,
+            getUserReplyCommentReactionsFail,
+         ],
+         variables: {},
          dispatch,
          getState,
       });

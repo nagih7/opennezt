@@ -30,6 +30,7 @@ import {
 import CreateAricleForm from "./components/CreateAricleForm";
 import CommentList from "./components/CommentList";
 import UpdateArticleForm from "./components/UpdateArticleForm";
+import store from "states/configureStore";
 
 function NewFeeds() {
    const dispatch = useDispatch();
@@ -204,25 +205,19 @@ function NewFeeds() {
       setSelectedArticle({});
       dispatch(closeUpdateForm());
    }, [dispatch]);
-   const handleUpdateFormSubmit = useCallback(
-      async (id, formData) => {
-         const newFormData = new FormData();
-         newFormData.append("caption", formData.content.caption);
-         formData.content.attachment.forEach((file) => {
-            newFormData.append("attachment", file);
-         });
-         newFormData.append(
-            "hashtags",
-            JSON.stringify(formData.content.hashtags)
-         );
-         newFormData.append("audience", formData.audience);
-         newFormData.append("status", formData.status);
-         newFormData.append("project_id", formData.project_id);
-         dispatch(handleUpdateArticle({ id: id, data: newFormData }));
-         dispatch(updateUpdatedArticle(formData));
-      },
-      [dispatch]
-   );
+   const handleUpdateFormSubmit = useCallback(async (id, formData) => {
+      const newFormData = new FormData();
+      newFormData.append("caption", formData.content.caption);
+      formData.content.attachment.forEach((file) => {
+         newFormData.append("attachment", file);
+      });
+      newFormData.append("hashtags", JSON.stringify(formData.content.hashtags));
+      newFormData.append("audience", formData.audience);
+      newFormData.append("status", formData.status);
+      newFormData.append("project_id", formData.project_id);
+      await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }));
+      await store.dispatch(updateUpdatedArticle(formData));
+   }, []);
    //End Update Article
    //Delete Article
    const handleDelete = useCallback(
