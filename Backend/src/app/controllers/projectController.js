@@ -82,3 +82,21 @@ export async function applyToJoinProject(req, res) {
     await projectService.applyToJoinProject(req.currentUser, req.params.id, req.body)
     res.status(200).jsonify('Apply to join project successfully.')
 }
+
+// ========== POST [Project - Access] ========== //
+export async function accessToProject(req, res) {
+    await projectService.accessToProject(req.currentUser, req.params.id)
+    res.status(200).jsonify('Access to project successfully.')
+}
+
+// ========== GET [My Project Access] ========== //
+export async function getMyProjectAccess(req, res) {
+    const result = await projectService.getMyProjectAccess(req.currentUser)
+    res.jsonify(result)
+}
+
+// ========== GET [Access to My Projects] ========== //
+export async function getAccessToMyProjects(req, res) {
+    const result = await projectService.getAccessToMyProjects(req.currentUser)
+    res.jsonify(result)
+}

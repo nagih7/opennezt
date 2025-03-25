@@ -20,7 +20,7 @@ const MessageBoxList = () => {
 		<div className={styles.messageBoxListWrap}>
 			{conversations.map((converse, i) => (
 				<MessageBox
-					key={converse.conversation._id}
+					key={converse.conversation?._id}
 					converse={converse}
 					sendMessage={sendMessage}
 				/>
