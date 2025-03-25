@@ -84,10 +84,7 @@ const Comment = forwardRef(
                         )}
                      </div>
                      <div className="flex items-center">
-                        <a
-                           href=""
-                           className="flex items-center gap-1 text-sm font-medium no-underline text-black"
-                        >
+                        <a className="flex items-center gap-1 text-sm font-medium no-underline text-black">
                            <span className="hover:text-[#3897f0]">
                               {userData.name}
                            </span>
@@ -154,10 +151,7 @@ const Comment = forwardRef(
                      <div>
                         <div className="flex items-center gap-2">
                            <span className="text-xs text-[#6f7f92]">
-                              <a
-                                 href=""
-                                 className="no-underline ml-[2px] text-black font-medium"
-                              >
+                              <a className="no-underline ml-[2px] text-black font-medium">
                                  {comment.reaction_count > 0
                                     ? comment.reaction_count > 1000
                                        ? Math.floor(

@@ -13,6 +13,7 @@ import {
    differenceInSeconds,
 } from "date-fns";
 import { Button } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const Article = forwardRef(
    (
@@ -29,6 +30,7 @@ const Article = forwardRef(
          comment_count,
       } = feed;
 
+      const navigate = useNavigate();
       const displayReaction = () => {
          if (reaction == "like") {
             return (
@@ -168,10 +170,29 @@ const Article = forwardRef(
                      <div className="flex items-center gap-1">
                         {user[0].name}
                         <CheckCircleFilled className="text-[#3897f0]" />
-                        <span className="text-sm">posted in</span>
-                        <span className="">
-                           {project[0]?.name || "no name"}
-                        </span>
+                        {project[0] ? (
+                           <>
+                              {" "}
+                              <span className="text-sm">posted in</span>
+                              <span
+                                 className=""
+                                 onClick={() =>
+                                    navigate(
+                                       `/projects/details/${project[0]._id}`
+                                    )
+                                 }
+                              >
+                                 {project[0]?.name}
+                              </span>
+                           </>
+                        ) : (
+                           <>
+                              {" "}
+                              <span className="text-sm">
+                                 created a new post
+                              </span>
+                           </>
+                        )}
                      </div>
                      <span className="text-xs text-gray-500">
                         {day <= 7

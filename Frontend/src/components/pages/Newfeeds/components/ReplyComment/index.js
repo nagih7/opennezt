@@ -45,10 +45,7 @@ const ReplyComment = ({ reply, reaction, handleReactionReplyComment }) => {
                )}
             </div>
             <div className="flex items-center">
-               <a
-                  href=""
-                  className="flex items-center gap-1 text-sm font-medium no-underline text-black"
-               >
+               <a className="flex items-center gap-1 text-sm font-medium no-underline text-black">
                   <span className="hover:text-[#3897f0]">{userData.name}</span>
                   {userData.verified && (
                      <CheckCircleFilled className="text-[#3897f0] w-[12px] h-[12px]" />
@@ -109,10 +106,7 @@ const ReplyComment = ({ reply, reaction, handleReactionReplyComment }) => {
             <div>
                <div className="flex items-center gap-2">
                   <span className="text-xs text-[#6f7f92]">
-                     <a
-                        href=""
-                        className="no-underline ml-[2px] text-black font-medium"
-                     >
+                     <a className="no-underline ml-[2px] text-black font-medium">
                         {reply.reaction_count > 0
                            ? reply.reaction_count > 1000
                               ? Math.floor(reply.reaction_count / 1000) + "k"
