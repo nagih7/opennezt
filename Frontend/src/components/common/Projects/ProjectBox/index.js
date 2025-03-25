@@ -5,9 +5,7 @@ import { sendProjectInvitation } from "api/notification";
 import { Button, message, Modal, Select } from "antd";
 import { useSelector } from "react-redux";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
-import { getProjectInvitations } from "api/project";
 import store from "states/configureStore";
-import { listTeamRole, listRole } from "components/common/ListSelected";
 import {
 	INDUSTRY_FIELD,
 	STAGE_OF_DEVELOPMENT,
@@ -70,7 +68,6 @@ const ProjectBox = ({ project, inviteeId }) => {
 			sendProjectInvitation({ ...formProjectInvitation, user_id: inviteeId })
 		);
 		setModalConfirm(false);
-		store.dispatch(getProjectInvitations(inviteeId));
 	};
 
 	const onChange = (option, key) => {

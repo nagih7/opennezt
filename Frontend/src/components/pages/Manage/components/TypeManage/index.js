@@ -11,6 +11,7 @@ import {
 import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
+import store from "states/configureStore";
 
 function TypeManage() {
 	const dispatch = useDispatch();
@@ -46,13 +47,6 @@ function TypeManage() {
 		type: "CREATE",
 	});
 
-	// useEffect(() => {
-	// 	setDataCreateOrUpdate({
-	// 		name: data.name,
-	// 		description: data.description,
-	// 	});
-	// }, [data]);
-
 	useEffect(() => {
 		// CONFIG
 		dispatch(getListType(dataFilter));
@@ -69,7 +63,7 @@ function TypeManage() {
 	};
 
 	// UPDATE
-	const handleUpdate = (data) => {
+	const handleUpdate = async (data) => {
 		let dataSelect = _.cloneDeep(data);
 		setData(dataSelect);
 		// CONFIG
@@ -86,9 +80,12 @@ function TypeManage() {
 		setData(dataSelect);
 		dispatch(setVisibleModalDeleteType(true));
 	};
-	const handleConfirmDelete = () => {
+	const handleConfirmDelete = async () => {
 		// CONFIG
-		dispatch(deleteType(data._id));
+		await store.dispatch(deleteType(data._id));
+		if (!isLoadingBtnCreateOrUpdateType) {
+			await store.dispatch(getListType(dataFilter));
+		}
 	};
 
 	useEffect(() => {
@@ -109,18 +106,16 @@ function TypeManage() {
 		});
 	}, []);
 
-	const handleConfirmCreateOrUpdate = () => {
-		// CONFIG
-		// let data = new FormData();
-		// data.append(`name`, dataCreateOrUpdate.name);
-		// data.append(`description`, dataCreateOrUpdate.description);
-
+	const handleConfirmCreateOrUpdate = async () => {
 		if (configModal.type === "CREATE") {
-			dispatch(createOrUpdateType(dataCreateOrUpdate, "CREATE"));
+			await store.dispatch(createOrUpdateType(dataCreateOrUpdate, "CREATE"));
+			await store.dispatch(getListType(dataFilter));
 		} else {
-			dispatch(createOrUpdateType(dataCreateOrUpdate, "UPDATE", data._id));
+			await store.dispatch(
+				createOrUpdateType(dataCreateOrUpdate, "UPDATE", data._id)
+			);
+			await store.dispatch(getListType(dataFilter));
 		}
-		// }
 	};
 
 	const columns = [
@@ -176,40 +171,57 @@ function TypeManage() {
 	const CreateOrUpdateElement = () => {
 		// CONFIG
 		return (
-			<div className={styles.mainModalWrap}>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Class *</div>
+			<div className="w-full">
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter class..."}
 						onChange={(e) => handleChangeInput(e, "class")}
 						// onBlur={() => validateBlur("name")}
 						value={dataCreateOrUpdate.class}
-						// error={errorCreateOrUpdateEmployee.name}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Class *
+					</label>
 				</div>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Name *</div>
+
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter name..."}
 						onChange={(e) => handleChangeInput(e, "name")}
 						// onBlur={() => validateBlur("name")}
 						value={dataCreateOrUpdate.name}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
 						// error={errorCreateOrUpdateEmployee.name}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Name *
+					</label>
 				</div>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Description *</div>
+
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter description..."}
 						onChange={(e) => handleChangeInput(e, "description")}
 						// onBlur={() => validateBlur("email")}
 						value={dataCreateOrUpdate.description}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
 						// error={errorCreateOrUpdateEmployee.email}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Description *
+					</label>
 				</div>
+
 				<div className={styles.btnWrap}>
 					<ButtonMASQ
 						textBtn={"Save"}
@@ -228,7 +240,7 @@ function TypeManage() {
 	};
 
 	return (
-		<>
+		<div>
 			<h1>Type management</h1>
 			<TableManage
 				// CONFIG
@@ -254,7 +266,7 @@ function TypeManage() {
 				visibleModalCreateOrUpdate={visibleModalCreateOrUpdateType}
 				setVisibleModalCreateOrUpdate={setVisibleModalCreateOrUpdateType}
 			/>
-		</>
+		</div>
 	);
 }
 

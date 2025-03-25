@@ -50,9 +50,9 @@ export const rootLoader = async (
 		}
 	} else {
 		if (auth.isAuthSuccess && auth.authRole === "Super Admin") {
-			return redirect("/");
+			return redirect("/activity");
 		} else if (auth.isAuthSuccess && auth.authRole === "User") {
-			return redirect("/");
+			return redirect("/activity");
 		}
 		// return redirect("/");
 	}

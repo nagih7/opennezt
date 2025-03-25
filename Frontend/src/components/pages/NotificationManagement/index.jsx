@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Tag, Button, Modal, Row, Col } from "antd";
 import TableCustom from "components/UI/Table";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, EyeInvisibleOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import styles from "./styles.module.scss";
 import store from "states/configureStore";
 import { getTalentDetails } from "api/talent";
@@ -21,10 +21,8 @@ import {
   REQUEST_BY,
   REQUEST_AT,
 } from "utils/constains";
-
-const TalentProfile = React.lazy(() =>
-  import("components/common/TalentProfile")
-);
+import { Tabs } from "@chakra-ui/react"
+import RightSidebar from "components/common/RightSidebar";
 
 function NotificationProject() {
   const [openModalTalentDetails, setOpenModalTalentDetails] = useState(false);
@@ -238,9 +236,6 @@ function NotificationProject() {
         onCancel={() => setOpenModalTalentDetails(false)}
         width={1000}
       >
-        <React.Suspense fallback={<div>{ACTIONS.LOADING[language]}</div>}>
-          <TalentProfile talent={talentDetails} />
-        </React.Suspense>
       </Modal>
     </div>
   );

@@ -14,7 +14,7 @@ import AdditonalInfo from "components/pages/CreateProject/AdditionalInfo";
 import Logo from "components/pages/CreateProject/Logo";
 import Background from "components/pages/CreateProject/Background";
 import Invites from "components/pages/CreateProject/Invites";
-import ProjectDetails from "components/pages/ProjectDetails";
+import MyProjectDetails from "components/pages/MyProjectDetails";
 // EditProfile
 import EditDetail from "components/pages/EditProject/Components/Detail";
 import EditStage from "components/pages/EditProject/Components/Stage";
@@ -23,8 +23,8 @@ import EditFundingSources from "components/pages/EditProject/Components/FundingS
 import EditAdditionalInfo from "components/pages/EditProject/Components/AdditionalInfo";
 import EditLogo from "components/pages/EditProject/Components/Logo";
 import EditBackground from "components/pages/EditProject/Components/Background";
-import Members from "components/pages/ProjectDetails/components/Members";
-import Setting from "components/pages/ProjectDetails/components/Setting";
+import Members from "components/pages/MyProjectDetails/components/Members";
+import ProjectManage from "components/pages/MyProjectDetails/components/ProjectManage";
 import NewConversation from "components/pages/Message/components/NewConversation";
 import Conversation from "components/pages/Message/components/Conversation";
 
@@ -36,9 +36,29 @@ const ForgotPassword = React.lazy(() =>
 );
 const Profile = React.lazy(() => import("../components/pages/Profile"));
 const Manage = React.lazy(() => import("../components/pages/Manage"));
-const Home = React.lazy(() => import("../components/pages/Home"));
 const UserManagement = React.lazy(() =>
 	import("../components/pages/UserManagement")
+);
+const RoleManage = React.lazy(() =>
+	import("../components/pages/Manage/components/RoleManage")
+);
+const TypeManage = React.lazy(() =>
+	import("../components/pages/Manage/components/TypeManage")
+);
+const IndustryManage = React.lazy(() =>
+	import("../components/pages/Manage/components/IndustryManage")
+);
+const ExperienceLevelManage = React.lazy(() =>
+	import("../components/pages/Manage/components/ExperienceLevelManage")
+);
+const CategoryManage = React.lazy(() =>
+	import("../components/pages/Manage/components/CategoryManage")
+);
+const SkillManage = React.lazy(() =>
+	import("../components/pages/Manage/components/SkillManage")
+);
+const OrganizationManage = React.lazy(() =>
+	import("../components/pages/Manage/components/OrganizationManage")
 );
 const About = React.lazy(() => import("../components/pages/About"));
 const Message = React.lazy(() => import("../components/pages/Message"));
@@ -52,9 +72,6 @@ const SeekProjects = React.lazy(() =>
 );
 const ProjectDetailsBySeek = React.lazy(() =>
 	import("../components/pages/ProjectDetailsBySeek")
-);
-const NotificationManagement = React.lazy(() =>
-	import("../components/pages/NotificationManagement")
 );
 const VerifyAuth = React.lazy(() => import("../components/pages/Auth/Verify"));
 const ResetPassword = React.lazy(() =>
@@ -73,7 +90,9 @@ const Skills = React.lazy(() =>
 const AdditionalInfo = React.lazy(() =>
 	import("../components/pages/EditProfile/components/AdditionalInfo")
 );
-
+const NotificationManagement = React.lazy(() =>
+	import("../components/pages/NotificationManagement")
+)
 const router = createBrowserRouter([
 	{
 		path: "/login",
@@ -141,10 +160,74 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_MANAGE_PAGE"),
 	},
 	{
+		path: "admin/manage/users",
+		element: (
+			<AppLayout>
+				<UserManagement />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/roles",
+		element: (
+			<AppLayout>
+				<RoleManage />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/types",
+		element: (
+			<AppLayout>
+				<TypeManage />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/industries",
+		element: (
+			<AppLayout>
+				<IndustryManage />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/experience-levels",
+		element: (
+			<AppLayout>
+				<ExperienceLevelManage />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/categories",
+		element: (
+			<AppLayout>
+				<CategoryManage />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/skills",
+		element: (
+			<AppLayout>
+				<SkillManage />
+			</AppLayout>
+		),
+	},
+	{
+		path: "admin/manage/organizations",
+		element: (
+			<AppLayout>
+				<OrganizationManage />
+			</AppLayout>
+		),
+	},
+	{
 		path: "/",
 		element: (
 			<AppLayout>
-				<Home />
+				<Newfeeds />
 			</AppLayout>
 		),
 		loader: ({ request }) => rootLoader({ request }, true, "LOAD_HOME_PAGE"),
@@ -165,16 +248,6 @@ const router = createBrowserRouter([
 					rootLoader({ request }, true, "LOAD_ABOUT_PAGE"),
 			},
 		],
-	},
-	{
-		path: "admin/user-management",
-		element: (
-			<AppLayout>
-				<UserManagement />
-			</AppLayout>
-		),
-		loader: ({ request }) =>
-			rootLoader({ request }, true, "LOAD_EMPLOYEE_PAGE"),
 	},
 	{
 		path: "/activity",
@@ -218,7 +291,7 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_SEEK_PROJECT_PAGE"),
 	},
 	{
-		path: "seek-projects/:id",
+		path: "projects/:id/details",
 		element: (
 			<AppLayout>
 				<ProjectDetailsBySeek />
@@ -235,7 +308,7 @@ const router = createBrowserRouter([
 			</AppLayout>
 		),
 		loader: ({ request }) =>
-			rootLoader({ request }, true, "LOAD_PROJECTS_NOTIFICATION_PAGE"),
+			rootLoader({ request }, true, "LOAD_NOTIFICATION_MANAGEMENT_PAGE"),
 	},
 	// {
 	// 	path: "/about/edit-profile",
@@ -377,7 +450,7 @@ const router = createBrowserRouter([
 		path: "/projects/details/:id",
 		element: (
 			<AppLayout>
-				<ProjectDetails />
+				<MyProjectDetails />
 			</AppLayout>
 		),
 		loader: ({ request }) =>
@@ -467,39 +540,42 @@ const router = createBrowserRouter([
 		path: "/project/details/setting",
 		element: (
 			<AppLayout>
-				<Setting />
+				<ProjectManage />
 			</AppLayout>
 		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROJECT_SETTING_PAGE"),
 	},
 	{
-		path:"/messages",
-		element:(
+		path: "/messages",
+		element: (
 			<AppLayout>
 				<Message />
 			</AppLayout>
 		),
-		loader:({request})=>rootLoader({request},true,"LOAD_MESSAGES_PAGE")
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_MESSAGES_PAGE"),
 	},
 	{
-		path:"/messages/new-conversation",
-		element:(
+		path: "/messages/new-conversation",
+		element: (
 			<AppLayout>
 				<NewConversation />
 			</AppLayout>
 		),
-		loader:({request})=>rootLoader({request},true,"LOAD_NEW_CONVERSATION_PAGE")
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_NEW_CONVERSATION_PAGE"),
 	},
 	{
-		path:"/messages/conversation",
-		element:(
+		path: "/messages/conversation",
+		element: (
 			<AppLayout>
 				<Conversation />
 			</AppLayout>
 		),
-		loader:({request})=>rootLoader({request},true,"LOAD_CONVERSATION_PAGE")
-	}
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_CONVERSATION_PAGE"),
+	},
 ]);
 
 export default router;

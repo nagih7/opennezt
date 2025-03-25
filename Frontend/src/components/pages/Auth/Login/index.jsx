@@ -43,9 +43,9 @@ const Login = () => {
 	useEffect(() => {
 		if (isAuthSuccess) {
 			if (authRole === "Super Admin") {
-				navigate("/");
+				navigate("/activity");
 			} else if (authRole === "User") {
-				navigate("/");
+				navigate("/activity");
 			}
 		}
 	}, [isAuthSuccess, authRole, navigate]);

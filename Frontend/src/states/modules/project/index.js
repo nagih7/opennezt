@@ -1,26 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { seekProjects } from "api/project";
 import { toaster } from "components/UI/toaster";
-import { last } from "lodash";
 
 const projectSlice = createSlice({
-	name: "ProJect",
+	name: "Project",
 
 	initialState: {
 		title: "",
-
-		projects: [],
-		projectDetails: {},
-		projectInvitations: [],
-		resultCreateProject: null,
-		loadingGetProjects: false,
-		loadingGetProjectDetails: false,
-		loadingUpdatePitchDeck: false,
-		loadingUpdateProject: false,
-		resultUpdateProject: null,
-		loadingDeleteProject: false,
-		loadingGetProjectInvitations: false,
-
 		// ========== My projects ========== //
 		myProjects: [],
 		myProjectDetails: {},
@@ -36,14 +21,20 @@ const projectSlice = createSlice({
 			logo: null,
 			background: null,
 		},
-		isLoadingGetListMyProjects: false,
-		isLoadingGetMyProjectDetails: false,
 		paginationListMyProjects: {
 			currentPage: 1,
 			perPage: 6,
 			totalPage: 1,
 			totalRecord: 0,
 		},
+		// ========== MY PROJECT DETAILS ========== //
+		isLoadingGetListMyProjects: false,
+		isLoadingGetMyProjectDetails: false,
+		// ========== DELETE MY PROJECT ========== //
+		isLoadingDeleteMyProject: false,
+		// ========== PROJECT DETAILS ========== //
+		projectDetails: {},
+		isLoadingGetProjectDetails: false,
 		// ========== SEEK PROJECTS ========== //
 		projectsBySeek: [],
 		isLoadingSeekProjects: false,
@@ -105,7 +96,6 @@ const projectSlice = createSlice({
 			return {
 				...state,
 				isLoadingCreateNewProject: false,
-				resultCreateProject: true,
 			};
 		},
 		createNewProjectFail: (state, action) => {
@@ -117,7 +107,6 @@ const projectSlice = createSlice({
 			return {
 				...state,
 				isLoadingCreateNewProject: false,
-				resultCreateProject: false,
 			};
 		},
 		// ========== MY PROJECT DETAILS ========== //
@@ -138,16 +127,16 @@ const projectSlice = createSlice({
 		// ========== PROJECT DETAILS ========== //
 		requestGetProjectDetails: (state) => ({
 			...state,
-			loadingGetProjectDetails: true,
+			isLoadingGetProjectDetails: true,
 		}),
 		getProjectDetailsSuccess: (state, action) => ({
 			...state,
-			loadingGetProjectDetails: false,
+			isLoadingGetProjectDetails: false,
 			projectDetails: action.payload.data,
 		}),
 		getProjectDetailsFail: (state) => ({
 			...state,
-			loadingGetProjectDetails: false,
+			isLoadingGetProjectDetails: false,
 		}),
 
 		// ========== SEEK PROJECTS ========== //
@@ -216,53 +205,25 @@ const projectSlice = createSlice({
 			isOpenModalConfirmApply: action.payload,
 		}),
 
-		// ////////////////////////////////
-		startRequestUpdateProject: (state) => ({
+		// ========== UPDATE PROJECT ========== //
+		// ========== DELETE PROJECT ========== //
+		requestDeleteMyProject: (state) => ({
 			...state,
-			loadingUpdateProject: true,
-			resultUpdateProject: null,
+			isLoadingDeleteMyProject: true,
 		}),
-		startRequestUpdateProjectSuccess: (state, action) => {
-			toaster.create({
-				title: "Update project successfully",
-				description: "You have successfully updated the project",
-				type: "success",
-			});
-			return {
-				...state,
-				loadingUpdateProject: false,
-				resultUpdateProject: true,
-			};
-		},
-		startRequestUpdateProjectFail: (state) => {
-			toaster.create({
-				title: "Update project failed",
-				description: "You have failed to update the project",
-				type: "error",
-			});
-			return {
-				...state,
-				loadingUpdateProject: false,
-				resultUpdateProject: false,
-			};
-		},
-		startRequestDeleteProject: (state) => ({
-			...state,
-			loadingDeleteProject: true,
-		}),
-		startRequestDeleteProjectSuccess: (state) => {
+		deleteMyProjectSuccess: (state) => {
 			toaster.create({
 				title: "Delete project successfully",
 				description: "You have successfully deleted the project",
 				type: "success",
 			});
-
+			window.location.href = "/projects";
 			return {
 				...state,
-				loadingDeleteProject: false,
+				isLoadingDeleteMyProject: false,
 			};
 		},
-		startRequestDeleteProjectFail: (state) => {
+		deleteMyProjectFail: (state) => {
 			toaster.create({
 				title: "Delete project failed",
 				description: "You have failed to delete the project",
@@ -270,101 +231,10 @@ const projectSlice = createSlice({
 			});
 			return {
 				...state,
-				loadingDeleteProject: false,
+				isLoadingDeleteMyProject: false,
 			};
 		},
-		startUpdateRequestStatus: (state) => ({
-			...state,
-			loadingUpdateStatus: true,
-		}),
-		startUpdateRequestStatusSuccess: (state, action) => ({
-			...state,
-			updatedRequest: action.payload.data,
-			loadingUpdateStatus: false,
-		}),
-		startUpdateRequestStatusFail: (state) => ({
-			...state,
-			updatedRequest: null,
-			loadingUpdateStatus: false,
-		}),
-		startRequestUpdateBackground: (state) => ({
-			...state,
-			loadingUpdateBackground: true,
-		}),
-
-		startRequestUpdateBackgroundSuccess: (state, action) => {
-			toaster.create({
-				title: "Update background successfully",
-				description: "You have successfully updated the background",
-				type: "success",
-			});
-			return {
-				...state,
-				loadingUpdateBackground: false,
-			};
-		},
-
-		startRequestUpdateBackgroundFail: (state) => {
-			toaster.create({
-				title: "Update background failed",
-				description: "You have failed to update the background",
-				type: "error",
-			});
-			return {
-				...state,
-				loadingUpdateBackground: false,
-			};
-		},
-		startRequestGetProjectInvitations: (state) => ({
-			...state,
-			loadingGetProjectInvitations: true,
-		}),
-		startRequestGetProjectInvitationsSuccess: (state, action) => ({
-			...state,
-			loadingGetProjectInvitations: false,
-			projectInvitations: action.payload.data,
-		}),
-		startRequestGetProjectInvitationsFail: (state) => ({
-			...state,
-			loadingGetProjectInvitations: false,
-			projectInvitations: [],
-		}),
-
-		// formSeekProjects
-		setFormSeekProjects: (state, action) => {
-			const { event, nameSelect } = action.payload;
-			if (nameSelect) {
-				return {
-					...state,
-					formSeekProjects: {
-						...state.formSeekProjects,
-						[nameSelect]: event,
-						page: 0,
-					},
-				};
-			} else {
-				const { name, value } = event.target;
-				return {
-					...state,
-					formSeekProjects: {
-						...state.formSeekProjects,
-						[name]: value,
-						page: 0,
-					},
-				};
-			}
-		},
-		resetFormSeekProjects: (state) => ({
-			...state,
-			formSeekProjects: {
-				industry: null,
-				stage: null,
-				name: null,
-				page: 0,
-			},
-		}),
-
-		// ========== NEW ========== //
+		// ========== SEEK PROJECTS ========== //
 		onChangeFormCreateProject: (state, action) => {
 			Object.keys(action.payload).forEach((key) => {
 				state.formCreateProject[key] = action.payload[key];
@@ -399,25 +269,12 @@ export const {
 	applyToJoinProjectSuccess,
 	applyToJoinProjectFail,
 	setOpenModalConfirmApply,
-	// ////////////////////////////////
-	startRequestUpdateProject,
-	startRequestUpdateProjectSuccess,
-	startRequestUpdateProjectFail,
-	startRequestDeleteProject,
-	startRequestDeleteProjectSuccess,
-	startRequestDeleteProjectFail,
-	startUpdateRequestStatus,
-	startUpdateRequestStatusSuccess,
-	startUpdateRequestStatusFail,
-	startRequestUpdateBackground,
-	startRequestUpdateBackgroundSuccess,
-	startRequestUpdateBackgroundFail,
-	startRequestGetProjectInvitations,
-	startRequestGetProjectInvitationsSuccess,
-	startRequestGetProjectInvitationsFail,
-	setFormSeekProjects,
-	resetFormSeekProjects,
-	// ========== NEW ========== //
+	// ========== UPDATE PROJECT ========== //
+	// ========== DELETE PROJECT ========== //
+	requestDeleteMyProject,
+	deleteMyProjectSuccess,
+	deleteMyProjectFail,
+	// ========== SEEK PROJECTS ========== //
 	onChangeFormCreateProject,
 } = projectSlice.actions;
 

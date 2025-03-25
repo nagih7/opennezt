@@ -3,17 +3,10 @@ import { Button } from "@chakra-ui/react";
 import ActionBar from "../../../EditProfile/components/ActionBar";
 import ProjectEditMenu from "../ProjectEditMenu";
 import ProjectCard from "../ProjectCard";
-import { IconlyEdit } from "components/UI/Iconly";
-import { IconlyDelete } from "components/UI/Iconly"
-import { useDispatch, useSelector } from "react-redux";
 import SelectCustom from "components/UI/SelectCustom";
 
 const EditStage = () => {
-
-	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX ========== //
-	const project = useSelector((state) => state.project.myProjectDetails);
-	console.log("project", project);
 	return (
 		<div className="flex gap-8 w-full py-8 px-[16px]">
 			<ProjectEditMenu />
@@ -31,68 +24,18 @@ const EditStage = () => {
 						</div>
 					</div>
 					<div className="px-[16px] flex flex-col gap-8">
-						{/* <div>
-							<div className="relative mb-8">
-								<SelectRoot
-									height={50}
-									width={"100%"}
-									className="w-full border-[1px] outline-none border-gray-200 rounded-md flex justify-center "
-									multiple
-									size="sm">
-									<SelectTrigger>
-										<SelectValueText
-											className="p-[6px]"
-											placeholder="Movie"
-										/>
-									</SelectTrigger>
-									<SelectContent width={"100%"} className="w-full">
-										<SelectItem className="p-[12px] w-full outline-none  rounded-md"></SelectItem>
-									</SelectContent>
-								</SelectRoot>
-								<label
-									htmlFor=""
-									className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
-									Stage
-								</label>
-							</div>
-							<div className="relative mb-8">
-								<SelectRoot
-									height={50}
-									width={"100%"}
-									className="w-full border-[1px] outline-none border-gray-200 rounded-md flex justify-center "
-									multiple
-									size="sm">
-									<SelectTrigger>
-										<SelectValueText
-											className="p-[6px]"
-											placeholder="Movie"
-										/>
-									</SelectTrigger>
-									<SelectContent width={"100%"} className="w-full">
-										<SelectItem className="p-[12px] w-full outline-none  rounded-md"></SelectItem>
-									</SelectContent>
-								</SelectRoot>
-								<label
-									htmlFor=""
-									className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
-									Industries
-								</label>
-							</div>
-						</div> */}
 						<SelectCustom
 							multiple
 							required
 							label="Industries"
 							placeholder="Ex: Software Engineer"
 							canChange
-
 						/>
 						<SelectCustom
 							required
 							label="Stage"
 							placeholder="Ex:Seed stage"
 							canChange
-
 						/>
 						<div className="px-[16px] flex justify-end">
 							<div className="">

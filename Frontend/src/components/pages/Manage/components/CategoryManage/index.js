@@ -17,6 +17,7 @@ import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
 import SelectCustom from "components/UI/Select/index";
+import store from "states/configureStore";
 
 function CategoryManage() {
 	const dispatch = useDispatch();
@@ -52,13 +53,6 @@ function CategoryManage() {
 		title: "Create category",
 		type: "CREATE",
 	});
-
-	// useEffect(() => {
-	// 	setDataCreateOrUpdate({
-	// 		name: data.name,
-	// 		description: data.description,
-	// 	});
-	// }, [data]);
 
 	useEffect(() => {
 		// CONFIG
@@ -96,8 +90,9 @@ function CategoryManage() {
 		setData(dataSelect);
 		dispatch(setVisibleModalDeleteCategory(true));
 	};
-	const handleConfirmDelete = () => {
-		dispatch(deleteCategory(data._id));
+	const handleConfirmDelete = async () => {
+		await store.dispatch(deleteCategory(data._id));
+		await store.dispatch(getListCategory(dataFilter));
 	};
 
 	useEffect(() => {
@@ -118,18 +113,17 @@ function CategoryManage() {
 		});
 	}, []);
 
-	const handleConfirmCreateOrUpdate = () => {
-		// CONFIG
-		// let data = new FormData();
-		// data.append(`name`, dataCreateOrUpdate.name);
-		// data.append(`description`, dataCreateOrUpdate.description);
-
+	const handleConfirmCreateOrUpdate = async () => {
 		if (configModal.type === "CREATE") {
-			dispatch(createOrUpdateCategory(dataCreateOrUpdate, "CREATE"));
+			await store.dispatch(
+				createOrUpdateCategory(dataCreateOrUpdate, "CREATE")
+			);
+			await store.dispatch(getListCategory(dataFilter));
 		} else {
-			dispatch(
+			await store.dispatch(
 				createOrUpdateCategory(dataCreateOrUpdate, "UPDATE", data._id)
 			);
+			await store.dispatch(getListCategory(dataFilter));
 		}
 		// }
 	};
@@ -182,8 +176,7 @@ function CategoryManage() {
 		// CONFIG
 		return (
 			<div className={styles.mainModalWrap}>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Category *</div>
+				<div className="relative mb-8">
 					<SelectCustom
 						style={{ height: "40px" }}
 						value={dataCreateOrUpdate.parent_id}
@@ -195,28 +188,43 @@ function CategoryManage() {
 							label: item.name,
 						}))}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Category *
+					</label>
 				</div>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Name *</div>
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter name..."}
 						onChange={(e) => handleChangeInput(e, "name")}
 						// onBlur={() => validateBlur("name")}
 						value={dataCreateOrUpdate.name}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
 						// error={errorCreateOrUpdateEmployee.name}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Name *
+					</label>
 				</div>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Description *</div>
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter description..."}
 						onChange={(e) => handleChangeInput(e, "description")}
 						// onBlur={() => validateBlur("email")}
 						value={dataCreateOrUpdate.description}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
 						// error={errorCreateOrUpdateEmployee.email}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Description *
+					</label>
 				</div>
 				<div className={styles.btnWrap}>
 					<ButtonMASQ
