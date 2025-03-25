@@ -1,4 +1,4 @@
-import {LINK_STATIC_URL} from '@/configs'
+import {ACCESS_TYPE, LINK_STATIC_URL, NOTIFICATION_TYPE, PROJECT_ACCESS, PROJECT_APPLICATION} from '@/configs'
 import {
     Project,
     NotificationFeed,
@@ -9,6 +9,7 @@ import {
     Type,
     ProjectMember,
     Role,
+    ActivityLog,
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
 
@@ -722,7 +723,7 @@ export async function seekProjects(user, {q, page, per_page, field, order, indus
 export async function applyToJoinProject(user, projectId, requestBody) {
     const {teamRole, role} = requestBody
     const project = await Project.findById(new ObjectId(projectId))
-    const typeNotification = await Type.findOne({class: 'notification', name: 'project_application'})
+    const typeNotification = await Type.findOne({class: NOTIFICATION_TYPE, name: PROJECT_APPLICATION})
     const notification = new NotificationFeed({
         source_id: user._id,
         user_id: project.user_id,
@@ -739,4 +740,29 @@ export async function applyToJoinProject(user, projectId, requestBody) {
     })
 
     await notification.save()
+}
+
+// ========== POST [Project Access] ========== //
+export async function accessToProject(user, projectId) {
+    const project = await Project.findById(new ObjectId(projectId))
+    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROJECT_ACCESS})
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        'data.project_id': project._id,
+        type_id: accessType._id,
+    })
+    if (oldActivity) {
+        // Update timestamp
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        // Create new activity
+        const activity = new ActivityLog({
+            user_id: user._id,
+            type_id: accessType._id,
+            data: {project_id: project._id},
+            metadata: {},
+        })
+        await activity.save()
+    }
 }

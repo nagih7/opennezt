@@ -11,6 +11,7 @@ import chatReducer from "./modules/chat";
 import notificationReducer from "./modules/notification";
 import artificialIntelligenceReducer from "./modules/artificialIntelligence";
 import articleReducer from "./modules/article";
+import activityReducer from "./modules/activity";
 
 const rootReducer = {
 	app: appReducer,
@@ -26,6 +27,7 @@ const rootReducer = {
 	chat: chatReducer,
 	notification: notificationReducer,
 	artificialIntelligence: artificialIntelligenceReducer,
+	activity: activityReducer,
 };
 
 export default rootReducer;

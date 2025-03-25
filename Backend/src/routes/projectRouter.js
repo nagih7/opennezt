@@ -72,20 +72,23 @@ projectRouter.post(
 )
 
 // ========== GET [My Project Details] ========== //
-projectRouter.get('/me/:id', asyncHandler(projectController.getMyProjectDetails))
+projectRouter.get('/me/:id/details', asyncHandler(projectController.getMyProjectDetails))
 
 // ========== POST [Project] ========== //
 projectRouter.post(
-    '/',
+    '/me/create',
     asyncHandler(projectMiddleware.decodeFormData),
     asyncHandler(validate(projectRequest.createProject)),
     asyncHandler(projectController.createProject)
 )
 
 // ========== GET [My Projects] ========== //
-projectRouter.get('/', asyncHandler(projectController.getListMyProjects))
+projectRouter.get('/me', asyncHandler(projectController.getListMyProjects))
 
 // ========== GET [Project Details] ========== //
-projectRouter.get('/:id', asyncHandler(projectController.getProjectDetails))
+projectRouter.get('/:id/details', asyncHandler(projectController.getProjectDetails))
+
+// ========== POST [Project Access] ========== //
+projectRouter.post('/:id/access', asyncHandler(projectController.accessToProject))
 
 export default projectRouter

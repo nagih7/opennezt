@@ -289,7 +289,7 @@ const router = createBrowserRouter([
 			rootLoader({ request }, true, "LOAD_SEEK_PROJECT_PAGE"),
 	},
 	{
-		path: "seek-projects/:id",
+		path: "projects/:id/details",
 		element: (
 			<AppLayout>
 				<ProjectDetailsBySeek />
