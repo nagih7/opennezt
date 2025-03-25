@@ -20,11 +20,16 @@ const ListTalents = () => {
 		);
 	};
 
+	const handleViewTalentDetails = (talent) => {
+		console.log(talent);
+	};
+
 	return (
 		<div className="container flex flex-col items-center justify-center gap-20 py-12 mx-auto">
 			<div className="grid w-full grid-cols-3 gap-8">
 				{talents?.map((talent) => (
 					<div
+						onClick={() => handleViewTalentDetails(talent)}
 						key={talent.user._id}
 						className="relative group h-[380px]"
 						onMouseEnter={(e) => {
@@ -116,11 +121,11 @@ const ListTalents = () => {
 									opacity: 0, // Mặc định opacity là 0
 									transition: "opacity 0.3s ease-in-out",
 								}}>
-								<a
+								<span
 									href=""
 									className="no-underline text-white font-semibold text-xs bg-[#2f65b9] px-[24px] py-[12px] rounded-md">
 									VIEW DETAILS
-								</a>
+								</span>
 							</div>
 						</div>
 					</div>
