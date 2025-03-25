@@ -88,3 +88,9 @@ export async function accessToProject(req, res) {
     await projectService.accessToProject(req.currentUser, req.params.id)
     res.status(200).jsonify('Access to project successfully.')
 }
+
+// ========== POST [Project - Requirement] ========== //
+export async function addProjectRequirement(req, res) {
+    await projectService.addProjectRequirement(req.currentUser, req.params.id, req.body)
+    res.status(200).jsonify('Add requirement successfully.')
+}

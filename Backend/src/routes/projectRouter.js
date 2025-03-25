@@ -91,4 +91,11 @@ projectRouter.get('/:id/details', asyncHandler(projectController.getProjectDetai
 // ========== POST [Project Access] ========== //
 projectRouter.post('/:id/access', asyncHandler(projectController.accessToProject))
 
+// ========== POST [Project - Requirement] ========== //
+projectRouter.post(
+    '/:id/requirement',
+    asyncHandler(validate(projectRequest.addProjectRequirement)),
+    asyncHandler(projectController.addProjectRequirement)
+)
+
 export default projectRouter

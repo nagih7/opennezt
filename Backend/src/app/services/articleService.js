@@ -538,5 +538,5 @@ export const getUserCommentReactions = async (user_id, target_ids) => {
 // Update project name after update article
 export const updateProjectName = async (project_id) => {
     const articles = await Article.find({project_id: project_id})
-
+    
 }
