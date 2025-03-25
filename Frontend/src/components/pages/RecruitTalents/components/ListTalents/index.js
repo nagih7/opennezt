@@ -1,5 +1,5 @@
 import React from "react";
-import { IconlyHeart, IconlyShow, IconlyStar } from "components/UI/Iconly";
+import { IconlyBookmark, IconlyHeart, IconlyShow, IconlyStar } from "components/UI/Iconly";
 import img_bag from "assets/images/background/bag.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import PaginationCustom from "components/UI/PaginationCustom";
@@ -74,6 +74,13 @@ const ListTalents = () => {
 												href="#"
 												className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
 												<IconlyHeart size={20} color={"#2f65b9"} />
+											</a>
+										</li>
+										<li>
+											<a
+												href="#"
+												className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
+												<IconlyBookmark size={20} color={"#2f65b9"} />
 											</a>
 										</li>
 									</ul>
