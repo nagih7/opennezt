@@ -81,11 +81,11 @@ const Members = () => {
 												Public
 											</li>
 											<li className="flex flex-col items-center">
-												<h5>0</h5>
+												<h5>{project?.articles?.length || 0}</h5>
 												Posts
 											</li>
 											<li className="flex flex-col items-center">
-												<h5>1</h5>
+												<h5>{project?.members?.length || 0}</h5>
 												Member
 											</li>
 										</ul>

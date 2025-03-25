@@ -11,7 +11,6 @@ import {
     Role,
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
-import delay from '@/utils/classes/delay'
 
 // ========== POST [Project] ========== //
 export async function createProject(user, requestBody) {
@@ -235,6 +234,22 @@ export async function getMyProjectDetails(user, projectId) {
                         },
                     },
                 ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'project_members',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'members',
+            },
+        },
+        {
+            $lookup: {
+                from: 'articles',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'articles',
             },
         },
         {
@@ -545,6 +560,7 @@ export async function deleteProject(user, projectId) {
     await Revenue.deleteMany({project_id: projectId}).exec()
     await FundingSource.deleteMany({project_id: projectId}).exec()
     await ProjectAdditionalInfo.deleteMany({project_id: projectId}).exec()
+    await ProjectMember.deleteMany({project_id: projectId}).exec()
 }
 
 // ========== POST [Project - Invite] ========== //
