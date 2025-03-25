@@ -6,7 +6,6 @@ import manageRouteMap from "../../../../router/manageRouteMap";
 import { handleCheckRoute } from "../../../../utils/helper";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import LogoutIcon from "@mui/icons-material/Logout";
 import { logout } from "../../../../api/auth";
 import store from "states/configureStore";
 import { IconlyLogout, IconlySetting } from "components/UI/Iconly";
@@ -118,9 +117,9 @@ function SideBar(props) {
 					</div>
 				</div>
 				<div className="bottom-0 left-0 w-[270px] py-4 px-3 bg-[#ffffff] text-gray-500">
-					<div className="flex items-center w-[240px] p-3 bg-[#f8f9fa] ] rounded-md gap-10">
+					<div className="flex items-center w-[240px] p-3 bg-[#f8f9fa] ] rounded-md">
 						<ul
-							className="flex items-center justify-between"
+							className="flex items-center justify-around w-full"
 							style={{
 								width: "100%",
 								padding: "0",
@@ -135,8 +134,6 @@ function SideBar(props) {
 									}
 								/>
 							</li>
-							<LogoutIcon />
-							<LogoutIcon />
 							<li
 								onClick={() => handleConfirmLogOut()}
 								style={{ cursor: "pointer" }}>

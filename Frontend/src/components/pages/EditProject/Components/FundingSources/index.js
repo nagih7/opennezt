@@ -1,26 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Avatar, Button, Input } from "@chakra-ui/react";
-import { getProfile } from "api/profile";
-import { getExperienceLevelFramwork, getIndustryFramework } from "api/user";
-import { useDispatch, useSelector } from "react-redux";
-import { CheckCircleFilled } from "@ant-design/icons";
-import {
-	IconlyHome,
-	IconlyLogout,
-	IconlyMessage,
-	IconlyProfile,
-} from "components/UI/Iconly";
+import React from "react";
+import { Button } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
 import ActionBar from "../../../EditProfile/components/ActionBar";
 import ProjectEditMenu from "../ProjectEditMenu";
 import ProjectCard from "../ProjectCard";
 import { IconlyEdit } from "components/UI/Iconly";
-import { IconlyDelete } from "components/UI/Iconly"
+import { IconlyDelete } from "components/UI/Iconly";
 const EditFundingSources = () => {
-
-	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX ========== //
 	const project = useSelector((state) => state.project.myProjectDetails);
-	console.log("project", project);
 	return (
 		<div className="flex gap-8 w-full py-8 px-[16px]">
 			<ProjectEditMenu />
@@ -37,7 +25,6 @@ const EditFundingSources = () => {
 							<h4 className=""> Funding Sources</h4>
 						</div>
 						<Button
-
 							height={50}
 							className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
 							borderRadius={4}
@@ -52,8 +39,9 @@ const EditFundingSources = () => {
 						<div className="px-[16px]">
 							{Array.isArray(project?.funding_sources) ? (
 								project.funding_sources.map((pro, index) => (
-									<div key={index} className="shadow rounded-[0.6rem] mt-[2rem] p-4">
-
+									<div
+										key={index}
+										className="shadow rounded-[0.6rem] mt-[2rem] p-4">
 										<div className="relative flex justify-end space-x-2">
 											<span className="cursor-pointer">
 												<IconlyEdit size={24} color={"#000"} />
@@ -63,16 +51,17 @@ const EditFundingSources = () => {
 											</span>
 										</div>
 
-
-										{pro.name && <h4 className="font-bold mb-[0.75rem]">{pro.name}</h4>}
-
-
-										{pro.amount && (
-											<p className="flex">Amount: {pro.amount} {pro.currency}</p>
+										{pro.name && (
+											<h4 className="font-bold mb-[0.75rem]">
+												{pro.name}
+											</h4>
 										)}
 
-
-
+										{pro.amount && (
+											<p className="flex">
+												Amount: {pro.amount} {pro.currency}
+											</p>
+										)}
 									</div>
 								))
 							) : (

@@ -65,7 +65,7 @@ function InputMASQ(props) {
 						? "password"
 						: "text"
 				}
-				className={`input-custom ${props.error ? "inputError" : ""}`}
+				className={`${props.error ? "inputError" : ""}`}
 				style={{ fontFeatureSettings: "normal", color: "#000000" }}
 				placeholder={props.placeholder}
 				onChange={(e) => props.onChange(e)}

@@ -34,7 +34,6 @@ const ProfileOverview = () => {
 	const handleUploadAvatar = (event) => {
 		const file = event.target.files[0]; // Lấy file đầu tiên từ input
 		if (file) {
-			console.log("File selected: ", file);
 			setAvatarFile(file);
 			setAvatarFileSrc(URL.createObjectURL(file));
 			dispatch(setIsOpenAvatarPreview(true));

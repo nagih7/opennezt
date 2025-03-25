@@ -12,10 +12,7 @@ import {
     OPENAI_ANALYZE_PROMPT_STOP,
 } from './constants'
 import tiktoken from './tiktoken'
-
-const delay = (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms))
-}
+import delay from '@/utils/classes/delay'
 
 const openAI = async (prompt) => {
     console.log('Token by prompt: ', tiktoken(prompt))

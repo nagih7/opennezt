@@ -21,10 +21,11 @@ function SelectCustom(props) {
 		<Select
 			value={value}
 			style={style}
-			className={`select-custom`}
+			className={`select-custom className="p-[16px]  w-full outline-none border-gray-200 rounded-md "`}
 			defaultValue={value}
 			onChange={onChange}
 			options={options}
+		
 		/>
 	);
 }

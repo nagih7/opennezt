@@ -12,6 +12,7 @@ import ModalCreateOrUpdate from "../ModalCreateOrUpdate";
 import InputMASQ from "components/UI/Input";
 import ButtonMASQ from "components/UI/Button";
 import SelectCustom from "components/UI/Select/index";
+import store from "states/configureStore";
 
 function RoleManage() {
 	const dispatch = useDispatch();
@@ -85,8 +86,9 @@ function RoleManage() {
 		setData(dataSelect);
 		dispatch(setVisibleModalDeleteRole(true));
 	};
-	const handleConfirmDelete = () => {
-		dispatch(deleteRole(data._id));
+	const handleConfirmDelete = async () => {
+		await store.dispatch(deleteRole(data._id));
+		await store.dispatch(getListRole(dataFilter));
 	};
 
 	useEffect(() => {
@@ -106,18 +108,16 @@ function RoleManage() {
 		});
 	}, []);
 
-	const handleConfirmCreateOrUpdate = () => {
-		// CONFIG
-		// let data = new FormData();
-		// data.append(`name`, dataCreateOrUpdate.name);
-		// data.append(`description`, dataCreateOrUpdate.description);
-
+	const handleConfirmCreateOrUpdate = async () => {
 		if (configModal.type === "CREATE") {
-			dispatch(createOrUpdateRole(dataCreateOrUpdate, "CREATE"));
+			await store.dispatch(createOrUpdateRole(dataCreateOrUpdate, "CREATE"));
+			await store.dispatch(getListRole(dataFilter));
 		} else {
-			dispatch(createOrUpdateRole(dataCreateOrUpdate, "UPDATE", data._id));
+			await store.dispatch(
+				createOrUpdateRole(dataCreateOrUpdate, "UPDATE", data._id)
+			);
 		}
-		// }
+		await store.dispatch(getListRole(dataFilter));
 	};
 
 	const columns = [
@@ -174,8 +174,7 @@ function RoleManage() {
 		// CONFIG
 		return (
 			<div className={styles.mainModalWrap}>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Category *</div>
+				<div className="relative mb-8">
 					<SelectCustom
 						style={{ height: "40px" }}
 						value={dataCreateOrUpdate.type_id}
@@ -185,28 +184,43 @@ function RoleManage() {
 							label: item.name,
 						}))}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Category *
+					</label>
 				</div>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Name *</div>
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter name..."}
 						onChange={(e) => handleChangeInput(e, "name")}
 						// onBlur={() => validateBlur("name")}
 						value={dataCreateOrUpdate.name}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
 						// error={errorCreateOrUpdateEmployee.name}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Name *
+					</label>
 				</div>
-				<div className={styles.inputWrapper}>
-					<div className={styles.label}>Description *</div>
+				<div className="relative mb-8">
 					<InputMASQ
 						type={"text"}
 						placeholder={"Enter description..."}
 						onChange={(e) => handleChangeInput(e, "description")}
 						// onBlur={() => validateBlur("email")}
 						value={dataCreateOrUpdate.description}
+						className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
 						// error={errorCreateOrUpdateEmployee.email}
 					/>
+					<label
+						htmlFor=""
+						className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+						Description *
+					</label>
 				</div>
 				<div className={styles.btnWrap}>
 					<ButtonMASQ
