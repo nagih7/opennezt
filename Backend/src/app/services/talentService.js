@@ -1,7 +1,7 @@
 // import {LINK_STATIC_URL} from '@/configs'
 
-import {LINK_STATIC_URL} from '@/configs'
-import {Category, ObjectId, Profile} from '@/models'
+import {ACCESS_TYPE, LINK_STATIC_URL, PROFILE_ACCESS} from '@/configs'
+import {ActivityLog, Category, ObjectId, Profile, Type} from '@/models'
 
 // =========== GET [Recruit Talents] =========== //
 export async function recruitTalents(
@@ -278,4 +278,30 @@ export async function getTalentDetails({id}) {
     }
     const talent = await Profile.aggregate([matchStage, ...lookupStages, ...unwindStages, projectStage])
     return talent[0]
+}
+
+// =========== POST [Access to Talent] =========== //
+export async function accessToTalent(user, {id}) {
+    console.log('accessToTalent', user, id)
+    const profile = await Profile.findOne({user_id: new ObjectId(id)})
+    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROFILE_ACCESS})
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        'data.profile_id': profile._id,
+        type_id: accessType._id,
+    })
+    if (oldActivity) {
+        // Update timestamp
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        // Create new activity
+        const activity = new ActivityLog({
+            user_id: user._id,
+            type_id: accessType._id,
+            data: {profile_id: profile._id, owner_id: new ObjectId(id)},
+            metadata: {},
+        })
+        await activity.save()
+    }
 }

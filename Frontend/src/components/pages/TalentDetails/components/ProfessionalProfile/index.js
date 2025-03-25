@@ -1,10 +1,6 @@
 import RightSidebar from "components/common/RightSidebar";
-import { IconlyEditSquare } from "components/UI/Iconly";
 import React from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 const ProfessionalProfile = ({ profile }) => {
-	const navigate = useNavigate();
 	// ========== STATE FROM REDUX STORE ========== //
 	const formatDate = (dateString) => {
 		if (!dateString) return "N/A";

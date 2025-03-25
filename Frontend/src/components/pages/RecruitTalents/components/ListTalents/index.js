@@ -1,11 +1,17 @@
 import React from "react";
-import { IconlyBookmark, IconlyHeart, IconlyShow, IconlyStar } from "components/UI/Iconly";
+import {
+	IconlyBookmark,
+	IconlyHeart,
+	IconlyShow,
+	IconlyStar,
+} from "components/UI/Iconly";
 import img_bag from "assets/images/background/bag.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import PaginationCustom from "components/UI/PaginationCustom";
 import { recruitTalents } from "api/talent";
 import { Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { accessToTalent } from "api/activity";
 
 const ListTalents = () => {
 	const dispatch = useDispatch();
@@ -25,8 +31,9 @@ const ListTalents = () => {
 		);
 	};
 
-	const handleViewTalentDetails = (talent) => {
-		navigate(`/talents/${talent.user._id}/details`);
+	const handleViewTalentDetails = (user) => {
+		dispatch(accessToTalent(user._id));
+		navigate(`/talents/${user._id}/details`);
 	};
 	// ========== RENDER COMPONENT ========== //
 	return (
@@ -34,7 +41,7 @@ const ListTalents = () => {
 			<div className="grid w-full grid-cols-3 gap-8">
 				{talents?.map((talent) => (
 					<div
-						onClick={() => handleViewTalentDetails(talent)}
+						onClick={() => handleViewTalentDetails(talent.user)}
 						key={talent.user._id}
 						className="relative group h-[380px] cursor-pointer"
 						onMouseEnter={(e) => {
@@ -86,7 +93,10 @@ const ListTalents = () => {
 											<a
 												href="#"
 												className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
-												<IconlyBookmark size={20} color={"#2f65b9"} />
+												<IconlyBookmark
+													size={20}
+													color={"#2f65b9"}
+												/>
 											</a>
 										</li>
 									</ul>

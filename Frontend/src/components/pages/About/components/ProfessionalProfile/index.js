@@ -1,12 +1,24 @@
+import { getAccessToMyProfile } from "api/activity";
 import RightSidebar from "components/common/RightSidebar";
 import { IconlyEditSquare } from "components/UI/Iconly";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+const action = (user) => {
+	return (
+		<div>
+			<b>{user}</b> has accessed your profile.
+		</div>
+	);
+};
+
 const ProfessionalProfile = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX STORE ========== //
 	const { profile } = useSelector((state) => state.profile);
+	const { accessToMyProfile } = useSelector((state) => state.activity);
 
 	const formatDate = (dateString) => {
 		if (!dateString) return "N/A";
@@ -32,6 +44,12 @@ const ProfessionalProfile = () => {
 		}, {}) || {};
 
 	const result = Object.values(groupedSkills);
+
+	// ========== USE EFFECT ========== //
+	useEffect(() => {
+		if (accessToMyProfile?.length === 0) dispatch(getAccessToMyProfile());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<div className="flex gap-8">
@@ -238,7 +256,7 @@ const ProfessionalProfile = () => {
 					</div>
 				</div>
 			</div>
-			<RightSidebar />
+			<RightSidebar activities={accessToMyProfile} action={action} />
 		</div>
 	);
 };
