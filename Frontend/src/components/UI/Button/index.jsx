@@ -12,7 +12,7 @@ ButtonMASQ.prototype = {
 }
 
 ButtonMASQ.defaultProps = {
-  textBtn: 'OK',
+  // textBtn: 'OK',
   style: {},
   loading: false,
   disabled: false,
