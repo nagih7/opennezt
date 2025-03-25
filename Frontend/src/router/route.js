@@ -69,7 +69,9 @@ const Skills = React.lazy(() =>
 const AdditionalInfo = React.lazy(() =>
 	import("../components/pages/EditProfile/components/AdditionalInfo")
 );
-
+const NotificationManagement = React.lazy(() =>
+	import("../components/pages/NotificationManagement")
+)
 const router = createBrowserRouter([
 	{
 		path: "/login",
@@ -222,6 +224,16 @@ const router = createBrowserRouter([
 		),
 		loader: ({ request }) =>
 			rootLoader({ request }, true, "LOAD_PROJECT_DETAIL_PAGE"),
+	},
+	{
+		path: "/notification-management",
+		element: (
+			<AppLayout>
+				<NotificationManagement />
+			</AppLayout>
+		),
+		loader: ({ request }) =>
+			rootLoader({ request }, true, "LOAD_NOTIFICATION_MANAGEMENT_PAGE"),
 	},
 	// {
 	// 	path: "/about/edit-profile",

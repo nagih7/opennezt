@@ -99,30 +99,15 @@ const ProjectMoreInfo = () => {
 					{/* 26 Participants in the Project */}
 					{projectDetails?.members?.length} Participants in the Project
 				</p>
-<<<<<<< HEAD
+
 				<p className="text-[#6F7F92] flex">
 					<IconlyRevenue color={"#2F65B9"} />
 					Revenue {projectDetails?.revenues?.slice(-1)[0].amount} (
 					{projectDetails?.revenues?.slice(-1)[0].currency})
 				</p>
-=======
-				{projectDetails?.revenues?.length > 0 && (
-					<p className="text-[#6F7F92] flex">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="currentColor"
-							className="mr-3 text-[#2F65B9]"
-							height="24"
-							viewBox="0 0 24 24"
-							width="24">
-							<path d="M0 0h24v24H0z" fill="none" />
-							<path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-						</svg>
-						Revenue {projectDetails?.revenues?.slice(-1)[0]?.amount} (
-						{projectDetails?.revenues?.slice(-1)[0]?.currency})
-					</p>
-				)}
->>>>>>> 8648648e8866875da7fac14056d00b7c50c73078
+
+
+
 			</div>
 			{projectDetails &&
 				projectDetails?.applied === false &&
