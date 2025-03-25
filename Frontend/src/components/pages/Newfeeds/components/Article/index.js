@@ -105,7 +105,6 @@ const Article = forwardRef(
             document.removeEventListener("mousedown", handleClickOutside);
          };
       }, []);
-      //
 
       //==================================================================================================
       //Posted Date Logic
@@ -170,7 +169,7 @@ const Article = forwardRef(
                         <CheckCircleFilled className="text-[#3897f0]" />
                         <span className="text-sm">posted in</span>
                         <span className="">
-                           {project[0]?.name || "no name"}
+                           {feed?.project_name || "no name"}
                         </span>
                      </div>
                      <span className="text-xs text-gray-500">

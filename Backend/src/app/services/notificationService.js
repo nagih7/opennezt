@@ -147,7 +147,7 @@ export async function replyNotification(requestBody, io) {
 export async function replyFriendRequest(notification_id, status, io) {
     // Get information notification
     const notification = await NotificationFeed.findById(notification_id)
-    const type = await Type.findOne({name: 'Reply Friend'})
+    const typeNameDirectChat = await Type.findOne({name: 'Direct'}) //Type name direct chat
     if (!notification) {
         console.log('Notification not found!')
         return
@@ -180,7 +180,6 @@ export async function replyFriendRequest(notification_id, status, io) {
                 io.to(senderSocketId).emit('reject_add_friend', user.name)
             }
 
-            console.log(`Friend request rejected: ${user_id} and ${source_id} are not friends.`)
         } else {
             // If reject is false, handle acceptance of the friend request
 
@@ -193,19 +192,29 @@ export async function replyFriendRequest(notification_id, status, io) {
                 await Friend.create({user_id: source_id, friend_id: user_id, status: 'accepted'})
             }
 
+            const roleUserId = await User.findOne({_id : user_id})
+            const roleSourceId = await User.findOne({_id : source_id})
             // Create new conversation
             const conversation = new Conversation({
-                members: [
-                    {user_id: user_id, role: 'user'},
-                    {user_id: source_id, role: 'user'},
+                member_ids: [
+                    {
+                        user_id: user_id,
+                        conversation_id: null,
+                        role_id: roleUserId.role_id,
+                        notification_enabled: true,
+                    },
+                    {
+                        user_id: source_id,
+                        conversation_id: null,
+                        role_id: roleSourceId.role_id,
+                        notification_enabled: true,
+                    },
                 ],
-                type_id: type._id,
-                metadata: {
-                    type: 'Reply Friend',
-                    status: 'accepted',
-                    read: true,
-                    data: {},
-                },
+                type_id: typeNameDirectChat._id,
+                name: 'Friend Chat',
+                image: '',
+                last_message_id: null,
+                metadata: {},
             })
             await conversation.save()
 
@@ -225,12 +234,10 @@ export async function replyFriendRequest(notification_id, status, io) {
             const receiverSocketId = Object.keys(userSockets).find(
                 (socketId) => userSockets[socketId] === source_id.toString()
             )
-            console.log('receiverSocketId:', receiverSocketId)
             if (receiverSocketId) {
                 io.to(receiverSocketId).emit('confirm_add_friend', user.name)
             }
 
-            console.log(`Friend request accepted: ${user_id} and ${source_id} are now friends.`)
         }
     } else {
         console.log('Notification is not in waiting state.')
@@ -340,8 +347,6 @@ export async function requestAddFriend(user, requestBody, io) {
     const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === user_id)
 
     if (!userSocketId) {
-        console.error('Không tìm thấy userSocketId cho user_id:', user_id)
-        console.log('Danh sách userSockets:', userSockets)
         return
     }
 

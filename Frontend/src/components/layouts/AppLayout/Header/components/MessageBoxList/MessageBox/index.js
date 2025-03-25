@@ -83,6 +83,7 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 
 	const handleSendProjectInvitation = async () => {
 		setModalProjectInvitation(true);
+		dispatch(getProjectInvitations(converse.conversation?.members[0]?._id));
 	};
 
 	const handleCloseChatBox = (conversation) => {
@@ -92,25 +93,25 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 	return (
 		<div className={styles.messageBoxWrap}>
 			<div className={styles.miniChatHeader}>
-				{converse.conversation.metadata.type === "direct" && (
+				{converse.conversation?.metadata?.type === "Direct" && (
 					<div className={styles.miniChatHeaderContent}>
 						<div className={styles.avatar}>
 							<img
 								src={
-									converse.conversation.members[0].avatar ||
+									converse.conversation?.members[0]?.avatar ||
 									AvatarDefault
 								}
-								alt={converse.conversation.members[0].name}
+								alt={converse.conversation?.members[0]?.name}
 								onError={(e) => {
 									e.target.onerror = null;
 									e.target.src = AvatarDefault;
 								}}
 							/>
 						</div>
-						<span>{converse.conversation.members[0].name}</span>
+						<span>{converse.conversation?.members[0]?.name}</span>
 					</div>
 				)}
-				{converse.conversation.metadata.type === "group" && (
+				{converse.conversation?.metadata?.type === "Group" && (
 					<div className={styles.miniChatHeaderContent}>
 						<div className={styles.avatarGroup}>
 							<Avatar.Group
@@ -122,7 +123,7 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 										backgroundColor: "#fde3cf",
 									},
 								}}>
-								{converse.conversation.members.map((member, index) => (
+								{converse.conversation?.members?.map((member, index) => (
 									<Tooltip title={member.name} key={member._id}>
 										<Avatar
 											src={member.avatar || AvatarDefault}
@@ -133,7 +134,7 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 							</Avatar.Group>
 						</div>
 						<span>
-							{converse.conversation.metadata.data.project.name}
+							{converse.conversation?.metadata?.data.project.name}
 						</span>
 					</div>
 				)}
@@ -205,7 +206,7 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 				onCancel={() => setModalProjectInvitation(false)}
 				width={1000}>
 				<LazyLoadingMedium>
-					<Projects inviteeId={converse.conversation.members[0]._id} />
+					<Projects inviteeId={converse.conversation?.members[0]?._id} />
 				</LazyLoadingMedium>
 			</Modal>
 		</div>
