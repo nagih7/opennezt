@@ -184,7 +184,6 @@ export async function replyFriendRequest(notification_id, status, io) {
                 io.to(senderSocketId).emit('reject_add_friend', user.name)
             }
 
-            console.log(`Friend request rejected: ${user_id} and ${source_id} are not friends.`)
         } else {
             // If reject is false, handle acceptance of the friend request
 
@@ -222,7 +221,6 @@ export async function replyFriendRequest(notification_id, status, io) {
                 metadata: {},
             })
             await conversation.save()
-            console.log('Conversation created:', conversation)
 
             // Update notification status to 'accepted'
             await NotificationFeed.updateOne(
@@ -240,12 +238,11 @@ export async function replyFriendRequest(notification_id, status, io) {
             const receiverSocketId = Object.keys(userSockets).find(
                 (socketId) => userSockets[socketId] === source_id.toString()
             )
-            console.log('receiverSocketId:', receiverSocketId)
+            console.log('receiverSocketId', receiverSocketId)
             if (receiverSocketId) {
                 io.to(receiverSocketId).emit('confirm_add_friend', user.name)
             }
 
-            console.log(`Friend request accepted: ${user_id} and ${source_id} are now friends.`)
         }
     } else {
         console.log('Notification is not in waiting state.')

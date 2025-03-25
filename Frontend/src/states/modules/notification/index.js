@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { message } from "antd";
+import { toaster } from "components/UI/toaster";
 
 const notificationSlice = createSlice({
 	name: "notification",
@@ -55,14 +56,20 @@ const notificationSlice = createSlice({
 			loadingReplyNotification: true,
 		}),
 		startRequestReplyNotificationSuccess: (state) => {
-			message.success("Reply notification successfully");
+			toaster.create({
+				title: `Reply notification successfully.`,
+				type: "success",
+			});
 			return {
 				...state,
 				loadingReplyNotification: false,
 			};
 		},
 		startRequestReplyNotificationFail: (state) => {
-			message.error("Reply notification failed");
+			toaster.create({
+				title: `Reply notification failed.`,
+				type: "error",
+			});
 			return {
 				...state,
 				loadingReplyNotification: false,
@@ -73,14 +80,20 @@ const notificationSlice = createSlice({
 			loadingSendRequestAddFriend: true,
 		}),
 		startRequestMessageSuccess: (state) => {
-			message.success("Friend request sent successfully");
+			toaster.create({
+				title: `Friend request sent successfully.`,
+				type: "success",
+			});
 			return {
 				...state,
 				loadingSendRequestAddFriend: false,
 			};
 		},
 		startRequestMessageFail: (state) => {
-			message.error("Friend request sent failed");
+			toaster.create({
+				title: `Friend request sent failed.`,
+				type: "error",
+			});
 			return {
 				...state,
 				loadingSendRequestAddFriend: false,
@@ -103,7 +116,10 @@ const notificationSlice = createSlice({
 			loadingProjectInvitation: true,
 		}),
 		startRequestProjectInvitationSuccess: (state) => {
-			message.success("Project invitation sent successfully");
+			toaster.create({
+				title: `Project invitation sent successfully.`,
+				type: "success",
+			});
 			return {
 				...state,
 				loadingProjectInvitation: false,
