@@ -15,11 +15,6 @@ export async function replyNotification(req, res) {
     res.jsonify('Reply notification successfully.')
 }
 
-export async function requestAddFriend(req, res) {
-    await notificationService.requestAddFriend(req.currentUser, req.body, req.io)
-    res.status(201).jsonify('Request message successfully.')
-}
-
 export async function getTotalFriends(req, res) {
     const result = await notificationService.getTotalFriends(req.currentUser)
     res.jsonify(result)

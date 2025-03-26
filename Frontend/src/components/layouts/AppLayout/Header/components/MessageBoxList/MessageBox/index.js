@@ -13,7 +13,7 @@ import MicIcon from "@mui/icons-material/Mic";
 import { Avatar, message, Modal, Tooltip } from "antd";
 import { closeChatBox, comfirmSendMessage } from "states/modules/chat";
 import MessageBoxContent from "./MessageBoxContent";
-import { ACTIONS } from "utils/constains";
+import { ACTIONS } from "utils/constants";
 
 const Projects = React.lazy(() => import("components/common/Projects"));
 
@@ -123,14 +123,16 @@ const MessageBox = ({ key, converse, sendMessage }) => {
 										backgroundColor: "#fde3cf",
 									},
 								}}>
-								{converse.conversation?.members?.map((member, index) => (
-									<Tooltip title={member.name} key={member._id}>
-										<Avatar
-											src={member.avatar || AvatarDefault}
-											alt={member.name}
-										/>
-									</Tooltip>
-								))}
+								{converse.conversation?.members?.map(
+									(member, index) => (
+										<Tooltip title={member.name} key={member._id}>
+											<Avatar
+												src={member.avatar || AvatarDefault}
+												alt={member.name}
+											/>
+										</Tooltip>
+									)
+								)}
 							</Avatar.Group>
 						</div>
 						<span>

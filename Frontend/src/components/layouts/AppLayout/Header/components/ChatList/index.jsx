@@ -5,7 +5,9 @@ import AvatarDefault from "assets/images/default/AvatarDefault.png";
 import { getChatHistory, getChatList } from "api/chat";
 import NotFound from "components/UI/NotFound";
 import { Avatar, Tooltip } from "antd";
-import { CHATS } from "utils/constains/appConstains";
+import { MESSAGES } from "utils/constants/appConstants";
+import { Stack } from "@chakra-ui/react";
+import InputCustom from "components/UI/InputCustom";
 
 const ChatList = () => {
 	const dispatch = useDispatch();
@@ -36,110 +38,32 @@ const ChatList = () => {
 
 	const handleSearchQuery = (value) => {
 		setSearchQuery(value);
-	};	
+	};
 
 	return (
-		<div className={styles.chatPopoverWrap}>
-			<div className={styles.headerWrap}>
-				<h3>{CHATS.CHATS[language]}</h3>
-				<input
+		<Stack>
+			<h3>{MESSAGES.MESSAGES[language]}</h3>
+			{/* <input
 					type="text"
-					placeholder={CHATS.SEARCH[language]}
+					placeholder={MESSAGES.SEARCH[language]}
 					className={styles.searchInput}
 					value={searchQuery}
 					onChange={(e) => handleSearchQuery(e.target.value)}
 				/>
-			</div>
-			<div className={styles.chatListWrap}>
+				<InputCustom height="30px" /> */}
+
+			<Stack>
 				{chatList.length > 0 ? (
 					chatList.map((conversation, index) => {
-						switch (conversation?.metadata?.type) {
-							case "Direct":
-								return (
-									<div
-										className={styles.chatItem}
-										key={index}
-										onClick={() =>
-											handleGetChatHistory(conversation)
-										}>
-										<div className={styles.avatar}>
-											<img
-												src={
-													conversation?.members[0]?.avatar ||
-													AvatarDefault
-												}
-												alt={conversation?.members[0]?.name}
-												onError={(e) => {
-													e.target.onerror = null;
-													e.target.src = AvatarDefault;
-												}}
-											/>
-										</div>
-										<div className={styles.chatContent}>
-											<div className={styles.chatName}>
-												{conversation?.members[0]?.name}
-											</div>
-										</div>
-									</div>
-								);
-							case "Group":
-								return (
-									<div
-										className={styles.chatItem}
-										key={index}
-										onClick={() =>
-											handleGetChatHistory(conversation)
-										}>
-										<div
-											className={
-												conversation?.members?.length > 1
-													? styles.avatarGroup
-													: styles.avatar
-											}>
-											<Avatar.Group
-												size={"medium"}
-												max={{
-													count: 2,
-													style: {
-														color: "#f56a00",
-														backgroundColor: "#fde3cf",
-													},
-												}}>
-												{conversation?.members?.map(
-													(member, index) => (
-														<Tooltip
-															title={member.name}
-															key={member._id}>
-															<Avatar
-																src={
-																	member.avatar ||
-																	AvatarDefault
-																}
-																alt={member.name}
-															/>
-														</Tooltip>
-													)
-												)}
-											</Avatar.Group>
-										</div>
-										<div className={styles.chatContent}>
-											<div className={styles.chatName}>
-												{conversation?.metadata?.data.project.name}
-											</div>
-										</div>
-									</div>
-								);
-							default:
-								return null;
-						}
+						<></>;
 					})
 				) : (
-					<div className={styles.noResult}>
+					<div>
 						<NotFound content="Not found" size="100" />
 					</div>
 				)}
-			</div>
-		</div>
+			</Stack>
+		</Stack>
 	);
 };
 

@@ -53,22 +53,6 @@ export const replyNotification = (data) => async (dispatch, getState) => {
 	});
 };
 
-export const sendRequestAddFriend =
-	(requestMessageData) => async (dispatch, getState) => {
-		return callApi({
-			method: "post",
-			apiPath: `notification/request-add-friend`,
-			actionTypes: [
-				startRequestMessage,
-				startRequestMessageSuccess,
-				startRequestMessageFail,
-			],
-			variables: requestMessageData,
-			dispatch,
-			getState,
-		});
-	};
-
 export const getRequestAddFriend = (user_id) => async (dispatch, getState) => {
 	return callApi({
 		method: "get",

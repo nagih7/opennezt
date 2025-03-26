@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { onChangeFormCreateProject } from "states/modules/project";
 import InputCustom from "components/UI/InputCustom";
 import { createListCollection } from "@chakra-ui/react";
-import { PROJECT_ADDITIONAL_INFO } from "utils/constains";
+import { PROJECT_ADDITIONAL_INFO } from "utils/constants";
 import SelectCustom from "components/UI/SelectCustom";
 import { toaster } from "components/UI/toaster";
 

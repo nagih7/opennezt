@@ -3,7 +3,7 @@ import dark from "./styles.module.scss";
 import { handleCheckRoute } from "../../../../../../utils/helper";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { NAVBAR } from "../../../../../../utils/constains";
+import { NAVBAR } from "../../../../../../utils/constants";
 
 function NavItem(props) {
 	const styles = dark;
