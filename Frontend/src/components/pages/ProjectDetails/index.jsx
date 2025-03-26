@@ -9,6 +9,7 @@ import ProjectMenu from "./components/ProjectMenu";
 import RightProject from "./components/RightProject";
 
 const ProjectDetails = () => {
+  const [changeTab, setChangeTab] = useState("Home");
   const { id } = useParams();
   const dispatch = useDispatch();
   // ========== STATE FROM REDUX ========== //
