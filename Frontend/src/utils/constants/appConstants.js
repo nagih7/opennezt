@@ -525,6 +525,29 @@ export const CHATS = {
 	},
 };
 
+export const MESSAGES = {
+	MESSAGES: {
+		EN: "Messages",
+		VI: "Tin nhắn",
+		ZH: "消息",
+	},
+	SEND: {
+		EN: "Send",
+		VI: "Gửi",
+		ZH: "发送",
+	},
+	NEW_MESSAGE: {
+		EN: "New message",
+		VI: "Tin nhắn mới",
+		ZH: "新消息",
+	},
+	MESSAGE: {
+		EN: "Message",
+		VI: "Tin nhắn",
+		ZH: "消息",
+	},
+};
+
 export const TOOLTIP = {
 	EN: "Tooltip",
 	VI: "Chú giải",

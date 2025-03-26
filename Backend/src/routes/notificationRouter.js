@@ -23,13 +23,6 @@ notificationRouter.put(
     asyncHandler(notificationController.replyNotification)
 )
 
-// Request add friend
-notificationRouter.post(
-    '/request-add-friend',
-    asyncHandler(validate(notificationRequest.requestAddFriend)),
-    asyncHandler(notificationController.requestAddFriend)
-)
-
 // Request project invitation
 notificationRouter.post(
     '/project-invitation',

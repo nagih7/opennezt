@@ -1,5 +1,5 @@
 import React from "react";
-import { NAVBAR_LABEL } from "utils/constains";
+import { NAVBAR_LABEL } from "utils/constants";
 import {
 	IconlyActivity,
 	IconlyAddUser,
@@ -68,7 +68,7 @@ const manageRouteMap = [
 		path: "/messages",
 		routeActive: ["/messages"],
 		permissions: ["messages_page"],
-	}
+	},
 ];
 
 export default manageRouteMap;

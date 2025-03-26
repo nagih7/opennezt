@@ -117,3 +117,9 @@ export async function getProjectRoles(req, res) {
     const result = await userService.getProjectRoles()
     res.jsonify(result)
 }
+
+// ========== POST [User - Request Add Friend] ========== //
+export async function sendFriendRequest(req, res) {
+    await userService.sendFriendRequest(req.currentUser, req.params, req.io)
+    res.status(201).jsonify('Send friend request successfully.')
+}

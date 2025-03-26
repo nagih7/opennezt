@@ -27,6 +27,10 @@ import {
 	requestGetProjectRoleFramework,
 	getProjectRoleFrameworkSuccess,
 	getProjectRoleFrameworkFail,
+	// REQUEST ADD FRIEND
+	requestSendFriendRequest,
+	sendFriendRequestSuccess,
+	sendFriendRequestFail,
 } from "../../states/modules/user";
 
 // INDUSTRY
@@ -135,6 +139,22 @@ export const getProjectRoleFramework = () => async (dispatch, getState) => {
 			requestGetProjectRoleFramework,
 			getProjectRoleFrameworkSuccess,
 			getProjectRoleFrameworkFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
+};
+
+// REQUEST ADD FRIEND
+export const sendFriendRequest = (userId) => async (dispatch, getState) => {
+	return callApi({
+		method: "post",
+		apiPath: `users/${userId}/friend-request`,
+		actionTypes: [
+			requestSendFriendRequest,
+			sendFriendRequestSuccess,
+			sendFriendRequestFail,
 		],
 		variables: {},
 		dispatch,

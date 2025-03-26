@@ -179,7 +179,6 @@ export async function replyFriendRequest(notification_id, status, io) {
             if (senderSocketId) {
                 io.to(senderSocketId).emit('reject_add_friend', user.name)
             }
-
         } else {
             // If reject is false, handle acceptance of the friend request
 
@@ -192,8 +191,8 @@ export async function replyFriendRequest(notification_id, status, io) {
                 await Friend.create({user_id: source_id, friend_id: user_id, status: 'accepted'})
             }
 
-            const roleUserId = await User.findOne({_id : user_id})
-            const roleSourceId = await User.findOne({_id : source_id})
+            const roleUserId = await User.findOne({_id: user_id})
+            const roleSourceId = await User.findOne({_id: source_id})
             // Create new conversation
             const conversation = new Conversation({
                 member_ids: [
@@ -237,7 +236,6 @@ export async function replyFriendRequest(notification_id, status, io) {
             if (receiverSocketId) {
                 io.to(receiverSocketId).emit('confirm_add_friend', user.name)
             }
-
         }
     } else {
         console.log('Notification is not in waiting state.')
@@ -313,44 +311,6 @@ export async function replyProjectInvitation(notification_id, status, io) {
     } else if (status === 'rejected') {
         await NotificationFeed.delete({_id: notification_id})
     }
-}
-
-export async function requestAddFriend(user, requestBody, io) {
-    const {user_id, metadata} = requestBody
-    const type = await Type.findOne({name: 'Friend Request'})
-
-    // Kiểm tra user_id có tồn tại trong database không
-    const targetUser = await User.findById(user_id)
-    if (!targetUser) {
-        throw new Error('Người dùng không tồn tại.')
-    }
-
-    // Kiểm tra type_id có hợp lệ không
-    if (!type) {
-        throw new Error('Loại thông báo không hợp lệ.')
-    }
-    // Tạo notification mới
-    const notification = new NotificationFeed({
-        user_id: user_id,
-        source_id: user._id,
-        type_id: type._id,
-        metadata: {
-            ...metadata,
-            read: false,
-            status: 'waiting',
-            source_name: user.name,
-            avatar: user.avatar || '',
-        },
-    })
-
-    await notification.save()
-    const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === user_id)
-
-    if (!userSocketId) {
-        return
-    }
-
-    io.to(userSocketId).emit('new_notification', notification)
 }
 
 export async function getTotalFriends(user) {

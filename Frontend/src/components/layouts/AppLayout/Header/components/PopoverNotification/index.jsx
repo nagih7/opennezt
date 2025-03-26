@@ -8,7 +8,7 @@ import store from "states/configureStore";
 import { replyNotification, getNotifications } from "api/notification";
 import { useNavigate } from "react-router-dom";
 import { getChatList } from "api/chat";
-import { NOTIFICATIONS, ACTIONS, STATUS } from "utils/constains/appConstains";
+import { NOTIFICATIONS, ACTIONS, STATUS } from "utils/constants/appConstants";
 
 function PopoverNotification() {
 	const { notifications, loadingReplyNotification } = useSelector(

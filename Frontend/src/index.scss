@@ -386,3 +386,10 @@ button:focus {
 		border: 1px solid $colorBorderInput !important;
 	}
 }
+
+.chakra-select__trigger {
+	border-width: 0;
+	outline: none;
+	border: 1px solid #ccc; /* Hoặc bạn có thể thiết lập border nếu muốn */
+	border-color: white;
+}
