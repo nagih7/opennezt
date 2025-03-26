@@ -9,10 +9,18 @@ import ProjectMenu from "./components/ProjectMenu";
 import RightProject from "./components/RightProject";
 
 const ProjectDetails = () => {
+<<<<<<< HEAD
+  const [changeTab, setChangeTab] = useState("Home");
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  // ========== STATE FROM REDUX ========== //
+  const project = useSelector((state) => state.project.myProjectDetails);
+=======
 	const { id } = useParams();
 	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX ========== //
 	const project = useSelector((state) => state.project.myProjectDetails);
+>>>>>>> fc5781990d73f6fe5d87b6d496fe353ca72d7848
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
