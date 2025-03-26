@@ -1503,6 +1503,7 @@ export const IconlyWallet = ({ size, color }) => {
    );
 };
 
+
 export const IconlyChart = ({ size, color }) => {
    return (
       <svg
@@ -1637,3 +1638,5 @@ export const IconlyRevenue = ({ size = 24, color = "currentColor" }) => {
       </svg>
    );
 };
+
+

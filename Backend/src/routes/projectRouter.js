@@ -92,6 +92,8 @@ projectRouter.get('/:id/details', asyncHandler(projectController.getProjectDetai
 projectRouter.post('/:id/access', asyncHandler(projectController.accessToProject))
 
 // ========== GET [My Project Access] ========== //
-projectRouter.get('/me/access', asyncHandler(projectController.getMyProjectAccess))
+projectRouter.get('/access/me', asyncHandler(projectController.getMyProjectAccess))
 
+// ========== GET [Access To My Projects] ========== //
+projectRouter.get('/me/access', asyncHandler(projectController.getAccessToMyProjects))
 export default projectRouter

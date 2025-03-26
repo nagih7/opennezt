@@ -1,16 +1,14 @@
 import callApi from "api/callApi";
 
 import {
-	startRequestSkipTalent,
-	startRequestSkipTalentSuccess,
-	startRequestSkipTalentFail,
-	startRequestGetDetailTalent,
-	startRequestGetDetailTalentSuccess,
-	startRequestGetDetailTalentFail,
-	// ========== NEW ========== //
+	// ========== RECRUIT TALENTS ========== //
 	requestRecruitTalents,
 	recruitTalentsSuccess,
 	recruitTalentsFail,
+	// ========== TALENT DETAILS ========== //
+	requestGetTalentDetails,
+	getTalentDetailsSuccess,
+	getTalentDetailsFail,
 } from "../../states/modules/talent";
 
 // ========== RECRUIT TALENTS ========== //
@@ -52,30 +50,14 @@ export const recruitTalents = (dataFilter) => async (dispatch, getState) => {
 	});
 };
 
-export const skipTalent = (requestSkipTalent) => async (dispatch, getState) => {
-	requestSkipTalent = new URLSearchParams(requestSkipTalent).toString();
-	return callApi({
-		method: "get",
-		apiPath: `users/recruit-talents?${requestSkipTalent}`,
-		actionTypes: [
-			startRequestSkipTalent,
-			startRequestSkipTalentSuccess,
-			startRequestSkipTalentFail,
-		],
-		variables: {},
-		dispatch,
-		getState,
-	});
-};
-
 export const getTalentDetails = (id) => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
-		apiPath: `users/talent-details/${id}`,
+		apiPath: `talents/${id}/details`,
 		actionTypes: [
-			startRequestGetDetailTalent,
-			startRequestGetDetailTalentSuccess,
-			startRequestGetDetailTalentFail,
+			requestGetTalentDetails,
+			getTalentDetailsSuccess,
+			getTalentDetailsFail,
 		],
 		variables: {},
 		dispatch,

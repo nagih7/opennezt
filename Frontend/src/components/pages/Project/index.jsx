@@ -4,12 +4,25 @@ import ActiveBanner from "./components/ActiveBanner";
 import SearchProjectHeader from "./components/SearchProjectHeader";
 import ActivateHeader from "./components/ActivateHeader";
 import MyProjects from "./components/MyProjects";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getAccessToMyProjects } from "api/activity";
+
+const action = (project) => {
+	return (
+		<div>
+			has accessed your <b>{project}</b> project
+		</div>
+	);
+};
 
 function Projects() {
+	const dispatch = useDispatch();
+	// ========== STATE FROM REDUX STORE ========== //
 	const { paginationListMyProjects, isLoadingGetListMyProjects } = useSelector(
 		(state) => state.project
 	);
+	const { accessToMyProjects } = useSelector((state) => state.activity);
+
 	// ========== STATE ========== //
 	const [isBottom, setIsBottom] = useState(false);
 	// Ref cho container scroll
@@ -51,6 +64,11 @@ function Projects() {
 		};
 	}, [checkScroll]);
 
+	useEffect(() => {
+		if (accessToMyProjects?.length === 0) dispatch(getAccessToMyProjects());
+		// eslint-disable-next-line
+	}, [dispatch]);
+
 	return (
 		<div
 			className="w-full py-8 px-[16px] overflow-y-scroll overflow-x-hidden"
@@ -64,7 +82,7 @@ function Projects() {
 						<MyProjects isBottom={isBottom} setIsBottom={setIsBottom} />
 					</div>
 				</div>
-				<RightSidebar />
+				<RightSidebar activities={accessToMyProjects} action={action} />
 			</div>
 		</div>
 	);
