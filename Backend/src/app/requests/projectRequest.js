@@ -336,6 +336,21 @@ export const addProjectRequirement = Joi.object({
                         })
                 )
         ),
+    subcategory_ids: Joi.array()
+        .required()
+        .label('Sub Category')
+        .items(
+            Joi.string()
+                .trim()
+                .required()
+                .custom(
+                    (value, helpers) =>
+                        new AsyncValidate(value, async () => {
+                            const category = await Category.findById(new ObjectId(value))
+                            return category ? value : helpers.error('any.empty')
+                        })
+                )
+        ),
     skill_ids: Joi.array()
         .required()
         .label('Skill')

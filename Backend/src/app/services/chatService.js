@@ -99,7 +99,6 @@ export async function getChatList(user, input_value) {
             $sort: {updated_at: -1},
         },
     ])
-    console.log('chat', chatList)
 
     return chatList
 }

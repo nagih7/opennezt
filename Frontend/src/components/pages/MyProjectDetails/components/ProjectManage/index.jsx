@@ -41,16 +41,12 @@ const ProjectManage = () => {
   const [formData, setFormData] = useState({
     teamRole: "",
     role: "",
-    industries: "",
+    industries: [],
     experienceLevel: "",
-    categories: "",
-    subcategories: "",
-    skills: "",
+    categories: [],
+    subcategories: [],
+    skills: [],
   });
-  useEffect(() => {
-    console.log("Team Role Framework:", projectTeamRoleFramework);
-    console.log("Role Framework:", projectRoleFramework);
-  }, [projectTeamRoleFramework, projectRoleFramework]);
 
   useEffect(() => {
     dispatch(getProjectRoleFramework());
@@ -70,16 +66,6 @@ const ProjectManage = () => {
       dispatch(getCategoryFramework());
     }
   }, [dispatch, categoryFramework]);
-  useEffect(() => {
-    if (subCategoryFramework?.items?.length === 0) {
-      dispatch(getSubCategoryFramework());
-    }
-  }, [dispatch, subCategoryFramework]);
-  useEffect(() => {
-    if (skillFramework?.items?.length === 0) {
-      dispatch(getSkillFramework());
-    }
-  }, [dispatch, skillFramework]);
 
   useEffect(() => {
     setFormData({
@@ -95,20 +81,16 @@ const ProjectManage = () => {
 
   // ========== HANDLE CHANGE  ========== //
   const handleChange = (event, nameSelect) => {
+    if(nameSelect){
     setFormData({ ...formData, [nameSelect]: event.value });
-    console.log(`Updated ${nameSelect}:`, event.value);
-    // Handle dependent dropdowns
+    }
     switch (nameSelect) {
       case "categories":
-        // Reset subcategories when category changes
-        setFormData((prev) => ({ ...prev, subcategories: "" }));
-        // Fetch subcategories filtered by the selected category
+        setFormData((prev) => ({ ...prev, subcategories: [] }));
         dispatch(getSubCategoryFramework(event.value));
         break;
       case "subcategories":
-        // Reset skills when subcategory changes
-        setFormData((prev) => ({ ...prev, skills: "" }));
-        // Fetch skills filtered by the selected subcategory
+        setFormData((prev) => ({ ...prev, skills: [] }));
         dispatch(getSkillFramework(event.value));
         break;
       default:
@@ -131,29 +113,32 @@ const ProjectManage = () => {
 
   const handleSaveProjectRequirement = () => {
     const updatedFormData = {
-      teamRole: formData.teamRole[0] || "",  
-      role: formData.role[0] || "",
-      industries: formData.industries[0] || "",
-      experienceLevel: formData.experienceLevel[0] || "",
-      categories: formData.categories[0] || "",
-      subcategories: formData.subcategories[0] || "",
-      skills: formData.skills[0] || "",
+      project_id: id,
+      team_role_id: formData.teamRole[0] || "",  
+      role_id: formData.role[0] || "",
+      industry_ids: formData.industries || [],
+      experience_level_id: formData.experienceLevel[0] || "",
+      category_ids: formData.categories || [],
+      subcategory_ids: formData.subcategories || [],
+      skill_ids: formData.skills || [],
     };
   
     // Kiểm tra xem dữ liệu có đầy đủ không trước khi gửi
-    if (!updatedFormData.teamRole || !updatedFormData.role || !updatedFormData.industries || !updatedFormData.experienceLevel || !updatedFormData.skills || !updatedFormData.subcategories) {
-      toaster.create({
-        title: "Please fill in all required information.",
-        type: "error",
-      });
-      return;
-    }
+    if (!updatedFormData.team_role_id || 
+      !updatedFormData.role_id || 
+      !updatedFormData.industry_ids.length || 
+      !updatedFormData.experience_level_id || 
+      !updatedFormData.category_ids.length || 
+      !updatedFormData.subcategory_ids.length || 
+      !updatedFormData.skill_ids.length) {
+    toaster.create({
+      title: "Please fill in all required fields.",
+      type: "error",
+    });
+    return;
+  }
   
-    // Log lại dữ liệu đã sửa đổi
-    console.log("Updated Form Data:", updatedFormData);
-  
-    // Gửi dữ liệu đi
-    dispatch(addProjectRequirement(updatedFormData));
+    dispatch(addProjectRequirement(id ,updatedFormData));
   };
 
   return (
@@ -194,6 +179,7 @@ const ProjectManage = () => {
                 </div>
                 <div className="relative mb-8">
                   <SelectCustom
+                    multiple
                     required
                     label="Industries"
                     collection={industryFramework}
@@ -214,6 +200,7 @@ const ProjectManage = () => {
                 </div>
                 <div className="relative mb-8">
                   <SelectCustom
+                    multiple
                     required
                     label="Category"
                     collection={categoryFramework}
@@ -224,6 +211,7 @@ const ProjectManage = () => {
                 </div>
                 <div className="relative mb-8">
                   <SelectCustom
+                    multiple
                     required
                     label="Sub Category"
                     collection={subCategoryFramework}
@@ -234,6 +222,7 @@ const ProjectManage = () => {
                 </div>
                 <div className="relative mt-8">
                   <SelectCustom
+                    multiple
                     required
                     label="Skill"
                     collection={skillFramework}
