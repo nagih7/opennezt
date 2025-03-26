@@ -1,0 +1,162 @@
+.loading {
+  width: 100%;
+  height: 100px; /* Đảm bảo chiều cao là 100% màn hình */
+  display: flex;
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  // background-color: #ac9ae8;
+}
+
+.scanner span {
+  color: transparent;
+  font-size: 1.2rem;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+}
+
+.scanner span::before {
+  content: "OpenNezt...";
+  position: absolute;
+  top: 0;
+  left: 70px;
+  width: 0;
+  text-wrap: nowrap;
+  white-space: nowrap;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-right: 4px solid;
+  color: #4f0f8c;
+  overflow: hidden;
+  animation: loading 4s linear infinite;
+}
+
+@keyframes loading {
+  0%,
+  10%,
+  100% {
+    width: 0;
+  }
+  10%,
+  20%,
+  30%,
+  40%,
+  50%,
+  60%,
+  70%,
+  80%,
+  90%,
+  100% {
+    border-right-color: transparent;
+  }
+  11%,
+  21%,
+  31%,
+  41%,
+  51%,
+  61%,
+  71%,
+  81%,
+  91% {
+    borsder-right-color: #4f0f8c;
+  }
+  60%,
+  80% {
+    width: 100%;
+  }
+}
+
+.circle {
+  width: 100px;
+  height: 100px;
+  background: red;
+  border-radius: 50%;
+  animation: spin 3s;
+  /* alternate infinite; */
+  animation-iteration-count: infinite;
+  position: absolute;
+  
+}
+
+.circle:nth-child(1) {
+  animation-delay: 0.1s;
+  background: #4f0f8c;
+  width: 90px;
+  height:90px;
+}
+
+.circle:nth-child(2) {
+  animation-delay: 0.2s;
+  background: #6914ba;
+  width: 80px;
+  height: 80px;
+}
+
+.circle:nth-child(3) {
+  animation-delay: 0.3s;
+  background: #831ae7;
+  width: 70px;
+  height: 70px;
+}
+
+.circle:nth-child(4) {
+  animation-delay: 0.4s;
+  background: #9c48ec;
+  width: 60px;
+  height: 60px;
+}
+
+.circle:nth-child(5) {
+  animation-delay: 0.5s;
+  background: #b577f0;
+  width: 50px;
+  height: 50px;
+}
+
+.circle:nth-child(6) {
+  animation-delay: 0.6s;
+  background: #cea5f5;
+  width: 40px;
+  height: 40px;
+}
+
+.circle:nth-child(7) {
+  animation-delay: 0.7s;
+  background: #e7d3fa;
+  width: 30px;
+  height: 30px;
+}
+
+.circle:nth-child(8) {
+  animation-delay: 0.8s;
+  background: white;
+  width: 20px;
+  height: 20px;
+}
+
+.circle:nth-child(9) {
+  animation-delay: 0.9s;
+  background: white;
+  width: 10px;
+  height: 10px;
+}
+
+@keyframes spin {
+  0% {
+    border-radius: 50%;
+    transform: rotate(0);
+  }
+  20% {
+    border-radius: 50%;
+    transform: rotate(0);
+  }
+  90% {
+    border-radius: 5%;
+    transform: rotate(90deg);
+  }
+  100% {
+    border-radius: 5%;
+    transform: rotate(90deg);
+  }
+}
