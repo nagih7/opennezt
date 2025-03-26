@@ -1,8 +1,7 @@
 import mongoose from 'mongoose'
 
 export default function createModel(name, collection, definition, options) {
-    const hasTimestamps = 'timestamp' in definition
-
+    const hasTimestamp = 'timestamp' in definition
     // Check if TTL is defined
     const ttlValue = definition.ttl
     if (ttlValue) {
@@ -10,17 +9,17 @@ export default function createModel(name, collection, definition, options) {
     }
 
     const schema = new mongoose.Schema(definition, {
-        timestamps: hasTimestamps ? false : {createdAt: 'created_at', updatedAt: 'updated_at'},
+        timestamps: hasTimestamp ? null : {createdAt: 'created_at', updatedAt: 'updated_at'},
         versionKey: false,
         ...(options ?? {}),
     })
 
+    schema.index({created_at: 1})
+
     // Apply TTL index if needed
     if (ttlValue) {
+        console.log(typeof ttlValue)
         schema.index({created_at: 1}, {expireAfterSeconds: ttlValue})
-    }
-    if (ttlValue && hasTimestamps) {
-        schema.index({timestamp: 1}, {expireAfterSeconds: ttlValue})
     }
 
     return mongoose.model(name, schema, collection)

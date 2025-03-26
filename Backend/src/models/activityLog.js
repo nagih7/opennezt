@@ -16,6 +16,7 @@ const ActivityLog = createModel('ActivityLog', 'activity_logs', {
         required: false,
         default: {},
     },
+    // ttl: 60 * 60 * 24 * 14, // 14 days
     timestamp: {
         type: Date,
         required: true,
@@ -26,7 +27,6 @@ const ActivityLog = createModel('ActivityLog', 'activity_logs', {
         required: true,
         default: {},
     },
-    ttl: 60,
 })
 
 export default ActivityLog

@@ -106,19 +106,16 @@ const ProjectMoreInfo = () => {
 				)}
 				<p className="text-[#6F7F92] flex">
 					<IconlyParticipants color={"#2F65B9"} />
-					{/* 26 Participants in the Project */}
 					{projectDetails?.members?.length} Participants in the Project
 				</p>
 
-
-				<p className="text-[#6F7F92] flex">
-					<IconlyRevenue color={"#2F65B9"} />
-					Revenue {projectDetails?.revenues?.slice(-1)[0].amount} (
-					{projectDetails?.revenues?.slice(-1)[0].currency})
-				</p>
-
-
-
+				{projectDetails?.revenue && projectDetails?.revenue?.length > 0 && (
+					<p className="text-[#6F7F92] flex">
+						<IconlyRevenue color={"#2F65B9"} />
+						Revenue {projectDetails?.revenues?.slice(-1)[0].amount} (
+						{projectDetails?.revenues?.slice(-1)[0].currency})
+					</p>
+				)}
 			</div>
 			{projectDetails &&
 				projectDetails?.applied === false &&

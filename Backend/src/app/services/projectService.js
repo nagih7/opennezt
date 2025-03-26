@@ -761,7 +761,7 @@ export async function accessToProject(user, projectId) {
         const activity = new ActivityLog({
             user_id: user._id,
             type_id: accessType._id,
-            data: {project_id: project._id},
+            data: {project_id: project._id, owner_id: project.user_id},
             metadata: {},
         })
         await activity.save()
@@ -785,3 +785,173 @@ export async function addProjectRequirement(user, requestBody) {
 }
 
 
+// ========== GET [My Project Access] ========== //
+export async function getMyProjectAccess(user) {
+    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROJECT_ACCESS})
+    const activities = await ActivityLog.aggregate([
+        {
+            $match: {
+                user_id: user._id,
+                type_id: accessType._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'projects',
+                localField: 'data.project_id',
+                foreignField: '_id',
+                as: 'project',
+                pipeline: [
+                    {
+                        $addFields: {
+                            logo: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                                    then: '$logo',
+                                    else: {$concat: [LINK_STATIC_URL, '$logo']},
+                                },
+                            },
+                            background: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                                    then: '$background',
+                                    else: {$concat: [LINK_STATIC_URL, '$background']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            logo: 1,
+                            background: 1,
+                            created_at: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$project',
+        },
+        // {
+        //     $addFields: {
+        //         timestamp: '$created_at',
+        //     },
+        // },
+        {
+            $limit: 10,
+        },
+        {
+            $sort: {timestamp: -1},
+        },
+        {
+            $project: {
+                timestamp: 1,
+                project: 1,
+            },
+        },
+    ])
+
+    return activities
+}
+
+// ========== GET [Access to My Projects] ========== //
+export async function getAccessToMyProjects(user) {
+    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROJECT_ACCESS})
+    const activities = await ActivityLog.aggregate([
+        {
+            $match: {
+                'data.owner_id': user._id,
+                type_id: accessType._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'projects',
+                localField: 'data.project_id',
+                foreignField: '_id',
+                as: 'project',
+                pipeline: [
+                    {
+                        $addFields: {
+                            logo: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                                    then: '$logo',
+                                    else: {$concat: [LINK_STATIC_URL, '$logo']},
+                                },
+                            },
+                            background: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                                    then: '$background',
+                                    else: {$concat: [LINK_STATIC_URL, '$background']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            logo: 1,
+                            background: 1,
+                            created_at: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$project',
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $limit: 10,
+        },
+        {
+            $sort: {timestamp: -1},
+        },
+        {
+            $project: {
+                timestamp: 1,
+                project: 1,
+                user: 1,
+            },
+        },
+    ])
+
+    return activities
+}

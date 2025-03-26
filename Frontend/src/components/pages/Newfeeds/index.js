@@ -15,6 +15,8 @@ import {
    handleCreateArticle,
    handleUpdateArticle,
    handleDeleteArticle,
+   handleGetUserBookmarks,
+   handleBookmarkArticle,
 } from "../../../api/newfeeds";
 import { useDispatch, useSelector } from "react-redux";
 import RightSidebar from "components/common/RightSidebar";
@@ -26,10 +28,13 @@ import {
    closeCreateForm,
    openUpdateForm,
    closeUpdateForm,
+   updateBookmarks,
 } from "states/modules/article";
 import CreateAricleForm from "./components/CreateAricleForm";
 import CommentList from "./components/CommentList";
 import UpdateArticleForm from "./components/UpdateArticleForm";
+import store from "states/configureStore";
+import { PermPhoneMsg } from "@mui/icons-material";
 
 function NewFeeds() {
    const dispatch = useDispatch();
@@ -45,6 +50,7 @@ function NewFeeds() {
       isOpenCreateForm,
       isOpenUpdateForm,
       pagination,
+      bookmarks,
    } = useSelector((state) => state.article);
 
    const { nextCursor, limit, hasMore } = pagination;
@@ -204,31 +210,47 @@ function NewFeeds() {
       setSelectedArticle({});
       dispatch(closeUpdateForm());
    }, [dispatch]);
-   const handleUpdateFormSubmit = useCallback(
-      async (id, formData) => {
-         const newFormData = new FormData();
-         newFormData.append("caption", formData.content.caption);
-         formData.content.attachment.forEach((file) => {
-            newFormData.append("attachment", file);
-         });
-         newFormData.append(
-            "hashtags",
-            JSON.stringify(formData.content.hashtags)
-         );
-         newFormData.append("audience", formData.audience);
-         newFormData.append("status", formData.status);
-         newFormData.append("project_id", formData.project_id);
-         dispatch(handleUpdateArticle({ id: id, data: newFormData }));
-         dispatch(updateUpdatedArticle(formData));
-      },
-      [dispatch]
-   );
+   const handleUpdateFormSubmit = useCallback(async (id, formData) => {
+      const newFormData = new FormData();
+      newFormData.append("caption", formData.content.caption);
+      formData.content.attachment.forEach((file) => {
+         newFormData.append("attachment", file);
+      });
+      newFormData.append("hashtags", JSON.stringify(formData.content.hashtags));
+      newFormData.append("audience", formData.audience);
+      newFormData.append("status", formData.status);
+      newFormData.append("project_id", formData.project_id);
+      await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }));
+      await store.dispatch(updateUpdatedArticle(formData));
+   }, []);
    //End Update Article
    //Delete Article
    const handleDelete = useCallback(
       (id) => {
          dispatch(updateDeletedArticle(id));
          dispatch(handleDeleteArticle({ id }));
+      },
+      [dispatch]
+   );
+
+   useEffect(() => {
+      if (onetimefeeds.length > 0) {
+         const articleIds = onetimefeeds.filter((r) => r._id).map((r) => r._id);
+
+         if (articleIds.length > 0) {
+            dispatch(handleGetUserBookmarks(articleIds));
+         }
+      }
+   }, [dispatch, onetimefeeds]);
+
+   const bookmarksMap = useMemo(() => {
+      return new Map(bookmarks.map((r) => [r.article_id.toString(), r.marked]));
+   }, [bookmarks]);
+
+   const bookmarkArticle = useCallback(
+      (data) => {
+         dispatch(handleBookmarkArticle({ data }));
+         dispatch(updateBookmarks(data));
       },
       [dispatch]
    );
@@ -277,6 +299,8 @@ function NewFeeds() {
                         onSelect={handleSelectArticle}
                         onEdit={handleOpenUpdateForm}
                         onDelete={handleDelete}
+                        bookmark={bookmarksMap.get(feed._id)}
+                        onBookmark={bookmarkArticle}
                      />
                   );
                } else {
@@ -290,6 +314,8 @@ function NewFeeds() {
                         onSelect={handleSelectArticle}
                         onEdit={handleOpenUpdateForm}
                         onDelete={handleDelete}
+                        bookmark={bookmarksMap.get(feed._id)}
+                        onBookmark={bookmarkArticle}
                      />
                   );
                }

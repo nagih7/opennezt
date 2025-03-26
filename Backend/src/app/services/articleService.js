@@ -6,11 +6,11 @@ import {LINK_STATIC_URL} from '@/configs'
 import {ObjectId} from 'mongodb'
 import delay from '@/utils/classes/delay.js'
 import Project from '@/models/project.js'
+import Bookmark from '@/models/bookmark.js'
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa
 export const createArticle = async (user, requestBody) => {
-
     const filesArray = requestBody.content.attachment
 
     if (filesArray && filesArray.length > 0) {
@@ -204,15 +204,14 @@ export const updateArticle = async (user_id, id, requestBody) => {
             const updatedProject = await Project.findById(requestBody.project_id) // Lấy project mới theo ID
             if (updatedProject) {
                 // Cập nhật lại mảng project với project mới
-                requestBody.project = [updatedProject]  // Mảng chứa 1 project mới
+                requestBody.project = [updatedProject] // Mảng chứa 1 project mới
             } else {
                 throw new Error('Project not found')
             }
         }
 
-
         // Cập nhật bài viết với mảng project mới nếu có thay đổi
-        const updatedArticle = await Article.findByIdAndUpdate(id, { ...requestBody }, { new: true })
+        const updatedArticle = await Article.findByIdAndUpdate(id, {...requestBody}, {new: true})
         await delay(2000)
         return updatedArticle
     }
@@ -538,5 +537,40 @@ export const getUserCommentReactions = async (user_id, target_ids) => {
 // Update project name after update article
 export const updateProjectName = async (project_id) => {
     const articles = await Article.find({project_id: project_id})
-    
+}
+
+export const bookmarkArticle = async (requestBody, user) => {
+    const {article_id, marked} = requestBody
+    const user_id = user._id.toString()
+
+    const existingBookmark = await Bookmark.findOne({
+        article_id: article_id,
+        user_id: user_id,
+    })
+
+    if (existingBookmark) {
+        existingBookmark.marked = marked
+        await existingBookmark.save()
+        return existingBookmark
+    } else {
+        const newBookmark = new Bookmark({
+            user_id: user_id,
+            article_id: article_id,
+            marked: marked,
+        })
+        await newBookmark.save()
+        return newBookmark
+    }
+}
+
+export const getUserBookmarks = async (user, article_ids) => {
+    const user_id = user._id
+    const articleIdsArray = article_ids.split(',').map((id) => new Object(id))
+
+    const bookMarks = await Bookmark.find({
+        user_id: user_id,
+        article_id: {$in: articleIdsArray},
+    })
+
+    return bookMarks
 }

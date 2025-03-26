@@ -63,3 +63,9 @@ export async function updateProfileAdditionalInfo(req, res) {
     await profileService.updateProfileAdditionalInfo(req.currentUser, req.body)
     res.jsonify('Update profile additional info successfully.')
 }
+
+// ========== GET [Profile Access] ========== //
+export async function getAccessToMyProfile(req, res) {
+    const access = await profileService.getAccessToMyProfile(req.currentUser)
+    res.jsonify(access)
+}

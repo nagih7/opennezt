@@ -3,7 +3,7 @@ import {Schema} from 'mongoose'
 import User from './user'
 import Project from './project'
 import {ARTICLE_AUDIENCE_ENUM, ARTICLE_STATUS_ENUM} from '@/configs'
-import { de } from '@faker-js/faker'
+import {de} from '@faker-js/faker'
 
 const Content = new Schema(
     {
@@ -14,11 +14,11 @@ const Content = new Schema(
         },
         attachment: {
             type: [String],
-            require: false,
+            required: false,
         },
         hashtags: {
             type: [String],
-            require: false,
+            required: false,
         },
     },
     {

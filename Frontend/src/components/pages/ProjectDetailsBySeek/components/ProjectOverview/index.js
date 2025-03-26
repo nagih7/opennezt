@@ -1,7 +1,7 @@
 import { Avatar } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Tabs } from "@chakra-ui/react"
+import { Tabs } from "@chakra-ui/react";
 const ProjectOverview = () => {
 	const [changetab, setChangetab] = useState("Overview");
 	const [dropdown, setDropsown] = useState(true);
@@ -19,9 +19,7 @@ const ProjectOverview = () => {
 			<Tabs.Root defaultValue="Overview">
 				<Tabs.List>
 					<div className="bg-white mt-[1rem] p-4 font-bold flex w-[43rem] 2xl:w-[49rem]">
-						<Tabs.Trigger value="Overview"
-							className="text-black "
-						>
+						<Tabs.Trigger value="Overview" className="text-black ">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className="w-[1.2rem] mr-2"
@@ -32,9 +30,7 @@ const ProjectOverview = () => {
 							</svg>
 							Overview
 						</Tabs.Trigger>
-						<Tabs.Trigger value="Project"
-							className="text-black "
-						>
+						<Tabs.Trigger value="Project" className="text-black ">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className="w-[1.2rem] mr-2"
@@ -47,9 +43,7 @@ const ProjectOverview = () => {
 							</svg>
 							Project
 						</Tabs.Trigger>
-						<Tabs.Trigger value="Creator"
-							className="text-black"
-						>
+						<Tabs.Trigger value="Creator" className="text-black">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className="w-[1.2rem] mr-2"
@@ -60,9 +54,7 @@ const ProjectOverview = () => {
 							</svg>
 							Creator
 						</Tabs.Trigger>
-						<Tabs.Trigger value="Reviews"
-							className="text-black"
-						>
+						<Tabs.Trigger value="Reviews" className="text-black">
 							<svg
 								fill="#000000"
 								xmlns="http://www.w3.org/2000/svg"
@@ -80,27 +72,12 @@ const ProjectOverview = () => {
 				<div className=" mt-[2.5rem]">
 					<Tabs.Content value="Overview">
 						<div className="p-4 bg-white">
-							<h2 className="mb-4 text-2xl font-semibold">Description</h2>
+							<h2 className="mb-4 text-2xl font-semibold">
+								Description
+							</h2>
 							<p className="text-[#9DA4A4] mb-4">
 								{projectDetails?.description || "No description"}
 							</p>
-							{/* <p className="text-[#9DA4A4] mb-4">
-							This is the occasion to give an answer to those questions!
-						</p>
-						<p className="text-[#9DA4A4] mb-4">
-							The class is meant for ice cream makers and pastry chefs,
-							but any passionate hobbyist is most welcome!
-						</p>
-						<p className="text-[#9DA4A4] mb-4">
-							Throughout the course, we will talk about ice cream
-							ingredients, their functions, in order to understand how to
-							build a complete recipe from zero.
-						</p>
-						<p className="text-[#9DA4A4] mb-4">
-							Please bear in mind that this course is not to teach how to
-							make ice cream, but rather very important and technical
-							aspects behind the recipe architecture.
-						</p> */}
 							{projectDetails?.additional_infos?.map((info, index) => (
 								<>
 									<h2 className="mb-4 text-2xl font-semibold">
@@ -292,18 +269,21 @@ const ProjectOverview = () => {
 										<div
 											key={star}
 											className="flex items-center relative right-[-4rem] top-[3rem] ">
-											<span className="ml-1 text-gray-700">{star}</span>
+											<span className="ml-1 text-gray-700">
+												{star}
+											</span>
 											<span className="text-lg text-yellow-400">
 												⭐
 											</span>
 											<div className="w-[17rem] h-2 bg-gray-200 rounded-lg mx-2 2xl:w-[19rem] ">
 												<div
-													className={`h-2 ${star === 5
-														? "bg-yellow-400 w-3/6"
-														: star === 4
+													className={`h-2 ${
+														star === 5
+															? "bg-yellow-400 w-3/6"
+															: star === 4
 															? "bg-yellow-400 w-2/6"
 															: "bg-gray-200"
-														} rounded-lg`}></div>
+													} rounded-lg`}></div>
 											</div>
 											<span className="text-sm text-gray-600">
 												{star === 5 ? "1" : star === 4 ? "1" : "0"}
@@ -399,7 +379,6 @@ const ProjectOverview = () => {
 						</>
 					</Tabs.Content>
 				</div>
-
 			</Tabs.Root>
 		</div>
 	);
