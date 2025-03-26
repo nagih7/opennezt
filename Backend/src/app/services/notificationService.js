@@ -1,3 +1,4 @@
+import {LINK_STATIC_URL} from '@/configs'
 import {NotificationFeed, Friend, ObjectId, Project, User, Conversation, Type, ProjectMember} from '@/models'
 import {userSockets} from '@/routes/socket'
 
@@ -76,43 +77,79 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
     return {total, page, per_page, notifications}
 }
 
+// ========== GET [Notification - Read] ========== //
 export async function getNotifications(user) {
+    const matchStage = {
+        $match: {
+            user_id: user._id,
+        },
+    }
     const lookupTypeStage = {
         $lookup: {
             from: 'types',
             localField: 'type_id',
             foreignField: '_id',
-            as: 'type_info',
+            as: 'type',
+            pipeline: [
+                {
+                    $project: {
+                        _id: 0,
+                        class: 1,
+                        name: 1,
+                    },
+                },
+            ],
         },
+    }
+    const unwindTypeStage = {
+        $unwind: '$type',
     }
     const lookupUserStage = {
         $lookup: {
             from: 'users',
             localField: 'source_id',
             foreignField: '_id',
-            as: 'source_info',
+            as: 'user',
+            pipeline: [
+                {
+                    $addFields: {
+                        avatar: {
+                            $cond: {
+                                if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                then: '$avatar',
+                                else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                            },
+                        },
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        name: 1,
+                        avatar: 1,
+                    },
+                },
+            ],
         },
+    }
+    const unwindUserStage = {
+        $unwind: '$user',
     }
     const projectStage = {
         $project: {
             _id: 1,
-            type_id: 1,
-            source_id: 1,
-            type_name: {$ifNull: [{$arrayElemAt: ['$type_info.name', 0]}, 'Unknown Type']},
-            source_name: {$ifNull: [{$arrayElemAt: ['$source_info.name', 0]}, 'Unknown User']},
-            created_at: 1,
-            updated_at: 1,
+            user: 1,
+            type: 1,
+            timestamp: 1,
             metadata: 1,
         },
     }
     const notifications = await NotificationFeed.aggregate([
-        {
-            $match: {
-                user_id: user._id,
-            },
-        },
+        matchStage,
         lookupTypeStage,
         lookupUserStage,
+        unwindTypeStage,
+        unwindUserStage,
         {
             $sort: {
                 created_at: -1,
@@ -120,9 +157,6 @@ export async function getNotifications(user) {
         },
         {
             $limit: 10,
-        },
-        {
-            $skip: 0,
         },
         projectStage,
     ])

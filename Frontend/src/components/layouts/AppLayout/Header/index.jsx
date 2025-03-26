@@ -1,7 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import styles from "./styles.module.scss";
-// import "./styles.scss";
-// import { Popover } from "antd";
 import PopoverProfile from "./components/PopoverProfile";
 import PopoverNotification from "./components/PopoverNotification";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
@@ -16,7 +13,7 @@ import {
 	IconlyNotification,
 	IconlySearch,
 } from "components/UI/Iconly";
-import { Avatar, Button, Popover, Portal, Stack } from "@chakra-ui/react";
+import { Avatar, Popover, Portal, Stack } from "@chakra-ui/react";
 import Logo from "assets/images/logo/OpenNezt_logo_black.png";
 
 const Header = () => {
@@ -142,7 +139,9 @@ const Header = () => {
 								)}
 							</div>
 						</div>
-						<Popover.Root positioning={{ placement: "bottom-end" }}>
+						<Popover.Root
+							positioning={{ placement: "bottom-end" }}
+							size={"lg"}>
 							<Popover.Trigger asChild>
 								<span>
 									<IconlyNotification size={24} color="#6f7f92" />

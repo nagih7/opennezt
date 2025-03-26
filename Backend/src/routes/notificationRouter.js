@@ -39,7 +39,8 @@ notificationRouter.get(
 // Get total friends
 notificationRouter.get('/total-friends', asyncHandler(notificationController.getTotalFriends))
 
-notificationRouter.get('/', asyncHandler(notificationController.getNotifications))
+// ========== GET [Notification - Read] ========== //
+notificationRouter.get('/read', asyncHandler(notificationController.getNotifications))
 
 // ========== PUT [Notification - Reply Invitation Member] ========== //
 notificationRouter.put(

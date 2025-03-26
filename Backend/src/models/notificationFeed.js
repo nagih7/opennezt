@@ -41,6 +41,11 @@ const NotificationFeed = createModel('NotificationFeed', 'notifications_feed', {
         required: true,
         default: {},
     },
+    timestamp: {
+        type: Date,
+        required: true,
+        default: Date.now,
+    },
     metadata: {
         type: metadata,
         required: true,

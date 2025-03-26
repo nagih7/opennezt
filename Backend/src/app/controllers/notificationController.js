@@ -5,6 +5,7 @@ export async function readRoot(req, res) {
     res.jsonify(result)
 }
 
+// ========== GET [Notification - Read Notification] ========== //
 export async function getNotifications(req, res) {
     const result = await notificationService.getNotifications(req.currentUser)
     res.jsonify(result)

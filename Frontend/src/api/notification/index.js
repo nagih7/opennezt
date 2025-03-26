@@ -3,15 +3,13 @@ import {
 	startRequestReadRoot,
 	startRequestReadRootSuccess,
 	startRequestReadRootFail,
-	startRequestGetNotifications,
-	startRequestGetNotificationsSuccess,
-	startRequestGetNotificationsFail,
+	// =========== Get Notification =========== //
+	requestGetNotifications,
+	getNotificationsSuccess,
+	getNotificationsFail,
 	startRequestReplyNotification,
 	startRequestReplyNotificationSuccess,
 	startRequestReplyNotificationFail,
-	startRequestMessage,
-	startRequestMessageSuccess,
-	startRequestMessageFail,
 	startRequestGetTotalFriends,
 	startRequestGetTotalFriendsSuccess,
 	startRequestGetTotalFriendsFail,
@@ -23,14 +21,15 @@ import {
 	startRequestGetRequestAddFriendFail,
 } from "states/modules/notification";
 
+// =========== Get Notification =========== //
 export const getNotifications = () => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
-		apiPath: "notification",
+		apiPath: "notifications/read",
 		actionTypes: [
-			startRequestGetNotifications,
-			startRequestGetNotificationsSuccess,
-			startRequestGetNotificationsFail,
+			requestGetNotifications,
+			getNotificationsSuccess,
+			getNotificationsFail,
 		],
 		variables: {},
 		dispatch,

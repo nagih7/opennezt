@@ -5,7 +5,10 @@ import { toaster } from "components/UI/toaster";
 const notificationSlice = createSlice({
 	name: "notification",
 	initialState: {
+		// =========== Get Notification =========== //
 		notifications: [],
+		isLoadingGetNotifications: false,
+		// =========== Reply Notification =========== //
 		requestAddFriend: {},
 		paginationListNotification: {
 			currentPage: 1,
@@ -39,17 +42,19 @@ const notificationSlice = createSlice({
 			...state,
 			loadingGetNotifications: false,
 		}),
-		startRequestGetNotifications: (state) => ({
+		// =========== Get Notification =========== //
+		requestGetNotifications: (state) => ({
 			...state,
+			isLoadingGetNotifications: true,
 		}),
-		startRequestGetNotificationsSuccess: (state, action) => ({
+		getNotificationsSuccess: (state, action) => ({
 			...state,
 			notifications: action.payload.data,
-			loadingGetNotifications: false,
+			isLoadingGetNotifications: false,
 		}),
-		startRequestGetNotificationsFail: (state) => ({
+		getNotificationsFail: (state) => ({
 			...state,
-			loadingGetNotifications: false,
+			isLoadingGetNotifications: false,
 		}),
 		startRequestReplyNotification: (state) => ({
 			...state,
@@ -149,9 +154,10 @@ export const {
 	startRequestReadRoot,
 	startRequestReadRootSuccess,
 	startRequestReadRootFail,
-	startRequestGetNotifications,
-	startRequestGetNotificationsSuccess,
-	startRequestGetNotificationsFail,
+	// =========== Get Notification =========== //
+	requestGetNotifications,
+	getNotificationsSuccess,
+	getNotificationsFail,
 	startRequestReplyNotification,
 	startRequestReplyNotificationSuccess,
 	startRequestReplyNotificationFail,
