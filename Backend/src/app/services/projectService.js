@@ -10,6 +10,7 @@ import {
     ProjectMember,
     Role,
     ActivityLog,
+    ProjectRequirement
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
 
@@ -766,6 +767,23 @@ export async function accessToProject(user, projectId) {
         await activity.save()
     }
 }
+
+// ========== POST [Project - add Requirement] ========== //
+export async function addProjectRequirement(user, requestBody) {
+    const {project_id, team_role_id, role_id, industry_ids, experience_level_id, category_ids, skill_ids, metadata} = requestBody
+    const requirement = new ProjectRequirement({
+        project_id: project_id,
+        team_role_id: team_role_id,
+        role_id: role_id,
+        industry_ids: industry_ids,
+        experience_level_id: experience_level_id,
+        category_ids: category_ids,
+        skill_ids: skill_ids,
+        metadata: metadata,
+    })
+    await requirement.save()
+}
+
 
 // ========== GET [My Project Access] ========== //
 export async function getMyProjectAccess(user) {

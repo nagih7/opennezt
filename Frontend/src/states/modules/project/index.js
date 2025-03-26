@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toaster } from "components/UI/toaster";
+import { create } from "lodash";
 
 const projectSlice = createSlice({
 	name: "Project",
@@ -54,6 +55,17 @@ const projectSlice = createSlice({
 		// ========== APPLY TO JOIN PROJECT ========== //
 		isLoadingApplyToJoinProject: false,
 		isOpenModalConfirmApply: false,
+		// ========== REQUIREMENT PROJECT ========== //
+		formAddProjectRequirement:{
+			teamRole: "",
+			role: "",
+			industries: "",
+			experienceLevel: "",
+			categories: "",
+			subcategories: "",
+			skills: "",
+		},
+		isLoadingCreateProjectRequirement: false,
 	},
 	reducers: {
 		setTitle: (state) => ({
@@ -240,6 +252,34 @@ const projectSlice = createSlice({
 				state.formCreateProject[key] = action.payload[key];
 			});
 		},
+		// ========== REQUIREMENT PROJECT ========== //
+		requestCreateProjectRequirement: (state) => ({
+			...state,
+			isLoadingCreateProjectRequirement: true,
+		}),
+		createProjectRequirementSuccess: (state) => {
+			toaster.create({
+				title: "Create project requirement successfully",
+				description: "You have successfully created the project requirement",
+				type: "success",
+			});
+			return {
+				...state,
+				isLoadingCreateProjectRequirement: false,
+			};
+		},
+		createProjectRequirementFail: (state) => {
+			toaster.create({
+				title: "Create project requirement failed",
+				description: "You have failed to create the project requirement",
+				type: "error",
+			});
+			return {
+				...state,
+				isLoadingCreateProjectRequirement: false,
+			};
+		},
+
 	},
 });
 
@@ -276,6 +316,10 @@ export const {
 	deleteMyProjectFail,
 	// ========== SEEK PROJECTS ========== //
 	onChangeFormCreateProject,
+	// ========== REQUIREMENT PROJECT ========== //
+	requestCreateProjectRequirement,
+	createProjectRequirementSuccess,
+	createProjectRequirementFail,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;
