@@ -65,16 +65,18 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
 						</span>
 					</li>
 				</Link>
-				<li onClick={() => setChangeTab("Messages")} className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
-					<a
-						href="#"
-						className={`no-underline  ${changeTab === "Messages" ? "bg-[#4374c0]" : "bg-[#F4F5F6]"}   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}>
-						<IconlyMessage size={20} color={"#042713"} />
-					</a>
-					<span className={` ${changeTab === "Messages" ? "text-[#4374c0]" : "text-[#6f7f92]"} text-sm font-medium`}>
-						Messages
-					</span>
-				</li>
+				<Link className="no-underline" to={"/messages"}>
+					<li onClick={() => setChangeTab("Messages")} className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
+						<a
+							href="#"
+							className={`no-underline  ${changeTab === "Messages" ? "bg-[#4374c0]" : "bg-[#F4F5F6]"}   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}>
+							<IconlyMessage size={20} color={"#042713"} />
+						</a>
+						<span className={` ${changeTab === "Messages" ? "text-[#4374c0]" : "text-[#6f7f92]"} text-sm font-medium`}>
+							Messages
+						</span>
+					</li>
+				</Link>
 				<li onClick={() => setChangeTab("Badges")} className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
 					<a
 						href="#"
@@ -85,16 +87,18 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
 						Badges
 					</span>
 				</li>
-				<li onClick={() => setChangeTab("Courses")} className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
-					<a
-						href="#"
-						className={`no-underline  ${changeTab === "Courses" ? "bg-[#4374c0]" : "bg-[#F4F5F6]"}   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}>
-						<IconlyDocument size={20} color={"#042713"} />
-					</a>
-					<span className={` ${changeTab === "Courses" ? "text-[#4374c0]" : "text-[#6f7f92]"} text-sm font-medium`}>
-						Courses
-					</span>
-				</li>
+				<Link className="no-underline" to={"/projects"}>
+					<li onClick={() => setChangeTab("Courses")} className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
+						<a
+							href="#"
+							className={`no-underline  ${changeTab === "Courses" ? "bg-[#4374c0]" : "bg-[#F4F5F6]"}   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}>
+							<IconlyDocument size={20} color={"#042713"} />
+						</a>
+						<span className={` ${changeTab === "Courses" ? "text-[#4374c0]" : "text-[#6f7f92]"} text-sm font-medium`}>
+							Projects
+						</span>
+					</li>
+				</Link>
 			</ul>
 		</div>
 	);

@@ -135,7 +135,7 @@ function NotificationProject() {
 		<>
 			<div className="flex gap-8 mt-[1rem]">
 				<Tabs.Root className="h-4" defaultValue="Unread">
-					<div className="w-[60.25rem]">
+					<div className="w-[60.25rem] 2xl:ml-6">
 						<Tabs.List>
 							<div className="bg-white  p-4 font-bold flex w-[43rem] 2xl:w-[61rem]">
 								<Tabs.Trigger className="text-black" value="Unread">

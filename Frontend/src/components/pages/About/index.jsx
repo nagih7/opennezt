@@ -6,9 +6,9 @@ import Friends from "./components/Friends";
 import { Image } from "@chakra-ui/react";
 import Timeline from "./components/Timeline";
 import Groups from "./components/Groups";
-import Messages from "./components/Messages";
+
 import Badges from "./components/Badges";
-import Courses from "./components/Courses";
+
 import ProfileOverview from "./components/ProfileOverview";
 
 const About = () => {
@@ -38,11 +38,10 @@ const About = () => {
 				{changeTab == "Friends" && <Friends />}
 				{changeTab == "Timeline" && <Timeline />}
 				{changeTab == "Groups" && <Groups />}
-				{changeTab == "Messages" && <Messages />}
 				{changeTab == "Badges" && <Badges />}
-				{changeTab == "Courses" && <Courses />}
-				{changeTab == "About" && <ProfessionalProfile />}
-				{changeTab == "Friends" && <Friends />}
+
+
+
 			</div>
 		</div>
 	);
