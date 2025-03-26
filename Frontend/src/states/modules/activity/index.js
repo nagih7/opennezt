@@ -13,6 +13,9 @@ const activitySlice = createSlice({
 		isLoadinggGetAccessToMyProjects: false,
 		// ========== TALENT ACCESS ========== //
 		isLoadingAccessTalent: false,
+		// ========== ACCESS TO MY PROFILE ========== //
+		accessToMyProfile: [],
+		isLoadingGetAccessToMyProfile: false,
 	},
 	reducers: {
 		// ========== PROJECT ACCESS ========== //
@@ -56,6 +59,33 @@ const activitySlice = createSlice({
 			...state,
 			isLoadinggGetAccessToMyProjects: false,
 		}),
+		// ========== TALENT ACCESS ========== //
+		requestAccessToTalent: (state) => ({
+			...state,
+			isLoadingAccessTalent: true,
+		}),
+		accessToTalentSuccess: (state) => ({
+			...state,
+			isLoadingAccessTalent: false,
+		}),
+		accessToTalentFailure: (state) => ({
+			...state,
+			isLoadingAccessTalent: false,
+		}),
+		// ========== ACCESS TO MY PROFILE ========== //
+		requestGetAccessToMyProfile: (state) => ({
+			...state,
+			isLoadingGetAccessToMyProfile: true,
+		}),
+		getAccessToMyProfileSuccess: (state, action) => ({
+			...state,
+			accessToMyProfile: action.payload.data,
+			isLoadingGetAccessToMyProfile: false,
+		}),
+		getAccessToMyProfileFail: (state) => ({
+			...state,
+			isLoadingGetAccessToMyProfile: false,
+		}),
 	},
 });
 
@@ -72,6 +102,14 @@ export const {
 	requestGetAccessToMyProjects,
 	getAccessToMyProjectsSuccess,
 	getAccessToMyProjectsFail,
+	// ========== TALENT ACCESS ========== //
+	requestAccessToTalent,
+	accessToTalentSuccess,
+	accessToTalentFailure,
+	// ========== ACCESS TO MY PROFILE ========== //
+	requestGetAccessToMyProfile,
+	getAccessToMyProfileSuccess,
+	getAccessToMyProfileFail,
 } = activitySlice.actions;
 
 export default activitySlice.reducer;

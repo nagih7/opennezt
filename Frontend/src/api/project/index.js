@@ -28,6 +28,9 @@ import {
 	requestGetProjectDetails,
 	getProjectDetailsSuccess,
 	getProjectDetailsFail,
+	requestCreateProjectRequirement,
+	createProjectRequirementSuccess,
+	createProjectRequirementFail,
 } from "../../states/modules/project";
 
 // ========== My projects ========== //
@@ -156,6 +159,23 @@ export const applyToJoinProject =
 				requestApplyToJoinProject,
 				applyToJoinProjectSuccess,
 				applyToJoinProjectFail,
+			],
+			variables: formRequest,
+			dispatch,
+			getState,
+		});
+	};
+
+// ========== PROJECT REQUIREMENT ========== //
+export const addProjectRequirement =
+	(projectId, formRequest) => async (dispatch, getState) => {
+		return callApi({
+			method: "post",
+			apiPath: `projects/${projectId}/requirement`,
+			actionTypes: [
+				requestCreateProjectRequirement,
+				createProjectRequirementSuccess,
+				createProjectRequirementFail,
 			],
 			variables: formRequest,
 			dispatch,

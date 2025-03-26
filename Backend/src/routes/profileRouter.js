@@ -69,6 +69,9 @@ profileRouter.put(
     asyncHandler(profileController.updateProfileAdditionalInfo)
 )
 
+// ========== GET [Profile - Access] ========== //
+profileRouter.get('/me/access', asyncHandler(profileController.getAccessToMyProfile))
+
 // ========== GET [Profile] ========== //
 profileRouter.get('/', asyncHandler(profileController.getProfile))
 

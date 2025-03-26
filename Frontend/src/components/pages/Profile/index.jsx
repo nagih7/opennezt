@@ -73,10 +73,10 @@ function Profile() {
 		<div className={styles.profileWrap}>
 			<Row gutter={20}>
 				<Col span={24}>
-					<div className={`${styles.profileItem}`}>
+					<div className={`${styles.profileItem} rounded-md`}>
 						<div className={styles.informationWrap}>
 							<div className={styles.backgroundWrap}>
-								<img src={background || BackgroundDefault} />
+								<img src={background || BackgroundDefault} className="rounded-md" />
 								<div className={styles.buttonChangeBackground}>
 									<Upload {...propsBackground}>
 										<CameraAltIcon fontSize="2rem" />

@@ -1,6 +1,10 @@
 import React, { forwardRef, useState, useRef, useEffect } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
-import { IconlyDelete, IconlyMoreCircle } from "components/UI/Iconly";
+import {
+   IconlyBookmark,
+   IconlyDelete,
+   IconlyMoreCircle,
+} from "components/UI/Iconly";
 import avt from "assets/images/background/avt.jpg";
 import { IconlyChat } from "components/UI/Iconly";
 import { IconlyHeart } from "components/UI/Iconly";
@@ -13,10 +17,21 @@ import {
    differenceInSeconds,
 } from "date-fns";
 import { Button } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const Article = forwardRef(
    (
-      { feed, reaction, onReaction, isLoading, onSelect, onEdit, onDelete },
+      {
+         feed,
+         reaction,
+         onReaction,
+         isLoading,
+         onSelect,
+         onEdit,
+         onDelete,
+         onBookmark,
+         bookmark,
+      },
       ref
    ) => {
       const {
@@ -29,6 +44,7 @@ const Article = forwardRef(
          comment_count,
       } = feed;
 
+      const navigate = useNavigate();
       const displayReaction = () => {
          if (reaction == "like") {
             return (
@@ -120,6 +136,50 @@ const Article = forwardRef(
       //End of Posted Date Logic
       //==================================================================================================
 
+      const handleBookmark = (data) => {
+         onBookmark(data);
+      };
+
+      console.log(bookmark);
+      const displayBookmark = () => {
+         if (bookmark === "yes") {
+            return (
+               <div
+                  className="flex text-2xl items-start pr-4 mt-2"
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                     handleBookmark({
+                        article_id: feed._id,
+                        marked: "no",
+                     })
+                  }
+               >
+                  <IconlyBookmark
+                     size={25}
+                     color={"#6f7f92"}
+                     backgroundColor={"#6f7f92"}
+                  />
+               </div>
+            );
+         }
+         if (bookmark === "no" || bookmark === undefined) {
+            return (
+               <div
+                  className="flex text-2xl items-start pr-4 mt-2"
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                     handleBookmark({
+                        article_id: feed._id,
+                        marked: "yes",
+                     })
+                  }
+               >
+                  <IconlyBookmark size={25} color={"#6f7f92"} />
+               </div>
+            );
+         }
+      };
+
       return (
          <div
             className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8"
@@ -167,10 +227,29 @@ const Article = forwardRef(
                      <div className="flex items-center gap-1">
                         {user[0].name}
                         <CheckCircleFilled className="text-[#3897f0]" />
-                        <span className="text-sm">posted in</span>
-                        <span className="">
-                           {feed?.project_name || "no name"}
-                        </span>
+                        {project[0] ? (
+                           <>
+                              {" "}
+                              <span className="text-sm">posted in</span>
+                              <span
+                                 className="cursor-pointer"
+                                 onClick={() =>
+                                    navigate(
+                                       `/projects/${project[0]._id}/details`
+                                    )
+                                 }
+                              >
+                                 <b> {project[0]?.name}</b>
+                              </span>
+                           </>
+                        ) : (
+                           <>
+                              {" "}
+                              <span className="text-sm">
+                                 created a new post
+                              </span>
+                           </>
+                        )}
                      </div>
                      <span className="text-xs text-gray-500">
                         {day <= 7
@@ -187,7 +266,7 @@ const Article = forwardRef(
                   {/* */}
 
                   <div>
-                     <div className="relative" ref={dropdownRef}>
+                     <div className="flex relative" ref={dropdownRef}>
                         <div
                            className="flex text-2xl items-start pr-4"
                            style={{ cursor: "pointer" }}
@@ -195,6 +274,7 @@ const Article = forwardRef(
                         >
                            ...
                         </div>
+                        {displayBookmark(bookmark)}
                         {isShowMore && (
                            <div className="absolute top-full right-0 bg-white shadow-lg rounded-md z-[99999] min-w-[200px] border border-gray-100">
                               <ul className="p-0 m-2">

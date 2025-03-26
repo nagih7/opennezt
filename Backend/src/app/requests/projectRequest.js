@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import {MAX_STRING_SIZE} from '@/configs'
 import {AsyncValidate, FileUpload} from '@/utils/classes'
-import {Industry, ObjectId, Project, Role, Stage, User} from '@/models'
+import {Category, ExperienceLevel, Industry, ObjectId, Project, Role, Skill, Stage, User} from '@/models'
 import {tryValidateOrDefault} from '@/utils/helpers'
 
 export const requestAddFriend = Joi.object({
@@ -271,5 +271,84 @@ export const applyToJoinProject = Joi.object({
                     const role = await Role.findById(value)
                     return role ? value : helpers.error('any.empty')
                 })
+        ),
+})
+
+// ========== POST [Project - Requirement] ========== //
+export const addProjectRequirement = Joi.object({
+    team_role_id: Joi.string()
+        .required()
+        .label('Team Role ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const role = await Role.findById(value)
+                    return role ? value : helpers.error('any.empty')
+                })
+        ),
+    role_id: Joi.string()
+        .required()
+        .label('Role ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const role = await Role.findById(value)
+                    return role ? value : helpers.error('any.empty')
+                })
+        ),
+    industry_ids: Joi.array()
+        .required()
+        .label('Industry')
+        .items(
+            Joi.string()
+                .trim()
+                .required()
+                .custom(
+                    (value, helpers) =>
+                        new AsyncValidate(value, async () => {
+                            const industry = await Industry.findById(new ObjectId(value))
+                            return industry ? value : helpers.error('any.empty')
+                        })
+                )
+        ),
+    experience_level_id: Joi.string()
+        .required()
+        .label('Experience Level ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const experienceLevel = await ExperienceLevel.findById(value)
+                    return experienceLevel ? value : helpers.error('any.empty')
+                })
+        ),
+    category_ids: Joi.array()
+        .required()
+        .label('Category')
+        .items(
+            Joi.string()
+                .trim()
+                .required()
+                .custom(
+                    (value, helpers) =>
+                        new AsyncValidate(value, async () => {
+                            const category = await Category.findById(new ObjectId(value))
+                            return category ? value : helpers.error('any.empty')
+                        })
+                )
+        ),
+    skill_ids: Joi.array()
+        .required()
+        .label('Skill')
+        .items(
+            Joi.string()
+                .trim()
+                .required()
+                .custom(
+                    (value, helpers) =>
+                        new AsyncValidate(value, async () => {
+                            const skill = await Skill.findById(new ObjectId(value))
+                            return skill ? value : helpers.error('any.empty')
+                        })
+                )
         ),
 })

@@ -890,7 +890,7 @@ export const IconlyShieldDone = ({ size, color }) => {
    );
 };
 
-export const IconlyBookmark = ({ size = 24, color }) => {
+export const IconlyBookmark = ({ size, color, backgroundColor }) => {
    return (
       <svg
          width={size}
@@ -905,7 +905,7 @@ export const IconlyBookmark = ({ size = 24, color }) => {
             id="Iconly/Light/Bookmark"
             stroke="none"
             strokeWidth="1.5"
-            fill="none"
+            fill={backgroundColor || "none"}
             fillRule="evenodd"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -1341,12 +1341,22 @@ export const IconlyFilter = ({ size, color }) => {
 
 export const IconlyArrowLeft2 = ({ size, color }) => {
    return (
-      <svg width={size} height={size} viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-         <path d="M15.75 19L8.75 12L15.75 5" stroke={color} strokeWidth="1.5" strokeLinecap="square"></path>
+      <svg
+         width={size}
+         height={size}
+         viewBox="0 0 25 24"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg"
+      >
+         <path
+            d="M15.75 19L8.75 12L15.75 5"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeLinecap="square"
+         ></path>
       </svg>
-   )
-}
-
+   );
+};
 
 export const IconlyTickSquare = ({ size, color }) => {
    return (
@@ -1458,26 +1468,83 @@ export const IconlyIndustry = ({ size = 24, color }) => {
 
 export const IconlyWallet = ({ size, color }) => {
    return (
-      <svg width={size} height={size} viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-         <path fillRule="evenodd" clipRule="evenodd" d="M17.8061 11.0281L22.6303 11.0281V12.5281H17.8063M17.8063 12.5281C16.656 12.5289 15.8468 13.3615 15.8467 14.2436C15.8474 15.1265 16.6565 15.9589 17.8065 15.9595H22.6303V17.4595H17.8061C15.9643 17.4585 14.3479 16.0849 14.3467 14.2443C14.3467 12.4028 15.9648 11.0291 17.8061 11.0281" fill={color}></path>
-         <path fillRule="evenodd" clipRule="evenodd" d="M1.86914 4.97598H22.6305V22H1.86914V4.97598ZM3.36914 6.47598V20.5H21.1305V6.47598H3.36914Z" fill={color}></path>
-         <path fillRule="evenodd" clipRule="evenodd" d="M1.86914 1.99997L19.9983 2.00077V6.378H18.4983V3.50071L3.36914 3.50004V21.9995H1.86914V1.99997Z" fill={color}></path>
-         <path fillRule="evenodd" clipRule="evenodd" d="M6.43359 9.54382H13.3671V11.0438H6.43359V9.54382Z" fill={color}></path>
+      <svg
+         width={size}
+         height={size}
+         viewBox="0 0 25 24"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg"
+      >
+         <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M17.8061 11.0281L22.6303 11.0281V12.5281H17.8063M17.8063 12.5281C16.656 12.5289 15.8468 13.3615 15.8467 14.2436C15.8474 15.1265 16.6565 15.9589 17.8065 15.9595H22.6303V17.4595H17.8061C15.9643 17.4585 14.3479 16.0849 14.3467 14.2443C14.3467 12.4028 15.9648 11.0291 17.8061 11.0281"
+            fill={color}
+         ></path>
+         <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M1.86914 4.97598H22.6305V22H1.86914V4.97598ZM3.36914 6.47598V20.5H21.1305V6.47598H3.36914Z"
+            fill={color}
+         ></path>
+         <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M1.86914 1.99997L19.9983 2.00077V6.378H18.4983V3.50071L3.36914 3.50004V21.9995H1.86914V1.99997Z"
+            fill={color}
+         ></path>
+         <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M6.43359 9.54382H13.3671V11.0438H6.43359V9.54382Z"
+            fill={color}
+         ></path>
       </svg>
-   )
-}
+   );
+};
+
 
 export const IconlyChart = ({ size, color }) => {
    return (
-      <svg width={size} height={size} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-         <path d="M7.41367 10.9624V16.9922" stroke={color} strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="round"></path>
-         <path d="M12.2506 8.07715V16.9923" stroke={color} strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="round"></path>
-         <path d="M17.0865 14.1489V16.9924" stroke={color} strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="round"></path>
-         <path fillRule="evenodd" clipRule="evenodd" d="M21.5 21.7847L21.5 3.28467L3 3.28467L3 21.7847L21.5 21.7847Z" stroke={color} strokeWidth="1.5" strokeLinecap="round"></path>
+      <svg
+         width={size}
+         height={size}
+         viewBox="0 0 25 25"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg"
+      >
+         <path
+            d="M7.41367 10.9624V16.9922"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeLinecap="square"
+            strokeLinejoin="round"
+         ></path>
+         <path
+            d="M12.2506 8.07715V16.9923"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeLinecap="square"
+            strokeLinejoin="round"
+         ></path>
+         <path
+            d="M17.0865 14.1489V16.9924"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeLinecap="square"
+            strokeLinejoin="round"
+         ></path>
+         <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M21.5 21.7847L21.5 3.28467L3 3.28467L3 21.7847L21.5 21.7847Z"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+         ></path>
       </svg>
-   )
-}
-
+   );
+};
 
 export const IconlyEarlyStage = ({ size = 24, color }) => {
    return (
