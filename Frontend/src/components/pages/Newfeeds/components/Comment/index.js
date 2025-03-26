@@ -144,7 +144,7 @@ const Comment = forwardRef(
                      </div>
                      <a
                         onClick={handleReply}
-                        className="no-underline text-[#6f7f92] text-xs font-medium"
+                        className="no-underline text-[#6f7f92] text-xs font-medium cursor-pointer"
                      >
                         Reply
                      </a>
