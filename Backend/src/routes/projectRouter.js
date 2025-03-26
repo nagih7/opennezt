@@ -48,6 +48,13 @@ projectRouter.patch(
     asyncHandler(projectController.updateAdditionalInfo)
 )
 
+// ========== POST [Project - Requirement] ========== //
+projectRouter.post(
+    '/:id/requirement',
+    asyncHandler(validate(projectRequest.addProjectRequirement)),
+    asyncHandler(projectController.addProjectRequirement)
+)
+
 // ========== DELETE [Project] ========== //
 projectRouter.delete('/:id/delete', asyncHandler(projectController.deleteProject))
 
@@ -96,4 +103,5 @@ projectRouter.get('/access/me', asyncHandler(projectController.getMyProjectAcces
 
 // ========== GET [Access To My Projects] ========== //
 projectRouter.get('/me/access', asyncHandler(projectController.getAccessToMyProjects))
+
 export default projectRouter

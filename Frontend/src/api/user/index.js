@@ -95,6 +95,7 @@ export const getSubCategoryFramework =
 
 // SKILLS
 export const getSkillFramework = (categoryId) => async (dispatch, getState) => {
+	console.log("categoryId", categoryId);
 	return callApi({
 		method: "get",
 		apiPath: `users/skills/${categoryId}`,
