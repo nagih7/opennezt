@@ -42,6 +42,12 @@ import {
    getUserReplyCommentReactions,
    getUserReplyCommentReactionsSuccess,
    getUserReplyCommentReactionsFail,
+   bookmarkArticle,
+   bookmarkArticleFail,
+   bookmarkArticleSuccess,
+   getUserBookmarks,
+   getUserBookmarksSuccess,
+   getUserBookmarksFail,
 } from "states/modules/article";
 
 export const getListFeeds =
@@ -248,7 +254,6 @@ export const getProjectsToTag = (dataFilter) => async (dispatch, getState) => {
 export const handleReplyComment =
    ({ data }) =>
    async (dispatch, getState) => {
-      console.log(data);
       let path = `article/reply-comment`;
       return callApi({
          method: "post",
@@ -270,6 +275,41 @@ export const handleGetUserReplyCommentReactions =
             getUserReplyCommentReactions,
             getUserReplyCommentReactionsSuccess,
             getUserReplyCommentReactionsFail,
+         ],
+         variables: {},
+         dispatch,
+         getState,
+      });
+   };
+
+export const handleBookmarkArticle =
+   ({ data }) =>
+   async (dispatch, getState) => {
+      const path = `article/bookmark-article`;
+      return callApi({
+         method: "post",
+         apiPath: path,
+         actionTypes: [
+            bookmarkArticle,
+            bookmarkArticleSuccess,
+            bookmarkArticleFail,
+         ],
+         variables: data,
+         dispatch,
+         getState,
+      });
+   };
+
+export const handleGetUserBookmarks =
+   (articleIds) => async (dispatch, getState) => {
+      const path = `article/user-bookmarks/${articleIds.join(",")}`;
+      return callApi({
+         method: "get",
+         apiPath: path,
+         actionTypes: [
+            getUserBookmarks,
+            getUserBookmarksSuccess,
+            getUserBookmarksFail,
          ],
          variables: {},
          dispatch,

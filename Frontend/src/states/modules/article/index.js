@@ -45,6 +45,9 @@ const articleSlice = createSlice({
       repliedComment: {},
       reply_comment_reactions: [],
       isLoadingGetReplyCommentReactions: false,
+      isLoadingBookmarkArticle: false,
+      bookmarks: [],
+      isLoadingGetBookmarks: false,
    },
    // reducers: ở đây có chức năng là nhận vào state hiện tại và action, sau đó trả về một state mới
    reducers: {
@@ -390,6 +393,47 @@ const articleSlice = createSlice({
          reply_comment_reactions: [],
          isLoadingGetReplyCommentReactions: false,
       }),
+      bookmarkArticle: (state) => ({
+         ...state,
+         isLoadingBookmarkArticle: true,
+      }),
+      bookmarkArticleSuccess: (state) => ({
+         ...state,
+         isLoadingBookmarkArticle: false,
+      }),
+      bookmarkArticleFail: (state) => ({
+         ...state,
+         isLoadingBookmarkArticle: false,
+      }),
+      getUserBookmarks: (state) => ({
+         ...state,
+         isLoadingGetBookmarks: true,
+      }),
+      getUserBookmarksSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetBookmarks: false,
+         bookmarks: [...state.bookmarks, ...action.payload.data],
+      }),
+      getUserBookmarksFail: (state) => ({
+         ...state,
+         isLoadingGetBookmarks: false,
+      }),
+      updateBookmarks: (state, action) => {
+         const { article_id, marked } = action.payload;
+
+         const existingBookmarkIndex = state.bookmarks.findIndex(
+            (bm) => bm.article_id.toString() === article_id.toString()
+         );
+
+         if (existingBookmarkIndex) {
+            state.bookmarks[existingBookmarkIndex].marked = marked;
+         } else {
+            state.bookmarks.push({
+               article_id: article_id,
+               marked: marked,
+            });
+         }
+      },
    },
 });
 
@@ -447,6 +491,13 @@ export const {
    getUserReplyCommentReactions,
    getUserReplyCommentReactionsSuccess,
    getUserReplyCommentReactionsFail,
+   bookmarkArticle,
+   bookmarkArticleSuccess,
+   bookmarkArticleFail,
+   getUserBookmarks,
+   getUserBookmarksSuccess,
+   getUserBookmarksFail,
+   updateBookmarks,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;

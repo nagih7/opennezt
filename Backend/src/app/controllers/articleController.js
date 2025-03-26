@@ -80,3 +80,13 @@ export const updateProjectName = async (req, res) => {
     await articleService.updateProjectName(req.params.project_id, req.body)
     res.status(200).jsonify('Update Project Name Success')
 }
+
+export const bookmarkArticle = async (req, res) => {
+    const bookmarkArticle = await articleService.bookmarkArticle(req.body, req.currentUser)
+    res.status(200).jsonify(bookmarkArticle)
+}
+
+export const getUserBookmarks = async (req, res) => {
+    const bookmarks = await articleService.getUserBookmarks(req.currentUser, req.params.article_ids)
+    res.status(200).jsonify(bookmarks)
+}

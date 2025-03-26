@@ -15,6 +15,8 @@ import {
    handleCreateArticle,
    handleUpdateArticle,
    handleDeleteArticle,
+   handleGetUserBookmarks,
+   handleBookmarkArticle,
 } from "../../../api/newfeeds";
 import { useDispatch, useSelector } from "react-redux";
 import RightSidebar from "components/common/RightSidebar";
@@ -26,11 +28,13 @@ import {
    closeCreateForm,
    openUpdateForm,
    closeUpdateForm,
+   updateBookmarks,
 } from "states/modules/article";
 import CreateAricleForm from "./components/CreateAricleForm";
 import CommentList from "./components/CommentList";
 import UpdateArticleForm from "./components/UpdateArticleForm";
 import store from "states/configureStore";
+import { PermPhoneMsg } from "@mui/icons-material";
 
 function NewFeeds() {
    const dispatch = useDispatch();
@@ -46,6 +50,7 @@ function NewFeeds() {
       isOpenCreateForm,
       isOpenUpdateForm,
       pagination,
+      bookmarks,
    } = useSelector((state) => state.article);
 
    const { nextCursor, limit, hasMore } = pagination;
@@ -227,6 +232,28 @@ function NewFeeds() {
       },
       [dispatch]
    );
+
+   useEffect(() => {
+      if (onetimefeeds.length > 0) {
+         const articleIds = onetimefeeds.filter((r) => r._id).map((r) => r._id);
+
+         if (articleIds.length > 0) {
+            dispatch(handleGetUserBookmarks(articleIds));
+         }
+      }
+   }, [dispatch, onetimefeeds]);
+
+   const bookmarksMap = useMemo(() => {
+      return new Map(bookmarks.map((r) => [r.article_id.toString(), r.marked]));
+   }, [bookmarks]);
+
+   const bookmarkArticle = useCallback(
+      (data) => {
+         dispatch(handleBookmarkArticle({ data }));
+         dispatch(updateBookmarks(data));
+      },
+      [dispatch]
+   );
    //End Delete Article
    return (
       <div className="flex w-full gap-8 pt-4 px-[16px]">
@@ -272,6 +299,8 @@ function NewFeeds() {
                         onSelect={handleSelectArticle}
                         onEdit={handleOpenUpdateForm}
                         onDelete={handleDelete}
+                        bookmark={bookmarksMap.get(feed._id)}
+                        onBookmark={bookmarkArticle}
                      />
                   );
                } else {
@@ -285,6 +314,8 @@ function NewFeeds() {
                         onSelect={handleSelectArticle}
                         onEdit={handleOpenUpdateForm}
                         onDelete={handleDelete}
+                        bookmark={bookmarksMap.get(feed._id)}
+                        onBookmark={bookmarkArticle}
                      />
                   );
                }
