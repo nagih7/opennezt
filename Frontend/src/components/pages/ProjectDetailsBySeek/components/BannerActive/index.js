@@ -1,4 +1,5 @@
 import { Avatar } from "@chakra-ui/react";
+import { IconlyBookmark } from "components/UI/Iconly";
 import React from "react";
 import {
 	FaChevronRight,
@@ -69,6 +70,9 @@ const BannerActive = () => {
 						<div className="w-3/5 h-full bg-blue-600 rounded-full"></div>
 					</p>
 				</div>
+				<button className="ml-5 mb-[0.5rem]">
+					<IconlyBookmark color={"#FFF"} />
+				</button>
 			</div>
 		</div>
 	);

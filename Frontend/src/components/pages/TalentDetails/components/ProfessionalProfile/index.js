@@ -1,25 +1,7 @@
-import { getAccessToMyProfile } from "api/activity";
 import RightSidebar from "components/common/RightSidebar";
-import { IconlyEditSquare } from "components/UI/Iconly";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-
-const action = (user) => {
-	return (
-		<div>
-			<b>{user}</b> has accessed your profile.
-		</div>
-	);
-};
-
-const ProfessionalProfile = () => {
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
+import React from "react";
+const ProfessionalProfile = ({ profile }) => {
 	// ========== STATE FROM REDUX STORE ========== //
-	const { profile } = useSelector((state) => state.profile);
-	const { accessToMyProfile } = useSelector((state) => state.activity);
-
 	const formatDate = (dateString) => {
 		if (!dateString) return "N/A";
 		const date = new Date(dateString);
@@ -45,25 +27,12 @@ const ProfessionalProfile = () => {
 
 	const result = Object.values(groupedSkills);
 
-	// ========== USE EFFECT ========== //
-	useEffect(() => {
-		if (accessToMyProfile?.length === 0) dispatch(getAccessToMyProfile());
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	return (
 		<div className="flex gap-8">
 			<div className="w-10/12">
 				<div className="bg-[#ffffff] rounded-md">
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Professional Background</h5>
-						<span
-							onClick={() =>
-								navigate("/about/edit-profile/professional-background")
-							}
-							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
-							<IconlyEditSquare size={20} color={"#ffffff"} />
-						</span>
 					</div>
 					<div className="p-8">
 						<ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
@@ -93,11 +62,6 @@ const ProfessionalProfile = () => {
 				<div className="bg-[#ffffff] rounded-md mt-8">
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Eduaction</h5>
-						<span
-							onClick={() => navigate("/about/edit-profile/educations")}
-							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
-							<IconlyEditSquare size={20} color={"#ffffff"} />
-						</span>
 					</div>
 					<div className="p-8">
 						<ul className=" p-0 mb-0 mx-[-16px] text-[#6f7f92]">
@@ -108,7 +72,7 @@ const ProfessionalProfile = () => {
 											profile.educations.map((education, index) => (
 												<div
 													key={index}
-													className="p-3  rounded-lg  mt-2 mr-1 shadow rounded-[0.6rem]">
+													className="p-3 mt-2 mr-1 shadow rounded-[0.6rem]">
 													<h4 className="font-semibold">
 														{education.school || "N/A"}
 													</h4>
@@ -146,13 +110,6 @@ const ProfessionalProfile = () => {
 				<div className="bg-[#ffffff] rounded-md mt-8">
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Certification</h5>
-						<span
-							onClick={() =>
-								navigate("/about/edit-profile/certifications")
-							}
-							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
-							<IconlyEditSquare size={20} color={"#ffffff"} />
-						</span>
 					</div>
 					<div className="p-8">
 						<ul className=" p-0 mb-0 mx-[-16px] text-[#6f7f92]">
@@ -164,7 +121,7 @@ const ProfessionalProfile = () => {
 												(certification, index) => (
 													<div
 														key={index}
-														className="p-3  rounded-lg  mt-2 mr-1 shadow rounded-[0.6rem]">
+														className="p-3  mt-2 mr-1 shadow rounded-[0.6rem]">
 														<h4 className="font-semibold">
 															{certification.name || "N/A"}
 														</h4>
@@ -192,11 +149,6 @@ const ProfessionalProfile = () => {
 				<div className="bg-[#ffffff] rounded-md mt-8">
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">Expertise</h5>
-						<span
-							onClick={() => navigate("/about/edit-profile/skills")}
-							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
-							<IconlyEditSquare size={20} color={"#ffffff"} />
-						</span>
 					</div>
 					<div className="p-8">
 						{result?.length > 0 ? (
@@ -226,11 +178,6 @@ const ProfessionalProfile = () => {
 				<div className="bg-[#ffffff] rounded-md mt-8">
 					<div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
 						<h5 className="mb-0">More </h5>
-						<span
-							onClick={() => navigate("/about/edit-profile/more")}
-							className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer">
-							<IconlyEditSquare size={20} color={"#ffffff"} />
-						</span>
 					</div>
 					<div className="p-8">
 						{profile?.additional_infos?.length > 0 ? (
@@ -256,7 +203,7 @@ const ProfessionalProfile = () => {
 					</div>
 				</div>
 			</div>
-			<RightSidebar activities={accessToMyProfile} action={action} />
+			<RightSidebar />
 		</div>
 	);
 };

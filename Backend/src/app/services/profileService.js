@@ -1,4 +1,13 @@
-import {Certification, Education, Profile, ProfileAdditionalInfo, Organization} from '@/models'
+import {ACCESS_TYPE, LINK_STATIC_URL, PROFILE_ACCESS} from '@/configs'
+import {
+    Certification,
+    Education,
+    Profile,
+    ProfileAdditionalInfo,
+    Organization,
+    Type,
+    ActivityLog,
+} from '@/models'
 
 // ========== GET [Profile] ========== //
 export async function getProfile(user) {
@@ -314,4 +323,63 @@ export async function updateProfileAdditionalInfo(user, requestBody) {
     if (!additionalInfo) {
         throw new Error('Additional Info not found.')
     }
+}
+
+// ========== GET [Profile Access] ========== //
+export async function getAccessToMyProfile(user) {
+    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROFILE_ACCESS})
+    const activities = await ActivityLog.aggregate([
+        {
+            $match: {
+                'data.owner_id': user._id,
+                type_id: accessType._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $limit: 10,
+        },
+        {
+            $sort: {timestamp: -1},
+        },
+        {
+            $project: {
+                timestamp: 1,
+                project: 1,
+                user: 1,
+            },
+        },
+    ])
+
+    return activities
 }

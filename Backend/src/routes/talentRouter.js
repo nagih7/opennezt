@@ -17,4 +17,10 @@ talentRouter.get(
     asyncHandler(talentController.recruitTalents)
 )
 
+// =========== GET [Talent Details] =========== //
+talentRouter.get('/:id/details', asyncHandler(talentController.getTalentDetails))
+
+// =========== POST [Access to Talent] =========== //
+talentRouter.post('/:id/access', asyncHandler(talentController.accessToTalent))
+
 export default talentRouter

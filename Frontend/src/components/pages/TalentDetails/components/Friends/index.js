@@ -42,12 +42,8 @@ const Friends = () => {
 
     const handleDeleteRequest = (user) => {
         setFriendRequests((prevRequests) => prevRequests.filter((req) => req.id !== user.id));
-        message.success("Delete request successfully")
+        message.success("Delete successfully")
     };
-    const handleDeleteFriend = (friend) => {
-        setFriendsList((preFriends) => preFriends.filter((req) => req.id !== friend.id))
-        message.success("Delete friend successfully")
-    }
 
     return (
         <div className="flex gap-8">
@@ -117,12 +113,7 @@ const Friends = () => {
                                             </button>
                                         </>
                                     ) : (
-                                        <>
-                                            <button className="text-blue-500 text-lg">✉️</button>
-                                            <button onClick={() => handleDeleteFriend(user)} className="text-lg">
-                                                <IconlyDelete size={23} color={"#FF0000"} />
-                                            </button>
-                                        </>
+                                        <button className="text-blue-500 text-lg">✉️</button>
                                     )}
                                 </div>
                             </div>
@@ -132,7 +123,7 @@ const Friends = () => {
             </div>
 
             <RightSidebar />
-        </div >
+        </div>
     );
 };
 
