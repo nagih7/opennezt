@@ -93,7 +93,7 @@ export async function accessToProject(req, res) {
 export async function addProjectRequirement(req, res) {
     await projectService.addProjectRequirement(req.currentUser, req.params.id, req.body)
     res.status(200).jsonify('Add requirement successfully.')
-=======
+}
 // ========== GET [My Project Access] ========== //
 export async function getMyProjectAccess(req, res) {
     const result = await projectService.getMyProjectAccess(req.currentUser)
