@@ -778,24 +778,26 @@ export async function accessToProject(user, projectId) {
 }
 
 // ========== POST [Project - add Requirement] ========== //
-export async function addProjectRequirement(user, requestBody) {
+export async function addProjectRequirement(user, projectId, requestBody) {
+    const project = await Project.findById(new ObjectId(projectId))
     const {
-        project_id,
         team_role_id,
         role_id,
         industry_ids,
         experience_level_id,
         category_ids,
+        subcategory_ids,
         skill_ids,
         metadata,
     } = requestBody
     const requirement = new ProjectRequirement({
-        project_id: project_id,
+        project_id: project._id,
         team_role_id: team_role_id,
         role_id: role_id,
         industry_ids: industry_ids,
         experience_level_id: experience_level_id,
         category_ids: category_ids,
+        subcategory_ids: subcategory_ids,
         skill_ids: skill_ids,
         metadata: metadata,
     })
@@ -805,6 +807,7 @@ export async function addProjectRequirement(user, requestBody) {
 // ========== GET [My Project Access] ========== //
 export async function getMyProjectAccess(user) {
     const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROJECT_ACCESS})
+    console.log('accessType', accessType._id)
     const activities = await ActivityLog.aggregate([
         {
             $match: {

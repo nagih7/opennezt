@@ -78,8 +78,8 @@ userRouter.post('/:userId/friend-request', asyncHandler(userController.sendFrien
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))
 
 userRouter.delete(
-    '/',
-    asyncHandler(userMiddleware.checkUserId),
+    '/:id',
+    asyncHandler(userMiddleware.checkUserIdDelete),
     userMiddleware.checkCanDeleteUser,
     asyncHandler(userController.removeItem)
 )

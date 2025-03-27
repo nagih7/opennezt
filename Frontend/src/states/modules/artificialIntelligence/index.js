@@ -1,6 +1,4 @@
-import React from "react";
 import { createSlice } from "@reduxjs/toolkit";
-import TransformAI from "components/UI/TransformAI";
 
 import { message } from "antd";
 
@@ -19,21 +17,12 @@ const artificialIntelligenceSlice = createSlice({
 			...state,
 			openModalMatchingProjects: action.payload,
 		}),
-		startRequestMatchingProjects: (state) => {
-			message.loading({
-				content: "",
-				key: "matchingProjects",
-				duration: 100000,
-				icon: <TransformAI />,
-			});
-			return {
-				...state,
-				loadingMatchingProjects: true,
-				matchedProjects: false,
-			};
-		},
+		startRequestMatchingProjects: (state) => ({
+			...state,
+			loadingMatchingProjects: true,
+			matchedProjects: false,
+		}),
 		startRequestMatchingProjectsSuccess: (state, action) => {
-			message.destroy("matchingProjects");
 			if (action.payload.data.length === 0) {
 				message.error({
 					content: "No matching projects found",
@@ -69,20 +58,11 @@ const artificialIntelligenceSlice = createSlice({
 				loadingMatchingProjects: false,
 			};
 		},
-		startRequestMatchingTalents: (state) => {
-			message.loading({
-				content: "",
-				key: "matchingTalents",
-				duration: 100000,
-				icon: <TransformAI />,
-			});
-			return {
-				...state,
-				loadingMatchingTalents: true,
-			};
-		},
+		startRequestMatchingTalents: (state) => ({
+			...state,
+			loadingMatchingTalents: true,
+		}),
 		startRequestMatchingTalentsSuccess: (state, action) => {
-			message.destroy("matchingTalents");
 			if (action.payload.data.length === 0) {
 				message.error({
 					content: "No matching talents found",

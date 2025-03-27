@@ -5,6 +5,16 @@ export const PROFILE_ACCESS = 'profile'
 
 // NOTIFICATION
 export const NOTIFICATION_TYPE = 'notification'
+export const PROJECT_APPLICATION = 'project_application'
+
+// ARTICLE
+export const ARTICLE_TYPE = 'article'
+export const ARTICLE_REACTION = 'reaction'
+export const ARTICLE_REPLY_COMMENT = 'reply_comment'
+export const ARTICLE_UPDATE = 'update'
+export const ARTICLE_CREATE = 'create'
+export const ARTICLE_SAVE = 'save'
+
 export const PROJECT_APPLICATION_NOTIFICATION = 'project_application'
 export const FRIEND_REQUEST_NOTIFICATION = 'friend_request'
 export const CONFIRM_FRIEND_REQUEST_NOTIFICATION = 'confirm_friend_request'
@@ -19,3 +29,11 @@ export const DELETE_STATUS = 'delete'
 export const CONVERSATION_TYPE = 'conversation'
 export const DIRECT_CONVERSATION = 'direct'
 export const GROUP_CONVERSATION = 'group'
+
+// MESSAGE TYPE
+export const MESSAGE_TYPE = 'message'
+export const TEXT_MESSAGE = 'text'
+export const FILE_MESSAGE = 'file'
+export const IMAGE_MESSAGE = 'image'
+export const VIDEO_MESSAGE = 'video'
+export const AUDIO_MESSAGE = 'audio'

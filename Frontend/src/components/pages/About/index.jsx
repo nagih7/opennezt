@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import ProfileMenu from "./components/ProfileMenu";
@@ -12,39 +13,41 @@ import Badges from "./components/Badges";
 import ProfileOverview from "./components/ProfileOverview";
 
 const About = () => {
-	const { authUser } = useSelector((state) => state.auth);
-
-	const [changeTab, setChangeTab] = useState("About");
-	return (
-		<div className="relative bg-[#ffffff] w-full max-h-full mb-8">
-			<Image
-				className="h-[400px] object-cover"
-				src={
-					authUser?.background ||
-					"https://wallpapercave.com/uwp/uwp4261619.png"
-				}
-				onError={(e) => {
-					e.target.onerror = null;
-					e.target.src = "https://wallpapercave.com/uwp/uwp4261619.png";
-				}}
-				alt="Naruto vs Sasuke"
-				aspectRatio={16 / 9}
-				width="100%"
-			/>
-			<div className="absolute w-full top-[275px] px-[16px]">
-				<ProfileOverview />
-				<ProfileMenu changeTab={changeTab} setChangeTab={setChangeTab} />
-				{changeTab == "About" && <ProfessionalProfile />}
-				{changeTab == "Friends" && <Friends />}
-				{changeTab == "Timeline" && <Timeline />}
-				{changeTab == "Groups" && <Groups />}
-				{changeTab == "Badges" && <Badges />}
+    const { authUser } = useSelector((state) => state.auth);
 
 
+    const [changeTab, setChangeTab] = useState("About");
+    return (
+        <div className="relative bg-[#ffffff] w-full max-h-full mb-8">
+            <Image
+                className="h-[400px] object-cover"
+                src={
+                    authUser?.background ||
+                    "https://wallpapercave.com/uwp/uwp4261619.png"
+                }
+                onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "https://wallpapercave.com/uwp/uwp4261619.png";
+                }}
+                alt="Naruto vs Sasuke"
+                aspectRatio={16 / 9}
+                width="100%"
+            />
+            <div className="absolute w-full top-[275px] px-[16px]">
+                <ProfileOverview />
+                <ProfileMenu changeTab={changeTab} setChangeTab={setChangeTab} />
+                {changeTab == "About" && <ProfessionalProfile />}
+                {changeTab == "Friends" && <Friends />}
+                {changeTab == "Timeline" && <Timeline />}
+                {changeTab == "Groups" && <Groups />}
+                {changeTab == "Badges" && <Badges />}
 
-			</div>
-		</div>
-	);
+
+
+            </div>
+        </div>
+    );
+
 };
 
 export default About;

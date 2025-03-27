@@ -51,13 +51,18 @@ export async function matchingProjects(user) {
     // Call OpenAI API to get matching projects
     try {
         const response = await callOpenAI(prompt)
-        const cleanResponse = response.replace(/```json\n|```/g, '')
-        const projectsByMatching = JSON.parse(cleanResponse)
+
+        // const cleanResponse = response.replace(/```json\n|```/g, '')
+        // console.log('Response from OpenAI API: ', cleanResponse)
+        // const projectsByMatching = JSON.parse(cleanResponse)
+
+        const jsonString = response.replace('Output:\n\n', '')
+        const jsonData = JSON.parse(jsonString)
 
         // Filter projects with projectsByMatching
         const result = projects
             .map((project) => {
-                const match = projectsByMatching.find((p) => p.projectId === project._id.toString())
+                const match = jsonData.find((p) => p.projectId === project._id.toString())
                 if (match) {
                     return {
                         ...project,
@@ -111,12 +116,15 @@ export async function matchingTalents(user) {
     const prompt = MATCHING_TALENTS_PROMPT(relatedIndustries, userSkills)
     try {
         const response = await callOpenAI(prompt)
-        const cleanResponse = response.replace(/```json\n|```/g, '')
-        const talentsByMatching = JSON.parse(cleanResponse)
+        // const cleanResponse = response.replace(/```json\n|```/g, '')
+        // const talentsByMatching = JSON.parse(cleanResponse)
+
+        const jsonString = response.replace('Output:\n', '')
+        const jsonData = JSON.parse(jsonString)
 
         // Matching user_id with User model
 
-        const userIds = Object.keys(talentsByMatching).map((userId) => new ObjectId(userId))
+        const userIds = Object.keys(jsonData).map((userId) => new ObjectId(userId))
         const result = await User.aggregate([
             {
                 $match: {
@@ -134,11 +142,11 @@ export async function matchingTalents(user) {
                 $addFields: {
                     match_score: {
                         $let: {
-                            vars: {talentsByMatching}, // Truyền trực tiếp ánh xạ
+                            vars: {jsonData}, // Truyền trực tiếp ánh xạ
                             in: {
                                 $getField: {
                                     field: '$user_id',
-                                    input: '$$talentsByMatching',
+                                    input: '$$jsonData',
                                 },
                             },
                         },

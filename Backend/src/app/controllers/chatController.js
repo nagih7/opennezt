@@ -15,6 +15,18 @@ export async function getConversation(req, res) {
     res.status(200).jsonify(conversation)
 }
 
+// ========== GET [MESSAGES] ========== //
+export async function getMessages(req, res) {
+    const messages = await chatService.getMessages(req.currentUser, req.params)
+    res.status(200).jsonify(messages)
+}
+
+// ========== SEND [MESSAGE] ========== //
+export async function sendMessage(req, res) {
+    const message = await chatService.sendMessage(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(message)
+}
+
 export async function getChatHistory(req, res) {
     const chatHistory = await chatService.getChatHistory(req.currentUser, req.params)
     res.status(200).jsonify(chatHistory)
