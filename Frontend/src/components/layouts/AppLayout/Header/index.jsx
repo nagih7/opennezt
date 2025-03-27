@@ -150,7 +150,6 @@ const Header = () => {
                                         <Popover.Body>
                                             <Stack spacing={4}>
                                                 <ChatList />
-                                                {/* <MessageBoxList /> */}
                                             </Stack>
                                         </Popover.Body>
                                     </Popover.Content>

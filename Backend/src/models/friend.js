@@ -16,7 +16,7 @@ const Friend = createModel('Friend', 'friends', {
     },
     status: {
         type: String,
-        required: true,
+        required: false,
         default: '',
     },
     is_favorite: {

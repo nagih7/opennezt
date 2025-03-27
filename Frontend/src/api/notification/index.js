@@ -39,7 +39,7 @@ export const replyNotification = (notificationId, action) => async (dispatch, ge
         method: 'put',
         apiPath: `notifications/${notificationId}/reply`,
         actionTypes: [requestReplyNotification, replyNotificationSuccess, replyNotificationFail],
-        variables: action,
+        variables: { action },
         dispatch,
         getState,
     });
