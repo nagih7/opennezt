@@ -2,7 +2,16 @@ import FileUpload from '@/utils/classes/file-upload.js'
 import Article from '../../models/article.js'
 import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
-import {ACCESS_TYPE, ARTICLE_CREATE, ARTICLE_TYPE, ARTICLE_UPDATE, LINK_STATIC_URL} from '@/configs'
+import {
+    ACCESS_TYPE,
+    ARTICLE_CREATE,
+    ARTICLE_REACTION,
+    ARTICLE_REPLY_COMMENT,
+    ARTICLE_SAVE,
+    ARTICLE_TYPE,
+    ARTICLE_UPDATE,
+    LINK_STATIC_URL,
+} from '@/configs'
 import {ObjectId} from 'mongodb'
 import delay from '@/utils/classes/delay.js'
 import Project from '@/models/project.js'
@@ -609,7 +618,82 @@ export const postActivityUpdateArticle = async (user, articleId) => {
             data: {article_id: article._id, project_id: article.project_id, owner_id: article.user_id},
             metadata: {},
         })
-        
+
+        await newActivity.save()
+        return newActivity
+    }
+}
+
+export const postActivitySaveArticle = async (user, articleId) => {
+    const article = await Article.findById(new ObjectId(articleId))
+    const articleSaveType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_SAVE})
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        type_id: articleSaveType._id,
+        'data.article_id': article._id,
+    })
+
+    if (oldActivity) {
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        const newActivity = new ActivityLog({
+            user_id: user._id,
+            type_id: articleSaveType._id,
+            data: {article_id: article._id, project_id: article.project_id, owner_id: article.user_id},
+            metadata: {},
+        })
+
+        await newActivity.save()
+        return newActivity
+    }
+}
+
+export const postActivityReactionArticle = async (user, articleId) => {
+    const article = await Article.findById(new ObjectId(articleId))
+    const articleReactionType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_REACTION})
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        type_id: articleReactionType._id,
+        'data.article_id': article._id,
+    })
+
+    if (oldActivity) {
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        const newActivity = new ActivityLog({
+            user_id: user._id,
+            type_id: articleReactionType._id,
+            data: {article_id: article._id, project_id: article.project_id, owner_id: article.user_id},
+            metadata: {},
+        })
+
+        await newActivity.save()
+        return newActivity
+    }
+}
+
+export const postActivityReplyComment = async (user, commentId) => {
+    const comment = await Comment.findById(new ObjectId(commentId))
+    const commentReplyType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_REPLY_COMMENT})
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        type_id: commentReplyType._id,
+        'data.comment_id': comment._id,
+    })
+
+    if (oldActivity) {
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        const newActivity = new ActivityLog({
+            user_id: user._id,
+            type_id: commentReplyType._id,
+            data: {comment_id: comment._id, article_id: comment.article_id, owner_id: comment.user_id},
+            metadata: {},
+        })
+
         await newActivity.save()
         return newActivity
     }
@@ -724,7 +808,7 @@ export const getActivityUpdateArticle = async (user) => {
                         },
                     },
                 ],
-            }
+            },
         },
         {
             $unwind: '$user',
@@ -741,12 +825,265 @@ export const getActivityUpdateArticle = async (user) => {
         {
             $project: {
                 user: 1,
-                article: { caption: 1 },
-                timestamp: 1,           
+                article: {caption: 1},
+                timestamp: 1,
                 data: 1,
                 type_id: 1,
             },
         },
     ])
     return activities
+}
+
+export const getActivitySaveArticle = async (user) => {
+    const articleSaveType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_SAVE})
+    const activities = await ActivityLog.aggregate([
+        {
+            $match: {
+                user_id: user._id,
+                type_id: articleSaveType._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'articles',
+                localField: 'data.article_id',
+                foreignField: '_id',
+                as: 'article',
+                pipeline: [
+                    {
+                        $project: {
+                            caption: '$content.caption',
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $unwind: '$article',
+        },
+        {
+            $limit: 10,
+        },
+        {
+            $sort: {timestamp: -1},
+        },
+        {
+            $project: {
+                user: 1,
+                article: {caption: 1},
+                timestamp: 1,
+                data: 1,
+                type_id: 1,
+            },
+        },
+    ])
+    return activities
+}
+
+export const getActivityReactionArticle = async (user) => {
+    const articleReactionType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_REACTION})
+    const activities = await ActivityLog.aggregate([
+        {
+            $match: {
+                user_id: user._id,
+                type_id: articleReactionType._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'articles',
+                localField: 'data.article_id',
+                foreignField: '_id',
+                as: 'article',
+                pipeline: [
+                    {
+                        $project: {
+                            caption: '$content.caption',
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $unwind: '$article',
+        },
+        {
+            $limit: 10,
+        },
+        {
+            $sort: {timestamp: -1},
+        },
+        {
+            $project: {
+                user: 1,
+                article: {caption: 1},
+                timestamp: 1,
+                data: 1,
+                type_id: 1,
+            },
+        },
+    ])
+    return activities
+}
+
+export const getActivityReplyComment = async (user) => {
+    const commentReplyType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_REPLY_COMMENT})
+    const activities = await ActivityLog.aggregate([
+        {
+            $match: {
+                user_id: user._id,
+                type_id: commentReplyType._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'comments',
+                localField: 'data.comment_id',
+                foreignField: '_id',
+                as: 'comment',
+                pipeline: [
+                    {
+                        $project: {
+                            content: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $unwind: '$comment',
+        },
+        {
+            $limit: 10,
+        },
+        {
+            $sort: {timestamp: -1},
+        },
+        {
+            $project: {
+                user: 1,
+                comment: {content: 1},
+                timestamp: 1,
+                data: 1,
+                type_id: 1,
+            },
+        },
+    ])
+    return activities
+}
+
+// ========== DELETE [ARTICLE ACTIVITIES] ========== //
+export const deleteActivitySaveArticle = async (user, articleId) => {
+    try {
+        const articleSaveType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_SAVE })
+        if (!articleSaveType) {
+            console.log('Không tìm thấy loại bài viết.')
+            return
+        }
+
+        const objectIdArticle = new ObjectId(articleId)
+
+        const data = {
+            user_id: user._id,
+            type_id: articleSaveType._id,
+            'data.article_id': objectIdArticle,
+        }
+        await ActivityLog.deleteOne(data)
+    } catch (error) {
+        console.error('Lỗi khi xóa bài viết:', error)
+    }
 }

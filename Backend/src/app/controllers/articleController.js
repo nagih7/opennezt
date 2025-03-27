@@ -93,13 +93,27 @@ export const getUserBookmarks = async (req, res) => {
 
 // ========== POST [ARTICLE ACTIVITIES] ========== //
 export const postActivityCreateArticle = async (req, res) => {
-    const activity = await articleService.postActivityCreateArticle(req.currentUser)
+    const activity = await articleService.postActivityCreateArticle(req.currentUser, req.params.id)
     res.status(200).jsonify(activity)
 }
 
 export const postActivityUpdateArticle = async (req, res) => {
-    console.log(req.currentUser, req.params.id)
     const result = await articleService.postActivityUpdateArticle(req.currentUser, req.params.id)
+    return res.json(result)
+}
+
+export const postActivitySaveArticle = async (req, res) => {
+    const result = await articleService.postActivitySaveArticle(req.currentUser, req.params.id)
+    return res.json(result)
+}
+
+export const postActivityReactionArticle = async (req, res) => {
+    const result = await articleService.postActivityReactionArticle(req.currentUser, req.params.id)
+    return res.json(result)
+}
+
+export const postActivityReplyComment = async (req, res) => {
+    const result = await articleService.postActivityReplyComment(req.currentUser, req.params.id3)
     return res.json(result)
 }
 
@@ -112,4 +126,25 @@ export const getActivityCreateArticle = async (req, res) => {
 export const getActivityUpdateArticle = async (req, res) => {
     const activity = await articleService.getActivityUpdateArticle(req.currentUser)
     res.status(200).jsonify(activity)
+}
+
+export const getActivitySaveArticle = async (req, res) => {
+    const activity = await articleService.getActivitySaveArticle(req.currentUser)
+    res.status(200).jsonify(activity)
+}
+
+export const getActivityReactionArticle = async (req, res) => {
+    const activity = await articleService.getActivityReactionArticle(req.currentUser)
+    res.status(200).jsonify(activity)
+}
+
+export const getActivityReplyComment = async (req, res) => {
+    const activity = await articleService.getActivityReplyComment(req.currentUser)
+    res.status(200).jsonify(activity)
+}
+
+// ========== DELETE [ARTICLE ACTIVITIES] ========== //
+export const deleteActivitySaveArticle = async (req, res) => {
+    const result = await articleService.deleteActivitySaveArticle(req.currentUser, req.params.id)
+    return res.json(result)
 }
