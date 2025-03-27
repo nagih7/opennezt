@@ -118,7 +118,7 @@ const Header = () => {
                                 )}
                             </div>
                         </div>
-                        <Popover.Root positioning={{ placement: 'bottom-end' }}>
+                        <Popover.Root positioning={{ placement: 'bottom-end' }} size={'lg'}>
                             <Popover.Trigger asChild>
                                 <span>
                                     <IconlyNotification size={24} color="#6f7f92" />
@@ -127,7 +127,10 @@ const Header = () => {
                             <Portal>
                                 <Popover.Positioner>
                                     <Popover.Content>
-                                        <PopoverNotification />
+                                        <Popover.Arrow />
+                                        <Popover.Body className="p-0">
+                                            <PopoverNotification />
+                                        </Popover.Body>
                                     </Popover.Content>
                                 </Popover.Positioner>
                             </Portal>
@@ -147,6 +150,7 @@ const Header = () => {
                                         <Popover.Body>
                                             <Stack spacing={4}>
                                                 <ChatList />
+                                                {/* <MessageBoxList /> */}
                                             </Stack>
                                         </Popover.Body>
                                     </Popover.Content>
