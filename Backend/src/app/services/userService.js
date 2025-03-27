@@ -91,6 +91,8 @@ export async function remove(user) {
         FileUpload.remove(user.avatar)
     }
     await User.deleteOne({_id: user._id})
+    await Project.deleteMany({user_id: user._id})
+    await NotificationFeed.deleteMany({$or: [{user_id: user._id}, {source_id: user._id}]})
 }
 
 export async function createProject(user, {pitch_deck, background, ...requestBody}) {
@@ -517,29 +519,24 @@ export async function getCategories() {
 // Subcategory framework
 export async function getSubCategories(categoryIds) {
     // Handle comma-separated string of IDs
-    const idArray = Array.isArray(categoryIds) 
-        ? categoryIds 
-        : categoryIds.split(',').map(id => id.trim())
-    
+    const idArray = Array.isArray(categoryIds) ? categoryIds : categoryIds.split(',').map((id) => id.trim())
+
     const subCategories = await Category.find({
-        parent_id: { $in: idArray }
+        parent_id: {$in: idArray},
     }).select('name _id description parent_id')
-    
+
     return subCategories
 }
-
 
 // Skills framework
 export async function getSkills(categoryIds) {
     // Handle comma-separated string of IDs
-    const idArray = Array.isArray(categoryIds) 
-        ? categoryIds 
-        : categoryIds.split(',').map(id => id.trim())
-    
+    const idArray = Array.isArray(categoryIds) ? categoryIds : categoryIds.split(',').map((id) => id.trim())
+
     const skills = await Skill.find({
-        category_id: { $in: idArray }
+        category_id: {$in: idArray},
     }).select('name _id description category_id')
-    
+
     return skills
 }
 
