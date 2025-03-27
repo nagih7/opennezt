@@ -71,6 +71,9 @@ userRouter.get('/stages', asyncHandler(userController.getStages))
 // Project role framework
 userRouter.get('/roles/project', asyncHandler(userController.getProjectRoles))
 
+// ========== POST [User - Request Add Friend] ========== //
+userRouter.post('/:userId/friend-request', asyncHandler(userController.sendFriendRequest))
+
 // URL dynamic
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))
 

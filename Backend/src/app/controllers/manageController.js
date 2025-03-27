@@ -28,6 +28,12 @@ export async function deleteRole(req, res) {
     res.jsonify('Delete role successfully')
 }
 
+// ALL TYPES
+export async function getAllTypes(req, res) {
+    const result = await manageService.getAllTypes()
+    res.jsonify(result)
+}
+
 // TYPES
 export async function typeReadRoot(req, res) {
     const result = await manageService.typeReadRoot(req.query)

@@ -16,7 +16,7 @@ import moment from "moment";
 import { IconlyEdit } from "components/UI/Iconly";
 import { createOrUpdateProfileAdditionalInfo } from "api/profile";
 import { setIsOpenModalCreateOrUpdateProfileAdditionalInfo } from "states/modules/profile";
-import { PROFILE_ADDITIONAL } from "utils/constains";
+import { PROFILE_ADDITIONAL } from "utils/constants";
 import SelectCustom from "components/UI/SelectCustom";
 
 const AdditionalInfoFramework = createListCollection({

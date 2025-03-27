@@ -1,0 +1,3 @@
+// CONVERSATION ROLE
+export const CONVERSATION_MEMBER_ROLE = 'member'
+export const CONVERSATION_ADMIN_ROLE = 'admin'

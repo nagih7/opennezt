@@ -15,7 +15,7 @@ import {
 	INPUT_PLACEHOLDER,
 	TEAM_ROLE,
 	ROLE,
-} from "utils/constains";
+} from "utils/constants";
 
 const ProjectBox = ({ project, inviteeId }) => {
 	const [modalConfirm, setModalConfirm] = useState(false);

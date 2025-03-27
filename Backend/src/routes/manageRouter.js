@@ -34,6 +34,9 @@ manageRouter.put(
 )
 manageRouter.delete('/roles/:id', asyncHandler(manageController.deleteRole))
 
+// ALL TYPES
+manageRouter.get('/types/all', asyncHandler(manageController.getAllTypes))
+
 // TYPES
 manageRouter.get(
     '/types',

@@ -3,9 +3,16 @@ import User from '../../models/user.js'
 import * as chatService from '../services/chatService.js'
 import {userSockets} from '@/routes/socket/index.js'
 
-export async function getChatList(req, res) {
-    const chatList = await chatService.getChatList(req.currentUser, req.query.value)
-    res.status(200).jsonify(chatList)
+// ========== GET [CONVERSATIONS] ========== //
+export async function getConversations(req, res) {
+    const conversations = await chatService.getConversations(req.currentUser)
+    res.status(200).jsonify(conversations)
+}
+
+// ========== GET [CONVERSATION] ========== //
+export async function getConversation(req, res) {
+    const conversation = await chatService.getConversation(req.currentUser, req.params)
+    res.status(200).jsonify(conversation)
 }
 
 export async function getChatHistory(req, res) {

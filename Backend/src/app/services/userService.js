@@ -14,7 +14,8 @@ import {
     Role,
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
-import {LINK_STATIC_URL} from '@/configs'
+import {FRIEND_REQUEST_NOTIFICATION, LINK_STATIC_URL, NOTIFICATION_TYPE, WAITING_STATUS} from '@/configs'
+import {userSockets} from '@/routes/socket'
 
 export async function create(requestBody) {
     const user = new User(requestBody)
@@ -542,4 +543,69 @@ export async function getProjectRoles() {
     const projectRoles = await Role.find({type_id: roleType._id}).select('name _id description')
     const projectTeamRoles = await Role.find({type_id: teamRoleType._id}).select('name _id description')
     return {roles: projectRoles, teamRoles: projectTeamRoles}
+}
+
+// ========== POST [User - Request Add Friend] ========== //
+export async function sendFriendRequest(user, {userId}, io) {
+    const requestType = await Type.findOne({class: NOTIFICATION_TYPE, name: FRIEND_REQUEST_NOTIFICATION})
+    const newNotification = new NotificationFeed({
+        user_id: new ObjectId(userId),
+        source_id: user._id,
+        type_id: requestType._id,
+        metadata: {
+            read: false,
+            status: WAITING_STATUS,
+        },
+    })
+    await newNotification.save()
+
+    const notification = await NotificationFeed.aggregate([
+        {
+            $match: {_id: newNotification._id},
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'source_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $project: {
+                _id: 0,
+                user: 1,
+                metadata: 1,
+            },
+        },
+    ]).exec()
+
+    if (notification.length > 0) {
+        const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === userId)
+
+        io.to(userSocketId).emit(FRIEND_REQUEST_NOTIFICATION, notification[0])
+    }
 }

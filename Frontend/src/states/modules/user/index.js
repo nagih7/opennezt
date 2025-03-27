@@ -1,5 +1,6 @@
 import { createListCollection } from "@chakra-ui/react";
 import { createSlice } from "@reduxjs/toolkit";
+import { toaster } from "components/UI/toaster";
 
 const userSlice = createSlice({
 	name: "home",
@@ -41,6 +42,9 @@ const userSlice = createSlice({
 			items: [],
 		}),
 		isLoadingGetProjectRoleFramework: false,
+
+		// REQUEST ADD FRIEND
+		isLoadingSendFriendRequest: false,
 	},
 	reducers: {
 		// INDUSTRIES
@@ -181,6 +185,35 @@ const userSlice = createSlice({
 			...state,
 			isLoadingGetProjectRoleFramework: false,
 		}),
+
+		// REQUEST ADD FRIEND
+		requestSendFriendRequest: (state) => ({
+			...state,
+			isLoadingSendFriendRequest: true,
+		}),
+		sendFriendRequestSuccess: (state) => {
+			toaster.create({
+				title: "Friend Request Sent",
+				description: "Friend request sent successfully",
+				type: "success",
+			});
+			return {
+				...state,
+				isLoadingSendFriendRequest: false,
+			};
+		},
+		sendFriendRequestFail: (state) => {
+			toaster.create({
+				title: "Friend Request Failed",
+				description: "Failed to send friend request",
+				type: "error",
+			});
+			return {
+				...state,
+				isLoadingSendFriendRequest: false,
+			};
+		},
+
 	},
 });
 
@@ -212,6 +245,11 @@ export const {
 	requestGetProjectRoleFramework,
 	getProjectRoleFrameworkSuccess,
 	getProjectRoleFrameworkFail,
+	// REQUEST ADD FRIEND
+	requestSendFriendRequest,
+	sendFriendRequestSuccess,
+	sendFriendRequestFail,
+
 } = userSlice.actions;
 
 export default userSlice.reducer;

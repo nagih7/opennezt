@@ -1,16 +1,45 @@
-import { Avatar } from "@chakra-ui/react";
+import { Avatar, Button } from "@chakra-ui/react";
+import { sendFriendRequest, cancelFriendRequest } from "api/user";
 import {
+	IconlyAddUser,
 	IconlyBookmark,
 	IconlyLocation,
 	IconlyShieldDone,
 } from "components/UI/Iconly";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const ProfileOverview = ({ user }) => {
+const ProfileOverview = ({ user, isFriendRequested }) => {
+	const dispatch = useDispatch();
+
+	// ========== STATE FROM REDUX ========== //
+	const { isLoadingSendFriendRequest } = useSelector((state) => state.user);
+
+	// ========== HANDLE FUNCTION ========== //
+	const handleSendFriendRequest = () => {
+		dispatch(sendFriendRequest(user._id));
+	};
+
+
 	return (
 		<div className="p-8 bg-[#ffffff] rounded-md">
 			<div className="flex items-center w-full">
-				<div className="w-4/12"></div>
+				<div className="w-4/12">
+					<ul className="flex flex-wrap items-center justify-center gap-5 p-0 m-0">
+						<li className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
+							<h5>0</h5>
+							Posts
+						</li>
+						<li>
+							<h5>0</h5>
+							Posts
+						</li>
+						<li>
+							<h5>0</h5>
+							Posts
+						</li>
+					</ul>
+				</div>
 				<div className="flex flex-col items-center w-4/12">
 					<div className="relative flex flex-col items-center bg-[#ffffff] mb-10 p-1 rounded-md">
 						<div className="absolute top-[-137px]">
@@ -63,8 +92,26 @@ const ProfileOverview = ({ user }) => {
 				<div className="w-4/12">
 					<ul className="flex flex-wrap items-center justify-center gap-5 p-0 m-0">
 						<li className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
-							<h5>0</h5>
-							Posts
+							{isFriendRequested ? (
+								<>
+									<div className="flex">
+										<Button className="bg-[#F4F5F6] text-black rounded-[0.3rem] ml-4 border-none">Requested</Button>
+										<Button className="bg-[#0866FF] text-white rounded-[0.3rem] ml-4">Cancle request</Button>
+									</div>
+
+								</>
+							) : (
+								<Button
+									className="bg-[#0866FF] text-white rounded-[0.3rem]"
+									onClick={handleSendFriendRequest}
+									loading={isLoadingSendFriendRequest}
+									loadingText="Sending..."
+									spinnerPlacement="start"
+									variant="solid">
+									<IconlyAddUser size={24} color={"#fff"} />
+									Add friend
+								</Button>
+							)}
 						</li>
 						<li>
 							<h5>0</h5>

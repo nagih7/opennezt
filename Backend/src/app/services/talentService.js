@@ -1,7 +1,13 @@
 // import {LINK_STATIC_URL} from '@/configs'
 
-import {ACCESS_TYPE, LINK_STATIC_URL, PROFILE_ACCESS} from '@/configs'
-import {ActivityLog, Category, ObjectId, Profile, Type} from '@/models'
+import {
+    ACCESS_TYPE,
+    FRIEND_REQUEST_NOTIFICATION,
+    LINK_STATIC_URL,
+    NOTIFICATION_TYPE,
+    PROFILE_ACCESS,
+} from '@/configs'
+import {ActivityLog, Category, NotificationFeed, ObjectId, Profile, Type} from '@/models'
 
 // =========== GET [Recruit Talents] =========== //
 export async function recruitTalents(
@@ -85,7 +91,7 @@ export async function recruitTalents(
 }
 
 // =========== GET [Talent Details] =========== //
-export async function getTalentDetails({id}) {
+export async function getTalentDetails(user, {id}) {
     const matchStage = {
         $match: {user_id: new ObjectId(id)},
     }
@@ -98,7 +104,6 @@ export async function getTalentDetails({id}) {
             pipeline: [
                 {
                     $project: {
-                        _id: 0,
                         __v: 0,
                         password: 0,
                         created_at: 0,
@@ -241,48 +246,61 @@ export async function getTalentDetails({id}) {
             created_at: 0,
             updated_at: 0,
 
-            // 'industries._id': 0,
+            'industries._id': 0,
             'industries.profile_id': 0,
             'industries.created_at': 0,
             'industries.updated_at': 0,
             'industries.__v': 0,
-            // 'experience_level._id': 0,
+            'experience_level._id': 0,
             'experience_level.profile_id': 0,
             'experience_level.created_at': 0,
             'experience_level.updated_at': 0,
             'experience_level.__v': 0,
-            // 'educations._id': 0,
+            'educations._id': 0,
             'educations.profile_id': 0,
             'educations.created_at': 0,
             'educations.updated_at': 0,
             'educations.__v': 0,
-            // 'certifications._id': 0,
+            'certifications._id': 0,
             'certifications.profile_id': 0,
             'certifications.created_at': 0,
             'certifications.updated_at': 0,
             'certifications.__v': 0,
-            // 'categories._id': 0,
+            'categories._id': 0,
             'categories.created_at': 0,
             'categories.updated_at': 0,
             'categories.__v': 0,
-            // 'skills._id': 0,
+            'skills._id': 0,
+            category_id: 0,
             'skills.created_at': 0,
             'skills.updated_at': 0,
             'skills.__v': 0,
-            // 'additional_infos._id': 0,
+            'additional_infos._id': 0,
             'additional_infos.profile_id': 0,
             'additional_infos.created_at': 0,
             'additional_infos.updated_at': 0,
             'additional_infos.__v': 0,
         },
     }
+
     const talent = await Profile.aggregate([matchStage, ...lookupStages, ...unwindStages, projectStage])
+
+    // Check if user has sent friend request
+    const requestType = await Type.findOne({class: NOTIFICATION_TYPE, name: FRIEND_REQUEST_NOTIFICATION})
+
+    const friendRequest = await NotificationFeed.findOne({
+        user_id: new ObjectId(id),
+        source_id: user._id,
+        type_id: requestType._id,
+    })
+
+    talent[0].is_friend_requested = !!friendRequest
+
     return talent[0]
 }
 
 // =========== POST [Access to Talent] =========== //
 export async function accessToTalent(user, {id}) {
-    console.log('accessToTalent', user, id)
     const profile = await Profile.findOne({user_id: new ObjectId(id)})
     const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROFILE_ACCESS})
     const oldActivity = await ActivityLog.findOne({
