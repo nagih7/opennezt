@@ -6,7 +6,6 @@ import {
     IconlyChat,
     IconlyFolder,
     IconlyGraph,
-    IconlyMessage,
     IconlyNotification,
     IconlyProfile,
     IconlyWork,

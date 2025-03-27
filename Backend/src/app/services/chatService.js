@@ -1,5 +1,5 @@
-import {LINK_STATIC_URL} from '@/configs'
-import {Message, ObjectId, Conversation} from '@/models'
+import {LINK_STATIC_URL, MESSAGE_TYPE, TEXT_MESSAGE} from '@/configs'
+import {Message, ObjectId, Conversation, Type, User} from '@/models'
 
 // ========== GET [CONVERSATIONS] ========== //
 export async function getConversations(user) {
@@ -161,6 +161,126 @@ export async function getConversation(user, {conversationId}) {
     ])
 
     return conversation[0]
+}
+
+// ========== GET [MESSAGES] ========== //
+export async function getMessages(user, {conversationId}) {
+    const conversation = await Conversation.findOne({
+        _id: conversationId,
+        members: {$elemMatch: {user_id: user._id}},
+    })
+    if (!conversation) {
+        return []
+    }
+    const messages = await Message.aggregate([
+        {
+            $match: {
+                conversation_id: conversation._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $project: {
+                _id: 1,
+                user: 1,
+                conversation_id: 1,
+                content: 1,
+                read_by: 1,
+                pinned: 1,
+                status: 1,
+                timestamp: 1,
+            },
+        },
+        {
+            $sort: {
+                timestamp: 1,
+            },
+        },
+    ])
+    return messages
+}
+
+// ========== SEND [MESSAGE] ========== //
+export async function sendMessage(user, {conversationId}, {content}) {
+    const conversation = await Conversation.findOne({
+        _id: conversationId,
+        members: {$elemMatch: {user_id: user._id}},
+    })
+    const typeMessage = await Type.findOne({class: MESSAGE_TYPE, name: TEXT_MESSAGE})
+    if (!conversation || !typeMessage) {
+        throw new Error('Conversation not found')
+    }
+
+    const message = new Message({
+        conversation_id: conversation._id,
+        user_id: user._id,
+        content,
+        type_id: typeMessage._id,
+        read_by: [],
+        status: 'sent',
+    })
+    await message.save()
+    conversation.updated_at = new Date()
+    conversation.save()
+
+    const user_message = await User.aggregate([
+        {
+            $match: {
+                _id: message.user_id,
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+                avatar: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                        then: '$avatar',
+                        else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                    },
+                },
+            },
+        },
+    ])
+
+    message.user = user_message[0]
+
+    return {
+        _id: message._id,
+        user: user_message[0],
+        conversation_id: message.conversation_id,
+        content: message.content,
+        read_by: message.read_by,
+        pinned: message.pinned,
+        status: message.status,
+        timestamp: message.timestamp,
+    }
 }
 
 export async function getChatHistory(user, requestParams) {

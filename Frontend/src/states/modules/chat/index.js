@@ -14,6 +14,8 @@ const chatSlice = createSlice({
         // ========== CONVERSATION ========== //
         conversation: {},
         isLoadingGetConversation: false,
+        // ========== MESSAGES ========== //
+        isLoadingGetMessages: false,
     },
     reducers: {
         // ========== GET CONVERSATIONS ========== //
@@ -37,12 +39,50 @@ const chatSlice = createSlice({
         }),
         getConversationSuccess: (state, action) => ({
             ...state,
-            conversation: action.payload.data,
+            conversation: {
+                messages: [],
+                ...action.payload.data,
+            },
             isLoadingGetConversation: false,
         }),
         getConversationFail: (state) => ({
             ...state,
             isLoadingGetConversation: false,
+        }),
+        // ========== GET MESSAGES ========== //
+        requestGetMessages: (state) => ({
+            ...state,
+            isLoadingGetMessages: true,
+        }),
+        getMessagesSuccess: (state, action) => ({
+            ...state,
+            conversation: {
+                ...state.conversation,
+                messages: action.payload.data,
+            },
+            isLoadingGetMessages: false,
+        }),
+        getMessagesFail: (state) => ({
+            ...state,
+            isLoadingGetMessages: false,
+        }),
+
+        // ========== SEND MESSAGE ========== //
+        requestSendMessage: (state) => ({
+            ...state,
+            loadingSendMessage: true,
+        }),
+        sendMessageSuccess: (state, action) => ({
+            ...state,
+            conversation: {
+                ...state.conversation,
+                messages: [...state.conversation.messages, action.payload.data],
+            },
+            loadingSendMessage: false,
+        }),
+        sendMessageFail: (state) => ({
+            ...state,
+            loadingSendMessage: false,
         }),
 
         startRequestGetChatHistory: (state) => ({
@@ -142,6 +182,14 @@ export const {
     requestGetConversation,
     getConversationSuccess,
     getConversationFail,
+    // ========== GET MESSAGES ========== //
+    requestGetMessages,
+    getMessagesSuccess,
+    getMessagesFail,
+    // ========== SEND MESSAGE ========== //
+    requestSendMessage,
+    sendMessageSuccess,
+    sendMessageFail,
     startRequestGetChatHistory,
     startRequestGetChatHistorySuccess,
     startRequestGetChatHistoryFail,

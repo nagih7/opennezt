@@ -19,3 +19,11 @@ export const DELETE_STATUS = 'delete'
 export const CONVERSATION_TYPE = 'conversation'
 export const DIRECT_CONVERSATION = 'direct'
 export const GROUP_CONVERSATION = 'group'
+
+// MESSAGE TYPE
+export const MESSAGE_TYPE = 'message'
+export const TEXT_MESSAGE = 'text'
+export const FILE_MESSAGE = 'file'
+export const IMAGE_MESSAGE = 'image'
+export const VIDEO_MESSAGE = 'video'
+export const AUDIO_MESSAGE = 'audio'
