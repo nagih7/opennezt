@@ -14,6 +14,7 @@ import {
 } from 'date-fns';
 import { Button } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Article = forwardRef(
     (
@@ -140,6 +141,22 @@ const Article = forwardRef(
             }
         };
 
+        const authUser = useSelector((state) => state.auth.authUser);
+
+        const verifyAction = () => {
+            if (authUser._id === user[0]._id) {
+                return (
+                    <div
+                        className="flex text-2xl items-start pr-4"
+                        style={{ cursor: 'pointer' }}
+                        onClick={handleClickMore}
+                    >
+                        ...
+                    </div>
+                );
+            }
+        };
+
         return (
             <div className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8" ref={ref}>
                 {isConfirmDelete ? (
@@ -220,13 +237,7 @@ const Article = forwardRef(
 
                         <div>
                             <div className="relative flex" ref={dropdownRef}>
-                                <div
-                                    className="flex items-start pr-4 text-2xl"
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={handleClickMore}
-                                >
-                                    ...
-                                </div>
+                                {verifyAction()}
                                 {displayBookmark(bookmark)}
                                 {isShowMore && (
                                     <div className="absolute top-full right-0 bg-white shadow-lg rounded-md z-[99999] min-w-[200px] border border-gray-100">
