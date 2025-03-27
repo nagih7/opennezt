@@ -1,9 +1,32 @@
+import {Schema} from 'mongoose'
 import createModel, {ObjectId} from './base'
 
+const MemberSchema = new Schema(
+    {
+        user_id: {
+            type: ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        role_id: {
+            type: ObjectId,
+            ref: 'Role',
+            required: true,
+        },
+        notification_enabled: {
+            type: Boolean,
+            required: true,
+            default: true,
+        },
+    },
+    {
+        _id: false,
+    }
+)
+
 const Conversation = createModel('Conversation', 'conversations', {
-    member_ids: {
-        type: [ObjectId],
-        ref: 'Conversation_Member',
+    members: {
+        type: [MemberSchema],
         required: true,
     },
     type_id: {

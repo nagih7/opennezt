@@ -1,6 +1,12 @@
 // import {LINK_STATIC_URL} from '@/configs'
 
-import {ACCESS_TYPE, FRIEND_REQUEST, LINK_STATIC_URL, NOTIFICATION_TYPE, PROFILE_ACCESS} from '@/configs'
+import {
+    ACCESS_TYPE,
+    FRIEND_REQUEST_NOTIFICATION,
+    LINK_STATIC_URL,
+    NOTIFICATION_TYPE,
+    PROFILE_ACCESS,
+} from '@/configs'
 import {ActivityLog, Category, NotificationFeed, ObjectId, Profile, Type} from '@/models'
 
 // =========== GET [Recruit Talents] =========== //
@@ -280,7 +286,7 @@ export async function getTalentDetails(user, {id}) {
     const talent = await Profile.aggregate([matchStage, ...lookupStages, ...unwindStages, projectStage])
 
     // Check if user has sent friend request
-    const requestType = await Type.findOne({class: NOTIFICATION_TYPE, name: FRIEND_REQUEST})
+    const requestType = await Type.findOne({class: NOTIFICATION_TYPE, name: FRIEND_REQUEST_NOTIFICATION})
 
     const friendRequest = await NotificationFeed.findOne({
         user_id: new ObjectId(id),

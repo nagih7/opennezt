@@ -16,13 +16,6 @@ notificationRouter.get(
     asyncHandler(notificationController.readRoot)
 )
 
-// Reply notification
-notificationRouter.put(
-    '/reply',
-    asyncHandler(validate(notificationRequest.replyNotification)),
-    asyncHandler(notificationController.replyNotification)
-)
-
 // Request project invitation
 notificationRouter.post(
     '/project-invitation',
@@ -41,6 +34,13 @@ notificationRouter.get('/total-friends', asyncHandler(notificationController.get
 
 // ========== GET [Notification - Read] ========== //
 notificationRouter.get('/read', asyncHandler(notificationController.getNotifications))
+
+// ========== PUT [Notification - Reply] ========== //
+notificationRouter.put(
+    '/:notificationId/reply',
+    // asyncHandler(validate(notificationRequest.replyNotification)),
+    asyncHandler(notificationController.replyNotification)
+)
 
 // ========== PUT [Notification - Reply Invitation Member] ========== //
 notificationRouter.put(

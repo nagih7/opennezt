@@ -11,31 +11,7 @@ export const readRoot = Joi.object({
     order: tryValidateOrDefault(Joi.valid('1', '-1'), '-1'),
 })
 
-export const replyNotification = Joi.object({
-    notification_id: Joi.string()
-        .required()
-        .label('Notification_ID')
-        .custom(async (value, helpers) => {
-            const notification = await NotificationFeed.findById(value)
-            if (!notification) {
-                return helpers.error('any.empty', {message: 'Notification not found'})
-            }
-            return value
-        }),
-
-    type_id: Joi.string()
-        .required()
-        .label('Type_ID')
-        .custom(async (value, helpers) => {
-            const type = await Type.findById(value)
-            if (!type) {
-                return helpers.error('any.empty', {message: 'Type not found'})
-            }
-            return value
-        }),
-
-    status: Joi.string().valid('waiting', 'accepted', 'rejected').required().label('Status'),
-})
+export const replyNotification = Joi.object({})
 
 export const projectInvitation = Joi.object({
     project_id: Joi.string()

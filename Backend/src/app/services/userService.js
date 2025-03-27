@@ -14,7 +14,7 @@ import {
     Role,
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
-import {FRIEND_REQUEST, LINK_STATIC_URL, NOTIFICATION_TYPE, WAITING_STATUS} from '@/configs'
+import {FRIEND_REQUEST_NOTIFICATION, LINK_STATIC_URL, NOTIFICATION_TYPE, WAITING_STATUS} from '@/configs'
 import {userSockets} from '@/routes/socket'
 
 export async function create(requestBody) {
@@ -547,7 +547,7 @@ export async function getProjectRoles() {
 
 // ========== POST [User - Request Add Friend] ========== //
 export async function sendFriendRequest(user, {userId}, io) {
-    const requestType = await Type.findOne({class: NOTIFICATION_TYPE, name: FRIEND_REQUEST})
+    const requestType = await Type.findOne({class: NOTIFICATION_TYPE, name: FRIEND_REQUEST_NOTIFICATION})
     const newNotification = new NotificationFeed({
         user_id: new ObjectId(userId),
         source_id: user._id,
@@ -606,6 +606,6 @@ export async function sendFriendRequest(user, {userId}, io) {
     if (notification.length > 0) {
         const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === userId)
 
-        io.to(userSocketId).emit(FRIEND_REQUEST, notification[0])
+        io.to(userSocketId).emit(FRIEND_REQUEST_NOTIFICATION, notification[0])
     }
 }
