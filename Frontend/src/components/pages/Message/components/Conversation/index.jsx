@@ -96,7 +96,7 @@ const Conversation = () => {
                                                 </Avatar.Root>
                                             </span>
                                             <span className="flex items-center gap-1">
-                                                Vuong Manh Nghia
+                                                {conversation?.members[0]?.name}
                                                 <CheckCircleFilled className="text-blue-500" />
                                             </span>
                                         </div>
@@ -112,7 +112,7 @@ const Conversation = () => {
                                                 />
                                             </span>
                                             <span className="flex items-center gap-1">
-                                                Vuong Manh Nghia
+                                                {conversation?.members[0]?.name}
                                                 <CheckCircleFilled className="text-blue-500" />
                                             </span>
                                         </div>
