@@ -5,7 +5,6 @@ import { CheckOutlined, CloseOutlined } from '@mui/icons-material';
 import store from 'states/configureStore';
 import { replyNotification, getNotifications } from 'api/notification';
 import { useNavigate } from 'react-router-dom';
-import { getChatList } from 'api/chat';
 import { NOTIFICATIONS, ACTIONS, STATUS } from 'utils/constants/appConstants';
 import { Avatar, Stack, Text } from '@chakra-ui/react';
 import { CONFIRM_ACTION, DELETE_ACTION } from 'utils/constants';

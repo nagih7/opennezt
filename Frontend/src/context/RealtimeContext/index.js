@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSocket } from 'context/SocketContext';
-import { getChatList } from 'api/chat';
 import { getNotifications } from 'api/notification';
 import { toaster } from 'components/UI/toaster';
 import { CONFIRM_FRIEND_REQUEST_NOTIFICATION, FRIEND_REQUEST_NOTIFICATION } from 'utils/constants';
@@ -74,7 +73,7 @@ export const RealtimeProvider = ({ children }) => {
                 type: 'success',
                 duration: 100,
             });
-            dispatch(getChatList());
+            // dispatch(getChatList());
         });
     };
 

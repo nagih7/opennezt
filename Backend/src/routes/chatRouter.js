@@ -7,7 +7,8 @@ const chatRouter = Router()
 
 chatRouter.use(asyncHandler(requireAuthentication))
 
-chatRouter.get('/chat-list', asyncHandler(chatController.getChatList))
+// ========== GET [CONVERSATIONS] ========== //
+chatRouter.get('/conversations', asyncHandler(chatController.getConversations))
 
 chatRouter.get('/chat-history/:conversation_id', asyncHandler(chatController.getChatHistory))
 

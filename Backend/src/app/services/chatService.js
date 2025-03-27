@@ -1,27 +1,24 @@
 import {LINK_STATIC_URL} from '@/configs'
 import {Message, ObjectId, Conversation} from '@/models'
 
-export async function getChatList(user, input_value) {
-    if (!input_value || input_value === 'undefined' || input_value === null) {
-        input_value = ''
-    }
-    const chatList = await Conversation.aggregate([
+// ========== GET [CONVERSATIONS] ========== //
+export async function getConversations(user) {
+    const conversations = await Conversation.aggregate([
         {
             $match: {
-                member_ids: {$elemMatch: {user_id: user._id}},
+                members: {$elemMatch: {user_id: user._id}},
             },
         },
         {
             $lookup: {
                 from: 'users',
-                localField: 'member_ids.user_id',
+                localField: 'members.user_id',
                 foreignField: '_id',
                 as: 'members',
                 pipeline: [
                     {
                         $match: {
                             _id: {$ne: user._id},
-                            name: {$regex: input_value, $options: 'i'},
                         },
                     },
                     {
@@ -42,14 +39,15 @@ export async function getChatList(user, input_value) {
         },
         {
             $lookup: {
-                from: 'projects',
-                localField: 'metadata.data.project_id',
+                from: 'types',
+                localField: 'type_id',
                 foreignField: '_id',
-                as: 'metadata.data.project',
+                as: 'type',
                 pipeline: [
                     {
                         $project: {
-                            _id: 1,
+                            _id: 0,
+                            class: 1,
                             name: 1,
                         },
                     },
@@ -58,27 +56,16 @@ export async function getChatList(user, input_value) {
         },
         {
             $lookup: {
-                from: 'types',
-                localField: 'type_id',
+                from: 'messages',
+                localField: 'last_message_id',
                 foreignField: '_id',
-                as: 'type',
-            }
-        },
-        {
-            $addFields: {
-                'metadata.type': {$arrayElemAt: ['$type.name', 0]},
-            }
+                as: 'last_message',
+            },
         },
         {
             $unwind: {
-                path: '$metadata.data.project',
-                preserveNullAndEmptyArrays: true, // giữ lại các bản ghi không có project
-            },
-        },
-        // Loại bỏ các bản ghi có members rỗng
-        {
-            $match: {
-                $expr: {$gt: [{$size: '$members'}, 0]},
+                path: '$last_message',
+                preserveNullAndEmptyArrays: true,
             },
         },
         {
@@ -87,21 +74,15 @@ export async function getChatList(user, input_value) {
                 members: 1,
                 metadata: {
                     type: 1,
-                    data: {
-                        project: 1,
-                    },
+                    data: 1,
                 },
-                project: 1,
+                last_message: 1,
                 updated_at: 1,
             },
         },
-        {
-            $sort: {updated_at: -1},
-        },
     ])
-    console.log('chat', chatList)
 
-    return chatList
+    return conversations
 }
 
 export async function getChatHistory(user, requestParams) {

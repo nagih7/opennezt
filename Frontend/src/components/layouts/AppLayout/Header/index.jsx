@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PopoverProfile from './components/PopoverProfile';
+import PopoverMessage from './components/PopoverMessage';
 import PopoverNotification from './components/PopoverNotification';
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
 import ZoomInMapIcon from '@mui/icons-material/ZoomInMap';
 import { useSelector, useDispatch } from 'react-redux';
-import ChatList from './components/ChatList';
 import MessageBoxList from './components/MessageBoxList';
 import { LANG } from 'utils/constants';
 import { setLanguage } from 'states/modules/app';
@@ -149,7 +149,7 @@ const Header = () => {
                                         <Popover.Arrow />
                                         <Popover.Body>
                                             <Stack spacing={4}>
-                                                <ChatList />
+                                                <PopoverMessage />
                                             </Stack>
                                         </Popover.Body>
                                     </Popover.Content>
