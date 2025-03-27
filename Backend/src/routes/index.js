@@ -28,7 +28,7 @@ function route(app, io) {
     app.use('/chat', chatrouter)
     app.use('/common', commonRouter)
     app.use('/subscribe', LandingPageRouter)
-    app.use('/notification', notificationRouter)
+    app.use('/notifications', notificationRouter)
     app.use('/projects', projectRouter)
     app.use('/ai', artificialIntelligenceRouter)
     app.use('/article', articleRouter)

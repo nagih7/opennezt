@@ -1,4 +1,10 @@
-import {ACCESS_TYPE, LINK_STATIC_URL, NOTIFICATION_TYPE, PROJECT_ACCESS, PROJECT_APPLICATION} from '@/configs'
+import {
+    ACCESS_TYPE,
+    LINK_STATIC_URL,
+    NOTIFICATION_TYPE,
+    PROJECT_ACCESS,
+    PROJECT_APPLICATION_NOTIFICATION,
+} from '@/configs'
 import {
     Project,
     NotificationFeed,
@@ -10,7 +16,7 @@ import {
     ProjectMember,
     Role,
     ActivityLog,
-    ProjectRequirement
+    ProjectRequirement,
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
 
@@ -724,7 +730,10 @@ export async function seekProjects(user, {q, page, per_page, field, order, indus
 export async function applyToJoinProject(user, projectId, requestBody) {
     const {teamRole, role} = requestBody
     const project = await Project.findById(new ObjectId(projectId))
-    const typeNotification = await Type.findOne({class: NOTIFICATION_TYPE, name: PROJECT_APPLICATION})
+    const typeNotification = await Type.findOne({
+        class: NOTIFICATION_TYPE,
+        name: PROJECT_APPLICATION_NOTIFICATION,
+    })
     const notification = new NotificationFeed({
         source_id: user._id,
         user_id: project.user_id,
@@ -771,7 +780,16 @@ export async function accessToProject(user, projectId) {
 // ========== POST [Project - add Requirement] ========== //
 export async function addProjectRequirement(user, projectId, requestBody) {
     const project = await Project.findById(new ObjectId(projectId))
-    const {team_role_id, role_id, industry_ids, experience_level_id, category_ids, subcategory_ids, skill_ids, metadata} = requestBody
+    const {
+        team_role_id,
+        role_id,
+        industry_ids,
+        experience_level_id,
+        category_ids,
+        subcategory_ids,
+        skill_ids,
+        metadata,
+    } = requestBody
     const requirement = new ProjectRequirement({
         project_id: project._id,
         team_role_id: team_role_id,
@@ -785,7 +803,6 @@ export async function addProjectRequirement(user, projectId, requestBody) {
     })
     await requirement.save()
 }
-
 
 // ========== GET [My Project Access] ========== //
 export async function getMyProjectAccess(user) {

@@ -32,7 +32,10 @@ const TalentDetails = () => {
 				width={"100%"}
 			/>
 			<div className="absolute w-full top-[275px] px-[16px]">
-				<ProfileOverview user={talentDetails?.user} />
+				<ProfileOverview
+					user={talentDetails?.user}
+					isFriendRequested={talentDetails?.is_friend_requested}
+				/>
 				<ProfessionalProfile profile={talentDetails} />
 			</div>
 		</div>

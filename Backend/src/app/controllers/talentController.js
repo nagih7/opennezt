@@ -8,7 +8,7 @@ export async function recruitTalents(req, res) {
 
 // =========== GET [Talent Details] =========== //
 export async function getTalentDetails(req, res) {
-    const result = await talentService.getTalentDetails(req.params)
+    const result = await talentService.getTalentDetails(req.currentUser, req.params)
     res.jsonify(result)
 }
 

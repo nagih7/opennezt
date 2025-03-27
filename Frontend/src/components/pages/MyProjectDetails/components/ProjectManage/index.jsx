@@ -1,42 +1,42 @@
-import React, { useState, useEffect } from "react";
-import ProjectActivity from "../ProjectActivity";
-import { Button, Input, Tabs } from "@chakra-ui/react";
-import { toaster } from "components/UI/toaster";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { addProjectRequirement, deleteMyProject } from "api/project";
-import SelectCustom from "components/UI/SelectCustom";
+import React, { useState, useEffect } from 'react';
+import ProjectActivity from '../ProjectActivity';
+import { Button, Input, Tabs } from '@chakra-ui/react';
+import { toaster } from 'components/UI/toaster';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { addProjectRequirement, deleteMyProject } from 'api/project';
+import SelectCustom from 'components/UI/SelectCustom';
 import {
-  getCategoryFramework,
-  getExperienceLevelFramwork,
-  getIndustryFramework,
-  getProjectRoleFramework,
-  getSkillFramework,
-  getSubCategoryFramework,
-} from "api/user";
+    getCategoryFramework,
+    getExperienceLevelFramwork,
+    getIndustryFramework,
+    getProjectRoleFramework,
+    getSkillFramework,
+    getSubCategoryFramework,
+} from 'api/user';
 
 const ProjectManage = () => {
-  const dispatch = useDispatch();
-  const { id } = useParams();
-  // ========== STATE FROM REDUX STORE  ========== //
-  const {
-    isLoadingDeleteMyProject,
-    isLoadingCreateProjectRequirement,
-    formAddProjectRequirement,
-  } = useSelector((state) => state.project);
+    const dispatch = useDispatch();
+    const { id } = useParams();
+    // ========== STATE FROM REDUX STORE  ========== //
+    const {
+        isLoadingDeleteMyProject,
+        isLoadingCreateProjectRequirement,
+        formAddProjectRequirement,
+    } = useSelector((state) => state.project);
 
-  const {
-    projectTeamRoleFramework ,
-    projectRoleFramework,
-    industryFramework,
-    experienceLevelFramework,
-    categoryFramework,
-    subCategoryFramework,
-    skillFramework,
-  } = useSelector((state) => state.user);
+    const {
+        projectTeamRoleFramework,
+        projectRoleFramework,
+        industryFramework,
+        experienceLevelFramework,
+        categoryFramework,
+        subCategoryFramework,
+        skillFramework,
+    } = useSelector((state) => state.user);
 
-  // ========== STATE  ========== //
-  const [confirmDelete, setConfirmDelete] = useState(false);
+    // ========== STATE  ========== //
+    const [confirmDelete, setConfirmDelete] = useState(false);
 
   const [formData, setFormData] = useState({
     teamRole: "",
@@ -67,18 +67,6 @@ const ProjectManage = () => {
     }
   }, [dispatch, categoryFramework]);
 
-  useEffect(() => {
-    setFormData({
-      teamRole: formAddProjectRequirement.teamRole,
-      role: formAddProjectRequirement.role,
-      industries: formAddProjectRequirement.industries,
-      experienceLevel: formAddProjectRequirement.experienceLevel,
-      categories: formAddProjectRequirement.categories,
-      subcategories: formAddProjectRequirement.subcategories,
-      skills: formAddProjectRequirement.skills,
-    });
-  }, [formAddProjectRequirement]);
-
   // ========== HANDLE CHANGE  ========== //
   const handleChange = (event, nameSelect) => {
     if(nameSelect){
@@ -97,19 +85,46 @@ const ProjectManage = () => {
         break;
     }
   };
+    useEffect(() => {
+        dispatch(getProjectRoleFramework());
+    }, [dispatch]);
+    useEffect(() => {
+        if (industryFramework?.items?.length === 0) {
+            dispatch(getIndustryFramework());
+        }
+    }, [dispatch, industryFramework]);
+    useEffect(() => {
+        if (experienceLevelFramework?.items?.length === 0) {
+            dispatch(getExperienceLevelFramwork());
+        }
+    }, [dispatch, experienceLevelFramework]);
+    useEffect(() => {
+        if (categoryFramework?.items?.length === 0) {
+            dispatch(getCategoryFramework());
+        }
+    }, [dispatch, categoryFramework]);
+    useEffect(() => {
+        if (subCategoryFramework?.items?.length === 0) {
+            dispatch(getSubCategoryFramework());
+        }
+    }, [dispatch, subCategoryFramework]);
+    useEffect(() => {
+        if (skillFramework?.items?.length === 0) {
+            dispatch(getSkillFramework());
+        }
+    }, [dispatch, skillFramework]);
 
-  // ========== HANDLE CHANGE ========== //
-  const handleConfirmDeleteProject = () => {
-    if (confirmDelete) {
-      dispatch(deleteMyProject(id));
-    } else {
-      toaster.create({
-        title:
-          "Please confirm that you understand the consequences of deleting this project.",
-        type: "error",
-      });
-    }
-  };
+    useEffect(() => {
+        setFormData({
+            teamRole: formAddProjectRequirement.teamRole,
+            role: formAddProjectRequirement.role,
+            industries: formAddProjectRequirement.industries,
+            experienceLevel: formAddProjectRequirement.experienceLevel,
+            categories: formAddProjectRequirement.categories,
+            subcategories: formAddProjectRequirement.subcategories,
+            skills: formAddProjectRequirement.skills,
+        });
+    }, [formAddProjectRequirement]);
 
   const handleSaveProjectRequirement = () => {
     const updatedFormData = {
@@ -141,22 +156,35 @@ const ProjectManage = () => {
     dispatch(addProjectRequirement(id ,updatedFormData));
   };
 
-  return (
-    <div className="px-[16px]">
-      <div className="flex w-full gap-8">
-        <div className="w-10/12 mt-8">
-          <Tabs.Root defaultValue="Project Requirement" variant="plain">
-            <div className="p-8 bg-[#ffffff] rounded-md">
-              <Tabs.List>
-                <Tabs.Trigger value="Project Requirement">
-                  Project Requirement
-                </Tabs.Trigger>
-                <Tabs.Trigger value="delete">Delete</Tabs.Trigger>
-                <Tabs.Indicator rounded="l2" />
-              </Tabs.List>
-            </div>
-            <div className="p-8 mt-8 bg-[#ffffff] rounded-md">
-              <Tabs.Content pt="0" value="Project Requirement">
+    // ========== HANDLE CHANGE ========== //
+    const handleConfirmDeleteProject = () => {
+        if (confirmDelete) {
+            dispatch(deleteMyProject(id));
+        } else {
+            toaster.create({
+                title: 'Please confirm that you understand the consequences of deleting this project.',
+                type: 'error',
+            });
+        }
+    };
+
+
+    return (
+        <div className="px-[16px]">
+            <div className="flex w-full gap-8">
+                <div className="w-10/12 mt-8">
+                    <Tabs.Root defaultValue="Project Requirement" variant="plain">
+                        <div className="p-8 bg-[#ffffff] rounded-md">
+                            <Tabs.List>
+                                <Tabs.Trigger value="Project Requirement">
+                                    Project Requirement
+                                </Tabs.Trigger>
+                                <Tabs.Trigger value="delete">Delete</Tabs.Trigger>
+                                <Tabs.Indicator rounded="l2" />
+                            </Tabs.List>
+                        </div>
+                        <div className="p-8 mt-8 bg-[#ffffff] rounded-md">
+                        <Tabs.Content pt="0" value="Project Requirement">
                 <div className="relative mb-8">
                   <SelectCustom
                     required
@@ -281,16 +309,16 @@ const ProjectManage = () => {
                   </div>
                 </div>
               </Tabs.Content>
+                        </div>
+                    </Tabs.Root>
+                </div>
+                <div className="w-4/12 mt-8">
+                    {/* ProjectActivity */}
+                    <ProjectActivity />
+                </div>
             </div>
-          </Tabs.Root>
         </div>
-        <div className="w-4/12 mt-8">
-          {/* ProjectActivity */}
-          <ProjectActivity />
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default ProjectManage;
