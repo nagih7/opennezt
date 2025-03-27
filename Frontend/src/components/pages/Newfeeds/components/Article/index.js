@@ -7,13 +7,24 @@ import { IconlyHeart } from 'components/UI/Iconly';
 import { IconlySend } from 'components/UI/Iconly';
 import { IconlyEdit } from 'components/UI/Iconly';
 import {
-    differenceInDays,
-    differenceInHours,
-    differenceInMinutes,
-    differenceInSeconds,
-} from 'date-fns';
-import { Button } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+   IconlyBookmark,
+   IconlyDelete,
+   IconlyMoreCircle,
+} from "components/UI/Iconly";
+import avt from "assets/images/background/avt.jpg";
+import { IconlyChat } from "components/UI/Iconly";
+import { IconlyHeart } from "components/UI/Iconly";
+import { IconlySend } from "components/UI/Iconly";
+import { IconlyEdit } from "components/UI/Iconly";
+import {
+   differenceInDays,
+   differenceInHours,
+   differenceInMinutes,
+   differenceInSeconds,
+} from "date-fns";
+import { Button } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Article = forwardRef(
     (
@@ -105,54 +116,77 @@ const Article = forwardRef(
             onBookmark(data);
         };
 
-        const displayBookmark = () => {
-            if (bookmark === 'yes') {
-                return (
-                    <div
-                        className="flex items-start pr-4 mt-2 text-2xl"
-                        style={{ cursor: 'pointer' }}
-                        onClick={() =>
-                            handleBookmark({
-                                article_id: feed._id,
-                                marked: 'no',
-                            })
-                        }
-                    >
-                        <IconlyBookmark size={25} color={'#6f7f92'} backgroundColor={'#6f7f92'} />
-                    </div>
-                );
-            }
-            if (bookmark === 'no' || bookmark === undefined) {
-                return (
-                    <div
-                        className="flex items-start pr-4 mt-2 text-2xl"
-                        style={{ cursor: 'pointer' }}
-                        onClick={() =>
-                            handleBookmark({
-                                article_id: feed._id,
-                                marked: 'yes',
-                            })
-                        }
-                    >
-                        <IconlyBookmark size={25} color={'#6f7f92'} />
-                    </div>
-                );
-            }
-        };
+      const displayBookmark = () => {
+         if (bookmark === "yes") {
+            return (
+               <div
+                  className="flex text-2xl items-start pr-4 mt-2"
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                     handleBookmark({
+                        article_id: feed._id,
+                        marked: "no",
+                     })
+                  }
+               >
+                  <IconlyBookmark
+                     size={25}
+                     color={"#6f7f92"}
+                     backgroundColor={"#6f7f92"}
+                  />
+               </div>
+            );
+         }
+         if (bookmark === "no" || bookmark === undefined) {
+            return (
+               <div
+                  className="flex text-2xl items-start pr-4 mt-2"
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                     handleBookmark({
+                        article_id: feed._id,
+                        marked: "yes",
+                     })
+                  }
+               >
+                  <IconlyBookmark size={25} color={"#6f7f92"} />
+               </div>
+            );
+         }
+      };
 
-        return (
-            <div className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8" ref={ref}>
-                {isConfirmDelete ? (
-                    <div
-                        className="fixed inset-0 flex justify-center items-center z-[999999] bg-gray-900 bg-opacity-50"
-                        onClick={handleClickDelete}
-                    >
-                        <div className="bg-[#ffffff] w-[600px] p-8 rounded-md mb-4">
-                            <div className="flex items-center justify-center border-b-[0.5px] border-[#6f7f92] p-2 font-medium">
-                                Delete Post?
-                            </div>
-                            <span className="p-2 text-sm">
-                                {`Are you sure wan't to delete this post. After delete
+      const authUser = useSelector((state) => state.auth.authUser);
+
+      const verifyAction = () => {
+         if (authUser._id === user[0]._id) {
+            return (
+               <div
+                  className="flex text-2xl items-start pr-4"
+                  style={{ cursor: "pointer" }}
+                  onClick={handleClickMore}
+               >
+                  ...
+               </div>
+            );
+         }
+      };
+
+      return (
+         <div
+            className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8"
+            ref={ref}
+         >
+            {isConfirmDelete ? (
+               <div
+                  className="fixed inset-0 flex justify-center items-center z-[999999] bg-gray-900 bg-opacity-50"
+                  onClick={handleClickDelete}
+               >
+                  <div className="bg-[#ffffff] w-[600px] p-8 rounded-md mb-4">
+                     <div className="flex items-center justify-center border-b-[0.5px] border-[#6f7f92] p-2 font-medium">
+                        Delete Post?
+                     </div>
+                     <span className="text-sm p-2">
+                        {`Are you sure wan't to delete this post. After delete
                         you are not able to get it back`}
                             </span>
                             <div>
@@ -217,95 +251,95 @@ const Article = forwardRef(
                             </span>
                         </div>
                         {/* */}
-
-                        <div>
-                            <div className="relative flex" ref={dropdownRef}>
-                                <div
-                                    className="flex items-start pr-4 text-2xl"
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={handleClickMore}
-                                >
-                                    ...
-                                </div>
-                                {displayBookmark(bookmark)}
-                                {isShowMore && (
-                                    <div className="absolute top-full right-0 bg-white shadow-lg rounded-md z-[99999] min-w-[200px] border border-gray-100">
-                                        <ul className="p-0 m-2">
-                                            <li
-                                                className="flex items-center gap-2 px-3 cursor-pointer hover:bg-gray-100"
-                                                onClick={handleClickDelete}
-                                            >
-                                                <IconlyDelete size={25} color={'#6f7f92'} />
-                                                <span className="p-2 text-sm">Delete post</span>
-                                            </li>
-                                            <li
-                                                className="flex items-center gap-2 px-3 cursor-pointer hover:bg-gray-100"
-                                                onClick={handleEdit}
-                                            >
-                                                <IconlyEdit
-                                                    size={25}
-                                                    color={'#6f7f92'}
-                                                    backgroundColor={'#6f7f92'}
-                                                />
-                                                <span className="p-2 text-sm">Edit post</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="mt-6">
-                    <p className="my-[6px]">{content.caption}</p>
-                </div>
-                <div className="flex flex-wrap gap-2 ">
-                    {content.attachment &&
-                        content.attachment.length > 0 &&
-                        content.attachment.map((img, index) => {
-                            return (
-                                <img
-                                    key={index}
-                                    src={typeof img === 'string' ? img : URL.createObjectURL(img)}
-                                />
-                            );
-                        })}
-                </div>
-                <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
-                    <span className="text-[#6f7f92]"></span>
-                </div>
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 pt-[16px] text-[#6f7f92]">
-                        <a className="flex items-center gap-1 text-current no-underline">
-                            {displayReaction(reaction)}
-                            <span className="text-sm">
-                                {reaction_count > 0
-                                    ? reaction_count > 1000
-                                        ? Math.floor(reaction_count / 1000) + 'k'
-                                        : reaction_count
-                                    : ' '}{' '}
-                            </span>
-                        </a>
-                        <a
-                            className="flex items-center gap-1 text-current no-underline"
-                            onClick={handleSetClick}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            <IconlyChat size={20} color={'#6f7f92'} />
-                            <span className="text-sm">
-                                {comment_count > 0
-                                    ? comment_count > 1000
-                                        ? Math.floor(comment_count / 1000) + 'k'
-                                        : comment_count
-                                    : ' '}{' '}
-                            </span>
-                        </a>
-                    </div>
-                    <div className="flex items-center gap-1 pt-[16px] text-[#6f7f92]">
-                        <IconlySend size={22} color={'#6f7f92'} />
-                        <span>Share</span>
-                    </div>
-                </div>
+                  <div>
+                     <div className="flex relative" ref={dropdownRef}>
+                        {verifyAction()}
+                        {displayBookmark(bookmark)}
+                        {isShowMore && (
+                           <div className="absolute top-full right-0 bg-white shadow-lg rounded-md z-[99999] min-w-[200px] border border-gray-100">
+                              <ul className="p-0 m-2">
+                                 <li
+                                    className="px-3 hover:bg-gray-100 flex items-center gap-2 cursor-pointer"
+                                    onClick={handleClickDelete}
+                                 >
+                                    <IconlyDelete size={25} color={"#6f7f92"} />
+                                    <span className="text-sm p-2">
+                                       Delete post
+                                    </span>
+                                 </li>
+                                 <li
+                                    className="px-3 hover:bg-gray-100 flex items-center gap-2 cursor-pointer"
+                                    onClick={handleEdit}
+                                 >
+                                    <IconlyEdit
+                                       size={25}
+                                       color={"#6f7f92"}
+                                       backgroundColor={"#6f7f92"}
+                                    />
+                                    <span className="text-sm p-2">
+                                       Edit post
+                                    </span>
+                                 </li>
+                              </ul>
+                           </div>
+                        )}
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div className="mt-6">
+               <p className="my-[6px]">{content.caption}</p>
+            </div>
+            <div className="flex flex-wrap gap-2 ">
+               {content.attachment &&
+                  content.attachment.length > 0 &&
+                  content.attachment.map((img, index) => {
+                     return (
+                        <img
+                           key={index}
+                           src={
+                              typeof img === "string"
+                                 ? img
+                                 : URL.createObjectURL(img)
+                           }
+                        />
+                     );
+                  })}
+            </div>
+            <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
+               <span className="text-[#6f7f92]"></span>
+            </div>
+            <div className="flex items-center justify-between">
+               <div className="flex items-center gap-3 pt-[16px] text-[#6f7f92]">
+                  <a className="flex items-center gap-1 text-current no-underline">
+                     {displayReaction(reaction)}
+                     <span className="text-sm">
+                        {reaction_count > 0
+                           ? reaction_count > 1000
+                              ? Math.floor(reaction_count / 1000) + "k"
+                              : reaction_count
+                           : " "}{" "}
+                     </span>
+                  </a>
+                  <a
+                     className="flex items-center gap-1 text-current no-underline"
+                     onClick={handleSetClick}
+                     style={{ cursor: "pointer" }}
+                  >
+                     <IconlyChat size={20} color={"#6f7f92"} />
+                     <span className="text-sm">
+                        {comment_count > 0
+                           ? comment_count > 1000
+                              ? Math.floor(comment_count / 1000) + "k"
+                              : comment_count
+                           : " "}{" "}
+                     </span>
+                  </a>
+               </div>
+               <div className="flex items-center gap-1 pt-[16px] text-[#6f7f92]">
+                  <IconlySend size={22} color={"#6f7f92"} />
+                  <span>Share</span>
+               </div>
             </div>
         );
     }
