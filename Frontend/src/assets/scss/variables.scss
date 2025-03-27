@@ -1,6 +1,7 @@
 $colorBackground: #f6f6f9;
 $mainColor: #212631;
-$backgroundMain: #f6f6f9;
+// $backgroundMain: #f6f6f9;
+$backgroundMain: #f4f5f6;
 $mainColorDark: #2a2a4a;
 $colorWhite: #fff;
 $colorBlack: #363949;
@@ -11,6 +12,8 @@ $colorSuccess: #1b9c85;
 $colorNote: #677483;
 $backgroundHoverMain: #2a303d;
 $hoverSecondaryAccent: #8577ff;
+
+$colorSidebarActive: #2f65b9;
 
 $colorWhiteHover: #fcfcfe;
 
@@ -164,7 +167,8 @@ $color-primary: #6c9bcf;
 $textColorDark: #1f2937;
 
 // Size Navbar
-$sizeNavbar: 200px;
+// $sizeNavbar: 200px;
+$sizeNavbar: 270px;
 $colorPlaceholder: #949698;
 
 // Card

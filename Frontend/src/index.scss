@@ -1,5 +1,9 @@
+@import "./assets/scss/base.scss";
+@tailwind components;
+@tailwind utilities;
 @import "./assets/scss/variables";
 @import url("https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:wght@300;400;500;700&family=Roboto&family=Roboto+Flex:opsz,wdth,wght@8..144,125,100..1000&family=Sora:wght@100..800&display=swap");
 
 body {
 	font-feature-settings: normal !important;
@@ -17,7 +21,8 @@ body {
 }
 
 * {
-	font-family: "Inter", "Red Hat Text", sans-serif !important;
+	// font-family: "Inter", "Red Hat Text", sans-serif !important;
+	font-family: "Plus Jakarta Sans", sans-serif !important;
 	font-variant: none !important;
 	font-feature-settings: normal !important;
 }
@@ -365,4 +370,26 @@ h4 {
 
 .ant-progress-text {
 	font-size: 12px;
+}
+
+button:focus {
+	outline: none; /* Tắt outline khi button được focus */
+	border: none; /* Nếu bạn muốn bỏ luôn border */
+}
+
+// ========== CHAKRA UI ========== //
+
+.chakra-checkbox__root {
+	cursor: pointer;
+	display: flex;
+	.chakra-checkbox__control {
+		border: 1px solid $colorBorderInput !important;
+	}
+}
+
+.chakra-select__trigger {
+	border-width: 0;
+	outline: none;
+	border: 1px solid #ccc; /* Hoặc bạn có thể thiết lập border nếu muốn */
+	border-color: white;
 }

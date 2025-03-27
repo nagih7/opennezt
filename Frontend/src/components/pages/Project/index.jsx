@@ -1,354 +1,91 @@
-import React, { useState, useEffect, useCallback } from "react";
-import styles from "./styles.module.scss";
-import {
-	getProjects,
-	createNewProject,
-	getProjectDetails,
-	updateProject,
-	deleteProject,
-} from "api/project";
-import { useSelector, useDispatch } from "react-redux";
-import { Button, Modal, Tooltip } from "antd";
-import LazyLoading from "components/UI/LazyLoading";
-import BoxProject from "./BoxProject";
-import ProjectDetails from "../../common/ProjectDetails";
-import ProjectsSkeleton from "components/skeleton/ProjectsSkeleton";
-import NotFound from "components/UI/NotFound";
-import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { SearchOutlined } from "@mui/icons-material";
-import { matchingTalents } from "api/artificialIntelligence";
-import store from "states/configureStore";
-import { setOpenModalMatchingTalents } from "states/modules/artificialIntelligence";
-import {
-	PROJECT_MANAGEMENT,
-	VIEW_MATCHING_TALENTS,
-	MATCHING_TALENT_WITH_AI,
-	CREATE_NEW_PROJECT,
-	UPDATE,
-	DELETE,
-	TOOLTIP,
-} from "utils/constains";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import RightSidebar from "components/common/RightSidebar";
+import ActiveBanner from "./components/ActiveBanner";
+import SearchProjectHeader from "./components/SearchProjectHeader";
+import ActivateHeader from "./components/ActivateHeader";
+import MyProjects from "./components/MyProjects";
+import { useDispatch, useSelector } from "react-redux";
+import { getAccessToMyProjects } from "api/activity";
 
-const CreateProjectForm = React.lazy(() => import("./CreateProjectForm"));
-const UpdateProjectForm = React.lazy(() => import("./UpdateProjectForm"));
-
-function Project() {
-	const dispatch = useDispatch();
-
-	const { talents, loadingMatchingTalents } = useSelector(
-		(state) => state.artificialIntelligence
+const action = (project) => {
+	return (
+		<div>
+			has accessed your <b>{project}</b> project
+		</div>
 	);
-	const { language } = useSelector((state) => state.app);
+};
 
-	const [openModalUpdateProject, setOpenModalUpdateProject] = useState(false);
-	const [openModalCreateProject, setOpenModalCreateProject] = useState(false);
-	const [openModalProjectDetails, setOpenModalProjectDetails] =
-		useState(false);
+function Projects() {
+	const dispatch = useDispatch();
+	// ========== STATE FROM REDUX STORE ========== //
+	const { paginationListMyProjects, isLoadingGetListMyProjects } = useSelector(
+		(state) => state.project
+	);
+	const { accessToMyProjects } = useSelector((state) => state.activity);
 
-	const [formProject, setFormData] = useState({
-		name: "",
-		landing_page_url: "",
-		related_industries: [],
-		stage: null,
-		problem: "",
-		solution: "",
-		project_demo_url: "",
-		team_intro_url: "",
-		pitch_deck: {},
-		statistics: "",
-		revenues: [],
-		funding_sources: {
-			friend_and_family: "",
-			grant: "",
-			angel: "",
-			venture_capital: "",
-			other: "",
-		},
-		target_money: "",
-		target_audience: "",
-		competitors: "",
-		competitive_advantage: "",
-		why_now: "",
-		strategy: "",
-		milestones: "",
-		background: {},
-	});
-	const [openModalConfirm, setOpenModalConfirm] = useState(false);
+	// ========== STATE ========== //
+	const [isBottom, setIsBottom] = useState(false);
+	// Ref cho container scroll
+	const scrollContainerRef = useRef(null);
 
-	const setDefaultForm = () => {
-		setFormData({
-			name: "",
-			landing_page_url: "",
-			related_industries: [],
-			stage: null,
-			problem: "",
-			solution: "",
-			project_demo_url: "",
-			team_intro_url: "",
-			pitch_deck: {},
-			statistics: "",
-			revenues: [],
-			funding_sources: {
-				friend_and_family: "",
-				grant: "",
-				angel: "",
-				venture_capital: "",
-				other: "",
-			},
-			target_money: "",
-			target_audience: "",
-			competitors: "",
-			competitive_advantage: "",
-			why_now: "",
-			strategy: "",
-			milestones: "",
-			background: {},
-		});
-	};
+	// Hàm kiểm tra cuộn khi người dùng cuộn xuống dưới cùng
+	const checkScroll = useCallback(() => {
+		if (!scrollContainerRef.current) return;
+		const { scrollTop, scrollHeight, clientHeight } =
+			scrollContainerRef.current;
+		if (!isLoadingGetListMyProjects)
+			if (
+				paginationListMyProjects.lastPage !== 0 &&
+				paginationListMyProjects.totalRecord !== 0
+			)
+				if (
+					scrollTop + clientHeight >= scrollHeight - 50 &&
+					paginationListMyProjects.currentPage <
+						paginationListMyProjects.lastPage
+				) {
+					setIsBottom(true);
+				} else {
+					setIsBottom(false);
+				}
+	}, [isLoadingGetListMyProjects, paginationListMyProjects]);
 
-	const {
-		projects,
-		loadingCreateNewProject,
-		resultCreateProject,
-		projectDetails,
-		loadingUpdateProject,
-		resultUpdateProject,
-		loadingDeleteProject,
-		loadingGetProjects,
-	} = useSelector((state) => state.project);
+	// Theo dõi sự kiện scroll khi cuộn
+	useEffect(() => {
+		const container = scrollContainerRef.current;
+		if (container) {
+			container.addEventListener("scroll", checkScroll);
+		}
 
-	const handleOpenModalDetails = (project_id) => {
-		setOpenModalProjectDetails(true);
-		dispatch(getProjectDetails(project_id));
-	};
-
-	const handleCreateProject = async () => {
-		dispatch(createNewProject(formProject));
-	};
+		// Cleanup khi component unmount
+		return () => {
+			if (container) {
+				container.removeEventListener("scroll", checkScroll);
+			}
+		};
+	}, [checkScroll]);
 
 	useEffect(() => {
-		if (resultCreateProject === true) {
-			setOpenModalCreateProject(false);
-			setDefaultForm();
-			dispatch(getProjects());
-		}
-	}, [resultCreateProject, dispatch]);
-
-	const handleCancel = () => {
-		setOpenModalCreateProject(false);
-		setDefaultForm();
-	};
-
-	const handleOpenModalUpdateProject = async () => {
-		setFormData(projectDetails);
-		setOpenModalUpdateProject(true);
-	};
-
-	const handleCloseModalUpdateProject = () => {
-		setDefaultForm();
-		setOpenModalUpdateProject(false);
-	};
-
-	const handleDeleteProject = async (project_id) => {
-		await store.dispatch(deleteProject(project_id));
-		dispatch(getProjects());
-		setOpenModalProjectDetails(false);
-	};
-
-	const handleUpdateProject = async () => {
-		dispatch(updateProject(formProject));
-		dispatch(getProjectDetails(projectDetails._id));
-		dispatch(getProjects());
-	};
-
-	useEffect(() => {
-		if (resultUpdateProject === true) {
-			setOpenModalUpdateProject(false);
-			setDefaultForm();
-		}
-	}, [resultUpdateProject]);
-
-	const handleMatchingWithAI = useCallback(() => {
-		setOpenModalConfirm(false);
-		dispatch(matchingTalents());
+		if (accessToMyProjects?.length === 0) dispatch(getAccessToMyProjects());
+		// eslint-disable-next-line
 	}, [dispatch]);
 
 	return (
-		<div className={styles.projectContainer}>
-			<div className={styles.projectHeader}>
-				<h2>{PROJECT_MANAGEMENT[language]}</h2>
-				<div className={styles.userActions}>
-					{talents && talents.length > 0 ? (
-						<Button
-							color="cyan"
-							variant="solid"
-							style={{
-								borderRadius: "0.5rem",
-							}}
-							icon={<VisibilityIcon />}
-							loading={false}
-							onClick={() =>
-								dispatch(setOpenModalMatchingTalents(true))
-							}>
-							{VIEW_MATCHING_TALENTS[language]}
-						</Button>
-					) : projects && projects.length > 0 ? (
-						<Button
-							style={{
-								borderRadius: "0.5rem",
-							}}
-							icon={<SearchOutlined />}
-							type="primary"
-							loading={loadingMatchingTalents}
-							onClick={() => setOpenModalConfirm(true)}>
-							{MATCHING_TALENT_WITH_AI[language]}
-						</Button>
-					) : (
-						<Tooltip
-							title={
-								TOOLTIP.YOU_NEED_TO_CREATE_A_PROJECT_FIRST[language]
-							}
-							placement="top">
-							<Button
-								disabled
-								style={{
-									borderRadius: "0.5rem",
-								}}
-								icon={<SearchOutlined />}
-								type="primary">
-								{MATCHING_TALENT_WITH_AI[language]}
-							</Button>
-						</Tooltip>
-					)}
-
-					<Button
-						type="primary"
-						className={styles.btnCreate}
-						onClick={() => setOpenModalCreateProject(true)}>
-						<CreateNewFolderIcon />
-						{CREATE_NEW_PROJECT[language]}
-					</Button>
-				</div>
-			</div>
-
-			{projects && projects.length === 0 && !loadingGetProjects ? (
-				<NotFound
-					content={"You do not have any project yet"}
-					size={"10rem"}
-				/>
-			) : (
-				<div className={styles.projectsListWrap}>
-					<div className={styles.projectsList}>
-						{loadingGetProjects ? (
-							<ProjectsSkeleton boxs={6} />
-						) : (
-							projects &&
-							projects.length > 0 &&
-							projects.map((project, index) => (
-								<BoxProject
-									project={project}
-									key={index}
-									openModalDetails={handleOpenModalDetails}
-									usedTo="my-projects"
-								/>
-							))
-						)}
+		<div
+			className="w-full py-8 px-[16px] overflow-y-scroll overflow-x-hidden"
+			ref={scrollContainerRef}>
+			<ActiveBanner />
+			<div className="flex gap-8 mt-8">
+				<div className="w-10/12">
+					<SearchProjectHeader />
+					<div className="pb-8 px-8 bg-[#fbfbfb] rounded-md mt-8">
+						<ActivateHeader />
+						<MyProjects isBottom={isBottom} setIsBottom={setIsBottom} />
 					</div>
 				</div>
-			)}
-
-			<Modal
-				title=""
-				okText="Create"
-				open={openModalCreateProject}
-				onOk={handleCreateProject}
-				confirmLoading={loadingCreateNewProject}
-				onCancel={handleCancel}
-				width={1000}>
-				<LazyLoading>
-					<CreateProjectForm
-						formProject={formProject}
-						setFormData={setFormData}
-					/>
-				</LazyLoading>
-			</Modal>
-			<Modal
-				title=""
-				open={openModalProjectDetails}
-				onCancel={() => setOpenModalProjectDetails(false)}
-				width={1280}
-				footer={
-					<>
-						<Button
-							type="primary"
-							onClick={handleOpenModalUpdateProject}
-							loading={false}>
-							{UPDATE[language]}
-						</Button>
-						<Button
-							type="primary"
-							danger
-							onClick={() => handleDeleteProject(projectDetails._id)}
-							loading={loadingDeleteProject}>
-							{DELETE[language]}
-						</Button>
-					</>
-				}>
-				<ProjectDetails />
-			</Modal>
-			<Modal
-				title=""
-				okText="Update now"
-				open={openModalUpdateProject}
-				onOk={handleUpdateProject}
-				confirmLoading={loadingUpdateProject}
-				onCancel={handleCloseModalUpdateProject}
-				width={1000}>
-				<LazyLoading>
-					<UpdateProjectForm
-						formProject={formProject}
-						setFormData={setFormData}
-					/>
-				</LazyLoading>
-			</Modal>
-			<Modal
-				onCancel={() => setOpenModalConfirm(false)}
-				onOk={handleMatchingWithAI}
-				title=""
-				open={openModalConfirm}
-				width={1000}>
-				<div className={styles.modalConfirm}>
-					<h2>{MATCHING_TALENT_WITH_AI[language]}</h2>
-					<p style={{ fontSize: "1rem", marginTop: "1rem" }}>
-						<b>
-							To provide you with the most accurate and relevant matches,
-							our AI system needs to analyze the following:
-						</b>
-						<br />
-						<br />
-						<b>(1)</b> Your project profile, including its description,
-						goals, tractions and requirements.
-						<br />
-						<b>(2)</b> Profiles of your founding team and core team,
-						including skills, roles, and expertise.
-						<br />
-						<br />
-						This information will only be used to enhance the matching
-						process and recommend talents who best align with your needs.
-						Your data will remain confidential and protected under our
-						Privacy Policy.
-						<br />
-						<br />
-						<b>
-							Do you consent to allowing our AI system to access this
-							information for the purpose of generating matches?
-						</b>
-					</p>
-				</div>
-			</Modal>
+				<RightSidebar activities={accessToMyProjects} action={action} />
+			</div>
 		</div>
 	);
 }
 
-export default Project;
+export default Projects;

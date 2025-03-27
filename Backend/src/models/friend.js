@@ -14,6 +14,21 @@ const Friend = createModel('Friend', 'friends', {
         required: true,
         default: Date.now,
     },
+    status: {
+        type: String,
+        required: false,
+        default: '',
+    },
+    is_favorite: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    metadata: {
+        type: Object,
+        required: false,
+        default: {},
+    },
 })
 
 export default Friend

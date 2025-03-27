@@ -5,19 +5,16 @@ export async function readRoot(req, res) {
     res.jsonify(result)
 }
 
+// ========== GET [Notification - Read Notification] ========== //
 export async function getNotifications(req, res) {
     const result = await notificationService.getNotifications(req.currentUser)
     res.jsonify(result)
 }
 
+// ========== PUT [Notification - Reply Notification] ========== //
 export async function replyNotification(req, res) {
-    await notificationService.replyNotification(req.body, req.io)
+    await notificationService.replyNotification(req.params, req.body, req.io)
     res.jsonify('Reply notification successfully.')
-}
-
-export async function requestAddFriend(req, res) {
-    await notificationService.requestAddFriend(req.currentUser, req.body, req.io)
-    res.status(201).jsonify('Request message successfully.')
 }
 
 export async function getTotalFriends(req, res) {
@@ -34,4 +31,10 @@ export async function projectInvitation(req, res) {
 export async function getRequestAddFriend(req, res) {
     const result = await notificationService.getRequestAddFriend(req.currentUser, req.params.user_id)
     res.jsonify(result)
+}
+
+// ========== PUT [Notification - Reply Invitation Member] ========== //
+export async function replyInvitationMember(req, res) {
+    await notificationService.replyInvitationMember(req.currentUser, req.body, req.io)
+    res.jsonify('Reply invitation member successfully.')
 }

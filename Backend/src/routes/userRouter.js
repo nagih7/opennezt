@@ -22,8 +22,6 @@ userRouter.put(
     asyncHandler(userController.updateBackground)
 )
 
-userRouter.get('/check-steps', asyncHandler(userController.checkSteps))
-
 userRouter.get('/users', asyncHandler(validate(userRequest.readRoot)), asyncHandler(userController.readRoot))
 
 userRouter.patch(
@@ -49,15 +47,6 @@ userRouter.put('/project', asyncHandler(userController.updateProject))
 userRouter.delete('/project', asyncHandler(userController.deleteProject))
 
 // Founder Profile
-userRouter.post(
-    '/founder-profile',
-    asyncHandler(validate(userRequest.createFounderProfile)),
-    asyncHandler(userController.createFounderProfile)
-)
-
-userRouter.get('/get-founder-profile', asyncHandler(userController.getFounderProfile))
-
-userRouter.put('/founder-profile', asyncHandler(userController.updateFounderProfile))
 
 userRouter.get(
     '/recruit-talents',
@@ -66,6 +55,24 @@ userRouter.get(
 )
 
 userRouter.get('/talent-details/:id', asyncHandler(userController.getTalentDetails))
+
+// Industry framework
+userRouter.get('/industries', asyncHandler(userController.getIndustries))
+// Experience Level framework
+userRouter.get('/experience-levels', asyncHandler(userController.getExperienceLevels))
+// Category framework
+userRouter.get('/categories', asyncHandler(userController.getCategories))
+// Sub Category framework
+userRouter.get('/categories/:id', asyncHandler(userController.getSubCategories))
+// Skill framework
+userRouter.get('/skills/:id', asyncHandler(userController.getSkills))
+// Stage framework
+userRouter.get('/stages', asyncHandler(userController.getStages))
+// Project role framework
+userRouter.get('/roles/project', asyncHandler(userController.getProjectRoles))
+
+// ========== POST [User - Request Add Friend] ========== //
+userRouter.post('/:userId/friend-request', asyncHandler(userController.sendFriendRequest))
 
 // URL dynamic
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))

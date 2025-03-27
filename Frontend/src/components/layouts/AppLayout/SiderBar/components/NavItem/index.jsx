@@ -3,7 +3,7 @@ import dark from "./styles.module.scss";
 import { handleCheckRoute } from "../../../../../../utils/helper";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { NAVBAR } from "../../../../../../utils/constains";
+import { NAVBAR } from "../../../../../../utils/constants";
 
 function NavItem(props) {
 	const styles = dark;
@@ -20,6 +20,9 @@ function NavItem(props) {
 		}
 		return is_active;
 	};
+
+	const isActive = location.pathname === route.path;
+	const iconColor = isActive ? "#fff" : "rgb(125, 141, 161)";
 
 	return (
 		<>
@@ -38,7 +41,9 @@ function NavItem(props) {
 				}
           `}>
 						<div className={styles.textWrap}>
-							<div className={styles.iconWrap}>{route.icon}</div>
+							<div className={styles.iconWrap}>
+								{React.cloneElement(route.icon, { color: iconColor })}
+							</div>
 							{isShowSideBar ? (
 								<span className={styles.text}>
 									{NAVBAR[route.label][language]}
@@ -124,7 +129,9 @@ function NavItem(props) {
 				}
           `}>
 						<div className={styles.textWrap}>
-							<div className={styles.iconWrap}>{route.icon}</div>
+							<div className={styles.iconWrap}>
+								{React.cloneElement(route.icon, { color: iconColor })}
+							</div>
 							{isShowSideBar ? (
 								<span className={styles.text}>
 									{NAVBAR[route.label][language]}

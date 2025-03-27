@@ -7,7 +7,17 @@ const chatRouter = Router()
 
 chatRouter.use(asyncHandler(requireAuthentication))
 
-chatRouter.get('/chat-list', asyncHandler(chatController.getChatList))
+// ========== GET [CONVERSATIONS] ========== //
+chatRouter.get('/conversations', asyncHandler(chatController.getConversations))
+
+// ========== GET [MESSAGES] ========== //
+chatRouter.get('/conversations/:conversationId/messages', asyncHandler(chatController.getMessages))
+
+// ========== SEND [MESSAGE] ========== //
+chatRouter.post('/conversations/:conversationId/messages', asyncHandler(chatController.sendMessage))
+
+// ========== GET [CONVERSATION] ========== //
+chatRouter.get('/conversations/:conversationId', asyncHandler(chatController.getConversation))
 
 chatRouter.get('/chat-history/:conversation_id', asyncHandler(chatController.getChatHistory))
 

@@ -1,261 +1,323 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { message } from "antd";
+import { toaster } from "components/UI/toaster";
+import { create } from "lodash";
 
 const projectSlice = createSlice({
-	name: "ProJect",
+  name: "Project",
 
-	initialState: {
-		title: "",
-		projects: [],
-		projectDetails: null,
-		projectsBySeek: [],
-		projectInvitations: [],
-		resultCreateProject: null,
-		loadingGetProjects: false,
-		loadingGetProjectDetails: false,
-		loadingCreateNewProject: false,
-		loadingSeekProjects: false,
-		loadingUpdatePitchDeck: false,
-		loadingUpdateProject: false,
-		resultUpdateProject: null,
-		loadingDeleteProject: false,
-		loadingGetProjectInvitations: false,
-		formSeekProjects: {
-			industry: null,
-			stage: null,
-			name: null,
-			page: 0,
-		},
-	},
-	reducers: {
-		setTitle: (state) => ({
-			...state,
-			title: "title",
-		}),
-		startRequestGetProjects: (state) => ({
-			...state,
-			loadingGetProjects: true,
-		}),
-		startRequestGetProjectsSuccess: (state, action) => ({
-			...state,
-			loadingGetProjects: false,
-			projects: action.payload.data,
-		}),
-		startRequestGetProjectsFail: (state) => ({
-			...state,
-			loadingGetProjects: false,
-		}),
-		startRequestCreateNewProject: (state) => ({
-			...state,
-			loadingCreateNewProject: true,
-			resultCreateProject: null,
-		}),
-		startRequestCreateNewProjectSuccess: (state, action) => {
-			message.success("Create project successfully");
-			return {
-				...state,
-				loadingCreateNewProject: false,
-				resultCreateProject: true,
-			};
-		},
-		startRequestCreateNewProjectFail: (state) => {
-			message.error("Create project failed");
-			return {
-				...state,
-				loadingCreateNewProject: false,
-				resultCreateProject: false,
-			};
-		},
-		startGetProjectDetails: (state) => ({
-			...state,
-			loadingGetProjectDetails: true,
-		}),
-		startGetProjectDetailsSuccess: (state, action) => ({
-			...state,
-			loadingGetProjectDetails: false,
-			projectDetails: action.payload.data,
-		}),
-		startGetProjectDetailsFail: (state) => ({
-			...state,
-			loadingGetProjectDetails: false,
-			projectDetails: null,
-		}),
+  initialState: {
+    title: "",
+    // ========== My projects ========== //
+    myProjects: [],
+    myProjectDetails: {},
+    isLoadingCreateNewProject: false,
+    formCreateProject: {
+      name: "",
+      description: "",
+      industries: [],
+      stage: "",
+      revenues: [{ date: "", amount: "", currency: "" }],
+      funding_sources: [{ name: "", amount: "", currency: "" }],
+      additional_infos: [{ name: "", content: "" }],
+      logo: null,
+      background: null,
+    },
+    paginationListMyProjects: {
+      currentPage: 1,
+      perPage: 6,
+      totalPage: 1,
+      totalRecord: 0,
+    },
+    // ========== MY PROJECT DETAILS ========== //
+    isLoadingGetListMyProjects: false,
+    isLoadingGetMyProjectDetails: false,
+    // ========== DELETE MY PROJECT ========== //
+    isLoadingDeleteMyProject: false,
+    // ========== PROJECT DETAILS ========== //
+    projectDetails: {},
+    isLoadingGetProjectDetails: false,
+    // ========== SEEK PROJECTS ========== //
+    projectsBySeek: [],
+    isLoadingSeekProjects: false,
+    filterSeekProjects: {
+      keySearch: "",
+      industry: "",
+      stage: "",
+      page: 1,
+      perPage: 6,
+    },
+    paginationSeekProjects: {
+      currentPage: 1,
+      perPage: 6,
+      totalPage: 1,
+      totalRecord: 0,
+    },
+    // ========== APPLY TO JOIN PROJECT ========== //
+    isLoadingApplyToJoinProject: false,
+    isOpenModalConfirmApply: false,
+    // ========== REQUIREMENT PROJECT ========== //
+    formAddProjectRequirement: {
+      team_role_id: "",
+      role_id: "", 
+      industry_ids: [], 
+      experience_level_id: "", 
+      category_ids: [], 
+      skill_ids: [],
+    },
+    isLoadingCreateProjectRequirement: false,
+  },
+  reducers: {
+    setTitle: (state) => ({
+      ...state,
+      title: "title",
+    }),
+    // ========== My projects ========== //
+    requestGetListMyProjects: (state) => ({
+      ...state,
+      isLoadingGetListMyProjects: true,
+    }),
+    getListMyProjectsSuccess: (state, action) => ({
+      ...state,
+      myProjects: [...state.myProjects, ...action.payload.data.projects],
+      paginationListMyProjects: {
+        currentPage: action.payload.data.page,
+        perPage: action.payload.data.per_page,
+        lastPage: action.payload.data.last_page,
+        totalRecord: action.payload.data.total,
+      },
+      isLoadingGetListMyProjects: false,
+    }),
+    getListMyProjectsFail: (state) => ({
+      ...state,
+      isLoadingGetListMyProjects: false,
+    }),
 
-		// Seek project
-		startRequestSeekProjects: (state) => ({
-			...state,
-			loadingSeekProjects: true,
-		}),
+    // ========== CREATE NEW PROJECT ========== //
+    requestCreateNewProject: (state) => ({
+      ...state,
+      isLoadingCreateNewProject: true,
+    }),
+    createNewProjectSuccess: (state, action) => {
+      toaster.create({
+        title: "Create project successfully",
+        description: "You have successfully created the project",
+        type: "success",
+      });
+      window.location.href = `/projects/details/${action.payload.data.project_id}`;
+      return {
+        ...state,
+        isLoadingCreateNewProject: false,
+      };
+    },
+    createNewProjectFail: (state, action) => {
+      toaster.create({
+        title: `${Object.values(action.payload.data.detail)[0]}`,
+        description: "You have failed to create the project",
+        type: "error",
+      });
+      return {
+        ...state,
+        isLoadingCreateNewProject: false,
+      };
+    },
+    // ========== MY PROJECT DETAILS ========== //
+    requestGetMyProjectDetails: (state) => ({
+      ...state,
+      isLoadingGetMyProjectDetails: true,
+    }),
+    getMyProjectDetailsSuccess: (state, action) => ({
+      ...state,
+      myProjectDetails: action.payload.data,
+      isLoadingGetMyProjectDetails: false,
+    }),
+    getMyProjectDetailsFail: (state) => ({
+      ...state,
+      isLoadingGetMyProjectDetails: false,
+    }),
 
-		startRequestSeekProjectsSuccess: (state, action) => ({
-			...state,
-			projectsBySeek: action.payload.data.projects,
-			formSeekProjects: {
-				...state.formSeekProjects,
-				page: action.payload.data.page,
-			},
-			loadingSeekProjects: false,
-		}),
-		startRequestSeekProjectsFail: (state) => ({
-			...state,
-			projectsBySeek: [],
-			loadingSeekProjects: false,
-		}),
-		startRequestUpdateProject: (state) => ({
-			...state,
-			loadingUpdateProject: true,
-			resultUpdateProject: null,
-		}),
-		startRequestUpdateProjectSuccess: (state, action) => {
-			message.success("Update project successfully");
-			return {
-				...state,
-				loadingUpdateProject: false,
-				resultUpdateProject: true,
-			};
-		},
-		startRequestUpdateProjectFail: (state) => {
-			message.error("Update project failed");
-			return {
-				...state,
-				loadingUpdateProject: false,
-				resultUpdateProject: false,
-			};
-		},
-		startRequestDeleteProject: (state) => ({
-			...state,
-			loadingDeleteProject: true,
-		}),
-		startRequestDeleteProjectSuccess: (state) => {
-			message.success("Delete project successfully");
-			return {
-				...state,
-				loadingDeleteProject: false,
-			};
-		},
-		startRequestDeleteProjectFail: (state) => {
-			message.error("Delete project failed");
-			return {
-				...state,
-				loadingDeleteProject: false,
-			};
-		},
-		startUpdateRequestStatus: (state) => ({
-			...state,
-			loadingUpdateStatus: true,
-		}),
-		startUpdateRequestStatusSuccess: (state, action) => ({
-			...state,
-			updatedRequest: action.payload.data,
-			loadingUpdateStatus: false,
-		}),
-		startUpdateRequestStatusFail: (state) => ({
-			...state,
-			updatedRequest: null,
-			loadingUpdateStatus: false,
-		}),
-		startRequestUpdateBackground: (state) => ({
-			...state,
-			loadingUpdateBackground: true,
-		}),
+    // ========== PROJECT DETAILS ========== //
+    requestGetProjectDetails: (state) => ({
+      ...state,
+      isLoadingGetProjectDetails: true,
+    }),
+    getProjectDetailsSuccess: (state, action) => ({
+      ...state,
+      isLoadingGetProjectDetails: false,
+      projectDetails: action.payload.data,
+    }),
+    getProjectDetailsFail: (state) => ({
+      ...state,
+      isLoadingGetProjectDetails: false,
+    }),
 
-		startRequestUpdateBackgroundSuccess: (state, action) => {
-			message.success("Update background successfully");
-			return {
-				...state,
-				loadingUpdateBackground: false,
-			};
-		},
+    // ========== SEEK PROJECTS ========== //
+    requestSeekProjects: (state) => ({
+      ...state,
+      isLoadingSeekProjects: true,
+    }),
+    seekProjectsSuccess: (state, action) => ({
+      ...state,
+      projectsBySeek: action.payload.data.projects,
+      isLoadingSeekProjects: false,
+      filterSeekProjects: {
+        ...state.filterSeekProjects,
+        page: action.payload.page,
+      },
+      paginationSeekProjects: {
+        currentPage: action.payload.data.page,
+        perPage: action.payload.data.per_page,
+        totalPage: action.payload.data.last_page,
+        totalRecord: action.payload.data.total,
+      },
+    }),
+    seekProjectsFail: (state) => ({
+      ...state,
+      isLoadingSeekProjects: false,
+    }),
+    setFilterSeekProjects: (state, action) => ({
+      ...state,
+      filterSeekProjects: action.payload,
+    }),
 
-		startRequestUpdateBackgroundFail: (state) => {
-			message.error("Update background failed");
-			return {
-				...state,
-				loadingUpdateBackground: false,
-			};
-		},
-		startRequestGetProjectInvitations: (state) => ({
-			...state,
-			loadingGetProjectInvitations: true,
-		}),
-		startRequestGetProjectInvitationsSuccess: (state, action) => ({
-			...state,
-			loadingGetProjectInvitations: false,
-			projectInvitations: action.payload.data,
-		}),
-		startRequestGetProjectInvitationsFail: (state) => ({
-			...state,
-			loadingGetProjectInvitations: false,
-			projectInvitations: [],
-		}),
+    // ========== APPLY TO JOIN PROJECT ========== //
+    requestApplyToJoinProject: (state) => ({
+      ...state,
+      isLoadingApplyToJoinProject: true,
+    }),
+    applyToJoinProjectSuccess: (state) => {
+      toaster.create({
+        title: "Apply to join project successfully",
+        description: "You have successfully applied to join the project",
+        type: "success",
+      });
+      return {
+        ...state,
+        isLoadingApplyToJoinProject: false,
+        isOpenModalConfirmApply: false,
+        projectDetails: {
+          ...state.projectDetails,
+          applied: true,
+        },
+      };
+    },
+    applyToJoinProjectFail: (state) => {
+      toaster.create({
+        title: "Apply to join project failed",
+        description: "You have failed to apply to join the project",
+        type: "error",
+      });
+      return {
+        ...state,
+        isLoadingApplyToJoinProject: false,
+      };
+    },
+    setOpenModalConfirmApply: (state, action) => ({
+      ...state,
+      isOpenModalConfirmApply: action.payload,
+    }),
 
-		// formSeekProjects
-		setFormSeekProjects: (state, action) => {
-			const { event, nameSelect } = action.payload;
-			if (nameSelect) {
-				return {
-					...state,
-					formSeekProjects: {
-						...state.formSeekProjects,
-						[nameSelect]: event,
-						page: 0,
-					},
-				};
-			} else {
-				const { name, value } = event.target;
-				return {
-					...state,
-					formSeekProjects: {
-						...state.formSeekProjects,
-						[name]: value,
-						page: 0,
-					},
-				};
-			}
-		},
-		resetFormSeekProjects: (state) => ({
-			...state,
-			formSeekProjects: {
-				industry: null,
-				stage: null,
-				name: null,
-				page: 0,
-			},
-		}),
-	},
+    // ========== UPDATE PROJECT ========== //
+    // ========== DELETE PROJECT ========== //
+    requestDeleteMyProject: (state) => ({
+      ...state,
+      isLoadingDeleteMyProject: true,
+    }),
+    deleteMyProjectSuccess: (state) => {
+      toaster.create({
+        title: "Delete project successfully",
+        description: "You have successfully deleted the project",
+        type: "success",
+      });
+      window.location.href = "/projects";
+      return {
+        ...state,
+        isLoadingDeleteMyProject: false,
+      };
+    },
+    deleteMyProjectFail: (state) => {
+      toaster.create({
+        title: "Delete project failed",
+        description: "You have failed to delete the project",
+        type: "error",
+      });
+      return {
+        ...state,
+        isLoadingDeleteMyProject: false,
+      };
+    },
+    // ========== SEEK PROJECTS ========== //
+    onChangeFormCreateProject: (state, action) => {
+      Object.keys(action.payload).forEach((key) => {
+        state.formCreateProject[key] = action.payload[key];
+      });
+    },
+    // ========== REQUIREMENT PROJECT ========== //
+    requestCreateProjectRequirement: (state) => ({
+      ...state,
+      isLoadingCreateProjectRequirement: true,
+    }),
+    createProjectRequirementSuccess: (state) => {
+      toaster.create({
+        title: "Create project requirement successfully",
+        description: "You have successfully created the project requirement",
+        type: "success",
+      });
+      return {
+        ...state,
+        isLoadingCreateProjectRequirement: false,
+      };
+    },
+    createProjectRequirementFail: (state) => {
+      toaster.create({
+        title: "Create project requirement failed",
+        description: "You have failed to create the project requirement",
+        type: "error",
+      });
+      return {
+        ...state,
+        isLoadingCreateProjectRequirement: false,
+      };
+    },
+  },
 });
 
 export const {
-	setTitle,
-	startRequestGetProjects,
-	startRequestGetProjectsSuccess,
-	startRequestGetProjectsFail,
-	startRequestCreateNewProject,
-	startRequestCreateNewProjectSuccess,
-	startRequestCreateNewProjectFail,
-	startGetProjectDetails,
-	startGetProjectDetailsSuccess,
-	startGetProjectDetailsFail,
-	startRequestSeekProjects,
-	startRequestSeekProjectsSuccess,
-	startRequestSeekProjectsFail,
-	startRequestUpdateProject,
-	startRequestUpdateProjectSuccess,
-	startRequestUpdateProjectFail,
-	startRequestDeleteProject,
-	startRequestDeleteProjectSuccess,
-	startRequestDeleteProjectFail,
-	startUpdateRequestStatus,
-	startUpdateRequestStatusSuccess,
-	startUpdateRequestStatusFail,
-	startRequestUpdateBackground,
-	startRequestUpdateBackgroundSuccess,
-	startRequestUpdateBackgroundFail,
-	startRequestGetProjectInvitations,
-	startRequestGetProjectInvitationsSuccess,
-	startRequestGetProjectInvitationsFail,
-	setFormSeekProjects,
-	resetFormSeekProjects,
+  setTitle,
+  // ========== My projects ========== //
+  requestGetListMyProjects,
+  getListMyProjectsSuccess,
+  getListMyProjectsFail,
+  requestCreateNewProject,
+  createNewProjectSuccess,
+  createNewProjectFail,
+  requestGetMyProjectDetails,
+  getMyProjectDetailsSuccess,
+  getMyProjectDetailsFail,
+  // ========== Projects ========== //
+  requestGetProjectDetails,
+  getProjectDetailsSuccess,
+  getProjectDetailsFail,
+  // ========== SEEK PROJECTS ========== //
+  requestSeekProjects,
+  seekProjectsSuccess,
+  seekProjectsFail,
+  setFilterSeekProjects,
+  // ========== APPLY TO JOIN PROJECT ========== //
+  requestApplyToJoinProject,
+  applyToJoinProjectSuccess,
+  applyToJoinProjectFail,
+  setOpenModalConfirmApply,
+  // ========== UPDATE PROJECT ========== //
+  // ========== DELETE PROJECT ========== //
+  requestDeleteMyProject,
+  deleteMyProjectSuccess,
+  deleteMyProjectFail,
+  // ========== SEEK PROJECTS ========== //
+  onChangeFormCreateProject,
+  // ========== REQUIREMENT PROJECT ========== //
+  requestCreateProjectRequirement,
+  createProjectRequirementSuccess,
+  createProjectRequirementFail,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

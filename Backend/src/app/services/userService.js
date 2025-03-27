@@ -1,6 +1,21 @@
-import {User, FounderProfile, Project, ObjectId, NotificationFeed, Conversation} from '@/models'
+import {
+    User,
+    Profile,
+    Project,
+    ObjectId,
+    NotificationFeed,
+    Conversation,
+    Industry,
+    ExperienceLevel,
+    Skill,
+    Category,
+    Stage,
+    Type,
+    Role,
+} from '@/models'
 import {FileUpload} from '@/utils/classes'
-import {LINK_STATIC_URL} from '@/configs'
+import {FRIEND_REQUEST_NOTIFICATION, LINK_STATIC_URL, NOTIFICATION_TYPE, WAITING_STATUS} from '@/configs'
+import {userSockets} from '@/routes/socket'
 
 export async function create(requestBody) {
     const user = new User(requestBody)
@@ -76,28 +91,8 @@ export async function remove(user) {
         FileUpload.remove(user.avatar)
     }
     await User.deleteOne({_id: user._id})
-    await FounderProfile.deleteOne({user_id: user._id})
     await Project.deleteMany({user_id: user._id})
     await NotificationFeed.deleteMany({$or: [{user_id: user._id}, {source_id: user._id}]})
-}
-
-export async function createFounderProfile(user, requestBody) {
-    requestBody.user_id = user._id
-    const founder = new FounderProfile(requestBody)
-    await founder.save()
-    return founder
-}
-
-export async function getFounderProfile(userId) {
-    const founder = await FounderProfile.findOne({user_id: userId})
-    return founder
-}
-
-export async function updateFounderProfile(user, requestBody) {
-    const founder = await FounderProfile.findOne({user_id: user._id})
-    founder.set(requestBody)
-    await founder.save()
-    return founder
 }
 
 export async function createProject(user, {pitch_deck, background, ...requestBody}) {
@@ -289,7 +284,7 @@ export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
         }
     }
 
-    const talents = await FounderProfile.aggregate([
+    const talents = await Profile.aggregate([
         {
             $match: query,
         },
@@ -400,9 +395,12 @@ export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
     return {total: talents.length, page: requestRecuitTalents.page + 1, per_page, talents}
 }
 
-export async function getTalentDetails(user, id) {
+export async function getTalentDetails(user, _id) {
+    // const type = await Type.findOne({name: 'Friend Request'})
     const detailTalent = await User.aggregate([
-        {$match: {_id: new ObjectId(id)}},
+        {
+            $match: {_id: _id},
+        },
         {
             $lookup: {
                 from: 'founder_profiles',
@@ -426,8 +424,8 @@ export async function getTalentDetails(user, id) {
                         $match: {
                             type: 'friend_request',
                             $and: [
-                                {$or: [{user_id: user._id}, {user_id: new ObjectId(id)}]},
-                                {$or: [{source_id: user._id}, {source_id: new ObjectId(id)}]},
+                                {$or: [{user_id: user._id}, {user_id: _id}]},
+                                {$or: [{source_id: user._id}, {source_id: _id}]},
                             ],
                         },
                     },
@@ -498,15 +496,126 @@ export async function updateAvatar(user, requestBody) {
     await user.save()
 }
 
-export async function checkSteps(user) {
-    const founderProfile = await FounderProfile.findOne(
-        {user_id: user._id},
-        {user_id: 0, created_at: 0, updated_at: 0}
-    )
-    const project = await Project.findOne({user_id: user._id}, {user_id: 0, created_at: 0, updated_at: 0})
+// Industry framework
+export async function getIndustries() {
+    const industries = await Industry.find().select('name _id description')
+    return industries
+}
 
-    return {
-        founderProfile: founderProfile ? true : false,
-        project: project ? true : false,
+// Experience level framework
+export async function getExperienceLevels() {
+    const experienceLevels = await ExperienceLevel.find().select('name _id description')
+    return experienceLevels
+}
+
+// Category framework
+export async function getCategories() {
+    const categories = await Category.find({
+        parent_id: null,
+    }).select('name _id description')
+    return categories
+}
+
+// Subcategory framework
+export async function getSubCategories(categoryIds) {
+    // Handle comma-separated string of IDs
+    const idArray = Array.isArray(categoryIds) ? categoryIds : categoryIds.split(',').map((id) => id.trim())
+
+    const subCategories = await Category.find({
+        parent_id: {$in: idArray},
+    }).select('name _id description parent_id')
+
+    return subCategories
+}
+
+// Skills framework
+export async function getSkills(categoryIds) {
+    // Handle comma-separated string of IDs
+    const idArray = Array.isArray(categoryIds) ? categoryIds : categoryIds.split(',').map((id) => id.trim())
+
+    const skills = await Skill.find({
+        category_id: {$in: idArray},
+    }).select('name _id description category_id')
+
+    return skills
+}
+
+// Stage framework
+export async function getStages() {
+    const stages = await Stage.find().select('name _id description')
+    return stages
+}
+
+// Project role framework
+export async function getProjectRoles() {
+    const roleType = await Type.findOne({class: 'role', name: 'project_role'})
+    const teamRoleType = await Type.findOne({class: 'role', name: 'project_team_role'})
+    const projectRoles = await Role.find({type_id: roleType._id}).select('name _id description')
+    const projectTeamRoles = await Role.find({type_id: teamRoleType._id}).select('name _id description')
+    return {roles: projectRoles, teamRoles: projectTeamRoles}
+}
+
+// ========== POST [User - Request Add Friend] ========== //
+export async function sendFriendRequest(user, {userId}, io) {
+    const requestType = await Type.findOne({class: NOTIFICATION_TYPE, name: FRIEND_REQUEST_NOTIFICATION})
+    const newNotification = new NotificationFeed({
+        user_id: new ObjectId(userId),
+        source_id: user._id,
+        type_id: requestType._id,
+        metadata: {
+            read: false,
+            status: WAITING_STATUS,
+        },
+    })
+    await newNotification.save()
+
+    const notification = await NotificationFeed.aggregate([
+        {
+            $match: {_id: newNotification._id},
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'source_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $project: {
+                _id: 0,
+                user: 1,
+                metadata: 1,
+            },
+        },
+    ]).exec()
+
+    if (notification.length > 0) {
+        const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === userId)
+
+        io.to(userSocketId).emit(FRIEND_REQUEST_NOTIFICATION, notification[0])
     }
 }

@@ -1,4 +1,4 @@
-import {LINK_RESET_PASSWORD_URL, LINK_VERIFY_EMAIL_URL, TOKEN_TYPE} from '@/configs'
+import {LINK_RESET_PASSWORD_URL, LINK_VERIFY_EMAIL_URL, TOKEN_TYPE, APP_URL_CLIENT} from '@/configs'
 import {abort, generateToken, getToken} from '@/utils/helpers'
 import * as authService from '../services/authService'
 import * as userService from '../services/userService'
@@ -34,7 +34,7 @@ export async function register(req, res) {
 
 export async function verifyEmail(req, res) {
     await authService.verifyEmail(req.currentUser)
-    res.redirect(`${process.env.APP_URL_CLIENT}`)
+    res.redirect(`${APP_URL_CLIENT}`)
 }
 
 export async function logout(req, res) {
@@ -45,6 +45,11 @@ export async function logout(req, res) {
 
 export async function me(req, res) {
     const result = await authService.profile(req.currentUser._id)
+    res.jsonify(result)
+}
+
+export async function getRole(req, res) {
+    const result = await authService.getRole(req.currentUser.role_id)
     res.jsonify(result)
 }
 
@@ -79,4 +84,16 @@ export async function resetPassword(req, res) {
     await userService.resetPassword(req.currentUser, req.body.password)
     await authService.blockToken(req.params.token)
     res.status(201).jsonify('Reset password success.')
+}
+
+// ================== Social Login ================== //
+export async function loginWithLinkedIn(req, res) {
+    const url = await authService.loginWithLinkedIn(req)
+    res.redirect(url)
+}
+
+export async function loginWithLinkedInCallback(req, res) {
+    const result = await authService.loginWithLinkedInCallback(req.query.code)
+    const accessToken = authService.authToken(result).access_token
+    res.redirect(`${APP_URL_CLIENT}/login?access_token=${accessToken}`)
 }

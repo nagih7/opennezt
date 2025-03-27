@@ -25,6 +25,7 @@ authRouter.get(
 authRouter.post('/logout', asyncHandler(requireAuthentication), asyncHandler(authController.logout))
 
 authRouter.get('/me', asyncHandler(requireAuthentication), asyncHandler(authController.me))
+authRouter.get('/role', asyncHandler(requireAuthentication), asyncHandler(authController.getRole))
 
 authRouter.put(
     '/me',
@@ -58,5 +59,10 @@ authRouter.post(
     asyncHandler(validate(authRequest.resetPassword)),
     asyncHandler(authController.resetPassword)
 )
+
+// ================== Social Login ================== //
+authRouter.get('/linkedin', asyncHandler(authController.loginWithLinkedIn))
+
+authRouter.get('/linkedin/callback', asyncHandler(authController.loginWithLinkedInCallback))
 
 export default authRouter

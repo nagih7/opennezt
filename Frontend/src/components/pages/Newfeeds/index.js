@@ -1,162 +1,347 @@
-import React, { useState, useEffect, useRef } from "react";
-import "./styles.scss";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import './styles.scss';
+import Article from './components/Article';
+import NewArticle from './components/NewAricle';
+import {
+    getListFeeds,
+    getUserReactionsList,
+    handleReactArticle,
+    handleCreateArticle,
+    handleUpdateArticle,
+    handleDeleteArticle,
+    handleGetUserBookmarks,
+    handleBookmarkArticle,
+} from '../../../api/newfeeds';
+import { useDispatch, useSelector } from 'react-redux';
+import RightSidebar from 'components/common/RightSidebar';
+import {
+    updateDeletedArticle,
+    updateReaction,
+    updateUpdatedArticle,
+    openCreateForm,
+    closeCreateForm,
+    openUpdateForm,
+    closeUpdateForm,
+    updateBookmarks,
+} from 'states/modules/article';
+import CreateAricleForm from './components/CreateAricleForm';
+import CommentList from './components/CommentList';
+import UpdateArticleForm from './components/UpdateArticleForm';
+import store from 'states/configureStore';
+import { PermPhoneMsg } from '@mui/icons-material';
+import {
+    deleteActivitySaveArticle,
+    getUpdateArticle,
+    postActivitySaveArticle,
+    postActivityUpdateArticle,
+} from 'api/activity';
+
+const actionUpdate = (activity) => {
+    const { owner_id, owner_name } = activity;
+    const { auth } = store.getState();
+    const currentUserId = auth.user?._id;
+
+    const displayName = owner_id === currentUserId ? 'You' : owner_name || 'Someone';
+
+    return <div>{displayName} has updated an article</div>;
+};
 
 function NewFeeds() {
-	const [feeds, setFeeds] = useState([]);
-	const [selectedFeed, setSelectedFeed] = useState(null);
-	const popupRef = useRef(null);
+    const dispatch = useDispatch();
 
-	useEffect(() => {
-		const mockFeeds = [
-			{
-				id: 1,
-				title: "Innovative AI Startup Raises $10M in Series A",
-				description:
-					"The startup leverages AI to enhance decision-making processes for businesses.",
-				details:
-					"This startup focuses on building AI solutions for enterprises to automate workflows and make data-driven decisions. They plan to use the $10M raised to expand their team and further develop their technology.",
-				image: "https://cdn.prod.website-files.com/65c9d364707f20d739b9981f/65ce017e736b73b90897f255_65c9d364707f20d739b9991f_5469-1.jpeg",
-				date: "2024-11-01",
-			},
-			{
-				id: 2,
-				title: "GreenTech Startup Launches New Solar Panel Technology",
-				description:
-					"Their solar panels increase efficiency by 30% compared to existing solutions.",
-				details:
-					"This GreenTech company has revolutionized solar panel efficiency using advanced nano-coating technology. The product is expected to disrupt the renewable energy market.",
-				image: "https://nairametrics.com/wp-content/uploads/2019/12/Planning-1.jpeg",
-				date: "2024-11-10",
-			},
-			{
-				id: 3,
-				title: "GreenTech Startup Launches New Solar Panel Technology",
-				description:
-					"Their solar panels increase efficiency by 30% compared to existing solutions.",
-				details:
-					"This GreenTech company has revolutionized solar panel efficiency using advanced nano-coating technology. The product is expected to disrupt the renewable energy market.",
-				image: "https://images.prismic.io/turing/652ec738fbd9a45bcec81a2a_Startup_Project_Management_f0edf9a96f.webp?auto=format,compress",
-				date: "2024-11-10",
-			},
-			{
-				id: 4,
-				title: "GreenTech Startup Launches New Solar Panel Technology",
-				description:
-					"Their solar panels increase efficiency by 30% compared to existing solutions.",
-				details:
-					"This GreenTech company has revolutionized solar panel efficiency using advanced nano-coating technology. The product is expected to disrupt the renewable energy market.",
-				image: "https://cbx-prod.b-cdn.net/COLOURBOX56715706.jpg?width=800&height=800&quality=70",
-				date: "2024-11-10",
-			},
-			{
-				id: 5,
-				title: "GreenTech Startup Launches New Solar Panel Technology",
-				description:
-					"Their solar panels increase efficiency by 30% compared to existing solutions.",
-				details:
-					"This GreenTech company has revolutionized solar panel efficiency using advanced nano-coating technology. The product is expected to disrupt the renewable energy market.",
-				image: "https://www.imensosoftware.com/wp-content/uploads/2024/03/Top5StartupProjectManagementMethodologiesin2023.webp",
-				date: "2024-11-10",
-			},
-			{
-				id: 6,
-				title: "GreenTech Startup Launches New Solar Panel Technology",
-				description:
-					"Their solar panels increase efficiency by 30% compared to existing solutions.",
-				details:
-					"This GreenTech company has revolutionized solar panel efficiency using advanced nano-coating technology. The product is expected to disrupt the renewable energy market.",
-				image: "https://www.startupguruz.com/wp-content/uploads/2024/02/20240208_201243_0000-1.png",
-				date: "2024-11-10",
-			},
-			{
-				id: 7,
-				title: "GreenTech Startup Launches New Solar Panel Technology",
-				description:
-					"Their solar panels increase efficiency by 30% compared to existing solutions.",
-				details:
-					"This GreenTech company has revolutionized solar panel efficiency using advanced nano-coating technology. The product is expected to disrupt the renewable energy market.",
-				image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0GY9au-VQCZk0VXS88BdEJV4SeUHR25U8zQ&s",
-				date: "2024-11-10",
-			},
-			{
-				id: 8,
-				title: "GreenTech Startup Launches New Solar Panel Technology",
-				description:
-					"Their solar panels increase efficiency by 30% compared to existing solutions.",
-				details:
-					"This GreenTech company has revolutionized solar panel efficiency using advanced nano-coating technology. The product is expected to disrupt the renewable energy market.",
-				image: "https://newbusinessage-media.s3.ap-south-1.amazonaws.com/img/news/20240611123440_1606904006.start-up-businesss.jpg",
-				date: "2024-11-10",
-			},
-		];
-		setFeeds(mockFeeds);
-	}, []);
+    const {
+        feeds,
+        onetimefeeds,
+        reactions,
+        isLoadingGetFeeds,
+        isLoadingReactArticle,
+        isLoadingCreateArticle,
+        isLoadingUpdateArticle,
+        isOpenCreateForm,
+        isOpenUpdateForm,
+        pagination,
+        bookmarks,
+    } = useSelector((state) => state.article);
 
-	const handleFeedClick = (feed) => {
-		setSelectedFeed(feed);
-	};
+    const { updateArticleActivity } = useSelector((state) => state.activity);
 
-	const closePopup = () => {
-		setSelectedFeed(null);
-	};
+    const { nextCursor, limit, hasMore } = pagination;
 
-	useEffect(() => {
-		if (!selectedFeed) return;
+    const [dataFilter, setDataFilter] = useState({
+        cursor: 0,
+        limit: limit,
+    });
 
-		const handleClickOutside = (event) => {
-			if (popupRef.current && !popupRef.current.contains(event.target)) {
-				closePopup();
-			}
-		};
+    useEffect(() => {
+        if (feeds.length === 0 && hasMore === true) {
+            dispatch(
+                getListFeeds({
+                    cursor: new Date(),
+                    limit: limit,
+                })
+            );
+        }
+    }, [dispatch, feeds.length, limit, hasMore]);
 
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [selectedFeed]);
+    useEffect(() => {
+        // Chỉ gọi API khi cursor thay đổi (không phải lần đầu load)
+        if (dataFilter.cursor !== 0) {
+            dispatch(getListFeeds(dataFilter));
+        }
+    }, [dispatch, dataFilter]);
+    //Xử lí bất đồng bộ
+    const isLoadingRef = useRef(isLoadingGetFeeds); // Tạo một ref để lưu trạng thái
+    const cursorRef = useRef(nextCursor);
+    useEffect(() => {
+        isLoadingRef.current = isLoadingGetFeeds; // Cập nhật giá trị ref mỗi khi trạng thái thay đổi
+    }, [isLoadingGetFeeds]);
+    useEffect(() => {
+        cursorRef.current = nextCursor;
+    }, [nextCursor]);
+    //End
+    //Lướt xuống bài viết cuối thì load tiếp
+    const observerRef = useRef(null);
 
-	return (
-		<div className="newfeed-container">
-			<h1 className="newfeed-title">Startup News</h1>
-			<div className="feed-grid">
-				{feeds.map((feed) => (
-					<div
-						key={feed.id}
-						className="feed-card"
-						onClick={() => handleFeedClick(feed)}>
-						<img
-							src={feed.image}
-							alt={feed.title}
-							className="feed-image"
-						/>
-						<div className="feed-content">
-							<h2 className="feed-title">{feed.title}</h2>
-							<p className="feed-description">{feed.description}</p>
-							<span className="feed-date">{feed.date}</span>
-						</div>
-					</div>
-				))}
-			</div>
+    const lastElementRef = useCallback(
+        (node) => {
+            // Ngắt kết nối observer cũ
+            if (observerRef.current) {
+                observerRef.current.disconnect();
+                observerRef.current = null;
+            }
 
-			{selectedFeed && (
-				<div className="feed-popup">
-					<div className="popup-content" ref={popupRef}>
-						<button className="close-button" onClick={closePopup}>
-							&times;
-						</button>
-						<img
-							src={selectedFeed.image}
-							alt={selectedFeed.title}
-							className="popup-image"
-						/>
-						<h2 className="popup-title">{selectedFeed.title}</h2>
-						<p className="popup-details">{selectedFeed.details}</p>
-						<button className="connect-button">View Details</button>
-					</div>
-				</div>
-			)}
-		</div>
-	);
+            // Tạo observer mới nếu có node và hasMore
+            if (node && hasMore) {
+                observerRef.current = new IntersectionObserver(
+                    (entries) => {
+                        const first = entries[0];
+                        if (first.isIntersecting && hasMore && !isLoadingRef.current) {
+                            setDataFilter({
+                                cursor: cursorRef.current,
+                                limit: limit,
+                            });
+                        }
+                    },
+                    { threshold: 0.1 }
+                );
+
+                observerRef.current.observe(node);
+            }
+        },
+        [hasMore, limit]
+    );
+    //Reaction User's Status
+    // Tải trạng thái reaction của người dùng hiện tại
+    useEffect(() => {
+        if (onetimefeeds.length > 0) {
+            // Lấy tất cả article IDs
+            const articleIds = onetimefeeds.filter((feed) => feed._id).map((feed) => feed._id);
+
+            // Gọi API một lần với array của IDs
+            if (articleIds.length > 0) {
+                dispatch(getUserReactionsList(articleIds));
+            }
+        }
+    }, [onetimefeeds, dispatch]);
+
+    const reactionMap = useMemo(() => {
+        return new Map(reactions.map((r) => [r.target_id.toString(), r.type]));
+    }, [reactions]);
+    //End Reaction User's Status
+    //Form Create Article
+
+    const handleOpenForm = useCallback(() => {
+        dispatch(openCreateForm());
+    }, [dispatch]);
+
+    const handleCloseForm = useCallback(() => {
+        dispatch(closeCreateForm());
+    }, [dispatch]);
+
+    const handleReaction = useCallback(
+        (articleId, formData) => {
+            const reactionType = formData.get('type');
+            dispatch(updateReaction({ articleId, reactionType }));
+
+            //Gọi API để update server
+            dispatch(handleReactArticle({ articleId, data: formData }));
+        },
+        [dispatch]
+    );
+
+    const handleFormSubmit = useCallback(
+        async (formData) => {
+            const newFormData = new FormData();
+            newFormData.append('caption', formData.content.caption);
+            formData.content.attachment.forEach((file) => {
+                newFormData.append('attachment', file);
+            });
+            newFormData.append('hashtags', JSON.stringify(formData.content.hashtags));
+            newFormData.append('audience', formData.audience);
+            newFormData.append('status', formData.status);
+            newFormData.append('project_id', formData.project_id);
+            dispatch(handleCreateArticle({ data: newFormData }));
+        },
+        [dispatch]
+    );
+    //End Form Create Article
+
+    //Comment Article
+    const [selectedArticle, setSelectedArticle] = useState({});
+    const [isOpenComment, setIsOpenComment] = useState(false);
+    const handleSelectArticle = useCallback(async (feed) => {
+        setSelectedArticle(feed);
+        setIsOpenComment(true);
+    }, []);
+
+    const handleCloseComment = useCallback(() => {
+        setIsOpenComment(false);
+        setSelectedArticle({});
+    }, []);
+
+    //End Comment Article
+
+    //Update Article
+    const handleOpenUpdateForm = useCallback(
+        async (feed) => {
+            setSelectedArticle(feed);
+            dispatch(openUpdateForm());
+        },
+        [dispatch]
+    );
+    const handleCloseUpdateForm = useCallback(async () => {
+        setSelectedArticle({});
+        dispatch(closeUpdateForm());
+    }, [dispatch]);
+    const handleUpdateFormSubmit = useCallback(async (id, formData) => {
+        const newFormData = new FormData();
+        newFormData.append('caption', formData.content.caption);
+        formData.content.attachment.forEach((file) => {
+            newFormData.append('attachment', file);
+        });
+        newFormData.append('hashtags', JSON.stringify(formData.content.hashtags));
+        newFormData.append('audience', formData.audience);
+        newFormData.append('status', formData.status);
+        newFormData.append('project_id', formData.project_id);
+        await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }));
+        await store.dispatch(updateUpdatedArticle(formData));
+        await store.dispatch(postActivityUpdateArticle(id));
+        await store.dispatch(getUpdateArticle());
+    }, []);
+    //End Update Article
+    //Delete Article
+    const handleDelete = useCallback(
+        (id) => {
+            dispatch(updateDeletedArticle(id));
+            dispatch(handleDeleteArticle({ id }));
+        },
+        [dispatch]
+    );
+
+    useEffect(() => {
+        if (onetimefeeds.length > 0) {
+            const articleIds = onetimefeeds.filter((r) => r._id).map((r) => r._id);
+
+            if (articleIds.length > 0) {
+                dispatch(handleGetUserBookmarks(articleIds));
+            }
+        }
+    }, [dispatch, onetimefeeds]);
+
+    const bookmarksMap = useMemo(() => {
+        return new Map(bookmarks.map((r) => [r.article_id.toString(), r.marked]));
+    }, [bookmarks]);
+
+    const bookmarkArticle = useCallback(
+        (data) => {
+            dispatch(handleBookmarkArticle({ data }));
+            dispatch(updateBookmarks(data));
+            if (data.marked === 'yes') {
+                dispatch(postActivitySaveArticle(data.article_id));
+            } else if (data.marked === 'no') {
+                dispatch(deleteActivitySaveArticle(data.article_id));
+            }
+            dispatch(getSaveArticle());
+        },
+        [dispatch]
+    );
+    //End Delete Article
+
+    // Activities
+    useEffect(() => {
+        dispatch(getUpdateArticle());
+    }, [dispatch]);
+
+    // End Activities
+    return (
+        <div className="flex w-full gap-8 pt-4 px-[16px]">
+            <div className="w-10/12">
+                {isOpenUpdateForm ? (
+                    <UpdateArticleForm
+                        feed={selectedArticle}
+                        onClose={handleCloseUpdateForm}
+                        onSubmit={handleUpdateFormSubmit}
+                        isLoadingUpdateArticle={isLoadingUpdateArticle}
+                    />
+                ) : null}
+                {isOpenComment ? (
+                    <CommentList
+                        key={selectedArticle._id}
+                        feed={selectedArticle}
+                        onClose={handleCloseComment}
+                        reaction={reactionMap.get(selectedArticle._id)}
+                        onReaction={handleReaction}
+                        isLoading={isLoadingReactArticle}
+                    />
+                ) : null}
+                {isOpenCreateForm ? (
+                    <CreateAricleForm
+                        onSubmitForm={handleFormSubmit}
+                        onCloseForm={handleCloseForm}
+                        isLoadingCreateArticle={isLoadingCreateArticle}
+                    />
+                ) : null}
+                <div>
+                    <NewArticle onOpenForm={handleOpenForm} />
+                </div>
+                {feeds.map((feed, index) => {
+                    if (index === feeds.length - 1) {
+                        return (
+                            <Article
+                                key={feed._id}
+                                ref={lastElementRef}
+                                feed={feed}
+                                reaction={reactionMap.get(feed._id)}
+                                onReaction={handleReaction}
+                                isLoading={isLoadingReactArticle}
+                                onSelect={handleSelectArticle}
+                                onEdit={handleOpenUpdateForm}
+                                onDelete={handleDelete}
+                                bookmark={bookmarksMap.get(feed._id)}
+                                onBookmark={bookmarkArticle}
+                            />
+                        );
+                    } else {
+                        return (
+                            <Article
+                                key={feed._id}
+                                feed={feed}
+                                reaction={reactionMap.get(feed._id)}
+                                onReaction={handleReaction}
+                                isLoading={isLoadingReactArticle}
+                                onSelect={handleSelectArticle}
+                                onEdit={handleOpenUpdateForm}
+                                onDelete={handleDelete}
+                                bookmark={bookmarksMap.get(feed._id)}
+                                onBookmark={bookmarkArticle}
+                            />
+                        );
+                    }
+                })}
+            </div>
+            <RightSidebar activities={updateArticleActivity} action={actionUpdate} />
+        </div>
+    );
 }
 
 export default NewFeeds;

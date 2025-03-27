@@ -14,7 +14,6 @@ export const useSocket = () => {
 
 // Component SocketProvider sẽ quản lý kết nối socket
 export const SocketProvider = ({ children }) => {
-	console.log("SocketProvider");
 	const [socket, setSocket] = useState(null);
 
 	// Kết nối socket khi component được render

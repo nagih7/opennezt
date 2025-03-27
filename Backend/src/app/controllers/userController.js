@@ -1,4 +1,3 @@
-import {FounderProfile} from '@/models'
 import * as userService from '../services/userService'
 
 export async function readRoot(req, res) {
@@ -29,26 +28,6 @@ export async function removeItem(req, res) {
 export async function resetPassword(req, res) {
     await userService.resetPassword(req.user, req.body.new_password)
     res.status(201).jsonify('Reset password successfully.')
-}
-
-export async function createFounderProfile(req, res) {
-    const isExist = await FounderProfile.findOne({user_id: req.currentUser._id})
-    if (isExist) {
-        res.status(200).jsonify('Founder profile is already exist.')
-    } else {
-        const result = await userService.createFounderProfile(req.currentUser, req.body)
-        res.status(201).jsonify(result)
-    }
-}
-
-export async function getFounderProfile(req, res) {
-    const result = await userService.getFounderProfile(req.currentUser._id)
-    res.jsonify(result)
-}
-
-export async function updateFounderProfile(req, res) {
-    const result = await userService.updateFounderProfile(req.currentUser, req.body)
-    res.status(201).jsonify(result)
 }
 
 export async function createProject(req, res) {
@@ -97,7 +76,50 @@ export async function updateAvatar(req, res) {
     res.status(200).jsonify('Update avatar successfully.')
 }
 
-export async function checkSteps(req, res) {
-    const result = await userService.checkSteps(req.currentUser)
+// Industry framework
+export async function getIndustries(req, res) {
+    const result = await userService.getIndustries()
     res.jsonify(result)
+}
+
+// Experience level framework
+export async function getExperienceLevels(req, res) {
+    const result = await userService.getExperienceLevels()
+    res.jsonify(result)
+}
+
+// Category framework
+export async function getCategories(req, res) {
+    const result = await userService.getCategories()
+    res.jsonify(result)
+}
+
+// Subcategory framework
+export async function getSubCategories(req, res) {
+    const result = await userService.getSubCategories(req.params.id)
+    res.jsonify(result)
+}
+
+// Skill framework
+export async function getSkills(req, res) {
+    const result = await userService.getSkills(req.params.id)
+    res.jsonify(result)
+}
+
+// Stage framework
+export async function getStages(req, res) {
+    const result = await userService.getStages()
+    res.jsonify(result)
+}
+
+// Project role framework
+export async function getProjectRoles(req, res) {
+    const result = await userService.getProjectRoles()
+    res.jsonify(result)
+}
+
+// ========== POST [User - Request Add Friend] ========== //
+export async function sendFriendRequest(req, res) {
+    await userService.sendFriendRequest(req.currentUser, req.params, req.io)
+    res.status(201).jsonify('Send friend request successfully.')
 }

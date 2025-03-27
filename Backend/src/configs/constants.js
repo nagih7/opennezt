@@ -214,7 +214,7 @@ Skills: ${Object.keys(userSkills.skills)
         .join('\n')}         
 2. Projects:${projects
         .map(
-            (project, index) => `
+            (project) => `
 Project ID: ${project._id}; Related Industries: ${project.related_industries.join(', ')}`
         )
         .join('\n')}
@@ -239,7 +239,7 @@ You are an AI system that matches projects with talents. Analyze input data care
 Input:
 1. Projects Requirements:${projects.join(', ')}
 2. Talents: ${talents
-        .map((talent, index) => `User ID: ${talent.user_id}, Industry: ${talent.industry.join(', ')}`)
+        .map((talent) => `User ID: ${talent.user_id}, Industry: ${talent.industry.join(', ')}`)
         .join('; ')}
 Task: Analyze the user's suitability for the project; Return the matching users; Limit the top 6 users to the highest score; For each user, include: "user_id": user ID, "match_score": score from 1 to 99 indicating the match rate (do not create even numbers).
 Output format:{"<user_id>": <Score>,...}`,
@@ -248,3 +248,10 @@ Output format:{"<user_id>": <Score>,...}`,
 
     return messages
 }
+
+//ARTICLE CONST
+export const REACTIONS_ENUM = ['like', 'dislike', 'share']
+export const ARTICLE_STATUS_ENUM = ['draft', 'published', 'archived']
+export const ARTICLE_AUDIENCE_ENUM = ['public', 'private', 'friends']
+export const REACTION_TARGET_TYPE_ENUM = ['article', 'comment']
+//END ARTICLE CONST

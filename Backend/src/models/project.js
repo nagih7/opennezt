@@ -1,190 +1,46 @@
 import createModel, {ObjectId} from './base'
-import {Schema} from 'mongoose'
-
-const Revernue = new Schema(
-    {
-        time: {
-            type: Date,
-            required: true,
-        },
-        revenue: {
-            type: String,
-            required: true,
-        },
-    },
-    {
-        _id: false,
-    }
-)
-
-const FundingSource = new Schema(
-    {
-        friend_and_family: {
-            type: String,
-            required: false,
-        },
-        grant: {
-            type: String,
-            required: false,
-        },
-        angel: {
-            type: String,
-            required: false,
-        },
-        venture_capital: {
-            type: String,
-            required: false,
-        },
-        other: {
-            type: String,
-            required: false,
-        },
-    },
-    {
-        _id: false,
-    }
-)
-
-const Members = new Schema(
-    {
-        _id: {
-            type: ObjectId,
-            required: true,
-            ref: 'User',
-        },
-        name: {
-            type: String,
-            required: true,
-        },
-        avatar: {
-            type: String,
-            required: false,
-        },
-        team_role: {
-            type: String,
-            required: true,
-        },
-        role: {
-            type: String,
-            required: true,
-        },
-        join_at: {
-            type: Date,
-            required: true,
-            default: Date.now,
-        },
-    },
-    {
-        _id: false,
-    }
-)
-
-const Metadata = new Schema(
-    {
-        members: {
-            type: [Members],
-            required: true,
-            default: [],
-        },
-    },
-    {
-        _id: false,
-    }
-)
 
 const Project = createModel('Project', 'projects', {
     user_id: {
         type: ObjectId,
         required: true,
+        ref: 'User',
+        index: true,
     },
     name: {
         type: String,
         required: true,
     },
+    description: {
+        type: String,
+        required: false,
+        default: '',
+    },
     logo: {
         type: String,
         required: false,
+        default: '',
     },
     background: {
         type: String,
         required: false,
     },
-    related_industries: {
-        type: [String],
+    industry_ids: {
+        type: [ObjectId],
+        ref: 'Industry',
         required: true,
+        index: true,
     },
-    stage: {
-        type: String,
+    stage_id: {
+        type: ObjectId,
+        ref: 'Stage',
         required: true,
+        index: true,
     },
     metadata: {
-        type: Metadata,
+        type: Object,
         required: true,
         default: {},
-    },
-    landing_page_url: {
-        type: String,
-        required: false,
-    },
-    problem: {
-        type: String,
-        required: false,
-    },
-    solution: {
-        type: String,
-        required: false,
-    },
-    project_demo_url: {
-        type: String,
-        required: false,
-    },
-    team_intro_url: {
-        type: String,
-        required: false,
-    },
-    pitch_deck: {
-        type: String,
-        required: false,
-    },
-    statistics: {
-        type: String,
-        required: false,
-    },
-    revenues: {
-        type: [Revernue],
-        required: false,
-    },
-    funding_sources: {
-        type: FundingSource,
-        required: false,
-    },
-    target_money: {
-        type: String,
-        required: false,
-    },
-    target_audience: {
-        type: String,
-        required: false,
-    },
-    competitors: {
-        type: String,
-        required: false,
-    },
-    competitive_advantage: {
-        type: String,
-        required: false,
-    },
-    why_now: {
-        type: String,
-        required: false,
-    },
-    strategy: {
-        type: String,
-        required: false,
-    },
-    milestones: {
-        type: String,
-        required: false,
     },
 })
 

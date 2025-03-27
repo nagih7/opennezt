@@ -4,8 +4,7 @@ import loadHomeSaga from "../states/modules/home/saga";
 import loadProfileSaga from "../states/modules/profile/saga";
 import loadEmployeeSaga from "../states/modules/employee/saga";
 import loadAboutYouSaga from "../states/modules/aboutYou/saga";
-import loadNewfeedSaga from "../states/modules/newfeeds/saga";
-import loadfounderSaga from "../states/modules/founder/saga";
+import loadNewfeedSaga from "../states/modules/article/saga";
 import loadProjectSaga from "../states/modules/project/saga";
 import loadTalentSaga from "../states/modules/talent/saga";
 
@@ -18,6 +17,5 @@ ROUTE_SAGAS["LOAD_ABOUT_YOU_PAGE"] = loadAboutYouSaga;
 ROUTE_SAGAS["LOAD_PROFILE_PAGE"] = loadProfileSaga;
 ROUTE_SAGAS["LOAD_EMPLOYEE_PAGE"] = loadEmployeeSaga;
 ROUTE_SAGAS["LOAD_NEWFEED_PAGE"] = loadNewfeedSaga;
-ROUTE_SAGAS["LOAD_FOUNDER_PAGE"] = loadfounderSaga;
 ROUTE_SAGAS["LOAD_PROJECT_PAGE"] = loadProjectSaga;
 ROUTE_SAGAS["LOAD_RECRUIT_TALETNS_PAGE"] = loadTalentSaga;

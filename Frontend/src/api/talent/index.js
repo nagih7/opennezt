@@ -1,45 +1,48 @@
 import callApi from "api/callApi";
 
 import {
-	startRequestRecruitTalents,
-	startRequestRecruitTalentsSuccess,
-	startRequestRecruitTalentsFail,
-	startRequestSkipTalent,
-	startRequestSkipTalentSuccess,
-	startRequestSkipTalentFail,
-	startRequestGetDetailTalent,
-	startRequestGetDetailTalentSuccess,
-	startRequestGetDetailTalentFail,
+	// ========== RECRUIT TALENTS ========== //
+	requestRecruitTalents,
+	recruitTalentsSuccess,
+	recruitTalentsFail,
+	// ========== TALENT DETAILS ========== //
+	requestGetTalentDetails,
+	getTalentDetailsSuccess,
+	getTalentDetailsFail,
 } from "../../states/modules/talent";
 
-export const recruitTalents =
-	(requestRecruitTalents) => async (dispatch, getState) => {
-		requestRecruitTalents = new URLSearchParams(
-			requestRecruitTalents
-		).toString();
-		return callApi({
-			method: "get",
-			apiPath: `users/recruit-talents?${requestRecruitTalents}`,
-			actionTypes: [
-				startRequestRecruitTalents,
-				startRequestRecruitTalentsSuccess,
-				startRequestRecruitTalentsFail,
-			],
-			variables: {},
-			dispatch,
-			getState,
-		});
-	};
+// ========== RECRUIT TALENTS ========== //
+export const recruitTalents = (dataFilter) => async (dispatch, getState) => {
+	let path = `talents/recruit?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
+	if (dataFilter.keySearch) {
+		path += `&q=${dataFilter.keySearch}`;
+	}
+	if (dataFilter.order && dataFilter.column) {
+		path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+	}
+	if (dataFilter.industry) {
+		path += `&industry_id=${dataFilter.industry}`;
+	}
+	if (dataFilter.experienceLevel) {
+		path += `&experience_level_id=${dataFilter.experienceLevel}`;
+	}
+	if (dataFilter.category) {
+		path += `&category_id=${dataFilter.category}`;
+	}
+	if (dataFilter.subcategory) {
+		path += `&subcategory_id=${dataFilter.subcategory}`;
+	}
+	if (dataFilter.skill) {
+		path += `&skill_id=${dataFilter.skill}`;
+	}
 
-export const skipTalent = (requestSkipTalent) => async (dispatch, getState) => {
-	requestSkipTalent = new URLSearchParams(requestSkipTalent).toString();
 	return callApi({
 		method: "get",
-		apiPath: `users/recruit-talents?${requestSkipTalent}`,
+		apiPath: path,
 		actionTypes: [
-			startRequestSkipTalent,
-			startRequestSkipTalentSuccess,
-			startRequestSkipTalentFail,
+			requestRecruitTalents,
+			recruitTalentsSuccess,
+			recruitTalentsFail,
 		],
 		variables: {},
 		dispatch,
@@ -50,11 +53,11 @@ export const skipTalent = (requestSkipTalent) => async (dispatch, getState) => {
 export const getTalentDetails = (id) => async (dispatch, getState) => {
 	return callApi({
 		method: "get",
-		apiPath: `users/talent-details/${id}`,
+		apiPath: `talents/${id}/details`,
 		actionTypes: [
-			startRequestGetDetailTalent,
-			startRequestGetDetailTalentSuccess,
-			startRequestGetDetailTalentFail,
+			requestGetTalentDetails,
+			getTalentDetailsSuccess,
+			getTalentDetailsFail,
 		],
 		variables: {},
 		dispatch,

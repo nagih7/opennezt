@@ -37,6 +37,12 @@
 			color: $colorWhite;
 		}
 	}
+
+	&:hover {
+		.textWrap {
+			color: $colorSidebarActive;
+		}
+	}
 }
 
 .navItemCloseWrap {
@@ -46,12 +52,12 @@
 .navItemActiveWrap {
 	.textWrap {
 		.iconWrap {
-			color: $colorActive;
+			color: $colorWhite !important;
 		}
 
 		.text,
 		g {
-			color: $colorActive;
+			color: $colorWhite;
 		}
 	}
 

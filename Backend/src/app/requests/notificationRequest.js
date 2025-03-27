@@ -1,5 +1,5 @@
 import {MAX_STRING_SIZE} from '@/configs'
-import {NotificationFeed, Project, User} from '@/models'
+import {NotificationFeed, Project, User, Type} from '@/models'
 import {AsyncValidate} from '@/utils/classes'
 import {tryValidateOrDefault} from '@/utils/helpers'
 import Joi from 'joi'
@@ -11,35 +11,7 @@ export const readRoot = Joi.object({
     order: tryValidateOrDefault(Joi.valid('1', '-1'), '-1'),
 })
 
-export const requestAddFriend = Joi.object({
-    user_id: Joi.string()
-        .required()
-        .label('User ID')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async () => {
-                    const user = await User.findById(value)
-                    return user ? value : helpers.error('any.empty')
-                })
-        ),
-    metadata: Joi.object().label('Metadata'),
-})
-
-export const replyNotification = Joi.object({
-    notification_id: Joi.string()
-        .required()
-        .label('Notification_ID')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async () => {
-                    const notification = await NotificationFeed.findById(value)
-                    return notification ? value : helpers.error('any.empty')
-                })
-        ),
-
-    type: Joi.string().required().label('Type'),
-    status: Joi.string().required().label('Status'),
-})
+export const replyNotification = Joi.object({})
 
 export const projectInvitation = Joi.object({
     project_id: Joi.string()
@@ -65,6 +37,31 @@ export const projectInvitation = Joi.object({
                 new AsyncValidate(value, async () => {
                     const user = await User.findById(value)
                     return user ? value : helpers.error('any.empty')
+                })
+        ),
+})
+
+// ========== PUT [Notification - Reply Invitation Member] ========== //
+export const replyInvitationMember = Joi.object({
+    notification_id: Joi.string()
+        .required()
+        .label('Notification')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const notification = await NotificationFeed.findById(value)
+                    return notification ? value : helpers.error('any.empty')
+                })
+        ),
+
+    action_id: Joi.string()
+        .required()
+        .label('Action')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const action = await Type.findById(value)
+                    return action ? value : helpers.error('any.empty')
                 })
         ),
 })

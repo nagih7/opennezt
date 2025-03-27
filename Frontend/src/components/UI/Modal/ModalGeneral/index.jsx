@@ -27,11 +27,12 @@ function ModalGeneral(props) {
     <Modal
       open={isModalOpen}
       footer={false}
-      className={`general-dialog-wrap`}
+      className='rounded-md'
       closable={false}
     >
-      <div className={styles.headerDialogWrap}>
-        <span className={styles.title}>{configModal.title}</span>
+      <div className='flex pb-8 items-center justify-between'>
+        <span> </span>
+        <span className='text-xl font-semibold' >{configModal.title}</span>
         <div
           onClick={() => props.onClose()}
           className={`${styles.btnClose} cursor-pointer`}

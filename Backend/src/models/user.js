@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import createModel from './base'
+import createModel, {ObjectId} from './base'
 
 const User = createModel(
     'User',
@@ -18,7 +18,7 @@ const User = createModel(
         },
         password: {
             type: String,
-            required: true,
+            required: false,
             set(password) {
                 const salt = bcrypt.genSaltSync(10)
                 return bcrypt.hashSync(password, salt)
@@ -60,11 +60,10 @@ const User = createModel(
             default: ['Vietnamese'],
             required: true,
         },
-        role: {
-            type: String,
-            default: 'user',
+        role_id: {
+            type: ObjectId,
+            ref: 'Role',
             required: true,
-            enum: ['user', 'admin'],
         },
         is_active: {
             type: Boolean,
@@ -78,7 +77,7 @@ const User = createModel(
             virtuals: false,
             transform(doc, ret) {
                 // eslint-disable-next-line no-unused-vars
-                const {password, is_active, created_at, updated_at, ...result} = ret
+                const {password, is_active, updated_at, ...result} = ret
                 return result
             },
         },
