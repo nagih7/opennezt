@@ -98,14 +98,18 @@ export const getSubCategoryFramework = (categoryId) => async (dispatch, getState
 
 // SKILLS
 export const getSkillFramework = (categoryId) => async (dispatch, getState) => {
-    return callApi({
-        method: 'get',
-        apiPath: `users/skills/${categoryId}`,
-        actionTypes: [requestGetSkillFramework, getSkillFrameworkSuccess, getSkillFrameworkFail],
-        variables: {},
-        dispatch,
-        getState,
-    });
+	return callApi({
+		method: "get",
+		apiPath: `users/skills/${categoryId}`,
+		actionTypes: [
+			requestGetSkillFramework,
+			getSkillFrameworkSuccess,
+			getSkillFrameworkFail,
+		],
+		variables: {},
+		dispatch,
+		getState,
+	});
 };
 
 // STAGES

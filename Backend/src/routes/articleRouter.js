@@ -64,4 +64,29 @@ articleRouter.post('/bookmark-article', asyncHandler(articleController.bookmarkA
 
 articleRouter.get('/user-bookmarks/:article_ids', asyncHandler(articleController.getUserBookmarks))
 
+// ========== POST [ARTICLE ACTIVITIES] ========== //
+articleRouter.post('/activity/create/:id', asyncHandler(articleController.postActivityCreateArticle))
+
+articleRouter.post('/activity/update/:id', asyncHandler(articleController.postActivityUpdateArticle))
+
+articleRouter.post('/activity/save/:id', asyncHandler(articleController.postActivitySaveArticle))
+
+articleRouter.post('/activity/reaction/:id', asyncHandler(articleController.postActivityReactionArticle))
+
+articleRouter.post('/activity/reply-comment/:id3', asyncHandler(articleController.postActivityReplyComment))
+
+// ========== GET [ARTICLE ACTIVITIES] ========== //
+articleRouter.get('/activity/create', asyncHandler(articleController.getActivityCreateArticle))
+
+articleRouter.get('/activity/update', asyncHandler(articleController.getActivityUpdateArticle))
+
+articleRouter.get('/activity/save', asyncHandler(articleController.getActivitySaveArticle))
+
+articleRouter.get('/activity/reaction', asyncHandler(articleController.getActivityReactionArticle))
+
+articleRouter.get('/activity/reply-comment', asyncHandler(articleController.getActivityReplyComment))
+
+// ========== DELETE [ARTICLE ACTIVITIES] ========== //
+articleRouter.delete('/activity/save/:id', asyncHandler(articleController.deleteActivitySaveArticle))
+
 export default articleRouter

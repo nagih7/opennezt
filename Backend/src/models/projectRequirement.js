@@ -31,6 +31,11 @@ const ProjectRequirement = createModel('Project_Requirement', 'project_requireme
         ref: 'Category',
         required: true,
     },
+    subcategory_ids: {
+        type: [ObjectId],
+        ref: 'Subcategory',
+        required: true,
+    },
     skill_ids: {
         type: [ObjectId],
         ref: 'Skill',
