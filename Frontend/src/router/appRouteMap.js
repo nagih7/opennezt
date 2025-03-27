@@ -5,7 +5,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import PageviewIcon from "@mui/icons-material/Pageview";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
-import { NAVBAR_LABEL } from "utils/constains";
+import { NAVBAR_LABEL } from "utils/constants";
 
 const appRouteMap = [
 	{

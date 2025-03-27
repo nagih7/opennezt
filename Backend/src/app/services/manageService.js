@@ -115,6 +115,12 @@ export async function deleteRole(id) {
     await Role.deleteOne({_id: id})
 }
 
+// ALL TYPES
+export async function getAllTypes() {
+    const types = await Type.find().select('_id name description')
+    return {types}
+}
+
 // TYPE
 export async function typeReadRoot({q, page, per_page, field, order}) {
     q = q ? q : ''

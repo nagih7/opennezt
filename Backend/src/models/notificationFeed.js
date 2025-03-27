@@ -1,19 +1,6 @@
 import createModel, {ObjectId} from './base'
 import {Schema} from 'mongoose'
 
-const additional_info = new Schema(
-    {
-        project_id: {
-            type: ObjectId,
-            ref: 'Project',
-            required: false,
-        },
-    },
-    {
-        _id: false,
-    }
-)
-
 const metadata = new Schema(
     {
         read: {
@@ -49,10 +36,15 @@ const NotificationFeed = createModel('NotificationFeed', 'notifications_feed', {
         required: true,
         index: true,
     },
-    additional_info: {
-        type: additional_info,
+    data: {
+        type: Object,
         required: true,
         default: {},
+    },
+    timestamp: {
+        type: Date,
+        required: true,
+        default: Date.now,
     },
     metadata: {
         type: metadata,

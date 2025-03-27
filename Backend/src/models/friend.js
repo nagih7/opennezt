@@ -16,8 +16,7 @@ const Friend = createModel('Friend', 'friends', {
     },
     status: {
         type: String,
-        required: true,
-        // enum: ['pending', 'accepted', 'rejected'],
+        required: false,
         default: '',
     },
     is_favorite: {

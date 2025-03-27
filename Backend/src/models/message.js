@@ -20,6 +20,7 @@ const Message = createModel('Message', 'messages', {
         type: ObjectId,
         ref: 'Type',
         required: true,
+        default: 'text',
     },
     reply_to: {
         type: ObjectId,
@@ -29,13 +30,13 @@ const Message = createModel('Message', 'messages', {
     read_by: {
         type: [ObjectId],
         ref: 'User',
-        required: true,
+        required: false,
         default: [],
     },
     reaction_ids: {
         type: [ObjectId],
         ref: 'Reaction',
-        required: true,
+        required: false,
         default: [],
     },
     is_active: {
@@ -45,7 +46,7 @@ const Message = createModel('Message', 'messages', {
     },
     pinned: {
         type: Boolean,
-        required: true,
+        required: false,
         default: false,
     },
     status: {
@@ -53,6 +54,11 @@ const Message = createModel('Message', 'messages', {
         required: true,
         enum: ['sent', 'delivered', 'read'],
         default: 'sent',
+    },
+    timestamp: {
+        type: Date,
+        required: true,
+        default: Date.now,
     },
     metadata: {
         type: Object,

@@ -3,7 +3,7 @@ import styles from "./styles.module.scss";
 import { Col, Row } from "antd";
 import SelectCustom from "../../../../../components/UI/Select/index";
 import PropTypes from "prop-types";
-import { STATUS_USER } from "../../../../../utils/constains";
+import { STATUS_USER } from "../../../../../utils/constants";
 
 Filter.prototype = {
 	onClose: PropTypes.func,

@@ -3,9 +3,28 @@ import User from '../../models/user.js'
 import * as chatService from '../services/chatService.js'
 import {userSockets} from '@/routes/socket/index.js'
 
-export async function getChatList(req, res) {
-    const chatList = await chatService.getChatList(req.currentUser, req.query.value)
-    res.status(200).jsonify(chatList)
+// ========== GET [CONVERSATIONS] ========== //
+export async function getConversations(req, res) {
+    const conversations = await chatService.getConversations(req.currentUser)
+    res.status(200).jsonify(conversations)
+}
+
+// ========== GET [CONVERSATION] ========== //
+export async function getConversation(req, res) {
+    const conversation = await chatService.getConversation(req.currentUser, req.params)
+    res.status(200).jsonify(conversation)
+}
+
+// ========== GET [MESSAGES] ========== //
+export async function getMessages(req, res) {
+    const messages = await chatService.getMessages(req.currentUser, req.params)
+    res.status(200).jsonify(messages)
+}
+
+// ========== SEND [MESSAGE] ========== //
+export async function sendMessage(req, res) {
+    const message = await chatService.sendMessage(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(message)
 }
 
 export async function getChatHistory(req, res) {
