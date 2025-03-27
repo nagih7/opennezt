@@ -10,6 +10,9 @@ chatRouter.use(asyncHandler(requireAuthentication))
 // ========== GET [CONVERSATIONS] ========== //
 chatRouter.get('/conversations', asyncHandler(chatController.getConversations))
 
+// ========== GET [CONVERSATION] ========== //
+chatRouter.get('/conversations/:conversationId', asyncHandler(chatController.getConversation))
+
 chatRouter.get('/chat-history/:conversation_id', asyncHandler(chatController.getChatHistory))
 
 export default chatRouter

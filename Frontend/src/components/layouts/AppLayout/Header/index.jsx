@@ -5,7 +5,6 @@ import PopoverNotification from './components/PopoverNotification';
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
 import ZoomInMapIcon from '@mui/icons-material/ZoomInMap';
 import { useSelector, useDispatch } from 'react-redux';
-import MessageBoxList from './components/MessageBoxList';
 import { LANG } from 'utils/constants';
 import { setLanguage } from 'states/modules/app';
 import { IconlyChat, IconlyNotification, IconlySearch } from 'components/UI/Iconly';
@@ -134,7 +133,6 @@ const Header = () => {
                                     </Popover.Content>
                                 </Popover.Positioner>
                             </Portal>
-                            <MessageBoxList />
                         </Popover.Root>
 
                         <Popover.Root positioning={{ placement: 'bottom-end' }}>
@@ -155,7 +153,6 @@ const Header = () => {
                                     </Popover.Content>
                                 </Popover.Positioner>
                             </Portal>
-                            <MessageBoxList />
                         </Popover.Root>
 
                         <Popover.Root positioning={{ placement: 'bottom-end' }}>
@@ -179,7 +176,6 @@ const Header = () => {
                                     </Popover.Content>
                                 </Popover.Positioner>
                             </Portal>
-                            <MessageBoxList />
                         </Popover.Root>
                     </div>
                 </div>

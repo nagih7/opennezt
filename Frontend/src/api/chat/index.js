@@ -4,6 +4,10 @@ import {
     requestGetConversations,
     getConversationsSuccess,
     getConversationsFail,
+    // ========== GET CONVERSATION ========== //
+    requestGetConversation,
+    getConversationSuccess,
+    getConversationFail,
     startRequestGetChatHistory,
     startRequestGetChatHistorySuccess,
     startRequestGetChatHistoryFail,
@@ -15,6 +19,18 @@ export const getConversations = () => async (dispatch, getState) => {
         method: 'get',
         apiPath: 'chat/conversations',
         actionTypes: [requestGetConversations, getConversationsSuccess, getConversationsFail],
+        variables: {},
+        dispatch,
+        getState,
+    });
+};
+
+// ========== GET CONVERSATION ========== //
+export const getConversation = (conversation_id) => async (dispatch, getState) => {
+    return callApi({
+        method: 'get',
+        apiPath: `chat/conversations/${conversation_id}`,
+        actionTypes: [requestGetConversation, getConversationSuccess, getConversationFail],
         variables: {},
         dispatch,
         getState,

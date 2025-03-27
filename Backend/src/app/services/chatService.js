@@ -69,6 +69,9 @@ export async function getConversations(user) {
             },
         },
         {
+            $unwind: '$type',
+        },
+        {
             $project: {
                 _id: 1,
                 members: 1,
@@ -76,6 +79,7 @@ export async function getConversations(user) {
                     type: 1,
                     data: 1,
                 },
+                type: 1,
                 last_message: 1,
                 updated_at: 1,
             },
@@ -83,6 +87,80 @@ export async function getConversations(user) {
     ])
 
     return conversations
+}
+
+// ========== GET [CONVERSATION] ========== //
+export async function getConversation(user, {conversationId}) {
+    const conversation = await Conversation.aggregate([
+        {
+            $match: {
+                _id: new ObjectId(conversationId),
+                members: {$elemMatch: {user_id: user._id}},
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'members.user_id',
+                foreignField: '_id',
+                as: 'members',
+                pipeline: [
+                    {
+                        $match: {
+                            _id: {$ne: user._id},
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'types',
+                localField: 'type_id',
+                foreignField: '_id',
+                as: 'type',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            class: 1,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$type',
+        },
+        {
+            $project: {
+                _id: 1,
+                members: 1,
+                metadata: {
+                    type: 1,
+                    data: 1,
+                },
+                type: 1,
+                updated_at: 1,
+            },
+        },
+    ])
+
+    return conversation[0]
 }
 
 export async function getChatHistory(user, requestParams) {

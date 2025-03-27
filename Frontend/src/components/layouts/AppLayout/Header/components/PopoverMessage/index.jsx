@@ -3,13 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getChatHistory } from 'api/chat';
 import NotFound from 'components/UI/NotFound';
 import { MESSAGES } from 'utils/constants/appConstants';
-import { Stack } from '@chakra-ui/react';
+import { Avatar, Stack, Text } from '@chakra-ui/react';
+import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants/typeConstants';
 
 const PopoverMessage = () => {
     const dispatch = useDispatch();
     const { conversations } = useSelector((state) => state.chat);
-
-    console.log(conversations);
     const { language } = useSelector((state) => state.app);
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -53,7 +52,47 @@ const PopoverMessage = () => {
             <Stack>
                 {conversations.length > 0 ? (
                     conversations.map((conversation, index) => {
-                        <></>;
+                        return (
+                            <Stack
+                                key={index}
+                                onClick={() => handleGetChatHistory(conversation)}
+                                className="cursor-pointer"
+                            >
+                                {(() => {
+                                    switch (conversation.type.name) {
+                                        case DIRECT_CONVERSATION:
+                                            return (
+                                                <Stack
+                                                    direction="row"
+                                                    className="items-center"
+                                                    spacing={4}
+                                                >
+                                                    <Avatar.Root size={'md'}>
+                                                        <Avatar.Fallback
+                                                            name={conversation.members[0].name}
+                                                        />
+                                                        <Avatar.Image
+                                                            src={conversation.members[0].avatar}
+                                                        />
+                                                    </Avatar.Root>
+                                                    <Stack className="items-start flex-1">
+                                                        <Text>{conversation.members[0].name}</Text>
+                                                    </Stack>
+                                                </Stack>
+                                            );
+                                        case GROUP_CONVERSATION:
+                                            return (
+                                                <div>
+                                                    <div>{conversation.metadata.data.name}</div>
+                                                    <div>{conversation.members.length} members</div>
+                                                </div>
+                                            );
+                                        default:
+                                            return null;
+                                    }
+                                })()}
+                            </Stack>
+                        );
                     })
                 ) : (
                     <div>

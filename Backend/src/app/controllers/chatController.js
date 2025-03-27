@@ -9,6 +9,12 @@ export async function getConversations(req, res) {
     res.status(200).jsonify(conversations)
 }
 
+// ========== GET [CONVERSATION] ========== //
+export async function getConversation(req, res) {
+    const conversation = await chatService.getConversation(req.currentUser, req.params)
+    res.status(200).jsonify(conversation)
+}
+
 export async function getChatHistory(req, res) {
     const chatHistory = await chatService.getChatHistory(req.currentUser, req.params)
     res.status(200).jsonify(chatHistory)

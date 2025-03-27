@@ -8,9 +8,12 @@ const chatSlice = createSlice({
         loadingGetChatList: false,
         loadingGetChatHistory: false,
         loadingRequestChatInvitation: false,
-        // ========== CONVERSATION ========== //
+        // ========== CONVERSATIONS ========== //
         conversations: [],
         isLoadingGetConversations: false,
+        // ========== CONVERSATION ========== //
+        conversation: {},
+        isLoadingGetConversation: false,
     },
     reducers: {
         // ========== GET CONVERSATIONS ========== //
@@ -26,6 +29,20 @@ const chatSlice = createSlice({
         getConversationsFail: (state) => ({
             ...state,
             isLoadingGetConversations: false,
+        }),
+        // ========== GET CONVERSATION ========== //
+        requestGetConversation: (state) => ({
+            ...state,
+            isLoadingGetConversation: true,
+        }),
+        getConversationSuccess: (state, action) => ({
+            ...state,
+            conversation: action.payload.data,
+            isLoadingGetConversation: false,
+        }),
+        getConversationFail: (state) => ({
+            ...state,
+            isLoadingGetConversation: false,
         }),
 
         startRequestGetChatHistory: (state) => ({
@@ -121,7 +138,10 @@ export const {
     requestGetConversations,
     getConversationsSuccess,
     getConversationsFail,
-
+    // ========== GET CONVERSATION ========== //
+    requestGetConversation,
+    getConversationSuccess,
+    getConversationFail,
     startRequestGetChatHistory,
     startRequestGetChatHistorySuccess,
     startRequestGetChatHistoryFail,
