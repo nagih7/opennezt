@@ -212,7 +212,7 @@ function NotificationProject() {
                                                                 onChange={toggleSelectAll}
                                                                 checked={
                                                                     selected.length ===
-                                                                        data.length &&
+                                                                    data.length &&
                                                                     data.length > 0
                                                                 }
                                                                 indeterminate={
@@ -286,6 +286,7 @@ function NotificationProject() {
                                 </div>
                             </Tabs.Content>
 
+
                             <Tabs.Content value="Read">
                                 <>
                                     <div className="p-4">
@@ -306,13 +307,13 @@ function NotificationProject() {
                                                                         onChange={toggleSelectAll}
                                                                         checked={
                                                                             selected.length ===
-                                                                                data.length &&
+                                                                            data.length &&
                                                                             data.length > 0
                                                                         }
                                                                         indeterminate={
                                                                             selected.length > 0 &&
                                                                             selected.length <
-                                                                                data.length
+                                                                            data.length
                                                                         }
                                                                     />
                                                                 </th>
@@ -405,6 +406,7 @@ function NotificationProject() {
                         </div>
                     </div>
                 </Tabs.Root>
+
 
                 <RightSidebar />
             </div>

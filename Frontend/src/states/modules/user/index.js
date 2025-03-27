@@ -213,6 +213,7 @@ const userSlice = createSlice({
 				isLoadingSendFriendRequest: false,
 			};
 		},
+
 	},
 });
 
@@ -248,6 +249,7 @@ export const {
 	requestSendFriendRequest,
 	sendFriendRequestSuccess,
 	sendFriendRequestFail,
+
 } = userSlice.actions;
 
 export default userSlice.reducer;

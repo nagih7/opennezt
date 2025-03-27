@@ -71,7 +71,7 @@ const BannerActive = () => {
 					</p>
 				</div>
 				<button className="ml-5 mb-[0.5rem]">
-					<IconlyBookmark color={"#FFF"} />
+					<IconlyBookmark size={24} color={"#FFF"} />
 				</button>
 			</div>
 		</div>
