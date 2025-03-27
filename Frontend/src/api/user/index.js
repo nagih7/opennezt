@@ -31,6 +31,10 @@ import {
     requestSendFriendRequest,
     sendFriendRequestSuccess,
     sendFriendRequestFail,
+    // REQUEST CANCEL FRIEND
+    requestCancelFriendRequest,
+    sendFriendCancelRequestSuccess,
+    sendFriendCancelRequestFail
 } from '../../states/modules/user';
 
 // INDUSTRY
@@ -151,3 +155,4 @@ export const sendFriendRequest = (userId) => async (dispatch, getState) => {
         getState,
     });
 };
+
