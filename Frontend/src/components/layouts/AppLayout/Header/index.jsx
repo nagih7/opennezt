@@ -140,7 +140,10 @@ const Header = () => {
               <Portal>
                 <Popover.Positioner>
                   <Popover.Content>
-                    <PopoverNotification />
+                    <Popover.Arrow />
+                    <Popover.Body className="p-0" >
+                      <PopoverNotification />
+                    </Popover.Body>
                   </Popover.Content>
                 </Popover.Positioner>
               </Portal>

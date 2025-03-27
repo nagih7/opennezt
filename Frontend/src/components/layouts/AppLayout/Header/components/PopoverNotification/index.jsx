@@ -42,14 +42,7 @@ function PopoverNotification() {
   };
 
   return (
-    <Stack
-      width={"400px"}
-      top={"50px"}
-      right={"0"}
-      bg={"#ffffff"}
-      boxShadow={"md"}
-      borderRadius={"md"}
-    >
+    <Stack spacing={4}>
       <div className="mx-8 py-[16px] border-b border-gray-200 text-lg font-medium ">
         {NOTIFICATIONS.NOTIFICATIONS[language]}
       </div>
