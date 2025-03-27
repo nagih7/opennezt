@@ -64,4 +64,16 @@ articleRouter.post('/bookmark-article', asyncHandler(articleController.bookmarkA
 
 articleRouter.get('/user-bookmarks/:article_ids', asyncHandler(articleController.getUserBookmarks))
 
+// ========== POST [ARTICLE ACTIVITIES] ========== //
+articleRouter.post('/activity/create', asyncHandler(articleController.postActivityCreateArticle))
+
+articleRouter.post('/activity/update/:id', asyncHandler(articleController.postActivityUpdateArticle))
+
+// ========== GET [ARTICLE ACTIVITIES] ========== //
+articleRouter.get('/activity/create', asyncHandler(articleController.getActivityCreateArticle))
+
+articleRouter.get('/activity/update', asyncHandler(articleController.getActivityUpdateArticle))
+
+
+
 export default articleRouter

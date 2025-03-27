@@ -90,3 +90,26 @@ export const getUserBookmarks = async (req, res) => {
     const bookmarks = await articleService.getUserBookmarks(req.currentUser, req.params.article_ids)
     res.status(200).jsonify(bookmarks)
 }
+
+// ========== POST [ARTICLE ACTIVITIES] ========== //
+export const postActivityCreateArticle = async (req, res) => {
+    const activity = await articleService.postActivityCreateArticle(req.currentUser)
+    res.status(200).jsonify(activity)
+}
+
+export const postActivityUpdateArticle = async (req, res) => {
+    console.log(req.currentUser, req.params.id)
+    const result = await articleService.postActivityUpdateArticle(req.currentUser, req.params.id)
+    return res.json(result)
+}
+
+// ========== GET [ARTICLE ACTIVITIES] ========== //
+export const getActivityCreateArticle = async (req, res) => {
+    const activity = await articleService.getActivityCreateArticle(req.currentUser)
+    res.status(200).jsonify(activity)
+}
+
+export const getActivityUpdateArticle = async (req, res) => {
+    const activity = await articleService.getActivityUpdateArticle(req.currentUser)
+    res.status(200).jsonify(activity)
+}

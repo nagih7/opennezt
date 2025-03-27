@@ -2,11 +2,14 @@ import FileUpload from '@/utils/classes/file-upload.js'
 import Article from '../../models/article.js'
 import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
-import {LINK_STATIC_URL} from '@/configs'
+import {ACCESS_TYPE, ARTICLE_CREATE, ARTICLE_TYPE, ARTICLE_UPDATE, LINK_STATIC_URL} from '@/configs'
 import {ObjectId} from 'mongodb'
 import delay from '@/utils/classes/delay.js'
 import Project from '@/models/project.js'
 import Bookmark from '@/models/bookmark.js'
+import Type from '@/models/type.js'
+import AccessLog from '@/models/accessLog.js'
+import ActivityLog from '@/models/activityLog.js'
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa
@@ -573,4 +576,177 @@ export const getUserBookmarks = async (user, article_ids) => {
     })
 
     return bookMarks
+}
+
+// ========== POST [ARTICLE ACTIVITIES] ========== //
+export const postActivityCreateArticle = async (user) => {
+    const articleCreateType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_CREATE})
+    const newActivity = new AccessLog({
+        user_id: user._id,
+        type_id: articleCreateType._id,
+        metadata: {},
+    })
+    await newActivity.save()
+    return newActivity
+}
+
+export const postActivityUpdateArticle = async (user, articleId) => {
+    const article = await Article.findById(new ObjectId(articleId))
+    const articleUpdateType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_UPDATE})
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        type_id: articleUpdateType._id,
+        'data.article_id': article._id,
+    })
+
+    if (oldActivity) {
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        const newActivity = new ActivityLog({
+            user_id: user._id,
+            type_id: articleUpdateType._id,
+            data: {article_id: article._id, project_id: article.project_id, owner_id: article.user_id},
+            metadata: {},
+        })
+        
+        await newActivity.save()
+        return newActivity
+    }
+}
+
+// ========== GET [ARTICLE ACTIVITIES] ========== //
+export const getActivityCreateArticle = async (user) => {
+    const articleCreateType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_CREATE})
+    const activities = await AccessLog.aggregate([
+        {
+            $match: {
+                user_id: user._id,
+                type_id: articleCreateType._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $limit: 10,
+        },
+        {
+            $sort: {timestamp: -1},
+        },
+        {
+            $project: {
+                user: 1,
+                timestamp: 1,
+                metadata: 1,
+                type_id: 1,
+            },
+        },
+    ])
+    return activities
+}
+
+export const getActivityUpdateArticle = async (user) => {
+    const articleUpdateType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_UPDATE})
+    const activities = await ActivityLog.aggregate([
+        {
+            $match: {
+                user_id: user._id,
+                type_id: articleUpdateType._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'articles',
+                localField: 'data.article_id',
+                foreignField: '_id',
+                as: 'article',
+                pipeline: [
+                    {
+                        $project: {
+                            caption: '$content.caption',
+                        },
+                    },
+                ],
+            }
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $unwind: '$article',
+        },
+        {
+            $limit: 10,
+        },
+        {
+            $sort: {timestamp: -1},
+        },
+        {
+            $project: {
+                user: 1,
+                article: { caption: 1 },
+                timestamp: 1,           
+                data: 1,
+                type_id: 1,
+            },
+        },
+    ])
+    return activities
 }

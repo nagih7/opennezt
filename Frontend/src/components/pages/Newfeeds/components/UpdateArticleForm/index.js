@@ -21,6 +21,7 @@ import { Avatar } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { IconlyAddUser, IconlyImage2, IconlyWork } from "components/UI/Iconly";
 import { getProjectsToTag } from "api/newfeeds";
+import { postActivityUpdateArticle } from "api/activity";
 
 const UpdateArticleForm = forwardRef(
   ({ onClose, feed, onSubmit, isLoadingUpdateArticle }, ref) => {
@@ -62,10 +63,6 @@ const UpdateArticleForm = forwardRef(
     const [dataFilter, setDataFilter] = useState({
       keySearch: "",
     });
-
-    const selectedProjectName = projectsToTag?.find(
-      (project) => project._id === formData.project_id
-    )?.name;
 
     useEffect(() => {
       dispatch(getProjectsToTag(dataFilter));
@@ -176,8 +173,15 @@ const UpdateArticleForm = forwardRef(
     };
 
     const handleSubmit = async () => {
-      await onSubmit(feed._id, formData);
-      setFileKey((prev) => prev + 1);
+      try {
+        await onSubmit(feed._id, formData);
+        console.log("Update article success");
+        dispatch(postActivityUpdateArticle(feed._id));
+        console.log("Post activity update article success");
+        setFileKey((prev) => prev + 1);
+      } catch (error) {
+        console.error("Error updating article:", error);
+      }
     };
 
     const handleClose = () => {
