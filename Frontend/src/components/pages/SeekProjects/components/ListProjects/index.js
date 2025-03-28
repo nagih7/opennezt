@@ -36,10 +36,9 @@ const ListProjects = ({ action }) => {
 	return (
 		<div className="flex flex-col items-center gap-4 ">
 			<ul
-				className={`${
-					action === "grid" &&
+				className={`${action === "grid" &&
 					"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-				}
+					}
                 ${action === "list" && "flex flex-col"}
              gap-6 pl-0 mt-4 w-full`}>
 				{projects.map((project, index) => (
@@ -48,19 +47,15 @@ const ListProjects = ({ action }) => {
 						key={index}
 						className="overflow-hidden rounded-sm cursor-pointer group">
 						<div
-							className={`bg-white ${
-								action === "grid" && "w-full max-w-lg h-[360px]"
-							}${
-								action === "list" &&
+							className={`bg-white ${action === "grid" && "w-full max-w-lg h-[360px]"
+								}${action === "list" &&
 								"flex items-center p-4 w-[55rem] 2xl:w-[68rem]"
-							} pt-3 mx-auto`}>
+								} pt-3 mx-auto`}>
 							<div
-								className={`relative ${
-									action === "grid" && "w-[90%] h-48 mx-auto"
-								}
-                                ${
-												action === "list" && "w-[16rem] h-[10rem]"
-											} rounded-md overflow-hidden group`}>
+								className={`relative ${action === "grid" && "w-[90%] h-48 mx-auto"
+									}
+                                ${action === "list" && "w-[16rem] h-[10rem]"
+									} rounded-md overflow-hidden group`}>
 								<img
 									src={project.background || imageHardCode}
 									alt={project.name}
@@ -68,39 +63,32 @@ const ListProjects = ({ action }) => {
 										e.target.onerror = null;
 										e.target.src = imageHardCode;
 									}}
-									className={`object-cover absolute  ${
-										action === "grid" && "w-full h-auto"
-									}
-                                    ${
-													action === "list" &&
-													"w-[16rem] h-[10rem]"
-												}  !transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110 `}
+									className={`object-cover absolute  ${action === "grid" && "w-full h-auto"
+										}
+                                    ${action === "list" &&
+										"w-[16rem] h-[10rem]"
+										}  !transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110 `}
 								/>
 							</div>
 
 							<div
-								className={`${
-									action === "grid" &&
+								className={`${action === "grid" &&
 									"relative p-4 top-[-3rem] 2xl:top-[-0.75rem]"
-								}
-                                ${
-												action === "list" &&
-												"ml-4 flex flex-col justify-center"
-											}
+									}
+                                ${action === "list" &&
+									"ml-4 flex flex-col justify-center"
+									}
                                 `}>
 								<div
-									className={` ${
-										action === "grid" &&
+									className={` ${action === "grid" &&
 										"flex justify-between items-center"
-									} ${action === "list" && "flex "}`}>
+										} ${action === "list" && "flex "}`}>
 									<p
-										className={`${
-											action === "grid" &&
+										className={`${action === "grid" &&
 											"bg-[#EAEFF8] p-1 rounded-sm text-[#737F92] text-xs md:text-[0.85rem] font-semibold"
-										} ${
-											action === "list" &&
+											} ${action === "list" &&
 											"bg-[#EAEFF8] p-1 rounded-sm text-[#737F92] text-xs md:text-[0.85rem] font-semibold mr-4"
-										}`}>
+											}`}>
 										{project.stage.name}
 									</p>
 									<p className="text-xs font-semibold md:text-sm">
@@ -115,17 +103,14 @@ const ListProjects = ({ action }) => {
 									{project.name}
 								</h5>
 								<div
-									className={`${
-										action === "grid" &&
+									className={`${action === "grid" &&
 										"flex items-center justify-between mt-3 text-gray-600 text-xs md:text-sm"
-									} ${
-										action === "list" &&
+										} ${action === "list" &&
 										"flex items-center mt-3 text-gray-600 text-xs md:text-sm"
-									}`}>
+										}`}>
 									<p
-										className={`${
-											action === "list" && "mr-4"
-										} text-nowrap text-xs"`}>
+										className={`${action === "list" && "mr-4"
+											} text-nowrap text-xs"`}>
 										📖 {project.articles?.length} Posts
 									</p>
 									<p className="text-xs text-nowrap">
