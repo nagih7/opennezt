@@ -1,7 +1,7 @@
 import Message from '../../models/message.js'
 import User from '../../models/user.js'
 import * as chatService from '../services/chatService.js'
-import {userSockets} from '@/routes/socket/index.js'
+import {userSockets} from '@/routes'
 
 // ========== GET [CONVERSATIONS] ========== //
 export async function getConversations(req, res) {

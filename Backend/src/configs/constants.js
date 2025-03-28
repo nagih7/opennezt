@@ -169,6 +169,7 @@ export const JOI_DEFAULT_OPTIONS = {
         'any.invalid': '{{#label}} is invalid.',
         'any.exists': '{{#label}} already exists.',
         'any.empty': '{{#label}} does not exist.',
+        'any.invited': '{{#label}} has been invited.',
     },
 }
 
