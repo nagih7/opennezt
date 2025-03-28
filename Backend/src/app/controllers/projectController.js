@@ -105,3 +105,9 @@ export async function getAccessToMyProjects(req, res) {
     const result = await projectService.getAccessToMyProjects(req.currentUser)
     res.jsonify(result)
 }
+
+// ========== POST [My Project - Search] ========== //
+export async function searchMyProjects(req, res) {
+    const result = await projectService.searchMyProjects(req.currentUser, req.query)
+    res.jsonify(result)
+}

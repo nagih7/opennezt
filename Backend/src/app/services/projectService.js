@@ -975,3 +975,29 @@ export async function getAccessToMyProjects(user) {
 
     return activities
 }
+
+// ========== POST [My Project - Search] ========== //
+export async function searchMyProjects(user, {q}) {
+    const projects = await Project.aggregate([
+        {
+            $match: {
+                $and: [{user_id: user._id}, {name: {$regex: q, $options: 'i'}}],
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+                logo: {
+                    $cond: {
+                        if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                        then: '$logo',
+                        else: {$concat: [LINK_STATIC_URL, '$logo']},
+                    },
+                },
+            },
+        },
+    ])
+
+    return projects
+}

@@ -1,4 +1,4 @@
-import { IconlyArrowLeft2, IconlySend, IconlyStar } from 'components/UI/Iconly';
+import { IconlyAddUser, IconlyArrowLeft2, IconlySend, IconlyStar } from 'components/UI/Iconly';
 
 import {
     ArrowsAltOutlined,
@@ -14,8 +14,25 @@ import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getConversation, getMessages, sendMessage } from 'api/chat';
 import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants/typeConstants';
-import { Avatar } from '@chakra-ui/react';
+import {
+    Alert,
+    Avatar,
+    Blockquote,
+    Button,
+    CloseButton,
+    Dialog,
+    Popover,
+    Portal,
+    Stack,
+    Text,
+} from '@chakra-ui/react';
 import moment from 'moment';
+import { Tooltip } from 'components/UI/tooltip';
+import SelectCustom from 'components/UI/SelectCustom';
+import InputCustom from 'components/UI/InputCustom';
+import { debounce } from 'lodash';
+import { searchMyProjects } from 'api/project';
+import { getProjectRoleFramework } from 'api/user';
 
 const Conversation = () => {
     const dispatch = useDispatch();
@@ -26,11 +43,27 @@ const Conversation = () => {
     // ========== STATE FROM REDUX ========== //
     const { authUser } = useSelector((state) => state.auth);
     const { conversation } = useSelector((state) => state.chat);
+    const { projectRoleFramework, projectTeamRoleFramework } = useSelector((state) => state.user);
+    const { myProjectsBySearch, isLoadingSearchMyProjects } = useSelector((state) => state.project);
 
     // ========== STATE ========== //
     const [message, setMessage] = useState('');
+    const [isOpenMoreActions, setIsOpenMoreActions] = useState(false);
+    const [isOpenModal, setIsOpenModal] = useState(false);
+    const [formRequest, setFormRequest] = useState({
+        project: '',
+        teamRole: '',
+        role: '',
+    });
 
     // ========== USE EFFECT ========== //
+    useEffect(() => {
+        if (!projectRoleFramework || !projectRoleFramework.length) {
+            dispatch(getProjectRoleFramework());
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch]);
+
     useEffect(() => {
         if (id) {
             dispatch(getConversation(id));
@@ -67,6 +100,40 @@ const Conversation = () => {
         if (e.key === 'Enter') {
             handleSendMessage();
         }
+    };
+
+    // ========== HANDLE FUNCTION MODAL ========== //
+    const handleOpenModal = () => {
+        setIsOpenModal(true);
+        setIsOpenMoreActions(false);
+    };
+    const handleClose = () => {
+        setIsOpenModal(false);
+    };
+    const handleConfirmInvite = () => {
+        console.log(formRequest);
+    };
+
+    // ========== HANDLE FUNCTION POPPER ========== //
+    const onOpenChange = (open) => {
+        setIsOpenMoreActions(open.open);
+    };
+
+    // ========== HANDLE FUNCTION SEARCH PROJECT ========== //
+    const handleSearchProject = debounce((e) => {
+        if (e.target.value === '') {
+            return;
+        }
+        dispatch(searchMyProjects(e.target.value));
+    }, 300);
+
+    // ========== HANDLE FUNCTION REMOVE PROJECT ========== //
+    const handleRemoveProject = () => {
+        setFormRequest({
+            project: '',
+            teamRole: '',
+            role: '',
+        });
     };
 
     if (id) {
@@ -126,9 +193,227 @@ const Conversation = () => {
                         <span className="flex items-center justify-center text-[#6f7f92] w-[50px] h-11">
                             <ArrowsAltOutlined />
                         </span>
-                        <span className="flex items-center justify-center text-[#6f7f92] w-[50px] h-11">
-                            <MoreOutlined />
-                        </span>
+
+                        <Popover.Root
+                            positioning={{ placement: 'bottom-end' }}
+                            open={isOpenMoreActions}
+                            onOpenChange={(open) => onOpenChange(open)}
+                        >
+                            <Popover.Trigger asChild>
+                                <span
+                                    className="flex items-center justify-center text-[#6f7f92] w-[50px] h-11 cursor-pointer"
+                                    onClick={() => setIsOpenMoreActions(!isOpenMoreActions)}
+                                >
+                                    <Tooltip
+                                        content="More"
+                                        openDelay={0}
+                                        closeDelay={100}
+                                        positioning={{ placement: 'top' }}
+                                    >
+                                        <MoreOutlined />
+                                    </Tooltip>
+                                </span>
+                            </Popover.Trigger>
+                            <Portal>
+                                <Popover.Positioner>
+                                    <Popover.Content>
+                                        <Popover.Arrow />
+                                        <Popover.Body className="p-4">
+                                            <Stack spacing={4}>
+                                                <Stack
+                                                    spacing={4}
+                                                    direction={'row'}
+                                                    align={'center'}
+                                                    cursor={'pointer'}
+                                                    onClick={handleOpenModal}
+                                                >
+                                                    <IconlyAddUser size={24} color="#6f7f92" />
+                                                    Invite to project
+                                                </Stack>
+                                            </Stack>
+                                        </Popover.Body>
+                                    </Popover.Content>
+                                </Popover.Positioner>
+                            </Portal>
+                        </Popover.Root>
+                        <Dialog.Root
+                            size={'lg'}
+                            open={isOpenModal}
+                            placement={'center'}
+                            motionPreset="slide-in-bottom"
+                        >
+                            <Portal>
+                                <Dialog.Backdrop />
+                                <Dialog.Positioner>
+                                    <Dialog.Content>
+                                        <Dialog.Header>
+                                            <Text>Invite to project</Text>
+                                        </Dialog.Header>
+                                        <Dialog.Body>
+                                            <Stack>
+                                                <Alert.Root status="info">
+                                                    <Alert.Indicator />
+                                                    <Alert.Title>
+                                                        Do you want to invite people to join the
+                                                        project?
+                                                    </Alert.Title>
+                                                </Alert.Root>
+                                                <Stack
+                                                    spacing={4}
+                                                    className="flex flex-col gap-4 my-4"
+                                                >
+                                                    {!formRequest.project && (
+                                                        <>
+                                                            <InputCustom
+                                                                label="Project"
+                                                                required
+                                                                placeholder="Start typing to search for a project"
+                                                                onChange={handleSearchProject}
+                                                                loading={isLoadingSearchMyProjects}
+                                                            />
+                                                            {myProjectsBySearch?.length > 0 && (
+                                                                <Stack spacing={4}>
+                                                                    {myProjectsBySearch.map(
+                                                                        (project, idx) => (
+                                                                            <Stack
+                                                                                key={idx}
+                                                                                spacing={4}
+                                                                                direction={'row'}
+                                                                                align={'center'}
+                                                                                cursor={'pointer'}
+                                                                                onClick={() =>
+                                                                                    setFormRequest({
+                                                                                        ...formRequest,
+                                                                                        project:
+                                                                                            project,
+                                                                                    })
+                                                                                }
+                                                                            >
+                                                                                <Avatar.Root
+                                                                                    size={'md'}
+                                                                                >
+                                                                                    <Avatar.Fallback
+                                                                                        name={
+                                                                                            project.name
+                                                                                        }
+                                                                                    />
+                                                                                    <Avatar.Image
+                                                                                        src={
+                                                                                            project.logo
+                                                                                        }
+                                                                                    />
+                                                                                </Avatar.Root>
+                                                                                <Text>
+                                                                                    {project.name}
+                                                                                </Text>
+                                                                            </Stack>
+                                                                        )
+                                                                    )}
+                                                                </Stack>
+                                                            )}
+                                                        </>
+                                                    )}
+                                                    {formRequest.project && (
+                                                        <>
+                                                            <Stack
+                                                                spacing={4}
+                                                                direction={'row'}
+                                                                align={'center'}
+                                                            >
+                                                                <Stack
+                                                                    spacing={4}
+                                                                    direction={'row'}
+                                                                    align={'center'}
+                                                                >
+                                                                    <Avatar.Root size={'md'}>
+                                                                        <Avatar.Fallback
+                                                                            name={
+                                                                                formRequest.project
+                                                                                    .name
+                                                                            }
+                                                                        />
+                                                                        <Avatar.Image
+                                                                            src={
+                                                                                formRequest.project
+                                                                                    .logo
+                                                                            }
+                                                                        />
+                                                                    </Avatar.Root>
+                                                                    <Text>
+                                                                        {formRequest.project.name}
+                                                                    </Text>
+                                                                </Stack>
+                                                                <CloseButton
+                                                                    onClick={handleRemoveProject}
+                                                                />
+                                                            </Stack>
+
+                                                            <SelectCustom
+                                                                height="40px"
+                                                                label="Team Role"
+                                                                required
+                                                                collection={
+                                                                    projectTeamRoleFramework
+                                                                }
+                                                                // onChange={(e) =>
+                                                                //     handleChangeFormRequest(e, 'teamRole')
+                                                                // }
+                                                                value={formRequest.teamRole}
+                                                            />
+                                                            <SelectCustom
+                                                                height="40px"
+                                                                label="Role"
+                                                                required
+                                                                collection={projectRoleFramework}
+                                                                // onChange={(e) =>
+                                                                //     handleChangeFormRequest(e, 'role')
+                                                                // }
+                                                                value={formRequest.role}
+                                                            />
+                                                        </>
+                                                    )}
+                                                </Stack>
+                                                <Blockquote.Root
+                                                    colorPalette="yellow"
+                                                    style={{
+                                                        borderInlineStartWidth: '4px',
+                                                        borderInlineStartColor: '#fef08a',
+                                                    }}
+                                                >
+                                                    <Blockquote.Content cite="OpenNezt">
+                                                        If you would like to invite someone to this
+                                                        project, please let me know what position
+                                                        you would like the person to fill.
+                                                    </Blockquote.Content>
+                                                    <Blockquote.Caption>
+                                                        — <cite>OpenNezt</cite>
+                                                    </Blockquote.Caption>
+                                                </Blockquote.Root>
+                                            </Stack>
+                                        </Dialog.Body>
+                                        <Dialog.Footer>
+                                            <Dialog.ActionTrigger asChild>
+                                                <Button variant="outline" onClick={handleClose}>
+                                                    Cancel
+                                                </Button>
+                                            </Dialog.ActionTrigger>
+                                            <Button
+                                                onClick={handleConfirmInvite}
+                                                borderRadius={4}
+                                                loading={false}
+                                                loadingText="Loading..."
+                                                spinnerPlacement="start"
+                                            >
+                                                INVITE
+                                            </Button>
+                                        </Dialog.Footer>
+                                        <Dialog.CloseTrigger asChild>
+                                            <CloseButton onClick={handleClose} size="sm" />
+                                        </Dialog.CloseTrigger>
+                                    </Dialog.Content>
+                                </Dialog.Positioner>
+                            </Portal>
+                        </Dialog.Root>
                     </div>
                 </div>
                 <div className="flex flex-1 flex-col text-[#6f7f92] items-center w-full overflow-hidden">
@@ -143,7 +428,7 @@ const Conversation = () => {
                         </div>
                         <div className="relative flex flex-col items-center justify-center w-full">
                             <div className="after:z-20 px-[11px] rounded-md text-xs font-semibold text-[#2f65b9] py-[5px] my-[11px]">
-                                November 28, 2024
+                                {moment(conversation?.createdAt).format('MMMM D, YYYY')}
                             </div>
                             {conversation?.messages?.map((message, idx) => {
                                 switch (message?.user?._id) {

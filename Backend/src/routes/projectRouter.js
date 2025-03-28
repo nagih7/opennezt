@@ -89,9 +89,6 @@ projectRouter.post(
     asyncHandler(projectController.createProject)
 )
 
-// ========== GET [My Projects] ========== //
-projectRouter.get('/me', asyncHandler(projectController.getListMyProjects))
-
 // ========== GET [Project Details] ========== //
 projectRouter.get('/:id/details', asyncHandler(projectController.getProjectDetails))
 
@@ -103,5 +100,11 @@ projectRouter.get('/access/me', asyncHandler(projectController.getMyProjectAcces
 
 // ========== GET [Access To My Projects] ========== //
 projectRouter.get('/me/access', asyncHandler(projectController.getAccessToMyProjects))
+
+// ========== GET [Project - Search] ========== //
+projectRouter.get('/me/search', asyncHandler(projectController.searchMyProjects))
+
+// ========== GET [My Projects] ========== //
+projectRouter.get('/me', asyncHandler(projectController.getListMyProjects))
 
 export default projectRouter

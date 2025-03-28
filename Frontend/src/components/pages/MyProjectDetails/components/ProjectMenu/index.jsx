@@ -5,7 +5,6 @@ import {
     IconlyHome,
     IconlyImage2,
     IconlySend,
-    IconlySetting,
     IconlyUser,
 } from 'components/UI/Iconly';
 import React, { useState } from 'react';
