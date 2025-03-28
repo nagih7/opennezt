@@ -4,6 +4,7 @@ import { useSocket } from 'context/SocketContext';
 import { getNotifications } from 'api/notification';
 import { toaster } from 'components/UI/toaster';
 import { CONFIRM_FRIEND_REQUEST_NOTIFICATION, FRIEND_REQUEST_NOTIFICATION } from 'utils/constants';
+import { getConversations } from 'api/chat';
 
 export const RealtimeContext = React.createContext();
 
@@ -45,7 +46,6 @@ export const RealtimeProvider = ({ children }) => {
 
         // ========== CONFIRM FRIEND REQUEST NOTIFICATION ========== //
         socket.on(CONFIRM_FRIEND_REQUEST_NOTIFICATION, async (user) => {
-            console.log(user);
             toaster.create({
                 title: `${user.name} accepted your friend request`,
                 type: 'success',
@@ -55,6 +55,8 @@ export const RealtimeProvider = ({ children }) => {
                     onClick: () => console.log('View'),
                 },
             });
+            // GET CONVERSATIONS
+            dispatch(getConversations());
         });
 
         // CONFIRM ADD FRIEND

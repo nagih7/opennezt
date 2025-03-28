@@ -1,27 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { CheckOutlined, CloseOutlined } from '@mui/icons-material';
 import store from 'states/configureStore';
 import { replyNotification, getNotifications } from 'api/notification';
 import { useNavigate } from 'react-router-dom';
-import { NOTIFICATIONS, ACTIONS, STATUS } from 'utils/constants/appConstants';
-import { Avatar, Stack, Text } from '@chakra-ui/react';
-import { CONFIRM_ACTION, DELETE_ACTION } from 'utils/constants';
+import { NOTIFICATIONS, ACTIONS } from 'utils/constants/appConstants';
+import { Avatar, Spinner, Stack, Text } from '@chakra-ui/react';
+import { CONFIRM_ACTION, DELETE_ACTION, FRIEND_REQUEST_NOTIFICATION } from 'utils/constants';
+import { getConversations } from 'api/chat';
+import {
+    CONFIRM_STATUS,
+    PROJECT_INVITATION_NOTIFICATION,
+    WAITING_STATUS,
+} from 'utils/constants/typeConstants';
 
 function PopoverNotification() {
-    const { notifications, loadingReplyNotification } = useSelector((state) => state.notification);
-    const { language } = useSelector((state) => state.app);
     const navigate = useNavigate();
+    // ========== STATE FROM REDUX ========== //
+    const { notifications, isLoadingReplyNotification } = useSelector(
+        (state) => state.notification
+    );
+    const { language } = useSelector((state) => state.app);
 
-    const handleReplyNotification = async (notification_id, action) => {
+    // ========== STATE ========== //
+    const [notificationIndex, setNotificationIndex] = useState(null);
+
+    // ========== HANDLE REPLY NOTIFICATION ========== //
+    const handleReplyNotification = async (notification_id, action, index) => {
+        setNotificationIndex(index);
         await store.dispatch(replyNotification(notification_id, action));
         await store.dispatch(getNotifications());
+        await store.dispatch(getConversations());
     };
     const handleNavigateToNotification = () => {
         navigate('/notification-management');
     };
 
+    // ========== RENDER ========== //
     return (
         <Stack spacing={4}>
             <div className="mx-4 py-[16px] border-b border-gray-200 text-lg font-medium ">
@@ -49,7 +65,7 @@ function PopoverNotification() {
                                             <Stack spacing={2}>
                                                 {(() => {
                                                     switch (notification.type?.name) {
-                                                        case 'project_invitation':
+                                                        case PROJECT_INVITATION_NOTIFICATION:
                                                             return (
                                                                 <div className="text-[#6f7f92] text-sm font-medium">
                                                                     <b>{notification.user?.name}</b>{' '}
@@ -72,7 +88,7 @@ function PopoverNotification() {
                                                                     }
                                                                 </div>
                                                             );
-                                                        case 'friend_request':
+                                                        case FRIEND_REQUEST_NOTIFICATION:
                                                             return (
                                                                 <div className="text-[#6f7f92] text-sm font-medium">
                                                                     <b>{notification.user?.name}</b>{' '}
@@ -99,35 +115,121 @@ function PopoverNotification() {
                                             </Stack>
                                         </Stack>
                                         <div className="flex items-center justify-end">
-                                            {notification.metadata.status === 'waiting' && (
-                                                <Stack direction="row" spacing={4}>
-                                                    <button
-                                                        className="px-[12px] py-[8px] text-xs font-medium bg-[#2f65b9] text-white rounded-md"
-                                                        icon={<CheckOutlined />}
-                                                        onClick={() =>
-                                                            handleReplyNotification(
-                                                                notification._id,
-                                                                CONFIRM_ACTION
-                                                            )
+                                            {(() => {
+                                                switch (notificationIndex) {
+                                                    case index:
+                                                        switch (isLoadingReplyNotification) {
+                                                            case true:
+                                                                return <Spinner size="md" />;
+                                                            default:
+                                                                switch (
+                                                                    notification.metadata.status
+                                                                ) {
+                                                                    case WAITING_STATUS:
+                                                                        return (
+                                                                            <Stack
+                                                                                direction="row"
+                                                                                spacing={4}
+                                                                            >
+                                                                                <button
+                                                                                    className="px-[12px] py-[8px] text-xs font-medium bg-[#2f65b9] text-white rounded-md"
+                                                                                    icon={
+                                                                                        <CheckOutlined />
+                                                                                    }
+                                                                                    onClick={() =>
+                                                                                        handleReplyNotification(
+                                                                                            notification._id,
+                                                                                            CONFIRM_ACTION,
+                                                                                            index
+                                                                                        )
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        ACTIONS
+                                                                                            .CONFIRM[
+                                                                                            language
+                                                                                        ]
+                                                                                    }
+                                                                                </button>
+                                                                                <button
+                                                                                    className="px-[12px] py-[8px] text-xs font-medium bg-[#f8f9fa] text-[#6f7f92] rounded-md"
+                                                                                    danger
+                                                                                    icon={
+                                                                                        <CloseOutlined />
+                                                                                    }
+                                                                                    onClick={() =>
+                                                                                        handleReplyNotification(
+                                                                                            notification._id,
+                                                                                            DELETE_ACTION
+                                                                                        )
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        ACTIONS
+                                                                                            .DELETE[
+                                                                                            language
+                                                                                        ]
+                                                                                    }
+                                                                                </button>
+                                                                            </Stack>
+                                                                        );
+                                                                    case CONFIRM_STATUS:
+                                                                        return null;
+                                                                    default:
+                                                                        return null;
+                                                                }
                                                         }
-                                                    >
-                                                        {ACTIONS.CONFIRM[language]}
-                                                    </button>
-                                                    <button
-                                                        className="px-[12px] py-[8px] text-xs font-medium bg-[#f8f9fa] text-[#6f7f92] rounded-md"
-                                                        danger
-                                                        icon={<CloseOutlined />}
-                                                        onClick={() =>
-                                                            handleReplyNotification(
-                                                                notification._id,
-                                                                DELETE_ACTION
-                                                            )
+                                                    default:
+                                                        switch (notification.metadata.status) {
+                                                            case WAITING_STATUS:
+                                                                return (
+                                                                    <Stack
+                                                                        direction="row"
+                                                                        spacing={4}
+                                                                    >
+                                                                        <button
+                                                                            className="px-[12px] py-[8px] text-xs font-medium bg-[#2f65b9] text-white rounded-md"
+                                                                            icon={<CheckOutlined />}
+                                                                            onClick={() =>
+                                                                                handleReplyNotification(
+                                                                                    notification._id,
+                                                                                    CONFIRM_ACTION,
+                                                                                    index
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                ACTIONS.CONFIRM[
+                                                                                    language
+                                                                                ]
+                                                                            }
+                                                                        </button>
+                                                                        <button
+                                                                            className="px-[12px] py-[8px] text-xs font-medium bg-[#f8f9fa] text-[#6f7f92] rounded-md"
+                                                                            danger
+                                                                            icon={<CloseOutlined />}
+                                                                            onClick={() =>
+                                                                                handleReplyNotification(
+                                                                                    notification._id,
+                                                                                    DELETE_ACTION
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                ACTIONS.DELETE[
+                                                                                    language
+                                                                                ]
+                                                                            }
+                                                                        </button>
+                                                                    </Stack>
+                                                                );
+                                                            case CONFIRM_STATUS:
+                                                                return null;
+                                                            default:
+                                                                return null;
                                                         }
-                                                    >
-                                                        {ACTIONS.DELETE[language]}
-                                                    </button>
-                                                </Stack>
-                                            )}
+                                                }
+                                            })()}
                                         </div>
                                     </Stack>
                                 </div>
