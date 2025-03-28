@@ -11,8 +11,8 @@ Filter.prototype = {
 };
 
 Filter.defaultProps = {
-	onChangeStatus: () => {},
-	onClose: () => {},
+	onChangeStatus: () => { },
+	onClose: () => { },
 };
 
 function Filter(props) {

@@ -9,7 +9,7 @@ import { LANG } from 'utils/constants';
 import { setLanguage } from 'states/modules/app';
 import { IconlyChat, IconlyNotification, IconlySearch } from 'components/UI/Iconly';
 import { Avatar, Popover, Portal, Stack } from '@chakra-ui/react';
-import Logo from 'assets/images/logo/OpenNezt_logo_black.png';
+import Logo from 'assets/images/logo/opennezt_full_black.png';
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -146,6 +146,7 @@ const Header = () => {
                                     <Popover.Content >
                                         <Popover.Body className="bg-white">
                                             <Stack spacing={4}>
+
                                                 <PopoverMessage />
                                             </Stack>
                                         </Popover.Body>

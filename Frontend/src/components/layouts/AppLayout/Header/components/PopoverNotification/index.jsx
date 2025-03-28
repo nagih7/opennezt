@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 import store from 'states/configureStore';
 import { replyNotification, getNotifications } from 'api/notification';
-import { NOTIFICATIONS } from 'utils/constants/appConstants';
+import { NOTIFICATIONS } from 'utils/constants';
 import { Avatar, Spinner, Stack } from '@chakra-ui/react';
 import { getConversations } from 'api/chat';
 import {
@@ -53,7 +53,7 @@ function PopoverNotification() {
                         {notifications &&
                             notifications.length > 0 &&
                             notifications.map((notification, index) => (
-                                <div className="px-4 py-[16px]" key={index}>
+                                <div className="px-4 py-[16px] hover:bg-[#f6f5f5]" key={index}>
                                     <Stack>
                                         <Stack direction="row" spacing={4}>
                                             <Avatar.Root size={'sm'}>

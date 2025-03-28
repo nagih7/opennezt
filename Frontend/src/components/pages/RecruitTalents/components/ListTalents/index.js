@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IconlyBookmark, IconlyHeart, IconlyShow, IconlyStar } from 'components/UI/Iconly';
 import img_bag from 'assets/images/background/bag.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import PaginationCustom from 'components/UI/PaginationCustom';
 import { recruitTalents } from 'api/talent';
-import { Button } from '@chakra-ui/react';
+import { Button, Image } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { accessToTalent } from 'api/activity';
+import { OPENNEZT_LOGO } from 'utils/constants';
 
 const ListTalents = () => {
     const dispatch = useDispatch();
@@ -15,6 +16,9 @@ const ListTalents = () => {
     const { talents, formRecruitTalents, paginationRecruitTalents } = useSelector(
         (state) => state.talent
     );
+
+    // ========== STATE ========== //
+    const [imageError, setImageError] = useState(false);
 
     // ========== HANDLE FUNCTION ========== //
     const onPageChange = (pageData) => {
@@ -51,17 +55,18 @@ const ListTalents = () => {
                     >
                         <div className="relative">
                             <div className="relative group">
-                                <div>
-                                    <img
-                                        src={talent.user.avatar || img_bag}
-                                        alt={talent.user.name}
-                                        onError={(e) => {
-                                            e.target.onerror = null;
-                                            e.target.src = img_bag;
-                                        }}
+                                {!imageError ? (
+                                    <Image
                                         className="w-[280px] h-[280px] rounded-md"
+                                        src={talent.user.avatar}
+                                        alt={talent.user.name}
+                                        onError={setImageError(true)}
                                     />
-                                </div>
+                                ) : (
+                                    <div className="w-[280px] h-[280px] bg-gray-200 rounded-md flex items-center justify-center overflow-hidden p-12">
+                                        <Image src={OPENNEZT_LOGO} alt="OpenNezt" />
+                                    </div>
+                                )}
 
                                 <div
                                     className="absolute top-[15px] right-[15px] fade-element"
@@ -71,35 +76,20 @@ const ListTalents = () => {
                                     }}
                                 >
                                     <ul className="flex flex-col gap-2 pl-0 m-0">
-                                        <li>
-                                            <a
-                                                href="#"
-                                                className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center"
-                                            >
-                                                <IconlyShow size={20} color={'#2f65b9'} />
-                                            </a>
+                                        <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
+                                            <IconlyShow size={20} color={'#2f65b9'} />
                                         </li>
-                                        <li>
-                                            <a
-                                                href="#"
-                                                className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center"
-                                            >
-                                                <IconlyHeart size={20} color={'#2f65b9'} />
-                                            </a>
+                                        <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
+                                            <IconlyHeart size={20} color={'#2f65b9'} />
                                         </li>
-                                        <li>
-                                            <a
-                                                href="#"
-                                                className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center"
-                                            >
-                                                <IconlyBookmark size={20} color={'#2f65b9'} />
-                                            </a>
+                                        <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
+                                            <IconlyBookmark size={20} color={'#2f65b9'} />
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        <div className="absolute bottom-[-61px] group-hover:bottom-[-21px] group-hover:translate-x-0 translate-x-full transition-all duration-700 ease-in-out left-0 w-[280px] p-[16px] bg-[#f6f4f4] flex flex-col justify-center items-center gap-2">
+                        <div className="absolute bottom-[-40px] group-hover:bottom-[-21px] group-hover:translate-x-0 translate-x-full transition-all duration-700 ease-in-out left-0 w-[280px] p-[16px] bg-[#f6f4f4] flex flex-col justify-center items-center gap-2">
                             <div className="font-semibold text-black no-underline">
                                 {talent.user.name}
                             </div>
