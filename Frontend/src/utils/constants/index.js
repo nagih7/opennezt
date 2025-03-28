@@ -3,3 +3,4 @@ export * from './inputConstants';
 export * from './apiConstants';
 export * from './validationConstants';
 export * from './authConstants';
+export * from './assetConstants';

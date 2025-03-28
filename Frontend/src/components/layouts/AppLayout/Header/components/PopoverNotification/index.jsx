@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 import store from 'states/configureStore';
 import { replyNotification, getNotifications } from 'api/notification';
-import { NOTIFICATIONS } from 'utils/constants/appConstants';
+import { NOTIFICATIONS } from 'utils/constants';
 import { Avatar, Spinner, Stack } from '@chakra-ui/react';
 import { getConversations } from 'api/chat';
 import {

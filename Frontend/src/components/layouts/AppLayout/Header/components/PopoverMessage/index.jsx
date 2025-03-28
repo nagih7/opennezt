@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getChatHistory } from 'api/chat';
 import NotFound from 'components/UI/NotFound';
-import { MESSAGES } from 'utils/constants/appConstants';
+import { MESSAGES } from 'utils/constants';
 import { Avatar, Stack, Text } from '@chakra-ui/react';
 import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants/typeConstants';
 

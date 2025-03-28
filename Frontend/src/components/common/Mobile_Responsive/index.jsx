@@ -1,27 +1,36 @@
-import React, { useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "./styles.module.scss";
+import React, { useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import styles from './styles.module.scss';
 
 const Mobile_Responsive = () => {
-    
     useEffect(() => {
-        document.title = "This website is not available on mobile devices";
+        document.title = 'This website is not available on mobile devices';
         const metaDescription = document.querySelector('meta[name="description"]');
         if (metaDescription) {
-            metaDescription.setAttribute("content", "This website is only available on desktop devices");
+            metaDescription.setAttribute(
+                'content',
+                'This website is only available on desktop devices'
+            );
         }
     }, []);
 
     return (
         <div className={styles.container}>
-            <svg className={styles.artwork} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 700" width="1120" height="700">
-                <circle cx="292.61" cy="213" r="213" fill="#f2f2f2"/>
-                {/* <img src="../../../../public/LogoOpenNezt.png"></img> */}
+            <svg
+                className={styles.artwork}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 1120 700"
+                width="1120"
+                height="700"
+            >
+                <circle cx="292.61" cy="213" r="213" fill="#f2f2f2" />
             </svg>
             <h1>This website is not available on mobile devices</h1>
             <p>Please access this website from a desktop computer or laptop.</p>
             <p>Mobile version coming soon.</p>
-            <a href="https://opennezt.com" className={styles.link}>Join our Landing Page</a>
+            <a href="https://opennezt.com" className={styles.link}>
+                Join our Landing Page
+            </a>
         </div>
     );
 };

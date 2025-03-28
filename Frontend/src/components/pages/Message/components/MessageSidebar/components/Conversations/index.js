@@ -2,7 +2,7 @@ import { Avatar, Stack, Tabs } from '@chakra-ui/react';
 import { IconlyChat, IconlyHome, IconlyProfile, IconlyUser } from 'components/UI/Iconly';
 import React from 'react';
 import { CheckCircleFilled } from '@ant-design/icons';
-import img_project from '../../../../../../../assets/images/logo/OpenNezt_icon_black.png';
+import img_project from '../../../../../../../assets/images/logo/opennezt_black.png';
 import img_avt from '../../../../../../../assets/images/background/avt.jpg';
 import { useSelector } from 'react-redux';
 import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants/typeConstants';
