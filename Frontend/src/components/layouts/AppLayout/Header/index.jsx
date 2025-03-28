@@ -126,8 +126,8 @@ const Header = () => {
                             <Portal>
                                 <Popover.Positioner>
                                     <Popover.Content>
-                                        <Popover.Arrow />
-                                        <Popover.Body className="p-0">
+
+                                        <Popover.Body className="p-0 bg-white">
                                             <PopoverNotification />
                                         </Popover.Body>
                                     </Popover.Content>
@@ -141,11 +141,10 @@ const Header = () => {
                                     <IconlyChat size={24} color="#6f7f92" />
                                 </span>
                             </Popover.Trigger>
-                            <Portal>
-                                <Popover.Positioner>
-                                    <Popover.Content>
-                                        <Popover.Arrow />
-                                        <Popover.Body>
+                            <Portal >
+                                <Popover.Positioner >
+                                    <Popover.Content >
+                                        <Popover.Body className="bg-white">
                                             <Stack spacing={4}>
                                                 <PopoverMessage />
                                             </Stack>
@@ -167,8 +166,7 @@ const Header = () => {
                             <Portal>
                                 <Popover.Positioner>
                                     <Popover.Content>
-                                        <Popover.Arrow />
-                                        <Popover.Body>
+                                        <Popover.Body className="bg-white">
                                             <Stack spacing={4}>
                                                 <PopoverProfile />
                                             </Stack>

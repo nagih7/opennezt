@@ -155,7 +155,7 @@ const Conversation = () => {
                                             >
                                                 {(() => {
                                                     switch (
-                                                        conversation?.messages[idx - 1]?.user._id
+                                                    conversation?.messages[idx - 1]?.user._id
                                                     ) {
                                                         case message?.user?._id:
                                                             return (
@@ -254,7 +254,7 @@ const Conversation = () => {
                                             <div className="flex gap-[10px] mb-[5px] px-[15px] w-full">
                                                 {(() => {
                                                     switch (
-                                                        conversation?.messages[idx - 1]?.user._id
+                                                    conversation?.messages[idx - 1]?.user._id
                                                     ) {
                                                         case message?.user?._id:
                                                             return (
@@ -378,7 +378,7 @@ const Conversation = () => {
                                 onChange={handleChangeMessage}
                                 type="text"
                                 placeholder="Write your message"
-                                className="w-full outline-none"
+                                className="w-full outline-none bg-white"
                             />
                         </div>
                         <div

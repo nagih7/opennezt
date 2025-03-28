@@ -38,7 +38,7 @@ const PopoverMessage = () => {
     };
 
     return (
-        <Stack>
+        <Stack >
             <h3>{MESSAGES.MESSAGES[language]}</h3>
             {/* <input
 					type="text"
