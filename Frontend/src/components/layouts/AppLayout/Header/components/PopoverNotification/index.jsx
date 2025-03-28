@@ -53,7 +53,7 @@ function PopoverNotification() {
                         {notifications &&
                             notifications.length > 0 &&
                             notifications.map((notification, index) => (
-                                <div className="px-4 py-[16px]" key={index}>
+                                <div className="px-4 py-[16px] hover:bg-[#f6f5f5]" key={index}>
                                     <Stack>
                                         <Stack direction="row" spacing={4}>
                                             <Avatar.Root size={'sm'}>

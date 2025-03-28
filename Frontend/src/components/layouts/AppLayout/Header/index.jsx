@@ -145,8 +145,8 @@ const Header = () => {
                                 <Popover.Positioner>
                                     <Popover.Content>
                                         <Popover.Arrow />
-                                        <Popover.Body>
-                                            <Stack spacing={4}>
+                                        <Popover.Body className="p-0">
+                                            <Stack spacing={4}> 
                                                 <PopoverMessage />
                                             </Stack>
                                         </Popover.Body>
