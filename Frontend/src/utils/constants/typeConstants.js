@@ -16,6 +16,10 @@ export const WAITING_STATUS = 'waiting';
 export const CONFIRM_STATUS = 'confirm';
 export const DELETE_STATUS = 'delete';
 
+// ACTIONS
+export const CONFIRM_ACTION = 'confirm';
+export const DELETE_ACTION = 'delete';
+
 // CONVERSATION TYPE
 export const CONVERSATION_TYPE = 'conversation';
 export const DIRECT_CONVERSATION = 'direct';
