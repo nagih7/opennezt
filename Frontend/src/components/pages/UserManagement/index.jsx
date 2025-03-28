@@ -207,7 +207,7 @@ function UserManagement() {
                 <div className="flex justify-between gap-4 px-8 pt-8">
                     <div className="flex items-center justify-between w-full border rounded-md ">
                         <input
-                            className="w-full px-3 rounded-md outline-none"
+                            className="w-full px-3 rounded-md outline-none bg-white"
                             placeholder="Search by name, email or phone"
                             value={dataFilter.keySearch}
                             onChange={(e) => handleSearch(e)}
