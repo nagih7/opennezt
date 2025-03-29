@@ -8,7 +8,6 @@ import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants/typeCon
 import { Check, CheckOutlined } from '@mui/icons-material';
 import { CheckCircleFilled } from '@ant-design/icons';
 import { MoreOutlined } from '@ant-design/icons';
-import './styles.module.scss';
 
 const PopoverMessage = () => {
     const dispatch = useDispatch();
@@ -40,10 +39,6 @@ const PopoverMessage = () => {
     const handleSearchQuery = (value) => {
         setSearchQuery(value);
     };
-    const MAX_LENGTH = 15;
-    const truncateText = (text, maxLength) => {
-        return text.length > maxLength ? '...' : text;
-    };
 
     return (
         <Stack className="bg-[#ffffff] rounded-md">
@@ -60,27 +55,25 @@ const PopoverMessage = () => {
 				/>
 				<InputCustom height="30px" /> */}
 
-            <Stack
-                className={`${
+            <Stack className={`${
                     conversations.length >= 3
-                        ? 'flex flex-col items-center max-h-[250px] p-0 m-0 overflow-y-scroll scrollbar-thumb-gray-400 scrollbar-track-gray-200'
+                        ? 'flex flex-col items-center max-h-[410px] p-0 m-0 overflow-y-scroll scrollbar-hide'
                         : ''
-                }`}
-            >
+                }`}>
                 {conversations.length > 0 ? (
                     conversations.map((conversation, index) => {
                         return (
                             <Stack
                                 key={index}
                                 onClick={() => handleGetChatHistory(conversation)}
-                                className="group cursor-pointer p-[15px] hover:bg-[#f6f5f5] w-full"
+                                className="group cursor-pointer p-[15px] hover:bg-[#f6f5f5]"
                             >
                                 {(() => {
                                     switch (conversation.type.name) {
                                         case DIRECT_CONVERSATION:
                                             return (
                                                 <Stack
-                                                    className="flex flex-row w-full items-center gap-2 px-[15px] hover:bg-[#f6f5f5]"
+                                                    className="flex flex-row w-full items-center gap-2 px-[15px]"
                                                     spacing={4}
                                                 >
                                                     <Avatar.Root size={'lg'}>
@@ -96,11 +89,8 @@ const PopoverMessage = () => {
                                                             {conversation.members[0].name}
                                                             <CheckCircleFilled className="text-blue-500" />
                                                         </Text>
-                                                        <Text className="mb-0 text-xs text-[#6f7f92] font-medium">
-                                                            {truncateText(
-                                                                'No message hiijh',
-                                                                MAX_LENGTH
-                                                            )}
+                                                        <Text className="mb-0 text-xs truncate w-32 text-[#6f7f92] font-medium">
+                                                            No messageeeeeeeeeeeee
                                                         </Text>
                                                     </Stack>
                                                     <div className="hidden group-hover:flex justify-end">

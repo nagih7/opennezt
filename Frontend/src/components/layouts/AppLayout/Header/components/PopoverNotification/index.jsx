@@ -44,7 +44,7 @@ function PopoverNotification() {
             <div
                 className={`${
                     notifications && notifications.length >= 3
-                        ? 'flex flex-col items-center max-h-[250px] p-0 m-0 overflow-y-scroll scrollbar-thumb-gray-400 scrollbar-track-gray-200 w-full'
+                        ? 'flex flex-col items-center max-h-[410px] p-0 m-0 overflow-y-scroll scrollbar-hide'
                         : ''
                 }`}
             >
