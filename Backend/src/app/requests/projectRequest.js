@@ -1,7 +1,18 @@
 import Joi from 'joi'
 import {MAX_STRING_SIZE} from '@/configs'
 import {AsyncValidate, FileUpload} from '@/utils/classes'
-import {Category, ExperienceLevel, Industry, ObjectId, Project, Role, Skill, Stage, User} from '@/models'
+import {
+    Category,
+    ExperienceLevel,
+    Industry,
+    NotificationFeed,
+    ObjectId,
+    Project,
+    Role,
+    Skill,
+    Stage,
+    User,
+} from '@/models'
 import {tryValidateOrDefault} from '@/utils/helpers'
 
 export const requestAddFriend = Joi.object({
@@ -205,40 +216,6 @@ export const updateAdditionalInfo = Joi.object({
         .allow(null),
 })
 
-// ========== POST [Project - Invite] ========== //
-export const inviteMember = Joi.object({
-    user_id: Joi.string()
-        .required()
-        .label('User ID')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async () => {
-                    const user = await User.findById(value)
-                    return user ? value : helpers.error('any.empty')
-                })
-        ),
-    team_role_id: Joi.string()
-        .required()
-        .label('Team Role ID')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async () => {
-                    const role = await Role.findById(value)
-                    return role ? value : helpers.error('any.empty')
-                })
-        ),
-    role_id: Joi.string()
-        .required()
-        .label('Role ID')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async () => {
-                    const role = await Role.findById(value)
-                    return role ? value : helpers.error('any.empty')
-                })
-        ),
-})
-
 // ========== PATCH [Project - Seek] ========== //
 export const seekProjects = Joi.object({
     q: tryValidateOrDefault(Joi.string().trim(), ''),
@@ -365,5 +342,46 @@ export const addProjectRequirement = Joi.object({
                             return skill ? value : helpers.error('any.empty')
                         })
                 )
+        ),
+})
+
+// ========== POST [My Project - Invite member] ========== //
+export const inviteMember = Joi.object({
+    userId: Joi.string()
+        .required()
+        .label('User')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async (req) => {
+                    const user = await User.findById(new ObjectId(value))
+                    if (!user) return helpers.error('any.empty')
+                    const notification = await NotificationFeed.findOne({
+                        user_id: new ObjectId(value),
+                        source_id: req.currentUser._id,
+                        'data.project_id': new ObjectId(req.params.id),
+                    })
+                    if (notification) return helpers.error('any.invited')
+                    return value
+                })
+        ),
+    teamRole: Joi.string()
+        .required()
+        .label('Team role')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const role = await Role.findById(new ObjectId(value))
+                    return role ? value : helpers.error('any.empty')
+                })
+        ),
+    role: Joi.string()
+        .required()
+        .label('Role')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const role = await Role.findById(value)
+                    return role ? value : helpers.error('any.empty')
+                })
         ),
 })

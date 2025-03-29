@@ -36,6 +36,10 @@ import {
     requestSearchMyProjects,
     searchMyProjectsSuccess,
     searchMyProjectsFail,
+    // ========== INVITE MEMBER ========== //
+    requestInviteMember,
+    inviteMemberSuccess,
+    inviteMemberFail,
 } from '../../states/modules/project';
 
 // ========== My projects ========== //
@@ -78,11 +82,7 @@ export const getMyProjectDetails = (projectId) => async (dispatch, getState) => 
     return callApi({
         method: 'get',
         apiPath: `projects/me/${projectId}/details`,
-        actionTypes: [
-            requestGetMyProjectDetails,
-            getMyProjectDetailsSuccess,
-            getMyProjectDetailsFail,
-        ],
+        actionTypes: [requestGetMyProjectDetails, getMyProjectDetailsSuccess, getMyProjectDetailsFail],
         variables: {},
         dispatch,
         getState,
@@ -154,11 +154,7 @@ export const addProjectRequirement = (projectId, formRequest) => async (dispatch
     return callApi({
         method: 'post',
         apiPath: `projects/${projectId}/requirement`,
-        actionTypes: [
-            requestCreateProjectRequirement,
-            createProjectRequirementSuccess,
-            createProjectRequirementFail,
-        ],
+        actionTypes: [requestCreateProjectRequirement, createProjectRequirementSuccess, createProjectRequirementFail],
         variables: formRequest,
         dispatch,
         getState,
@@ -172,6 +168,18 @@ export const searchMyProjects = (keySearch) => async (dispatch, getState) => {
         apiPath: `projects/me/search?q=${keySearch}`,
         actionTypes: [requestSearchMyProjects, searchMyProjectsSuccess, searchMyProjectsFail],
         variables: {},
+        dispatch,
+        getState,
+    });
+};
+
+// ========== INVITE MEMBER ========== //
+export const inviteMember = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `projects/me/${projectId}/invite`,
+        actionTypes: [requestInviteMember, inviteMemberSuccess, inviteMemberFail],
+        variables: formRequest,
         dispatch,
         getState,
     });

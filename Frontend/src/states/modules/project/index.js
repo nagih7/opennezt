@@ -68,6 +68,9 @@ const projectSlice = createSlice({
         // ========== SEARCH MY PROJECTS ========== //
         isLoadingSearchMyProjects: false,
         myProjectsBySearch: [],
+        // ========= INVITE MEMBER ========== //
+        isLoadingInviteMember: false,
+        isOpenModalInviteMember: false,
     },
     reducers: {
         setTitle: (state) => ({
@@ -296,6 +299,38 @@ const projectSlice = createSlice({
             ...state,
             isLoadingSearchMyProjects: false,
         }),
+        // ========== INVITE MEMBER ========== //
+        requestInviteMember: (state) => ({
+            ...state,
+            isLoadingInviteMember: true,
+        }),
+        inviteMemberSuccess: (state) => {
+            toaster.create({
+                title: 'Invite member successfully',
+                description: 'You have successfully invited the member',
+                type: 'success',
+            });
+            return {
+                ...state,
+                isLoadingInviteMember: false,
+                isOpenModalInviteMember: false,
+            };
+        },
+        inviteMemberFail: (state, action) => {
+            toaster.create({
+                title: `${Object.values(action.payload.data.detail)[0]}`,
+                description: 'You have failed to invite the member',
+                type: 'error',
+            });
+            return {
+                ...state,
+                isLoadingInviteMember: false,
+            };
+        },
+        setModalInviteMember: (state, action) => ({
+            ...state,
+            isOpenModalInviteMember: action.payload,
+        }),
     },
 });
 
@@ -340,6 +375,11 @@ export const {
     requestSearchMyProjects,
     searchMyProjectsSuccess,
     searchMyProjectsFail,
+    // ========== INVITE MEMBER ========== //
+    requestInviteMember,
+    inviteMemberSuccess,
+    inviteMemberFail,
+    setModalInviteMember,
 } = projectSlice.actions;
 
 export default projectSlice.reducer;
