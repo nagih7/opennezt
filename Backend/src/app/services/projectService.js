@@ -1002,8 +1002,8 @@ export async function inviteMember(user, projectId, requestBody, io) {
         type_id: typeNotification._id,
         data: {
             project_id: project._id,
-            team_role_id: teamRole,
-            role_id: role,
+            team_role_id: new ObjectId(teamRole),
+            role_id: new ObjectId(role),
         },
         metadata: {
             status: WAITING_STATUS,

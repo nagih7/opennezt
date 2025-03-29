@@ -5,11 +5,13 @@ const ProjectMember = createModel('Project_Member', 'project_members', {
         type: ObjectId,
         ref: 'Project',
         required: true,
+        index: true,
     },
     user_id: {
         type: ObjectId,
         ref: 'User',
         required: true,
+        index: true,
     },
     team_role_id: {
         type: ObjectId,

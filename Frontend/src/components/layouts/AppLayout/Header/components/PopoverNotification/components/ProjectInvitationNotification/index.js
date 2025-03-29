@@ -7,8 +7,8 @@ const ProjectInvitationNotification = ({ notification }) => {
 
     return (
         <div className="text-[#6f7f92] text-sm font-medium">
-            <b>{notification.user?.name}</b> {NOTIFICATIONS.INVITED_YOU_TO_JOIN_THE[language]}{' '}
-            <b>{notification.metadata.project_name}</b> {NOTIFICATIONS.PROJECT[language]}
+            <b>{notification?.user?.name}</b> {NOTIFICATIONS.INVITED_YOU_TO_JOIN_THE[language]}{' '}
+            <b>{notification?.data?.project?.name}</b> {NOTIFICATIONS.PROJECT[language]}
         </div>
     );
 };

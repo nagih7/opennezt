@@ -19,9 +19,7 @@ import Footer from './components/FooterPopoverNotification';
 
 function PopoverNotification() {
     // ========== STATE FROM REDUX ========== //
-    const { notifications, isLoadingReplyNotification } = useSelector(
-        (state) => state.notification
-    );
+    const { notifications, isLoadingReplyNotification } = useSelector((state) => state.notification);
     const { language } = useSelector((state) => state.app);
 
     // ========== STATE ========== //
@@ -64,22 +62,13 @@ function PopoverNotification() {
                                                 {(() => {
                                                     switch (notification.type?.name) {
                                                         case PROJECT_INVITATION_NOTIFICATION:
-                                                            return (
-                                                                <ProjectInvitation
-                                                                    notification={notification}
-                                                                />
-                                                            );
+                                                            return <ProjectInvitation notification={notification} />;
                                                         case FRIEND_REQUEST_NOTIFICATION:
-                                                            return (
-                                                                <FriendRequest
-                                                                    notification={notification}
-                                                                />
-                                                            );
+                                                            return <FriendRequest notification={notification} />;
                                                         default:
                                                             return (
                                                                 <div className="text-[#6f7f92] text-sm font-medium">
-                                                                    {notification.message ||
-                                                                        'New notification'}
+                                                                    {notification.message || 'New notification'}
                                                                 </div>
                                                             );
                                                     }
@@ -97,15 +86,11 @@ function PopoverNotification() {
                                                             case true:
                                                                 return <Spinner size="md" />;
                                                             default:
-                                                                switch (
-                                                                    notification.metadata.status
-                                                                ) {
+                                                                switch (notification.metadata.status) {
                                                                     case WAITING_STATUS:
                                                                         return (
                                                                             <Actions
-                                                                                notification={
-                                                                                    notification
-                                                                                }
+                                                                                notification={notification}
                                                                                 handleReplyNotification={
                                                                                     handleReplyNotification
                                                                                 }

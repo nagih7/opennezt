@@ -5,10 +5,12 @@ import {
     DELETE_STATUS,
     DIRECT_CONVERSATION,
     FRIEND_REQUEST_NOTIFICATION,
+    GROUP_CONVERSATION,
     LINK_STATIC_URL,
     PROJECT_APPLICATION_NOTIFICATION,
+    PROJECT_INVITATION_NOTIFICATION,
 } from '@/configs'
-import {CONVERSATION_ADMIN_ROLE} from '@/configs/roleConstants'
+import {CONVERSATION_ADMIN_ROLE, CONVERSATION_MEMBER_ROLE} from '@/configs/roleConstants'
 import {
     NotificationFeed,
     Friend,
@@ -104,6 +106,7 @@ export async function getNotifications(user) {
             user_id: user._id,
         },
     }
+    // TYPE
     const lookupTypeStage = {
         $lookup: {
             from: 'types',
@@ -124,6 +127,7 @@ export async function getNotifications(user) {
     const unwindTypeStage = {
         $unwind: '$type',
     }
+    // USER
     const lookupUserStage = {
         $lookup: {
             from: 'users',
@@ -155,11 +159,39 @@ export async function getNotifications(user) {
     const unwindUserStage = {
         $unwind: '$user',
     }
+    // PROJECT
+    const lookupProjectStage = {
+        $lookup: {
+            from: 'projects',
+            localField: 'data.project_id',
+            foreignField: '_id',
+            as: 'data.project',
+            pipeline: [
+                {
+                    $project: {
+                        _id: 0,
+                        name: 1,
+                        avatar: 1,
+                    },
+                },
+            ],
+        },
+    }
+    const unwindProjectStage = {
+        $unwind: {
+            path: '$data.project',
+            preserveNullAndEmptyArrays: true,
+        },
+    }
+
     const projectStage = {
         $project: {
             _id: 1,
             user: 1,
             type: 1,
+            data: {
+                project: 1,
+            },
             timestamp: 1,
             metadata: 1,
         },
@@ -170,6 +202,30 @@ export async function getNotifications(user) {
         lookupUserStage,
         unwindTypeStage,
         unwindUserStage,
+        lookupProjectStage,
+        unwindProjectStage,
+        // {
+        //     $addFields: {
+        //         created_at: {
+        //             $dateToString: {
+        //                 format: '%Y-%m-%d %H:%M:%S',
+        //                 date: '$created_at',
+        //                 timezone: 'Asia/Ho_Chi_Minh',
+        //             },
+        //         },
+        //     },
+        // },
+        // {
+        //     $addFields: {
+        //         updated_at: {
+        //             $dateToString: {
+        //                 format: '%Y-%m-%d %H:%M:%S',
+        //                 date: '$updated_at',
+        //                 timezone: 'Asia/Ho_Chi_Minh',
+        //             },
+        //         },
+        //     },
+        // },
         {
             $sort: {
                 created_at: -1,
@@ -186,20 +242,9 @@ export async function getNotifications(user) {
 // ========== PUT [Notification - Reply] ========== //
 export async function replyNotification({notificationId}, {action}, io) {
     if (action === CONFIRM_STATUS) {
-        const notification = await NotificationFeed.findOneAndUpdate(
-            {
-                _id: new ObjectId(notificationId),
-            },
-            {
-                $set: {
-                    'metadata.status': CONFIRM_STATUS,
-                    'metadata.read': true,
-                },
-            },
-            {
-                new: true,
-            }
-        )
+        const notification = await NotificationFeed.findOne({
+            _id: new ObjectId(notificationId),
+        })
         // Check if notification exists
         if (!notification) {
             throw new Error('Notification not found!')
@@ -211,12 +256,16 @@ export async function replyNotification({notificationId}, {action}, io) {
             case FRIEND_REQUEST_NOTIFICATION:
                 await replyFriendRequest(notification, io)
                 break
-            case PROJECT_APPLICATION_NOTIFICATION:
-                await replyProjectInvitation(notificationId, action, io)
+            case PROJECT_INVITATION_NOTIFICATION:
+                await replyProjectInvitation(notification, io)
                 break
             default:
                 break
         }
+        notification.metadata.status = CONFIRM_STATUS
+        notification.metadata.read = true
+        notification.markModified('metadata')
+        await notification.save()
     } else if (action === DELETE_STATUS) {
         await NotificationFeed.findByIdAndDelete(new ObjectId(notificationId))
         return
@@ -318,74 +367,94 @@ const replyFriendRequest = async (notification, io) => {
     }
 }
 
-export async function replyProjectInvitation(notification_id, status, io) {
-    if (status === 'accepted') {
-        // THAY ĐỔI TRẠNG THÁI THÔNG BÁO (TYPE)
-        const notification = await NotificationFeed.findById({_id: notification_id})
-        const {user_id, source_id, metadata} = notification
-        const user = await User.findById(user_id).select('name avatar _id')
-
-        if (status === 'accepted') {
-            const project = await Project.findById(metadata.project_id)
-            project.metadata.members.push({
-                _id: user_id,
-                name: user.name,
-                avatar: user.avatar,
-                team_role: metadata.team_role,
-                role: metadata.role,
-            })
-            await project.save()
-        }
-        notification.metadata.status = status
-        notification.metadata.read = true
-        notification.markModified('metadata')
-        await notification.save()
-
-        // TẠO CONVERSATION MỚI HOẶC CẬP NHẬT CONVERSATION CŨ
-        const conversation = await Conversation.findOne({
-            'metadata.data.project_id': metadata.project_id,
-            'metadata.type': 'group',
+// ========== REPLY PROJECT INVITATION ========== //
+const replyProjectInvitation = async (notification, io) => {
+    const {user_id, source_id} = notification
+    const {project_id, team_role_id, role_id} = notification.data
+    // PROJECT MEMBER
+    const projectMember = await ProjectMember.findOne({
+        user_id: user_id,
+        project_id: project_id,
+    })
+    // CHECK IF THE USER IS ALREADY A MEMBER OF THE PROJECT
+    if (!projectMember) {
+        await ProjectMember.create({
+            user_id: user_id,
+            project_id: project_id,
+            team_role_id,
+            role_id,
         })
-        if (conversation) {
-            // THÊM THÀNH VIÊN VÀO CONVERSATION
+    }
+    // CONVERSATION
+    const conversationType = await Type.findOne({class: CONVERSATION_TYPE, name: GROUP_CONVERSATION})
+    const conversation = await Conversation.findOne({
+        type_id: conversationType._id,
+        data: {
+            project_id: new ObjectId(project_id),
+        },
+    })
+
+    console.log('Query:', {
+        type_id: conversationType._id,
+        data: {
+            project_id: new ObjectId(project_id),
+        },
+    })
+
+    // ADD MEMBER TO CONVERSATION
+    if (conversation) {
+        const existingMember = conversation.members.find(
+            (member) => member.user_id.toString() === user_id.toString()
+        )
+        if (!existingMember) {
+            const memberRole = await Role.findOne({
+                name: CONVERSATION_MEMBER_ROLE,
+                type_id: conversationType._id,
+            })
+            if (!memberRole) {
+                throw new Error('Conversation member role not found!')
+            }
             conversation.members.push({
                 user_id: user_id,
-                role: 'member',
+                role_id: memberRole._id,
             })
             await conversation.save()
-        } else {
-            // TẠO CONVERSATION MỚI
-            const newConversation = new Conversation({
-                members: [
-                    {
-                        user_id: source_id,
-                        role: 'admin',
-                    },
-                    {
-                        user_id: user_id,
-                        role: 'member',
-                    },
-                ],
-                metadata: {
-                    type: 'group',
-                    data: {
-                        project_id: metadata.project_id,
-                    },
+            return
+        }
+    } else {
+        // CREATE A NEW CONVERSATION IF IT DOESN'T EXIST
+        const adminRole = await Role.findOne({
+            name: CONVERSATION_ADMIN_ROLE,
+            type_id: conversationType._id,
+        })
+        if (!adminRole) {
+            throw new Error('Conversation admin role not found!')
+        }
+        const memberRole = await Role.findOne({
+            name: CONVERSATION_MEMBER_ROLE,
+            type_id: conversationType._id,
+        })
+        if (!memberRole) {
+            throw new Error('Conversation member role not found!')
+        }
+        await Conversation.create({
+            members: [
+                {
+                    user_id: source_id,
+                    role_id: adminRole._id,
                 },
-            })
+                {
+                    user_id: user_id,
+                    role_id: memberRole._id,
+                },
+            ],
+            type_id: conversationType._id,
+            data: {
+                project_id: new ObjectId(project_id),
+            },
+        })
 
-            await newConversation.save()
-        }
-
-        // GỬI THÔNG BÁO ĐẾN USER
-        const userSocketId = Object.keys(userSockets).find(
-            (socketId) => userSockets[socketId] === source_id.toString()
-        )
-        if (userSocketId) {
-            io.to(userSocketId).emit('confirm_project_invitation', user.name)
-        }
-    } else if (status === 'rejected') {
-        await NotificationFeed.delete({_id: notification_id})
+        return
     }
 }
 
