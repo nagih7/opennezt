@@ -5,6 +5,7 @@ import { getNotifications } from 'api/notification';
 import { toaster } from 'components/UI/toaster';
 import { CONFIRM_FRIEND_REQUEST_NOTIFICATION, FRIEND_REQUEST_NOTIFICATION } from 'utils/constants';
 import { getConversations } from 'api/chat';
+import { PROJECT_INVITATION_NOTIFICATION } from 'utils/constants/typeConstants';
 
 export const RealtimeContext = React.createContext();
 
@@ -13,23 +14,8 @@ export const RealtimeProvider = ({ children }) => {
     const socket = useSocket();
 
     // Handle new websocket events
+
     const handleSocketEvents = () => {
-        // Handle new notification
-        const handleNewNotification = (notification) => {
-            toaster.create({
-                type: 'success',
-                title:
-                    notification.type_name === 'Project Invitation'
-                        ? `${notification.metadata.source_name} invited you to join ${notification.metadata.project_name}`
-                        : `${notification.metadata.source_name} sent you a friend request`,
-                duration: 100,
-            });
-            dispatch(getNotifications());
-        };
-
-        // NEW PROJECT INVITATION
-        socket.on('new_notification', handleNewNotification);
-
         // ========== FRIEND REQUEST NOTIFICATION ========== //
         socket.on(FRIEND_REQUEST_NOTIFICATION, async (notification) => {
             toaster.create({
@@ -69,13 +55,17 @@ export const RealtimeProvider = ({ children }) => {
         });
 
         // CONFIRM PROJECT INVITATION
-        socket.on('confirm_project_invitation', (name) => {
+        socket.on(PROJECT_INVITATION_NOTIFICATION, (notification) => {
+            console.log('PROJECT_INVITATION_NOTIFICATION', notification);
             toaster.create({
-                title: `${name} accepted your project invitation`,
-                type: 'success',
-                duration: 100,
+                title: `${notification.user.name} invited you to join ${notification.project.name}`,
+                type: 'info',
+                duration: 10000,
+                action: {
+                    label: 'View',
+                    onClick: () => console.log('View'),
+                },
             });
-            // dispatch(getChatList());
         });
     };
 

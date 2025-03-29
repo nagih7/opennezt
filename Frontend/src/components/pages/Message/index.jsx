@@ -1,8 +1,6 @@
-import { IconlyStar } from 'components/UI/Iconly';
 import React from 'react';
 import MessageSidebar from './components/MessageSidebar';
 import Conversation from './components/Conversation';
-import { Link } from 'react-router-dom';
 
 const Message = () => {
     return (

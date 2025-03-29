@@ -59,12 +59,6 @@ export async function deleteProject(req, res) {
     res.status(200).jsonify('Delete project successfully.')
 }
 
-// ========== POST [Project - Invite] ========== //
-export async function inviteMember(req, res) {
-    await projectService.inviteMember(req.currentUser, req.params.id, req.body)
-    res.status(200).jsonify('Invite member successfully.')
-}
-
 // ========== GET [Project - TAGS] ========== //
 export async function getProjectsToTag(req, res) {
     const result = await projectService.getProjectsToTag(req.currentUser, req.query)
@@ -104,4 +98,16 @@ export async function getMyProjectAccess(req, res) {
 export async function getAccessToMyProjects(req, res) {
     const result = await projectService.getAccessToMyProjects(req.currentUser)
     res.jsonify(result)
+}
+
+// ========== POST [My Project - Search] ========== //
+export async function searchMyProjects(req, res) {
+    const result = await projectService.searchMyProjects(req.currentUser, req.query)
+    res.jsonify(result)
+}
+
+// ========= POST [My project - Invite member] ========== //
+export async function inviteMember(req, res) {
+    await projectService.inviteMember(req.currentUser, req.params.id, req.body, req.io)
+    res.status(200).jsonify('Invite member to my project successfully.')
 }

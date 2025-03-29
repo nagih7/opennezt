@@ -25,7 +25,7 @@ const About = () => {
                 <Image
                     className="h-[400px] object-cover bg-cover bg-center"
                     src={authUser.background}
-                    alt={authUser?.username}
+                    alt={authUser?.name}
                     aspectRatio={16 / 9}
                     width="100%"
                     onError={setImageError(true)}

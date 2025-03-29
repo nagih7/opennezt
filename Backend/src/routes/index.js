@@ -13,6 +13,8 @@ import articleRouter from './articleRouter'
 import profileRouter from './profileRouter'
 import talentRouter from './talentRouter'
 
+export const userSockets = {}
+
 function route(app, io) {
     socketRoutes(io)
     app.use((req, res, next) => {
