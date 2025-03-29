@@ -1,7 +1,7 @@
 import * as chatController from '../../app/controllers/chatController'
 
-const chatRouter = (socket, io) => {
-    socket.on('message', (data) => chatController.saveMessage(data, io, socket.id))
+const chatRouter = async (socket, io) => {
+    await socket.on('message', (data) => chatController.saveMessage(data, io, socket.id))
 }
 
 export default chatRouter

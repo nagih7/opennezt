@@ -78,7 +78,7 @@ const FilterHeader = ({ action, setAction }) => {
 						<Button
 							size="sm"
 							variant="outline"
-							className="bg-[#2F65B9] px-4 py-2 text-white  rounded-sm">
+							className="bg-[#2F65B9] px-4 py-2 text-white  rounded-sm border-[#2F65B9]">
 							Filter{" "}
 							<span>
 								<IconlyFilter size={24} color={"white"} />
@@ -87,8 +87,7 @@ const FilterHeader = ({ action, setAction }) => {
 					</Popover.Trigger>
 					<Portal>
 						<Popover.Positioner>
-							<Popover.Content>
-								<Popover.Arrow />
+							<Popover.Content className="bg-white">
 								<Popover.Body>
 									<Stack separator={<StackSeparator />}>
 										<SelectCustom
@@ -110,7 +109,8 @@ const FilterHeader = ({ action, setAction }) => {
 											onClick={handleSaveFilter}
 											borderRadius={4}
 											loadingText="Loading..."
-											spinnerPlacement="start">
+											spinnerPlacement="start"
+											className="bg-[#2F65B9] text-white">
 											Apply
 										</Button>
 									</Stack>
@@ -142,11 +142,10 @@ const FilterHeader = ({ action, setAction }) => {
 				</div>
 				<button
 					onClick={() => setAction("grid")}
-					className={`px-2 py-2 rounded ${
-						action === "grid"
-							? "bg-blue-500 text-white"
-							: "bg-gray-300 text-black"
-					}`}>
+					className={`px-2 py-2 rounded ${action === "grid"
+						? "bg-blue-500 text-white"
+						: "bg-gray-300 text-black"
+						}`}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="24"
@@ -160,11 +159,10 @@ const FilterHeader = ({ action, setAction }) => {
 				</button>
 				<button
 					onClick={() => setAction("list")}
-					className={`px-2 py-2 rounded ${
-						action === "list"
-							? "bg-blue-500 text-white"
-							: "bg-gray-300 text-black"
-					}`}>
+					className={`px-2 py-2 rounded ${action === "list"
+						? "bg-blue-500 text-white"
+						: "bg-gray-300 text-black"
+						}`}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						height="24"

@@ -9,7 +9,7 @@ import { LANG } from 'utils/constants';
 import { setLanguage } from 'states/modules/app';
 import { IconlyChat, IconlyNotification, IconlySearch } from 'components/UI/Iconly';
 import { Avatar, Popover, Portal, Stack } from '@chakra-ui/react';
-import Logo from 'assets/images/logo/OpenNezt_logo_black.png';
+import Logo from 'assets/images/logo/opennezt_full_black.png';
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -126,8 +126,8 @@ const Header = () => {
                             <Portal>
                                 <Popover.Positioner>
                                     <Popover.Content>
-                                        <Popover.Arrow />
-                                        <Popover.Body className="p-0">
+
+                                        <Popover.Body className="p-0 bg-white">
                                             <PopoverNotification />
                                         </Popover.Body>
                                     </Popover.Content>
@@ -141,12 +141,12 @@ const Header = () => {
                                     <IconlyChat size={24} color="#6f7f92" />
                                 </span>
                             </Popover.Trigger>
-                            <Portal>
-                                <Popover.Positioner>
-                                    <Popover.Content>
-                                        <Popover.Arrow />
-                                        <Popover.Body>
+                            <Portal >
+                                <Popover.Positioner >
+                                    <Popover.Content >
+                                        <Popover.Body className="bg-white">
                                             <Stack spacing={4}>
+
                                                 <PopoverMessage />
                                             </Stack>
                                         </Popover.Body>
@@ -167,8 +167,7 @@ const Header = () => {
                             <Portal>
                                 <Popover.Positioner>
                                     <Popover.Content>
-                                        <Popover.Arrow />
-                                        <Popover.Body>
+                                        <Popover.Body className="bg-white">
                                             <Stack spacing={4}>
                                                 <PopoverProfile />
                                             </Stack>

@@ -19,16 +19,14 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
                 >
                     <a
                         href="#"
-                        className={`no-underline ${
-                            changeTab === 'Timeline' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
-                        }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
+                        className={`no-underline ${changeTab === 'Timeline' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
+                            }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
                     >
                         <IconlyCalendar size={20} color={'#042713'} />
                     </a>
                     <span
-                        className={` ${
-                            changeTab === 'Timeline' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
-                        } text-sm font-medium`}
+                        className={` ${changeTab === 'Timeline' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
+                            } text-sm font-medium`}
                     >
                         Timeline
                     </span>
@@ -39,16 +37,14 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
                 >
                     <a
                         href="#"
-                        className={`no-underline  ${
-                            changeTab === 'About' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
-                        }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
+                        className={`no-underline  ${changeTab === 'About' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
+                            }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
                     >
                         <IconlyProfile size={20} color={'#042713'} />
                     </a>
                     <span
-                        className={` ${
-                            changeTab === 'About' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
-                        } text-sm font-medium`}
+                        className={` ${changeTab === 'About' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
+                            } text-sm font-medium`}
                     >
                         About
                     </span>
@@ -59,16 +55,14 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
                 >
                     <a
                         href="#"
-                        className={`no-underline  ${
-                            changeTab === 'Friends' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
-                        }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
+                        className={`no-underline  ${changeTab === 'Friends' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
+                            }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
                     >
                         <IconlyUser size={20} color={'#042713'} />
                     </a>
                     <span
-                        className={` ${
-                            changeTab === 'Friends' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
-                        } text-sm font-medium`}
+                        className={` ${changeTab === 'Friends' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
+                            } text-sm font-medium`}
                     >
                         Friends
                     </span>
@@ -79,16 +73,14 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
                 >
                     <a
                         href="#"
-                        className={`no-underline  ${
-                            changeTab === 'Groups' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
-                        }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
+                        className={`no-underline  ${changeTab === 'Groups' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
+                            }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
                     >
                         <IconlyUser size={20} color={'#042713'} />
                     </a>
                     <span
-                        className={` ${
-                            changeTab === 'Groups' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
-                        } text-sm font-medium`}
+                        className={` ${changeTab === 'Groups' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
+                            } text-sm font-medium`}
                     >
                         Groups
                     </span>
@@ -100,57 +92,53 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
                     >
                         <a
                             href="#"
-                            className={`no-underline  ${
-                                changeTab === 'Notifications' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
-                            }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
+                            className={`no-underline  ${changeTab === 'Notifications' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
+                                }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
                         >
                             <IconlyNotification size={20} color={'#042713'} />
                         </a>
                         <span
-                            className={` ${
-                                changeTab === 'Notifications' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
-                            } text-sm font-medium`}
+                            className={` ${changeTab === 'Notifications' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
+                                } text-sm font-medium`}
                         >
                             Notifications
                         </span>
                     </li>
                 </Link>
-                <li
-                    onClick={() => setChangeTab('Messages')}
-                    className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]"
-                >
-                    <a
-                        href="#"
-                        className={`no-underline  ${
-                            changeTab === 'Messages' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
-                        }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
+                <Link className='no-underline' to={"/conversation"}>
+                    <li
+                        onClick={() => setChangeTab('Messages')}
+                        className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]"
                     >
-                        <IconlyMessage size={20} color={'#042713'} />
-                    </a>
-                    <span
-                        className={` ${
-                            changeTab === 'Messages' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
-                        } text-sm font-medium`}
-                    >
-                        Messages
-                    </span>
-                </li>
+                        <a
+                            href="#"
+                            className={`no-underline  ${changeTab === 'Messages' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
+                                }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
+                        >
+                            <IconlyMessage size={20} color={'#042713'} />
+                        </a>
+                        <span
+                            className={` ${changeTab === 'Messages' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
+                                } text-sm font-medium`}
+                        >
+                            Messages
+                        </span>
+                    </li>
+                </Link>
                 <li
                     onClick={() => setChangeTab('Badges')}
                     className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]"
                 >
                     <a
                         href="#"
-                        className={`no-underline  ${
-                            changeTab === 'Badges' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
-                        }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
+                        className={`no-underline  ${changeTab === 'Badges' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
+                            }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
                     >
                         <IconlyBookmark size={20} color={'#042713'} />
                     </a>
                     <span
-                        className={` ${
-                            changeTab === 'Badges' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
-                        } text-sm font-medium`}
+                        className={` ${changeTab === 'Badges' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
+                            } text-sm font-medium`}
                     >
                         Badges
                     </span>
@@ -161,16 +149,14 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
                 >
                     <a
                         href="#"
-                        className={`no-underline  ${
-                            changeTab === 'Courses' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
-                        }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
+                        className={`no-underline  ${changeTab === 'Courses' ? 'bg-[#4374c0]' : 'bg-[#F4F5F6]'
+                            }   mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2`}
                     >
                         <IconlyDocument size={20} color={'#042713'} />
                     </a>
                     <span
-                        className={` ${
-                            changeTab === 'Courses' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
-                        } text-sm font-medium`}
+                        className={` ${changeTab === 'Courses' ? 'text-[#4374c0]' : 'text-[#6f7f92]'
+                            } text-sm font-medium`}
                     >
                         Courses
                     </span>
@@ -178,6 +164,7 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
             </ul>
         </div>
     );
+
 };
 
 export default ProfileMenu;

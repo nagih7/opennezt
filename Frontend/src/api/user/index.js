@@ -12,6 +12,7 @@ import {
     requestGetCategoryFramework,
     getCategoryFrameworkSuccess,
     getCategoryFrameworkFail,
+    // SUB CATEGORIES
     requestGetSubCategoryFramework,
     getSubCategoryFrameworkSuccess,
     getSubCategoryFrameworkFail,
@@ -27,11 +28,13 @@ import {
     requestGetProjectRoleFramework,
     getProjectRoleFrameworkSuccess,
     getProjectRoleFrameworkFail,
+} from '../../states/modules/user';
+import {
     // REQUEST ADD FRIEND
     requestSendFriendRequest,
     sendFriendRequestSuccess,
     sendFriendRequestFail,
-} from '../../states/modules/user';
+} from '../../states/modules/talent';
 
 // INDUSTRY
 export const getIndustryFramework = () => async (dispatch, getState) => {
@@ -81,6 +84,7 @@ export const getCategoryFramework = () => async (dispatch, getState) => {
     });
 };
 
+// SUB CATEGORIES
 export const getSubCategoryFramework = (categoryId) => async (dispatch, getState) => {
     return callApi({
         method: 'get',
@@ -98,18 +102,14 @@ export const getSubCategoryFramework = (categoryId) => async (dispatch, getState
 
 // SKILLS
 export const getSkillFramework = (categoryId) => async (dispatch, getState) => {
-	return callApi({
-		method: "get",
-		apiPath: `users/skills/${categoryId}`,
-		actionTypes: [
-			requestGetSkillFramework,
-			getSkillFrameworkSuccess,
-			getSkillFrameworkFail,
-		],
-		variables: {},
-		dispatch,
-		getState,
-	});
+    return callApi({
+        method: 'get',
+        apiPath: `users/skills/${categoryId}`,
+        actionTypes: [requestGetSkillFramework, getSkillFrameworkSuccess, getSkillFrameworkFail],
+        variables: {},
+        dispatch,
+        getState,
+    });
 };
 
 // STAGES

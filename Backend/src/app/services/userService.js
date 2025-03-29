@@ -15,7 +15,7 @@ import {
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
 import {FRIEND_REQUEST_NOTIFICATION, LINK_STATIC_URL, NOTIFICATION_TYPE, WAITING_STATUS} from '@/configs'
-import {userSockets} from '@/routes/socket'
+import {userSockets} from '@/routes'
 
 export async function create(requestBody) {
     const user = new User(requestBody)

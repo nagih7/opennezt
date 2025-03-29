@@ -8,7 +8,7 @@ const SeekProjects = () => {
     const [action, setAction] = useState('grid');
 
     return (
-        <div className="pt-[35px] px-[16px] flex gap-8">
+        <div className="pt-[35px] px-[16px] flex gap-8 2xl:ml-5">
             <div className="bg-gray-100 w-10/12 2xl:relative 2xl:left-[-1rem] 2xl:w-[70rem] ">
                 <FilterHeader action={action} setAction={setAction} />
                 <ListProjects action={action} />

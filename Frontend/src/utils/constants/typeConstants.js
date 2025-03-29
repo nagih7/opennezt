@@ -5,6 +5,7 @@ export const PROFILE_ACCESS = 'profile';
 
 // NOTIFICATION
 export const NOTIFICATION_TYPE = 'notification';
+export const PROJECT_INVITATION_NOTIFICATION = 'project_invitation';
 export const PROJECT_APPLICATION_NOTIFICATION = 'project_application';
 export const FRIEND_REQUEST_NOTIFICATION = 'friend_request';
 export const CONFIRM_FRIEND_REQUEST_NOTIFICATION = 'confirm_friend_request';
@@ -14,6 +15,10 @@ export const STATUS_TYPE = 'status';
 export const WAITING_STATUS = 'waiting';
 export const CONFIRM_STATUS = 'confirm';
 export const DELETE_STATUS = 'delete';
+
+// ACTIONS
+export const CONFIRM_ACTION = 'confirm';
+export const DELETE_ACTION = 'delete';
 
 // CONVERSATION TYPE
 export const CONVERSATION_TYPE = 'conversation';

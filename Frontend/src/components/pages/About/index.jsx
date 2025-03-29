@@ -6,28 +6,35 @@ import Friends from './components/Friends';
 import { Image } from '@chakra-ui/react';
 import Timeline from './components/Timeline';
 import Groups from './components/Groups';
-import Messages from './components/Messages';
 import Badges from './components/Badges';
-import Courses from './components/Courses';
 import ProfileOverview from './components/ProfileOverview';
+import { OPENNEZT_BG_BLACK } from 'utils/constants';
 
 const About = () => {
+    // ========== STATE FROM REDUX STORE ========== //
     const { authUser } = useSelector((state) => state.auth);
 
+    // ========== STATE ========== //
     const [changeTab, setChangeTab] = useState('About');
+    const [imageError, setImageError] = useState(false);
+
+    // ========== RENDER ========== //
     return (
         <div className="relative bg-[#ffffff] w-full max-h-full mb-8">
-            <Image
-                className="h-[400px] object-cover"
-                src={authUser?.background || 'https://wallpapercave.com/uwp/uwp4261619.png'}
-                onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://wallpapercave.com/uwp/uwp4261619.png';
-                }}
-                alt="Naruto vs Sasuke"
-                aspectRatio={16 / 9}
-                width="100%"
-            />
+            {!imageError ? (
+                <Image
+                    className="h-[400px] object-cover bg-cover bg-center"
+                    src={authUser.background}
+                    alt={authUser?.name}
+                    aspectRatio={16 / 9}
+                    width="100%"
+                    onError={setImageError(true)}
+                />
+            ) : (
+                <div className="h-[400px] flex items-center justify-center bg-gray-200 pb-10 px-10 user-select-none">
+                    <Image src={OPENNEZT_BG_BLACK} alt="OpenNezt" />
+                </div>
+            )}
             <div className="absolute w-full top-[275px] px-[16px]">
                 <ProfileOverview />
                 <ProfileMenu changeTab={changeTab} setChangeTab={setChangeTab} />
@@ -35,10 +42,7 @@ const About = () => {
                 {changeTab == 'Friends' && <Friends />}
                 {changeTab == 'Timeline' && <Timeline />}
                 {changeTab == 'Groups' && <Groups />}
-                {changeTab == 'Messages' && <Messages />}
                 {changeTab == 'Badges' && <Badges />}
-                {changeTab == 'Courses' && <Courses />}
-                {changeTab == 'About' && <ProfessionalProfile />}
             </div>
         </div>
     );

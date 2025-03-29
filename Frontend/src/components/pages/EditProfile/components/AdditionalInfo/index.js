@@ -140,11 +140,13 @@ const AdditionalInfo = () => {
 				open={isOpenModalCreateOrUpdateProfileAdditionalInfo}
 				key={formData.profile_id}
 				placement={"center"}
-				motionPreset="slide-in-bottom">
-				<Portal>
+				motionPreset="slide-in-bottom"
+			>
+
+				<Portal >
 					<Dialog.Backdrop />
 					<Dialog.Positioner>
-						<Dialog.Content>
+						<Dialog.Content className="bg-white">
 							<Dialog.Header>
 								<Dialog.Title>
 									{action === "create"
@@ -152,9 +154,10 @@ const AdditionalInfo = () => {
 										: "Update additional info"}
 								</Dialog.Title>
 							</Dialog.Header>
-							<Dialog.Body>
+							<Dialog.Body >
 								<Stack direction="row" h="20">
 									<SelectCustom
+
 										height="40px"
 										required
 										label="Name"
@@ -177,12 +180,8 @@ const AdditionalInfo = () => {
 								</Stack>
 							</Dialog.Body>
 							<Dialog.Footer>
-								<Dialog.ActionTrigger asChild>
-									<Button variant="outline" onClick={handleClose}>
-										Cancel
-									</Button>
-								</Dialog.ActionTrigger>
 								<Button
+									className="border-[#F4F5F6] bg-[#2F65B9] text-white"
 									onClick={handleSaveChanges}
 									borderRadius={4}
 									loading={
@@ -192,10 +191,12 @@ const AdditionalInfo = () => {
 									spinnerPlacement="start">
 									SAVE CHANGES
 								</Button>
+								<Dialog.ActionTrigger asChild>
+									<Button className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]" variant="outline" onClick={handleClose}>
+										Cancel
+									</Button>
+								</Dialog.ActionTrigger>
 							</Dialog.Footer>
-							<Dialog.CloseTrigger asChild>
-								<CloseButton onClick={handleClose} size="sm" />
-							</Dialog.CloseTrigger>
 						</Dialog.Content>
 					</Dialog.Positioner>
 				</Portal>

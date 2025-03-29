@@ -2,9 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getChatHistory } from 'api/chat';
 import NotFound from 'components/UI/NotFound';
-import { MESSAGES } from 'utils/constants/appConstants';
+import { MESSAGES } from 'utils/constants';
 import { Avatar, Stack, Text } from '@chakra-ui/react';
 import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants/typeConstants';
+import { Check, CheckOutlined } from '@mui/icons-material';
+import { CheckCircleFilled } from '@ant-design/icons';
+import { MoreOutlined } from '@ant-design/icons';
+import './styles.module.scss';
 
 const PopoverMessage = () => {
     const dispatch = useDispatch();
@@ -36,10 +40,16 @@ const PopoverMessage = () => {
     const handleSearchQuery = (value) => {
         setSearchQuery(value);
     };
+    const MAX_LENGTH = 15;
+    const truncateText = (text, maxLength) => {
+        return text.length > maxLength ? '...' : text;
+    };
 
     return (
-        <Stack>
-            <h3>{MESSAGES.MESSAGES[language]}</h3>
+        <Stack className="bg-[#ffffff] rounded-md">
+            <div className="mx-4 py-[16px] border-b border-gray-200 text-lg font-medium ">
+                {MESSAGES.MESSAGES[language]}
+            </div>
             {/* <input
 					type="text"
 					placeholder={MESSAGES.SEARCH[language]}
@@ -48,36 +58,45 @@ const PopoverMessage = () => {
 					onChange={(e) => handleSearchQuery(e.target.value)}
 				/>
 				<InputCustom height="30px" /> */}
-
-            <Stack>
+            <Stack
+                className={`${
+                    conversations.length >= 3
+                        ? 'flex flex-col items-center max-h-[250px] p-0 m-0 overflow-y-scroll scrollbar-thumb-gray-400 scrollbar-track-gray-200'
+                        : ''
+                }`}
+            >
                 {conversations.length > 0 ? (
                     conversations.map((conversation, index) => {
                         return (
                             <Stack
                                 key={index}
                                 onClick={() => handleGetChatHistory(conversation)}
-                                className="cursor-pointer"
+                                className="group cursor-pointer p-[15px] hover:bg-[#f6f5f5] w-full"
                             >
                                 {(() => {
                                     switch (conversation.type.name) {
                                         case DIRECT_CONVERSATION:
                                             return (
                                                 <Stack
-                                                    direction="row"
-                                                    className="items-center"
+                                                    className="flex flex-row w-full items-center gap-2 px-[15px] hover:bg-[#f6f5f5]"
                                                     spacing={4}
                                                 >
-                                                    <Avatar.Root size={'md'}>
-                                                        <Avatar.Fallback
-                                                            name={conversation.members[0].name}
-                                                        />
-                                                        <Avatar.Image
-                                                            src={conversation.members[0].avatar}
-                                                        />
+                                                    <Avatar.Root size={'lg'}>
+                                                        <Avatar.Fallback name={conversation.members[0].name} />
+                                                        <Avatar.Image src={conversation.members[0].avatar} />
                                                     </Avatar.Root>
-                                                    <Stack className="items-start flex-1">
-                                                        <Text>{conversation.members[0].name}</Text>
+                                                    <Stack className="flex flex-col w-full gap-0">
+                                                        <Text className="flex items-center gap-1 mb-0 text-sm">
+                                                            {conversation.members[0].name}
+                                                            <CheckCircleFilled className="text-blue-500" />
+                                                        </Text>
+                                                        <Text className="mb-0 text-xs text-[#6f7f92] font-medium">
+                                                            {truncateText('No message hiijh', MAX_LENGTH)}
+                                                        </Text>
                                                     </Stack>
+                                                    <div className="justify-end hidden group-hover:flex">
+                                                        <MoreOutlined className="w-[15px] h-[15px] text-black" />
+                                                    </div>
                                                 </Stack>
                                             );
                                         case GROUP_CONVERSATION:
