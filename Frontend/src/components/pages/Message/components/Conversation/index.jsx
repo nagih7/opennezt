@@ -56,8 +56,8 @@ const Conversation = () => {
                                 case GROUP_CONVERSATION:
                                     return (
                                         <ConversationHeader
-                                            name={conversation?.members[0]?.name}
-                                            logo={conversation?.members[0]?.avatar}
+                                            name={conversation?.data?.project?.name}
+                                            logo={conversation?.data?.project?.logo}
                                         />
                                     );
                                 default:

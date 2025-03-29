@@ -20,25 +20,22 @@ const Conversations = () => {
             <Tabs.Root defaultValue="message" variant="plain" className="flex flex-col h-full">
                 <Stack className="bg-[#ffffff] rounded-md p-[13px]">
                     <Tabs.List bg="bg.muted" className="bg-white" rounded="l3" p="1">
-                        <Tabs.Trigger value="message" textStyle="xs" className="bg-white text-black">
+                        <Tabs.Trigger value="message" textStyle="xs" className="text-black bg-white">
                             <IconlyChat size={16} color={'#000000'} />
                             Message
                         </Tabs.Trigger>
-                        <Tabs.Trigger value="friend" textStyle="xs" className="bg-white text-black">
+                        <Tabs.Trigger value="friend" textStyle="xs" className="text-black bg-white">
                             <IconlyUser size={16} color={'#000000'} />
                             Friends
                         </Tabs.Trigger>
-                        <Tabs.Trigger value="projects" textStyle="xs" className="bg-white text-black">
+                        <Tabs.Trigger value="projects" textStyle="xs" className="text-black bg-white">
                             <IconlyUser size={16} color={'#000000'} />
                             Projects
                         </Tabs.Trigger>
                         <Tabs.Indicator rounded="l2" />
                     </Tabs.List>
                 </Stack>
-                <Tabs.Content
-                    value="message"
-                    className="flex-1 h-full overflow-y-scroll scrollbar-hide"
-                >
+                <Tabs.Content value="message" className="flex-1 h-full overflow-y-scroll scrollbar-hide">
                     {conversations.map((conversation, index) => {
                         return (
                             <Stack
@@ -51,17 +48,10 @@ const Conversations = () => {
                                     switch (conversation.type.name) {
                                         case DIRECT_CONVERSATION:
                                             return (
-                                                <Stack
-                                                    className="items-center gap-3"
-                                                    direction={'row'}
-                                                >
+                                                <Stack className="items-center gap-3" direction={'row'}>
                                                     <Avatar.Root size={'xl'}>
-                                                        <Avatar.Fallback
-                                                            name={conversation.members[0].name}
-                                                        />
-                                                        <Avatar.Image
-                                                            src={conversation.members[0].avatar}
-                                                        />
+                                                        <Avatar.Fallback name={conversation.members[0].name} />
+                                                        <Avatar.Image src={conversation.members[0].avatar} />
                                                     </Avatar.Root>
                                                     <div className="flex-1">
                                                         <span className="flex items-center gap-2 text-sm font-medium">
@@ -69,28 +59,25 @@ const Conversations = () => {
                                                             <CheckCircleFilled className="text-blue-500" />
                                                         </span>
                                                         <p className="text-xs mb-0 text-[#6f7f92] font-medium">
-                                                            {conversation.last_message?.content ||
-                                                                'No message'}
+                                                            {conversation.last_message?.content || 'No message'}
                                                         </p>
                                                     </div>
                                                 </Stack>
                                             );
                                         case GROUP_CONVERSATION:
                                             return (
-                                                <Stack
-                                                    className="items-center gap-3"
-                                                    direction={'row'}
-                                                >
+                                                <Stack className="items-center gap-3" direction={'row'}>
                                                     <Avatar.Root size={'xl'}>
-                                                        <Avatar.Fallback name={'OpenNezt'} />
-                                                        <Avatar.Image src={img_project} />
+                                                        <Avatar.Fallback name={conversation.data?.project?.name} />
+                                                        <Avatar.Image src={conversation.data?.project?.logo} />
                                                     </Avatar.Root>
-                                                    <div>
-                                                        <span className="text-sm font-medium">
-                                                            OpenNezt
+                                                    <div className="flex-1">
+                                                        <span className="flex items-center gap-2 text-sm font-medium">
+                                                            {conversation.data?.project?.name}
+                                                            <CheckCircleFilled className="text-blue-500" />
                                                         </span>
                                                         <p className="text-xs mb-0 text-[#6f7f92] font-medium">
-                                                            {conversation.members.length} members
+                                                            {conversation.last_message?.content || 'No message'}
                                                         </p>
                                                     </div>
                                                 </Stack>
@@ -118,11 +105,7 @@ const Conversations = () => {
                         <div className="p-[14px] mt-[15px] rounded-md bg-[#ffffff]">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <img
-                                        src={img_avt}
-                                        alt=""
-                                        className="w-[35px] h-[35px] rounded-full"
-                                    />
+                                    <img src={img_avt} alt="" className="w-[35px] h-[35px] rounded-full" />
                                     <span className="flex items-center gap-2 text-sm font-medium">
                                         Bui Hoang Duy
                                         <CheckCircleFilled className="text-blue-500" />
@@ -147,11 +130,7 @@ const Conversations = () => {
                         <div className="p-[14px] mt-[15px] rounded-md bg-[#ffffff]">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <img
-                                        src={img_project}
-                                        alt=""
-                                        className="w-[35px] h-[35px] rounded-full"
-                                    />
+                                    <img src={img_project} alt="" className="w-[35px] h-[35px] rounded-full" />
                                     <span className="text-sm font-medium">OpenNezt</span>
                                 </div>
                                 <a href="#" className="px-[15px]">
