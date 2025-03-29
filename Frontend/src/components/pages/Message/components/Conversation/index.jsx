@@ -16,7 +16,6 @@ import InputCustom from 'components/UI/InputCustom';
 import { debounce } from 'lodash';
 import { inviteMember, searchMyProjects } from 'api/project';
 import { getProjectRoleFramework } from 'api/user';
-import './index.scss';
 import { setModalInviteMember } from 'states/modules/project';
 import store from 'states/configureStore';
 
@@ -210,7 +209,7 @@ const Conversation = () => {
                                 <Popover.Positioner>
                                     <Popover.Content>
                                         <Popover.Arrow />
-                                        <Popover.Body className="p-[15px]">
+                                        <Popover.Body className="p-4">
                                             <Stack spacing={4}>
                                                 <Stack
                                                     spacing={4}
@@ -238,8 +237,8 @@ const Conversation = () => {
                                 <Dialog.Backdrop />
                                 <Dialog.Positioner>
                                     <Dialog.Content>
-                                        <Dialog.Header className='p-4'>
-                                            <Text className='mb-0 text-xl font-medium'>Invite to project</Text>
+                                        <Dialog.Header>
+                                            <Text>Invite to project</Text>
                                         </Dialog.Header>
                                         <Dialog.Body>
                                             <Stack>
@@ -249,9 +248,7 @@ const Conversation = () => {
                                                         Do you want to invite people to join the project?
                                                     </Alert.Title>
                                                 </Alert.Root>
-                                                <Stack
-                                                    spacing={4}
-                                                    className="flex flex-col gap-2 my-4"
+                                                <Stack spacing={4} className="flex flex-col gap-4 my-4">
                                                     {!projectSelected && (
                                                         <>
                                                             <InputCustom
@@ -261,196 +258,59 @@ const Conversation = () => {
                                                                 onChange={handleSearchProject}
                                                                 loading={isLoadingSearchMyProjects}
                                                             />
-// <<<<<<< trongtruong
-//                                                             <div
-//                                                                 className={`${
-//                                                                     myProjectsBySearch?.length >= 4
-//                                                                         ? 'flex flex-col items-center max-h-[150px] p-0 m-0 overflow-y-scroll scrollbar-thumb-gray-400 scrollbar-track-gray-200 w-full'
-//                                                                         : ''
-//                                                                 }`}
-//                                                             >
-//                                                                 {myProjectsBySearch?.length > 0 && (
-//                                                                     <Stack
-//                                                                         spacing={4}
-//                                                                         className="gap-0 w-full"
-//                                                                     >
-//                                                                         {myProjectsBySearch.map(
-//                                                                             (project, idx) => (
-//                                                                                 <Stack
-//                                                                                     key={idx}
-//                                                                                     direction={
-//                                                                                         'row'
-//                                                                                     }
-//                                                                                     align={'center'}
-//                                                                                     className="px-[15px] hover:bg-[#f6f5f5] py-[10px] border-b border-gray-200"
-//                                                                                     cursor={
-//                                                                                         'pointer'
-//                                                                                     }
-//                                                                                     onClick={() =>
-//                                                                                         setFormRequest(
-//                                                                                             {
-//                                                                                                 ...formRequest,
-//                                                                                                 project:
-//                                                                                                     project,
-//                                                                                             }
-//                                                                                         )
-//                                                                                     }
-//                                                                                 >
-//                                                                                     <Avatar.Root
-//                                                                                         size={'sm'}
-//                                                                                     >
-//                                                                                         <Avatar.Fallback
-//                                                                                             name={
-//                                                                                                 project.name
-//                                                                                             }
-//                                                                                         />
-//                                                                                         <Avatar.Image
-//                                                                                             src={
-//                                                                                                 project.logo
-//                                                                                             }
-//                                                                                         />
-//                                                                                     </Avatar.Root>
-//                                                                                     <Text className="mb-0 ">
-//                                                                                         {
-//                                                                                             project.name
-//                                                                                         }
-//                                                                                     </Text>
-//                                                                                 </Stack>
-//                                                                             )
-//                                                                         )}
-//                                                                     </Stack>
-//                                                                 )}
-//                                                             </div>
-//                                                         </>
-//                                                     )}
-//                                                     <div className='flex flex-col gap-4'>
-//                                                         {formRequest.project && (
-//                                                             <>
-//                                                                 <Stack
-//                                                                     spacing={4}
-//                                                                     direction={'row'}
-//                                                                     align={'center'}
-//                                                                     className="flex justify-between w-full px-[3px] py-[3px] rounded-md "
-//                                                                 >
-//                                                                     <Stack
-//                                                                         spacing={4}
-//                                                                         direction={'row'}
-//                                                                         align={'center'}
-//                                                                     >
-//                                                                         <Avatar.Root size={'sm'}>
-//                                                                             <Avatar.Fallback
-//                                                                                 name={
-//                                                                                     formRequest
-//                                                                                         .project
-//                                                                                         .name
-//                                                                                 }
-//                                                                             />
-//                                                                             <Avatar.Image
-//                                                                                 src={
-//                                                                                     formRequest
-//                                                                                         .project
-//                                                                                         .logo
-//                                                                                 }
-//                                                                             />
-//                                                                         </Avatar.Root>
-//                                                                         <Text className="mb-0">
-//                                                                             {
-//                                                                                 formRequest.project
-//                                                                                     .name
-//                                                                             }
-//                                                                         </Text>
-//                                                                     </Stack>
-//                                                                     <CloseButton
-//                                                                         className="w-[20px] h-[20px] "
-//                                                                         size={'xs'}
-//                                                                         onClick={
-//                                                                             handleRemoveProject
-//                                                                         }
-//                                                                     />
-//                                                                 </Stack>
+                                                            {myProjectsBySearch?.length > 0 && (
+                                                                <Stack spacing={4}>
+                                                                    {myProjectsBySearch.map((project, idx) => (
+                                                                        <Stack
+                                                                            key={idx}
+                                                                            spacing={4}
+                                                                            direction={'row'}
+                                                                            align={'center'}
+                                                                            cursor={'pointer'}
+                                                                            onClick={() => setProjectSelected(project)}
+                                                                        >
+                                                                            <Avatar.Root size={'md'}>
+                                                                                <Avatar.Fallback name={project.name} />
+                                                                                <Avatar.Image src={project.logo} />
+                                                                            </Avatar.Root>
+                                                                            <Text>{project.name}</Text>
+                                                                        </Stack>
+                                                                    ))}
+                                                                </Stack>
+                                                            )}
+                                                        </>
+                                                    )}
+                                                    {projectSelected && (
+                                                        <>
+                                                            <Stack spacing={4} direction={'row'} align={'center'}>
+                                                                <Stack spacing={4} direction={'row'} align={'center'}>
+                                                                    <Avatar.Root size={'md'}>
+                                                                        <Avatar.Fallback name={projectSelected.name} />
+                                                                        <Avatar.Image src={projectSelected.logo} />
+                                                                    </Avatar.Root>
+                                                                    <Text>{projectSelected.name}</Text>
+                                                                </Stack>
+                                                                <CloseButton onClick={handleRemoveProject} />
+                                                            </Stack>
 
-//                                                                 <SelectCustom
-//                                                                     height="40px"
-//                                                                     label="Team Role"
-//                                                                     required
-//                                                                     collection={
-//                                                                         projectTeamRoleFramework
-//                                                                     }
-//                                                                     // onChange={(e) =>
-//                                                                     //     handleChangeFormRequest(e, 'teamRole')
-//                                                                     // }
-//                                                                     value={formRequest.teamRole}
-//                                                                 />
-//                                                                 <SelectCustom
-//                                                                     height="40px"
-//                                                                     label="Role"
-//                                                                     required
-//                                                                     collection={
-//                                                                         projectRoleFramework
-//                                                                     }
-//                                                                     // onChange={(e) =>
-//                                                                     //     handleChangeFormRequest(e, 'role')
-//                                                                     // }
-//                                                                     value={formRequest.role}
-//                                                                 />
-//                                                             </>
-//                                                         )}
-//                                                     </div>
-// =======
-//                                                             {myProjectsBySearch?.length > 0 && (
-//                                                                 <Stack spacing={4}>
-//                                                                     {myProjectsBySearch.map((project, idx) => (
-//                                                                         <Stack
-//                                                                             key={idx}
-//                                                                             spacing={4}
-//                                                                             direction={'row'}
-//                                                                             align={'center'}
-//                                                                             cursor={'pointer'}
-//                                                                             onClick={() => setProjectSelected(project)}
-//                                                                         >
-//                                                                             <Avatar.Root size={'md'}>
-//                                                                                 <Avatar.Fallback name={project.name} />
-//                                                                                 <Avatar.Image src={project.logo} />
-//                                                                             </Avatar.Root>
-//                                                                             <Text>{project.name}</Text>
-//                                                                         </Stack>
-//                                                                     ))}
-//                                                                 </Stack>
-//                                                             )}
-//                                                         </>
-//                                                     )}
-//                                                     {projectSelected && (
-//                                                         <>
-//                                                             <Stack spacing={4} direction={'row'} align={'center'}>
-//                                                                 <Stack spacing={4} direction={'row'} align={'center'}>
-//                                                                     <Avatar.Root size={'md'}>
-//                                                                         <Avatar.Fallback name={projectSelected.name} />
-//                                                                         <Avatar.Image src={projectSelected.logo} />
-//                                                                     </Avatar.Root>
-//                                                                     <Text>{projectSelected.name}</Text>
-//                                                                 </Stack>
-//                                                                 <CloseButton onClick={handleRemoveProject} />
-//                                                             </Stack>
-
-//                                                             <SelectCustom
-//                                                                 height="40px"
-//                                                                 label="Team Role"
-//                                                                 required
-//                                                                 collection={projectTeamRoleFramework}
-//                                                                 onChange={(e) => handleChangeFormRequest(e, 'teamRole')}
-//                                                                 value={formRequest.teamRole}
-//                                                             />
-//                                                             <SelectCustom
-//                                                                 height="40px"
-//                                                                 label="Role"
-//                                                                 required
-//                                                                 collection={projectRoleFramework}
-//                                                                 onChange={(e) => handleChangeFormRequest(e, 'role')}
-//                                                                 value={formRequest.role}
-//                                                             />
-//                                                         </>
-//                                                     )}
-// >>>>>>> v1
+                                                            <SelectCustom
+                                                                height="40px"
+                                                                label="Team Role"
+                                                                required
+                                                                collection={projectTeamRoleFramework}
+                                                                onChange={(e) => handleChangeFormRequest(e, 'teamRole')}
+                                                                value={formRequest.teamRole}
+                                                            />
+                                                            <SelectCustom
+                                                                height="40px"
+                                                                label="Role"
+                                                                required
+                                                                collection={projectRoleFramework}
+                                                                onChange={(e) => handleChangeFormRequest(e, 'role')}
+                                                                value={formRequest.role}
+                                                            />
+                                                        </>
+                                                    )}
                                                 </Stack>
                                                 <Blockquote.Root
                                                     colorPalette="yellow"
@@ -471,7 +331,7 @@ const Conversation = () => {
                                         </Dialog.Body>
                                         <Dialog.Footer>
                                             <Dialog.ActionTrigger asChild>
-                                                <Button variant="outline" className='bg-[#f6f5f5] rounded-md' onClick={handleClose}>
+                                                <Button variant="outline" onClick={handleClose}>
                                                     Cancel
                                                 </Button>
                                             </Dialog.ActionTrigger>
@@ -479,7 +339,6 @@ const Conversation = () => {
                                                 onClick={handleConfirmInvite}
                                                 borderRadius={4}
                                                 loading={false}
-                                                className='bg-[#2f65b9] text-white text-sm rounded-md font-medium'
                                                 loadingText="Loading..."
                                                 spinnerPlacement="start"
                                             >
