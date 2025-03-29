@@ -197,47 +197,47 @@ function CreateOrUpdate(props) {
         </div>
 
         {configModal.type === "CREATE" ? (
-          
-		  <div className="relative mb-8">
-          <InputMASQ
-            type={"password"}
-            placeholder={"Enter password..."}
-            onChange={(e) => handleChangeInput(e, "password")}
-            onBlur={() => validateBlur("password")}
-            value={dataCreateOrUpdate.password}
-            className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
-            error={errorCreateOrUpdateEmployee.password}
-          />
-          <label
-            htmlFor=""
-            className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
-          >
-            Password *
-          </label>
-        </div>
+
+          <div className="relative mb-8">
+            <InputMASQ
+              type={"password"}
+              placeholder={"Enter password..."}
+              onChange={(e) => handleChangeInput(e, "password")}
+              onBlur={() => validateBlur("password")}
+              value={dataCreateOrUpdate.password}
+              className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
+              error={errorCreateOrUpdateEmployee.password}
+            />
+            <label
+              htmlFor=""
+              className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
+            >
+              Password *
+            </label>
+          </div>
         ) : (
           ""
         )}
 
         {configModal.type === "CREATE" ? (
-          
-		  <div className="relative mb-8">
-          <InputMASQ
-            type={"password"}
-            placeholder={"Enter password..."}
-            onChange={(e) => handleChangeInput(e, "confirmPassword")}
-            onBlur={() => validateBlur("confirmPassword")}
-            value={dataCreateOrUpdate.confirmPassword}
-            className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
-            error={errorCreateOrUpdateEmployee.confirmPassword}
-          />
-          <label
-            htmlFor=""
-            className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
-          >
-            ConfirmPassword *
-          </label>
-        </div>
+
+          <div className="relative mb-8">
+            <InputMASQ
+              type={"password"}
+              placeholder={"Enter password..."}
+              onChange={(e) => handleChangeInput(e, "confirmPassword")}
+              onBlur={() => validateBlur("confirmPassword")}
+              value={dataCreateOrUpdate.confirmPassword}
+              className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md "
+              error={errorCreateOrUpdateEmployee.confirmPassword}
+            />
+            <label
+              htmlFor=""
+              className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
+            >
+              ConfirmPassword *
+            </label>
+          </div>
         ) : (
           ""
         )}

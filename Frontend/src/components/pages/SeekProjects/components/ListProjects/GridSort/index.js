@@ -15,7 +15,7 @@ const GridSort = ({ projects, handleViewProjectDetails }) => {
                     key={index}
                     className="overflow-hidden rounded-sm cursor-pointer group"
                 >
-                    <div className="w-full max-w-lg h-[360px] pt-3 mx-auto">
+                    <div className="w-full max-w-lg h-[360px] pt-3 mx-auto bg-white rounded-[0.2rem]">
                         <div className="relative flex items-center justify-center w-full h-48 overflow-hidden mx-autorounded-md group">
                             {!imageError ? (
                                 <Image

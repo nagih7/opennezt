@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Button} from 'antd';
+import React, { useState } from 'react';
+import { Button } from 'antd';
 import PropTypes from "prop-types";
 import styles from './styles.module.scss';
 
@@ -16,25 +16,25 @@ ButtonMASQ.defaultProps = {
   style: {},
   loading: false,
   disabled: false,
-  onClick: () => {}
+  onClick: () => { }
 }
 
 function ButtonMASQ(props) {
   const [isHovered, setIsHovered] = useState(false);
   const colorMappings = {
-    '#2B3847': '#374B63',
+    '#2F65B9': '#3B82F6',
     '#2F4858': '#374B63',
     '#6B7F8D': '#A1A7B3',
     '#D5DADD': '#E3EBEF',
     '#EBEDF3': '#F5F8FF',
     '#FFF': '#F8F8F8'
   };
-  const defaultBackgroundColor = '#2B3847';
+  const defaultBackgroundColor = '#2F65B9';
   const initialBackground = props.style.background || props.style.backgroundColor || defaultBackgroundColor;
   const style = {
     ...props.style,
-    background: isHovered ? colorMappings[initialBackground ] || initialBackground  : initialBackground ,
-    backgroundColor: isHovered ? colorMappings[initialBackground ] || initialBackground  : initialBackground
+    background: isHovered ? colorMappings[initialBackground] || initialBackground : initialBackground,
+    backgroundColor: isHovered ? colorMappings[initialBackground] || initialBackground : initialBackground
   };
 
   return (

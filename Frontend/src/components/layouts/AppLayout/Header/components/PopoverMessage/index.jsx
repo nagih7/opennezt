@@ -41,11 +41,11 @@ const PopoverMessage = () => {
     };
 
     return (
+
         <Stack className="bg-[#ffffff] rounded-md">
             <div className="mx-4 py-[16px] border-b border-gray-200 text-lg font-medium ">
                 {MESSAGES.MESSAGES[language]}
             </div>
-
             {/* <input
 					type="text"
 					placeholder={MESSAGES.SEARCH[language]}
@@ -55,10 +55,9 @@ const PopoverMessage = () => {
 				/>
 				<InputCustom height="30px" /> */}
 
-            <Stack className={`${
-                    conversations.length >= 3
-                        ? 'flex flex-col items-center max-h-[410px] p-0 m-0 overflow-y-scroll scrollbar-hide'
-                        : ''
+            <Stack className={`${conversations.length >= 3
+                    ? 'flex flex-col items-center max-h-[410px] p-0 m-0 overflow-y-scroll scrollbar-hide'
+                    : ''
                 }`}>
                 {conversations.length > 0 ? (
                     conversations.map((conversation, index) => {

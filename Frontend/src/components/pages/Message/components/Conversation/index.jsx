@@ -569,7 +569,7 @@ const Conversation = () => {
                                 onChange={handleChangeMessage}
                                 type="text"
                                 placeholder="Write your message"
-                                className="w-full outline-none"
+                                className="w-full bg-white outline-none"
                             />
                         </div>
                         <div
