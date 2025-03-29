@@ -47,6 +47,11 @@ const Conversation = createModel('Conversation', 'conversations', {
         ref: 'Message',
         required: false,
     },
+    data: {
+        type: Object,
+        required: false,
+        default: {},
+    },
     metadata: {
         type: Object,
         required: true,
