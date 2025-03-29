@@ -19,16 +19,16 @@ const Conversations = () => {
         <div className="flex flex-col flex-1 overflow-hidden">
             <Tabs.Root defaultValue="message" variant="plain" className="flex flex-col h-full">
                 <Stack className="bg-[#ffffff] rounded-md p-[13px]">
-                    <Tabs.List bg="bg.muted" rounded="l3" p="1">
-                        <Tabs.Trigger value="message" textStyle="xs">
+                    <Tabs.List bg="bg.muted" className="bg-white" rounded="l3" p="1">
+                        <Tabs.Trigger value="message" textStyle="xs" className="bg-white text-black">
                             <IconlyChat size={16} color={'#000000'} />
                             Message
                         </Tabs.Trigger>
-                        <Tabs.Trigger value="friend" textStyle="xs">
+                        <Tabs.Trigger value="friend" textStyle="xs" className="bg-white text-black">
                             <IconlyUser size={16} color={'#000000'} />
                             Friends
                         </Tabs.Trigger>
-                        <Tabs.Trigger value="projects" textStyle="xs">
+                        <Tabs.Trigger value="projects" textStyle="xs" className="bg-white text-black">
                             <IconlyUser size={16} color={'#000000'} />
                             Projects
                         </Tabs.Trigger>
@@ -112,7 +112,7 @@ const Conversations = () => {
                             <input
                                 type="text"
                                 placeholder="Search..."
-                                className="text-sm w-full outline-none px-[10px] h-[45px] py-[5px]"
+                                className="text-sm w-full outline-none px-[10px] h-[45px] py-[5px] bg-white"
                             />
                         </div>
                         <div className="p-[14px] mt-[15px] rounded-md bg-[#ffffff]">
@@ -141,7 +141,7 @@ const Conversations = () => {
                             <input
                                 type="text"
                                 placeholder="Search..."
-                                className="text-sm w-full outline-none px-[10px] h-[45px] py-[5px]"
+                                className="text-sm w-full outline-none px-[10px] h-[45px] py-[5px] bg-white"
                             />
                         </div>
                         <div className="p-[14px] mt-[15px] rounded-md bg-[#ffffff]">

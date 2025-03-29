@@ -4,6 +4,7 @@ import {
     NOTIFICATION_TYPE,
     PROJECT_ACCESS,
     PROJECT_APPLICATION_NOTIFICATION,
+    WAITING_STATUS,
 } from '@/configs'
 import {
     Project,
@@ -19,6 +20,8 @@ import {
     ProjectRequirement,
 } from '@/models'
 import {FileUpload} from '@/utils/classes'
+import {userSockets} from '@/routes'
+import {PROJECT_INVITATION_NOTIFICATION} from './../../../../Frontend/src/utils/constants/typeConstants'
 
 // ========== POST [Project] ========== //
 export async function createProject(user, requestBody) {
@@ -571,28 +574,6 @@ export async function deleteProject(user, projectId) {
     await ProjectMember.deleteMany({project_id: projectId}).exec()
 }
 
-// ========== POST [Project - Invite] ========== //
-export async function inviteMember(user, projectId, requestBody) {
-    const {user_id, team_role_id, role_id} = requestBody
-    const typeNotification = await Type.findOne({class: 'notification', name: 'Project Invitation'})
-
-    const notification = new NotificationFeed({
-        source_id: user._id,
-        user_id: new ObjectId(user_id),
-        type_id: typeNotification._id,
-        additional_info: {
-            project_id: projectId,
-            team_role_id,
-            role_id,
-        },
-        metadata: {
-            status: 'waiting',
-            read: false,
-        },
-    })
-    await notification.save()
-}
-
 // ========== GET [Project - TAGS] ========== //
 export async function getProjectsToTag(user, requestQuery) {
     const key = requestQuery.keySearch || ''
@@ -1000,4 +981,103 @@ export async function searchMyProjects(user, {q}) {
     ])
 
     return projects
+}
+
+// ========= POST [My project - Invite member] ========== //
+export async function inviteMember(user, projectId, requestBody, io) {
+    const {userId, teamRole, role} = requestBody
+
+    const project = await Project.findOne({
+        user_id: user._id,
+        _id: new ObjectId(projectId),
+    })
+    const typeNotification = await Type.findOne({
+        class: NOTIFICATION_TYPE,
+        name: PROJECT_INVITATION_NOTIFICATION,
+    })
+
+    const noti = new NotificationFeed({
+        source_id: user._id,
+        user_id: new ObjectId(userId),
+        type_id: typeNotification._id,
+        data: {
+            project_id: project._id,
+            team_role_id: teamRole,
+            role_id: role,
+        },
+        metadata: {
+            status: WAITING_STATUS,
+            read: false,
+        },
+    })
+    await noti.save()
+
+    const notification = await NotificationFeed.aggregate([
+        {
+            $match: {
+                _id: noti._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'source_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: {
+                                $cond: {
+                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    then: '$avatar',
+                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'projects',
+                localField: 'data.project_id',
+                foreignField: '_id',
+                as: 'project',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $unwind: '$project',
+        },
+        {
+            $project: {
+                _id: 1,
+                user: 1,
+                project: 1,
+                timestamp: 1,
+            },
+        },
+    ])
+
+    const userSocketId = Object.keys(userSockets).find(
+        (socketId) => userSockets[socketId] === userId.toString()
+    )
+    if (userSocketId) {
+        console.log('userSocketId', userSocketId)
+        io.to(userSocketId).emit(PROJECT_INVITATION_NOTIFICATION, notification[0])
+    }
 }

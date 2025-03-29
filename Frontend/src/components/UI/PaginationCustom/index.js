@@ -12,21 +12,21 @@ const PaginationCustom = ({ pagination, onPageChange }) => {
 			onPageChange={onPageChange}>
 			<ButtonGroup variant="outline" size="sm">
 				<Pagination.PrevTrigger asChild>
-					<IconButton>
+					<IconButton className="hover:bg-white text-black">
 						<LuChevronLeft />
 					</IconButton>
 				</Pagination.PrevTrigger>
 
 				<Pagination.Items
 					render={(page) => (
-						<IconButton variant={{ base: "outline", _selected: "solid" }}>
+						<IconButton className="text-black hover:bg-white" variant={{ base: "outline", _selected: "solid" }}>
 							{page.value}
 						</IconButton>
 					)}
 				/>
 
 				<Pagination.NextTrigger asChild>
-					<IconButton>
+					<IconButton className="hover:bg-white text-black">
 						<LuChevronRight />
 					</IconButton>
 				</Pagination.NextTrigger>

@@ -58,13 +58,6 @@ projectRouter.post(
 // ========== DELETE [Project] ========== //
 projectRouter.delete('/:id/delete', asyncHandler(projectController.deleteProject))
 
-// ========== POST [Project - Invite] ========== //
-projectRouter.post(
-    '/:id/invite-member',
-    asyncHandler(validate(projectRequest.inviteMember)),
-    asyncHandler(projectController.inviteMember)
-)
-
 // ========== GET [Project - Seek] ========== //
 projectRouter.get(
     '/seek',
@@ -103,6 +96,13 @@ projectRouter.get('/me/access', asyncHandler(projectController.getAccessToMyProj
 
 // ========== GET [Project - Search] ========== //
 projectRouter.get('/me/search', asyncHandler(projectController.searchMyProjects))
+
+// ========= POST [Project - Invite member] ========== //
+projectRouter.post(
+    '/me/:id/invite',
+    asyncHandler(validate(projectRequest.inviteMember)),
+    asyncHandler(projectController.inviteMember)
+)
 
 // ========== GET [My Projects] ========== //
 projectRouter.get('/me', asyncHandler(projectController.getListMyProjects))

@@ -50,7 +50,6 @@ const PopoverMessage = () => {
             <div className="mx-4 py-[16px] border-b border-gray-200 text-lg font-medium ">
                 {MESSAGES.MESSAGES[language]}
             </div>
-
             {/* <input
 					type="text"
 					placeholder={MESSAGES.SEARCH[language]}
@@ -59,7 +58,6 @@ const PopoverMessage = () => {
 					onChange={(e) => handleSearchQuery(e.target.value)}
 				/>
 				<InputCustom height="30px" /> */}
-
             <Stack
                 className={`${
                     conversations.length >= 3
@@ -84,26 +82,19 @@ const PopoverMessage = () => {
                                                     spacing={4}
                                                 >
                                                     <Avatar.Root size={'lg'}>
-                                                        <Avatar.Fallback
-                                                            name={conversation.members[0].name}
-                                                        />
-                                                        <Avatar.Image
-                                                            src={conversation.members[0].avatar}
-                                                        />
+                                                        <Avatar.Fallback name={conversation.members[0].name} />
+                                                        <Avatar.Image src={conversation.members[0].avatar} />
                                                     </Avatar.Root>
-                                                    <Stack className="flex flex-col gap-0 w-full">
+                                                    <Stack className="flex flex-col w-full gap-0">
                                                         <Text className="flex items-center gap-1 mb-0 text-sm">
                                                             {conversation.members[0].name}
                                                             <CheckCircleFilled className="text-blue-500" />
                                                         </Text>
                                                         <Text className="mb-0 text-xs text-[#6f7f92] font-medium">
-                                                            {truncateText(
-                                                                'No message hiijh',
-                                                                MAX_LENGTH
-                                                            )}
+                                                            {truncateText('No message hiijh', MAX_LENGTH)}
                                                         </Text>
                                                     </Stack>
-                                                    <div className="hidden group-hover:flex justify-end">
+                                                    <div className="justify-end hidden group-hover:flex">
                                                         <MoreOutlined className="w-[15px] h-[15px] text-black" />
                                                     </div>
                                                 </Stack>

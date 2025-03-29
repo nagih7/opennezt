@@ -1,12 +1,5 @@
 import { IconlyAddUser, IconlyArrowLeft2, IconlySend, IconlyStar } from 'components/UI/Iconly';
-
-import {
-    ArrowsAltOutlined,
-    LinkOutlined,
-    MoreOutlined,
-    RollbackOutlined,
-    WechatOutlined,
-} from '@ant-design/icons';
+import { ArrowsAltOutlined, LinkOutlined, MoreOutlined, RollbackOutlined, WechatOutlined } from '@ant-design/icons';
 import img_avt from '../../../../../assets/images/background/avt.jpg';
 import React, { useEffect, useRef, useState } from 'react';
 import { CheckCircleFilled } from '@ant-design/icons';
@@ -14,26 +7,17 @@ import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getConversation, getMessages, sendMessage } from 'api/chat';
 import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants/typeConstants';
-import {
-    Alert,
-    Avatar,
-    Blockquote,
-    Button,
-    CloseButton,
-    Dialog,
-    Popover,
-    Portal,
-    Stack,
-    Text,
-} from '@chakra-ui/react';
+import { Alert, Avatar, Blockquote, Button, CloseButton, Dialog, Popover, Portal, Stack, Text } from '@chakra-ui/react';
 import moment from 'moment';
 import { Tooltip } from 'components/UI/tooltip';
 import SelectCustom from 'components/UI/SelectCustom';
 import InputCustom from 'components/UI/InputCustom';
 import { debounce } from 'lodash';
-import { searchMyProjects } from 'api/project';
+import { inviteMember, searchMyProjects } from 'api/project';
 import { getProjectRoleFramework } from 'api/user';
 import './index.scss';
+import { setModalInviteMember } from 'states/modules/project';
+import store from 'states/configureStore';
 
 const Conversation = () => {
     const dispatch = useDispatch();
@@ -45,14 +29,15 @@ const Conversation = () => {
     const { authUser } = useSelector((state) => state.auth);
     const { conversation } = useSelector((state) => state.chat);
     const { projectRoleFramework, projectTeamRoleFramework } = useSelector((state) => state.user);
-    const { myProjectsBySearch, isLoadingSearchMyProjects } = useSelector((state) => state.project);
+    const { myProjectsBySearch, isLoadingSearchMyProjects, isOpenModalInviteMember } = useSelector(
+        (state) => state.project
+    );
 
     // ========== STATE ========== //
     const [message, setMessage] = useState('');
     const [isOpenMoreActions, setIsOpenMoreActions] = useState(false);
-    const [isOpenModal, setIsOpenModal] = useState(false);
+    const [projectSelected, setProjectSelected] = useState(null);
     const [formRequest, setFormRequest] = useState({
-        project: '',
         teamRole: '',
         role: '',
     });
@@ -105,14 +90,11 @@ const Conversation = () => {
 
     // ========== HANDLE FUNCTION MODAL ========== //
     const handleOpenModal = () => {
-        setIsOpenModal(true);
+        dispatch(setModalInviteMember(true));
         setIsOpenMoreActions(false);
     };
     const handleClose = () => {
-        setIsOpenModal(false);
-    };
-    const handleConfirmInvite = () => {
-        console.log(formRequest);
+        dispatch(setModalInviteMember(false));
     };
 
     // ========== HANDLE FUNCTION POPPER ========== //
@@ -130,11 +112,30 @@ const Conversation = () => {
 
     // ========== HANDLE FUNCTION REMOVE PROJECT ========== //
     const handleRemoveProject = () => {
+        setProjectSelected(null);
         setFormRequest({
-            project: '',
             teamRole: '',
             role: '',
         });
+    };
+
+    const handleChangeFormRequest = (e, field) => {
+        setFormRequest((prev) => ({
+            ...prev,
+            [field]: e.value[0],
+        }));
+    };
+
+    // ========== HANDLE CONFIRM INVITE ========== //
+    const handleConfirmInvite = async () => {
+        await store.dispatch(
+            inviteMember(projectSelected._id, { ...formRequest, userId: conversation.members[0]._id })
+        );
+        setFormRequest({
+            teamRole: '',
+            role: '',
+        });
+        setProjectSelected(null);
     };
 
     if (id) {
@@ -142,10 +143,7 @@ const Conversation = () => {
             <>
                 <div className="flex justify-between p-[10px] mb-[18px] bg-[#ffffff] rounded-md">
                     <div className="flex items-center">
-                        <Link
-                            to={'/conversation'}
-                            className="flex justify-center items-center w-[50px] h-11"
-                        >
+                        <Link to={'/conversation'} className="flex justify-center items-center w-[50px] h-11">
                             <IconlyArrowLeft2 size={18} color={'#6f7f92'} />
                         </Link>
                         {(() => {
@@ -155,12 +153,8 @@ const Conversation = () => {
                                         <div className="flex items-center">
                                             <span className="mr-[8px]">
                                                 <Avatar.Root size={'md'}>
-                                                    <Avatar.Fallback
-                                                        name={conversation?.members[0]?.name}
-                                                    />
-                                                    <Avatar.Image
-                                                        src={conversation?.members[0]?.avatar}
-                                                    />
+                                                    <Avatar.Fallback name={conversation?.members[0]?.name} />
+                                                    <Avatar.Image src={conversation?.members[0]?.avatar} />
                                                 </Avatar.Root>
                                             </span>
                                             <span className="flex items-center gap-1">
@@ -173,11 +167,7 @@ const Conversation = () => {
                                     return (
                                         <div className="flex items-center">
                                             <span className="mr-[8px]">
-                                                <img
-                                                    src={img_avt}
-                                                    alt=""
-                                                    className=" w-[35px] h-[35px] rounded-full"
-                                                />
+                                                <img src={img_avt} alt="" className=" w-[35px] h-[35px] rounded-full" />
                                             </span>
                                             <span className="flex items-center gap-1">
                                                 {conversation?.members[0]?.name}
@@ -239,7 +229,7 @@ const Conversation = () => {
                         </Popover.Root>
                         <Dialog.Root
                             size={'lg'}
-                            open={isOpenModal}
+                            open={isOpenModalInviteMember}
                             placement={'center'}
                             motionPreset="slide-in-bottom"
                         >
@@ -247,23 +237,19 @@ const Conversation = () => {
                                 <Dialog.Backdrop />
                                 <Dialog.Positioner>
                                     <Dialog.Content>
-                                        <Dialog.Header className='p-4'>
-                                            <Text className='mb-0 text-xl font-medium'>Invite to project</Text>
+                                        <Dialog.Header className="p-4">
+                                            <Text className="mb-0 text-xl font-medium">Invite to project</Text>
                                         </Dialog.Header>
                                         <Dialog.Body>
                                             <Stack>
                                                 <Alert.Root status="info">
                                                     <Alert.Indicator />
                                                     <Alert.Title>
-                                                        Do you want to invite people to join the
-                                                        project?
+                                                        Do you want to invite people to join the project?
                                                     </Alert.Title>
                                                 </Alert.Root>
-                                                <Stack
-                                                    spacing={4}
-                                                    className="flex flex-col gap-2 my-4"
-                                                >
-                                                    {!formRequest.project && (
+                                                <Stack spacing={4} className="flex flex-col gap-2 my-4">
+                                                    {!projectSelected && (
                                                         <>
                                                             <InputCustom
                                                                 label="Project"
@@ -280,61 +266,36 @@ const Conversation = () => {
                                                                 }`}
                                                             >
                                                                 {myProjectsBySearch?.length > 0 && (
-                                                                    <Stack
-                                                                        spacing={4}
-                                                                        className="gap-0 w-full"
-                                                                    >
-                                                                        {myProjectsBySearch.map(
-                                                                            (project, idx) => (
-                                                                                <Stack
-                                                                                    key={idx}
-                                                                                    direction={
-                                                                                        'row'
-                                                                                    }
-                                                                                    align={'center'}
-                                                                                    className="px-[15px] hover:bg-[#f6f5f5] py-[10px] border-b border-gray-200"
-                                                                                    cursor={
-                                                                                        'pointer'
-                                                                                    }
-                                                                                    onClick={() =>
-                                                                                        setFormRequest(
-                                                                                            {
-                                                                                                ...formRequest,
-                                                                                                project:
-                                                                                                    project,
-                                                                                            }
-                                                                                        )
-                                                                                    }
-                                                                                >
-                                                                                    <Avatar.Root
-                                                                                        size={'sm'}
-                                                                                    >
-                                                                                        <Avatar.Fallback
-                                                                                            name={
-                                                                                                project.name
-                                                                                            }
-                                                                                        />
-                                                                                        <Avatar.Image
-                                                                                            src={
-                                                                                                project.logo
-                                                                                            }
-                                                                                        />
-                                                                                    </Avatar.Root>
-                                                                                    <Text className="mb-0 ">
-                                                                                        {
-                                                                                            project.name
-                                                                                        }
-                                                                                    </Text>
-                                                                                </Stack>
-                                                                            )
-                                                                        )}
+                                                                    <Stack spacing={4} className="w-full gap-0">
+                                                                        {myProjectsBySearch.map((project, idx) => (
+                                                                            <Stack
+                                                                                key={idx}
+                                                                                direction={'row'}
+                                                                                align={'center'}
+                                                                                className="px-[15px] hover:bg-[#f6f5f5] py-[10px] border-b border-gray-200"
+                                                                                cursor="pointer"
+                                                                                onClick={() =>
+                                                                                    setProjectSelected(project)
+                                                                                }
+                                                                            >
+                                                                                <Avatar.Root size={'sm'}>
+                                                                                    <Avatar.Fallback
+                                                                                        name={project.name}
+                                                                                    />
+                                                                                    <Avatar.Image src={project.logo} />
+                                                                                </Avatar.Root>
+                                                                                <Text className="mb-0 ">
+                                                                                    {project.name}
+                                                                                </Text>
+                                                                            </Stack>
+                                                                        ))}
                                                                     </Stack>
                                                                 )}
                                                             </div>
                                                         </>
                                                     )}
-                                                    <div className='flex flex-col gap-4'>
-                                                        {formRequest.project && (
+                                                    <div className="flex flex-col gap-4">
+                                                        {projectSelected && (
                                                             <>
                                                                 <Stack
                                                                     spacing={4}
@@ -349,33 +310,18 @@ const Conversation = () => {
                                                                     >
                                                                         <Avatar.Root size={'sm'}>
                                                                             <Avatar.Fallback
-                                                                                name={
-                                                                                    formRequest
-                                                                                        .project
-                                                                                        .name
-                                                                                }
+                                                                                name={projectSelected.name}
                                                                             />
-                                                                            <Avatar.Image
-                                                                                src={
-                                                                                    formRequest
-                                                                                        .project
-                                                                                        .logo
-                                                                                }
-                                                                            />
+                                                                            <Avatar.Image src={projectSelected.logo} />
                                                                         </Avatar.Root>
                                                                         <Text className="mb-0">
-                                                                            {
-                                                                                formRequest.project
-                                                                                    .name
-                                                                            }
+                                                                            {projectSelected.name}
                                                                         </Text>
                                                                     </Stack>
                                                                     <CloseButton
                                                                         className="w-[20px] h-[20px] "
                                                                         size={'xs'}
-                                                                        onClick={
-                                                                            handleRemoveProject
-                                                                        }
+                                                                        onClick={handleRemoveProject}
                                                                     />
                                                                 </Stack>
 
@@ -383,24 +329,18 @@ const Conversation = () => {
                                                                     height="40px"
                                                                     label="Team Role"
                                                                     required
-                                                                    collection={
-                                                                        projectTeamRoleFramework
+                                                                    collection={projectTeamRoleFramework}
+                                                                    onChange={(e) =>
+                                                                        handleChangeFormRequest(e, 'teamRole')
                                                                     }
-                                                                    // onChange={(e) =>
-                                                                    //     handleChangeFormRequest(e, 'teamRole')
-                                                                    // }
                                                                     value={formRequest.teamRole}
                                                                 />
                                                                 <SelectCustom
                                                                     height="40px"
                                                                     label="Role"
                                                                     required
-                                                                    collection={
-                                                                        projectRoleFramework
-                                                                    }
-                                                                    // onChange={(e) =>
-                                                                    //     handleChangeFormRequest(e, 'role')
-                                                                    // }
+                                                                    collection={projectRoleFramework}
+                                                                    onChange={(e) => handleChangeFormRequest(e, 'role')}
                                                                     value={formRequest.role}
                                                                 />
                                                             </>
@@ -415,9 +355,8 @@ const Conversation = () => {
                                                     }}
                                                 >
                                                     <Blockquote.Content cite="OpenNezt">
-                                                        If you would like to invite someone to this
-                                                        project, please let me know what position
-                                                        you would like the person to fill.
+                                                        If you would like to invite someone to this project, please let
+                                                        me know what position you would like the person to fill.
                                                     </Blockquote.Content>
                                                     <Blockquote.Caption>
                                                         — <cite>OpenNezt</cite>
@@ -427,7 +366,11 @@ const Conversation = () => {
                                         </Dialog.Body>
                                         <Dialog.Footer>
                                             <Dialog.ActionTrigger asChild>
-                                                <Button variant="outline" className='bg-[#f6f5f5] rounded-md' onClick={handleClose}>
+                                                <Button
+                                                    variant="outline"
+                                                    className="bg-[#f6f5f5] rounded-md"
+                                                    onClick={handleClose}
+                                                >
                                                     Cancel
                                                 </Button>
                                             </Dialog.ActionTrigger>
@@ -435,7 +378,7 @@ const Conversation = () => {
                                                 onClick={handleConfirmInvite}
                                                 borderRadius={4}
                                                 loading={false}
-                                                className='bg-[#2f65b9] text-white text-sm rounded-md font-medium'
+                                                className="bg-[#2f65b9] text-white text-sm rounded-md font-medium"
                                                 loadingText="Loading..."
                                                 spinnerPlacement="start"
                                             >
@@ -474,9 +417,7 @@ const Conversation = () => {
                                                 key={idx}
                                             >
                                                 {(() => {
-                                                    switch (
-                                                        conversation?.messages[idx - 1]?.user._id
-                                                    ) {
+                                                    switch (conversation?.messages[idx - 1]?.user._id) {
                                                         case message?.user?._id:
                                                             return (
                                                                 <>
@@ -486,18 +427,14 @@ const Conversation = () => {
                                                                             <div className="flex items-center bg-[#f8f9fa] rounded-md w-fit px-[12px] py-[7px]">
                                                                                 <span className="text-sm font-medium">
                                                                                     <p className="mb-0">
-                                                                                        {
-                                                                                            message?.content
-                                                                                        }
+                                                                                        {message?.content}
                                                                                     </p>
                                                                                 </span>
                                                                                 <span className="ml-[10px] text-xs font-semibold">
                                                                                     <span>
                                                                                         {moment(
                                                                                             message?.timestamp
-                                                                                        ).format(
-                                                                                            'HH:mm'
-                                                                                        )}
+                                                                                        ).format('HH:mm')}
                                                                                     </span>
                                                                                 </span>
                                                                             </div>
@@ -508,9 +445,7 @@ const Conversation = () => {
                                                                                 <span className="mx-[5px] cursor-pointer">
                                                                                     <IconlyStar
                                                                                         size={15}
-                                                                                        color={
-                                                                                            '#000000'
-                                                                                        }
+                                                                                        color={'#000000'}
                                                                                     />
                                                                                 </span>
                                                                             </span>
@@ -533,18 +468,14 @@ const Conversation = () => {
                                                                             <div className="flex items-center bg-[#f8f9fa] rounded-md w-fit px-[12px] py-[7px]">
                                                                                 <span className="text-sm font-medium">
                                                                                     <p className="mb-0">
-                                                                                        {
-                                                                                            message?.content
-                                                                                        }
+                                                                                        {message?.content}
                                                                                     </p>
                                                                                 </span>
                                                                                 <span className="ml-[10px] text-xs font-semibold">
                                                                                     <span>
                                                                                         {moment(
                                                                                             message?.timestamp
-                                                                                        ).format(
-                                                                                            'HH:mm'
-                                                                                        )}
+                                                                                        ).format('HH:mm')}
                                                                                     </span>
                                                                                 </span>
                                                                             </div>
@@ -555,9 +486,7 @@ const Conversation = () => {
                                                                                 <span className="mx-[5px] cursor-pointer">
                                                                                     <IconlyStar
                                                                                         size={15}
-                                                                                        color={
-                                                                                            '#000000'
-                                                                                        }
+                                                                                        color={'#000000'}
                                                                                     />
                                                                                 </span>
                                                                             </span>
@@ -573,9 +502,7 @@ const Conversation = () => {
                                         return (
                                             <div className="flex gap-[10px] mb-[5px] px-[15px] w-full">
                                                 {(() => {
-                                                    switch (
-                                                        conversation?.messages[idx - 1]?.user._id
-                                                    ) {
+                                                    switch (conversation?.messages[idx - 1]?.user._id) {
                                                         case message?.user?._id:
                                                             return (
                                                                 <>
@@ -586,30 +513,22 @@ const Conversation = () => {
                                                                                 <div className="flex items-center bg-[#f8f9fa] rounded-md w-fit px-[12px] py-[7px]">
                                                                                     <span className="text-sm font-medium">
                                                                                         <p className="mb-0">
-                                                                                            {
-                                                                                                message?.content
-                                                                                            }
+                                                                                            {message?.content}
                                                                                         </p>
                                                                                     </span>
                                                                                     <span className="ml-[10px] text-xs font-semibold">
                                                                                         <span>
                                                                                             {moment(
                                                                                                 message?.timestamp
-                                                                                            ).format(
-                                                                                                'HH:mm'
-                                                                                            )}
+                                                                                            ).format('HH:mm')}
                                                                                         </span>
                                                                                     </span>
                                                                                 </div>
                                                                                 <span className="ml-[5px] hidden items-center group-hover:flex transition-opacity duration-300 ease-in-out">
                                                                                     <span className="mx-[5px] cursor-pointer">
                                                                                         <IconlyStar
-                                                                                            size={
-                                                                                                15
-                                                                                            }
-                                                                                            color={
-                                                                                                '#000000'
-                                                                                            }
+                                                                                            size={15}
+                                                                                            color={'#000000'}
                                                                                         />
                                                                                     </span>
                                                                                     <span className="mx-[5px] cursor-pointer">
@@ -641,30 +560,22 @@ const Conversation = () => {
                                                                                 <div className="flex items-center bg-[#f8f9fa] rounded-md w-fit px-[12px] py-[7px]">
                                                                                     <span className="text-sm font-medium">
                                                                                         <p className="mb-0">
-                                                                                            {
-                                                                                                message?.content
-                                                                                            }
+                                                                                            {message?.content}
                                                                                         </p>
                                                                                     </span>
                                                                                     <span className="ml-[10px] text-xs font-semibold">
                                                                                         <span>
                                                                                             {moment(
                                                                                                 message?.timestamp
-                                                                                            ).format(
-                                                                                                'HH:mm'
-                                                                                            )}
+                                                                                            ).format('HH:mm')}
                                                                                         </span>
                                                                                     </span>
                                                                                 </div>
                                                                                 <span className="ml-[   5px] hidden items-center group-hover:flex transition-opacity duration-300 ease-in-out">
                                                                                     <span className="mx-[5px] cursor-pointer">
                                                                                         <IconlyStar
-                                                                                            size={
-                                                                                                15
-                                                                                            }
-                                                                                            color={
-                                                                                                '#000000'
-                                                                                            }
+                                                                                            size={15}
+                                                                                            color={'#000000'}
                                                                                         />
                                                                                     </span>
                                                                                     <span className="mx-[5px] cursor-pointer">
@@ -698,7 +609,7 @@ const Conversation = () => {
                                 onChange={handleChangeMessage}
                                 type="text"
                                 placeholder="Write your message"
-                                className="w-full outline-none"
+                                className="w-full bg-white outline-none"
                             />
                         </div>
                         <div
@@ -727,9 +638,7 @@ const Conversation = () => {
                         <p className="mb-0 w-14 h-14">
                             <WechatOutlined className="text-8xl w-14 h-14 " />
                         </p>
-                        <p className="mb-0 text-[#6f7f92]">
-                            Select a conversation to display messages
-                        </p>
+                        <p className="mb-0 text-[#6f7f92]">Select a conversation to display messages</p>
                         <p className="mb-0 text-[#6f7f92]">or</p>
                         <p className="mb-0">
                             <Link

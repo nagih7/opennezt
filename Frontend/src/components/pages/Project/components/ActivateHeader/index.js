@@ -50,7 +50,7 @@ const ActivateHeader = () => {
 							<select
 								name=""
 								id=""
-								className="ml-4 outline-none border-[1px] py-[10px] rounded-md pl-3 border-[#f3f4f5]">
+								className="ml-4 outline-none border-[1px] py-[10px] rounded-md pl-3 border-[#f3f4f5] bg-white">
 								<option value="">Last Active</option>
 								<option value="">Most Members</option>
 								<option value="">Newly Created</option>

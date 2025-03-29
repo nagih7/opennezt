@@ -151,13 +151,12 @@ const Educations = () => {
 													<p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
 														{`${moment(
 															education.start_date
-														).format("MMM YYYY")} ${
-															education.end_date
-																? `- ${moment(
-																		education.end_date
-																  ).format("MMM YYYY")}`
-																: ""
-														}`}
+														).format("MMM YYYY")} ${education.end_date
+															? `- ${moment(
+																education.end_date
+															).format("MMM YYYY")}`
+															: ""
+															}`}
 													</p>
 												)}
 											{education.field_of_study && (
@@ -195,7 +194,7 @@ const Educations = () => {
 				<Portal>
 					<Dialog.Backdrop />
 					<Dialog.Positioner>
-						<Dialog.Content>
+						<Dialog.Content className="bg-white">
 							<Dialog.Header>
 								<Dialog.Title>
 									{action === "create"
@@ -278,12 +277,8 @@ const Educations = () => {
 								</Stack>
 							</Dialog.Body>
 							<Dialog.Footer>
-								<Dialog.ActionTrigger asChild>
-									<Button variant="outline" onClick={handleClose}>
-										Cancel
-									</Button>
-								</Dialog.ActionTrigger>
 								<Button
+									className="border-[#F4F5F6] bg-[#2F65B9] text-white"
 									onClick={handleSaveChanges}
 									borderRadius={4}
 									loading={isLoadingCreateOrUpdateEducation}
@@ -291,10 +286,13 @@ const Educations = () => {
 									spinnerPlacement="start">
 									SAVE CHANGES
 								</Button>
+								<Dialog.ActionTrigger asChild>
+									<Button className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]" variant="outline" onClick={handleClose}>
+										Cancel
+									</Button>
+								</Dialog.ActionTrigger>
+
 							</Dialog.Footer>
-							<Dialog.CloseTrigger asChild>
-								<CloseButton onClick={handleClose} size="sm" />
-							</Dialog.CloseTrigger>
 						</Dialog.Content>
 					</Dialog.Positioner>
 				</Portal>

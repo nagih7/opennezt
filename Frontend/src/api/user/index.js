@@ -12,6 +12,7 @@ import {
     requestGetCategoryFramework,
     getCategoryFrameworkSuccess,
     getCategoryFrameworkFail,
+    // SUB CATEGORIES
     requestGetSubCategoryFramework,
     getSubCategoryFrameworkSuccess,
     getSubCategoryFrameworkFail,
@@ -83,6 +84,7 @@ export const getCategoryFramework = () => async (dispatch, getState) => {
     });
 };
 
+// SUB CATEGORIES
 export const getSubCategoryFramework = (categoryId) => async (dispatch, getState) => {
     return callApi({
         method: 'get',

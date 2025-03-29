@@ -41,7 +41,7 @@ const SelectCustom = ({ ...rest }) => {
 				<SelectContent
 					style={{ zIndex: 9999 }}
 					width={"100%"}
-					className="w-full">
+					className="w-full bg-white">
 					{collection?.items?.map((item) => (
 						<SelectItem
 							className="p-[12px] w-full outline-none  rounded-md"
