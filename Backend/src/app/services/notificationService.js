@@ -20,7 +20,7 @@ import {
     ProjectMember,
     Role,
 } from '@/models'
-import {userSockets} from '@/routes/socket'
+import {userSockets} from '@/routes'
 
 export async function filter(user, {q = '', page = 1, per_page = 20, order = 1}) {
     order = order === '-1' ? -1 : 1
