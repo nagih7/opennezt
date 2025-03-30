@@ -1,4 +1,4 @@
-import callApi from '../callApi';
+import callApi from '../callApi'
 import {
     // =========== GET CONVERSATIONS =========== //
     requestGetConversations,
@@ -19,7 +19,8 @@ import {
     startRequestGetChatHistory,
     startRequestGetChatHistorySuccess,
     startRequestGetChatHistoryFail,
-} from '../../states/modules/chat';
+} from '../../states/modules/chat'
+import callSocket from 'api/callSocket'
 
 // =========== GET CONVERSATIONS =========== //
 export const getConversations = () => async (dispatch, getState) => {
@@ -30,8 +31,8 @@ export const getConversations = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== GET CONVERSATION ========== //
 export const getConversation = (conversation_id) => async (dispatch, getState) => {
@@ -42,8 +43,8 @@ export const getConversation = (conversation_id) => async (dispatch, getState) =
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== GET MESSAGES ========== //
 export const getMessages = (conversation_id) => async (dispatch, getState) => {
@@ -54,32 +55,40 @@ export const getMessages = (conversation_id) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== SEND MESSAGE ========== //
-export const sendMessage = (conversation_id, content) => async (dispatch, getState) => {
-    return callApi({
-        method: 'post',
-        apiPath: `chat/conversations/${conversation_id}/messages`,
-        actionTypes: [requestSendMessage, sendMessageSuccess, sendMessageFail],
-        variables: { content },
-        dispatch,
-        getState,
-    });
-};
+// export const sendMessage = (conversation_id, content) => async (dispatch, getState) => {
+//     return callApi({
+//         method: 'post',
+//         apiPath: `chat/conversations/${conversation_id}/messages`,
+//         actionTypes: [requestSendMessage, sendMessageSuccess, sendMessageFail],
+//         variables: { content },
+//         dispatch,
+//         getState,
+//     });
+// };
 
 export const getChatHistory = (conversation_id) => async (dispatch, getState) => {
     return callApi({
         method: 'get',
         apiPath: `chat/chat-history/${conversation_id}`,
-        actionTypes: [
-            startRequestGetChatHistory,
-            startRequestGetChatHistorySuccess,
-            startRequestGetChatHistoryFail,
-        ],
+        actionTypes: [startRequestGetChatHistory, startRequestGetChatHistorySuccess, startRequestGetChatHistoryFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
+
+// ========== SEND MESSAGE ========== //
+export const sendMessage = (conversation_id, content, socket) => async (dispatch, getState) => {
+    return callSocket({
+        event: 'message',
+        actionTypes: [requestSendMessage, sendMessageSuccess, sendMessageFail],
+        payload: { conversation_id, content },
+        dispatch,
+        getState,
+        socket,
+    })
+}
