@@ -10,21 +10,11 @@ import {
     PROJECT_APPLICATION_NOTIFICATION,
     PROJECT_INVITATION_NOTIFICATION,
 } from '@/configs'
-import {CONVERSATION_ADMIN_ROLE, CONVERSATION_MEMBER_ROLE} from '@/configs/roleConstants'
-import {
-    NotificationFeed,
-    Friend,
-    ObjectId,
-    Project,
-    User,
-    Conversation,
-    Type,
-    ProjectMember,
-    Role,
-} from '@/models'
-import {userSockets} from '@/routes'
+import { CONVERSATION_ADMIN_ROLE, CONVERSATION_MEMBER_ROLE } from '@/configs/roleConstants'
+import { NotificationFeed, Friend, ObjectId, Project, User, Conversation, Type, ProjectMember, Role } from '@/models'
+import { userSockets } from '@/routes'
 
-export async function filter(user, {q = '', page = 1, per_page = 20, order = 1}) {
+export async function filter(user, { q = '', page = 1, per_page = 20, order = 1 }) {
     order = order === '-1' ? -1 : 1
 
     // Chuyển user._id thành ObjectId nếu cần
@@ -32,20 +22,20 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
 
     // Tạo bộ lọc
     const matchStage = {
-        $match: {user_id: userId},
+        $match: { user_id: userId },
     }
 
     if (q.trim().length > 0) {
         matchStage.$match.$or = [
             {
-                type: {$exists: true, $regex: q, $options: 'i'},
+                type: { $exists: true, $regex: q, $options: 'i' },
             },
         ]
     }
 
     // Các bước trong pipeline
     const orderStage = {
-        $sort: {created_at: order},
+        $sort: { created_at: order },
     }
     const skipStage = {
         $skip: (page - 1) * per_page,
@@ -74,8 +64,8 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
             _id: 1,
             type_id: 1,
             source_id: 1,
-            type_name: {$ifNull: [{$arrayElemAt: ['$type_info.name', 0]}, 'Unknown Type']},
-            source_name: {$ifNull: [{$arrayElemAt: ['$source_info.name', 0]}, 'Unknown User']},
+            type_name: { $ifNull: [{ $arrayElemAt: ['$type_info.name', 0] }, 'Unknown Type'] },
+            source_name: { $ifNull: [{ $arrayElemAt: ['$source_info.name', 0] }, 'Unknown User'] },
             created_at: 1,
             updated_at: 1,
             metadata: 1,
@@ -96,7 +86,7 @@ export async function filter(user, {q = '', page = 1, per_page = 20, order = 1})
     // Đếm số lượng chính xác
     const total = await NotificationFeed.countDocuments(matchStage.$match)
 
-    return {total, page, per_page, notifications}
+    return { total, page, per_page, notifications }
 }
 
 // ========== GET [Notification - Read] ========== //
@@ -139,9 +129,9 @@ export async function getNotifications(user) {
                     $addFields: {
                         avatar: {
                             $cond: {
-                                if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                 then: '$avatar',
-                                else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                             },
                         },
                     },
@@ -228,7 +218,7 @@ export async function getNotifications(user) {
         // },
         {
             $sort: {
-                created_at: -1,
+                timestamp: -1,
             },
         },
         {
@@ -240,7 +230,7 @@ export async function getNotifications(user) {
 }
 
 // ========== PUT [Notification - Reply] ========== //
-export async function replyNotification({notificationId}, {action}, io) {
+export async function replyNotification({ notificationId }, { action }, io) {
     if (action === CONFIRM_STATUS) {
         const notification = await NotificationFeed.findOne({
             _id: new ObjectId(notificationId),
@@ -266,6 +256,7 @@ export async function replyNotification({notificationId}, {action}, io) {
         notification.metadata.read = true
         notification.markModified('metadata')
         await notification.save()
+        return { notification_id: notification._id, status: CONFIRM_STATUS }
     } else if (action === DELETE_STATUS) {
         await NotificationFeed.findByIdAndDelete(new ObjectId(notificationId))
         return
@@ -274,23 +265,23 @@ export async function replyNotification({notificationId}, {action}, io) {
 
 // ========== REPLY FRIEND REQUEST ========== //
 const replyFriendRequest = async (notification, io) => {
-    const {user_id, source_id} = notification
+    const { user_id, source_id } = notification
 
-    const existingFriendship = await Friend.findOne({user_id: user_id, friend_id: source_id})
+    const existingFriendship = await Friend.findOne({ user_id: user_id, friend_id: source_id })
 
     // CHECK IF THE USER IS ALREADY FRIENDS
     if (!existingFriendship) {
-        await Friend.create({user_id: user_id, friend_id: source_id})
-        await Friend.create({user_id: source_id, friend_id: user_id})
+        await Friend.create({ user_id: user_id, friend_id: source_id })
+        await Friend.create({ user_id: source_id, friend_id: user_id })
     }
 
     // DIRECT CHAT TYPE
-    const directChatType = await Type.findOne({class: CONVERSATION_TYPE, name: DIRECT_CONVERSATION})
+    const directChatType = await Type.findOne({ class: CONVERSATION_TYPE, name: DIRECT_CONVERSATION })
     // CHECK IF THE CONVERSATION ALREADY EXISTS
     const conversation = await Conversation.findOne({
         type_id: directChatType._id,
         members: {
-            $all: [{$elemMatch: {user_id: user_id}}, {$elemMatch: {user_id: source_id}}],
+            $all: [{ $elemMatch: { user_id: user_id } }, { $elemMatch: { user_id: source_id } }],
         },
     })
 
@@ -339,9 +330,9 @@ const replyFriendRequest = async (notification, io) => {
             $addFields: {
                 avatar: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                         then: '$avatar',
-                        else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                        else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                     },
                 },
             },
@@ -369,8 +360,8 @@ const replyFriendRequest = async (notification, io) => {
 
 // ========== REPLY PROJECT INVITATION ========== //
 const replyProjectInvitation = async (notification, io) => {
-    const {user_id, source_id} = notification
-    const {project_id, team_role_id, role_id} = notification.data
+    const { user_id, source_id } = notification
+    const { project_id, team_role_id, role_id } = notification.data
     // PROJECT MEMBER
     const projectMember = await ProjectMember.findOne({
         user_id: user_id,
@@ -386,7 +377,7 @@ const replyProjectInvitation = async (notification, io) => {
         })
     }
     // CONVERSATION
-    const conversationType = await Type.findOne({class: CONVERSATION_TYPE, name: GROUP_CONVERSATION})
+    const conversationType = await Type.findOne({ class: CONVERSATION_TYPE, name: GROUP_CONVERSATION })
     const conversation = await Conversation.findOne({
         type_id: conversationType._id,
         data: {
@@ -403,9 +394,7 @@ const replyProjectInvitation = async (notification, io) => {
 
     // ADD MEMBER TO CONVERSATION
     if (conversation) {
-        const existingMember = conversation.members.find(
-            (member) => member.user_id.toString() === user_id.toString()
-        )
+        const existingMember = conversation.members.find((member) => member.user_id.toString() === user_id.toString())
         if (!existingMember) {
             const memberRole = await Role.findOne({
                 name: CONVERSATION_MEMBER_ROLE,
@@ -459,13 +448,13 @@ const replyProjectInvitation = async (notification, io) => {
 }
 
 export async function getTotalFriends(user) {
-    const totalFriends = await Friend.countDocuments({user_id: user._id})
+    const totalFriends = await Friend.countDocuments({ user_id: user._id })
     return totalFriends
 }
 
 export async function projectInvitation(user, requestBody, type_id, io) {
-    const {project_id, user_id} = requestBody
-    const type = await Type.findOne({name: 'Project Invitation'})
+    const { project_id, user_id } = requestBody
+    const type = await Type.findOne({ name: 'Project Invitation' })
 
     if (!type_id || !type._id) {
         throw new Error('Loại thông báo không hợp lệ.')
@@ -499,8 +488,8 @@ export async function projectInvitation(user, requestBody, type_id, io) {
 export async function getRequestAddFriend(user, user_id) {
     const request = await NotificationFeed.findOne({
         $or: [
-            {user_id: user_id, source_id: user._id},
-            {user_id: user._id, source_id: user_id},
+            { user_id: user_id, source_id: user._id },
+            { user_id: user._id, source_id: user_id },
         ],
         type: 'friend_request',
     })
@@ -510,11 +499,11 @@ export async function getRequestAddFriend(user, user_id) {
 
 // ========== PUT [Notification - Reply Invitation Member] ========== //
 export async function replyInvitationMember(user, requestBody, io) {
-    const {notification_id, action} = requestBody
+    const { notification_id, action } = requestBody
     const notification = await NotificationFeed.findById(notification_id)
 
     if (notification.metadata.status === 'waiting') {
-        const {user_id, source_id, additional_info} = notification
+        const { user_id, source_id, additional_info } = notification
         notification.metadata.status = action.toLowerCase()
         notification.metadata.read = true
         notification.markModified('metadata')
@@ -536,7 +525,7 @@ export async function replyInvitationMember(user, requestBody, io) {
         // }
     } else if (action.toLowerCase() === 'delete') {
         // XÓA THÔNG BÁO
-        await NotificationFeed.deleteOne({_id: notification_id})
+        await NotificationFeed.deleteOne({ _id: notification_id })
     }
 
     // THÊM THÀNH VIÊN VÀO DỰ ÁN

@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit'
+import { toaster } from 'components/UI/toaster'
 
 const talentSlice = createSlice({
     name: 'Talent',
@@ -52,7 +53,7 @@ const talentSlice = createSlice({
         }),
 
         setFormRecruitTalents: (state, action) => {
-            const { event, nameSelect } = action.payload;
+            const { event, nameSelect } = action.payload
             if (nameSelect) {
                 return {
                     ...state,
@@ -61,7 +62,7 @@ const talentSlice = createSlice({
                         [nameSelect]: event.value[0],
                         page: 1,
                     },
-                };
+                }
             }
             return {
                 ...state,
@@ -70,7 +71,7 @@ const talentSlice = createSlice({
                     [event.target.name]: event.target.value,
                     page: 1,
                 },
-            };
+            }
         },
 
         // ========== TALENT DETAILS ========== //
@@ -94,34 +95,20 @@ const talentSlice = createSlice({
             ...state,
             isLoadingSendFriendRequest: true,
         }),
-        sendFriendRequestSuccess: (state) => {
-            toaster.create({
-                title: 'Friend Request Sent',
-                description: 'Friend request sent successfully',
-                type: 'success',
-            });
-            return {
-                ...state,
-                talentDetails: {
-                    ...state.talentDetails,
-                    is_friend_requested: true,
-                },
-                isLoadingSendFriendRequest: false,
-            };
-        },
-        sendFriendRequestFail: (state) => {
-            toaster.create({
-                title: 'Friend Request Failed',
-                description: 'Failed to send friend request',
-                type: 'error',
-            });
-            return {
-                ...state,
-                isLoadingSendFriendRequest: false,
-            };
-        },
+        sendFriendRequestSuccess: (state, action) => ({
+            ...state,
+            talentDetails: {
+                ...state.talentDetails,
+                is_friend_requested: action.payload.data.is_friend_requested,
+            },
+            isLoadingSendFriendRequest: false,
+        }),
+        sendFriendRequestFail: (state) => ({
+            ...state,
+            isLoadingSendFriendRequest: false,
+        }),
     },
-});
+})
 
 export const {
     // ========== RECRUIT TALENTS ========== //
@@ -137,6 +124,6 @@ export const {
     requestSendFriendRequest,
     sendFriendRequestSuccess,
     sendFriendRequestFail,
-} = talentSlice.actions;
+} = talentSlice.actions
 
-export default talentSlice.reducer;
+export default talentSlice.reducer

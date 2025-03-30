@@ -1,5 +1,5 @@
-import {Router} from 'express'
-import {asyncHandler} from '@/utils/helpers'
+import { Router } from 'express'
+import { asyncHandler } from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
 import validate from '@/app/middleware/common/validate'
 import * as userMiddleware from '../app/middleware/userMiddleware'
@@ -10,11 +10,7 @@ const userRouter = Router()
 
 userRouter.use(asyncHandler(requireAuthentication))
 
-userRouter.put(
-    '/avatar',
-    asyncHandler(validate(userRequest.updateAvatar)),
-    asyncHandler(userController.updateAvatar)
-)
+userRouter.put('/avatar', asyncHandler(validate(userRequest.updateAvatar)), asyncHandler(userController.updateAvatar))
 
 userRouter.put(
     '/background',
@@ -72,7 +68,11 @@ userRouter.get('/stages', asyncHandler(userController.getStages))
 userRouter.get('/roles/project', asyncHandler(userController.getProjectRoles))
 
 // ========== POST [User - Request Add Friend] ========== //
-userRouter.post('/:userId/friend-request', asyncHandler(userController.sendFriendRequest))
+userRouter.post(
+    '/:userId/friend-request',
+    asyncHandler(validate(userRequest.sendFriendRequest)),
+    asyncHandler(userController.sendFriendRequest)
+)
 
 // URL dynamic
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))

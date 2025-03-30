@@ -1,54 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { getChatHistory } from 'api/chat';
-import NotFound from 'components/UI/NotFound';
-import { MESSAGES } from 'utils/constants';
-import { Avatar, Stack, Text } from '@chakra-ui/react';
-import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants';
-import { CheckCircleFilled } from '@ant-design/icons';
-import { MoreOutlined } from '@ant-design/icons';
-import './styles.module.scss';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { getChatHistory } from 'api/chat'
+import NotFound from 'components/UI/NotFound'
+import { MESSAGES } from 'utils/constants'
+import { Avatar, Stack, Text } from '@chakra-ui/react'
+import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants'
+import { CheckCircleFilled } from '@ant-design/icons'
+import { MoreOutlined } from '@ant-design/icons'
+import './styles.module.scss'
+import { useNavigate } from 'react-router-dom'
 
 const PopoverMessage = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { conversations } = useSelector((state) => state.chat);
-    const { language } = useSelector((state) => state.app);
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { conversations } = useSelector((state) => state.chat)
+    const { language } = useSelector((state) => state.app)
 
-    const [searchQuery, setSearchQuery] = useState('');
-    const [debouncedTerm, setDebouncedTerm] = useState('');
+    const [searchQuery, setSearchQuery] = useState('')
+    const [debouncedTerm, setDebouncedTerm] = useState('')
 
     // NEW
     const handleGetChatHistory = (conversation) => {
-        dispatch(getChatHistory(conversation._id));
-    };
+        dispatch(getChatHistory(conversation._id))
+    }
 
     useEffect(() => {
         const handler = setTimeout(() => {
-            setDebouncedTerm(searchQuery);
-        }, 300);
+            setDebouncedTerm(searchQuery)
+        }, 300)
 
         return () => {
-            clearTimeout(handler);
-        };
-    }, [searchQuery]);
+            clearTimeout(handler)
+        }
+    }, [searchQuery])
 
     useEffect(() => {
         // dispatch(getChatList(debouncedTerm));
-    }, [debouncedTerm, dispatch]);
+    }, [debouncedTerm, dispatch])
 
     const handleSearchQuery = (value) => {
-        setSearchQuery(value);
-    };
-    const MAX_LENGTH = 15;
+        setSearchQuery(value)
+    }
+    const MAX_LENGTH = 15
     const truncateText = (text, maxLength) => {
-        return text.length > maxLength ? '...' : text;
-    };
+        return text.length > maxLength ? '...' : text
+    }
 
     const handleNavigateChat = (id) => {
-        navigate(`/conversation/${id}`);
-    };
+        navigate(`/conversation/${id}`)
+    }
 
     return (
         <Stack className="bg-[#ffffff] rounded-md">
@@ -82,7 +82,11 @@ const PopoverMessage = () => {
                                     switch (conversation.type.name) {
                                         case DIRECT_CONVERSATION:
                                             return (
-                                                <Stack className="flex flex-row items-center w-full gap-2" spacing={4}>
+                                                <Stack
+                                                    className="flex flex-row items-center w-full gap-2"
+                                                    spacing={4}
+                                                    onClick={() => handleNavigateChat(conversation._id)}
+                                                >
                                                     <Avatar.Root size={'lg'}>
                                                         <Avatar.Fallback name={conversation.members[0]?.name} />
                                                         <Avatar.Image src={conversation.members[0]?.avatar} />
@@ -100,7 +104,7 @@ const PopoverMessage = () => {
                                                         <MoreOutlined className="w-[15px] h-[15px] text-black" />
                                                     </div>
                                                 </Stack>
-                                            );
+                                            )
                                         case GROUP_CONVERSATION:
                                             return (
                                                 <Stack
@@ -125,13 +129,13 @@ const PopoverMessage = () => {
                                                         <MoreOutlined className="w-[15px] h-[15px] text-black" />
                                                     </div>
                                                 </Stack>
-                                            );
+                                            )
                                         default:
-                                            return null;
+                                            return null
                                     }
                                 })()}
                             </Stack>
-                        );
+                        )
                     })
                 ) : (
                     <div>
@@ -140,7 +144,7 @@ const PopoverMessage = () => {
                 )}
             </Stack>
         </Stack>
-    );
-};
+    )
+}
 
-export default PopoverMessage;
+export default PopoverMessage

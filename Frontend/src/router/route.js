@@ -36,19 +36,11 @@ const Manage = React.lazy(() => import('../components/pages/Manage'));
 const UserManagement = React.lazy(() => import('../components/pages/UserManagement'));
 const RoleManage = React.lazy(() => import('../components/pages/Manage/components/RoleManage'));
 const TypeManage = React.lazy(() => import('../components/pages/Manage/components/TypeManage'));
-const IndustryManage = React.lazy(() =>
-    import('../components/pages/Manage/components/IndustryManage')
-);
-const ExperienceLevelManage = React.lazy(() =>
-    import('../components/pages/Manage/components/ExperienceLevelManage')
-);
-const CategoryManage = React.lazy(() =>
-    import('../components/pages/Manage/components/CategoryManage')
-);
+const IndustryManage = React.lazy(() => import('../components/pages/Manage/components/IndustryManage'));
+const ExperienceLevelManage = React.lazy(() => import('../components/pages/Manage/components/ExperienceLevelManage'));
+const CategoryManage = React.lazy(() => import('../components/pages/Manage/components/CategoryManage'));
 const SkillManage = React.lazy(() => import('../components/pages/Manage/components/SkillManage'));
-const OrganizationManage = React.lazy(() =>
-    import('../components/pages/Manage/components/OrganizationManage')
-);
+const OrganizationManage = React.lazy(() => import('../components/pages/Manage/components/OrganizationManage'));
 const About = React.lazy(() => import('../components/pages/About'));
 const Message = React.lazy(() => import('../components/pages/Message'));
 const Newfeeds = React.lazy(() => import('../components/pages/Newfeeds'));
@@ -63,16 +55,10 @@ const ResetPassword = React.lazy(() => import('../components/pages/Auth/ResetPas
 const ProfessionalBackground = React.lazy(() =>
     import('../components/pages/EditProfile/components/ProfessionalBackground')
 );
-const Educations = React.lazy(() =>
-    import('../components/pages/EditProfile/components/Educations')
-);
+const Educations = React.lazy(() => import('../components/pages/EditProfile/components/Educations'));
 const Skills = React.lazy(() => import('../components/pages/EditProfile/components/Skills'));
-const AdditionalInfo = React.lazy(() =>
-    import('../components/pages/EditProfile/components/AdditionalInfo')
-);
-const NotificationManagement = React.lazy(() =>
-    import('../components/pages/NotificationManagement')
-);
+const AdditionalInfo = React.lazy(() => import('../components/pages/EditProfile/components/AdditionalInfo'));
+const NotificationManagement = React.lazy(() => import('../components/pages/NotificationManagement'));
 const router = createBrowserRouter([
     {
         path: '/login',
@@ -261,6 +247,7 @@ const router = createBrowserRouter([
                 <TalentDetails />
             </AppLayout>
         ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_TALENT_DETAILS_PAGE'),
     },
     {
         path: '/seek-projects',

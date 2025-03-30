@@ -41,11 +41,7 @@ export const getIndustryFramework = () => async (dispatch, getState) => {
     return callApi({
         method: 'get',
         apiPath: 'users/industries',
-        actionTypes: [
-            requestgetIndustryFramework,
-            getIndustryFrameworkSuccess,
-            getIndustryFrameworkFail,
-        ],
+        actionTypes: [requestgetIndustryFramework, getIndustryFrameworkSuccess, getIndustryFrameworkFail],
         variables: {},
         dispatch,
         getState,
@@ -73,11 +69,7 @@ export const getCategoryFramework = () => async (dispatch, getState) => {
     return callApi({
         method: 'get',
         apiPath: 'users/categories',
-        actionTypes: [
-            requestGetCategoryFramework,
-            getCategoryFrameworkSuccess,
-            getCategoryFrameworkFail,
-        ],
+        actionTypes: [requestGetCategoryFramework, getCategoryFrameworkSuccess, getCategoryFrameworkFail],
         variables: {},
         dispatch,
         getState,
@@ -89,11 +81,7 @@ export const getSubCategoryFramework = (categoryId) => async (dispatch, getState
     return callApi({
         method: 'get',
         apiPath: `users/categories/${categoryId}`,
-        actionTypes: [
-            requestGetSubCategoryFramework,
-            getSubCategoryFrameworkSuccess,
-            getSubCategoryFrameworkFail,
-        ],
+        actionTypes: [requestGetSubCategoryFramework, getSubCategoryFrameworkSuccess, getSubCategoryFrameworkFail],
         variables: {},
         dispatch,
         getState,
@@ -129,11 +117,7 @@ export const getProjectRoleFramework = () => async (dispatch, getState) => {
     return callApi({
         method: 'get',
         apiPath: 'users/roles/project',
-        actionTypes: [
-            requestGetProjectRoleFramework,
-            getProjectRoleFrameworkSuccess,
-            getProjectRoleFrameworkFail,
-        ],
+        actionTypes: [requestGetProjectRoleFramework, getProjectRoleFrameworkSuccess, getProjectRoleFrameworkFail],
         variables: {},
         dispatch,
         getState,
@@ -141,12 +125,12 @@ export const getProjectRoleFramework = () => async (dispatch, getState) => {
 };
 
 // REQUEST ADD FRIEND
-export const sendFriendRequest = (userId) => async (dispatch, getState) => {
+export const sendFriendRequest = (userId, action) => async (dispatch, getState) => {
     return callApi({
         method: 'post',
         apiPath: `users/${userId}/friend-request`,
         actionTypes: [requestSendFriendRequest, sendFriendRequestSuccess, sendFriendRequestFail],
-        variables: {},
+        variables: { action },
         dispatch,
         getState,
     });
