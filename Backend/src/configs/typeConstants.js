@@ -25,6 +25,9 @@ export const STATUS_TYPE = 'status'
 export const WAITING_STATUS = 'waiting'
 export const CONFIRM_STATUS = 'confirm'
 export const DELETE_STATUS = 'delete'
+export const SENT_STATUS = 'sent'
+export const RECEIVED_STATUS = 'received'
+export const READ_STATUS = 'read'
 
 // CONVERSATION TYPE
 export const CONVERSATION_TYPE = 'conversation'

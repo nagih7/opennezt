@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit'
 
 const chatSlice = createSlice({
     name: 'chat',
@@ -84,14 +84,28 @@ const chatSlice = createSlice({
             ...state,
             loadingSendMessage: false,
         }),
+        // ========== SET MESSAGES ========== //
+        setMessages: (state, action) => {
+            console.log('setMessages', action.payload)
+            const { message } = action.payload
+            if (state.conversation._id === message.conversation_id) {
+                return {
+                    ...state,
+                    conversation: {
+                        ...state.conversation,
+                        messages: [...state.conversation.messages, message],
+                    },
+                }
+            }
+        },
 
         startRequestGetChatHistory: (state) => ({
             ...state,
             loadingGetChatHistory: true,
         }),
         startRequestGetChatHistorySuccess: (state, action) => {
-            const { data } = action.payload;
-            let i = 0;
+            const { data } = action.payload
+            let i = 0
             while (i < state.conversations.length + 1) {
                 if (i === state.conversations.length) {
                     return {
@@ -104,7 +118,7 @@ const chatSlice = createSlice({
                             },
                         ],
                         loadingGetChatHistory: false,
-                    };
+                    }
                 }
                 if (state.conversations[i].conversation._id === data.conversation._id) {
                     return {
@@ -118,10 +132,10 @@ const chatSlice = createSlice({
                             ...state.conversations.slice(i + 1),
                         ],
                         loadingGetChatHistory: false,
-                    };
+                    }
                 }
 
-                i++;
+                i++
             }
         },
 
@@ -136,12 +150,11 @@ const chatSlice = createSlice({
                 conversations: state.conversations.filter(
                     (conversation) => conversation.conversation._id !== action.payload
                 ),
-            };
+            }
         },
         comfirmSendMessage: (state, action) => {
-            const { user_id, conversation_id, content, created_at, metadata, updated_at, _id } =
-                action.payload;
-            let i = 0;
+            const { user_id, conversation_id, content, created_at, metadata, updated_at, _id } = action.payload
+            let i = 0
             while (i < state.conversations.length + 1) {
                 if (state.conversations[i].conversation._id === conversation_id) {
                     return {
@@ -165,13 +178,13 @@ const chatSlice = createSlice({
                             },
                             ...state.conversations.slice(i + 1),
                         ],
-                    };
+                    }
                 }
-                i++;
+                i++
             }
         },
     },
-});
+})
 
 export const {
     // ========== GET CONVERSATIONS ========== //
@@ -190,11 +203,13 @@ export const {
     requestSendMessage,
     sendMessageSuccess,
     sendMessageFail,
+    // ========== SET MESSAGES ========== //
+    setMessages,
     startRequestGetChatHistory,
     startRequestGetChatHistorySuccess,
     startRequestGetChatHistoryFail,
     closeChatBox,
     comfirmSendMessage,
-} = chatSlice.actions;
+} = chatSlice.actions
 
-export default chatSlice.reducer;
+export default chatSlice.reducer

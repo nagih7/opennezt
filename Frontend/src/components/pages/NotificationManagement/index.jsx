@@ -1,56 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Tag, Button, Modal, Row, Col } from 'antd';
-import TableCustom from 'components/UI/Table';
-import {
-    CheckOutlined,
-    CloseOutlined,
-    EyeInvisibleOutlined,
-    DeleteOutlined,
-    EyeOutlined,
-} from '@ant-design/icons';
-import styles from './styles.module.scss';
-import store from 'states/configureStore';
-import { getTalentDetails } from 'api/talent';
-import moment from 'moment';
-import { getNotifications, getTotalFriends, readRoot, replyNotification } from 'api/notification';
-import { FRIENDS, ACTIONS, STATUS, TYPE, REQUEST_BY, REQUEST_AT } from 'utils/constants';
-import { Tabs } from '@chakra-ui/react';
-import RightSidebar from 'components/common/RightSidebar';
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Tag, Button, Modal, Row, Col } from 'antd'
+import TableCustom from 'components/UI/Table'
+import { CheckOutlined, CloseOutlined, EyeInvisibleOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
+import styles from './styles.module.scss'
+import store from 'states/configureStore'
+import { getTalentDetails } from 'api/talent'
+import moment from 'moment'
+import { getNotifications, getTotalFriends, readRoot, replyNotification } from 'api/notification'
+import { FRIENDS, ACTIONS, STATUS, TYPE, REQUEST_BY, REQUEST_AT } from 'utils/constants'
+import { Tabs } from '@chakra-ui/react'
+import RightSidebar from 'components/common/RightSidebar'
 
 function NotificationProject() {
-    const [openModalTalentDetails, setOpenModalTalentDetails] = useState(false);
-    const { language } = useSelector((state) => state.app);
+    const [openModalTalentDetails, setOpenModalTalentDetails] = useState(false)
+    const { language } = useSelector((state) => state.app)
     const [dataFilter, setDataFilter] = useState({
         page: 1,
         perPage: 10,
         order: null,
-    });
-    const { talentDetails, isLoadingGetTalentDetails } = useSelector((state) => state.talent);
+    })
+    const { talentDetails, isLoadingGetTalentDetails } = useSelector((state) => state.talent)
     // const { notifications, totalFriends, paginationListNotification } =
     // 	useSelector((state) => state.notification);
 
     useEffect(() => {
-        store.dispatch(readRoot(dataFilter));
-        store.dispatch(getTotalFriends());
-    }, [dataFilter]);
+        store.dispatch(readRoot(dataFilter))
+        store.dispatch(getTotalFriends())
+    }, [dataFilter])
 
     const handleOpenTalentDetails = async (user_id) => {
-        setOpenModalTalentDetails(true);
-        await store.dispatch(getTalentDetails(user_id));
-    };
+        setOpenModalTalentDetails(true)
+        await store.dispatch(getTalentDetails(user_id))
+    }
 
     const handleReplyNotification = async (notification_id, type_id, status) => {
-        await store.dispatch(replyNotification({ notification_id, type_id, status }));
-        await store.dispatch(getNotifications());
+        await store.dispatch(replyNotification({ notification_id, type_id, status }))
+        await store.dispatch(getNotifications())
         if (status === 'accepted') {
             // await store.dispatch(getChatList());
         }
-    };
+    }
 
     const changeCurrentPage = (page) => {
-        setDataFilter({ ...dataFilter, page: page });
-    };
+        setDataFilter({ ...dataFilter, page: page })
+    }
 
     const onChange = (pagination, filters, sorter) => {
         if (sorter.order && sorter.field) {
@@ -58,11 +52,11 @@ function NotificationProject() {
                 ...dataFilter,
                 order: sorter.order === 'descend' ? -1 : 1,
                 column: sorter.field,
-            });
+            })
         } else {
-            setDataFilter({ ...dataFilter, order: null, column: null });
+            setDataFilter({ ...dataFilter, order: null, column: null })
         }
-    };
+    }
     // new code
     const notifications = [
         {
@@ -125,59 +119,57 @@ function NotificationProject() {
             message: 'joined your group',
             time: '3 weeks, 4 days ago',
         },
-    ];
-    const [unreadNotifications, setUnreadNotifications] = useState([]);
-    const [readNotifications, setReadNotifications] = useState(notifications);
-    const [data, setData] = useState(notifications);
-    const [selected, setSelected] = useState([]);
+    ]
+    const [unreadNotifications, setUnreadNotifications] = useState([])
+    const [readNotifications, setReadNotifications] = useState(notifications)
+    const [data, setData] = useState(notifications)
+    const [selected, setSelected] = useState([])
     const toggleSelectAll = (e) => {
         if (e.target.checked) {
-            setSelected(data.map((notification) => notification.id));
+            setSelected(data.map((notification) => notification.id))
         } else {
-            setSelected([]);
+            setSelected([])
         }
-    };
+    }
     //Read
     const markAsUnread = (id) => {
-        const notificationToMove = readNotifications.find((n) => n.id === id);
+        const notificationToMove = readNotifications.find((n) => n.id === id)
 
         if (notificationToMove) {
-            setUnreadNotifications([...unreadNotifications, notificationToMove]);
-            setReadNotifications(readNotifications.filter((n) => n.id !== id));
+            setUnreadNotifications([...unreadNotifications, notificationToMove])
+            setReadNotifications(readNotifications.filter((n) => n.id !== id))
         }
-    };
+    }
     //Unread
     const markAsRead = (id) => {
-        const notificationToMove = unreadNotifications.find((n) => n.id === id);
+        const notificationToMove = unreadNotifications.find((n) => n.id === id)
 
         if (notificationToMove) {
-            setReadNotifications([...readNotifications, notificationToMove]);
-            setUnreadNotifications(unreadNotifications.filter((n) => n.id !== id));
+            setReadNotifications([...readNotifications, notificationToMove])
+            setUnreadNotifications(unreadNotifications.filter((n) => n.id !== id))
         }
-    };
+    }
     const toggleSelect = (id) => {
-        setSelected((prev) =>
-            prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-        );
-    };
+        setSelected((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
+    }
     // Read
     const deleteNotification = (id) => {
-        setData(data.filter((notification) => notification.id !== id));
-    };
+        setData(data.filter((notification) => notification.id !== id))
+    }
     //Unread
     const deleteUnreadnotification = (id) => {
-        setUnreadNotifications(
-            unreadNotifications.filter((unreadnotification) => unreadnotification.id !== id)
-        );
-    };
+        setUnreadNotifications(unreadNotifications.filter((unreadnotification) => unreadnotification.id !== id))
+    }
     return (
         <>
             <div className="flex w-full gap-8 mt-[1rem] px-[16px]">
+
                 <Tabs.Root className="h-4 w-10/12" defaultValue="Unread">
                     <div className="2xl:w-full w-full">
+
                         <Tabs.List>
-                            <div className="flex justify-between bg-white  p-4 font-bold w-full">
-                                <div className='flex'>
+                            <div className="flex justify-between w-full p-4 font-bold bg-white">
+                                <div className="flex">
                                     <Tabs.Trigger className="text-black" value="Unread">
                                         Unread
                                     </Tabs.Trigger>
@@ -213,22 +205,15 @@ function NotificationProject() {
                                                                 type="checkbox"
                                                                 onChange={toggleSelectAll}
                                                                 checked={
-                                                                    selected.length ===
-                                                                    data.length &&
-                                                                    data.length > 0
-                                                                }
-                                                                indeterminate={
-                                                                    selected.length > 0 &&
-                                                                    selected.length < data.length
+
+
+                                                                    selected.length === data.length && data.length > 0
+
                                                                 }
                                                             />
                                                         </th>
-                                                        <th className="p-3 text-left">
-                                                            Notification
-                                                        </th>
-                                                        <th className="p-3 text-left">
-                                                            Date Received
-                                                        </th>
+                                                        <th className="p-3 text-left">Notification</th>
+                                                        <th className="p-3 text-left">Date Received</th>
                                                         <th className="p-3 text-center">Actions</th>
                                                     </tr>
                                                 </thead>
@@ -242,28 +227,17 @@ function NotificationProject() {
                                                                 {' '}
                                                                 <input
                                                                     type="checkbox"
-                                                                    checked={selected.includes(
-                                                                        notification.id
-                                                                    )}
-                                                                    onChange={() =>
-                                                                        toggleSelect(
-                                                                            notification.id
-                                                                        )
-                                                                    }
+                                                                    checked={selected.includes(notification.id)}
+                                                                    onChange={() => toggleSelect(notification.id)}
                                                                 />
                                                             </td>
                                                             <td className="p-3">
-                                                                {notification.name}{' '}
-                                                                {notification.message}
+                                                                {notification.name} {notification.message}
                                                             </td>
-                                                            <td className="p-3">
-                                                                {notification.time}
-                                                            </td>
+                                                            <td className="p-3">{notification.time}</td>
                                                             <td className="flex justify-center gap-2 p-3">
                                                                 <button
-                                                                    onClick={() =>
-                                                                        markAsRead(notification.id)
-                                                                    }
+                                                                    onClick={() => markAsRead(notification.id)}
                                                                     className="p-2 bg-gray-200 rounded hover:bg-gray-300 h-[2.25rem] w-[2.25rem]"
                                                                 >
                                                                     <EyeOutlined className="text-gray-600 " />
@@ -271,9 +245,7 @@ function NotificationProject() {
                                                                 <button
                                                                     className="p-2 bg-red-100 rounded hover:bg-red-200 h-[2.25rem] w-[2.25rem]"
                                                                     onClick={() =>
-                                                                        deleteUnreadnotification(
-                                                                            notification.id
-                                                                        )
+                                                                        deleteUnreadnotification(notification.id)
                                                                     }
                                                                 >
                                                                     <DeleteOutlined className="text-red-600" />
@@ -307,92 +279,63 @@ function NotificationProject() {
                                                                         type="checkbox"
                                                                         onChange={toggleSelectAll}
                                                                         checked={
-                                                                            selected.length ===
-                                                                            data.length &&
+                                                                            selected.length === data.length &&
                                                                             data.length > 0
-                                                                        }
-                                                                        indeterminate={
-                                                                            selected.length > 0 &&
-                                                                            selected.length <
-                                                                            data.length
                                                                         }
                                                                     />
                                                                 </th>
-                                                                <th className="p-3 text-left">
-                                                                    Notification
-                                                                </th>
-                                                                <th className="p-3 text-left">
-                                                                    Date Received
-                                                                </th>
-                                                                <th className="p-3 text-center">
-                                                                    Actions
-                                                                </th>
+                                                                <th className="p-3 text-left">Notification</th>
+                                                                <th className="p-3 text-left">Date Received</th>
+                                                                <th className="p-3 text-center">Actions</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {readNotifications.map(
-                                                                (notification) => (
-                                                                    <tr
-                                                                        key={notification.id}
-                                                                        className="border-b hover:bg-gray-100"
-                                                                    >
-                                                                        <td className="p-3">
-                                                                            {' '}
-                                                                            <input
-                                                                                type="checkbox"
-                                                                                checked={selected.includes(
-                                                                                    notification.id
-                                                                                )}
-                                                                                onChange={() =>
-                                                                                    toggleSelect(
-                                                                                        notification.id
-                                                                                    )
-                                                                                }
-                                                                            />
-                                                                        </td>
-                                                                        <td className="p-3">
-                                                                            {notification.name}{' '}
-                                                                            {notification.message}
-                                                                        </td>
-                                                                        <td className="p-3">
-                                                                            {notification.time}
-                                                                        </td>
-                                                                        <td className="flex justify-center gap-2 p-3">
-                                                                            <button
-                                                                                onClick={() =>
-                                                                                    markAsUnread(
-                                                                                        notification.id
-                                                                                    )
-                                                                                }
-                                                                                className="p-2 bg-gray-200 rounded hover:bg-gray-300 h-[2.25rem] w-[2.25rem]"
-                                                                            >
-                                                                                <EyeInvisibleOutlined className="text-gray-600 " />
-                                                                            </button>
-                                                                            <button
-                                                                                className="p-2 bg-red-100 rounded hover:bg-red-200 h-[2.25rem] w-[2.25rem]"
-                                                                                onClick={() =>
-                                                                                    deleteNotification(
-                                                                                        notification.id
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                <DeleteOutlined className="text-red-600" />
-                                                                            </button>
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            )}
+                                                            {readNotifications.map((notification) => (
+                                                                <tr
+                                                                    key={notification.id}
+                                                                    className="border-b hover:bg-gray-100"
+                                                                >
+                                                                    <td className="p-3">
+                                                                        {' '}
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            checked={selected.includes(notification.id)}
+                                                                            onChange={() =>
+                                                                                toggleSelect(notification.id)
+                                                                            }
+                                                                        />
+                                                                    </td>
+                                                                    <td className="p-3">
+                                                                        {notification.name} {notification.message}
+                                                                    </td>
+                                                                    <td className="p-3">{notification.time}</td>
+                                                                    <td className="flex justify-center gap-2 p-3">
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                markAsUnread(notification.id)
+                                                                            }
+                                                                            className="p-2 bg-gray-200 rounded hover:bg-gray-300 h-[2.25rem] w-[2.25rem]"
+                                                                        >
+                                                                            <EyeInvisibleOutlined className="text-gray-600 " />
+                                                                        </button>
+                                                                        <button
+                                                                            className="p-2 bg-red-100 rounded hover:bg-red-200 h-[2.25rem] w-[2.25rem]"
+                                                                            onClick={() =>
+                                                                                deleteNotification(notification.id)
+                                                                            }
+                                                                        >
+                                                                            <DeleteOutlined className="text-red-600" />
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
                                                         </tbody>
                                                     </table>
                                                 </div>
                                                 <div className="flex justify-between mt-3">
                                                     <select className="bg-[#F8F9FA] text-[#6F7F92] h-[3.25rem] border-[#F6F6F6] border-1 rounded-[0.4rem] ml-3">
-                                                        <option value="Bulk Actions">
-                                                            Bulk Actions
-                                                        </option>
-                                                        <option value="Mark Unread">
-                                                            Mark Unread
-                                                        </option>
+                                                        <option value="Bulk Actions">Bulk Actions</option>
+                                                        <option value="Mark Unread">Mark Unread</option>
                                                         <option value="Delete">Delete</option>
                                                     </select>
                                                     <button className="bg-[#2F65B9] text-white w-[6rem] h-[3rem] rounded-[0.4rem] mr-3">
@@ -411,7 +354,7 @@ function NotificationProject() {
                 <RightSidebar />
             </div>
         </>
-    );
+    )
 }
 
-export default NotificationProject;
+export default NotificationProject

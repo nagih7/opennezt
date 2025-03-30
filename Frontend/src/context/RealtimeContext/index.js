@@ -3,10 +3,11 @@ import { useDispatch } from 'react-redux'
 import { useSocket } from 'context/SocketContext'
 import { getNotifications } from 'api/notification'
 import { toaster } from 'components/UI/toaster'
-import { CONFIRM_FRIEND_REQUEST_NOTIFICATION, FRIEND_REQUEST_NOTIFICATION } from 'utils/constants'
+import { CONFIRM_FRIEND_REQUEST_NOTIFICATION, FRIEND_REQUEST_NOTIFICATION, MESSAGE_TYPE } from 'utils/constants'
 import { getConversations } from 'api/chat'
 import { PROJECT_INVITATION_NOTIFICATION } from 'utils/constants'
 import { setNotifications } from 'states/modules/notification'
+import { setMessages } from 'states/modules/chat'
 
 export const RealtimeContext = React.createContext()
 
@@ -48,13 +49,9 @@ export const RealtimeProvider = ({ children }) => {
             dispatch(getConversations())
         })
 
-        // CONFIRM ADD FRIEND
-        socket.on('confirm_add_friend', (name) => {
-            toaster.create({
-                title: `${name} accepted your friend request`,
-                type: 'success',
-                duration: 100,
-            })
+        // =========== MESSAGE ============ //
+        socket.on(MESSAGE_TYPE, async (message) => {
+            dispatch(setMessages({ message }))
         })
 
         // CONFIRM PROJECT INVITATION

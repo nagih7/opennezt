@@ -1,12 +1,12 @@
-import { Stack } from '@chakra-ui/react';
-import { CheckOutlined, CloseOutlined } from '@mui/icons-material';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { ACTIONS } from 'utils/constants';
-import { CONFIRM_ACTION, DELETE_ACTION } from 'utils/constants';
+import { Stack } from '@chakra-ui/react'
+import { CheckOutlined, CloseOutlined } from '@mui/icons-material'
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { ACTIONS } from 'utils/constants'
+import { CONFIRM_ACTION, DELETE_ACTION } from 'utils/constants'
 
 const Actions = ({ notification, handleReplyNotification, index }) => {
-    const { language } = useSelector((state) => state.app);
+    const { language } = useSelector((state) => state.app)
     return (
         <Stack direction="row" spacing={4}>
             <button
@@ -18,14 +18,13 @@ const Actions = ({ notification, handleReplyNotification, index }) => {
             </button>
             <button
                 className="px-[12px] py-[8px] text-xs font-medium bg-[#f8f9fa] text-[#6f7f92] rounded-md"
-                danger
                 icon={<CloseOutlined />}
                 onClick={() => handleReplyNotification(notification._id, DELETE_ACTION)}
             >
                 {ACTIONS.DELETE[language]}
             </button>
         </Stack>
-    );
-};
+    )
+}
 
-export default Actions;
+export default Actions

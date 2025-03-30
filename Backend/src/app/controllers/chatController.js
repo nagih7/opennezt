@@ -1,7 +1,7 @@
 import Message from '../../models/message.js'
 import User from '../../models/user.js'
 import * as chatService from '../services/chatService.js'
-import {userSockets} from '@/routes'
+import { userSockets } from '@/routes'
 
 // ========== GET [CONVERSATIONS] ========== //
 export async function getConversations(req, res) {
@@ -33,7 +33,7 @@ export async function getChatHistory(req, res) {
 }
 
 export const saveMessage = async (data, io, socketId) => {
-    const {message, members} = await chatService.saveMessage(data, userSockets[socketId])
+    const { message, members } = await chatService.saveMessage(data, userSockets[socketId])
 
     members.forEach((member) => {
         const receiverSocketId = Object.keys(userSockets).find(
@@ -48,11 +48,11 @@ export const saveMessage = async (data, io, socketId) => {
 export const getReceiverIds = async (userId) => {
     try {
         const senderIds = await Message.find({
-            $or: [{sender_id: userId}, {receiver_id: userId}],
+            $or: [{ sender_id: userId }, { receiver_id: userId }],
         }).distinct('sender_id')
 
         const receiverIds = await Message.find({
-            $or: [{sender_id: userId}, {receiver_id: userId}],
+            $or: [{ sender_id: userId }, { receiver_id: userId }],
         }).distinct('receiver_id')
 
         const distinctIds = [...new Set([...senderIds, ...receiverIds])]
@@ -62,7 +62,7 @@ export const getReceiverIds = async (userId) => {
         }
 
         const users = await User.find({
-            _id: {$in: filteredReceiverIds},
+            _id: { $in: filteredReceiverIds },
         })
 
         return users.map((user) => {
