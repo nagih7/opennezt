@@ -12,7 +12,7 @@ import {
     ARTICLE_UPDATE,
     LINK_STATIC_URL,
 } from '@/configs'
-import {ObjectId} from 'mongodb'
+import { ObjectId } from 'mongodb'
 import delay from '@/utils/classes/delay.js'
 import Project from '@/models/project.js'
 import Bookmark from '@/models/bookmark.js'
@@ -51,7 +51,7 @@ export const createArticle = async (user, requestBody) => {
 
 //Scroll Feed
 export const getArticleList = async (user, requestQuery) => {
-    const {limit = 5, cursor} = requestQuery
+    const { limit = 5, cursor } = requestQuery
 
     const articleLimit = parseInt(limit)
 
@@ -60,7 +60,7 @@ export const getArticleList = async (user, requestQuery) => {
     const articleList = await Article.aggregate([
         {
             $match: {
-                created_at: {$lt: new Date(fixedCursor)},
+                created_at: { $lt: new Date(fixedCursor) },
                 // $or: [{audience: 'public'}, {audience: 'friends', user_id: {$in: friendIds}}],
                 status: 'published',
             },
@@ -89,9 +89,9 @@ export const getArticleList = async (user, requestQuery) => {
                         as: 'attachment',
                         in: {
                             $cond: {
-                                if: {$eq: [{$ifNull: ['$$attachment', '']}, '']},
+                                if: { $eq: [{ $ifNull: ['$$attachment', ''] }, ''] },
                                 then: '$$attachment',
-                                else: {$concat: [LINK_STATIC_URL, '$$attachment']},
+                                else: { $concat: [LINK_STATIC_URL, '$$attachment'] },
                             },
                         },
                     },
@@ -99,7 +99,7 @@ export const getArticleList = async (user, requestQuery) => {
             },
         },
         {
-            $sort: {created_at: -1},
+            $sort: { created_at: -1 },
         },
         {
             $limit: articleLimit,
@@ -223,7 +223,7 @@ export const updateArticle = async (user_id, id, requestBody) => {
         }
 
         // Cập nhật bài viết với mảng project mới nếu có thay đổi
-        const updatedArticle = await Article.findByIdAndUpdate(id, {...requestBody}, {new: true})
+        const updatedArticle = await Article.findByIdAndUpdate(id, { ...requestBody }, { new: true })
         await delay(2000)
         return updatedArticle
     }
@@ -252,7 +252,7 @@ export const reactArticle = async (id, user, requestBody) => {
         const article = await Article.findById(id)
         if (existingReaction) {
             if (existingReaction.type === type) {
-                await Reaction.deleteOne({_id: existingReaction._id})
+                await Reaction.deleteOne({ _id: existingReaction._id })
                 article.reaction_count = article.reaction_count - 1
                 await article.save()
             } else {
@@ -276,7 +276,7 @@ export const reactArticle = async (id, user, requestBody) => {
         const comment = await Comment.findById(id)
         if (existingReaction) {
             if (existingReaction.type === type) {
-                await Reaction.deleteOne({_id: existingReaction._id})
+                await Reaction.deleteOne({ _id: existingReaction._id })
                 comment.reaction_count -= 1
                 await comment.save()
             } else {
@@ -317,7 +317,7 @@ export const getArticleById = async (id) => {
 export const shareArticle = async (id, user) => {
     //nhớ tìm hiểu lean
     const shareArticle = await Article.findById(id).lean()
-    const {...articleData} = shareArticle
+    const { ...articleData } = shareArticle
 
     const newArticle = await new Article({
         ...articleData,
@@ -330,7 +330,7 @@ export const shareArticle = async (id, user) => {
 
 //Replycomment
 export const replyComment = async (user, requestBody) => {
-    const {comment_id, article_id} = requestBody
+    const { comment_id, article_id } = requestBody
     const parentComment = await Comment.findById(comment_id)
     const updatedArticle = await Article.findById(article_id)
     const imageData = requestBody.content.image
@@ -374,7 +374,7 @@ export const getUserReactions = async (user_id, target_ids) => {
 
     const reactions = await Reaction.find({
         user_id: user_id,
-        target_id: {$in: targetIdArray},
+        target_id: { $in: targetIdArray },
     })
 
     return reactions
@@ -383,7 +383,7 @@ export const getUserReactions = async (user_id, target_ids) => {
 
 //Get Comment List
 export const getCommentList = async (user, requestQuery) => {
-    const {articleId, page, limit = 10} = requestQuery
+    const { articleId, page, limit = 10 } = requestQuery
     const skip = (page - 1) * limit
     const commentLimit = parseInt(limit)
 
@@ -406,15 +406,15 @@ export const getCommentList = async (user, requestQuery) => {
             $addFields: {
                 'content.image': {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$content.image', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$content.image', ''] }, ''] },
                         then: '',
-                        else: {$concat: [LINK_STATIC_URL, '$content.image']},
+                        else: { $concat: [LINK_STATIC_URL, '$content.image'] },
                     },
                 },
             },
         },
         {
-            $sort: {created_at: -1},
+            $sort: { created_at: -1 },
         },
         {
             $skip: skip,
@@ -443,7 +443,7 @@ export const getCommentList = async (user, requestQuery) => {
 }
 
 export const getReplyCommentList = async (user, requestQuery) => {
-    const {articleId, parentId, page, limit = 3} = requestQuery
+    const { articleId, parentId, page, limit = 3 } = requestQuery
     const skip = (page - 1) * limit
     const commentLimit = parseInt(limit)
 
@@ -466,15 +466,15 @@ export const getReplyCommentList = async (user, requestQuery) => {
             $addFields: {
                 'content.image': {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$content.image', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$content.image', ''] }, ''] },
                         then: '',
-                        else: {$concat: [LINK_STATIC_URL, '$content.image']},
+                        else: { $concat: [LINK_STATIC_URL, '$content.image'] },
                     },
                 },
             },
         },
         {
-            $sort: {created_at: -1},
+            $sort: { created_at: -1 },
         },
         {
             $skip: skip,
@@ -526,7 +526,7 @@ export const createComment = async (user, requestBody) => {
 
     await newComment.save()
 
-    await Article.findByIdAndUpdate(articleId, {$inc: {comment_count: 1}})
+    await Article.findByIdAndUpdate(articleId, { $inc: { comment_count: 1 } })
 
     return newComment
 }
@@ -540,7 +540,7 @@ export const getUserCommentReactions = async (user_id, target_ids) => {
 
     const reactions = await Reaction.find({
         user_id: user_id,
-        target_id: {$in: targetIdArray},
+        target_id: { $in: targetIdArray },
     })
 
     return reactions
@@ -548,11 +548,11 @@ export const getUserCommentReactions = async (user_id, target_ids) => {
 
 // Update project name after update article
 export const updateProjectName = async (project_id) => {
-    const articles = await Article.find({project_id: project_id})
+    const articles = await Article.find({ project_id: project_id })
 }
 
 export const bookmarkArticle = async (requestBody, user) => {
-    const {article_id, marked} = requestBody
+    const { article_id, marked } = requestBody
     const user_id = user._id.toString()
 
     const existingBookmark = await Bookmark.findOne({
@@ -581,7 +581,7 @@ export const getUserBookmarks = async (user, article_ids) => {
 
     const bookMarks = await Bookmark.find({
         user_id: user_id,
-        article_id: {$in: articleIdsArray},
+        article_id: { $in: articleIdsArray },
     })
 
     return bookMarks
@@ -589,7 +589,7 @@ export const getUserBookmarks = async (user, article_ids) => {
 
 // ========== POST [ARTICLE ACTIVITIES] ========== //
 export const postActivityCreateArticle = async (user) => {
-    const articleCreateType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_CREATE})
+    const articleCreateType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_CREATE })
     const newActivity = new AccessLog({
         user_id: user._id,
         type_id: articleCreateType._id,
@@ -601,7 +601,7 @@ export const postActivityCreateArticle = async (user) => {
 
 export const postActivityUpdateArticle = async (user, articleId) => {
     const article = await Article.findById(new ObjectId(articleId))
-    const articleUpdateType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_UPDATE})
+    const articleUpdateType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_UPDATE })
     const oldActivity = await ActivityLog.findOne({
         user_id: user._id,
         type_id: articleUpdateType._id,
@@ -615,7 +615,7 @@ export const postActivityUpdateArticle = async (user, articleId) => {
         const newActivity = new ActivityLog({
             user_id: user._id,
             type_id: articleUpdateType._id,
-            data: {article_id: article._id, project_id: article.project_id, owner_id: article.user_id},
+            data: { article_id: article._id, project_id: article.project_id, owner_id: article.user_id },
             metadata: {},
         })
 
@@ -626,7 +626,7 @@ export const postActivityUpdateArticle = async (user, articleId) => {
 
 export const postActivitySaveArticle = async (user, articleId) => {
     const article = await Article.findById(new ObjectId(articleId))
-    const articleSaveType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_SAVE})
+    const articleSaveType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_SAVE })
     const oldActivity = await ActivityLog.findOne({
         user_id: user._id,
         type_id: articleSaveType._id,
@@ -640,7 +640,7 @@ export const postActivitySaveArticle = async (user, articleId) => {
         const newActivity = new ActivityLog({
             user_id: user._id,
             type_id: articleSaveType._id,
-            data: {article_id: article._id, project_id: article.project_id, owner_id: article.user_id},
+            data: { article_id: article._id, project_id: article.project_id, owner_id: article.user_id },
             metadata: {},
         })
 
@@ -651,7 +651,7 @@ export const postActivitySaveArticle = async (user, articleId) => {
 
 export const postActivityReactionArticle = async (user, articleId) => {
     const article = await Article.findById(new ObjectId(articleId))
-    const articleReactionType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_REACTION})
+    const articleReactionType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_REACTION })
     const oldActivity = await ActivityLog.findOne({
         user_id: user._id,
         type_id: articleReactionType._id,
@@ -665,7 +665,7 @@ export const postActivityReactionArticle = async (user, articleId) => {
         const newActivity = new ActivityLog({
             user_id: user._id,
             type_id: articleReactionType._id,
-            data: {article_id: article._id, project_id: article.project_id, owner_id: article.user_id},
+            data: { article_id: article._id, project_id: article.project_id, owner_id: article.user_id },
             metadata: {},
         })
 
@@ -676,7 +676,7 @@ export const postActivityReactionArticle = async (user, articleId) => {
 
 export const postActivityReplyComment = async (user, commentId) => {
     const comment = await Comment.findById(new ObjectId(commentId))
-    const commentReplyType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_REPLY_COMMENT})
+    const commentReplyType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_REPLY_COMMENT })
     const oldActivity = await ActivityLog.findOne({
         user_id: user._id,
         type_id: commentReplyType._id,
@@ -690,7 +690,7 @@ export const postActivityReplyComment = async (user, commentId) => {
         const newActivity = new ActivityLog({
             user_id: user._id,
             type_id: commentReplyType._id,
-            data: {comment_id: comment._id, article_id: comment.article_id, owner_id: comment.user_id},
+            data: { comment_id: comment._id, article_id: comment.article_id, owner_id: comment.user_id },
             metadata: {},
         })
 
@@ -701,7 +701,7 @@ export const postActivityReplyComment = async (user, commentId) => {
 
 // ========== GET [ARTICLE ACTIVITIES] ========== //
 export const getActivityCreateArticle = async (user) => {
-    const articleCreateType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_CREATE})
+    const articleCreateType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_CREATE })
     const activities = await AccessLog.aggregate([
         {
             $match: {
@@ -720,9 +720,9 @@ export const getActivityCreateArticle = async (user) => {
                         $addFields: {
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -744,7 +744,7 @@ export const getActivityCreateArticle = async (user) => {
             $limit: 10,
         },
         {
-            $sort: {timestamp: -1},
+            $sort: { timestamp: -1 },
         },
         {
             $project: {
@@ -759,7 +759,7 @@ export const getActivityCreateArticle = async (user) => {
 }
 
 export const getActivityUpdateArticle = async (user) => {
-    const articleUpdateType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_UPDATE})
+    const articleUpdateType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_UPDATE })
     const activities = await ActivityLog.aggregate([
         {
             $match: {
@@ -778,9 +778,9 @@ export const getActivityUpdateArticle = async (user) => {
                         $addFields: {
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -811,21 +811,40 @@ export const getActivityUpdateArticle = async (user) => {
             },
         },
         {
+            $lookup: {
+                from: 'types',
+                localField: 'type_id',
+                foreignField: '_id',
+                as: 'activity_type',
+                pipeline: [
+                    {
+                        $project: {
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
             $unwind: '$user',
         },
         {
             $unwind: '$article',
         },
         {
+            $unwind: '$activity_type',
+        },
+        {
             $limit: 10,
         },
         {
-            $sort: {timestamp: -1},
+            $sort: { timestamp: -1 },
         },
         {
             $project: {
                 user: 1,
-                article: {caption: 1},
+                article: { caption: 1 },
+                activity_type: { name: 1 },
                 timestamp: 1,
                 data: 1,
                 type_id: 1,
@@ -836,7 +855,7 @@ export const getActivityUpdateArticle = async (user) => {
 }
 
 export const getActivitySaveArticle = async (user) => {
-    const articleSaveType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_SAVE})
+    const articleSaveType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_SAVE })
     const activities = await ActivityLog.aggregate([
         {
             $match: {
@@ -855,9 +874,9 @@ export const getActivitySaveArticle = async (user) => {
                         $addFields: {
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -888,21 +907,40 @@ export const getActivitySaveArticle = async (user) => {
             },
         },
         {
+            $lookup: {
+                from: 'types',
+                localField: 'type_id',
+                foreignField: '_id',
+                as: 'activity_type',
+                pipeline: [
+                    {
+                        $project: {
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
             $unwind: '$user',
         },
         {
             $unwind: '$article',
         },
         {
+            $unwind: '$activity_type',
+        },
+        {
             $limit: 10,
         },
         {
-            $sort: {timestamp: -1},
+            $sort: { timestamp: -1 },
         },
         {
             $project: {
                 user: 1,
-                article: {caption: 1},
+                article: { caption: 1 },
+                activity_type: { name: 1 },
                 timestamp: 1,
                 data: 1,
                 type_id: 1,
@@ -913,7 +951,7 @@ export const getActivitySaveArticle = async (user) => {
 }
 
 export const getActivityReactionArticle = async (user) => {
-    const articleReactionType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_REACTION})
+    const articleReactionType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_REACTION })
     const activities = await ActivityLog.aggregate([
         {
             $match: {
@@ -932,9 +970,9 @@ export const getActivityReactionArticle = async (user) => {
                         $addFields: {
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -974,12 +1012,12 @@ export const getActivityReactionArticle = async (user) => {
             $limit: 10,
         },
         {
-            $sort: {timestamp: -1},
+            $sort: { timestamp: -1 },
         },
         {
             $project: {
                 user: 1,
-                article: {caption: 1},
+                article: { caption: 1 },
                 timestamp: 1,
                 data: 1,
                 type_id: 1,
@@ -990,7 +1028,7 @@ export const getActivityReactionArticle = async (user) => {
 }
 
 export const getActivityReplyComment = async (user) => {
-    const commentReplyType = await Type.findOne({class: ARTICLE_TYPE, name: ARTICLE_REPLY_COMMENT})
+    const commentReplyType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_REPLY_COMMENT })
     const activities = await ActivityLog.aggregate([
         {
             $match: {
@@ -1009,9 +1047,9 @@ export const getActivityReplyComment = async (user) => {
                         $addFields: {
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -1051,12 +1089,12 @@ export const getActivityReplyComment = async (user) => {
             $limit: 10,
         },
         {
-            $sort: {timestamp: -1},
+            $sort: { timestamp: -1 },
         },
         {
             $project: {
                 user: 1,
-                comment: {content: 1},
+                comment: { content: 1 },
                 timestamp: 1,
                 data: 1,
                 type_id: 1,

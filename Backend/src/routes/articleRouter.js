@@ -1,5 +1,5 @@
-import {Router} from 'express'
-import {asyncHandler} from '@/utils/helpers'
+import { Router } from 'express'
+import { asyncHandler } from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
 import * as articleController from '@/app/controllers/articleController'
 import * as articleMiddleware from '@/app/middleware/articleMiddleware'
@@ -14,16 +14,9 @@ articleRouter.get('/article-by-id/:id', asyncHandler(articleController.getArticl
 
 articleRouter.get('/user-reactions/:target_ids', asyncHandler(articleController.getUserReactions))
 
-articleRouter.get(
-    '/user-comment-reactions/:target_ids',
-    asyncHandler(articleController.getUserCommentReactions)
-)
+articleRouter.get('/user-comment-reactions/:target_ids', asyncHandler(articleController.getUserCommentReactions))
 
-articleRouter.post(
-    '/',
-    asyncHandler(articleMiddleware.decodeFormData),
-    asyncHandler(articleController.createArticle)
-)
+articleRouter.post('/', asyncHandler(articleMiddleware.decodeFormData), asyncHandler(articleController.createArticle))
 
 articleRouter.get('/list-comments', asyncHandler(articleController.getCommentList))
 
@@ -73,7 +66,7 @@ articleRouter.post('/activity/save/:id', asyncHandler(articleController.postActi
 
 articleRouter.post('/activity/reaction/:id', asyncHandler(articleController.postActivityReactionArticle))
 
-articleRouter.post('/activity/reply-comment/:id3', asyncHandler(articleController.postActivityReplyComment))
+articleRouter.post('/activity/reply-comment/:id', asyncHandler(articleController.postActivityReplyComment))
 
 // ========== GET [ARTICLE ACTIVITIES] ========== //
 articleRouter.get('/activity/create', asyncHandler(articleController.getActivityCreateArticle))
