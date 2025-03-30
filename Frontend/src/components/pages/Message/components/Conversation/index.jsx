@@ -1,40 +1,40 @@
-import { IconlyAddUser, IconlyArrowLeft2 } from 'components/UI/Iconly';
-import { ArrowsAltOutlined, MoreOutlined } from '@ant-design/icons';
-import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants';
-import { Popover, Portal, Stack } from '@chakra-ui/react';
-import { Tooltip } from 'components/UI/tooltip';
-import ConversationHeader from './components/ConversationHeader';
-import InviteMemberModal from './components/InviteMemberModal';
-import { setModalInviteMember } from 'states/modules/project';
-import NoChat from './components/NoChat';
-import Chat from './components/Chat';
+import { IconlyAddUser, IconlyArrowLeft2 } from 'components/UI/Iconly'
+import { ArrowsAltOutlined, MoreOutlined } from '@ant-design/icons'
+import React, { useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants'
+import { Popover, Portal, Stack } from '@chakra-ui/react'
+import { Tooltip } from 'components/UI/tooltip'
+import ConversationHeader from './components/ConversationHeader'
+import InviteMemberModal from './components/InviteMemberModal'
+import { setModalInviteMember } from 'states/modules/project'
+import NoChat from './components/NoChat'
+import Chat from './components/Chat'
 
 const Conversation = () => {
-    const dispatch = useDispatch();
-    const params = useParams();
-    const { id } = params;
+    const dispatch = useDispatch()
+    const params = useParams()
+    const { id } = params
 
     // ========== STATE FROM REDUX ========== //
 
-    const { conversation } = useSelector((state) => state.chat);
+    const { conversation } = useSelector((state) => state.chat)
 
     // ========== STATE ========== //
 
-    const [isOpenMoreActions, setIsOpenMoreActions] = useState(false);
+    const [isOpenMoreActions, setIsOpenMoreActions] = useState(false)
 
     // ========== HANDLE FUNCTION MODAL ========== //
     const handleOpenModal = () => {
-        dispatch(setModalInviteMember(true));
-        setIsOpenMoreActions(false);
-    };
+        dispatch(setModalInviteMember(true))
+        setIsOpenMoreActions(false)
+    }
 
     // ========== HANDLE FUNCTION POPPER ========== //
     const onOpenChange = (open) => {
-        setIsOpenMoreActions(open.open);
-    };
+        setIsOpenMoreActions(open.open)
+    }
 
     if (id) {
         return (
@@ -52,16 +52,16 @@ const Conversation = () => {
                                             name={conversation?.members[0]?.name}
                                             logo={conversation?.members[0]?.avatar}
                                         />
-                                    );
+                                    )
                                 case GROUP_CONVERSATION:
                                     return (
                                         <ConversationHeader
                                             name={conversation?.data?.project?.name}
                                             logo={conversation?.data?.project?.logo}
                                         />
-                                    );
+                                    )
                                 default:
-                                    return null;
+                                    return null
                             }
                         })()}
                     </div>
@@ -102,6 +102,7 @@ const Conversation = () => {
                                                     align={'center'}
                                                     cursor={'pointer'}
                                                     onClick={handleOpenModal}
+                                                    className="hover:bg-[#f5f5f5] rounded-md p-2 m-2"
                                                 >
                                                     <IconlyAddUser size={24} color="#6f7f92" />
                                                     Invite to project
@@ -117,10 +118,10 @@ const Conversation = () => {
                 </div>
                 <Chat />
             </>
-        );
+        )
     } else {
-        return <NoChat />;
+        return <NoChat />
     }
-};
+}
 
-export default Conversation;
+export default Conversation
