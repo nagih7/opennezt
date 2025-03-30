@@ -18,8 +18,6 @@ async function socketAuthentication(socket, token) {
                 if (user && user.is_active) {
                     socket.currentUser = user
                     userSockets[socket.id] = user._id.toString()
-                    console.log('///// User connected [UserID]:', user_id)
-                    console.log('///// User connected [SocketID]:', socket.id)
                     return
                 }
             }
