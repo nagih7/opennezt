@@ -38,7 +38,6 @@ import {
 } from 'api/activity'
 
 const unifiedAction = (activity) => {
-    console.log('activity', activity)
     if (typeof activity === 'string' || !activity || activity === null) {
         return <span>has interacted with {activity}</span>
     }
