@@ -5,7 +5,7 @@ import {
     PROJECT_ACCESS,
     PROJECT_APPLICATION_NOTIFICATION,
     WAITING_STATUS,
-} from '@/configs'
+    PROJECT_INVITATION_NOTIFICATION } from '@/configs'
 import {
     Project,
     NotificationFeed,
@@ -19,13 +19,13 @@ import {
     ActivityLog,
     ProjectRequirement,
 } from '@/models'
-import {FileUpload} from '@/utils/classes'
-import {userSockets} from '@/routes'
-import {PROJECT_INVITATION_NOTIFICATION} from './../../../../Frontend/src/utils/constants/typeConstants'
+import { FileUpload } from '@/utils/classes'
+import { userSockets } from '@/routes'
+
 
 // ========== POST [Project] ========== //
 export async function createProject(user, requestBody) {
-    const {revenues, funding_sources, additional_infos, logo, background} = requestBody
+    const { revenues, funding_sources, additional_infos, logo, background } = requestBody
     // Project
     if (logo instanceof FileUpload) {
         requestBody.logo = logo.save('project_logos')
@@ -65,10 +65,10 @@ export async function createProject(user, requestBody) {
         await ProjectAdditionalInfo.insertMany(project.additional_infos)
     }
 
-    const roleType = await Type.findOne({class: 'role', name: 'project_role'})
-    const teamRoleType = await Type.findOne({class: 'role', name: 'project_team_role'})
-    const founderRole = await Role.findOne({type_id: roleType._id, name: 'Founder'})
-    const founderTeamRole = await Role.findOne({type_id: teamRoleType._id, name: 'Founder'})
+    const roleType = await Type.findOne({ class: 'role', name: 'project_role' })
+    const teamRoleType = await Type.findOne({ class: 'role', name: 'project_team_role' })
+    const founderRole = await Role.findOne({ type_id: roleType._id, name: 'Founder' })
+    const founderTeamRole = await Role.findOne({ type_id: teamRoleType._id, name: 'Founder' })
 
     const owner = new ProjectMember({
         project_id: project._id,
@@ -78,11 +78,11 @@ export async function createProject(user, requestBody) {
     })
     await owner.save()
 
-    return {project_id: project._id}
+    return { project_id: project._id }
 }
 
 // ========== GET [My Projects] ========== //
-export async function getListMyProjects(user, {q, page, per_page, field, order}) {
+export async function getListMyProjects(user, { q, page, per_page, field, order }) {
     page = parseInt(page)
     per_page = parseInt(per_page)
     q = q ? q : ''
@@ -90,11 +90,11 @@ export async function getListMyProjects(user, {q, page, per_page, field, order})
 
     const matchStage = {
         $match: {
-            $and: [{user_id: user._id}, {name: {$regex: q, $options: 'i'}}],
+            $and: [{ user_id: user._id }, { name: { $regex: q, $options: 'i' } }],
         },
     }
     const sortStage = {
-        $sort: {[field]: order},
+        $sort: { [field]: order },
     }
     const skipStage = {
         $skip: (page - 1) * per_page,
@@ -118,16 +118,16 @@ export async function getListMyProjects(user, {q, page, per_page, field, order})
         $addFields: {
             logo: {
                 $cond: {
-                    if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                    if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
                     then: '$logo',
-                    else: {$concat: [LINK_STATIC_URL, '$logo']},
+                    else: { $concat: [LINK_STATIC_URL, '$logo'] },
                 },
             },
             background: {
                 $cond: {
-                    if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                    if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
                     then: '$background',
-                    else: {$concat: [LINK_STATIC_URL, '$background']},
+                    else: { $concat: [LINK_STATIC_URL, '$background'] },
                 },
             },
         },
@@ -142,10 +142,10 @@ export async function getListMyProjects(user, {q, page, per_page, field, order})
         projectStage,
     ])
 
-    const filter = {user_id: user._id, name: {$regex: q, $options: 'i'}}
+    const filter = { user_id: user._id, name: { $regex: q, $options: 'i' } }
     const total = await Project.countDocuments(filter)
     const last_page = Math.ceil(total / per_page)
-    return {total, page, per_page, last_page, projects}
+    return { total, page, per_page, last_page, projects }
 }
 
 // ========== GET [My Project Details] ========== //
@@ -267,19 +267,19 @@ export async function getMyProjectDetails(user, projectId) {
             $addFields: {
                 logo: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
                         then: '$logo',
-                        else: {$concat: [LINK_STATIC_URL, '$logo']},
+                        else: { $concat: [LINK_STATIC_URL, '$logo'] },
                     },
                 },
                 background: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
                         then: '$background',
-                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                        else: { $concat: [LINK_STATIC_URL, '$background'] },
                     },
                 },
-                stage: {$arrayElemAt: ['$stage', 0]},
+                stage: { $arrayElemAt: ['$stage', 0] },
             },
         },
         {
@@ -298,12 +298,12 @@ export async function getMyProjectDetails(user, projectId) {
 
 // ========== GET [Project Details] ========== //
 export async function getProjectDetails(user, projectId) {
-    const typeNotification = await Type.findOne({class: 'notification', name: 'project_application'})
+    const typeNotification = await Type.findOne({ class: 'notification', name: 'project_application' })
     const project = await Project.aggregate([
         {
             $match: {
                 _id: new ObjectId(projectId),
-                user_id: {$ne: user._id},
+                user_id: { $ne: user._id },
             },
         },
         {
@@ -317,9 +317,9 @@ export async function getProjectDetails(user, projectId) {
                         $addFields: {
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -460,19 +460,19 @@ export async function getProjectDetails(user, projectId) {
             $addFields: {
                 logo: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
                         then: '$logo',
-                        else: {$concat: [LINK_STATIC_URL, '$logo']},
+                        else: { $concat: [LINK_STATIC_URL, '$logo'] },
                     },
                 },
                 background: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
                         then: '$background',
-                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                        else: { $concat: [LINK_STATIC_URL, '$background'] },
                     },
                 },
-                stage: {$arrayElemAt: ['$stage', 0]},
+                stage: { $arrayElemAt: ['$stage', 0] },
             },
         },
         {
@@ -507,25 +507,25 @@ export async function getProjectDetails(user, projectId) {
 // ========== PATCH [Project - Basic] ========== //
 export async function updateBasic(user, requestBody) {
     await Project.updateOne(
-        {user_id: user._id, _id: requestBody.project_id},
-        {name: requestBody.name, description: requestBody.description}
+        { user_id: user._id, _id: requestBody.project_id },
+        { name: requestBody.name, description: requestBody.description }
     )
 }
 
 // ========== PATCH [Project - Sector] ========== //
 export async function updateSector(user, requestBody) {
     await Project.updateOne(
-        {user_id: user._id, _id: requestBody.project_id},
-        {industry_ids: requestBody.industries, stage_id: requestBody.stage}
+        { user_id: user._id, _id: requestBody.project_id },
+        { industry_ids: requestBody.industries, stage_id: requestBody.stage }
     )
 }
 
 // ========== PATCH [Project - Revenue] ========== //
 export async function updateRevenue(user, requestBody) {
-    const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+    const project = await Project.findOne({ user_id: user._id, _id: requestBody.project_id })
 
-    const {revenues} = requestBody
-    await Revenue.deleteMany({project_id: project._id}).exec()
+    const { revenues } = requestBody
+    await Revenue.deleteMany({ project_id: project._id }).exec()
     if (revenues?.length > 0) {
         const revenueBulk = revenues.map((revenue) => ({
             ...revenue,
@@ -537,10 +537,10 @@ export async function updateRevenue(user, requestBody) {
 
 // ========== PATCH [Project - FundingSource] ========== //
 export async function updateFundingSource(user, requestBody) {
-    const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+    const project = await Project.findOne({ user_id: user._id, _id: requestBody.project_id })
 
-    const {funding_sources} = requestBody
-    await FundingSource.deleteMany({project_id: project._id}).exec()
+    const { funding_sources } = requestBody
+    await FundingSource.deleteMany({ project_id: project._id }).exec()
     if (funding_sources?.length > 0) {
         project.funding_sources = funding_sources.map((funding_source) => ({
             ...funding_source,
@@ -552,10 +552,10 @@ export async function updateFundingSource(user, requestBody) {
 
 // ========== PATCH [Project - AdditionalInfo] ========== //
 export async function updateAdditionalInfo(user, requestBody) {
-    const project = await Project.findOne({user_id: user._id, _id: requestBody.project_id})
+    const project = await Project.findOne({ user_id: user._id, _id: requestBody.project_id })
 
-    const {additional_infos} = requestBody
-    await ProjectAdditionalInfo.deleteMany({project_id: project._id}).exec()
+    const { additional_infos } = requestBody
+    await ProjectAdditionalInfo.deleteMany({ project_id: project._id }).exec()
     if (additional_infos?.length > 0) {
         project.additional_infos = additional_infos.map((additional_info) => ({
             ...additional_info,
@@ -567,11 +567,11 @@ export async function updateAdditionalInfo(user, requestBody) {
 
 // ========== DELETE [Project] ========== //
 export async function deleteProject(user, projectId) {
-    await Project.deleteOne({user_id: user._id, _id: projectId})
-    await Revenue.deleteMany({project_id: projectId}).exec()
-    await FundingSource.deleteMany({project_id: projectId}).exec()
-    await ProjectAdditionalInfo.deleteMany({project_id: projectId}).exec()
-    await ProjectMember.deleteMany({project_id: projectId}).exec()
+    await Project.deleteOne({ user_id: user._id, _id: projectId })
+    await Revenue.deleteMany({ project_id: projectId }).exec()
+    await FundingSource.deleteMany({ project_id: projectId }).exec()
+    await ProjectAdditionalInfo.deleteMany({ project_id: projectId }).exec()
+    await ProjectMember.deleteMany({ project_id: projectId }).exec()
 }
 
 // ========== GET [Project - TAGS] ========== //
@@ -579,16 +579,16 @@ export async function getProjectsToTag(user, requestQuery) {
     const key = requestQuery.keySearch || ''
     const projects = await Project.find({
         user_id: user._id,
-        name: {$regex: key, $options: 'i'},
+        name: { $regex: key, $options: 'i' },
     })
-        .select({name: 1, _id: 1})
+        .select({ name: 1, _id: 1 })
         .limit(5)
 
     return projects
 }
 
 // ========== GET [Project - Seek] ========== //
-export async function seekProjects(user, {q, page, per_page, field, order, industry, stage}) {
+export async function seekProjects(user, { q, page, per_page, field, order, industry, stage }) {
     q = q ? q : ''
     industry = industry ? industry : ''
     stage = stage ? stage : ''
@@ -597,15 +597,15 @@ export async function seekProjects(user, {q, page, per_page, field, order, indus
     const matchStage = {
         $match: {
             $and: [
-                {name: {$regex: q, $options: 'i'}},
-                {user_id: {$ne: user._id}},
-                {industry_ids: industry ? {$in: [new ObjectId(industry)]} : {$ne: null}},
-                {stage_id: stage ? new ObjectId(stage) : {$ne: null}},
+                { name: { $regex: q, $options: 'i' } },
+                { user_id: { $ne: user._id } },
+                { industry_ids: industry ? { $in: [new ObjectId(industry)] } : { $ne: null } },
+                { stage_id: stage ? new ObjectId(stage) : { $ne: null } },
             ],
         },
     }
     const sortStage = {
-        $sort: {[field]: order},
+        $sort: { [field]: order },
     }
     const skipStage = {
         $skip: (page - 1) * per_page,
@@ -674,9 +674,9 @@ export async function seekProjects(user, {q, page, per_page, field, order, indus
             $addFields: {
                 background: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
                         then: '$background',
-                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                        else: { $concat: [LINK_STATIC_URL, '$background'] },
                     },
                 },
             },
@@ -699,17 +699,17 @@ export async function seekProjects(user, {q, page, per_page, field, order, indus
     ])
 
     const filter = {
-        name: {$regex: q, $options: 'i'},
-        user_id: {$ne: user._id},
+        name: { $regex: q, $options: 'i' },
+        user_id: { $ne: user._id },
     }
     const total = await Project.countDocuments(filter)
 
-    return {total, page, per_page, projects}
+    return { total, page, per_page, projects }
 }
 
 // ========== POST [Project - Apply to join project] ========== //
 export async function applyToJoinProject(user, projectId, requestBody) {
-    const {teamRole, role} = requestBody
+    const { teamRole, role } = requestBody
     const project = await Project.findById(new ObjectId(projectId))
     const typeNotification = await Type.findOne({
         class: NOTIFICATION_TYPE,
@@ -736,7 +736,7 @@ export async function applyToJoinProject(user, projectId, requestBody) {
 // ========== POST [Project Access] ========== //
 export async function accessToProject(user, projectId) {
     const project = await Project.findById(new ObjectId(projectId))
-    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROJECT_ACCESS})
+    const accessType = await Type.findOne({ class: ACCESS_TYPE, name: PROJECT_ACCESS })
     const oldActivity = await ActivityLog.findOne({
         user_id: user._id,
         'data.project_id': project._id,
@@ -751,7 +751,7 @@ export async function accessToProject(user, projectId) {
         const activity = new ActivityLog({
             user_id: user._id,
             type_id: accessType._id,
-            data: {project_id: project._id, owner_id: project.user_id},
+            data: { project_id: project._id, owner_id: project.user_id },
             metadata: {},
         })
         await activity.save()
@@ -787,7 +787,7 @@ export async function addProjectRequirement(user, projectId, requestBody) {
 
 // ========== GET [My Project Access] ========== //
 export async function getMyProjectAccess(user) {
-    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROJECT_ACCESS})
+    const accessType = await Type.findOne({ class: ACCESS_TYPE, name: PROJECT_ACCESS })
     console.log('accessType', accessType._id)
     const activities = await ActivityLog.aggregate([
         {
@@ -807,16 +807,16 @@ export async function getMyProjectAccess(user) {
                         $addFields: {
                             logo: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
                                     then: '$logo',
-                                    else: {$concat: [LINK_STATIC_URL, '$logo']},
+                                    else: { $concat: [LINK_STATIC_URL, '$logo'] },
                                 },
                             },
                             background: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
                                     then: '$background',
-                                    else: {$concat: [LINK_STATIC_URL, '$background']},
+                                    else: { $concat: [LINK_STATIC_URL, '$background'] },
                                 },
                             },
                         },
@@ -845,7 +845,7 @@ export async function getMyProjectAccess(user) {
             $limit: 10,
         },
         {
-            $sort: {timestamp: -1},
+            $sort: { timestamp: -1 },
         },
         {
             $project: {
@@ -860,7 +860,7 @@ export async function getMyProjectAccess(user) {
 
 // ========== GET [Access to My Projects] ========== //
 export async function getAccessToMyProjects(user) {
-    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROJECT_ACCESS})
+    const accessType = await Type.findOne({ class: ACCESS_TYPE, name: PROJECT_ACCESS })
     const activities = await ActivityLog.aggregate([
         {
             $match: {
@@ -879,16 +879,16 @@ export async function getAccessToMyProjects(user) {
                         $addFields: {
                             logo: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
                                     then: '$logo',
-                                    else: {$concat: [LINK_STATIC_URL, '$logo']},
+                                    else: { $concat: [LINK_STATIC_URL, '$logo'] },
                                 },
                             },
                             background: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
                                     then: '$background',
-                                    else: {$concat: [LINK_STATIC_URL, '$background']},
+                                    else: { $concat: [LINK_STATIC_URL, '$background'] },
                                 },
                             },
                         },
@@ -916,9 +916,9 @@ export async function getAccessToMyProjects(user) {
                         $addFields: {
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -943,7 +943,7 @@ export async function getAccessToMyProjects(user) {
             $limit: 10,
         },
         {
-            $sort: {timestamp: -1},
+            $sort: { timestamp: -1 },
         },
         {
             $project: {
@@ -958,11 +958,11 @@ export async function getAccessToMyProjects(user) {
 }
 
 // ========== POST [My Project - Search] ========== //
-export async function searchMyProjects(user, {q}) {
+export async function searchMyProjects(user, { q }) {
     const projects = await Project.aggregate([
         {
             $match: {
-                $and: [{user_id: user._id}, {name: {$regex: q, $options: 'i'}}],
+                $and: [{ user_id: user._id }, { name: { $regex: q, $options: 'i' } }],
             },
         },
         {
@@ -971,9 +971,9 @@ export async function searchMyProjects(user, {q}) {
                 name: 1,
                 logo: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
                         then: '$logo',
-                        else: {$concat: [LINK_STATIC_URL, '$logo']},
+                        else: { $concat: [LINK_STATIC_URL, '$logo'] },
                     },
                 },
             },
@@ -985,7 +985,7 @@ export async function searchMyProjects(user, {q}) {
 
 // ========= POST [My project - Invite member] ========== //
 export async function inviteMember(user, projectId, requestBody, io) {
-    const {userId, teamRole, role} = requestBody
+    const { userId, teamRole, role } = requestBody
 
     const project = await Project.findOne({
         user_id: user._id,
@@ -1031,9 +1031,9 @@ export async function inviteMember(user, projectId, requestBody, io) {
                             name: 1,
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -1073,9 +1073,7 @@ export async function inviteMember(user, projectId, requestBody, io) {
         },
     ])
 
-    const userSocketId = Object.keys(userSockets).find(
-        (socketId) => userSockets[socketId] === userId.toString()
-    )
+    const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === userId.toString())
     if (userSocketId) {
         console.log('userSocketId', userSocketId)
         io.to(userSocketId).emit(PROJECT_INVITATION_NOTIFICATION, notification[0])

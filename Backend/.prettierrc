@@ -1,14 +1,11 @@
 {
-  "printWidth": 110,
-  "semi": false,
-  "singleQuote": true,
-  "bracketSpacing": false,
-  "overrides": [
-    {
-      "files": "*.js",
-      "options": {
-        "tabWidth": 4
-      }
-    }
-  ]
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "tabWidth": 4,
+    "useTabs": false,
+    "printWidth": 120,
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "endOfLine": "lf"
 }
