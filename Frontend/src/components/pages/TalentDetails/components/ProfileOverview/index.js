@@ -1,24 +1,24 @@
-import { Avatar, Button } from '@chakra-ui/react';
-import { sendFriendRequest, cancelFriendRequest } from 'api/user';
-import {
-    IconlyAddUser,
-    IconlyBookmark,
-    IconlyLocation,
-    IconlyShieldDone,
-} from 'components/UI/Iconly';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { Avatar, Button } from '@chakra-ui/react'
+import { sendFriendRequest } from 'api/user'
+import { IconlyAddUser, IconlyBookmark, IconlyLocation, IconlyShieldDone } from 'components/UI/Iconly'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { CANCEL_ACTION, SEND_ACTION } from 'utils/constants'
 
 const ProfileOverview = ({ user, isFriendRequested }) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
 
     // ========== STATE FROM REDUX ========== //
-    const { isLoadingSendFriendRequest } = useSelector((state) => state.talent);
+    const { isLoadingSendFriendRequest } = useSelector((state) => state.talent)
 
     // ========== HANDLE FUNCTION ========== //
     const handleSendFriendRequest = () => {
-        dispatch(sendFriendRequest(user._id));
-    };
+        dispatch(sendFriendRequest(user._id, SEND_ACTION))
+    }
+
+    const handleCancelFriendRequest = () => {
+        dispatch(sendFriendRequest(user._id, CANCEL_ACTION))
+    }
 
     return (
         <div className="p-8 bg-[#ffffff] rounded-md">
@@ -39,11 +39,7 @@ const ProfileOverview = ({ user, isFriendRequested }) => {
                     </div>
                     <h5 className="text-[#000000] font-bold text-lg flex gap-1 items-center">
                         {user?.name}
-                        <IconlyShieldDone
-                            size={24}
-                            color="#3897f0"
-                            className="text-[#3897f0] mx-[6px]"
-                        />
+                        <IconlyShieldDone size={24} color="#3897f0" className="text-[#3897f0] mx-[6px]" />
                     </h5>
                     <div className="flex items-center mt-[8px] gap-4">
                         {user?.region && (
@@ -72,35 +68,45 @@ const ProfileOverview = ({ user, isFriendRequested }) => {
                 </div>
                 <div className="w-4/12">
                     <div className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
-                        {isFriendRequested ? (
-                            <>
-                                <div className="flex">
-                                    <Button className="bg-[#F4F5F6] text-black rounded-[0.3rem] ml-4 border-none">
-                                        Requested
-                                    </Button>
-                                    <Button className="bg-[#0866FF] text-white rounded-[0.3rem] ml-4">
-                                        Cancel request
-                                    </Button>
-                                </div>
-                            </>
-                        ) : (
-                            <Button
-                                className="bg-[#0866FF] text-white rounded-[0.3rem]"
-                                onClick={handleSendFriendRequest}
-                                loading={isLoadingSendFriendRequest}
-                                loadingText="Sending..."
-                                spinnerPlacement="start"
-                                variant="solid"
-                            >
-                                <IconlyAddUser size={24} color={'#fff'} />
-                                Add friend
-                            </Button>
-                        )}
+                        {(() => {
+                            switch (isFriendRequested) {
+                                case true:
+                                    return (
+                                        <div className="flex">
+                                            <Button className="bg-[#F4F5F6] text-black rounded-[0.3rem] ml-4 border-none ">
+                                                Requested
+                                            </Button>
+                                            <Button
+                                                className="bg-[#0866FF] text-white rounded-[0.3rem] ml-4"
+                                                onClick={handleCancelFriendRequest}
+                                                loading={isLoadingSendFriendRequest}
+                                                loadingText="Canceling..."
+                                            >
+                                                Cancel request
+                                            </Button>
+                                        </div>
+                                    )
+                                case false:
+                                    return (
+                                        <Button
+                                            className="bg-[#0866FF] text-white rounded-[0.3rem]"
+                                            onClick={handleSendFriendRequest}
+                                            loading={isLoadingSendFriendRequest}
+                                            loadingText="Sending..."
+                                            spinnerPlacement="start"
+                                            variant="solid"
+                                        >
+                                            <IconlyAddUser size={24} color={'#fff'} />
+                                            Add friend
+                                        </Button>
+                                    )
+                            }
+                        })()}
                     </div>
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ProfileOverview;
+export default ProfileOverview

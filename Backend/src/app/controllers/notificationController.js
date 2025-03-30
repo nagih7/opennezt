@@ -13,8 +13,8 @@ export async function getNotifications(req, res) {
 
 // ========== PUT [Notification - Reply Notification] ========== //
 export async function replyNotification(req, res) {
-    await notificationService.replyNotification(req.params, req.body, req.io)
-    res.jsonify('Reply notification successfully.')
+    const result = await notificationService.replyNotification(req.params, req.body, req.io)
+    res.jsonify(result, 'Reply notification successfully.')
 }
 
 export async function getTotalFriends(req, res) {

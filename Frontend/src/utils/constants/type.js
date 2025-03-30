@@ -19,6 +19,8 @@ export const DELETE_STATUS = 'delete';
 // ACTIONS
 export const CONFIRM_ACTION = 'confirm';
 export const DELETE_ACTION = 'delete';
+export const SEND_ACTION = 'send';
+export const CANCEL_ACTION = 'cancel';
 
 // CONVERSATION TYPE
 export const CONVERSATION_TYPE = 'conversation';

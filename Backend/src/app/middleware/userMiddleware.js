@@ -1,7 +1,7 @@
-import {isValidObjectId} from 'mongoose'
-import {User} from '@/models'
-import {abort} from '@/utils/helpers'
-import {DecodeBase64} from '@/utils/classes'
+import { isValidObjectId } from 'mongoose'
+import { User } from '@/models'
+import { abort } from '@/utils/helpers'
+import { DecodeBase64 } from '@/utils/classes'
 
 export async function checkUserId(req, res, next) {
     // if (isValidObjectId(req.params.id)) {
@@ -13,7 +13,7 @@ export async function checkUserId(req, res, next) {
     //     }
     // }
     if (isValidObjectId(req.currentUser._id)) {
-        const user = await User.findOne({_id: req.currentUser._id})
+        const user = await User.findOne({ _id: req.currentUser._id })
         if (user) {
             req.user = user
             next()
@@ -25,7 +25,7 @@ export async function checkUserId(req, res, next) {
 
 export async function checkUserIdDelete(req, res, next) {
     if (isValidObjectId(req.params.id)) {
-        const user = await User.findOne({_id: req.params.id})
+        const user = await User.findOne({ _id: req.params.id })
         if (user) {
             req.user = user
             next()
@@ -42,7 +42,7 @@ export function checkCanDeleteUser(req, res, next) {
 }
 
 export async function validateProject(req, res, next) {
-    const {pitch_deck, background} = req.body
+    const { pitch_deck, background } = req.body
     if (pitch_deck && pitch_deck.file && pitch_deck.name) {
         req.body.pitch_deck = await DecodeBase64(pitch_deck.file, pitch_deck.name)
     }

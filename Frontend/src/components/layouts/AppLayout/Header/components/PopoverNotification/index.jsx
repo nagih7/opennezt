@@ -1,37 +1,36 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import moment from 'moment';
-import store from 'states/configureStore';
-import { replyNotification, getNotifications } from 'api/notification';
-import { NOTIFICATIONS } from 'utils/constants';
-import { Avatar, Spinner, Stack } from '@chakra-ui/react';
-import { getConversations } from 'api/chat';
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
+import moment from 'moment'
+import store from 'states/configureStore'
+import { replyNotification, getNotifications } from 'api/notification'
+import { NOTIFICATIONS } from 'utils/constants'
+import { Avatar, Spinner, Stack } from '@chakra-ui/react'
+import { getConversations } from 'api/chat'
 import {
     CONFIRM_STATUS,
     PROJECT_INVITATION_NOTIFICATION,
     FRIEND_REQUEST_NOTIFICATION,
     WAITING_STATUS,
-} from 'utils/constants';
-import Actions from './components/Actions';
-import FriendRequest from './components/FriendRequestNotification';
-import ProjectInvitation from './components/ProjectInvitationNotification';
-import Footer from './components/FooterPopoverNotification';
+} from 'utils/constants'
+import Actions from './components/Actions'
+import FriendRequest from './components/FriendRequestNotification'
+import ProjectInvitation from './components/ProjectInvitationNotification'
+import Footer from './components/FooterPopoverNotification'
 
 function PopoverNotification() {
     // ========== STATE FROM REDUX ========== //
-    const { notifications, isLoadingReplyNotification } = useSelector((state) => state.notification);
-    const { language } = useSelector((state) => state.app);
+    const { notifications, isLoadingReplyNotification } = useSelector((state) => state.notification)
+    const { language } = useSelector((state) => state.app)
 
     // ========== STATE ========== //
-    const [notificationIndex, setNotificationIndex] = useState(null);
+    const [notificationIndex, setNotificationIndex] = useState(null)
 
     // ========== HANDLE REPLY NOTIFICATION ========== //
     const handleReplyNotification = async (notification_id, action, index) => {
-        setNotificationIndex(index);
-        await store.dispatch(replyNotification(notification_id, action));
-        await store.dispatch(getNotifications());
-        await store.dispatch(getConversations());
-    };
+        setNotificationIndex(index)
+        await store.dispatch(replyNotification(notification_id, action))
+        await store.dispatch(getConversations())
+    }
 
     // ========== RENDER ========== //
     return (
@@ -62,15 +61,15 @@ function PopoverNotification() {
                                                 {(() => {
                                                     switch (notification.type?.name) {
                                                         case PROJECT_INVITATION_NOTIFICATION:
-                                                            return <ProjectInvitation notification={notification} />;
+                                                            return <ProjectInvitation notification={notification} />
                                                         case FRIEND_REQUEST_NOTIFICATION:
-                                                            return <FriendRequest notification={notification} />;
+                                                            return <FriendRequest notification={notification} />
                                                         default:
                                                             return (
                                                                 <div className="text-[#6f7f92] text-sm font-medium">
                                                                     {notification.message || 'New notification'}
                                                                 </div>
-                                                            );
+                                                            )
                                                     }
                                                 })()}
                                                 <span className="text-[#6f7f92] text-xs">
@@ -84,7 +83,7 @@ function PopoverNotification() {
                                                     case index:
                                                         switch (isLoadingReplyNotification) {
                                                             case true:
-                                                                return <Spinner size="md" />;
+                                                                return <Spinner size="md" />
                                                             default:
                                                                 switch (notification.metadata.status) {
                                                                     case WAITING_STATUS:
@@ -96,11 +95,11 @@ function PopoverNotification() {
                                                                                 }
                                                                                 index={index}
                                                                             />
-                                                                        );
+                                                                        )
                                                                     case CONFIRM_STATUS:
-                                                                        return null;
+                                                                        return null
                                                                     default:
-                                                                        return null;
+                                                                        return null
                                                                 }
                                                         }
                                                     default:
@@ -114,11 +113,11 @@ function PopoverNotification() {
                                                                         }
                                                                         index={index}
                                                                     />
-                                                                );
+                                                                )
                                                             case CONFIRM_STATUS:
-                                                                return null;
+                                                                return null
                                                             default:
-                                                                return null;
+                                                                return null
                                                         }
                                                 }
                                             })()}
@@ -131,7 +130,7 @@ function PopoverNotification() {
             </div>
             <Footer />
         </Stack>
-    );
+    )
 }
 
-export default PopoverNotification;
+export default PopoverNotification

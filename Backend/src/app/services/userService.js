@@ -13,9 +13,16 @@ import {
     Type,
     Role,
 } from '@/models'
-import {FileUpload} from '@/utils/classes'
-import {FRIEND_REQUEST_NOTIFICATION, LINK_STATIC_URL, NOTIFICATION_TYPE, WAITING_STATUS} from '@/configs'
-import {userSockets} from '@/routes'
+import { FileUpload } from '@/utils/classes'
+import {
+    CANCEL_ACTION,
+    FRIEND_REQUEST_NOTIFICATION,
+    LINK_STATIC_URL,
+    NOTIFICATION_TYPE,
+    SEND_ACTION,
+    WAITING_STATUS,
+} from '@/configs'
+import { userSockets } from '@/routes'
 
 export async function create(requestBody) {
     const user = new User(requestBody)
@@ -23,17 +30,17 @@ export async function create(requestBody) {
     return user
 }
 
-export async function filter({q, page, per_page, field, order}) {
+export async function filter({ q, page, per_page, field, order }) {
     q = q ? q : ''
     order = order === '-1' ? -1 : 1
     const matchStage = {
         $match: {
-            $or: [{name: {$regex: q, $options: 'i'}}, {email: {$regex: q, $options: 'i'}}],
+            $or: [{ name: { $regex: q, $options: 'i' } }, { email: { $regex: q, $options: 'i' } }],
         },
     }
 
     const sortStage = {
-        $sort: {[field]: order},
+        $sort: { [field]: order },
     }
     const skipStage = {
         $skip: (page - 1) * per_page,
@@ -46,16 +53,16 @@ export async function filter({q, page, per_page, field, order}) {
         $set: {
             avatar: {
                 $cond: {
-                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                     then: '$avatar',
-                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                 },
             },
             background: {
                 $cond: {
-                    if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                    if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
                     then: '$background',
-                    else: {$concat: [LINK_STATIC_URL, '$background']},
+                    else: { $concat: [LINK_STATIC_URL, '$background'] },
                 },
             },
         },
@@ -63,11 +70,11 @@ export async function filter({q, page, per_page, field, order}) {
     const users = await User.aggregate([matchStage, sortStage, skipStage, limitStage, addSetStage])
 
     const filter = {
-        ...(q && {$or: [{name: q}, {email: q}, {phone: q}]}),
+        ...(q && { $or: [{ name: q }, { email: q }, { phone: q }] }),
     }
 
     const total = await User.countDocuments(filter)
-    return {total, page, per_page, users}
+    return { total, page, per_page, users }
 }
 
 export async function details(userId) {
@@ -90,12 +97,12 @@ export async function remove(user) {
     if (user.avatar) {
         FileUpload.remove(user.avatar)
     }
-    await User.deleteOne({_id: user._id})
-    await Project.deleteMany({user_id: user._id})
-    await NotificationFeed.deleteMany({$or: [{user_id: user._id}, {source_id: user._id}]})
+    await User.deleteOne({ _id: user._id })
+    await Project.deleteMany({ user_id: user._id })
+    await NotificationFeed.deleteMany({ $or: [{ user_id: user._id }, { source_id: user._id }] })
 }
 
-export async function createProject(user, {pitch_deck, background, ...requestBody}) {
+export async function createProject(user, { pitch_deck, background, ...requestBody }) {
     if (pitch_deck instanceof FileUpload) {
         requestBody.pitch_deck = pitch_deck.save('pitch_decks')
     }
@@ -112,21 +119,21 @@ export async function createProject(user, {pitch_deck, background, ...requestBod
 export async function getProjects(userId) {
     const projects = await Project.aggregate([
         {
-            $match: {user_id: userId},
+            $match: { user_id: userId },
         },
         {
             $set: {
                 background: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
                         then: '$background',
-                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                        else: { $concat: [LINK_STATIC_URL, '$background'] },
                     },
                 },
             },
         },
         {
-            $sort: {created_at: -1},
+            $sort: { created_at: -1 },
         },
         {
             $project: {
@@ -144,7 +151,7 @@ export async function getProjects(userId) {
 export async function getProject(projectId) {
     const projectDetails = await Project.aggregate([
         {
-            $match: {_id: new ObjectId(projectId)},
+            $match: { _id: new ObjectId(projectId) },
         },
         {
             $lookup: {
@@ -168,9 +175,9 @@ export async function getProject(projectId) {
                         $addFields: {
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -185,16 +192,16 @@ export async function getProject(projectId) {
             $addFields: {
                 background: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
                         then: '$background',
-                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                        else: { $concat: [LINK_STATIC_URL, '$background'] },
                     },
                 },
                 pitch_deck: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$pitch_deck', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$pitch_deck', ''] }, ''] },
                         then: '$pitch_deck',
-                        else: {$concat: [LINK_STATIC_URL, '$pitch_deck']},
+                        else: { $concat: [LINK_STATIC_URL, '$pitch_deck'] },
                     },
                 },
                 'metadata.members': {
@@ -207,9 +214,9 @@ export async function getProject(projectId) {
                                 {
                                     avatar: {
                                         $cond: {
-                                            if: {$eq: [{$ifNull: ['$$member.avatar', '']}, '']},
+                                            if: { $eq: [{ $ifNull: ['$$member.avatar', ''] }, ''] },
                                             then: '$$member.avatar',
-                                            else: {$concat: [LINK_STATIC_URL, '$$member.avatar']},
+                                            else: { $concat: [LINK_STATIC_URL, '$$member.avatar'] },
                                         },
                                     },
                                 },
@@ -245,17 +252,17 @@ export async function updateProject(user, requestBody) {
             requestBody.pitch_deck = requestBody.pitch_deck.replace(LINK_STATIC_URL, '')
         }
     }
-    const project = await Project.findOne({user_id: user._id, _id: requestBody._id})
+    const project = await Project.findOne({ user_id: user._id, _id: requestBody._id })
     project.set(requestBody)
     await project.save()
 }
 
 export async function deleteProject(user, requestBody) {
-    await Project.deleteOne({user_id: user._id, _id: requestBody.projectId})
-    await Conversation.deleteOne({'metadata.data.project_id': requestBody.projectId})
+    await Project.deleteOne({ user_id: user._id, _id: requestBody.projectId })
+    await Conversation.deleteOne({ 'metadata.data.project_id': requestBody.projectId })
 }
 
-export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
+export async function recuitTalents(user, { keyword, ...requestRecuitTalents }) {
     const query = {}
     const per_page = 12
 
@@ -297,7 +304,7 @@ export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
                 pipeline: [
                     {
                         $match: {
-                            name: {$regex: keyword, $options: 'i'},
+                            name: { $regex: keyword, $options: 'i' },
                         },
                     },
                 ],
@@ -329,23 +336,23 @@ export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
                     }
                     : {}),
                 'user_data.is_active': true,
-                'user_data._id': {$ne: user._id},
+                'user_data._id': { $ne: user._id },
             },
         },
         {
             $addFields: {
                 'user_data.avatar': {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$user_data.avatar', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$user_data.avatar', ''] }, ''] },
                         then: '$user_data.avatar',
-                        else: {$concat: [LINK_STATIC_URL, '$user_data.avatar']},
+                        else: { $concat: [LINK_STATIC_URL, '$user_data.avatar'] },
                     },
                 },
                 'user_data.background': {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$user_data.background', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$user_data.background', ''] }, ''] },
                         then: '$user_data.background',
-                        else: {$concat: [LINK_STATIC_URL, '$user_data.background']},
+                        else: { $concat: [LINK_STATIC_URL, '$user_data.background'] },
                     },
                 },
             },
@@ -376,8 +383,8 @@ export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
         const friendRequests = await NotificationFeed.find({
             type: 'friend_request',
             $or: [
-                {user_id: user._id, source_id: {$in: talents.map((talent) => talent.user_data._id)}},
-                {user_id: {$in: talents.map((talent) => talent.user_data._id)}, source_id: user._id},
+                { user_id: user._id, source_id: { $in: talents.map((talent) => talent.user_data._id) } },
+                { user_id: { $in: talents.map((talent) => talent.user_data._id) }, source_id: user._id },
             ],
         }).select('source_id user_id type metadata.status')
 
@@ -386,20 +393,19 @@ export async function recuitTalents(user, {keyword, ...requestRecuitTalents}) {
     const friendRequests = await getFriendRequest(talents)
     talents.forEach((talent) => {
         const friendRequest = friendRequests.find(
-            (request) =>
-                request.source_id.equals(talent.user_data._id) || request.user_id.equals(talent.user_data._id)
+            (request) => request.source_id.equals(talent.user_data._id) || request.user_id.equals(talent.user_data._id)
         )
         talent.friend_request = friendRequest ? friendRequest : null
     })
 
-    return {total: talents.length, page: requestRecuitTalents.page + 1, per_page, talents}
+    return { total: talents.length, page: requestRecuitTalents.page + 1, per_page, talents }
 }
 
 export async function getTalentDetails(user, _id) {
     // const type = await Type.findOne({name: 'Friend Request'})
     const detailTalent = await User.aggregate([
         {
-            $match: {_id: _id},
+            $match: { _id: _id },
         },
         {
             $lookup: {
@@ -424,8 +430,8 @@ export async function getTalentDetails(user, _id) {
                         $match: {
                             type: 'friend_request',
                             $and: [
-                                {$or: [{user_id: user._id}, {user_id: _id}]},
-                                {$or: [{source_id: user._id}, {source_id: _id}]},
+                                { $or: [{ user_id: user._id }, { user_id: _id }] },
+                                { $or: [{ source_id: user._id }, { source_id: _id }] },
                             ],
                         },
                     },
@@ -442,16 +448,16 @@ export async function getTalentDetails(user, _id) {
             $addFields: {
                 avatar: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                         then: '$avatar',
-                        else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                        else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                     },
                 },
                 background: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
                         then: '$background',
-                        else: {$concat: [LINK_STATIC_URL, '$background']},
+                        else: { $concat: [LINK_STATIC_URL, '$background'] },
                     },
                 },
             },
@@ -522,7 +528,7 @@ export async function getSubCategories(categoryIds) {
     const idArray = Array.isArray(categoryIds) ? categoryIds : categoryIds.split(',').map((id) => id.trim())
 
     const subCategories = await Category.find({
-        parent_id: {$in: idArray},
+        parent_id: { $in: idArray },
     }).select('name _id description parent_id')
 
     return subCategories
@@ -534,7 +540,7 @@ export async function getSkills(categoryIds) {
     const idArray = Array.isArray(categoryIds) ? categoryIds : categoryIds.split(',').map((id) => id.trim())
 
     const skills = await Skill.find({
-        category_id: {$in: idArray},
+        category_id: { $in: idArray },
     }).select('name _id description category_id')
 
     return skills
@@ -548,74 +554,108 @@ export async function getStages() {
 
 // Project role framework
 export async function getProjectRoles() {
-    const roleType = await Type.findOne({class: 'role', name: 'project_role'})
-    const teamRoleType = await Type.findOne({class: 'role', name: 'project_team_role'})
-    const projectRoles = await Role.find({type_id: roleType._id}).select('name _id description')
-    const projectTeamRoles = await Role.find({type_id: teamRoleType._id}).select('name _id description')
-    return {roles: projectRoles, teamRoles: projectTeamRoles}
+    const roleType = await Type.findOne({ class: 'role', name: 'project_role' })
+    const teamRoleType = await Type.findOne({ class: 'role', name: 'project_team_role' })
+    const projectRoles = await Role.find({ type_id: roleType._id }).select('name _id description')
+    const projectTeamRoles = await Role.find({ type_id: teamRoleType._id }).select('name _id description')
+    return { roles: projectRoles, teamRoles: projectTeamRoles }
 }
 
 // ========== POST [User - Request Add Friend] ========== //
-export async function sendFriendRequest(user, {userId}, io) {
-    const requestType = await Type.findOne({class: NOTIFICATION_TYPE, name: FRIEND_REQUEST_NOTIFICATION})
-    const newNotification = new NotificationFeed({
-        user_id: new ObjectId(userId),
-        source_id: user._id,
-        type_id: requestType._id,
-        metadata: {
-            read: false,
-            status: WAITING_STATUS,
-        },
-    })
-    await newNotification.save()
+export async function sendFriendRequest(user, { userId }, { action }, io) {
+    const requestType = await Type.findOne({ class: NOTIFICATION_TYPE, name: FRIEND_REQUEST_NOTIFICATION })
+    switch (action) {
+        case SEND_ACTION: {
+            const newNotification = new NotificationFeed({
+                user_id: new ObjectId(userId),
+                source_id: user._id,
+                type_id: requestType._id,
+                metadata: {
+                    read: false,
+                    status: WAITING_STATUS,
+                },
+            })
+            await newNotification.save()
 
-    const notification = await NotificationFeed.aggregate([
-        {
-            $match: {_id: newNotification._id},
-        },
-        {
-            $lookup: {
-                from: 'users',
-                localField: 'source_id',
-                foreignField: '_id',
-                as: 'user',
-                pipeline: [
-                    {
-                        $addFields: {
-                            avatar: {
-                                $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
-                                    then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+            const notification = await NotificationFeed.aggregate([
+                { $match: { _id: newNotification._id } },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'source_id',
+                        foreignField: '_id',
+                        as: 'user',
+                        pipeline: [
+                            {
+                                $addFields: {
+                                    avatar: {
+                                        $cond: {
+                                            if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                            then: '$avatar',
+                                            else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                        },
+                                    },
                                 },
                             },
-                        },
+                            {
+                                $project: {
+                                    _id: 0,
+                                    name: 1,
+                                    avatar: 1,
+                                },
+                            },
+                        ],
                     },
-                    {
-                        $project: {
-                            _id: 1,
-                            name: 1,
-                            avatar: 1,
-                        },
+                },
+                { $unwind: '$user' },
+                {
+                    $lookup: {
+                        from: 'types',
+                        localField: 'type_id',
+                        foreignField: '_id',
+                        as: 'type',
+                        pipeline: [
+                            {
+                                $project: {
+                                    _id: 0,
+                                    class: 1,
+                                    name: 1,
+                                },
+                            },
+                        ],
                     },
-                ],
-            },
-        },
-        {
-            $unwind: '$user',
-        },
-        {
-            $project: {
-                _id: 0,
-                user: 1,
-                metadata: 1,
-            },
-        },
-    ]).exec()
+                },
+                { $unwind: '$type' },
+                {
+                    $project: {
+                        _id: 1,
+                        user_id: 0,
+                        source_id: 0,
+                        type_id: 0,
+                    },
+                },
+            ]).exec()
 
-    if (notification.length > 0) {
-        const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === userId)
+            if (notification.length > 0) {
+                const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === userId)
 
-        io.to(userSocketId).emit(FRIEND_REQUEST_NOTIFICATION, notification[0])
+                io.to(userSocketId).emit(FRIEND_REQUEST_NOTIFICATION, notification[0])
+            }
+            return { is_friend_requested: true }
+        }
+        case CANCEL_ACTION: {
+            const notification = await NotificationFeed.deleteOne({
+                user_id: new ObjectId(userId),
+                source_id: user._id,
+                type_id: requestType._id,
+            })
+            if (!notification.deletedCount) {
+                throw new Error('Notification not found')
+            } else {
+                return { is_friend_requested: false }
+            }
+        }
+        default:
+            throw new Error('Invalid action type')
     }
 }

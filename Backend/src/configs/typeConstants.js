@@ -38,3 +38,9 @@ export const FILE_MESSAGE = 'file'
 export const IMAGE_MESSAGE = 'image'
 export const VIDEO_MESSAGE = 'video'
 export const AUDIO_MESSAGE = 'audio'
+
+// ACTIONS
+export const CONFIRM_ACTION = 'confirm'
+export const DELETE_ACTION = 'delete'
+export const SEND_ACTION = 'send'
+export const CANCEL_ACTION = 'cancel'
