@@ -5,7 +5,7 @@ import { CheckCircleFilled } from '@ant-design/icons';
 import img_project from '../../../../../../../assets/images/logo/opennezt_black.png';
 import img_avt from '../../../../../../../assets/images/background/avt.jpg';
 import { useSelector } from 'react-redux';
-import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants/typeConstants';
+import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 

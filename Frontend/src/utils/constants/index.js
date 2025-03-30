@@ -1,4 +1,4 @@
-export * from './appConstants';
+export * from './app';
 export * from './input';
 export * from './api';
 export * from './validation';

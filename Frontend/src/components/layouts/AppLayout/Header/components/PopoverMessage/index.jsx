@@ -4,7 +4,7 @@ import { getChatHistory } from 'api/chat';
 import NotFound from 'components/UI/NotFound';
 import { MESSAGES } from 'utils/constants';
 import { Avatar, Stack, Text } from '@chakra-ui/react';
-import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants/typeConstants';
+import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants';
 import { CheckCircleFilled } from '@ant-design/icons';
 import { MoreOutlined } from '@ant-design/icons';
 import './styles.module.scss';

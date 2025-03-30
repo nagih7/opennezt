@@ -5,7 +5,7 @@ import { getNotifications } from 'api/notification';
 import { toaster } from 'components/UI/toaster';
 import { CONFIRM_FRIEND_REQUEST_NOTIFICATION, FRIEND_REQUEST_NOTIFICATION } from 'utils/constants';
 import { getConversations } from 'api/chat';
-import { PROJECT_INVITATION_NOTIFICATION } from 'utils/constants/typeConstants';
+import { PROJECT_INVITATION_NOTIFICATION } from 'utils/constants';
 
 export const RealtimeContext = React.createContext();
 

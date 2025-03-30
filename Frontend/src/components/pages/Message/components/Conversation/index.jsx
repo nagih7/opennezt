@@ -3,7 +3,7 @@ import { ArrowsAltOutlined, MoreOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants/typeConstants';
+import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants';
 import { Popover, Portal, Stack } from '@chakra-ui/react';
 import { Tooltip } from 'components/UI/tooltip';
 import ConversationHeader from './components/ConversationHeader';

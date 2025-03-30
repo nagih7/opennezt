@@ -11,7 +11,7 @@ import {
     PROJECT_INVITATION_NOTIFICATION,
     FRIEND_REQUEST_NOTIFICATION,
     WAITING_STATUS,
-} from 'utils/constants/typeConstants';
+} from 'utils/constants';
 import Actions from './components/Actions';
 import FriendRequest from './components/FriendRequestNotification';
 import ProjectInvitation from './components/ProjectInvitationNotification';

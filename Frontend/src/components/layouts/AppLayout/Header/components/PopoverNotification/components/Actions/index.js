@@ -3,7 +3,7 @@ import { CheckOutlined, CloseOutlined } from '@mui/icons-material';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { ACTIONS } from 'utils/constants';
-import { CONFIRM_ACTION, DELETE_ACTION } from 'utils/constants/typeConstants';
+import { CONFIRM_ACTION, DELETE_ACTION } from 'utils/constants';
 
 const Actions = ({ notification, handleReplyNotification, index }) => {
     const { language } = useSelector((state) => state.app);
