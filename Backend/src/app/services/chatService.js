@@ -1,11 +1,11 @@
-import {LINK_STATIC_URL, MESSAGE_TYPE, TEXT_MESSAGE} from '@/configs'
-import {Message, ObjectId, Conversation, Type, User} from '@/models'
+import { LINK_STATIC_URL, MESSAGE_TYPE, TEXT_MESSAGE } from '@/configs'
+import { Message, ObjectId, Conversation, Type, User } from '@/models'
 
 // ========== GET [CONVERSATIONS] ========== //
 export async function getConversations(user) {
     const matchStage = {
         $match: {
-            members: {$elemMatch: {user_id: user._id}},
+            members: { $elemMatch: { user_id: user._id } },
         },
     }
     const lookupUserStage = {
@@ -17,7 +17,7 @@ export async function getConversations(user) {
             pipeline: [
                 {
                     $match: {
-                        _id: {$ne: user._id},
+                        _id: { $ne: user._id },
                     },
                 },
                 {
@@ -26,9 +26,9 @@ export async function getConversations(user) {
                         name: 1,
                         avatar: {
                             $cond: {
-                                if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                 then: '$avatar',
-                                else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                             },
                         },
                     },
@@ -83,9 +83,9 @@ export async function getConversations(user) {
                         name: 1,
                         logo: {
                             $cond: {
-                                if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                                if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
                                 then: '$logo',
-                                else: {$concat: [LINK_STATIC_URL, '$logo']},
+                                else: { $concat: [LINK_STATIC_URL, '$logo'] },
                             },
                         },
                     },
@@ -138,11 +138,11 @@ export async function getConversations(user) {
 }
 
 // ========== GET [CONVERSATION] ========== //
-export async function getConversation(user, {conversationId}) {
+export async function getConversation(user, { conversationId }) {
     const matchStage = {
         $match: {
             _id: new ObjectId(conversationId),
-            members: {$elemMatch: {user_id: user._id}},
+            members: { $elemMatch: { user_id: user._id } },
         },
     }
     const lookupUserStage = {
@@ -154,7 +154,7 @@ export async function getConversation(user, {conversationId}) {
             pipeline: [
                 {
                     $match: {
-                        _id: {$ne: user._id},
+                        _id: { $ne: user._id },
                     },
                 },
                 {
@@ -163,9 +163,9 @@ export async function getConversation(user, {conversationId}) {
                         name: 1,
                         avatar: {
                             $cond: {
-                                if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                 then: '$avatar',
-                                else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                             },
                         },
                     },
@@ -206,9 +206,9 @@ export async function getConversation(user, {conversationId}) {
                         name: 1,
                         logo: {
                             $cond: {
-                                if: {$eq: [{$ifNull: ['$logo', '']}, '']},
+                                if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
                                 then: '$logo',
-                                else: {$concat: [LINK_STATIC_URL, '$logo']},
+                                else: { $concat: [LINK_STATIC_URL, '$logo'] },
                             },
                         },
                     },
@@ -254,10 +254,10 @@ export async function getConversation(user, {conversationId}) {
 }
 
 // ========== GET [MESSAGES] ========== //
-export async function getMessages(user, {conversationId}) {
+export async function getMessages(user, { conversationId }) {
     const conversation = await Conversation.findOne({
         _id: conversationId,
-        members: {$elemMatch: {user_id: user._id}},
+        members: { $elemMatch: { user_id: user._id } },
     })
     if (!conversation) {
         return []
@@ -281,9 +281,9 @@ export async function getMessages(user, {conversationId}) {
                             name: 1,
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -315,13 +315,13 @@ export async function getMessages(user, {conversationId}) {
     return messages
 }
 
-// ========== SEND [MESSAGE] ========== //
-export async function sendMessage(user, {conversationId}, {content}) {
+// ========== SEND [MESSAGE -- NO SOCKET] ========== //
+export async function sendMessage(user, { conversationId }, { content }) {
     const conversation = await Conversation.findOne({
         _id: conversationId,
-        members: {$elemMatch: {user_id: user._id}},
+        members: { $elemMatch: { user_id: user._id } },
     })
-    const typeMessage = await Type.findOne({class: MESSAGE_TYPE, name: TEXT_MESSAGE})
+    const typeMessage = await Type.findOne({ class: MESSAGE_TYPE, name: TEXT_MESSAGE })
     if (!conversation || !typeMessage) {
         throw new Error('Conversation not found')
     }
@@ -350,9 +350,9 @@ export async function sendMessage(user, {conversationId}, {content}) {
                 name: 1,
                 avatar: {
                     $cond: {
-                        if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                        if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                         then: '$avatar',
-                        else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                        else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                     },
                 },
             },
@@ -382,7 +382,7 @@ export async function getChatHistory(user, requestParams) {
         {
             $match: {
                 _id: new ObjectId(requestParams.conversation_id),
-                member_ids: {$elemMatch: {user_id: user._id}},
+                member_ids: { $elemMatch: { user_id: user._id } },
             },
         },
         {
@@ -394,7 +394,7 @@ export async function getChatHistory(user, requestParams) {
                 pipeline: [
                     {
                         $match: {
-                            _id: {$ne: user._id},
+                            _id: { $ne: user._id },
                         },
                     },
                     {
@@ -403,9 +403,9 @@ export async function getChatHistory(user, requestParams) {
                             name: 1,
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -450,7 +450,7 @@ export async function getChatHistory(user, requestParams) {
             },
         },
     ])
-    const messages = await Message.find({conversation_id: requestParams.conversation_id}).sort({
+    const messages = await Message.find({ conversation_id: requestParams.conversation_id }).sort({
         created_at: 1,
     })
 
@@ -471,13 +471,11 @@ export async function saveMessage(newMessage, user_id) {
         },
     })
     await message.save()
-    const conversation = await Conversation.findById({_id: newMessage.conversation_id})
+    const conversation = await Conversation.findById({ _id: newMessage.conversation_id })
     conversation.updated_at = new Date()
     conversation.save()
 
-    const members = await conversation.members.filter(
-        (member) => member.user_id.toString() !== user_id.toString()
-    )
+    const members = await conversation.members.filter((member) => member.user_id.toString() !== user_id.toString())
 
-    return {message, members}
+    return { message, members }
 }
