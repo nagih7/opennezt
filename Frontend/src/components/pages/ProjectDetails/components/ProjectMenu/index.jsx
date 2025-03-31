@@ -7,9 +7,9 @@ import {
     IconlySend,
     IconlySetting,
     IconlyUser,
-} from 'components/UI/Iconly';
-import React from 'react';
-import { Link } from 'react-router-dom';
+} from 'components/UI/Iconly'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
 const ProjectMenu = () => {
     return (
@@ -17,7 +17,7 @@ const ProjectMenu = () => {
             <ul className="flex items-center 2xl:max-w-full max-w-[1170px] p-0 m-0 overflow-x-scroll scrollbar-hide">
                 <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
                     <Link
-                        to={'/projects/details/:id'}
+                        to={'/projects/me/:id/details'}
                         className="no-underline bg-[#f8f9fa] mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2"
                     >
                         <IconlyHome size={20} color={'#6f7f92'} />
@@ -79,30 +79,9 @@ const ProjectMenu = () => {
                     </Link>
                     <span className="text-[#6f7f92] text-sm font-medium">Manage</span>
                 </li>
-
-                {/* <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
-                          <a
-                            href="#"
-                            className="no-underline bg-[#f8f9fa] mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2"
-                          >
-                            <IconlyBookmark size={20} color={"#6f7f92"} />
-                          </a>
-                          <span className="text-[#6f7f92] text-sm font-medium">Badges</span>
-                        </li>
-                        <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
-                          <a
-                            href="#"
-                            className="no-underline bg-[#f8f9fa] mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2"
-                          >
-                            <IconlyDocument size={20} color={"#6f7f92"} />
-                          </a>
-                          <span className="text-[#6f7f92] text-sm font-medium">
-                            Courses
-                          </span>
-                        </li> */}
             </ul>
         </div>
-    );
-};
+    )
+}
 
-export default ProjectMenu;
+export default ProjectMenu

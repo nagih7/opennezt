@@ -285,7 +285,7 @@ export async function getMyProjectDetails(user, projectId) {
         {
             $project: {
                 user_id: 0,
-                created_at: 0,
+                // created_at: 0,
                 updated_at: 0,
                 industry_ids: 0,
                 stage_id: 0,
@@ -505,11 +505,12 @@ export async function getProjectDetails(user, projectId) {
 }
 
 // ========== PATCH [Project - Basic] ========== //
-export async function updateBasic(user, requestBody) {
+export async function updateBasic(user, { id }, requestBody) {
     await Project.updateOne(
-        { user_id: user._id, _id: requestBody.project_id },
+        { user_id: user._id, _id: id },
         { name: requestBody.name, description: requestBody.description }
     )
+    return requestBody
 }
 
 // ========== PATCH [Project - Sector] ========== //

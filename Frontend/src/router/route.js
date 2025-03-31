@@ -1,64 +1,64 @@
-import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
-import { rootLoader } from './rootLoader';
+import React from 'react'
+import { createBrowserRouter } from 'react-router-dom'
+import { rootLoader } from './rootLoader'
 
-import AppLayout from 'components/layouts/AppLayout';
-import AuthLayout from 'components/layouts/AuthLayout';
-import Certifications from 'components/pages/EditProfile/components/Certifications';
+import AppLayout from 'components/layouts/AppLayout'
+import AuthLayout from 'components/layouts/AuthLayout'
+import Certifications from 'components/pages/EditProfile/components/Certifications'
 // Project
-import Details from 'components/pages/CreateProject/Details';
-import Stage from 'components/pages/CreateProject/Stage';
-import Revenue from 'components/pages/CreateProject/Revenue';
-import FundingSources from 'components/pages/CreateProject/FundingSources';
-import AdditonalInfo from 'components/pages/CreateProject/AdditionalInfo';
-import Logo from 'components/pages/CreateProject/Logo';
-import Background from 'components/pages/CreateProject/Background';
-import Invites from 'components/pages/CreateProject/Invites';
-import MyProjectDetails from 'components/pages/MyProjectDetails';
+import Details from 'components/pages/CreateProject/Details'
+import Stage from 'components/pages/CreateProject/Stage'
+import Revenue from 'components/pages/CreateProject/Revenue'
+import FundingSources from 'components/pages/CreateProject/FundingSources'
+import AdditonalInfo from 'components/pages/CreateProject/AdditionalInfo'
+import Logo from 'components/pages/CreateProject/Logo'
+import Background from 'components/pages/CreateProject/Background'
+import Invites from 'components/pages/CreateProject/Invites'
+import MyProjectDetails from 'components/pages/MyProjectDetails'
 // EditProfile
-import EditDetail from 'components/pages/EditProject/Components/Detail';
-import EditStage from 'components/pages/EditProject/Components/Stage';
-import EditRevenue from 'components/pages/EditProject/Components/Revenue';
-import EditFundingSources from 'components/pages/EditProject/Components/FundingSources';
-import EditAdditionalInfo from 'components/pages/EditProject/Components/AdditionalInfo';
-import EditLogo from 'components/pages/EditProject/Components/Logo';
-import EditBackground from 'components/pages/EditProject/Components/Background';
-import Members from 'components/pages/MyProjectDetails/components/Members';
-import ProjectManage from 'components/pages/MyProjectDetails/components/ProjectManage';
+import EditDetail from 'components/pages/EditProject/Components/Detail'
+import EditStage from 'components/pages/EditProject/Components/Stage'
+import EditRevenue from 'components/pages/EditProject/Components/Revenue'
+import EditFundingSources from 'components/pages/EditProject/Components/FundingSources'
+import EditAdditionalInfo from 'components/pages/EditProject/Components/AdditionalInfo'
+import EditLogo from 'components/pages/EditProject/Components/Logo'
+import EditBackground from 'components/pages/EditProject/Components/Background'
+import Members from 'components/pages/MyProjectDetails/components/Members'
+import ProjectManage from 'components/pages/MyProjectDetails/components/ProjectManage'
 // import NewConversation from 'components/pages/Message/components/NewConversation';
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
-const Login = React.lazy(() => import('../components/pages/Auth/Login'));
-const Register = React.lazy(() => import('../components/pages/Auth/Register'));
-const ForgotPassword = React.lazy(() => import('../components/pages/Auth/ForgotPassword'));
-const Profile = React.lazy(() => import('../components/pages/Profile'));
-const Manage = React.lazy(() => import('../components/pages/Manage'));
-const UserManagement = React.lazy(() => import('../components/pages/UserManagement'));
-const RoleManage = React.lazy(() => import('../components/pages/Manage/components/RoleManage'));
-const TypeManage = React.lazy(() => import('../components/pages/Manage/components/TypeManage'));
-const IndustryManage = React.lazy(() => import('../components/pages/Manage/components/IndustryManage'));
-const ExperienceLevelManage = React.lazy(() => import('../components/pages/Manage/components/ExperienceLevelManage'));
-const CategoryManage = React.lazy(() => import('../components/pages/Manage/components/CategoryManage'));
-const SkillManage = React.lazy(() => import('../components/pages/Manage/components/SkillManage'));
-const OrganizationManage = React.lazy(() => import('../components/pages/Manage/components/OrganizationManage'));
-const About = React.lazy(() => import('../components/pages/About'));
-const Message = React.lazy(() => import('../components/pages/Message'));
-const Newfeeds = React.lazy(() => import('../components/pages/Newfeeds'));
-const Project = React.lazy(() => import('../components/pages/Project'));
-const RecruitTalents = React.lazy(() => import('../components/pages/RecruitTalents'));
-const TalentDetails = React.lazy(() => import('../components/pages/TalentDetails'));
-const SeekProjects = React.lazy(() => import('../components/pages/SeekProjects'));
-const ProjectDetailsBySeek = React.lazy(() => import('../components/pages/ProjectDetailsBySeek'));
-const VerifyAuth = React.lazy(() => import('../components/pages/Auth/Verify'));
-const ResetPassword = React.lazy(() => import('../components/pages/Auth/ResetPassword'));
+const Login = React.lazy(() => import('../components/pages/Auth/Login'))
+const Register = React.lazy(() => import('../components/pages/Auth/Register'))
+const ForgotPassword = React.lazy(() => import('../components/pages/Auth/ForgotPassword'))
+const Profile = React.lazy(() => import('../components/pages/Profile'))
+const Manage = React.lazy(() => import('../components/pages/Manage'))
+const UserManagement = React.lazy(() => import('../components/pages/UserManagement'))
+const RoleManage = React.lazy(() => import('../components/pages/Manage/components/RoleManage'))
+const TypeManage = React.lazy(() => import('../components/pages/Manage/components/TypeManage'))
+const IndustryManage = React.lazy(() => import('../components/pages/Manage/components/IndustryManage'))
+const ExperienceLevelManage = React.lazy(() => import('../components/pages/Manage/components/ExperienceLevelManage'))
+const CategoryManage = React.lazy(() => import('../components/pages/Manage/components/CategoryManage'))
+const SkillManage = React.lazy(() => import('../components/pages/Manage/components/SkillManage'))
+const OrganizationManage = React.lazy(() => import('../components/pages/Manage/components/OrganizationManage'))
+const About = React.lazy(() => import('../components/pages/About'))
+const Message = React.lazy(() => import('../components/pages/Message'))
+const Newfeeds = React.lazy(() => import('../components/pages/Newfeeds'))
+const Project = React.lazy(() => import('../components/pages/Project'))
+const RecruitTalents = React.lazy(() => import('../components/pages/RecruitTalents'))
+const TalentDetails = React.lazy(() => import('../components/pages/TalentDetails'))
+const SeekProjects = React.lazy(() => import('../components/pages/SeekProjects'))
+const ProjectDetailsBySeek = React.lazy(() => import('../components/pages/ProjectDetailsBySeek'))
+const VerifyAuth = React.lazy(() => import('../components/pages/Auth/Verify'))
+const ResetPassword = React.lazy(() => import('../components/pages/Auth/ResetPassword'))
 // ========== EDIT PROFILE COMPONENTS ========== //
 const ProfessionalBackground = React.lazy(() =>
     import('../components/pages/EditProfile/components/ProfessionalBackground')
-);
-const Educations = React.lazy(() => import('../components/pages/EditProfile/components/Educations'));
-const Skills = React.lazy(() => import('../components/pages/EditProfile/components/Skills'));
-const AdditionalInfo = React.lazy(() => import('../components/pages/EditProfile/components/AdditionalInfo'));
-const NotificationManagement = React.lazy(() => import('../components/pages/NotificationManagement'));
+)
+const Educations = React.lazy(() => import('../components/pages/EditProfile/components/Educations'))
+const Skills = React.lazy(() => import('../components/pages/EditProfile/components/Skills'))
+const AdditionalInfo = React.lazy(() => import('../components/pages/EditProfile/components/AdditionalInfo'))
+const NotificationManagement = React.lazy(() => import('../components/pages/NotificationManagement'))
 const router = createBrowserRouter([
     {
         path: '/login',
@@ -402,7 +402,7 @@ const router = createBrowserRouter([
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
     },
     {
-        path: '/projects/details/:id',
+        path: '/projects/me/:id/details',
         element: (
             <AppLayout>
                 <MyProjectDetails />
@@ -411,7 +411,7 @@ const router = createBrowserRouter([
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PROJECT_DETAILS_PAGE'),
     },
     {
-        path: '/project/edit-project/detail',
+        path: '/projects/me/:id/edit/basic',
         element: (
             <AppLayout>
                 <EditDetail />
@@ -420,7 +420,7 @@ const router = createBrowserRouter([
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
     },
     {
-        path: '/project/edit-project/stage',
+        path: '/projects/me/:id/edit/stage',
         element: (
             <AppLayout>
                 <EditStage />
@@ -429,7 +429,7 @@ const router = createBrowserRouter([
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
     },
     {
-        path: '/project/edit-project/revenue',
+        path: '/projects/me/:id/edit/revenue',
         element: (
             <AppLayout>
                 <EditRevenue />
@@ -438,7 +438,7 @@ const router = createBrowserRouter([
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
     },
     {
-        path: '/project/edit-project/funding-sources',
+        path: '/projects/me/:id/edit/funding-sources',
         element: (
             <AppLayout>
                 <EditFundingSources />
@@ -447,7 +447,7 @@ const router = createBrowserRouter([
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
     },
     {
-        path: '/project/edit-project/additional-info',
+        path: '/projects/me/:id/edit/additional-info',
         element: (
             <AppLayout>
                 <EditAdditionalInfo />
@@ -456,7 +456,7 @@ const router = createBrowserRouter([
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
     },
     {
-        path: '/project/edit-project/logo',
+        path: '/projects/me/:id/edit/logo',
         element: (
             <AppLayout>
                 <EditLogo />
@@ -465,7 +465,7 @@ const router = createBrowserRouter([
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
     },
     {
-        path: '/project/edit-project/background',
+        path: '/projects/me/:id/edit/background',
         element: (
             <AppLayout>
                 <EditBackground />
@@ -518,6 +518,6 @@ const router = createBrowserRouter([
         ),
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CONVERSATION_PAGE'),
     },
-]);
+])
 
-export default router;
+export default router

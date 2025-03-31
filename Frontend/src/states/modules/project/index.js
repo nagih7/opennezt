@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { toaster } from 'components/UI/toaster';
-import { create } from 'lodash';
+import { createSlice } from '@reduxjs/toolkit'
+import { toaster } from 'components/UI/toaster'
+import { create } from 'lodash'
 
 const projectSlice = createSlice({
     name: 'Project',
@@ -31,6 +31,8 @@ const projectSlice = createSlice({
         // ========== MY PROJECT DETAILS ========== //
         isLoadingGetListMyProjects: false,
         isLoadingGetMyProjectDetails: false,
+        // ========= UPDATE PROJECT ========== //
+        isLoadingUpdateMyProject: false,
         // ========== DELETE MY PROJECT ========== //
         isLoadingDeleteMyProject: false,
         // ========== PROJECT DETAILS ========== //
@@ -56,14 +58,6 @@ const projectSlice = createSlice({
         isLoadingApplyToJoinProject: false,
         isOpenModalConfirmApply: false,
         // ========== REQUIREMENT PROJECT ========== //
-        formAddProjectRequirement: {
-            team_role_id: '',
-            role_id: '',
-            industry_ids: [],
-            experience_level_id: '',
-            category_ids: [],
-            skill_ids: [],
-        },
         isLoadingCreateProjectRequirement: false,
         // ========== SEARCH MY PROJECTS ========== //
         isLoadingSearchMyProjects: false,
@@ -108,23 +102,23 @@ const projectSlice = createSlice({
                 title: 'Create project successfully',
                 description: 'You have successfully created the project',
                 type: 'success',
-            });
-            window.location.href = `/projects/details/${action.payload.data.project_id}`;
+            })
+            window.location.href = `/projects/me/${action.payload.data.project_id}/details`
             return {
                 ...state,
                 isLoadingCreateNewProject: false,
-            };
+            }
         },
         createNewProjectFail: (state, action) => {
             toaster.create({
                 title: `${Object.values(action.payload.data.detail)[0]}`,
                 description: 'You have failed to create the project',
                 type: 'error',
-            });
+            })
             return {
                 ...state,
                 isLoadingCreateNewProject: false,
-            };
+            }
         },
         // ========== MY PROJECT DETAILS ========== //
         requestGetMyProjectDetails: (state) => ({
@@ -140,6 +134,36 @@ const projectSlice = createSlice({
             ...state,
             isLoadingGetMyProjectDetails: false,
         }),
+
+        // ========= UPDATE PROJECT ========== //
+        requestUpdateMyProject: (state) => ({
+            ...state,
+            isLoadingUpdateMyProject: true,
+        }),
+        updateMyProjectSuccess: (state, action) => {
+            toaster.create({
+                title: 'Update project successfully',
+                type: 'success',
+            })
+            return {
+                ...state,
+                myProjectDetails: {
+                    ...state.myProjectDetails,
+                    ...action.payload.data,
+                },
+                isLoadingUpdateMyProject: false,
+            }
+        },
+        updateMyProjectFail: (state) => {
+            toaster.create({
+                title: 'Update project failed',
+                type: 'error',
+            })
+            return {
+                ...state,
+                isLoadingUpdateMyProject: false,
+            }
+        },
 
         // ========== PROJECT DETAILS ========== //
         requestGetProjectDetails: (state) => ({
@@ -195,7 +219,7 @@ const projectSlice = createSlice({
                 title: 'Apply to join project successfully',
                 description: 'You have successfully applied to join the project',
                 type: 'success',
-            });
+            })
             return {
                 ...state,
                 isLoadingApplyToJoinProject: false,
@@ -204,18 +228,18 @@ const projectSlice = createSlice({
                     ...state.projectDetails,
                     applied: true,
                 },
-            };
+            }
         },
         applyToJoinProjectFail: (state) => {
             toaster.create({
                 title: 'Apply to join project failed',
                 description: 'You have failed to apply to join the project',
                 type: 'error',
-            });
+            })
             return {
                 ...state,
                 isLoadingApplyToJoinProject: false,
-            };
+            }
         },
         setOpenModalConfirmApply: (state, action) => ({
             ...state,
@@ -233,29 +257,29 @@ const projectSlice = createSlice({
                 title: 'Delete project successfully',
                 description: 'You have successfully deleted the project',
                 type: 'success',
-            });
-            window.location.href = '/projects';
+            })
+            window.location.href = '/projects'
             return {
                 ...state,
                 isLoadingDeleteMyProject: false,
-            };
+            }
         },
         deleteMyProjectFail: (state) => {
             toaster.create({
                 title: 'Delete project failed',
                 description: 'You have failed to delete the project',
                 type: 'error',
-            });
+            })
             return {
                 ...state,
                 isLoadingDeleteMyProject: false,
-            };
+            }
         },
         // ========== SEEK PROJECTS ========== //
         onChangeFormCreateProject: (state, action) => {
             Object.keys(action.payload).forEach((key) => {
-                state.formCreateProject[key] = action.payload[key];
-            });
+                state.formCreateProject[key] = action.payload[key]
+            })
         },
         // ========== REQUIREMENT PROJECT ========== //
         requestCreateProjectRequirement: (state) => ({
@@ -267,22 +291,22 @@ const projectSlice = createSlice({
                 title: 'Create project requirement successfully',
                 description: 'You have successfully created the project requirement',
                 type: 'success',
-            });
+            })
             return {
                 ...state,
                 isLoadingCreateProjectRequirement: false,
-            };
+            }
         },
         createProjectRequirementFail: (state) => {
             toaster.create({
                 title: 'Create project requirement failed',
                 description: 'You have failed to create the project requirement',
                 type: 'error',
-            });
+            })
             return {
                 ...state,
                 isLoadingCreateProjectRequirement: false,
-            };
+            }
         },
 
         // ========== SEARCH MY PROJECTS ========== //
@@ -309,30 +333,30 @@ const projectSlice = createSlice({
                 title: 'Invite member successfully',
                 description: 'You have successfully invited the member',
                 type: 'success',
-            });
+            })
             return {
                 ...state,
                 isLoadingInviteMember: false,
                 isOpenModalInviteMember: false,
-            };
+            }
         },
         inviteMemberFail: (state, action) => {
             toaster.create({
                 title: `${Object.values(action.payload.data.detail)[0]}`,
                 description: 'You have failed to invite the member',
                 type: 'error',
-            });
+            })
             return {
                 ...state,
                 isLoadingInviteMember: false,
-            };
+            }
         },
         setModalInviteMember: (state, action) => ({
             ...state,
             isOpenModalInviteMember: action.payload,
         }),
     },
-});
+})
 
 export const {
     setTitle,
@@ -340,12 +364,18 @@ export const {
     requestGetListMyProjects,
     getListMyProjectsSuccess,
     getListMyProjectsFail,
+    // ========= CREATE NEW PROJECT ========== //
     requestCreateNewProject,
     createNewProjectSuccess,
     createNewProjectFail,
+    // ========= MY PROJECT DETAILS ========== //
     requestGetMyProjectDetails,
     getMyProjectDetailsSuccess,
     getMyProjectDetailsFail,
+    // ========= UPDATE PROJECT ========== //
+    requestUpdateMyProject,
+    updateMyProjectSuccess,
+    updateMyProjectFail,
     // ========== Projects ========== //
     requestGetProjectDetails,
     getProjectDetailsSuccess,
@@ -380,6 +410,6 @@ export const {
     inviteMemberSuccess,
     inviteMemberFail,
     setModalInviteMember,
-} = projectSlice.actions;
+} = projectSlice.actions
 
-export default projectSlice.reducer;
+export default projectSlice.reducer

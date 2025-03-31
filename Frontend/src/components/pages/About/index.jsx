@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import ProfileMenu from './components/ProfileMenu';
-import ProfessionalProfile from './components/ProfessionalProfile';
-import Friends from './components/Friends';
-import { Image } from '@chakra-ui/react';
-import Timeline from './components/Timeline';
-import Groups from './components/Groups';
-import Badges from './components/Badges';
-import ProfileOverview from './components/ProfileOverview';
-import { OPENNEZT_BG_BLACK } from 'utils/constants';
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
+import ProfileMenu from './components/ProfileMenu'
+import ProfessionalProfile from './components/ProfessionalProfile'
+import Friends from './components/Friends'
+import { Image } from '@chakra-ui/react'
+import Timeline from './components/Timeline'
+import Groups from './components/Groups'
+import Badges from './components/Badges'
+import ProfileOverview from './components/ProfileOverview'
+import { OPENNEZT_BG_BLACK } from 'utils/constants'
 
 const About = () => {
     // ========== STATE FROM REDUX STORE ========== //
-    const { authUser } = useSelector((state) => state.auth);
+    const { authUser } = useSelector((state) => state.auth)
 
     // ========== STATE ========== //
-    const [changeTab, setChangeTab] = useState('About');
-    const [imageError, setImageError] = useState(false);
+    const [changeTab, setChangeTab] = useState('About')
+    const [imageError, setImageError] = useState(false)
 
     // ========== RENDER ========== //
     return (
@@ -28,7 +28,7 @@ const About = () => {
                     alt={authUser?.name}
                     aspectRatio={16 / 9}
                     width="100%"
-                    onError={setImageError(true)}
+                    onError={() => setImageError(true)}
                 />
             ) : (
                 <div className="h-[400px] flex items-center justify-center bg-gray-200 pb-10 px-10 user-select-none">
@@ -45,7 +45,7 @@ const About = () => {
                 {changeTab == 'Badges' && <Badges />}
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default About;
+export default About

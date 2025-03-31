@@ -1,51 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import img_avatar_group from 'assets/images/background/1656677703-bpfull.jpg';
-import { IconlyDocument, IconlyUser } from 'components/UI/Iconly';
-import img_avatar from 'assets/images/background/avt.jpg';
-import { PlusOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getListMyProjects } from 'api/project';
-import { Avatar, Button, Image } from '@chakra-ui/react';
-import { OPENNEZT_BG_BLACK, OPENNEZT_LOGO } from 'utils/constants';
+import React, { useEffect, useState } from 'react'
+import img_avatar_group from 'assets/images/background/1656677703-bpfull.jpg'
+import { IconlyDocument, IconlyUser } from 'components/UI/Iconly'
+import img_avatar from 'assets/images/background/avt.jpg'
+import { PlusOutlined } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getListMyProjects } from 'api/project'
+import { Avatar, Button, Image } from '@chakra-ui/react'
+import { OPENNEZT_BG_BLACK } from 'utils/constants'
 
 const MyProjects = ({ isBottom, setIsBottom }) => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     // ========== STATE FROM REDUX ========== //
-    const { myProjects, paginationListMyProjects, isLoadingGetListMyProjects } = useSelector(
-        (state) => state.project
-    );
+    const { myProjects, paginationListMyProjects, isLoadingGetListMyProjects } = useSelector((state) => state.project)
 
     // ========== STATE ========== //
-    const [errorBG, setErrorBG] = useState(false);
-    const [errorLogo, setErrorLogo] = useState(false);
+    const [errorBG, setErrorBG] = useState(false)
 
     // ========== USE EFFECT ========== //
     useEffect(() => {
         if (!myProjects || myProjects.length === 0) {
-            dispatch(getListMyProjects(paginationListMyProjects));
+            dispatch(getListMyProjects(paginationListMyProjects))
         }
         // eslint-disable-next-line
-    }, [dispatch]);
+    }, [dispatch])
 
     // Theo dõi sự kiện scroll
     useEffect(() => {
         if (isBottom) {
             // Call API hoặc load thêm dữ liệu
-            dispatch();
+            dispatch()
             getListMyProjects({
                 ...paginationListMyProjects,
                 currentPage: parseInt(paginationListMyProjects.currentPage) + 1,
-            });
-            setIsBottom(false);
+            })
+            setIsBottom(false)
         }
-    }, [isBottom, dispatch, paginationListMyProjects, setIsBottom]);
+    }, [isBottom, dispatch, paginationListMyProjects, setIsBottom])
 
     const handleNavigateToProjectDetails = (project) => {
-        navigate(`/projects/details/${project._id}`);
-    };
+        navigate(`/projects/me/${project._id}/details`)
+    }
 
     return (
         <>
@@ -73,7 +70,7 @@ const MyProjects = ({ isBottom, setIsBottom }) => {
                                         aspectRatio={10 / 3}
                                         width="100%"
                                         objectFit="cover"
-                                        onError={setErrorBG(true)}
+                                        onError={() => setErrorBG(true)}
                                     />
                                 ) : (
                                     <div className="h-[200px] flex items-center justify-center bg-gray-200 px-10 user-select-none">
@@ -107,10 +104,7 @@ const MyProjects = ({ isBottom, setIsBottom }) => {
                                                     className="no-underline text-[#6f7f92] text-sm font-medium flex items-center gap-1"
                                                 >
                                                     <span>
-                                                        <IconlyDocument
-                                                            size={20}
-                                                            color={'#6f7f92'}
-                                                        />
+                                                        <IconlyDocument size={20} color={'#6f7f92'} />
                                                     </span>
                                                     <span>0</span>
                                                     <span>Posts</span>
@@ -191,7 +185,7 @@ const MyProjects = ({ isBottom, setIsBottom }) => {
             </div>
             {isLoadingGetListMyProjects && <div className="text-center">Loading...</div>}
         </>
-    );
-};
+    )
+}
 
-export default MyProjects;
+export default MyProjects

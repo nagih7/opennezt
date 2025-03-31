@@ -1,4 +1,4 @@
-import { Button, CloseButton, Dialog, Portal, Stack } from "@chakra-ui/react";
+import { Button, Dialog, Portal, Stack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProfileCard from "../ProfileCard";
@@ -14,12 +14,12 @@ import {
 	getOrganizationFramework,
 } from "api/profile";
 import { Checkbox } from "components/UI/checkbox";
-import { array } from "prop-types";
 
 const Certifications = () => {
 	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX STORE ========== //
-	const { certifications } = useSelector((state) => state.profile.profile);
+	const { profile } = useSelector((state) => state.profile)
+	const { certifications } = profile || []
 	const {
 		isOpenModalCreateOrUpdateCertification,
 		isLoadingCreateOrUpdateCertification,
@@ -166,7 +166,7 @@ const Certifications = () => {
 									<div key={index}>
 										<div className="shadow rounded-[0.6rem]">
 											<div className="relative p-4 mt-[2rem]">
-												<span className="cursor-pointer  md:float-right 2xl:float-right"><IconlyDelete size={24} color={"#000"} /></span>
+												<span className="cursor-pointer md:float-right 2xl:float-right"><IconlyDelete size={24} color={"#000"} /></span>
 												<span
 													className="cursor-pointer md:float-right 2xl:float-right"
 													onClick={() =>
