@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { toaster } from 'components/UI/toaster'
 
 const talentSlice = createSlice({
     name: 'Talent',

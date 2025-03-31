@@ -440,56 +440,6 @@ const replyProjectInvitation = async (notification, io) => {
     }
 }
 
-export async function getTotalFriends(user) {
-    const totalFriends = await Friend.countDocuments({ user_id: user._id })
-    return totalFriends
-}
-
-export async function projectInvitation(user, requestBody, type_id, io) {
-    const { project_id, user_id } = requestBody
-    const type = await Type.findOne({ name: 'Project Invitation' })
-
-    if (!type_id || !type._id) {
-        throw new Error('Loại thông báo không hợp lệ.')
-    }
-
-    const notification = new NotificationFeed({
-        user_id: user_id,
-        source_id: user._id,
-        type_id: type._id,
-        notification_additional_info: {
-            project_id: new ObjectId(project_id),
-            team_role: requestBody.team_role,
-            role: requestBody.role,
-            project_name: requestBody.project_name,
-        },
-        metadata: {
-            read: false,
-            status: 'waiting',
-            source_name: user.name,
-            avatar: user.avatar ? user.avatar : '',
-        },
-    })
-
-    await notification.save()
-    const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === user_id)
-
-    io.to(userSocketId).emit('new_notification', notification)
-}
-
-// Get request add friend
-export async function getRequestAddFriend(user, user_id) {
-    const request = await NotificationFeed.findOne({
-        $or: [
-            { user_id: user_id, source_id: user._id },
-            { user_id: user._id, source_id: user_id },
-        ],
-        type: 'friend_request',
-    })
-
-    return request
-}
-
 // ========== PUT [Notification - Reply Invitation Member] ========== //
 export async function replyInvitationMember(user, requestBody, io) {
     const { notification_id, action } = requestBody
