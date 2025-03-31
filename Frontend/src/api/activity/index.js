@@ -1,4 +1,4 @@
-import callApi from 'api/callApi';
+import callApi from 'api/callApi'
 
 import {
     // ========== PROJECT ACCESS ========== //
@@ -65,7 +65,11 @@ import {
     requestDeleteSaveArticleActivity,
     deleteSaveArticleActivitySuccess,
     deleteSaveArticleActivityFail,
-} from 'states/modules/activity';
+    // ========== DELETE REACTION ARTICLE ACTIVITIES ========== //
+    requestDeleteReactionArticleActivity,
+    deleteReactionArticleActivitySuccess,
+    deleteReactionArticleActivityFail,
+} from 'states/modules/activity'
 
 // ========== PROJECT ACCESS ========== //
 export const accessToProject = (projectId) => async (dispatch, getState) => {
@@ -76,8 +80,8 @@ export const accessToProject = (projectId) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== MY PROJECT ACCESS ========== //
 export const getMyProjectAccess = () => async (dispatch, getState) => {
@@ -88,24 +92,20 @@ export const getMyProjectAccess = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== ACCESS TO MY PROJECTS ========== //
 export const getAccessToMyProjects = () => async (dispatch, getState) => {
     return callApi({
         method: 'get',
         apiPath: `projects/me/access`,
-        actionTypes: [
-            requestGetAccessToMyProjects,
-            getAccessToMyProjectsSuccess,
-            getAccessToMyProjectsFail,
-        ],
+        actionTypes: [requestGetAccessToMyProjects, getAccessToMyProjectsSuccess, getAccessToMyProjectsFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== TALENT ACCESS ========== //
 export const accessToTalent = (profileId) => async (dispatch, getState) => {
@@ -116,72 +116,56 @@ export const accessToTalent = (profileId) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== ACCESS TO MY PROFILE ========== //
 export const getAccessToMyProfile = () => async (dispatch, getState) => {
     return callApi({
         method: 'get',
         apiPath: `profile/me/access`,
-        actionTypes: [
-            requestGetAccessToMyProfile,
-            getAccessToMyProfileSuccess,
-            getAccessToMyProfileFail,
-        ],
+        actionTypes: [requestGetAccessToMyProfile, getAccessToMyProfileSuccess, getAccessToMyProfileFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== ACTIVITIES CREATE ARTICLE ========== //
 export const getCreateArticle = () => async (dispatch, getState) => {
     return callApi({
         method: 'get',
         apiPath: `article/activity/create`,
-        actionTypes: [
-            requestGetActivityCreateArticle,
-            getActivityCreateArticleSuccess,
-            getActivityCreateArticleFail,
-        ],
+        actionTypes: [requestGetActivityCreateArticle, getActivityCreateArticleSuccess, getActivityCreateArticleFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== ACTIVITIES UPDATE ARTICLE ========== //
 export const getUpdateArticle = () => async (dispatch, getState) => {
     return callApi({
         method: 'get',
         apiPath: `article/activity/update`,
-        actionTypes: [
-            requestGetActivityUpdateArticle,
-            getActivityUpdateArticleSuccess,
-            getActivityUpdateArticleFail,
-        ],
+        actionTypes: [requestGetActivityUpdateArticle, getActivityUpdateArticleSuccess, getActivityUpdateArticleFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== ACTIVITIES SAVE ARTICLE ========== //
 export const getSaveArticle = () => async (dispatch, getState) => {
     return callApi({
         method: 'get',
         apiPath: `article/activity/save`,
-        actionTypes: [
-            requestGetActivitySaveArticle,
-            getActivitySaveArticleSuccess,
-            getActivitySaveArticleFail,
-        ],
+        actionTypes: [requestGetActivitySaveArticle, getActivitySaveArticleSuccess, getActivitySaveArticleFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== ACTIVITIES REACTION ARTICLE ========== //
 export const getReactionArticle = () => async (dispatch, getState) => {
@@ -196,24 +180,20 @@ export const getReactionArticle = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== ACTIVITIES REPLY COMMENT ========== //
 export const getReplyComment = () => async (dispatch, getState) => {
     return callApi({
         method: 'get',
         apiPath: `article/activity/reply-comment`,
-        actionTypes: [
-            requestGetActivityReplyComment,
-            getActivityReplyCommentSuccess,
-            getActivityReplyCommentFail,
-        ],
+        actionTypes: [requestGetActivityReplyComment, getActivityReplyCommentSuccess, getActivityReplyCommentFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== POST ACTIVITIES CREATE ARTICLE ========== //
 export const postActivityCreateArticle = (articleId) => async (dispatch, getState) => {
@@ -228,8 +208,8 @@ export const postActivityCreateArticle = (articleId) => async (dispatch, getStat
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== POST ACTIVITIES UPDATE ARTICLE ========== //
 export const postActivityUpdateArticle = (articleId) => async (dispatch, getState) => {
@@ -244,24 +224,20 @@ export const postActivityUpdateArticle = (articleId) => async (dispatch, getStat
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== POST ACTIVITIES SAVE ARTICLE ========== //
 export const postActivitySaveArticle = (articleId) => async (dispatch, getState) => {
     return callApi({
         method: 'post',
         apiPath: `article/activity/save/${articleId}`,
-        actionTypes: [
-            requestPostActivitySaveArticle,
-            postActivitySaveArticleSuccess,
-            postActivitySaveArticleFail,
-        ],
+        actionTypes: [requestPostActivitySaveArticle, postActivitySaveArticleSuccess, postActivitySaveArticleFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== POST ACTIVITIES REACTION ARTICLE ========== //
 export const postActivityReactionArticle = (articleId) => async (dispatch, getState) => {
@@ -276,24 +252,20 @@ export const postActivityReactionArticle = (articleId) => async (dispatch, getSt
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== POST ACTIVITIES REPLY COMMENT ========== //
 export const postActivityReplyComment = (commentId) => async (dispatch, getState) => {
     return callApi({
         method: 'post',
         apiPath: `article/activity/reply-comment/${commentId}`,
-        actionTypes: [
-            requestPostActivityReplyComment,
-            postActivityReplyCommentSuccess,
-            postActivityReplyCommentFail,
-        ],
+        actionTypes: [requestPostActivityReplyComment, postActivityReplyCommentSuccess, postActivityReplyCommentFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== DELETE ACTIVITIES SAVE ARTICLE ========== //
 export const deleteActivitySaveArticle = (avitityId) => async (dispatch, getState) => {
@@ -308,5 +280,21 @@ export const deleteActivitySaveArticle = (avitityId) => async (dispatch, getStat
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
+
+// ========== DELETE ACTIVITIES REACTION ARTICLE ========== //
+export const deleteActivityReactionArticle = (avitityId) => async (dispatch, getState) => {
+    return callApi({
+        method: 'delete',
+        apiPath: `article/activity/reaction/${avitityId}`,
+        actionTypes: [
+            requestDeleteReactionArticleActivity,
+            deleteReactionArticleActivitySuccess,
+            deleteReactionArticleActivityFail,
+        ],
+        variables: {},
+        dispatch,
+        getState,
+    })
+}

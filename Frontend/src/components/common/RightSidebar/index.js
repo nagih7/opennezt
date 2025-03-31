@@ -41,7 +41,7 @@ function RightSidebar({ activities, action }) {
                                     {activity.user.name}
                                 </a>
                                 <CheckCircleFilled className="text-[#3897f0] mx-1" />
-                                {action(activity.project ? activity.project?.name : activity)}
+                                {action(activity.project ? activity.project?.name : activity)}{' '}
                                 <a href="#" className="no-underline text-[#6f7f92]">
                                     <span className="text-xs">{moment().fromNow(activity.timestamp)}</span>
                                 </a>

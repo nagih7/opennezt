@@ -82,4 +82,6 @@ articleRouter.get('/activity/reply-comment', asyncHandler(articleController.getA
 // ========== DELETE [ARTICLE ACTIVITIES] ========== //
 articleRouter.delete('/activity/save/:id', asyncHandler(articleController.deleteActivitySaveArticle))
 
+articleRouter.delete('/activity/reaction/:id', asyncHandler(articleController.deleteActivityReactionArticle))
+
 export default articleRouter

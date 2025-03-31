@@ -148,3 +148,8 @@ export const deleteActivitySaveArticle = async (req, res) => {
     const result = await articleService.deleteActivitySaveArticle(req.currentUser, req.params.id)
     return res.json(result)
 }
+
+export const deleteActivityReactionArticle = async (req, res) => {
+    const result = await articleService.deleteActivityReactionArticle(req.currentUser, req.params.id)
+    return res.json(result)
+}

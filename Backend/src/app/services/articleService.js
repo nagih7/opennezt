@@ -212,7 +212,7 @@ export const updateArticle = async (user_id, id, requestBody) => {
         }
 
         // Kiểm tra nếu project_id thay đổi và update project mảng
-        if (requestBody.project_id && requestBody.project_id !== validArticle.project_id.toString()) {
+        if (requestBody.project_id) {
             const updatedProject = await Project.findById(requestBody.project_id) // Lấy project mới theo ID
             if (updatedProject) {
                 // Cập nhật lại mảng project với project mới
@@ -238,9 +238,7 @@ export const updateArticle = async (user_id, id, requestBody) => {
 //Article Reaction
 export const reactArticle = async (id, user, requestBody) => {
     const target_type = requestBody.target_type
-
     const type = requestBody.type
-
     const user_id = user._id.toString()
 
     const existingReaction = await Reaction.findOne({
@@ -252,8 +250,10 @@ export const reactArticle = async (id, user, requestBody) => {
         const article = await Article.findById(id)
         if (existingReaction) {
             if (existingReaction.type === type) {
+                // Delete the reaction
                 await Reaction.deleteOne({ _id: existingReaction._id })
                 article.reaction_count = article.reaction_count - 1
+                await deleteActivityReactionArticle(user, id)
                 await article.save()
             } else {
                 existingReaction.type = type
@@ -268,11 +268,15 @@ export const reactArticle = async (id, user, requestBody) => {
             })
             await newReaction.save()
             article.reaction_count = article.reaction_count + 1
-
             await article.save()
+
+            // Create activity record for the new reaction
+            await postActivityReactionArticle(user, id)
         }
     }
+
     if (target_type === 'comment') {
+        // Same logic for comments
         const comment = await Comment.findById(id)
         if (existingReaction) {
             if (existingReaction.type === type) {
@@ -292,7 +296,6 @@ export const reactArticle = async (id, user, requestBody) => {
             })
             await newReaction.save()
             comment.reaction_count += 1
-
             await comment.save()
         }
     }
@@ -955,14 +958,15 @@ export const getActivityReactionArticle = async (user) => {
     const activities = await ActivityLog.aggregate([
         {
             $match: {
-                user_id: user._id,
+                'data.owner_id': user._id, // Articles owned by current user
                 type_id: articleReactionType._id,
+                user_id: { $ne: user._id }, // Exclude user's own reactions
             },
         },
         {
             $lookup: {
                 from: 'users',
-                localField: 'user_id',
+                localField: 'user_id', // This now shows the user who reacted
                 foreignField: '_id',
                 as: 'user',
                 pipeline: [
@@ -987,6 +991,7 @@ export const getActivityReactionArticle = async (user) => {
                 ],
             },
         },
+        // Rest of the pipeline remains the same
         {
             $lookup: {
                 from: 'articles',
@@ -1003,10 +1008,28 @@ export const getActivityReactionArticle = async (user) => {
             },
         },
         {
+            $lookup: {
+                from: 'types',
+                localField: 'type_id',
+                foreignField: '_id',
+                as: 'activity_type',
+                pipeline: [
+                    {
+                        $project: {
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
             $unwind: '$user',
         },
         {
             $unwind: '$article',
+        },
+        {
+            $unwind: '$activity_type',
         },
         {
             $limit: 10,
@@ -1018,6 +1041,7 @@ export const getActivityReactionArticle = async (user) => {
             $project: {
                 user: 1,
                 article: { caption: 1 },
+                activity_type: { name: 1 },
                 timestamp: 1,
                 data: 1,
                 type_id: 1,
@@ -1121,6 +1145,40 @@ export const deleteActivitySaveArticle = async (user, articleId) => {
             'data.article_id': objectIdArticle,
         }
         await ActivityLog.deleteOne(data)
+    } catch (error) {
+        console.error('Lỗi khi xóa bài viết:', error)
+    }
+}
+
+// ========== DELETE [ARTICLE REACTIONS] ========== //
+export const deleteActivityReactionArticle = async (user, activityOrArticleId) => {
+    try {
+        const articleReactionType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_REACTION })
+        if (!articleReactionType) {
+            console.log('Không tìm thấy loại bài viết.')
+            return
+        }
+
+        // Try first by activity ID (direct ID match)
+        let deleteResult = await ActivityLog.deleteOne({
+            _id: new ObjectId(activityOrArticleId),
+            user_id: user._id,
+            type_id: articleReactionType._id,
+        })
+
+        if (deleteResult.deletedCount === 0) {
+            // If not found, try by article ID (data.article_id match)
+            deleteResult = await ActivityLog.deleteOne({
+                user_id: user._id,
+                type_id: articleReactionType._id,
+                'data.article_id': new ObjectId(activityOrArticleId),
+            })
+        }
+        if (deleteResult.deletedCount === 0) {
+            console.log('No document was deleted')
+        } else {
+            console.log(`Successfully deleted ${deleteResult.deletedCount} document`)
+        }
     } catch (error) {
         console.error('Lỗi khi xóa bài viết:', error)
     }
