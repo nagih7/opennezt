@@ -52,7 +52,13 @@ const unifiedAction = (activity) => {
         // const displayAccessName = activity?.user?.name || 'Someone'
 
         const activityType = activity?.activity_type?.name
-        const articleCaption = activity?.article?.caption ? `"${activity.article.caption}"` : 'an article'
+        const articleCaption = activity?.article?.caption
+            ? `"${
+                  activity.article.caption.length > 20
+                      ? activity.article.caption.substring(0, 20) + '...'
+                      : activity.article.caption
+              }"`
+            : 'an article'
 
         // Handle by type
         switch (activityType) {

@@ -175,6 +175,7 @@ export const deleteArticle = async (user, id) => {
 
 //Update Article
 export const updateArticle = async (user_id, id, requestBody) => {
+    console.log('requestBody', requestBody)
     const validArticle = await Article.findById(id)
 
     if (!validArticle) {
@@ -211,14 +212,17 @@ export const updateArticle = async (user_id, id, requestBody) => {
             requestBody.content.attachment = listAttachment
         }
 
-        // Kiểm tra nếu project_id thay đổi và update project mảng
-        if (requestBody.project_id) {
-            const updatedProject = await Project.findById(requestBody.project_id) // Lấy project mới theo ID
-            if (updatedProject) {
-                // Cập nhật lại mảng project với project mới
-                requestBody.project = [updatedProject] // Mảng chứa 1 project mới
+        if ('project_id' in requestBody) {
+            if (requestBody.project_id === 'null' || requestBody.project_id === null) {
+                requestBody.project_id = null
+                requestBody.project = []
             } else {
-                throw new Error('Project not found')
+                const updatedProject = await Project.findById(requestBody.project_id)
+                if (updatedProject) {
+                    requestBody.project = [updatedProject]
+                } else {
+                    throw new Error('Project not found')
+                }
             }
         }
 
