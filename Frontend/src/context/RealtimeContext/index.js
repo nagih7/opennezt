@@ -55,10 +55,9 @@ export const RealtimeProvider = ({ children }) => {
         })
 
         // CONFIRM PROJECT INVITATION
-        socket.on(PROJECT_INVITATION_NOTIFICATION, (notification) => {
-            console.log('PROJECT_INVITATION_NOTIFICATION', notification)
+        socket.on(PROJECT_INVITATION_NOTIFICATION, async (notification) => {
             toaster.create({
-                title: `${notification.user.name} invited you to join ${notification.project.name}`,
+                title: `${notification.user?.name} invited you to join ${notification.data?.project?.name}`,
                 type: 'info',
                 duration: 10000,
                 action: {
@@ -66,6 +65,7 @@ export const RealtimeProvider = ({ children }) => {
                     onClick: () => console.log('View'),
                 },
             })
+            await handleUpdateNotification(notification)
         })
     }
 

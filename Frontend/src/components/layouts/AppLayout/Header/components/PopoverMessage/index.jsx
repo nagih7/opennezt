@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { getChatHistory } from 'api/chat'
 import NotFound from 'components/UI/NotFound'
 import { MESSAGES } from 'utils/constants'
 import { Avatar, Stack, Text } from '@chakra-ui/react'
@@ -18,11 +17,6 @@ const PopoverMessage = () => {
 
     const [searchQuery, setSearchQuery] = useState('')
     const [debouncedTerm, setDebouncedTerm] = useState('')
-
-    // NEW
-    const handleGetChatHistory = (conversation) => {
-        dispatch(getChatHistory(conversation._id))
-    }
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -75,7 +69,6 @@ const PopoverMessage = () => {
                         return (
                             <Stack
                                 key={index}
-                                onClick={() => handleGetChatHistory(conversation)}
                                 className="group cursor-pointer p-[15px] hover:bg-[#f6f5f5] w-full border-r-2"
                             >
                                 {(() => {

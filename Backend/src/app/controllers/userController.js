@@ -30,42 +30,6 @@ export async function resetPassword(req, res) {
     res.status(201).jsonify('Reset password successfully.')
 }
 
-export async function createProject(req, res) {
-    await userService.createProject(req.currentUser, req.body)
-    res.status(201).jsonify('Create project successfully.')
-}
-
-export async function getProjects(req, res) {
-    const result = await userService.getProjects(req.currentUser._id)
-    res.jsonify(result)
-}
-
-export async function getProject(req, res) {
-    const result = await userService.getProject(req.params.id)
-    res.jsonify(result)
-}
-
-export async function updateProject(req, res) {
-    await userService.updateProject(req.currentUser, req.body)
-    // res.status(200).jsonify('Cập nhật dự án thành công.')
-    res.status(200).jsonify('Update project successfully.')
-}
-
-export async function deleteProject(req, res) {
-    await userService.deleteProject(req.currentUser, req.body)
-    res.jsonify('Delete project successfully.')
-}
-
-export async function recuitTalents(req, res) {
-    const result = await userService.recuitTalents(req.currentUser, req.query)
-    res.jsonify(result)
-}
-
-export async function getTalentDetails(req, res) {
-    const result = await userService.getTalentDetails(req.currentUser, req.params.id)
-    res.jsonify(result)
-}
-
 export async function updateBackground(req, res) {
     await userService.updateBackground(req.currentUser, req.body)
     res.status(200).jsonify('Update background successfully.')

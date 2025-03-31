@@ -5,7 +5,8 @@ import {
     PROJECT_ACCESS,
     PROJECT_APPLICATION_NOTIFICATION,
     WAITING_STATUS,
-    PROJECT_INVITATION_NOTIFICATION } from '@/configs'
+    PROJECT_INVITATION_NOTIFICATION,
+} from '@/configs'
 import {
     Project,
     NotificationFeed,
@@ -21,7 +22,6 @@ import {
 } from '@/models'
 import { FileUpload } from '@/utils/classes'
 import { userSockets } from '@/routes'
-
 
 // ========== POST [Project] ========== //
 export async function createProject(user, requestBody) {
@@ -1013,11 +1013,7 @@ export async function inviteMember(user, projectId, requestBody, io) {
     await noti.save()
 
     const notification = await NotificationFeed.aggregate([
-        {
-            $match: {
-                _id: noti._id,
-            },
-        },
+        { $match: { _id: noti._id } },
         {
             $lookup: {
                 from: 'users',
@@ -1027,7 +1023,7 @@ export async function inviteMember(user, projectId, requestBody, io) {
                 pipeline: [
                     {
                         $project: {
-                            _id: 1,
+                            _id: 0,
                             name: 1,
                             avatar: {
                                 $cond: {
@@ -1041,41 +1037,64 @@ export async function inviteMember(user, projectId, requestBody, io) {
                 ],
             },
         },
+        { $unwind: '$user' },
         {
             $lookup: {
-                from: 'projects',
-                localField: 'data.project_id',
+                from: 'types',
+                localField: 'type_id',
                 foreignField: '_id',
-                as: 'project',
+                as: 'type',
                 pipeline: [
                     {
                         $project: {
-                            _id: 1,
+                            _id: 0,
+                            class: 1,
                             name: 1,
                         },
                     },
                 ],
             },
         },
+        { $unwind: '$type' },
         {
-            $unwind: '$user',
+            $lookup: {
+                from: 'projects',
+                localField: 'data.project_id',
+                foreignField: '_id',
+                as: 'data.project',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                            logo: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
+                                    then: '$logo',
+                                    else: { $concat: [LINK_STATIC_URL, '$logo'] },
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
         },
-        {
-            $unwind: '$project',
-        },
+        { $unwind: '$data.project' },
         {
             $project: {
                 _id: 1,
                 user: 1,
-                project: 1,
+                data: {
+                    project: 1,
+                },
+                type: 1,
                 timestamp: 1,
+                metadata: 1,
             },
         },
     ])
-
     const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === userId.toString())
     if (userSocketId) {
-        console.log('userSocketId', userSocketId)
         io.to(userSocketId).emit(PROJECT_INVITATION_NOTIFICATION, notification[0])
     }
 }

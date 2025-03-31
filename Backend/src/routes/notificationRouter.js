@@ -1,5 +1,5 @@
-import {Router} from 'express'
-import {asyncHandler} from '@/utils/helpers'
+import { Router } from 'express'
+import { asyncHandler } from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
 import validate from '@/app/middleware/common/validate'
 import * as notificationRequest from '@/app/requests/notificationRequest'
@@ -15,22 +15,6 @@ notificationRouter.get(
     asyncHandler(validate(notificationRequest.readRoot)),
     asyncHandler(notificationController.readRoot)
 )
-
-// Request project invitation
-notificationRouter.post(
-    '/project-invitation',
-    asyncHandler(validate(notificationRequest.projectInvitation)),
-    asyncHandler(notificationController.projectInvitation)
-)
-
-// Get request add friend
-notificationRouter.get(
-    '/request-add-friend/:user_id',
-    asyncHandler(notificationController.getRequestAddFriend)
-)
-
-// Get total friends
-notificationRouter.get('/total-friends', asyncHandler(notificationController.getTotalFriends))
 
 // ========== GET [Notification - Read] ========== //
 notificationRouter.get('/read', asyncHandler(notificationController.getNotifications))

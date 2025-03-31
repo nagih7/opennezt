@@ -40,14 +40,3 @@ export function checkCanDeleteUser(req, res, next) {
     }
     next()
 }
-
-export async function validateProject(req, res, next) {
-    const { pitch_deck, background } = req.body
-    if (pitch_deck && pitch_deck.file && pitch_deck.name) {
-        req.body.pitch_deck = await DecodeBase64(pitch_deck.file, pitch_deck.name)
-    }
-    if (background && background.file && background.name) {
-        req.body.background = await DecodeBase64(background.file, background.name)
-    }
-    next()
-}

@@ -17,9 +17,7 @@ const notificationSlice = createSlice({
         },
         totalFriends: 0,
         loadingGetNotifications: false,
-        loadingProjectInvitation: false,
         loadingSendRequestAddFriend: false,
-        loadingGetRequestAddFriend: false,
         isLoadingReplyNotification: false,
     },
     reducers: {
@@ -92,73 +90,6 @@ const notificationSlice = createSlice({
                 isLoadingReplyNotification: false,
             }
         },
-        startRequestMessage: (state) => ({
-            ...state,
-            loadingSendRequestAddFriend: true,
-        }),
-        startRequestMessageSuccess: (state) => {
-            toaster.create({
-                title: `Friend request sent successfully.`,
-                type: 'success',
-            })
-            return {
-                ...state,
-                loadingSendRequestAddFriend: false,
-            }
-        },
-        startRequestMessageFail: (state) => {
-            toaster.create({
-                title: `Friend request sent failed.`,
-                type: 'error',
-            })
-            return {
-                ...state,
-                loadingSendRequestAddFriend: false,
-            }
-        },
-        startRequestGetTotalFriends: (state) => ({
-            ...state,
-        }),
-        startRequestGetTotalFriendsSuccess: (state, action) => ({
-            ...state,
-            totalFriends: action.payload.data,
-            loadingGetTotalFriends: false,
-        }),
-        startRequestGetTotalFriendsFail: (state) => ({
-            ...state,
-            loadingGetTotalFriends: false,
-        }),
-        startRequestProjectInvitation: (state) => ({
-            ...state,
-            loadingProjectInvitation: true,
-        }),
-        startRequestProjectInvitationSuccess: (state) => {
-            toaster.create({
-                title: `Project invitation sent successfully.`,
-                type: 'success',
-            })
-            return {
-                ...state,
-                loadingProjectInvitation: false,
-            }
-        },
-        startRequestProjectInvitationFail: (state) => ({
-            ...state,
-            loadingProjectInvitation: false,
-        }),
-        startRequestGetRequestAddFriend: (state) => ({
-            ...state,
-            loadingGetRequestAddFriend: true,
-        }),
-        startRequestGetRequestAddFriendSuccess: (state, action) => ({
-            ...state,
-            requestAddFriend: action.payload.data,
-            loadingGetRequestAddFriend: false,
-        }),
-        startRequestGetRequestAddFriendFail: (state) => ({
-            ...state,
-            loadingGetRequestAddFriend: false,
-        }),
         // =========== Set Notification =========== //
         setNotifications: (state, action) => ({
             ...state,
@@ -181,18 +112,6 @@ export const {
     replyNotificationFail,
     // ========== Set Notification =========== //
     setNotifications,
-    startRequestMessage,
-    startRequestMessageSuccess,
-    startRequestMessageFail,
-    startRequestGetTotalFriends,
-    startRequestGetTotalFriendsSuccess,
-    startRequestGetTotalFriendsFail,
-    startRequestProjectInvitation,
-    startRequestProjectInvitationSuccess,
-    startRequestProjectInvitationFail,
-    startRequestGetRequestAddFriend,
-    startRequestGetRequestAddFriendSuccess,
-    startRequestGetRequestAddFriendFail,
 } = notificationSlice.actions
 
 export default notificationSlice.reducer

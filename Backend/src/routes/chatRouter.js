@@ -1,5 +1,5 @@
-import {Router} from 'express'
-import {asyncHandler} from '@/utils/helpers'
+import { Router } from 'express'
+import { asyncHandler } from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
 import * as chatController from '../app/controllers/chatController'
 
@@ -18,7 +18,5 @@ chatRouter.post('/conversations/:conversationId/messages', asyncHandler(chatCont
 
 // ========== GET [CONVERSATION] ========== //
 chatRouter.get('/conversations/:conversationId', asyncHandler(chatController.getConversation))
-
-chatRouter.get('/chat-history/:conversation_id', asyncHandler(chatController.getChatHistory))
 
 export default chatRouter
