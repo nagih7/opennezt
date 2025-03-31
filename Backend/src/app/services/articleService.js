@@ -175,7 +175,6 @@ export const deleteArticle = async (user, id) => {
 
 //Update Article
 export const updateArticle = async (user_id, id, requestBody) => {
-    console.log('requestBody', requestBody)
     const validArticle = await Article.findById(id)
 
     if (!validArticle) {
@@ -363,6 +362,7 @@ export const replyComment = async (user, requestBody) => {
     await parentComment.save()
     await updatedArticle.save()
     await newComment.save()
+    await postActivityReplyComment(user, newComment._id)
     return newComment
 }
 //Get Article's Reactions
@@ -683,6 +683,7 @@ export const postActivityReactionArticle = async (user, articleId) => {
 
 export const postActivityReplyComment = async (user, commentId) => {
     const comment = await Comment.findById(new ObjectId(commentId))
+    const parentComment = await Comment.findById(new ObjectId(comment?.parent_id))
     const commentReplyType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_REPLY_COMMENT })
     const oldActivity = await ActivityLog.findOne({
         user_id: user._id,
@@ -697,10 +698,9 @@ export const postActivityReplyComment = async (user, commentId) => {
         const newActivity = new ActivityLog({
             user_id: user._id,
             type_id: commentReplyType._id,
-            data: { comment_id: comment._id, article_id: comment.article_id, owner_id: comment.user_id },
+            data: { comment_id: comment._id, article_id: comment.article_id, owner_id: parentComment.user_id },
             metadata: {},
         })
-
         await newActivity.save()
         return newActivity
     }
@@ -1060,14 +1060,15 @@ export const getActivityReplyComment = async (user) => {
     const activities = await ActivityLog.aggregate([
         {
             $match: {
-                user_id: user._id,
+                'data.owner_id': user._id, // Comments owned by current user
                 type_id: commentReplyType._id,
+                user_id: { $ne: user._id }, // Exclude user's own replies
             },
         },
         {
             $lookup: {
                 from: 'users',
-                localField: 'user_id',
+                localField: 'user_id', // The user who replied
                 foreignField: '_id',
                 as: 'user',
                 pipeline: [
@@ -1102,6 +1103,37 @@ export const getActivityReplyComment = async (user) => {
                     {
                         $project: {
                             content: 1,
+                            article_id: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'articles',
+                localField: 'data.article_id',
+                foreignField: '_id',
+                as: 'article',
+                pipeline: [
+                    {
+                        $project: {
+                            caption: '$content.caption',
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'types',
+                localField: 'type_id',
+                foreignField: '_id',
+                as: 'activity_type',
+                pipeline: [
+                    {
+                        $project: {
+                            name: 1,
                         },
                     },
                 ],
@@ -1114,6 +1146,12 @@ export const getActivityReplyComment = async (user) => {
             $unwind: '$comment',
         },
         {
+            $unwind: '$article',
+        },
+        {
+            $unwind: '$activity_type',
+        },
+        {
             $limit: 10,
         },
         {
@@ -1123,9 +1161,10 @@ export const getActivityReplyComment = async (user) => {
             $project: {
                 user: 1,
                 comment: { content: 1 },
+                activity_type: { name: 1 },
+                article: { caption: 1 },
                 timestamp: 1,
                 data: 1,
-                type_id: 1,
             },
         },
     ])

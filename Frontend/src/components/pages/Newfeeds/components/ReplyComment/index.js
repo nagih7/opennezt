@@ -3,6 +3,7 @@ import avt from 'assets/images/background/avt.jpg'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { Image } from '@chakra-ui/react'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
+import { getReplyComment } from 'api/activity'
 
 const ReplyComment = ({ reply, reaction, handleReactionReplyComment }) => {
     if (!reply?._id || !reply?.user?.[0]) return null
@@ -18,12 +19,13 @@ const ReplyComment = ({ reply, reaction, handleReactionReplyComment }) => {
     const minute = differenceInMinutes(today, postedAt) % 60
     const second = differenceInSeconds(today, postedAt) % 60
 
-    const reactReplyComment = (type) => {
+    const reactReplyComment = async (type) => {
         if (handleReactionReplyComment) {
             const data = new FormData()
             data.append('type', type)
             data.append('target_type', 'comment')
-            handleReactionReplyComment(reply, data)
+            await handleReactionReplyComment(reply, data)
+            await getReplyComment()
         }
     }
     return (

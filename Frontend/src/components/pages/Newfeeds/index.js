@@ -32,9 +32,9 @@ import { PermPhoneMsg } from '@mui/icons-material'
 import {
     deleteActivitySaveArticle,
     getReactionArticle,
+    getReplyComment,
     getSaveArticle,
     getUpdateArticle,
-    postActivityReactionArticle,
     postActivitySaveArticle,
     postActivityUpdateArticle,
 } from 'api/activity'
@@ -80,12 +80,8 @@ const unifiedAction = (activity) => {
                         {displayName} has created {articleCaption}
                     </span>
                 )
-            case 'comment':
-                return (
-                    <span>
-                        {displayName} has commented on {articleCaption}
-                    </span>
-                )
+            case 'reply_comment':
+                return <span>has replied to your comment on {articleCaption}</span>
             case 'reaction':
                 return <span>liked your post {articleCaption}</span>
             default:
@@ -118,7 +114,7 @@ function NewFeeds() {
         bookmarks,
     } = useSelector((state) => state.article)
 
-    const { updateArticleActivity, saveArticleActivity, reactionArticleActivity } = useSelector(
+    const { updateArticleActivity, saveArticleActivity, reactionArticleActivity, replyCommentActivity } = useSelector(
         (state) => state.activity
     )
 
@@ -134,6 +130,7 @@ function NewFeeds() {
         dispatch(getUpdateArticle())
         dispatch(getSaveArticle())
         dispatch(getReactionArticle())
+        dispatch(getReplyComment())
     }, [dispatch])
 
     // End Activities
@@ -401,9 +398,12 @@ function NewFeeds() {
                 })}
             </div>
             <RightSidebar
-                activities={[...updateArticleActivity, ...saveArticleActivity, ...reactionArticleActivity].sort(
-                    (a, b) => new Date(b.created_at) - new Date(a.created_at)
-                )}
+                activities={[
+                    ...updateArticleActivity,
+                    ...saveArticleActivity,
+                    ...reactionArticleActivity,
+                    ...replyCommentActivity,
+                ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))}
                 action={unifiedAction}
             />{' '}
         </div>
