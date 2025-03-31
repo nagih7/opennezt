@@ -113,7 +113,12 @@ export const postActivityReactionArticle = async (req, res) => {
 }
 
 export const postActivityReplyComment = async (req, res) => {
-    const result = await articleService.postActivityReplyComment(req.currentUser, req.params.id3)
+    const result = await articleService.postActivityReplyComment(req.currentUser, req.params.id)
+    return res.json(result)
+}
+
+export const postActivityComment = async (req, res) => {
+    const result = await articleService.postActivityComment(req.currentUser, req.params.id)
     return res.json(result)
 }
 
@@ -140,6 +145,11 @@ export const getActivityReactionArticle = async (req, res) => {
 
 export const getActivityReplyComment = async (req, res) => {
     const activity = await articleService.getActivityReplyComment(req.currentUser)
+    res.status(200).jsonify(activity)
+}
+
+export const getActivityComment = async (req, res) => {
+    const activity = await articleService.getActivityComment(req.currentUser)
     res.status(200).jsonify(activity)
 }
 

@@ -31,6 +31,7 @@ import store from 'states/configureStore'
 import { PermPhoneMsg } from '@mui/icons-material'
 import {
     deleteActivitySaveArticle,
+    getComment,
     getReactionArticle,
     getReplyComment,
     getSaveArticle,
@@ -82,6 +83,8 @@ const unifiedAction = (activity) => {
                 )
             case 'reply_comment':
                 return <span>has replied to your comment on {articleCaption}</span>
+            case 'comment':
+                return <span>has commented on {articleCaption}</span>
             case 'reaction':
                 return <span>liked your post {articleCaption}</span>
             default:
@@ -114,9 +117,13 @@ function NewFeeds() {
         bookmarks,
     } = useSelector((state) => state.article)
 
-    const { updateArticleActivity, saveArticleActivity, reactionArticleActivity, replyCommentActivity } = useSelector(
-        (state) => state.activity
-    )
+    const {
+        updateArticleActivity,
+        saveArticleActivity,
+        reactionArticleActivity,
+        replyCommentActivity,
+        commentActivity,
+    } = useSelector((state) => state.activity)
 
     const { nextCursor, limit, hasMore } = pagination
 
@@ -131,6 +138,7 @@ function NewFeeds() {
         dispatch(getSaveArticle())
         dispatch(getReactionArticle())
         dispatch(getReplyComment())
+        dispatch(getComment())
     }, [dispatch])
 
     // End Activities
@@ -403,6 +411,7 @@ function NewFeeds() {
                     ...saveArticleActivity,
                     ...reactionArticleActivity,
                     ...replyCommentActivity,
+                    ...commentActivity,
                 ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))}
                 action={unifiedAction}
             />{' '}

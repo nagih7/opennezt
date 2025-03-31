@@ -4,6 +4,7 @@ import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
 import {
     ACCESS_TYPE,
+    ARTICLE_COMMENT,
     ARTICLE_CREATE,
     ARTICLE_REACTION,
     ARTICLE_REPLY_COMMENT,
@@ -535,6 +536,8 @@ export const createComment = async (user, requestBody) => {
 
     await Article.findByIdAndUpdate(articleId, { $inc: { comment_count: 1 } })
 
+    await postActivityComment(user, newComment._id)
+
     return newComment
 }
 //End Create Comment
@@ -701,6 +704,32 @@ export const postActivityReplyComment = async (user, commentId) => {
             data: { comment_id: comment._id, article_id: comment.article_id, owner_id: parentComment.user_id },
             metadata: {},
         })
+        await newActivity.save()
+        return newActivity
+    }
+}
+
+export const postActivityComment = async (user, commentId) => {
+    const comment = await Comment.findById(new ObjectId(commentId))
+    const article = await Article.findById(comment.article_id)
+    const commentType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_COMMENT })
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        type_id: commentType._id,
+        'data.comment_id': comment._id,
+    })
+
+    if (oldActivity) {
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        const newActivity = new ActivityLog({
+            user_id: user._id,
+            type_id: commentType._id,
+            data: { comment_id: comment._id, article_id: article._id, owner_id: article.user_id },
+            metadata: {},
+        })
+
         await newActivity.save()
         return newActivity
     }
@@ -1069,6 +1098,122 @@ export const getActivityReplyComment = async (user) => {
             $lookup: {
                 from: 'users',
                 localField: 'user_id', // The user who replied
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '$avatar',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'comments',
+                localField: 'data.comment_id',
+                foreignField: '_id',
+                as: 'comment',
+                pipeline: [
+                    {
+                        $project: {
+                            content: 1,
+                            article_id: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'articles',
+                localField: 'data.article_id',
+                foreignField: '_id',
+                as: 'article',
+                pipeline: [
+                    {
+                        $project: {
+                            caption: '$content.caption',
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'types',
+                localField: 'type_id',
+                foreignField: '_id',
+                as: 'activity_type',
+                pipeline: [
+                    {
+                        $project: {
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $unwind: '$comment',
+        },
+        {
+            $unwind: '$article',
+        },
+        {
+            $unwind: '$activity_type',
+        },
+        {
+            $limit: 10,
+        },
+        {
+            $sort: { timestamp: -1 },
+        },
+        {
+            $project: {
+                user: 1,
+                comment: { content: 1 },
+                activity_type: { name: 1 },
+                article: { caption: 1 },
+                timestamp: 1,
+                data: 1,
+            },
+        },
+    ])
+    return activities
+}
+
+export const getActivityComment = async (user) => {
+    const commentType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_COMMENT })
+    const activities = await ActivityLog.aggregate([
+        {
+            $match: {
+                'data.owner_id': user._id, // Articles owned by current user
+                type_id: commentType._id,
+                user_id: { $ne: user._id }, // Exclude user's own comments
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id', // The user who commented
                 foreignField: '_id',
                 as: 'user',
                 pipeline: [

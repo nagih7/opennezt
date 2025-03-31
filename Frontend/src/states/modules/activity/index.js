@@ -28,6 +28,8 @@ const activitySlice = createSlice({
         isLoadingReactionArticle: false,
         // ========== POST ACTIVITIES REPLY COMMENT ========== //
         isLoadingReplyComment: false,
+        // ========== POST ACTIVITIES COMMENT ========== //
+        isLoadingComment: false,
         // ========== GET ACTIVITIES CREATE ARTICLE ========== //
         createNewArticleActivity: [],
         isLoadingCreateNewArticleActivity: false,
@@ -43,6 +45,9 @@ const activitySlice = createSlice({
         // ========== GET ACTIVITIES REPLY COMMENT ========== //
         replyCommentActivity: [],
         isLoadingReplyCommentActivity: false,
+        // ========== GET ACTIVITIES COMMENT ========== //
+        commentActivity: [],
+        isLoadingCommentActivity: false,
         // ========== DELETE SAVE ARTICLE ACTIVITIES ========== //
         deleteSaveArticleActivity: [],
         isLoadingDeleteSaveArticleActivity: false,
@@ -189,6 +194,20 @@ const activitySlice = createSlice({
             ...state,
             isLoadingReplyComment: false,
         }),
+        // ========== ACTIVITIES COMMENT ========== //
+        requestGetActivityComment: (state) => ({
+            ...state,
+            isLoadingComment: true,
+        }),
+        getActivityCommentSuccess: (state, action) => ({
+            ...state,
+            commentActivity: action.payload.data,
+            isLoadingComment: false,
+        }),
+        getActivityCommentFail: (state) => ({
+            ...state,
+            isLoadingComment: false,
+        }),
         // ========== POST ACTIVITIES CREATE ARTICLE ========== //
         requestPostActivityCreateArticle: (state) => ({
             ...state,
@@ -253,6 +272,19 @@ const activitySlice = createSlice({
         postActivityReplyCommentFail: (state) => ({
             ...state,
             isLoadingReplyComment: false,
+        }),
+        // ========== POST ACTIVITIES COMMENT ========== //
+        requestPostActivityComment: (state) => ({
+            ...state,
+            isLoadingComment: true,
+        }),
+        postActivityCommentSuccess: (state) => ({
+            ...state,
+            isLoadingComment: false,
+        }),
+        postActivityCommentFail: (state) => ({
+            ...state,
+            isLoadingComment: false,
         }),
         // ========== DELETE SAVE ARTICLE ACTIVITIES ========== //
         requestDeleteSaveArticleActivity: (state) => ({
@@ -324,6 +356,10 @@ export const {
     requestGetActivityReplyComment,
     getActivityReplyCommentSuccess,
     getActivityReplyCommentFail,
+    // ========== GET COMMENT ========== //
+    requestGetActivityComment,
+    getActivityCommentSuccess,
+    getActivityCommentFail,
     // ========== POST ACTIVITIES CREATE ARTICLE ========== //
     requestPostActivityCreateArticle,
     postActivityCreateArticleSuccess,
@@ -344,6 +380,10 @@ export const {
     requestPostActivityReplyComment,
     postActivityReplyCommentSuccess,
     postActivityReplyCommentFail,
+    // ========== POST ACTIVITIES COMMENT ========== //
+    requestPostActivityComment,
+    postActivityCommentSuccess,
+    postActivityCommentFail,
     // ========== DELETE SAVE ARTICLE ACTIVITIES ========== //
     requestDeleteSaveArticleActivity,
     deleteSaveArticleActivitySuccess,

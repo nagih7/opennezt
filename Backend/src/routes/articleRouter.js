@@ -68,6 +68,8 @@ articleRouter.post('/activity/reaction/:id', asyncHandler(articleController.post
 
 articleRouter.post('/activity/reply-comment/:id', asyncHandler(articleController.postActivityReplyComment))
 
+articleRouter.post('/activity/comment/:id', asyncHandler(articleController.postActivityComment))
+
 // ========== GET [ARTICLE ACTIVITIES] ========== //
 articleRouter.get('/activity/create', asyncHandler(articleController.getActivityCreateArticle))
 
@@ -78,6 +80,8 @@ articleRouter.get('/activity/save', asyncHandler(articleController.getActivitySa
 articleRouter.get('/activity/reaction', asyncHandler(articleController.getActivityReactionArticle))
 
 articleRouter.get('/activity/reply-comment', asyncHandler(articleController.getActivityReplyComment))
+
+articleRouter.get('/activity/comment', asyncHandler(articleController.getActivityComment))
 
 // ========== DELETE [ARTICLE ACTIVITIES] ========== //
 articleRouter.delete('/activity/save/:id', asyncHandler(articleController.deleteActivitySaveArticle))

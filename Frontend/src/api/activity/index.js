@@ -41,6 +41,10 @@ import {
     requestGetActivityReplyComment,
     getActivityReplyCommentSuccess,
     getActivityReplyCommentFail,
+    // ========== ACTIVITIES COMMENT ========== //
+    requestGetActivityComment,
+    getActivityCommentSuccess,
+    getActivityCommentFail,
     // ========== POST ACTIVITIES CREATE ARTICLE ========== //
     requestPostActivityCreateArticle,
     postActivityCreateArticleSuccess,
@@ -61,6 +65,10 @@ import {
     requestPostActivityReplyComment,
     postActivityReplyCommentSuccess,
     postActivityReplyCommentFail,
+    // ========== POST ACTIVITIES COMMENT ========== //
+    requestPostActivityComment,
+    postActivityCommentSuccess,
+    postActivityCommentFail,
     // ========== DELETE SAVE ARTICLE ACTIVITIES ========== //
     requestDeleteSaveArticleActivity,
     deleteSaveArticleActivitySuccess,
@@ -195,6 +203,18 @@ export const getReplyComment = () => async (dispatch, getState) => {
     })
 }
 
+// ========== ACTIVITIES COMMENT ========== //
+export const getComment = () => async (dispatch, getState) => {
+    return callApi({
+        method: 'get',
+        apiPath: `article/activity/comment`,
+        actionTypes: [requestGetActivityComment, getActivityCommentSuccess, getActivityCommentFail],
+        variables: {},
+        dispatch,
+        getState,
+    })
+}
+
 // ========== POST ACTIVITIES CREATE ARTICLE ========== //
 export const postActivityCreateArticle = (articleId) => async (dispatch, getState) => {
     return callApi({
@@ -261,6 +281,18 @@ export const postActivityReplyComment = (commentId) => async (dispatch, getState
         method: 'post',
         apiPath: `article/activity/reply-comment/${commentId}`,
         actionTypes: [requestPostActivityReplyComment, postActivityReplyCommentSuccess, postActivityReplyCommentFail],
+        variables: {},
+        dispatch,
+        getState,
+    })
+}
+
+// ========== POST ACTIVITIES COMMENT ========== //
+export const postActivityComment = (commentId) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `article/activity/reply-comment/${commentId}`,
+        actionTypes: [requestPostActivityComment, postActivityCommentSuccess, postActivityCommentFail],
         variables: {},
         dispatch,
         getState,
