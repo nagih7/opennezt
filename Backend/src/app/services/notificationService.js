@@ -385,13 +385,6 @@ const replyProjectInvitation = async (notification, io) => {
         },
     })
 
-    console.log('Query:', {
-        type_id: conversationType._id,
-        data: {
-            project_id: new ObjectId(project_id),
-        },
-    })
-
     // ADD MEMBER TO CONVERSATION
     if (conversation) {
         const existingMember = conversation.members.find((member) => member.user_id.toString() === user_id.toString())
