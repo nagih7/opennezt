@@ -110,7 +110,7 @@ function ChangePassword() {
                                 onChange={(e) => handleChangeInput(e, 'confirmPassword')}
                                 onBlur={() => validateBlur('confirmPassword')}
                                 value={dataChangePassword.confirmPassword}
-                                error={errorChangePassword.confirmPassword}
+                                // error={errorChangePassword.confirmPassword}
                                 className="p-[14px] border-[1px] w-full outline-none border-gray-200 rounded-lg "
                             />
                             <label

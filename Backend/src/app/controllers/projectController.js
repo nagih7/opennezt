@@ -25,8 +25,8 @@ export async function getProjectDetails(req, res) {
 
 // ========== PATCH [Project - Basic] ========== //
 export async function updateBasic(req, res) {
-    await projectService.updateBasic(req.currentUser, req.body)
-    res.status(200).jsonify('Update basic information successfully.')
+    const result = await projectService.updateBasic(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update basic information successfully.')
 }
 
 // ========== PATCH [Project - Sector] ========== //

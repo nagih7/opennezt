@@ -1,10 +1,10 @@
-import { Image } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import { OPENNEZT_BG_BLACK } from 'utils/constants';
+import { Image } from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { OPENNEZT_BG_BLACK } from 'utils/constants'
 
 const GridSort = ({ projects, handleViewProjectDetails }) => {
     // ========== STATE ========== //
-    const [imageError, setImageError] = useState(false);
+    const [imageError, setImageError] = useState(false)
 
     // ========== RENDER ========== //
     return (
@@ -22,7 +22,7 @@ const GridSort = ({ projects, handleViewProjectDetails }) => {
                                     className="object-cover absolute w-full h-auto transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110"
                                     src={project.background}
                                     alt={project.name}
-                                    onError={setImageError(true)}
+                                    onError={() => setImageError(true)}
                                 />
                             ) : (
                                 <div className="absolute flex items-center justify-center object-cover w-full px-8">
@@ -36,10 +36,7 @@ const GridSort = ({ projects, handleViewProjectDetails }) => {
                                     {project.stage.name}
                                 </p>
                                 <p className="text-xs font-semibold md:text-sm">
-                                    By{' '}
-                                    <span className="font-semibold text-blue-600">
-                                        {project.user.name}
-                                    </span>
+                                    By <span className="font-semibold text-blue-600">{project.user.name}</span>
                                 </p>
                             </div>
 
@@ -47,19 +44,15 @@ const GridSort = ({ projects, handleViewProjectDetails }) => {
                                 {project.name}
                             </h5>
                             <div className="flex items-center justify-between mt-3 text-xs text-gray-600 md:text-sm">
-                                <p className="text-xs text-nowrap">
-                                    📖 {project.articles?.length} Posts
-                                </p>
-                                <p className="text-xs text-nowrap">
-                                    👨‍🎓 {project.members.length} Members
-                                </p>
+                                <p className="text-xs text-nowrap">📖 {project.articles?.length} Posts</p>
+                                <p className="text-xs text-nowrap">👨‍🎓 {project.members.length} Members</p>
                             </div>
                         </div>
                     </div>
                 </li>
             ))}
         </ul>
-    );
-};
+    )
+}
 
-export default GridSort;
+export default GridSort

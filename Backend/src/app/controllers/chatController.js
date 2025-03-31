@@ -27,11 +27,6 @@ export async function sendMessage(req, res) {
     res.status(200).jsonify(message)
 }
 
-export async function getChatHistory(req, res) {
-    const chatHistory = await chatService.getChatHistory(req.currentUser, req.params)
-    res.status(200).jsonify(chatHistory)
-}
-
 export const saveMessage = async (data, io, socketId) => {
     const { message, members } = await chatService.saveMessage(data, userSockets[socketId])
 

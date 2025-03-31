@@ -1,33 +1,44 @@
-import React from 'react';
-import { CheckCircleFilled } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
-import { Avatar } from '@chakra-ui/react';
+import React, { useEffect } from 'react'
+import { CheckCircleFilled } from '@ant-design/icons'
+import { useDispatch, useSelector } from 'react-redux'
+import { Avatar } from '@chakra-ui/react'
+import { useParams } from 'react-router-dom'
+import { getMyProjectDetails } from 'api/project'
 
 const ProjectCard = () => {
+    const dispatch = useDispatch()
+    const params = useParams()
+    const { id } = params
     // ========== STATE FROM REDUX STORE ========== //
-    const { authUser } = useSelector((state) => state.auth);
+    const project = useSelector((state) => state.project.myProjectDetails)
+
+    // ========== USE EFFECT ========== //
+    useEffect(() => {
+        if (!project || project?.id !== id) {
+            dispatch(getMyProjectDetails(id))
+        }
+        // eslint-disable-next-line
+    }, [dispatch, id])
     // ========== COMPONENT RENDER ========== //
     return (
         <div className="flex items-center gap-3 pb-8 border-b-[1px] border-gray-200 mb-8">
             <div>
                 <Avatar.Root shape={'rounded'} size={'2xl'}>
-                    <Avatar.Fallback name={authUser.name} />
-                    <Avatar.Image src={authUser.avatar} />
+                    <Avatar.Fallback name={project?.name} />
+                    <Avatar.Image src={project?.logo} />
                 </Avatar.Root>
             </div>
             <div>
                 <h4 className="flex items-center">
-                    {authUser?.name}
+                    {project?.name}
                     <CheckCircleFilled className="text-[#3897f0] ml-2" />
                 </h4>
                 <span className="text-[#6f7f92]">
-                    {authUser?.created_at
-                        ? `Member since ${new Date(authUser.created_at).getFullYear()}`
-                        : ''}
+                    {project?.created_at ? `Created since ${new Date(project.created_at).getFullYear()}` : ''}
                 </span>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ProjectCard;
+export default ProjectCard

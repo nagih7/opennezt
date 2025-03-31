@@ -1,24 +1,23 @@
-import React, { useEffect } from 'react';
-import styles from './styles.module.scss';
-import SideBar from './SiderBar';
-import Header from './Header';
-import { useSelector, useDispatch } from 'react-redux';
-import LazyLoading from 'components/UI/LazyLoading';
-import { RealtimeProvider } from 'context/RealtimeContext';
-import { useNavigate } from 'react-router-dom';
-import { setLocation } from 'states/modules/app';
-// import MessageBoxList from './Header/components/MessageBoxList';
+import React, { useEffect } from 'react'
+import styles from './styles.module.scss'
+import SideBar from './SiderBar'
+import Header from './Header'
+import { useSelector, useDispatch } from 'react-redux'
+import LazyLoading from 'components/UI/LazyLoading'
+import { RealtimeProvider } from 'context/RealtimeContext'
+import { useNavigate } from 'react-router-dom'
+import { setLocation } from 'states/modules/app'
 // import { SkeletonTheme } from "react-loading-skeleton";
 
 function AppLayout(props) {
-    const { children } = props;
+    const { children } = props
 
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
-    const isShowSideBar = useSelector((state) => state.app.isShowSideBar);
+    const isShowSideBar = useSelector((state) => state.app.isShowSideBar)
     // const isThemeLight = useSelector((state) => state.app.isThemeLight);
-    const location = useSelector((state) => state.app.location);
+    const location = useSelector((state) => state.app.location)
 
     useEffect(() => {
         if (location.pathName !== location.prevPathName) {
@@ -28,10 +27,10 @@ function AppLayout(props) {
                     payload: location.payload,
                     prevPathName: location.pathName,
                 })
-            );
-            navigate(location.pathName);
+            )
+            navigate(location.pathName)
         }
-    }, [location, navigate, dispatch]);
+    }, [location, navigate, dispatch])
 
     return (
         <RealtimeProvider>
@@ -49,9 +48,7 @@ function AppLayout(props) {
                         // isShowSideBar={isShowSideBar}
                         />
                         <div className="flex justify-center flex-1 w-full h-full max-h-full ">
-                            <main
-                                className={`${styles.mainContentWrap} w-full flex flex-col  items-center`}
-                            >
+                            <main className={`${styles.mainContentWrap} w-full flex flex-col  items-center`}>
                                 <LazyLoading>{children}</LazyLoading>
                                 {/* <Footer /> */}
                             </main>
@@ -59,9 +56,8 @@ function AppLayout(props) {
                     </div>
                 </div>
             </div>
-            {/* <MessageBoxList /> */}
         </RealtimeProvider>
-    );
+    )
 }
 
-export default AppLayout;
+export default AppLayout

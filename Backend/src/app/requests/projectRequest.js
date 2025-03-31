@@ -1,6 +1,6 @@
 import Joi from 'joi'
-import {MAX_STRING_SIZE} from '@/configs'
-import {AsyncValidate, FileUpload} from '@/utils/classes'
+import { MAX_STRING_SIZE } from '@/configs'
+import { AsyncValidate, FileUpload } from '@/utils/classes'
 import {
     Category,
     ExperienceLevel,
@@ -13,27 +13,7 @@ import {
     Stage,
     User,
 } from '@/models'
-import {tryValidateOrDefault} from '@/utils/helpers'
-
-export const requestAddFriend = Joi.object({
-    user_id: Joi.string()
-        .required()
-        .label('User ID')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async () => {
-                    const user = await User.findById(value)
-                    return user ? value : helpers.error('any.empty')
-                })
-        ),
-
-    source_name: Joi.string().max(MAX_STRING_SIZE).required().label('Source Name'),
-
-    metadata: Joi.object({
-        project_id: Joi.string().required().label('Project ID'),
-        project_name: Joi.string().required().label('Project Name'),
-    }).required(),
-})
+import { tryValidateOrDefault } from '@/utils/helpers'
 
 // ========== POST [Project] ========== //
 export const createProject = Joi.object({
@@ -45,7 +25,7 @@ export const createProject = Joi.object({
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async (req) => {
-                    const project = await Project.findOne({name: value, user_id: req.currentUser._id})
+                    const project = await Project.findOne({ name: value, user_id: req.currentUser._id })
                     return project ? helpers.error('any.empty') : value
                 })
         ),
@@ -108,18 +88,14 @@ export const createProject = Joi.object({
         .label('Profile Additional Info')
         .allow(null),
     logo: Joi.object({
-        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
-            .required()
-            .label('Image format'),
+        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp').required().label('Image format'),
     })
         .unknown(true)
         .instance(FileUpload)
         .allow('', {}, 'null')
         .label('Logo'),
     background: Joi.object({
-        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp')
-            .required()
-            .label('Image format'),
+        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp').required().label('Image format'),
     })
         .unknown(true)
         .instance(FileUpload)
@@ -137,7 +113,7 @@ export const updateBasic = Joi.object({
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async (req) => {
-                    const project = await Project.findOne({name: value, user_id: req.currentUser._id})
+                    const project = await Project.findOne({ name: value, user_id: req.currentUser._id })
                     return project ? helpers.error('any.empty') : value
                 })
         ),

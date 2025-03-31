@@ -1,175 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import ProjectActivity from '../ProjectActivity';
-import { Button, Input, Tabs } from '@chakra-ui/react';
-import { toaster } from 'components/UI/toaster';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { addProjectRequirement, deleteMyProject } from 'api/project';
-import SelectCustom from 'components/UI/SelectCustom';
-import {
-    getCategoryFramework,
-    getExperienceLevelFramwork,
-    getIndustryFramework,
-    getProjectRoleFramework,
-    getSkillFramework,
-    getSubCategoryFramework,
-} from 'api/user';
+import React from 'react'
+import ProjectActivity from '../ProjectActivity'
+import { Tabs } from '@chakra-ui/react'
+import ProjectRequirements from './ProjectRequirements'
+import ProjectDelete from './ProjectDelete'
 
 const ProjectManage = () => {
-    const dispatch = useDispatch();
-    const { id } = useParams();
-    // ========== STATE FROM REDUX STORE  ========== //
-    const {
-        isLoadingDeleteMyProject,
-        isLoadingCreateProjectRequirement,
-        formAddProjectRequirement,
-    } = useSelector((state) => state.project);
-
-    const {
-        projectTeamRoleFramework,
-        projectRoleFramework,
-        industryFramework,
-        experienceLevelFramework,
-        categoryFramework,
-        subCategoryFramework,
-        skillFramework,
-    } = useSelector((state) => state.user);
-
-    // ========== STATE  ========== //
-    const [confirmDelete, setConfirmDelete] = useState(false);
-
-    const [formData, setFormData] = useState({
-        teamRole: '',
-        role: '',
-        industries: [],
-        experienceLevel: '',
-        categories: [],
-        subcategories: [],
-        skills: [],
-    });
-
-    useEffect(() => {
-        dispatch(getProjectRoleFramework());
-    }, [dispatch]);
-    useEffect(() => {
-        if (industryFramework?.items?.length === 0) {
-            dispatch(getIndustryFramework());
-        }
-    }, [dispatch, industryFramework]);
-    useEffect(() => {
-        if (experienceLevelFramework?.items?.length === 0) {
-            dispatch(getExperienceLevelFramwork());
-        }
-    }, [dispatch, experienceLevelFramework]);
-    useEffect(() => {
-        if (categoryFramework?.items?.length === 0) {
-            dispatch(getCategoryFramework());
-        }
-    }, [dispatch, categoryFramework]);
-
-    // ========== HANDLE CHANGE  ========== //
-    const handleChange = (event, nameSelect) => {
-        if (nameSelect) {
-            setFormData({ ...formData, [nameSelect]: event.value });
-        }
-        switch (nameSelect) {
-            case 'categories':
-                setFormData((prev) => ({ ...prev, subcategories: [] }));
-                dispatch(getSubCategoryFramework(event.value));
-                break;
-            case 'subcategories':
-                setFormData((prev) => ({ ...prev, skills: [] }));
-                dispatch(getSkillFramework(event.value));
-                break;
-            default:
-                break;
-        }
-    };
-    useEffect(() => {
-        dispatch(getProjectRoleFramework());
-    }, [dispatch]);
-    useEffect(() => {
-        if (industryFramework?.items?.length === 0) {
-            dispatch(getIndustryFramework());
-        }
-    }, [dispatch, industryFramework]);
-    useEffect(() => {
-        if (experienceLevelFramework?.items?.length === 0) {
-            dispatch(getExperienceLevelFramwork());
-        }
-    }, [dispatch, experienceLevelFramework]);
-    useEffect(() => {
-        if (categoryFramework?.items?.length === 0) {
-            dispatch(getCategoryFramework());
-        }
-    }, [dispatch, categoryFramework]);
-    useEffect(() => {
-        if (subCategoryFramework?.items?.length === 0) {
-            dispatch(getSubCategoryFramework());
-        }
-    }, [dispatch, subCategoryFramework]);
-    useEffect(() => {
-        if (skillFramework?.items?.length === 0) {
-            dispatch(getSkillFramework());
-        }
-    }, [dispatch, skillFramework]);
-
-    useEffect(() => {
-        setFormData({
-            teamRole: formAddProjectRequirement.teamRole,
-            role: formAddProjectRequirement.role,
-            industries: formAddProjectRequirement.industries,
-            experienceLevel: formAddProjectRequirement.experienceLevel,
-            categories: formAddProjectRequirement.categories,
-            subcategories: formAddProjectRequirement.subcategories,
-            skills: formAddProjectRequirement.skills,
-        });
-    }, [formAddProjectRequirement]);
-
-    const handleSaveProjectRequirement = () => {
-        const updatedFormData = {
-            project_id: id,
-            team_role_id: formData.teamRole[0] || '',
-            role_id: formData.role[0] || '',
-            industry_ids: formData.industries || [],
-            experience_level_id: formData.experienceLevel[0] || '',
-            category_ids: formData.categories || [],
-            subcategory_ids: formData.subcategories || [],
-            skill_ids: formData.skills || [],
-        };
-
-        // Kiểm tra xem dữ liệu có đầy đủ không trước khi gửi
-        if (
-            !updatedFormData.team_role_id ||
-            !updatedFormData.role_id ||
-            !updatedFormData.industry_ids.length ||
-            !updatedFormData.experience_level_id ||
-            !updatedFormData.category_ids.length ||
-            !updatedFormData.subcategory_ids.length ||
-            !updatedFormData.skill_ids.length
-        ) {
-            toaster.create({
-                title: 'Please fill in all required fields.',
-                type: 'error',
-            });
-            return;
-        }
-
-        dispatch(addProjectRequirement(id, updatedFormData));
-    };
-
-    // ========== HANDLE CHANGE ========== //
-    const handleConfirmDeleteProject = () => {
-        if (confirmDelete) {
-            dispatch(deleteMyProject(id));
-        } else {
-            toaster.create({
-                title: 'Please confirm that you understand the consequences of deleting this project.',
-                type: 'error',
-            });
-        }
-    };
-
     return (
         <div className="px-[16px]">
             <div className="flex w-full gap-8">
@@ -177,149 +12,23 @@ const ProjectManage = () => {
                     <Tabs.Root defaultValue="Project Requirement" variant="plain">
                         <div className="p-8 bg-[#ffffff] rounded-md">
                             <Tabs.List>
-                                <Tabs.Trigger value="Project Requirement">
-                                    Project Requirement
-                                </Tabs.Trigger>
+                                <Tabs.Trigger value="Project Requirement">Project Requirement</Tabs.Trigger>
                                 <Tabs.Trigger value="delete">Delete</Tabs.Trigger>
                                 <Tabs.Indicator rounded="l2" />
                             </Tabs.List>
                         </div>
                         <div className="p-8 mt-8 bg-[#ffffff] rounded-md">
-                            <Tabs.Content pt="0" value="Project Requirement">
-                                <div className="relative mb-8">
-                                    <SelectCustom
-                                        required
-                                        label="Team Role"
-                                        collection={projectTeamRoleFramework}
-                                        onChange={(e) => handleChange(e, 'teamRole')}
-                                        value={formData.teamRole}
-                                        name="teamRole"
-                                    />
-                                </div>
-                                <div className="relative mb-8">
-                                    <SelectCustom
-                                        required
-                                        label="Role"
-                                        collection={projectRoleFramework}
-                                        onChange={(e) => handleChange(e, 'role')}
-                                        value={formData.role}
-                                        name="role"
-                                    />
-                                </div>
-                                <div className="relative mb-8">
-                                    <SelectCustom
-                                        multiple
-                                        required
-                                        label="Industries"
-                                        collection={industryFramework}
-                                        onChange={(e) => handleChange(e, 'industries')}
-                                        value={formData.industries}
-                                        name="industries"
-                                    />
-                                </div>
-                                <div className="relative mb-8">
-                                    <SelectCustom
-                                        required
-                                        label="Experience Level"
-                                        collection={experienceLevelFramework}
-                                        onChange={(e) => handleChange(e, 'experienceLevel')}
-                                        value={formData.experienceLevel}
-                                        name="experienceLevel"
-                                    />
-                                </div>
-                                <div className="relative mb-8">
-                                    <SelectCustom
-                                        multiple
-                                        required
-                                        label="Category"
-                                        collection={categoryFramework}
-                                        onChange={(e) => handleChange(e, 'categories')}
-                                        value={formData.categories}
-                                        name="category"
-                                    />
-                                </div>
-                                <div className="relative mb-8">
-                                    <SelectCustom
-                                        multiple
-                                        required
-                                        label="Sub Category"
-                                        collection={subCategoryFramework}
-                                        onChange={(e) => handleChange(e, 'subcategories')}
-                                        value={formData.subcategories}
-                                        name="subcategories"
-                                    />
-                                </div>
-                                <div className="relative mt-8">
-                                    <SelectCustom
-                                        multiple
-                                        required
-                                        label="Skill"
-                                        collection={skillFramework}
-                                        onChange={(e) => handleChange(e, 'skills')}
-                                        value={formData.skills}
-                                        name="skills"
-                                    />
-                                </div>
-                                <div className="flex justify-end">
-                                    <div className="">
-                                        <Button
-                                            height={50}
-                                            className="mt-[14px] text-sm px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-                                            borderRadius={4}
-                                            loading={isLoadingCreateProjectRequirement}
-                                            loadingText="Loading..."
-                                            spinnerPlacement="start"
-                                            onClick={handleSaveProjectRequirement}
-                                        >
-                                            SAVE CHANGES
-                                        </Button>
-                                    </div>
-                                </div>
-                            </Tabs.Content>
-                            <Tabs.Content pt="0" value="delete">
-                                <div>
-                                    <p className="mb-0 p-[15px] border-l-[3px] text-sm border-[#09c] rounded-r-md bg-[#e3f1f6] text-[#09c]">
-                                        WARNING: Deleting this group will completely remove ALL
-                                        content associated with it. There is no way back, please be
-                                        careful with this option.
-                                    </p>
-                                </div>
-                                <label htmlFor="delete-project" className="mt-[16px]">
-                                    <input
-                                        type="checkbox"
-                                        id="delete-project"
-                                        className="w-4 h-4 mr-[10px]"
-                                        value={confirmDelete}
-                                        onChange={() => setConfirmDelete(!confirmDelete)}
-                                    />
-                                    I understand the consequences of deleting this project.
-                                </label>
-                                <div className="flex justify-end">
-                                    <div className="">
-                                        <Button
-                                            height={50}
-                                            className="mt-[14px] text-sm px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-                                            borderRadius={4}
-                                            loading={isLoadingDeleteMyProject}
-                                            loadingText="Deleting..."
-                                            spinnerPlacement="start"
-                                            onClick={handleConfirmDeleteProject}
-                                        >
-                                            DELETE PROJECT
-                                        </Button>
-                                    </div>
-                                </div>
-                            </Tabs.Content>
+                            <ProjectRequirements />
+                            <ProjectDelete />
                         </div>
                     </Tabs.Root>
                 </div>
                 <div className="w-4/12 mt-8">
-                    {/* ProjectActivity */}
                     <ProjectActivity />
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ProjectManage;
+export default ProjectManage

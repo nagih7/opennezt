@@ -16,9 +16,6 @@ import {
     requestSendMessage,
     sendMessageSuccess,
     sendMessageFail,
-    startRequestGetChatHistory,
-    startRequestGetChatHistorySuccess,
-    startRequestGetChatHistoryFail,
 } from '../../states/modules/chat'
 import callSocket from 'api/callSocket'
 
@@ -69,17 +66,6 @@ export const getMessages = (conversation_id) => async (dispatch, getState) => {
 //         getState,
 //     });
 // };
-
-export const getChatHistory = (conversation_id) => async (dispatch, getState) => {
-    return callApi({
-        method: 'get',
-        apiPath: `chat/chat-history/${conversation_id}`,
-        actionTypes: [startRequestGetChatHistory, startRequestGetChatHistorySuccess, startRequestGetChatHistoryFail],
-        variables: {},
-        dispatch,
-        getState,
-    })
-}
 
 // ========== SEND MESSAGE ========== //
 export const sendMessage = (conversation_id, content, socket) => async (dispatch, getState) => {
