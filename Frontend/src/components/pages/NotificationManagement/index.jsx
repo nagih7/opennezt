@@ -163,8 +163,10 @@ function NotificationProject() {
     return (
         <>
             <div className="flex w-full gap-8 mt-[1rem] px-[16px]">
-                <Tabs.Root className="w-10/12 h-4" defaultValue="Unread">
-                    <div className="2xl:w-[60.25rem] w-full">
+
+                <Tabs.Root className="h-4 w-10/12" defaultValue="Unread">
+                    <div className="2xl:w-full w-full">
+
                         <Tabs.List>
                             <div className="flex justify-between w-full p-4 font-bold bg-white">
                                 <div className="flex">
@@ -203,7 +205,10 @@ function NotificationProject() {
                                                                 type="checkbox"
                                                                 onChange={toggleSelectAll}
                                                                 checked={
+
+
                                                                     selected.length === data.length && data.length > 0
+
                                                                 }
                                                             />
                                                         </th>
