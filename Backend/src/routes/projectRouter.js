@@ -27,9 +27,9 @@ projectRouter.patch(
     asyncHandler(projectController.updateSector)
 )
 
-// ========== PATCH [Project - Revenue] ========== //
+// ========== PATCH [Project - Revenues] ========== //
 projectRouter.patch(
-    '/me/:id/revenue',
+    '/me/:id/revenues',
     asyncHandler(validate(projectRequest.updateRevenue)),
     asyncHandler(projectController.updateRevenue)
 )

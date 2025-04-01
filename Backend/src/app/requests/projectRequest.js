@@ -113,7 +113,13 @@ export const updateBasic = Joi.object({
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async (req) => {
-                    const project = await Project.findOne({ name: value, user_id: req.currentUser._id })
+                    const project = await Project.findOne({
+                        _id: {
+                            $ne: new ObjectId(req.params.id),
+                        },
+                        name: value,
+                        user_id: req.currentUser._id,
+                    })
                     return project ? helpers.error('any.empty') : value
                 })
         ),
@@ -133,7 +139,7 @@ export const updateSector = Joi.object({
                     (value, helpers) =>
                         new AsyncValidate(value, async () => {
                             const industry = await Industry.findById(new ObjectId(value))
-                            return industry ? value : helpers.error('any.empty')
+                            return industry ? industry : helpers.error('any.empty')
                         })
                 )
         ),
@@ -145,7 +151,7 @@ export const updateSector = Joi.object({
             (value, helpers) =>
                 new AsyncValidate(value, async () => {
                     const stage = await Stage.findById(new ObjectId(value))
-                    return stage ? value : helpers.error('any.empty')
+                    return stage ? stage : helpers.error('any.empty')
                 })
         ),
 })

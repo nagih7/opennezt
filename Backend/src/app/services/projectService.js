@@ -495,11 +495,8 @@ export async function getProjectDetails(user, projectId) {
         },
     ])
 
-    if (project[0]?.applied) {
-        project[0].applied = true
-    } else {
-        project[0].applied = false
-    }
+    if (project[0]?.applied) project[0].applied = true
+    else project[0].applied = false
 
     return project[0]
 }
@@ -514,16 +511,23 @@ export async function updateBasic(user, { id }, requestBody) {
 }
 
 // ========== PATCH [Project - Sector] ========== //
-export async function updateSector(user, requestBody) {
+export async function updateSector(user, { id }, requestBody) {
     await Project.updateOne(
-        { user_id: user._id, _id: requestBody.project_id },
-        { industry_ids: requestBody.industries, stage_id: requestBody.stage }
+        { user_id: user._id, _id: id },
+        { industry_ids: requestBody.industries.map((item) => item._id), stage_id: requestBody.stage._id }
     )
+
+    return {
+        industries: requestBody.industries.map((item) => {
+            return { _id: item._id, name: item.name, description: item.description }
+        }),
+        stage: { _id: requestBody.stage._id, name: requestBody.stage.name, description: requestBody.stage.description },
+    }
 }
 
 // ========== PATCH [Project - Revenue] ========== //
-export async function updateRevenue(user, requestBody) {
-    const project = await Project.findOne({ user_id: user._id, _id: requestBody.project_id })
+export async function updateRevenue(user, { id }, requestBody) {
+    const project = await Project.findOne({ user_id: user._id, _id: id })
 
     const { revenues } = requestBody
     await Revenue.deleteMany({ project_id: project._id }).exec()
@@ -534,6 +538,8 @@ export async function updateRevenue(user, requestBody) {
         }))
         await Revenue.insertMany(revenueBulk)
     }
+
+    return revenues
 }
 
 // ========== PATCH [Project - FundingSource] ========== //

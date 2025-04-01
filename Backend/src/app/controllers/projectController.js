@@ -31,14 +31,14 @@ export async function updateBasic(req, res) {
 
 // ========== PATCH [Project - Sector] ========== //
 export async function updateSector(req, res) {
-    await projectService.updateSector(req.currentUser, req.body)
-    res.status(200).jsonify('Update sector successfully.')
+    const result = await projectService.updateSector(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update sector successfully.')
 }
 
 // ========== PATCH [Project - Revenue] ========== //
 export async function updateRevenue(req, res) {
-    await projectService.updateRevenue(req.currentUser, req.body)
-    res.status(200).jsonify('Update revenue successfully.')
+    const result = await projectService.updateRevenue(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update revenue successfully.')
 }
 
 // ========== PATCH [Project - FundingSource] ========== //

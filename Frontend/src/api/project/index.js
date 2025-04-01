@@ -105,6 +105,30 @@ export const updateProjectBasic = (projectId, formRequest) => async (dispatch, g
     })
 }
 
+// ========== UPDATE PROJECT SECTORS ========== //
+export const updateProjectSector = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/sector`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========== UPDATE PROJECT REVENUES ========== //
+export const updateProjectRevenue = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/revenues`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
 // ========== DELETE MY PROJECT ========== //
 export const deleteMyProject = (projectId) => async (dispatch, getState) => {
     return callApi({
