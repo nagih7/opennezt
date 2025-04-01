@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { get } from 'lodash';
-import { updateArticle } from '../article';
+import { createSlice } from '@reduxjs/toolkit'
+import { get } from 'lodash'
+import { updateArticle } from '../article'
 
 const activitySlice = createSlice({
     name: 'Activity',
@@ -28,6 +28,8 @@ const activitySlice = createSlice({
         isLoadingReactionArticle: false,
         // ========== POST ACTIVITIES REPLY COMMENT ========== //
         isLoadingReplyComment: false,
+        // ========== POST ACTIVITIES COMMENT ========== //
+        isLoadingComment: false,
         // ========== GET ACTIVITIES CREATE ARTICLE ========== //
         createNewArticleActivity: [],
         isLoadingCreateNewArticleActivity: false,
@@ -43,9 +45,15 @@ const activitySlice = createSlice({
         // ========== GET ACTIVITIES REPLY COMMENT ========== //
         replyCommentActivity: [],
         isLoadingReplyCommentActivity: false,
+        // ========== GET ACTIVITIES COMMENT ========== //
+        commentActivity: [],
+        isLoadingCommentActivity: false,
         // ========== DELETE SAVE ARTICLE ACTIVITIES ========== //
         deleteSaveArticleActivity: [],
         isLoadingDeleteSaveArticleActivity: false,
+        // ========== DELETE REACTION ARTICLE ACTIVITIES ========== //
+        deleteReactionArticleActivity: [],
+        isLoadingDeleteReactionArticleActivity: false,
     },
     reducers: {
         // ========== PROJECT ACCESS ========== //
@@ -186,6 +194,20 @@ const activitySlice = createSlice({
             ...state,
             isLoadingReplyComment: false,
         }),
+        // ========== ACTIVITIES COMMENT ========== //
+        requestGetActivityComment: (state) => ({
+            ...state,
+            isLoadingComment: true,
+        }),
+        getActivityCommentSuccess: (state, action) => ({
+            ...state,
+            commentActivity: action.payload.data,
+            isLoadingComment: false,
+        }),
+        getActivityCommentFail: (state) => ({
+            ...state,
+            isLoadingComment: false,
+        }),
         // ========== POST ACTIVITIES CREATE ARTICLE ========== //
         requestPostActivityCreateArticle: (state) => ({
             ...state,
@@ -251,6 +273,19 @@ const activitySlice = createSlice({
             ...state,
             isLoadingReplyComment: false,
         }),
+        // ========== POST ACTIVITIES COMMENT ========== //
+        requestPostActivityComment: (state) => ({
+            ...state,
+            isLoadingComment: true,
+        }),
+        postActivityCommentSuccess: (state) => ({
+            ...state,
+            isLoadingComment: false,
+        }),
+        postActivityCommentFail: (state) => ({
+            ...state,
+            isLoadingComment: false,
+        }),
         // ========== DELETE SAVE ARTICLE ACTIVITIES ========== //
         requestDeleteSaveArticleActivity: (state) => ({
             ...state,
@@ -264,8 +299,21 @@ const activitySlice = createSlice({
             ...state,
             isLoadingDeleteSaveArticleActivity: false,
         }),
+        // ========== DELETE REACTION ARTICLE ACTIVITIES ========== //
+        requestDeleteReactionArticleActivity: (state) => ({
+            ...state,
+            isLoadingDeleteReactionArticleActivity: true,
+        }),
+        deleteReactionArticleActivitySuccess: (state) => ({
+            ...state,
+            isLoadingDeleteReactionArticleActivity: false,
+        }),
+        deleteReactionArticleActivityFail: (state) => ({
+            ...state,
+            isLoadingDeleteReactionArticleActivity: false,
+        }),
     },
-});
+})
 
 export const {
     // ========== PROJECT ACCESS ========== //
@@ -308,6 +356,10 @@ export const {
     requestGetActivityReplyComment,
     getActivityReplyCommentSuccess,
     getActivityReplyCommentFail,
+    // ========== GET COMMENT ========== //
+    requestGetActivityComment,
+    getActivityCommentSuccess,
+    getActivityCommentFail,
     // ========== POST ACTIVITIES CREATE ARTICLE ========== //
     requestPostActivityCreateArticle,
     postActivityCreateArticleSuccess,
@@ -328,10 +380,18 @@ export const {
     requestPostActivityReplyComment,
     postActivityReplyCommentSuccess,
     postActivityReplyCommentFail,
+    // ========== POST ACTIVITIES COMMENT ========== //
+    requestPostActivityComment,
+    postActivityCommentSuccess,
+    postActivityCommentFail,
     // ========== DELETE SAVE ARTICLE ACTIVITIES ========== //
     requestDeleteSaveArticleActivity,
     deleteSaveArticleActivitySuccess,
     deleteSaveArticleActivityFail,
-} = activitySlice.actions;
+    // ========== DELETE REACTION ARTICLE ACTIVITIES ========== //
+    requestDeleteReactionArticleActivity,
+    deleteReactionArticleActivitySuccess,
+    deleteReactionArticleActivityFail,
+} = activitySlice.actions
 
-export default activitySlice.reducer;
+export default activitySlice.reducer

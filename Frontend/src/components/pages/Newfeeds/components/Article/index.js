@@ -1,110 +1,102 @@
-import React, { forwardRef, useState, useRef, useEffect } from 'react';
-import { CheckCircleFilled } from '@ant-design/icons';
-import { IconlyBookmark, IconlyDelete, IconlyMoreCircle } from 'components/UI/Iconly';
-import avt from 'assets/images/background/avt.jpg';
-import { IconlyChat } from 'components/UI/Iconly';
-import { IconlyHeart } from 'components/UI/Iconly';
-import { IconlySend } from 'components/UI/Iconly';
-import { IconlyEdit } from 'components/UI/Iconly';
-import {
-    differenceInDays,
-    differenceInHours,
-    differenceInMinutes,
-    differenceInSeconds,
-} from 'date-fns';
-import { Button } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React, { forwardRef, useState, useRef, useEffect } from 'react'
+import { CheckCircleFilled } from '@ant-design/icons'
+import { IconlyBookmark, IconlyDelete, IconlyMoreCircle } from 'components/UI/Iconly'
+import avt from 'assets/images/background/avt.jpg'
+import { IconlyChat } from 'components/UI/Iconly'
+import { IconlyHeart } from 'components/UI/Iconly'
+import { IconlySend } from 'components/UI/Iconly'
+import { IconlyEdit } from 'components/UI/Iconly'
+import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
+import { Button } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const Article = forwardRef(
-    (
-        { feed, reaction, onReaction, isLoading, onSelect, onEdit, onDelete, onBookmark, bookmark },
-        ref
-    ) => {
-        const { _id, user, project, content, reaction_count, created_at, comment_count } = feed;
+    ({ feed, reaction, onReaction, isLoading, onSelect, onEdit, onDelete, onBookmark, bookmark }, ref) => {
+        const { _id, user, project, content, reaction_count, created_at, comment_count } = feed
 
-        const navigate = useNavigate();
+        const navigate = useNavigate()
         const displayReaction = () => {
             if (reaction == 'like') {
                 return (
                     <div onClick={() => handleReactionClick('like')} style={{ cursor: 'pointer' }}>
                         <IconlyHeart size={25} color={'red'} backgroundColor={'red'} />
                     </div>
-                );
+                )
             }
             if (reaction == undefined) {
                 return (
                     <div onClick={() => handleReactionClick('like')} style={{ cursor: 'pointer' }}>
                         <IconlyHeart size={25} color={'#6f7f92'} />
                     </div>
-                );
+                )
             }
-        };
+        }
 
         const handleReactionClick = (type) => {
-            if (isLoading) return;
-            const data = new FormData();
-            data.append('type', type);
-            data.append('target_type', 'article');
-            onReaction(_id, data);
-        };
+            if (isLoading) return
+            const data = new FormData()
+            data.append('type', type)
+            data.append('target_type', 'article')
+            onReaction(_id, data)
+        }
 
         const handleSetClick = () => {
-            onSelect(feed);
-        };
+            onSelect(feed)
+        }
 
         const handleEdit = () => {
-            handleClickMore();
-            onEdit(feed);
-        };
+            handleClickMore()
+            onEdit(feed)
+        }
 
-        const [isConfirmDelete, setIsConfirmDelete] = useState(false);
+        const [isConfirmDelete, setIsConfirmDelete] = useState(false)
 
         const handleClickDelete = () => {
-            setIsConfirmDelete(!isConfirmDelete);
-        };
+            setIsConfirmDelete(!isConfirmDelete)
+        }
 
         const handleDelete = async () => {
-            onDelete(_id);
-        };
+            onDelete(_id)
+        }
 
         //
-        const [isShowMore, setIsShowMore] = useState(false);
+        const [isShowMore, setIsShowMore] = useState(false)
         const handleClickMore = () => {
-            setIsShowMore(!isShowMore);
-        };
-        const dropdownRef = useRef(null);
+            setIsShowMore(!isShowMore)
+        }
+        const dropdownRef = useRef(null)
 
         useEffect(() => {
             const handleClickOutside = (event) => {
                 if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                    setIsShowMore(false);
+                    setIsShowMore(false)
                 }
-            };
+            }
 
-            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('mousedown', handleClickOutside)
             return () => {
-                document.removeEventListener('mousedown', handleClickOutside);
-            };
-        }, []);
+                document.removeEventListener('mousedown', handleClickOutside)
+            }
+        }, [])
 
         //==================================================================================================
         //Posted Date Logic
         //==================================================================================================
-        const postedAt = new Date(created_at);
-        const postedDate = postedAt.toDateString();
-        const today = new Date();
-        const day = differenceInDays(today, postedAt);
-        const hour = differenceInHours(today, postedAt) % 24;
-        const minute = differenceInMinutes(today, postedAt) % 60;
-        const second = differenceInSeconds(today, postedAt) % 60;
+        const postedAt = new Date(created_at)
+        const postedDate = postedAt.toDateString()
+        const today = new Date()
+        const day = differenceInDays(today, postedAt)
+        const hour = differenceInHours(today, postedAt) % 24
+        const minute = differenceInMinutes(today, postedAt) % 60
+        const second = differenceInSeconds(today, postedAt) % 60
         //==================================================================================================
         //End of Posted Date Logic
         //==================================================================================================
 
         const handleBookmark = (data) => {
-            onBookmark(data);
-        };
+            onBookmark(data)
+        }
 
         const displayBookmark = () => {
             if (bookmark === 'yes') {
@@ -121,7 +113,7 @@ const Article = forwardRef(
                     >
                         <IconlyBookmark size={25} color={'#6f7f92'} backgroundColor={'#6f7f92'} />
                     </div>
-                );
+                )
             }
             if (bookmark === 'no' || bookmark === undefined) {
                 return (
@@ -137,11 +129,11 @@ const Article = forwardRef(
                     >
                         <IconlyBookmark size={25} color={'#6f7f92'} />
                     </div>
-                );
+                )
             }
-        };
+        }
 
-        const authUser = useSelector((state) => state.auth.authUser);
+        const authUser = useSelector((state) => state.auth.authUser)
 
         const verifyAction = () => {
             if (authUser._id === user[0]._id) {
@@ -153,9 +145,9 @@ const Article = forwardRef(
                     >
                         ...
                     </div>
-                );
+                )
             }
-        };
+        }
 
         return (
             <div className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8" ref={ref}>
@@ -207,9 +199,7 @@ const Article = forwardRef(
                                         <span className="text-sm">posted in</span>
                                         <span
                                             className="cursor-pointer"
-                                            onClick={() =>
-                                                navigate(`/projects/${project[0]._id}/details`)
-                                            }
+                                            onClick={() => navigate(`/projects/${project[0]._id}/details`)}
                                         >
                                             <b> {project[0]?.name}</b>
                                         </span>
@@ -253,11 +243,7 @@ const Article = forwardRef(
                                                 className="flex items-center gap-2 px-3 cursor-pointer hover:bg-gray-100"
                                                 onClick={handleEdit}
                                             >
-                                                <IconlyEdit
-                                                    size={25}
-                                                    color={'#6f7f92'}
-                                                    backgroundColor={'#6f7f92'}
-                                                />
+                                                <IconlyEdit size={25} color={'#6f7f92'} backgroundColor={'#6f7f92'} />
                                                 <span className="p-2 text-sm">Edit post</span>
                                             </li>
                                         </ul>
@@ -274,12 +260,7 @@ const Article = forwardRef(
                     {content.attachment &&
                         content.attachment.length > 0 &&
                         content.attachment.map((img, index) => {
-                            return (
-                                <img
-                                    key={index}
-                                    src={typeof img === 'string' ? img : URL.createObjectURL(img)}
-                                />
-                            );
+                            return <img key={index} src={typeof img === 'string' ? img : URL.createObjectURL(img)} />
                         })}
                 </div>
                 <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
@@ -318,10 +299,10 @@ const Article = forwardRef(
                     </div>
                 </div>
             </div>
-        );
+        )
     }
-);
+)
 
-Article.displayName = 'Article';
+Article.displayName = 'Article'
 
-export default Article;
+export default Article

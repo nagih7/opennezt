@@ -68,6 +68,8 @@ articleRouter.post('/activity/reaction/:id', asyncHandler(articleController.post
 
 articleRouter.post('/activity/reply-comment/:id', asyncHandler(articleController.postActivityReplyComment))
 
+articleRouter.post('/activity/comment/:id', asyncHandler(articleController.postActivityComment))
+
 // ========== GET [ARTICLE ACTIVITIES] ========== //
 articleRouter.get('/activity/create', asyncHandler(articleController.getActivityCreateArticle))
 
@@ -79,7 +81,11 @@ articleRouter.get('/activity/reaction', asyncHandler(articleController.getActivi
 
 articleRouter.get('/activity/reply-comment', asyncHandler(articleController.getActivityReplyComment))
 
+articleRouter.get('/activity/comment', asyncHandler(articleController.getActivityComment))
+
 // ========== DELETE [ARTICLE ACTIVITIES] ========== //
 articleRouter.delete('/activity/save/:id', asyncHandler(articleController.deleteActivitySaveArticle))
+
+articleRouter.delete('/activity/reaction/:id', asyncHandler(articleController.deleteActivityReactionArticle))
 
 export default articleRouter
