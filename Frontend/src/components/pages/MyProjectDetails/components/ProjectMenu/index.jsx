@@ -6,16 +6,16 @@ import {
     IconlyImage2,
     IconlySend,
     IconlyUser,
-} from 'components/UI/Iconly';
-import React, { useState } from 'react';
+} from 'components/UI/Iconly'
+import React, { useState } from 'react'
 
 const ProjectMenu = ({ setTab }) => {
-    const [activeTab, setActiveTab] = useState('overview');
+    const [activeTab, setActiveTab] = useState('overview')
 
     const handleTabClick = (tabName) => {
-        setActiveTab(tabName);
-        setTab(tabName);
-    };
+        setActiveTab(tabName)
+        setTab(tabName)
+    }
 
     return (
         <div className="w-full px-[16px] pt-8">
@@ -28,10 +28,7 @@ const ProjectMenu = ({ setTab }) => {
                             }`}
                             onClick={() => handleTabClick('overview')}
                         >
-                            <IconlyHome
-                                size={20}
-                                color={activeTab === 'overview' ? '#ffffff' : '#6f7f92'}
-                            />
+                            <IconlyHome size={20} color={activeTab === 'overview' ? '#ffffff' : '#6f7f92'} />
                         </span>
                         <span
                             className={`text-sm font-medium ${
@@ -48,10 +45,7 @@ const ProjectMenu = ({ setTab }) => {
                             }`}
                             onClick={() => handleTabClick('forum')}
                         >
-                            <IconlyDocument
-                                size={20}
-                                color={activeTab === 'forum' ? '#ffffff' : '#6f7f92'}
-                            />
+                            <IconlyDocument size={20} color={activeTab === 'forum' ? '#ffffff' : '#6f7f92'} />
                         </span>
                         <span
                             className={`text-sm font-medium ${
@@ -68,10 +62,7 @@ const ProjectMenu = ({ setTab }) => {
                             }`}
                             onClick={() => handleTabClick('members')}
                         >
-                            <IconlyUser
-                                size={20}
-                                color={activeTab === 'members' ? '#ffffff' : '#6f7f92'}
-                            />
+                            <IconlyUser size={20} color={activeTab === 'members' ? '#ffffff' : '#6f7f92'} />
                         </span>
                         <span
                             className={`text-sm font-medium ${
@@ -88,10 +79,7 @@ const ProjectMenu = ({ setTab }) => {
                             }`}
                             onClick={() => handleTabClick('invite')}
                         >
-                            <IconlySend
-                                size={20}
-                                color={activeTab === 'invite' ? '#ffffff' : '#6f7f92'}
-                            />
+                            <IconlySend size={20} color={activeTab === 'invite' ? '#ffffff' : '#6f7f92'} />
                         </span>
                         <span
                             className={`text-sm font-medium ${
@@ -108,10 +96,7 @@ const ProjectMenu = ({ setTab }) => {
                             }`}
                             onClick={() => handleTabClick('media')}
                         >
-                            <IconlyImage2
-                                size={20}
-                                color={activeTab === 'media' ? '#ffffff' : '#6f7f92'}
-                            />
+                            <IconlyImage2 size={20} color={activeTab === 'media' ? '#ffffff' : '#6f7f92'} />
                         </span>
                         <span
                             className={`text-sm font-medium ${
@@ -121,7 +106,7 @@ const ProjectMenu = ({ setTab }) => {
                             Media
                         </span>
                     </li>
-                    <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6] bg-[#ffffff]">
+                    {/* <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6] bg-[#ffffff]">
                         <span
                             className={`no-underline mx-[60px] w-12 h-12 rounded-md flex justify-center items-center gap-2 cursor-pointer ${
                                 activeTab === 'messages' ? 'bg-[#4374c0]' : 'bg-[#f8f9fa]'
@@ -140,7 +125,7 @@ const ProjectMenu = ({ setTab }) => {
                         >
                             Messages
                         </span>
-                    </li>
+                    </li> */}
                     <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6] bg-[#ffffff]">
                         <span
                             className={`no-underline mx-[60px] w-12 h-12 rounded-md flex justify-center items-center gap-2 cursor-pointer ${
@@ -148,10 +133,7 @@ const ProjectMenu = ({ setTab }) => {
                             }`}
                             onClick={() => handleTabClick('manage')}
                         >
-                            <IconlyActivity
-                                size={20}
-                                color={activeTab === 'manage' ? '#ffffff' : '#6f7f92'}
-                            />
+                            <IconlyActivity size={20} color={activeTab === 'manage' ? '#ffffff' : '#6f7f92'} />
                         </span>
                         <span
                             className={`text-sm font-medium ${
@@ -164,7 +146,7 @@ const ProjectMenu = ({ setTab }) => {
                 </ul>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ProjectMenu;
+export default ProjectMenu
