@@ -3,7 +3,6 @@ import Article from '../../models/article.js'
 import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
 import {
-    ACCESS_TYPE,
     ARTICLE_COMMENT,
     ARTICLE_CREATE,
     ARTICLE_REACTION,
@@ -554,11 +553,6 @@ export const getUserCommentReactions = async (user_id, target_ids) => {
     })
 
     return reactions
-}
-
-// Update project name after update article
-export const updateProjectName = async (project_id) => {
-    const articles = await Article.find({ project_id: project_id })
 }
 
 export const bookmarkArticle = async (requestBody, user) => {

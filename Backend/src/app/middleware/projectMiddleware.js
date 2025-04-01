@@ -1,15 +1,6 @@
 export const decodeFormData = async (req, res, next) => {
-    const {
-        name,
-        description,
-        industries,
-        stage,
-        revenues,
-        funding_sources,
-        additional_infos,
-        logo,
-        background,
-    } = req.body
+    const { name, description, industries, stage, revenues, funding_sources, additional_infos, logo, background } =
+        req.body
 
     const nameDecoded = name
     const descriptionDecoded = description
@@ -30,6 +21,23 @@ export const decodeFormData = async (req, res, next) => {
         funding_sources: (await fundingSourcesDecoded[0]) !== null ? fundingSourcesDecoded : null,
         additional_infos: (await additionalInfosDecoded[0]) !== null ? additionalInfosDecoded : null,
         logo: await logoDecoded,
+        background: await backgroundDecoded,
+    }
+    next()
+}
+
+export const decodeLogo = async (req, res, next) => {
+    const { logo } = req.body
+    const logoDecoded = logo
+    req.body = {
+        logo: await logoDecoded,
+    }
+    next()
+}
+export const decodeBackground = async (req, res, next) => {
+    const { background } = req.body
+    const backgroundDecoded = background
+    req.body = {
         background: await backgroundDecoded,
     }
     next()

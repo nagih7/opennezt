@@ -176,7 +176,7 @@ export const updateFundingSource = Joi.object({
         .items(
             Joi.object({
                 name: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Name'),
-                amount: Joi.string().required().label('Amount'),
+                amount: Joi.number().required().label('Amount'),
                 currency: Joi.string().trim().required().label('Currency'),
             })
         )
@@ -196,6 +196,26 @@ export const updateAdditionalInfo = Joi.object({
         )
         .label('Profile Additional Info')
         .allow(null),
+})
+
+export const updateLogo = Joi.object({
+    logo: Joi.object({
+        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp').required().label('Image format'),
+    })
+        .unknown(true)
+        .instance(FileUpload)
+        .allow('', {}, 'null')
+        .label('Logo'),
+})
+
+export const updateBackground = Joi.object({
+    background: Joi.object({
+        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp').required().label('Image format'),
+    })
+        .unknown(true)
+        .instance(FileUpload)
+        .allow('', {}, 'null')
+        .label('Background'),
 })
 
 // ========== PATCH [Project - Seek] ========== //

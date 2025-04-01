@@ -14,7 +14,7 @@ const ProjectCard = () => {
 
     // ========== USE EFFECT ========== //
     useEffect(() => {
-        if (!project || project?.id !== id) {
+        if (!project || project?._id !== id) {
             dispatch(getMyProjectDetails(id))
         }
         // eslint-disable-next-line

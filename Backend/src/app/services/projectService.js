@@ -6,6 +6,8 @@ import {
     PROJECT_APPLICATION_NOTIFICATION,
     WAITING_STATUS,
     PROJECT_INVITATION_NOTIFICATION,
+    PROJECT_LOGO_PATH,
+    PROJECT_BACKGROUND_PATH,
 } from '@/configs'
 import {
     Project,
@@ -28,7 +30,7 @@ export async function createProject(user, requestBody) {
     const { revenues, funding_sources, additional_infos, logo, background } = requestBody
     // Project
     if (logo instanceof FileUpload) {
-        requestBody.logo = logo.save('project_logos')
+        requestBody.logo = logo.save(PROJECT_LOGO_PATH)
     }
     if (background instanceof FileUpload) {
         requestBody.background = background.save('project_backgrounds')
@@ -150,147 +152,186 @@ export async function getListMyProjects(user, { q, page, per_page, field, order 
 
 // ========== GET [My Project Details] ========== //
 export async function getMyProjectDetails(user, projectId) {
+    const matchStage = {
+        $match: {
+            _id: new ObjectId(projectId),
+            user_id: user._id,
+        },
+    }
+    const industriesStage = {
+        $lookup: {
+            from: 'industries',
+            localField: 'industry_ids',
+            foreignField: '_id',
+            as: 'industries',
+            pipeline: [
+                {
+                    $project: {
+                        // _id: 0,
+                        // name: 1,
+                        created_at: 0,
+                        updated_at: 0,
+                    },
+                },
+            ],
+        },
+    }
+    const stagesStage = {
+        $lookup: {
+            from: 'stages',
+            localField: 'stage_id',
+            foreignField: '_id',
+            as: 'stage',
+            pipeline: [
+                {
+                    $project: {
+                        // _id: 0,
+                        // name: 1,
+                        created_at: 0,
+                        updated_at: 0,
+                        success_rate: 0,
+                        avg_funding: 0,
+                    },
+                },
+            ],
+        },
+    }
+    const revenuesStage = {
+        $lookup: {
+            from: 'revenues',
+            localField: '_id',
+            foreignField: 'project_id',
+            as: 'revenues',
+            pipeline: [
+                {
+                    $project: {
+                        // _id: 0,
+                        // name: 1,
+                        created_at: 0,
+                        updated_at: 0,
+                        project_id: 0,
+                    },
+                },
+            ],
+        },
+    }
+    const fundingSourcesStage = {
+        $lookup: {
+            from: 'funding_sources',
+            localField: '_id',
+            foreignField: 'project_id',
+            as: 'funding_sources',
+            pipeline: [
+                {
+                    $project: {
+                        // _id: 0,
+                        // name: 1,
+                        created_at: 0,
+                        updated_at: 0,
+                    },
+                },
+            ],
+        },
+    }
+    const additionalInfosStage = {
+        $lookup: {
+            from: 'project_additional_infos',
+            localField: '_id',
+            foreignField: 'project_id',
+            as: 'additional_infos',
+            pipeline: [
+                {
+                    $project: {
+                        // _id: 0,
+                        // name: 1,
+                        created_at: 0,
+                        updated_at: 0,
+                    },
+                },
+            ],
+        },
+    }
+    const membersStage = {
+        $lookup: {
+            from: 'project_members',
+            localField: '_id',
+            foreignField: 'project_id',
+            as: 'members',
+            pipeline: [
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user_id',
+                        foreignField: '_id',
+                        as: 'user',
+                        pipeline: [
+                            {
+                                $project: {
+                                    _id: 0,
+                                    name: 1,
+                                    avatar: {
+                                        $cond: {
+                                            if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                            then: '$avatar',
+                                            else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+                { $unwind: '$user' },
+                { $project: { _id: 0, user: 1, role_id: 1, team_role_id: 1 } },
+            ],
+        },
+    }
+    const articlesStage = {
+        $lookup: {
+            from: 'articles',
+            localField: '_id',
+            foreignField: 'project_id',
+            as: 'articles',
+        },
+    }
+    const addFieldsStage = {
+        $addFields: {
+            logo: {
+                $cond: {
+                    if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
+                    then: '$logo',
+                    else: { $concat: [LINK_STATIC_URL, '$logo'] },
+                },
+            },
+            background: {
+                $cond: {
+                    if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
+                    then: '$background',
+                    else: { $concat: [LINK_STATIC_URL, '$background'] },
+                },
+            },
+            stage: { $arrayElemAt: ['$stage', 0] },
+        },
+    }
+    const projectStage = {
+        $project: {
+            user_id: 0,
+            updated_at: 0,
+            industry_ids: 0,
+            stage_id: 0,
+        },
+    }
     const project = await Project.aggregate([
-        {
-            $match: {
-                _id: new ObjectId(projectId),
-                user_id: user._id,
-            },
-        },
-        {
-            $lookup: {
-                from: 'industries',
-                localField: 'industry_ids',
-                foreignField: '_id',
-                as: 'industries',
-                pipeline: [
-                    {
-                        $project: {
-                            // _id: 0,
-                            // name: 1,
-                            created_at: 0,
-                            updated_at: 0,
-                        },
-                    },
-                ],
-            },
-        },
-        {
-            $lookup: {
-                from: 'stages',
-                localField: 'stage_id',
-                foreignField: '_id',
-                as: 'stage',
-                pipeline: [
-                    {
-                        $project: {
-                            // _id: 0,
-                            // name: 1,
-                            created_at: 0,
-                            updated_at: 0,
-                        },
-                    },
-                ],
-            },
-        },
-        {
-            $lookup: {
-                from: 'revenues',
-                localField: '_id',
-                foreignField: 'project_id',
-                as: 'revenues',
-                pipeline: [
-                    {
-                        $project: {
-                            // _id: 0,
-                            // name: 1,
-                            created_at: 0,
-                            updated_at: 0,
-                        },
-                    },
-                ],
-            },
-        },
-        {
-            $lookup: {
-                from: 'funding_sources',
-                localField: '_id',
-                foreignField: 'project_id',
-                as: 'funding_sources',
-                pipeline: [
-                    {
-                        $project: {
-                            // _id: 0,
-                            // name: 1,
-                            created_at: 0,
-                            updated_at: 0,
-                        },
-                    },
-                ],
-            },
-        },
-        {
-            $lookup: {
-                from: 'project_additional_infos',
-                localField: '_id',
-                foreignField: 'project_id',
-                as: 'additional_infos',
-                pipeline: [
-                    {
-                        $project: {
-                            // _id: 0,
-                            // name: 1,
-                            created_at: 0,
-                            updated_at: 0,
-                        },
-                    },
-                ],
-            },
-        },
-        {
-            $lookup: {
-                from: 'project_members',
-                localField: '_id',
-                foreignField: 'project_id',
-                as: 'members',
-            },
-        },
-        {
-            $lookup: {
-                from: 'articles',
-                localField: '_id',
-                foreignField: 'project_id',
-                as: 'articles',
-            },
-        },
-        {
-            $addFields: {
-                logo: {
-                    $cond: {
-                        if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
-                        then: '$logo',
-                        else: { $concat: [LINK_STATIC_URL, '$logo'] },
-                    },
-                },
-                background: {
-                    $cond: {
-                        if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
-                        then: '$background',
-                        else: { $concat: [LINK_STATIC_URL, '$background'] },
-                    },
-                },
-                stage: { $arrayElemAt: ['$stage', 0] },
-            },
-        },
-        {
-            $project: {
-                user_id: 0,
-                // created_at: 0,
-                updated_at: 0,
-                industry_ids: 0,
-                stage_id: 0,
-            },
-        },
+        matchStage,
+        industriesStage,
+        stagesStage,
+        revenuesStage,
+        fundingSourcesStage,
+        additionalInfosStage,
+        membersStage,
+        articlesStage,
+        addFieldsStage,
+        projectStage,
     ])
 
     return project[0]
@@ -536,40 +577,91 @@ export async function updateRevenue(user, { id }, requestBody) {
             ...revenue,
             project_id: project._id,
         }))
-        await Revenue.insertMany(revenueBulk)
+        const newRevenues = await Revenue.insertMany(revenueBulk)
+        return {
+            revenues: newRevenues.map((item) => ({
+                _id: item._id,
+                amount: item.amount,
+                currency: item.currency,
+                date: item.date,
+            })),
+        }
     }
-
-    return revenues
 }
 
 // ========== PATCH [Project - FundingSource] ========== //
-export async function updateFundingSource(user, requestBody) {
-    const project = await Project.findOne({ user_id: user._id, _id: requestBody.project_id })
+export async function updateFundingSource(user, { id }, requestBody) {
+    const project = await Project.findOne({ user_id: user._id, _id: id })
 
     const { funding_sources } = requestBody
     await FundingSource.deleteMany({ project_id: project._id }).exec()
     if (funding_sources?.length > 0) {
-        project.funding_sources = funding_sources.map((funding_source) => ({
+        const fundingSourceBulk = funding_sources.map((funding_source) => ({
             ...funding_source,
             project_id: project._id,
         }))
-        await FundingSource.insertMany(project.funding_sources)
+        const newFundingSources = await FundingSource.insertMany(fundingSourceBulk)
+        return {
+            funding_sources: newFundingSources.map((item) => ({
+                _id: item._id,
+                name: item.name,
+                amount: item.amount,
+                currency: item.currency,
+            })),
+        }
     }
 }
 
 // ========== PATCH [Project - AdditionalInfo] ========== //
-export async function updateAdditionalInfo(user, requestBody) {
-    const project = await Project.findOne({ user_id: user._id, _id: requestBody.project_id })
+export async function updateAdditionalInfo(user, { id }, requestBody) {
+    const project = await Project.findOne({ user_id: user._id, _id: id })
 
     const { additional_infos } = requestBody
     await ProjectAdditionalInfo.deleteMany({ project_id: project._id }).exec()
     if (additional_infos?.length > 0) {
-        project.additional_infos = additional_infos.map((additional_info) => ({
+        const additionalInfoBulk = additional_infos.map((additional_info) => ({
             ...additional_info,
             project_id: project._id,
         }))
-        await ProjectAdditionalInfo.insertMany(project.additional_infos)
+        await ProjectAdditionalInfo.insertMany(additionalInfoBulk)
+        return {
+            additional_infos: additional_infos.map((item) => ({
+                _id: item._id,
+                name: item.name,
+                content: item.content,
+                description: item.description,
+            })),
+        }
     }
+}
+
+// ========== PATCH [Project - Logo] ========== //
+export async function updateLogo(user, { id }, requestBody) {
+    const project = await Project.findOne({ user_id: user._id, _id: id })
+    const { logo } = requestBody
+
+    if (logo instanceof FileUpload) {
+        if (project.logo) {
+            FileUpload.remove(project.logo)
+        }
+        project.logo = logo.save(PROJECT_LOGO_PATH)
+    }
+    await project.save()
+    return { logo: `${LINK_STATIC_URL}${project.logo}` }
+}
+
+// ========= PATCH [Project - Background] ========== //
+export async function updateBackground(user, { id }, requestBody) {
+    const project = await Project.findOne({ user_id: user._id, _id: id })
+    const { background } = requestBody
+    if (background instanceof FileUpload) {
+        if (project.background) {
+            FileUpload.remove(project.background)
+        }
+        project.background = background.save(PROJECT_BACKGROUND_PATH)
+    }
+    await project.save()
+    return { background: `${LINK_STATIC_URL}${project.background}` }
 }
 
 // ========== DELETE [Project] ========== //

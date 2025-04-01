@@ -43,14 +43,26 @@ export async function updateRevenue(req, res) {
 
 // ========== PATCH [Project - FundingSource] ========== //
 export async function updateFundingSource(req, res) {
-    await projectService.updateFundingSource(req.currentUser, req.body)
-    res.status(200).jsonify('Update funding source successfully.')
+    const result = await projectService.updateFundingSource(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update funding source successfully.')
 }
 
 // ========== PATCH [Project - AdditionalInfo] ========== //
 export async function updateAdditionalInfo(req, res) {
-    await projectService.updateAdditionalInfo(req.currentUser, req.body)
-    res.status(200).jsonify('Update additional information successfully.')
+    const result = await projectService.updateAdditionalInfo(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update additional information successfully.')
+}
+
+// ========== PATCH [Project - Logo] ========== //
+export async function updateLogo(req, res) {
+    const result = await projectService.updateLogo(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update logo successfully.')
+}
+
+// ========== PATCH [Project - Background] ========== //
+export async function updateBackground(req, res) {
+    const result = await projectService.updateBackground(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update background successfully.')
 }
 
 // ========== DELETE [Project] ========== //

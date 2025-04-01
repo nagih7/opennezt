@@ -11,6 +11,7 @@ import SelectCustom from 'components/UI/SelectCustom'
 import { IconlyDelete } from 'components/UI/Iconly'
 import { CURRENCY } from 'utils/constants'
 import { updateProjectRevenue } from 'api/project'
+import { toaster } from 'components/UI/toaster'
 const currencyFramework = createListCollection({
     items: CURRENCY['EN'],
 })
@@ -25,7 +26,7 @@ const EditRevenue = () => {
     const project = myProjectDetails
 
     // ========== STATE ========== //
-    const [formData, setFormData] = useState([{ date: '', amount: '', currency: '' }])
+    const [formData, setFormData] = useState([])
     // ========== USEEFFECT ========== //
 
     useEffect(() => {
