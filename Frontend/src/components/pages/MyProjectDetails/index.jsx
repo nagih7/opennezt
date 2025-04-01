@@ -6,6 +6,8 @@ import ProjectMenu from './components/ProjectMenu';
 import ProjectCard from './components/ProjectCard';
 import ProjectOverview from './components/ProjectOverview';
 import ProjectManage from './components/ProjectManage';
+import Members from './components/Members';
+import Sendinvite from './components/Sendinvite';
 
 const MyProjectDetails = () => {
     const { id } = useParams();
@@ -30,9 +32,9 @@ const MyProjectDetails = () => {
             {tab === 'overview' && <ProjectOverview project={project} />}
             {tab === 'manage' && <ProjectManage />}
             {tab === 'forum' && <ProjectOverview project={project} />}
-            {tab === 'members' && <ProjectOverview project={project} />}
+            {tab === 'members' && <Members project={project} />}
             {tab === 'media' && <ProjectOverview project={project} />}
-            {tab === 'invite' && <ProjectOverview project={project} />}
+            {tab === 'invite' && <Sendinvite project={project} />}
         </div>
     );
 };

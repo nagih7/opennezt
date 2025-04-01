@@ -1,8 +1,8 @@
-import React from 'react';
-import img_logo_project from '../../../../../assets/images/background/1656677876-bpthumb.jpg';
-import fb_img from '../../../../../assets/images/background/left-banner.webp';
-import Logo from '../../../../../assets/images/logo/opennezt_full_black.png';
-import { CheckCircleFilled, CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import React from 'react'
+import fb_img from '../../../../../assets/images/background/left-banner.webp'
+import Logo from '../../../../../assets/images/logo/opennezt_full_black.png'
+import { CheckCircleFilled, CloseOutlined, PlusOutlined } from '@ant-design/icons'
+import { OPENNEZT_LOGO } from 'utils/constants'
 
 const ProjectActivity = () => {
     return (
@@ -15,25 +15,14 @@ const ProjectActivity = () => {
                     <ul className="flex flex-col pl-0 mb-0">
                         <li className="flex items-center gap-3">
                             <div>
-                                <a href="#">
-                                    <img
-                                        src={img_logo_project}
-                                        alt=""
-                                        className="w-[60px] h-[60px] rounded-full"
-                                    />
-                                </a>
+                                <img src={OPENNEZT_LOGO} alt="" className="w-[60px] h-[60px] rounded-full" />
                             </div>
                             <div>
-                                <div
-                                    href="#"
-                                    className="flex items-center gap-2 text-black no-underline text-nowrap"
-                                >
+                                <div href="#" className="flex items-center gap-2 text-black no-underline text-nowrap">
                                     <span className="font-semibold">Vuong Manh Nghia</span>
                                     <CheckCircleFilled className="text-blue-500" />
                                 </div>
-                                <div className="text-xs text-gray-500">
-                                    vuongmanhnghia@gmail.com
-                                </div>
+                                <div className="text-xs text-gray-500">vuongmanhnghia@gmail.com</div>
                             </div>
                         </li>
                     </ul>
@@ -48,11 +37,7 @@ const ProjectActivity = () => {
                         <div className="w-3/12">
                             <div>
                                 <a href="#">
-                                    <img
-                                        src={img_logo_project}
-                                        alt=""
-                                        className="w-[60px] h-[60px] rounded-full"
-                                    />
+                                    <img src={OPENNEZT_LOGO} alt="" className="w-[60px] h-[60px] rounded-full" />
                                 </a>
                             </div>
                         </div>
@@ -83,11 +68,7 @@ const ProjectActivity = () => {
                         <div className="w-3/12">
                             <div>
                                 <a href="#">
-                                    <img
-                                        src={img_logo_project}
-                                        alt=""
-                                        className="w-[60px] h-[60px] rounded-full"
-                                    />
+                                    <img src={OPENNEZT_LOGO} alt="" className="w-[60px] h-[60px] rounded-full" />
                                 </a>
                             </div>
                         </div>
@@ -118,11 +99,7 @@ const ProjectActivity = () => {
                         <div className="w-3/12">
                             <div>
                                 <a href="#">
-                                    <img
-                                        src={img_logo_project}
-                                        alt=""
-                                        className="w-[60px] h-[60px] rounded-full"
-                                    />
+                                    <img src={OPENNEZT_LOGO} alt="" className="w-[60px] h-[60px] rounded-full" />
                                 </a>
                             </div>
                         </div>
@@ -153,20 +130,14 @@ const ProjectActivity = () => {
             </div>
             <div className="relative w-full">
                 <img src={fb_img} alt="logo-fb_img" className="w-full h-[450px] rounded-md mt-4" />
-                <img
-                    src={Logo}
-                    alt="logo-opennezt"
-                    className={`$styles.logo, absolute top-0 py-14 px-12 left-0`}
-                />
+                <img src={Logo} alt="logo-opennezt" className={`$styles.logo, absolute top-0 py-14 px-12 left-0`} />
                 <div className="absolute left-0 flex flex-col items-center gap-3 px-12 text-white top-32">
                     Feel free to reach us anytime. we are avaliable 24 hours
-                    <button className="bg-[#ffffff] px-3 py-3 text-black font-medium rounded-md">
-                        CONTACT US
-                    </button>
+                    <button className="bg-[#ffffff] px-3 py-3 text-black font-medium rounded-md">CONTACT US</button>
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ProjectActivity;
+export default ProjectActivity

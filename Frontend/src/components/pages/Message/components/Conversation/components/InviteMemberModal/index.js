@@ -1,73 +1,71 @@
-import { Alert, Avatar, Blockquote, Button, CloseButton, Dialog, Portal, Stack, Text } from '@chakra-ui/react';
-import { inviteMember, searchMyProjects } from 'api/project';
-import { getProjectRoleFramework } from 'api/user';
-import InputCustom from 'components/UI/InputCustom';
-import SelectCustom from 'components/UI/SelectCustom';
-import { debounce } from 'lodash';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import store from 'states/configureStore';
-import { setModalInviteMember } from 'states/modules/project';
+import { Alert, Avatar, Blockquote, Button, CloseButton, Dialog, Portal, Stack, Text } from '@chakra-ui/react'
+import { inviteMember, searchMyProjects } from 'api/project'
+import { getProjectRoleFramework } from 'api/user'
+import InputCustom from 'components/UI/InputCustom'
+import SelectCustom from 'components/UI/SelectCustom'
+import { debounce } from 'lodash'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import store from 'states/configureStore'
+import { setModalInviteMember } from 'states/modules/project'
 
 const InviteMemberModal = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
     // ========== STATE FROM REDUX ========== //
-    const { conversation } = useSelector((state) => state.chat);
-    const { projectRoleFramework, projectTeamRoleFramework } = useSelector((state) => state.user);
+    const { conversation } = useSelector((state) => state.chat)
+    const { projectRoleFramework, projectTeamRoleFramework } = useSelector((state) => state.user)
     const { myProjectsBySearch, isLoadingSearchMyProjects, isOpenModalInviteMember, isLoadingInviteMember } =
-        useSelector((state) => state.project);
+        useSelector((state) => state.project)
 
     // ========== STATE ========== //
-    const [projectSelected, setProjectSelected] = useState(null);
+    const [projectSelected, setProjectSelected] = useState(null)
     const [formRequest, setFormRequest] = useState({
         teamRole: '',
         role: '',
-    });
+    })
 
     // ========== USE EFFECT ========== //
     useEffect(() => {
         if (projectRoleFramework?.items?.length === 0 || projectTeamRoleFramework?.items?.length === 0) {
-            dispatch(getProjectRoleFramework());
+            dispatch(getProjectRoleFramework())
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch]);
+    }, [dispatch])
 
     // ========== HANDLE FUNCTIONS ========== //
     const handleSearchProject = debounce((e) => {
         if (e.target.value === '') {
-            return;
+            return
         }
-        dispatch(searchMyProjects(e.target.value));
-    }, 300);
+        dispatch(searchMyProjects(e.target.value))
+    }, 300)
 
     const handleRemoveProject = () => {
-        setProjectSelected(null);
+        setProjectSelected(null)
         setFormRequest({
             teamRole: '',
             role: '',
-        });
-    };
+        })
+    }
 
     const handleChangeFormRequest = (e, field) => {
         setFormRequest((prev) => ({
             ...prev,
             [field]: e.value[0],
-        }));
-    };
+        }))
+    }
     const handleConfirmInvite = async () => {
-        await store.dispatch(
-            inviteMember(projectSelected._id, { ...formRequest, userId: conversation.members[0]._id })
-        );
+        await store.dispatch(inviteMember(projectSelected._id, { ...formRequest, userId: conversation.members[0]._id }))
         setFormRequest({
             teamRole: '',
             role: '',
-        });
-        setProjectSelected(null);
-    };
+        })
+        setProjectSelected(null)
+    }
 
     const handleClose = () => {
-        dispatch(setModalInviteMember(false));
-    };
+        dispatch(setModalInviteMember(false))
+    }
 
     // ========== RENDER ========== //
     return (
@@ -154,7 +152,7 @@ const InviteMemberModal = () => {
                                                     required
                                                     collection={projectTeamRoleFramework}
                                                     onChange={(e) => handleChangeFormRequest(e, 'teamRole')}
-                                                    value={formRequest.teamRole}
+                                                    value={[formRequest.teamRole]}
                                                 />
                                                 <SelectCustom
                                                     height="40px"
@@ -162,7 +160,7 @@ const InviteMemberModal = () => {
                                                     required
                                                     collection={projectRoleFramework}
                                                     onChange={(e) => handleChangeFormRequest(e, 'role')}
-                                                    value={formRequest.role}
+                                                    value={[formRequest.role]}
                                                 />
                                             </>
                                         )}
@@ -209,7 +207,7 @@ const InviteMemberModal = () => {
                 </Dialog.Positioner>
             </Portal>
         </Dialog.Root>
-    );
-};
+    )
+}
 
-export default InviteMemberModal;
+export default InviteMemberModal

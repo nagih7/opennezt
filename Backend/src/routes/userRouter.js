@@ -26,32 +26,8 @@ userRouter.patch(
     asyncHandler(validate(userRequest.resetPassword)),
     asyncHandler(userController.resetPassword)
 )
-// Project
-userRouter.post(
-    '/project',
-    asyncHandler(userMiddleware.validateProject),
-    asyncHandler(validate(userRequest.createProject)),
-    asyncHandler(userController.createProject)
-)
 
-userRouter.get('/projects', asyncHandler(userController.getProjects))
-
-userRouter.get('/project/:id', asyncHandler(userController.getProject))
-
-userRouter.put('/project', asyncHandler(userController.updateProject))
-
-userRouter.delete('/project', asyncHandler(userController.deleteProject))
-
-// Founder Profile
-
-userRouter.get(
-    '/recruit-talents',
-    asyncHandler(validate(userRequest.recuitTalents)),
-    asyncHandler(userController.recuitTalents)
-)
-
-userRouter.get('/talent-details/:id', asyncHandler(userController.getTalentDetails))
-
+// ========== GET [User - Framework] ========== //
 // Industry framework
 userRouter.get('/industries', asyncHandler(userController.getIndustries))
 // Experience Level framework
@@ -74,7 +50,7 @@ userRouter.post(
     asyncHandler(userController.sendFriendRequest)
 )
 
-// URL dynamic
+// =========== URL dynamic ============= //
 userRouter.get('/', asyncHandler(userMiddleware.checkUserId), asyncHandler(userController.readItem))
 
 userRouter.delete(

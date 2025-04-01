@@ -1,5 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { create, get, update } from 'lodash';
+import { createSlice } from '@reduxjs/toolkit'
 
 const articleSlice = createSlice({
     name: 'article',
@@ -67,7 +66,7 @@ const articleSlice = createSlice({
                     limit: 5,
                     hasMore: action.payload.data.has_more,
                 },
-            };
+            }
         },
         getListFail: (state) => ({
             ...state,
@@ -102,32 +101,30 @@ const articleSlice = createSlice({
             isLoadingReactArticle: false,
         }),
         updateReaction: (state, action) => {
-            const { articleId, reactionType } = action.payload;
+            const { articleId, reactionType } = action.payload
 
             //Bài viết cần chỉnh sửa reaction count
-            const articleIndex = state.feeds.findIndex((feed) => feed._id.toString() === articleId);
+            const articleIndex = state.feeds.findIndex((feed) => feed._id.toString() === articleId)
 
-            const existingReactionIndex = state.reactions.findIndex(
-                (r) => r.target_id.toString() === articleId
-            );
+            const existingReactionIndex = state.reactions.findIndex((r) => r.target_id.toString() === articleId)
             //nếu không tìm thấy trả về -1
             //tìm thấy thì thay đổi kiểu reaction
             if (existingReactionIndex !== -1) {
                 if (state.reactions[existingReactionIndex].type === reactionType) {
-                    state.reactions.splice(existingReactionIndex, 1);
+                    state.reactions.splice(existingReactionIndex, 1)
                     if (articleIndex !== -1) {
-                        state.feeds[articleIndex].reaction_count -= 1;
+                        state.feeds[articleIndex].reaction_count -= 1
                     }
                 } else {
-                    state.reactions[existingReactionIndex].type = reactionType;
+                    state.reactions[existingReactionIndex].type = reactionType
                 }
             } else {
                 state.reactions.push({
                     target_id: articleId,
                     type: reactionType,
-                });
+                })
                 if (articleIndex !== -1) {
-                    state.feeds[articleIndex].reaction_count += 1;
+                    state.feeds[articleIndex].reaction_count += 1
                 }
             }
         },
@@ -206,32 +203,30 @@ const articleSlice = createSlice({
             comment_reactions: [],
         }),
         updateCommentReaction: (state, action) => {
-            const { commentId, reactionType } = action.payload;
+            const { commentId, reactionType } = action.payload
 
             //Bài viết cần chỉnh sửa reaction count
-            const commentIndex = state.comment.findIndex((cmt) => cmt._id.toString() === commentId);
+            const commentIndex = state.comment.findIndex((cmt) => cmt._id.toString() === commentId)
 
-            const existingReactionIndex = state.comment_reactions.findIndex(
-                (r) => r.target_id.toString() === commentId
-            );
+            const existingReactionIndex = state.comment_reactions.findIndex((r) => r.target_id.toString() === commentId)
             //nếu không tìm thấy trả về -1
             //tìm thấy thì thay đổi kiểu reaction
             if (existingReactionIndex !== -1) {
                 if (state.comment_reactions[existingReactionIndex].type === reactionType) {
-                    state.comment_reactions.splice(existingReactionIndex, 1);
+                    state.comment_reactions.splice(existingReactionIndex, 1)
                     if (commentIndex !== -1) {
-                        state.comment[commentIndex].reaction_count -= 1;
+                        state.comment[commentIndex].reaction_count -= 1
                     }
                 } else {
-                    state.comment[existingReactionIndex].type = reactionType;
+                    state.comment[existingReactionIndex].type = reactionType
                 }
             } else {
                 state.comment_reactions.push({
                     target_id: commentId,
                     type: reactionType,
-                });
+                })
                 if (commentIndex !== -1) {
-                    state.comment[commentIndex].reaction_count += 1;
+                    state.comment[commentIndex].reaction_count += 1
                 }
             }
         },
@@ -261,9 +256,7 @@ const articleSlice = createSlice({
         }),
         updateUpdatedArticle: (state, action) => ({
             ...state,
-            feeds: state.feeds.map((article) =>
-                article._id === action.payload._id ? action.payload : article
-            ),
+            feeds: state.feeds.map((article) => (article._id === action.payload._id ? action.payload : article)),
         }),
         openUpdateForm: (state) => ({
             ...state,
@@ -409,27 +402,27 @@ const articleSlice = createSlice({
             isLoadingGetBookmarks: false,
         }),
         updateBookmarks: (state, action) => {
-            const { article_id, marked } = action.payload;
+            const { article_id, marked } = action.payload
 
-            console.log(action.payload);
+            console.log(action.payload)
 
             const existingBookmarkIndex = state.bookmarks.findIndex(
                 (bm) => bm.article_id.toString() === article_id.toString()
-            );
+            )
 
             if (existingBookmarkIndex !== -1) {
-                state.bookmarks[existingBookmarkIndex].marked = marked;
+                state.bookmarks[existingBookmarkIndex].marked = marked
             } else {
                 state.bookmarks.push({
                     article_id: article_id,
                     marked: marked,
-                });
+                })
             }
 
-            console.log(state.bookmarks);
+            console.log(state.bookmarks)
         },
     },
-});
+})
 
 export const {
     getList,
@@ -492,6 +485,6 @@ export const {
     getUserBookmarksSuccess,
     getUserBookmarksFail,
     updateBookmarks,
-} = articleSlice.actions;
+} = articleSlice.actions
 
-export default articleSlice.reducer;
+export default articleSlice.reducer

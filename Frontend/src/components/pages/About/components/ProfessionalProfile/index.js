@@ -91,34 +91,23 @@ const ProfessionalProfile = () => {
                             <IconlyEditSquare size={20} color={'#ffffff'} />
                         </span>
                     </div>
-                    <div className="p-8">
-                        <ul className=" p-0 mb-0 mx-[-16px] text-[#6f7f92]">
-                            <li className="px-[16px] mb-10 ">
-                                <div className="">
-                                    <p className="mb-2 text-base font-medium text-black">
-                                        {profile?.educations?.length > 0 ? (
-                                            profile.educations.map((education, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="p-3  rounded-lg  mt-2 mr-1 shadow rounded-[0.6rem]"
-                                                >
-                                                    <h4 className="font-semibold">{education.school || 'N/A'}</h4>
-                                                    <p>Degree: {education.degree || 'N/A'}</p>
-                                                    <p>Field of Study: {education.field_of_study || 'N/A'}</p>
-                                                    <p>
-                                                        Years: {formatDate(education.start_date || 'N/A')} -{' '}
-                                                        {formatDate(education.end_date || 'N/A')}
-                                                    </p>
-                                                    <p>Grade: {education.grade || 'N/A'}</p>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p className="text-gray-500">No education information available.</p>
-                                        )}
+                    <div className="flex flex-col gap-4 p-4">
+                        {profile?.educations?.length > 0 ? (
+                            profile.educations.map((education, index) => (
+                                <div key={index} className="p-3  mt-2 mr-1 shadow rounded-[0.6rem]">
+                                    <h4 className="font-semibold">{education.school || 'N/A'}</h4>
+                                    <p>Degree: {education.degree || 'N/A'}</p>
+                                    <p>Field of Study: {education.field_of_study || 'N/A'}</p>
+                                    <p>
+                                        Years: {formatDate(education.start_date || 'N/A')} -{' '}
+                                        {formatDate(education.end_date || 'N/A')}
                                     </p>
+                                    <p>Grade: {education.grade || 'N/A'}</p>
                                 </div>
-                            </li>
-                        </ul>
+                            ))
+                        ) : (
+                            <p className="text-gray-500">No education information available.</p>
+                        )}
                     </div>
                 </div>
                 <div className="bg-[#ffffff] rounded-md mt-8">
@@ -131,31 +120,17 @@ const ProfessionalProfile = () => {
                             <IconlyEditSquare size={20} color={'#ffffff'} />
                         </span>
                     </div>
-                    <div className="p-8">
-                        <ul className=" p-0 mb-0 mx-[-16px] text-[#6f7f92]">
-                            <li className="px-[16px] mb-10">
-                                <div>
-                                    <p className="mb-2 text-base font-medium text-black">
-                                        {profile?.certifications?.length > 0 ? (
-                                            profile.certifications.map((certification, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="p-3  rounded-lg  mt-2 mr-1 shadow rounded-[0.6rem]"
-                                                >
-                                                    <h4 className="font-semibold">{certification.name || 'N/A'}</h4>
-                                                    <p>
-                                                        Certificate Expiration:{' '}
-                                                        {formatDate(certification.issue_date || 'N/A')}
-                                                    </p>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p className="text-gray-500">No education information available.</p>
-                                        )}
-                                    </p>
+                    <div className="flex flex-col gap-4 p-4">
+                        {profile?.certifications?.length > 0 ? (
+                            profile.certifications.map((certification, index) => (
+                                <div key={index} className="p-3    mt-2 mr-1 shadow rounded-[0.6rem]">
+                                    <h4 className="font-semibold">{certification.name || 'N/A'}</h4>
+                                    <p>Certificate Expiration: {formatDate(certification.issue_date || 'N/A')}</p>
                                 </div>
-                            </li>
-                        </ul>
+                            ))
+                        ) : (
+                            <p className="text-gray-500">No education information available.</p>
+                        )}
                     </div>
                 </div>
                 <div className="bg-[#ffffff] rounded-md mt-8">

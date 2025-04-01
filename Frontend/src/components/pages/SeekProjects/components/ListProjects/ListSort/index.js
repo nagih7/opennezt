@@ -1,10 +1,10 @@
-import { Image } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import { OPENNEZT_BG_BLACK } from 'utils/constants';
+import { Image } from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { OPENNEZT_BG_BLACK } from 'utils/constants'
 
 const ListSort = ({ projects, handleViewProjectDetails }) => {
     // ========== STATE ========== //
-    const [imageError, setImageError] = useState(false);
+    const [imageError, setImageError] = useState(false)
 
     // ========== RENDER ========== //
     return (
@@ -22,7 +22,7 @@ const ListSort = ({ projects, handleViewProjectDetails }) => {
                                     className="object-cover absolute w-[16rem] h-[10rem]!transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110 "
                                     src={project.background}
                                     alt={project.name}
-                                    onError={setImageError(true)}
+                                    onError={() => setImageError(true)}
                                 />
                             ) : (
                                 <div className="object-cover absolute w-[16rem] h-[10rem] flex items-center justify-center px-8">
@@ -37,10 +37,7 @@ const ListSort = ({ projects, handleViewProjectDetails }) => {
                                     {project.stage.name}
                                 </p>
                                 <p className="text-xs font-semibold md:text-sm">
-                                    By{' '}
-                                    <span className="font-semibold text-blue-600">
-                                        {project.user.name}
-                                    </span>
+                                    By <span className="font-semibold text-blue-600">{project.user.name}</span>
                                 </p>
                             </div>
 
@@ -48,19 +45,15 @@ const ListSort = ({ projects, handleViewProjectDetails }) => {
                                 {project.name}
                             </h5>
                             <div className="flex items-center mt-3 text-xs text-gray-600 md:text-sm">
-                                <p className="mr-4 text-xs text-nowrap">
-                                    📖 {project.articles?.length} Posts
-                                </p>
-                                <p className="text-xs text-nowrap">
-                                    👨‍🎓 {project.members.length} Members
-                                </p>
+                                <p className="mr-4 text-xs text-nowrap">📖 {project.articles?.length} Posts</p>
+                                <p className="text-xs text-nowrap">👨‍🎓 {project.members.length} Members</p>
                             </div>
                         </div>
                     </div>
                 </li>
             ))}
         </ul>
-    );
-};
+    )
+}
 
-export default ListSort;
+export default ListSort

@@ -3,7 +3,6 @@ import manageRouteMap from './manageRouter'
 import userRouter from './userRouter'
 import homeRouter from './homeRouter'
 import chatrouter from './chatRouter'
-import commonRouter from './commonRouter'
 import LandingPageRouter from './subscribe.js'
 import notificationRouter from './notificationRouter'
 import projectRouter from './projectRouter'
@@ -28,7 +27,6 @@ function route(app, io) {
     app.use('/profile', profileRouter)
     app.use('/home', homeRouter)
     app.use('/chat', chatrouter)
-    app.use('/common', commonRouter)
     app.use('/subscribe', LandingPageRouter)
     app.use('/notifications', notificationRouter)
     app.use('/projects', projectRouter)
