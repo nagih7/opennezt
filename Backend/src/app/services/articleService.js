@@ -555,11 +555,6 @@ export const getUserCommentReactions = async (user_id, target_ids) => {
     return reactions
 }
 
-// Update project name after update article
-export const updateProjectName = async (project_id) => {
-    const articles = await Article.find({ project_id: project_id })
-}
-
 export const bookmarkArticle = async (requestBody, user) => {
     const { article_id, marked } = requestBody
     const user_id = user._id.toString()

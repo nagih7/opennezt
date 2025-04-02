@@ -39,7 +39,7 @@ const ProjectEditMenu = () => {
                         <ul className="flex flex-col items-center pl-0 mb-0">
                             <li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
                                 <Link to={`/projects/me/${id}/edit/basic`} className="text-[#6f7f92] no-underline ">
-                                    Detail
+                                    Basic
                                 </Link>
                             </li>
                             <li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
@@ -65,7 +65,7 @@ const ProjectEditMenu = () => {
                                     to={`/projects/me/${id}/edit/additional-info`}
                                     className="text-[#6f7f92]  no-underline "
                                 >
-                                    Additional Info
+                                    More
                                 </Link>
                             </li>
                             <li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200  ">

@@ -31,26 +31,38 @@ export async function updateBasic(req, res) {
 
 // ========== PATCH [Project - Sector] ========== //
 export async function updateSector(req, res) {
-    await projectService.updateSector(req.currentUser, req.body)
-    res.status(200).jsonify('Update sector successfully.')
+    const result = await projectService.updateSector(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update sector successfully.')
 }
 
 // ========== PATCH [Project - Revenue] ========== //
 export async function updateRevenue(req, res) {
-    await projectService.updateRevenue(req.currentUser, req.body)
-    res.status(200).jsonify('Update revenue successfully.')
+    const result = await projectService.updateRevenue(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update revenue successfully.')
 }
 
 // ========== PATCH [Project - FundingSource] ========== //
 export async function updateFundingSource(req, res) {
-    await projectService.updateFundingSource(req.currentUser, req.body)
-    res.status(200).jsonify('Update funding source successfully.')
+    const result = await projectService.updateFundingSource(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update funding source successfully.')
 }
 
 // ========== PATCH [Project - AdditionalInfo] ========== //
 export async function updateAdditionalInfo(req, res) {
-    await projectService.updateAdditionalInfo(req.currentUser, req.body)
-    res.status(200).jsonify('Update additional information successfully.')
+    const result = await projectService.updateAdditionalInfo(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update additional information successfully.')
+}
+
+// ========== PATCH [Project - Logo] ========== //
+export async function updateLogo(req, res) {
+    const result = await projectService.updateLogo(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update logo successfully.')
+}
+
+// ========== PATCH [Project - Background] ========== //
+export async function updateBackground(req, res) {
+    const result = await projectService.updateBackground(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update background successfully.')
 }
 
 // ========== DELETE [Project] ========== //

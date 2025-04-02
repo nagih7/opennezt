@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Stack } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import ActionBar from '../../../EditProfile/components/ActionBar'
 import ProjectEditMenu from '../ProjectEditMenu'
 import ProjectCard from '../ProjectCard'
@@ -27,7 +27,7 @@ const EditDetail = () => {
     // ========== USE EFFECT ========== //
 
     useEffect(() => {
-        if (!project || project?.id !== id) {
+        if (!project || project?._id !== id) {
             dispatch(getMyProjectDetails(id))
         }
         // eslint-disable-next-line

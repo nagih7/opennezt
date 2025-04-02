@@ -75,12 +75,6 @@ export const replyComment = async (req, res) => {
     res.status(200).jsonify(replyComment)
 }
 
-// Update project name after update article
-export const updateProjectName = async (req, res) => {
-    await articleService.updateProjectName(req.params.project_id, req.body)
-    res.status(200).jsonify('Update Project Name Success')
-}
-
 export const bookmarkArticle = async (req, res) => {
     const bookmarkArticle = await articleService.bookmarkArticle(req.body, req.currentUser)
     res.status(200).jsonify(bookmarkArticle)

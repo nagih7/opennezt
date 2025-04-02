@@ -27,25 +27,41 @@ projectRouter.patch(
     asyncHandler(projectController.updateSector)
 )
 
-// ========== PATCH [Project - Revenue] ========== //
+// ========== PATCH [Project - Revenues] ========== //
 projectRouter.patch(
-    '/me/:id/revenue',
+    '/me/:id/revenues',
     asyncHandler(validate(projectRequest.updateRevenue)),
     asyncHandler(projectController.updateRevenue)
 )
 
 // ========== PATCH [Project - FundingSource] ========== //
 projectRouter.patch(
-    '/me/:id/funding-source',
+    '/me/:id/funding-sources',
     asyncHandler(validate(projectRequest.updateFundingSource)),
     asyncHandler(projectController.updateFundingSource)
 )
 
 // ========== PATCH [Project - AdditionalInfo] ========== //
 projectRouter.patch(
-    '/me/:id/additional-info',
+    '/me/:id/additional-infos',
     asyncHandler(validate(projectRequest.updateAdditionalInfo)),
     asyncHandler(projectController.updateAdditionalInfo)
+)
+
+// ========== PATCH [Project - Logo] ========== //
+projectRouter.patch(
+    '/me/:id/logo',
+    asyncHandler(projectMiddleware.decodeLogo),
+    asyncHandler(validate(projectRequest.updateLogo)),
+    asyncHandler(projectController.updateLogo)
+)
+
+// ========= PATCH [Project - Background] ========== //
+projectRouter.patch(
+    '/me/:id/background',
+    asyncHandler(projectMiddleware.decodeBackground),
+    asyncHandler(validate(projectRequest.updateBackground)),
+    asyncHandler(projectController.updateBackground)
 )
 
 // ========== POST [Project - Requirement] ========== //

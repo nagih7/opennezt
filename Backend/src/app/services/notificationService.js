@@ -10,7 +10,7 @@ import {
     PROJECT_INVITATION_NOTIFICATION,
 } from '@/configs'
 import { CONVERSATION_ADMIN_ROLE, CONVERSATION_MEMBER_ROLE } from '@/configs/roleConstants'
-import { NotificationFeed, Friend, ObjectId, Project, User, Conversation, Type, ProjectMember, Role } from '@/models'
+import { NotificationFeed, Friend, ObjectId, User, Conversation, Type, ProjectMember, Role } from '@/models'
 import { userSockets } from '@/routes'
 
 export async function filter(user, { q = '', page = 1, per_page = 20, order = 1 }) {
@@ -445,7 +445,7 @@ export async function replyInvitationMember(user, requestBody, io) {
     const notification = await NotificationFeed.findById(notification_id)
 
     if (notification.metadata.status === 'waiting') {
-        const { user_id, source_id, additional_info } = notification
+        const { user_id, additional_info } = notification
         notification.metadata.status = action.toLowerCase()
         notification.metadata.read = true
         notification.markModified('metadata')

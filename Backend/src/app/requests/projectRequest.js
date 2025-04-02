@@ -113,7 +113,13 @@ export const updateBasic = Joi.object({
         .custom(
             (value, helpers) =>
                 new AsyncValidate(value, async (req) => {
-                    const project = await Project.findOne({ name: value, user_id: req.currentUser._id })
+                    const project = await Project.findOne({
+                        _id: {
+                            $ne: new ObjectId(req.params.id),
+                        },
+                        name: value,
+                        user_id: req.currentUser._id,
+                    })
                     return project ? helpers.error('any.empty') : value
                 })
         ),
@@ -133,7 +139,7 @@ export const updateSector = Joi.object({
                     (value, helpers) =>
                         new AsyncValidate(value, async () => {
                             const industry = await Industry.findById(new ObjectId(value))
-                            return industry ? value : helpers.error('any.empty')
+                            return industry ? industry : helpers.error('any.empty')
                         })
                 )
         ),
@@ -145,7 +151,7 @@ export const updateSector = Joi.object({
             (value, helpers) =>
                 new AsyncValidate(value, async () => {
                     const stage = await Stage.findById(new ObjectId(value))
-                    return stage ? value : helpers.error('any.empty')
+                    return stage ? stage : helpers.error('any.empty')
                 })
         ),
 })
@@ -170,7 +176,7 @@ export const updateFundingSource = Joi.object({
         .items(
             Joi.object({
                 name: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Name'),
-                amount: Joi.string().required().label('Amount'),
+                amount: Joi.number().required().label('Amount'),
                 currency: Joi.string().trim().required().label('Currency'),
             })
         )
@@ -190,6 +196,26 @@ export const updateAdditionalInfo = Joi.object({
         )
         .label('Profile Additional Info')
         .allow(null),
+})
+
+export const updateLogo = Joi.object({
+    logo: Joi.object({
+        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp').required().label('Image format'),
+    })
+        .unknown(true)
+        .instance(FileUpload)
+        .allow('', {}, 'null')
+        .label('Logo'),
+})
+
+export const updateBackground = Joi.object({
+    background: Joi.object({
+        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp').required().label('Image format'),
+    })
+        .unknown(true)
+        .instance(FileUpload)
+        .allow('', {}, 'null')
+        .label('Background'),
 })
 
 // ========== PATCH [Project - Seek] ========== //
