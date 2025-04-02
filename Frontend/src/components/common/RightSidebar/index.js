@@ -1,7 +1,7 @@
 import React from 'react'
 import { CheckCircleFilled } from '@ant-design/icons'
 import fb_img from 'assets/images/background/left-banner.webp'
-import Logo from 'assets/images/logo/opennezt_full_black.png'
+import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import moment from 'moment'
 import { Avatar } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'

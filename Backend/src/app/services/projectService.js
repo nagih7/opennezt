@@ -95,6 +95,49 @@ export async function getListMyProjects(user, { q, page, per_page, field, order 
             $and: [{ user_id: user._id }, { name: { $regex: q, $options: 'i' } }],
         },
     }
+    const lookupMemberStage = {
+        $lookup: {
+            from: 'project_members',
+            localField: '_id',
+            foreignField: 'project_id',
+            as: 'members',
+            pipeline: [
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user_id',
+                        foreignField: '_id',
+                        as: 'user',
+                        pipeline: [
+                            {
+                                $project: {
+                                    _id: 0,
+                                    name: 1,
+                                    avatar: {
+                                        $cond: {
+                                            if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                            then: '$avatar',
+                                            else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+                { $unwind: '$user' },
+                { $project: { _id: 0, user: 1 } },
+            ],
+        },
+    }
+    const lookupArticleStage = {
+        $lookup: {
+            from: 'articles',
+            localField: '_id',
+            foreignField: 'project_id',
+            as: 'articles',
+        },
+    }
     const sortStage = {
         $sort: { [field]: order },
     }
@@ -107,17 +150,7 @@ export async function getListMyProjects(user, { q, page, per_page, field, order 
     const projectStage = {
         $project: {
             _id: 1,
-            user_id: 0,
-            description: 0,
-            industry_ids: 0,
-            stage_id: 0,
-            created_at: 0,
-            updated_at: 0,
-        },
-    }
-
-    const addFieldsStage = {
-        $addFields: {
+            name: 1,
             logo: {
                 $cond: {
                     if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
@@ -132,15 +165,18 @@ export async function getListMyProjects(user, { q, page, per_page, field, order 
                     else: { $concat: [LINK_STATIC_URL, '$background'] },
                 },
             },
+            members: 1,
+            articles: 1,
         },
     }
 
     const projects = await Project.aggregate([
         matchStage,
+        lookupMemberStage,
+        lookupArticleStage,
         sortStage,
         skipStage,
         limitStage,
-        addFieldsStage,
         projectStage,
     ])
 
@@ -828,6 +864,16 @@ export async function seekProjects(user, { q, page, per_page, field, order, indu
                 localField: '_id',
                 foreignField: 'project_id',
                 as: 'articles',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            title: 1,
+                            content: 1,
+                            created_at: 1,
+                        },
+                    },
+                ],
             },
         },
         {
@@ -836,6 +882,33 @@ export async function seekProjects(user, { q, page, per_page, field, order, indu
                 localField: '_id',
                 foreignField: 'project_id',
                 as: 'members',
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'user_id',
+                            foreignField: '_id',
+                            as: 'user',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        _id: 0,
+                                        name: 1,
+                                        avatar: {
+                                            $cond: {
+                                                if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                                then: '$avatar',
+                                                else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                            },
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    { $unwind: '$user' },
+                    { $project: { _id: 0, user: 1 } },
+                ],
             },
         },
         {
@@ -844,17 +917,7 @@ export async function seekProjects(user, { q, page, per_page, field, order, indu
         {
             $unwind: '$stage',
         },
-        {
-            $addFields: {
-                background: {
-                    $cond: {
-                        if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
-                        then: '$background',
-                        else: { $concat: [LINK_STATIC_URL, '$background'] },
-                    },
-                },
-            },
-        },
+
         sortStage,
         skipStage,
         limitStage,
@@ -864,7 +927,13 @@ export async function seekProjects(user, { q, page, per_page, field, order, indu
                 stage: 1,
                 articles: 1,
                 members: 1,
-                background: 1,
+                background: {
+                    $cond: {
+                        if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
+                        then: '$background',
+                        else: { $concat: [LINK_STATIC_URL, '$background'] },
+                    },
+                },
                 created_at: 1,
                 name: 1,
                 _id: 1,

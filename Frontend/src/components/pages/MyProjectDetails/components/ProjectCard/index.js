@@ -18,9 +18,13 @@ const ProjectCard = ({ project }) => {
                         onError={() => setBackgroundError(true)}
                     />
                 ) : (
-                    <div className="h-[400px] flex items-center justify-center bg-gray-200 pb-10 px-10 user-select-none">
-                        <Image src={OPENNEZT_BG_BLACK} alt="OpenNezt" />
-                    </div>
+                    <Image
+                        alt={project.name}
+                        aspectRatio={10 / 3}
+                        width="100%"
+                        objectFit="cover"
+                        src={OPENNEZT_BG_BLACK}
+                    />
                 )}
             </div>
 
