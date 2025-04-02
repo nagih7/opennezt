@@ -30,12 +30,12 @@ const ProjectOverview = ({ project }) => {
                                         <p className="mb-2 text-base font-medium text-black">
                                             {project?.industries?.length > 0
                                                 ? project.industries.map((industry) => (
-                                                      <HStack key={industry.id} spacing={2}>
-                                                          <Tag.Root size={'lg'} mt={2}>
-                                                              <Tag.Label>{industry.name}</Tag.Label>
-                                                          </Tag.Root>
-                                                      </HStack>
-                                                  ))
+                                                    <HStack key={industry.id} spacing={2}>
+                                                        <Tag.Root size={'lg'} mt={2}>
+                                                            <Tag.Label>{industry.name}</Tag.Label>
+                                                        </Tag.Root>
+                                                    </HStack>
+                                                ))
                                                 : 'N/A'}
                                         </p>
                                     </div>
@@ -68,19 +68,29 @@ const ProjectOverview = ({ project }) => {
                                     <div>
                                         {project?.revenues?.length > 0 ? (
                                             project.revenues.map((revenue, index) => {
-                                                const isLastItem = index === project.revenues.length - 1 // Kiểm tra phần tử cuối cùng
-                                                const date = new Date(revenue.date)
+                                                const isLastItem = index === project.revenues.length - 1;
+                                                const dateObj = new Date(revenue.date);
+                                                let year = dateObj.getFullYear();
+                                                let month = dateObj.getMonth();
+
+                                                if (month === 0) {
+                                                    month = 12;
+                                                    year -= 1;
+                                                } else {
+                                                    month = String(month).padStart(2, '0');
+                                                }
+
+                                                const date = `${month}/${year}`;
 
                                                 return (
                                                     <p
                                                         key={index}
-                                                        className={`mb-2 text-base font-medium text-black ${
-                                                            !isLastItem ? 'border-b-[1px] border-[#f4f5f6] pb-2' : ''
-                                                        }`}
+                                                        className={`mb-2 text-base font-medium text-black ${!isLastItem ? 'border-b-[1px] border-[#f4f5f6] pb-2' : ''
+                                                            }`}
                                                     >
-                                                        {date.toLocaleDateString('en-CA')}
+                                                        {date}
                                                     </p>
-                                                )
+                                                );
                                             })
                                         ) : (
                                             <p className="mb-2 text-base font-medium text-black">N/A</p>
@@ -97,9 +107,8 @@ const ProjectOverview = ({ project }) => {
                                                 return (
                                                     <p
                                                         key={id}
-                                                        className={`mb-2 text-base font-medium text-black ${
-                                                            !isLastItem ? 'border-b-[1px] border-[#f4f5f6] pb-2' : ''
-                                                        }`}
+                                                        className={`mb-2 text-base font-medium text-black ${!isLastItem ? 'border-b-[1px] border-[#f4f5f6] pb-2' : ''
+                                                            }`}
                                                     >
                                                         {revenue.amount} ({revenue.currency})
                                                     </p>
@@ -134,9 +143,8 @@ const ProjectOverview = ({ project }) => {
                                                 return (
                                                     <p
                                                         key={index}
-                                                        className={`mb-2 text-base font-medium text-black ${
-                                                            !isLastItem ? 'border-b-[1px] border-[#f4f5f6] pb-2' : ''
-                                                        }`}
+                                                        className={`mb-2 text-base font-medium text-black ${!isLastItem ? 'border-b-[1px] border-[#f4f5f6] pb-2' : ''
+                                                            }`}
                                                     >
                                                         {funding_sources.name}
                                                     </p>
@@ -156,9 +164,8 @@ const ProjectOverview = ({ project }) => {
                                                 return (
                                                     <p
                                                         key={index}
-                                                        className={`mb-2 text-base font-medium text-black ${
-                                                            !isLastItem ? 'border-b-[1px] border-[#f4f5f6] pb-2' : ''
-                                                        }`}
+                                                        className={`mb-2 text-base font-medium text-black ${!isLastItem ? 'border-b-[1px] border-[#f4f5f6] pb-2' : ''
+                                                            }`}
                                                     >
                                                         {funding_sources.amount} ({funding_sources.currency})
                                                     </p>
