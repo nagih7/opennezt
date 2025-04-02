@@ -150,7 +150,7 @@ const Article = forwardRef(
         }
 
         return (
-            <div className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8" ref={ref}>
+            <div className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8 mt-3" ref={ref}>
                 {isConfirmDelete ? (
                     <div
                         className="fixed inset-0 flex justify-center items-center z-[999999] bg-gray-900 bg-opacity-50"

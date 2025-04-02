@@ -1,6 +1,8 @@
 import { Tabs } from '@chakra-ui/react'
 import RightSidebar from "components/common/RightSidebar";
+
 import React from "react";
+import TimelinePost from './TimelinePost';
 const Timeline = () => {
     return (<>
         <div className="flex gap-8">
@@ -19,12 +21,10 @@ const Timeline = () => {
 
                             </div>
                         </Tabs.List>
-                        <div className="mt-5 bg-white ">
+                        <div className="mt-2">
                             <Tabs.Content value="All Post">
                                 <>
-                                    <div className="bg-white rounded-lg p-6">
-
-                                    </div>
+                                    <TimelinePost />
                                 </>
                             </Tabs.Content>
 
