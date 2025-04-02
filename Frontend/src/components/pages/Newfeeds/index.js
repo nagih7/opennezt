@@ -31,6 +31,9 @@ import store from 'states/configureStore'
 import { PermPhoneMsg } from '@mui/icons-material'
 import {
     deleteActivitySaveArticle,
+    getComment,
+    getReactionArticle,
+    getReplyComment,
     getSaveArticle,
     getUpdateArticle,
     postActivitySaveArticle,
@@ -47,9 +50,16 @@ const unifiedAction = (activity) => {
         const { auth } = store.getState()
         const currentUserId = auth.user?._id
         const displayName = owner_id === currentUserId ? 'You' : owner_name || 'Someone'
+        // const displayAccessName = activity?.user?.name || 'Someone'
 
         const activityType = activity?.activity_type?.name
-        const articleCaption = activity?.article?.caption ? `"${activity.article.caption}"` : 'an article'
+        const articleCaption = activity?.article?.caption
+            ? `"${
+                  activity.article.caption.length > 20
+                      ? activity.article.caption.substring(0, 20) + '...'
+                      : activity.article.caption
+              }"`
+            : 'an article'
 
         // Handle by type
         switch (activityType) {
@@ -71,18 +81,12 @@ const unifiedAction = (activity) => {
                         {displayName} has created {articleCaption}
                     </span>
                 )
+            case 'reply_comment':
+                return <span>has replied to your comment on {articleCaption}</span>
             case 'comment':
-                return (
-                    <span>
-                        {displayName} has commented on {articleCaption}
-                    </span>
-                )
-            case 'react':
-                return (
-                    <span>
-                        {displayName} has reacted to {articleCaption}
-                    </span>
-                )
+                return <span>has commented on {articleCaption}</span>
+            case 'reaction':
+                return <span>liked your post {articleCaption}</span>
             default:
                 return (
                     <span>
@@ -113,7 +117,13 @@ function NewFeeds() {
         bookmarks,
     } = useSelector((state) => state.article)
 
-    const { updateArticleActivity, saveArticleActivity } = useSelector((state) => state.activity)
+    const {
+        updateArticleActivity,
+        saveArticleActivity,
+        reactionArticleActivity,
+        replyCommentActivity,
+        commentActivity,
+    } = useSelector((state) => state.activity)
 
     const { nextCursor, limit, hasMore } = pagination
 
@@ -126,6 +136,9 @@ function NewFeeds() {
     useEffect(() => {
         dispatch(getUpdateArticle())
         dispatch(getSaveArticle())
+        dispatch(getReactionArticle())
+        dispatch(getReplyComment())
+        dispatch(getComment())
     }, [dispatch])
 
     // End Activities
@@ -217,12 +230,13 @@ function NewFeeds() {
     }, [dispatch])
 
     const handleReaction = useCallback(
-        (articleId, formData) => {
+        async (articleId, formData) => {
             const reactionType = formData.get('type')
-            dispatch(updateReaction({ articleId, reactionType }))
+            await dispatch(updateReaction({ articleId, reactionType }))
 
             //Gọi API để update server
-            dispatch(handleReactArticle({ articleId, data: formData }))
+            await dispatch(handleReactArticle({ articleId, data: formData }))
+            await dispatch(getReactionArticle())
         },
         [dispatch]
     )
@@ -311,13 +325,13 @@ function NewFeeds() {
     }, [bookmarks])
 
     const bookmarkArticle = useCallback(
-        (data) => {
-            dispatch(handleBookmarkArticle({ data }))
+        async (data) => {
+            await dispatch(handleBookmarkArticle({ data }))
             dispatch(updateBookmarks(data))
             if (data.marked === 'yes') {
-                dispatch(postActivitySaveArticle(data.article_id))
+                await dispatch(postActivitySaveArticle(data.article_id))
             } else if (data.marked === 'no') {
-                dispatch(deleteActivitySaveArticle(data.article_id))
+                await dispatch(deleteActivitySaveArticle(data.article_id))
             }
             dispatch(getSaveArticle())
         },
@@ -392,9 +406,13 @@ function NewFeeds() {
                 })}
             </div>
             <RightSidebar
-                activities={[...updateArticleActivity, ...saveArticleActivity].sort(
-                    (a, b) => new Date(b.created_at) - new Date(a.created_at)
-                )}
+                activities={[
+                    ...updateArticleActivity,
+                    ...saveArticleActivity,
+                    ...reactionArticleActivity,
+                    ...replyCommentActivity,
+                    ...commentActivity,
+                ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))}
                 action={unifiedAction}
             />{' '}
         </div>

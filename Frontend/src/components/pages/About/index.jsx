@@ -31,9 +31,13 @@ const About = () => {
                     onError={() => setImageError(true)}
                 />
             ) : (
-                <div className="h-[400px] flex items-center justify-center bg-gray-200 pb-10 px-10 user-select-none">
-                    <Image src={OPENNEZT_BG_BLACK} alt="OpenNezt" />
-                </div>
+                <Image
+                    className="h-[400px] object-cover bg-cover bg-center"
+                    alt={authUser?.name}
+                    aspectRatio={16 / 9}
+                    width="100%"
+                    src={OPENNEZT_BG_BLACK}
+                />
             )}
             <div className="absolute w-full top-[275px] px-[16px]">
                 <ProfileOverview />

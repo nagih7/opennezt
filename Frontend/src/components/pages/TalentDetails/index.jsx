@@ -40,9 +40,13 @@ const TalentDetails = () => {
                     onError={() => setImageError(true)}
                 />
             ) : (
-                <div className="h-[400px] flex items-center justify-center bg-gray-200 pb-10 px-10 user-select-none">
-                    <Image src={OPENNEZT_BG_BLACK} alt="OpenNezt" />
-                </div>
+                <Image
+                    className="h-[400px] object-cover bg-cover bg-center"
+                    aspectRatio={16 / 9}
+                    src={OPENNEZT_BG_BLACK}
+                    alt="OpenNezt"
+                    width="100%"
+                />
             )}
             <div className="absolute w-full top-[275px] px-[16px]">
                 <ProfileOverview user={talentDetails?.user} isFriendRequested={talentDetails?.is_friend_requested} />

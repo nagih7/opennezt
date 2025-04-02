@@ -64,9 +64,7 @@ const ProjectMoreInfo = () => {
                     width="100%"
                 />
             ) : (
-                <div className="bg-[#EAEFF8] h-[12.6rem]  flex items-center justify-center px-8 ">
-                    <Image src={OPENNEZT_BG_BLACK} alt={projectDetails?.name} />
-                </div>
+                <Image aspectRatio={5 / 3} src={OPENNEZT_BG_BLACK} alt={projectDetails?.name} width="100%" />
             )}
 
             <div className="bg-[#EAEFF8] h-[7.5rem]">

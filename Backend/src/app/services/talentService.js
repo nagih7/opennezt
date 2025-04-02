@@ -1,12 +1,6 @@
 // import {LINK_STATIC_URL} from '@/configs'
 
-import {
-    ACCESS_TYPE,
-    FRIEND_REQUEST_NOTIFICATION,
-    LINK_STATIC_URL,
-    NOTIFICATION_TYPE,
-    PROFILE_ACCESS,
-} from '@/configs'
+import { ACCESS_TYPE, FRIEND_REQUEST_NOTIFICATION, LINK_STATIC_URL, NOTIFICATION_TYPE, PROFILE_ACCESS } from '@/configs'
 import { ActivityLog, Category, NotificationFeed, ObjectId, Profile, Type } from '@/models'
 
 // =========== GET [Recruit Talents] =========== //
@@ -50,7 +44,21 @@ export async function recruitTalents(
             localField: 'user_id',
             foreignField: '_id',
             as: 'user',
-            pipeline: [matchUserStage, { $project: { name: 1, avatar: 1, background: 1 } }],
+            pipeline: [
+                matchUserStage,
+                {
+                    $project: {
+                        name: 1,
+                        avatar: {
+                            $cond: {
+                                if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                then: '$avatar',
+                                else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                            },
+                        },
+                    },
+                },
+            ],
         },
     }
     const unwindUserStage = {
@@ -63,10 +71,10 @@ export async function recruitTalents(
         $project: {
             _id: 1,
             user: 1,
-            industry_ids: 1,
-            experience_level_id: 1,
-            category_ids: 1,
-            skill_ids: 1,
+            // industry_ids: 1,
+            // experience_level_id: 1,
+            // category_ids: 1,
+            // skill_ids: 1,
         },
     }
     const talents = await Profile.aggregate([

@@ -75,12 +75,6 @@ export const replyComment = async (req, res) => {
     res.status(200).jsonify(replyComment)
 }
 
-// Update project name after update article
-export const updateProjectName = async (req, res) => {
-    await articleService.updateProjectName(req.params.project_id, req.body)
-    res.status(200).jsonify('Update Project Name Success')
-}
-
 export const bookmarkArticle = async (req, res) => {
     const bookmarkArticle = await articleService.bookmarkArticle(req.body, req.currentUser)
     res.status(200).jsonify(bookmarkArticle)
@@ -113,7 +107,12 @@ export const postActivityReactionArticle = async (req, res) => {
 }
 
 export const postActivityReplyComment = async (req, res) => {
-    const result = await articleService.postActivityReplyComment(req.currentUser, req.params.id3)
+    const result = await articleService.postActivityReplyComment(req.currentUser, req.params.id)
+    return res.json(result)
+}
+
+export const postActivityComment = async (req, res) => {
+    const result = await articleService.postActivityComment(req.currentUser, req.params.id)
     return res.json(result)
 }
 
@@ -143,8 +142,18 @@ export const getActivityReplyComment = async (req, res) => {
     res.status(200).jsonify(activity)
 }
 
+export const getActivityComment = async (req, res) => {
+    const activity = await articleService.getActivityComment(req.currentUser)
+    res.status(200).jsonify(activity)
+}
+
 // ========== DELETE [ARTICLE ACTIVITIES] ========== //
 export const deleteActivitySaveArticle = async (req, res) => {
     const result = await articleService.deleteActivitySaveArticle(req.currentUser, req.params.id)
+    return res.json(result)
+}
+
+export const deleteActivityReactionArticle = async (req, res) => {
+    const result = await articleService.deleteActivityReactionArticle(req.currentUser, req.params.id)
     return res.json(result)
 }

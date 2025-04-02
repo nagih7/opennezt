@@ -105,6 +105,78 @@ export const updateProjectBasic = (projectId, formRequest) => async (dispatch, g
     })
 }
 
+// ========== UPDATE PROJECT SECTORS ========== //
+export const updateProjectSector = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/sector`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========== UPDATE PROJECT REVENUES ========== //
+export const updateProjectRevenue = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/revenues`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========= UPDATE PROJECT FUNDING SOURCES ========== //
+export const updateProjectFundingSources = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/funding-sources`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========== UPDATE PROJECT ADDITIONAL INFOS ========== //
+export const updateProjectAdditionalInfos = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/additional-infos`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========== UPDATE PROJECT LOGO ========== //
+export const updateProjectLogo = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/logo`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========== UPDATE PROJECT BACKGROUND ========== //
+export const updateProjectBackground = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/background`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
 // ========== DELETE MY PROJECT ========== //
 export const deleteMyProject = (projectId) => async (dispatch, getState) => {
     return callApi({

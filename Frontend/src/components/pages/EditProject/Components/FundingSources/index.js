@@ -1,93 +1,181 @@
-import React from "react";
-import { Button } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
-import ActionBar from "../../../EditProfile/components/ActionBar";
-import ProjectEditMenu from "../ProjectEditMenu";
-import ProjectCard from "../ProjectCard";
-import { IconlyEdit } from "components/UI/Iconly";
-import { IconlyDelete } from "components/UI/Iconly";
+import React, { useEffect, useState } from 'react'
+import { Button, createListCollection } from '@chakra-ui/react'
+import { useDispatch, useSelector } from 'react-redux'
+import ActionBar from '../../../EditProfile/components/ActionBar'
+import ProjectEditMenu from '../ProjectEditMenu'
+import { PlusOutlined } from '@ant-design/icons'
+import ProjectCard from '../ProjectCard'
+import { IconlyDelete } from 'components/UI/Iconly'
+import { useParams } from 'react-router-dom'
+import SelectCustom from 'components/UI/SelectCustom'
+import InputCustom from 'components/UI/InputCustom'
+import { CURRENCY, FUNDING_SOURCES } from 'utils/constants'
+import { updateProjectFundingSources } from 'api/project'
+const currencyFramework = createListCollection({
+    items: CURRENCY['EN'],
+})
+const fundingSourceFramework = createListCollection({
+    items: FUNDING_SOURCES['EN'],
+})
+
 const EditFundingSources = () => {
-	// ========== STATE FROM REDUX ========== //
-	const project = useSelector((state) => state.project.myProjectDetails);
-	return (
-		<div className="flex gap-8 w-full py-8 px-[16px]">
-			<ProjectEditMenu />
-			<div className="w-8/12">
-				<div className="bg-[#ffffff] p-8 rounded-md">
-					{/* =========== Profile Card ========== */}
-					<ProjectCard />
-					{/* =========== Action Bar  ========== */}
-					<ActionBar />
-				</div>
-				<div className="bg-[#ffffff] p-8 rounded-md mt-8">
-					<div className="pb-[20px] mb-8 border-b-[1px] border-gray-200 flex justify-between">
-						<div>
-							<h4 className=""> Funding Sources</h4>
-						</div>
-						<Button
-							height={50}
-							className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-							borderRadius={4}
-							loading={false}
-							loadingText="Loading..."
-							spinnerPlacement="start">
-							Add Certification
-						</Button>
-					</div>
-					<div>
-						{/* <FormFundingScources /> */}
-						<div className="px-[16px]">
-							{Array.isArray(project?.funding_sources) ? (
-								project.funding_sources.map((pro, index) => (
-									<div
-										key={index}
-										className="shadow rounded-[0.6rem] mt-[2rem] p-4">
-										<div className="relative flex justify-end space-x-2">
-											<span className="cursor-pointer">
-												<IconlyEdit size={24} color={"#000"} />
-											</span>
-											<span className="cursor-pointer">
-												<IconlyDelete size={24} color={"#000"} />
-											</span>
-										</div>
+    const dispatch = useDispatch()
+    const params = useParams()
+    const { id } = params
 
-										{pro.name && (
-											<h4 className="font-bold mb-[0.75rem]">
-												{pro.name}
-											</h4>
-										)}
+    // ========== STATE FROM REDUX STORE ========== //
+    const { myProjectDetails, isLoadingUpdateMyProject } = useSelector((state) => state.project)
+    const project = myProjectDetails
 
-										{pro.amount && (
-											<p className="flex">
-												Amount: {pro.amount} {pro.currency}
-											</p>
-										)}
-									</div>
-								))
-							) : (
-								<p>Loading funding sources...</p>
-							)}
-						</div>
+    // ========== STATE ========== //
+    const [formData, setFormData] = useState([])
+    // ========== USEEFFECT ========== //
 
-						<div className="px-[16px] flex justify-end">
-							<div className="">
-								<Button
-									// onClick={handleSaveChanges}
-									height={50}
-									className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-									borderRadius={4}
-									loading={false}
-									loadingText="Loading..."
-									spinnerPlacement="start">
-									SAVE CHANGES
-								</Button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
-};
+    useEffect(() => {
+        if (project) {
+            setFormData(
+                project.funding_sources?.map((item) => {
+                    return {
+                        name: [item.name],
+                        amount: item.amount,
+                        currency: [item.currency],
+                    }
+                })
+            )
+        }
+        // eslint-disable-next-line
+    }, [project])
 
-export default EditFundingSources;
+    // ========== ONCHANGE FUNCTION ========== //
+    const handleChange = (e, index, nameSelect) => {
+        if (nameSelect) {
+            const newForm = formData.map((item, i) => {
+                if (i === index) {
+                    return { ...item, [nameSelect]: e.value }
+                }
+                return item
+            })
+            setFormData(newForm)
+        } else {
+            const { name, value } = e.target
+            const newForm = formData.map((item, i) => {
+                if (i === index) {
+                    return { ...item, [name]: value }
+                }
+                return item
+            })
+            setFormData(newForm)
+        }
+    }
+
+    const handleAddFundingSource = () => {
+        // VERIFY
+        if (formData.some((item) => !item.name || !item.amount || !item.currency)) {
+            toaster.create({
+                title: `Please fill all fields.`,
+                type: 'error',
+            })
+            return
+        }
+        setFormData([...formData, { name: '', amount: '', currency: '' }])
+    }
+
+    const handleRemoveForm = (index) => {
+        const newForm = formData.filter((_, i) => i !== index)
+        setFormData(newForm)
+    }
+
+    const handleSaveChanges = () => {
+        dispatch(
+            updateProjectFundingSources(id, {
+                funding_sources: formData.map((item) => ({
+                    name: item.name[0],
+                    amount: item.amount,
+                    currency: item.currency[0],
+                })),
+            })
+        )
+    }
+    // ========== COMPONENT RENDER ========== //
+    return (
+        <div className="flex gap-8 w-full py-8 px-[16px]">
+            <ProjectEditMenu />
+            <div className="w-8/12">
+                <div className="bg-[#ffffff] p-8 rounded-md">
+                    <ProjectCard />
+                    <ActionBar />
+                </div>
+                <div className="bg-[#ffffff] p-8 rounded-md mt-8">
+                    <div className="flex justify-end ">
+                        <div
+                            className="flex items-center gap-1 cursor-pointer bg-[#2f65b9] rounded-md text-[#ffffff] px-[20px] py-2 mb-[14px]"
+                            onClick={handleAddFundingSource}
+                        >
+                            <PlusOutlined className="text-[#ffffff]" />
+                            <button
+                                height={50}
+                                className="text-xs bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                            >
+                                ADD FUNDING SOURCE
+                            </button>
+                        </div>
+                    </div>
+                    {formData?.map((_, index) => (
+                        <div key={index} className="relative flex flex-col gap-6 mb-12 rounded-md ">
+                            <div className="flex flex-col gap-12">
+                                <SelectCustom
+                                    onChange={(e) => handleChange(e, index, 'name')}
+                                    value={formData[index].name}
+                                    name="name"
+                                    required
+                                    label="Name"
+                                    placeholder="Ex: Angel"
+                                    collection={fundingSourceFramework}
+                                />
+                                <InputCustom
+                                    onChange={(e) => handleChange(e, index)}
+                                    value={formData[index].amount}
+                                    name="amount"
+                                    required
+                                    label="Amount"
+                                    placeholder="Ex: 10000"
+                                />
+                                <SelectCustom
+                                    onChange={(e) => handleChange(e, index, 'currency')}
+                                    value={formData[index].currency}
+                                    name="currency"
+                                    required
+                                    label="Currency"
+                                    placeholder="Select Currency"
+                                    collection={currencyFramework}
+                                />
+                            </div>
+                            {formData.length > 1 && (
+                                <div className="flex justify-end">
+                                    <span onClick={() => handleRemoveForm(index)} className="cursor-pointer">
+                                        <IconlyDelete size={24} color={'#000'} />
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                    <div className="px-[16px] flex justify-end">
+                        <Button
+                            onClick={handleSaveChanges}
+                            height={50}
+                            className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                            borderRadius={4}
+                            loading={isLoadingUpdateMyProject}
+                            loadingText="Loading..."
+                            spinnerPlacement="start"
+                        >
+                            SAVE CHANGES
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default EditFundingSources

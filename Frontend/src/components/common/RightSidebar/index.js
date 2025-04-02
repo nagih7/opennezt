@@ -1,7 +1,7 @@
 import React from 'react'
 import { CheckCircleFilled } from '@ant-design/icons'
 import fb_img from 'assets/images/background/left-banner.webp'
-import Logo from 'assets/images/logo/opennezt_full_black.png'
+import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import moment from 'moment'
 import { Avatar } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
@@ -41,7 +41,7 @@ function RightSidebar({ activities, action }) {
                                     {activity.user.name}
                                 </a>
                                 <CheckCircleFilled className="text-[#3897f0] mx-1" />
-                                {action(activity.project ? activity.project?.name : activity)}
+                                {action(activity.project ? activity.project?.name : activity)}{' '}
                                 <a href="#" className="no-underline text-[#6f7f92]">
                                     <span className="text-xs">{moment().fromNow(activity.timestamp)}</span>
                                 </a>

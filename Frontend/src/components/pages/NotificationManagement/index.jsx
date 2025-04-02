@@ -11,7 +11,6 @@ function NotificationProject() {
         perPage: 10,
         order: null,
     })
-
     // new code
     const notifications = [
         {
@@ -300,7 +299,6 @@ function NotificationProject() {
                         </div>
                     </div>
                 </Tabs.Root>
-
                 <RightSidebar />
             </div>
         </>

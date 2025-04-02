@@ -3,7 +3,6 @@ import { NotificationFeed, Type, User } from '../../models'
 import {
     MAX_STRING_SIZE,
     VALIDATE_PHONE_REGEX,
-    MAX_AREAS_STRING_SIZE,
     SEND_ACTION,
     CANCEL_ACTION,
     NOTIFICATION_TYPE,
