@@ -6,6 +6,7 @@ import ProjectCard from '../ProjectCard'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { updateProjectBackground } from 'api/project'
+import resizeBackground from 'utils/files/resizeBackground'
 
 const Background = () => {
     const dispatch = useDispatch()
@@ -27,62 +28,14 @@ const Background = () => {
     }, [project])
 
     // ========== ONCHANGE FUNCTION ========== //
-    const handleFileChange = (event) => {
+    const handleFileChange = async (event) => {
         // Check if the file is an image
         const file = event.target.files?.[0]
         if (!file) return
 
-        // Validate if it's an image
-        if (!file.type.startsWith('image/')) {
-            alert('Please select an image file')
-            return
-        }
-
-        // Create an image element to prepare the background
-        const img = new Image()
-        img.onload = () => {
-            // Set up canvas for background image resizing
-            const canvas = document.createElement('canvas')
-            const ctx = canvas.getContext('2d')
-
-            // For background, use a 16:9 aspect ratio or maintain original ratio
-            const maxWidth = 1920
-            const maxHeight = 1080
-
-            // Calculate new dimensions while maintaining aspect ratio
-            let newWidth = img.width
-            let newHeight = img.height
-
-            if (newWidth > maxWidth) {
-                newHeight = (maxWidth / newWidth) * newHeight
-                newWidth = maxWidth
-            }
-
-            if (newHeight > maxHeight) {
-                newWidth = (maxHeight / newHeight) * newWidth
-                newHeight = maxHeight
-            }
-
-            // Set canvas dimensions to the new size
-            canvas.width = newWidth
-            canvas.height = newHeight
-
-            // Draw the resized image
-            ctx.drawImage(img, 0, 0, newWidth, newHeight)
-
-            // Convert to blob then file
-            canvas.toBlob(
-                (blob) => {
-                    const resizedFile = new File([blob], file.name, { type: file.type })
-                    setBgFile(resizedFile)
-                    setBgURL(URL.createObjectURL(blob))
-                },
-                file.type,
-                0.8
-            ) // Added quality parameter (0.8 = 80% quality) for better compression
-        }
-
-        img.src = URL.createObjectURL(file)
+        const background = await resizeBackground(file)
+        setBgFile(background)
+        setBgURL(URL.createObjectURL(background))
     }
 
     const handleSaveChanges = () => {

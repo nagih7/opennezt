@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import StepHeader from '../StepHeader'
 import { useDispatch, useSelector } from 'react-redux'
-import ReactCrop from 'react-image-crop'
 import { onChangeFormCreateProject } from 'states/modules/project'
 import { useNavigate } from 'react-router-dom'
+import resizeLogo from 'utils/files/resizeLogo'
 
 const Logo = () => {
     const navigate = useNavigate()
@@ -11,7 +11,8 @@ const Logo = () => {
     // ========== STATE FROM REDUX ========== //
     const { formCreateProject } = useSelector((state) => state.project)
     // ========== STATE ========== //
-    const [selectedImage, setSelectedImage] = useState({})
+    const [logoURL, setLogoURL] = useState('')
+    const [logoFile, setLogoFile] = useState(null)
     // ========== USEEFFECT ========== //
     useEffect(() => {
         if (formCreateProject.name === '') {
@@ -22,17 +23,21 @@ const Logo = () => {
 
     useEffect(() => {
         if (formCreateProject.logo) {
-            setSelectedImage(URL.createObjectURL(formCreateProject.logo))
+            setLogoFile(formCreateProject.logo)
+            setLogoURL(URL.createObjectURL(formCreateProject.logo))
         }
     }, [formCreateProject])
 
     // ========== ONCHANGE FUNCTION ========== //
-    const handleFileChange = (event) => {
+    const handleFileChange = async (event) => {
+        // Check if the file is an image
         const file = event.target.files?.[0]
-        if (file) {
-            setSelectedImage(URL.createObjectURL(file))
-            dispatch(onChangeFormCreateProject({ logo: file }))
-        }
+        if (!file) return
+
+        const logo = await resizeLogo(file)
+        setLogoFile(logo)
+        setLogoURL(URL.createObjectURL(logo))
+        dispatch(onChangeFormCreateProject({ logo: logo }))
     }
 
     const handleNextStep = () => {
@@ -75,19 +80,19 @@ const Logo = () => {
                                     <div>
                                         <div className="p-10 border-dashed border-[#6f7f9266] border-3 ">
                                             <div className="flex flex-col items-center justify-center gap-12 py-10">
-                                                {!selectedImage ? (
+                                                {!logoURL ? (
                                                     <>
                                                         <p className="mb-[5px] font-medium">Drop your file here</p>
                                                         <p className="mb-[5px] text-[#6f7f92] font-medium">or</p>
                                                     </>
                                                 ) : (
                                                     <div className="flex flex-col items-center w-full p-0 space-y-4">
-                                                        {selectedImage && (
+                                                        {logoURL && (
                                                             <div className="relative flex justify-center w-full gap-4">
                                                                 <div className="overflow-hidden w-[400px] h-[400px] relative flex justify-center items-center">
                                                                     <img
                                                                         // ref={imageRef}
-                                                                        src={selectedImage}
+                                                                        src={logoURL}
                                                                         alt="Preview"
                                                                         className="bg-center bg-no-repeat bg-cover"
                                                                     />

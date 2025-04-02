@@ -733,6 +733,14 @@ export async function updateBackground(user, { id }, requestBody) {
 
 // ========== DELETE [Project] ========== //
 export async function deleteProject(user, projectId) {
+    const project = await Project.findOne({ user_id: user._id, _id: projectId })
+    if (project.logo) {
+        FileUpload.remove(project.logo)
+    }
+    if (project.background) {
+        FileUpload.remove(project.background)
+    }
+    // Remove project from user sockets
     await Project.deleteOne({ user_id: user._id, _id: projectId })
     await Revenue.deleteMany({ project_id: projectId }).exec()
     await FundingSource.deleteMany({ project_id: projectId }).exec()

@@ -6,6 +6,7 @@ import ProjectCard from '../ProjectCard'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { updateProjectLogo } from 'api/project'
+import resizeLogo from 'utils/files/resizeLogo'
 
 const EditLogo = () => {
     const dispatch = useDispatch()
@@ -27,48 +28,14 @@ const EditLogo = () => {
     }, [project])
 
     // ========== ONCHANGE FUNCTION ========== //
-    const handleFileChange = (event) => {
+    const handleFileChange = async (event) => {
         // Check if the file is an image
         const file = event.target.files?.[0]
         if (!file) return
 
-        // Validate if it's an image
-        if (!file.type.startsWith('image/')) {
-            alert('Please select an image file')
-            return
-        }
-
-        // Create an image element to get dimensions for cropping
-        const img = new Image()
-        img.onload = () => {
-            // For 4x4 aspect ratio, make the dimensions equal
-            const canvas = document.createElement('canvas')
-            const ctx = canvas.getContext('2d')
-
-            // Determine the size for cropping (square)
-            const size = Math.min(img.width, img.height)
-
-            // Set canvas to be square with the minimum dimension and resize to 400x400
-            const maxSize = 400
-            canvas.width = maxSize
-            canvas.height = maxSize
-
-            // Calculate offset to center the crop
-            const offsetX = (img.width - size) / 2
-            const offsetY = (img.height - size) / 2
-
-            // Draw the cropped and resized image
-            ctx.drawImage(img, offsetX, offsetY, size, size, 0, 0, maxSize, maxSize)
-
-            // Convert to blob then file
-            canvas.toBlob((blob) => {
-                const croppedFile = new File([blob], file.name, { type: file.type })
-                setLogoFile(croppedFile)
-                setLogoURL(URL.createObjectURL(blob))
-            }, file.type)
-        }
-
-        img.src = URL.createObjectURL(file)
+        const logo = await resizeLogo(file)
+        setLogoFile(logo)
+        setLogoURL(URL.createObjectURL(logo))
     }
 
     const handleSaveChanges = () => {
