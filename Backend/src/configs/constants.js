@@ -46,9 +46,7 @@ assert(!_.isEmpty(APP_URL_CLIENT), assertMsg('APP_URL_CLIENT'))
 export const APP_URL_AUTH = process.env.APP_URL_AUTH
 assert(!_.isEmpty(APP_URL_AUTH), assertMsg('APP_URL_AUTH'))
 
-export const OTHER_URLS_CLIENT = process.env.OTHER_URLS_CLIENT
-    ? JSON.parse(process.env.OTHER_URLS_CLIENT)
-    : []
+export const OTHER_URLS_CLIENT = process.env.OTHER_URLS_CLIENT ? JSON.parse(process.env.OTHER_URLS_CLIENT) : []
 assert(_.isArray(OTHER_URLS_CLIENT), 'OTHER_URLS_CLIENT must be an array.')
 
 export const SECRET_KEY = process.env.SECRET_KEY
@@ -97,6 +95,14 @@ assert(!_.isEmpty(MAIL_PORT), assertMsg('MAIL_PORT'))
 assert(!_.isEmpty(MAIL_USERNAME), assertMsg('MAIL_USERNAME'))
 assert(!_.isEmpty(MAIL_PASSWORD), assertMsg('MAIL_PASSWORD'))
 
+// =========== WEB PUSH =========== //
+export const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY
+assert(!_.isEmpty(VAPID_PUBLIC_KEY), assertMsg('VAPID_PUBLIC_KEY'))
+export const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY
+assert(!_.isEmpty(VAPID_PRIVATE_KEY), assertMsg('VAPID_PRIVATE_KEY'))
+export const MAIL_TO = process.env.MAIL_TO
+assert(!_.isEmpty(MAIL_TO), assertMsg('MAIL_TO'))
+
 // other
 export const TOKEN_TYPE = {
     AUTHORIZATION: 'AUTHORIZATION',
@@ -120,8 +126,8 @@ export const STATUS_DEFAULT_MESSAGE = {
 export const JOI_DEFAULT_OPTIONS = {
     abortEarly: false,
     errors: {
-        wrap: {label: false},
-        language: {'any.exists': 'any.exists'},
+        wrap: { label: false },
+        language: { 'any.exists': 'any.exists' },
     },
     externals: false,
     stripUnknown: true,
@@ -239,9 +245,7 @@ You are an AI system that matches projects with talents. Analyze input data care
             content: `
 Input:
 1. Projects Requirements:${projects.join(', ')}
-2. Talents: ${talents
-        .map((talent) => `User ID: ${talent.user_id}, Industry: ${talent.industry.join(', ')}`)
-        .join('; ')}
+2. Talents: ${talents.map((talent) => `User ID: ${talent.user_id}, Industry: ${talent.industry.join(', ')}`).join('; ')}
 Task: Analyze the user's suitability for the project; Return the matching users; Limit the top 6 users to the highest score; For each user, include: "user_id": user ID, "match_score": score from 1 to 99 indicating the match rate (do not create even numbers).
 Output format:{"<user_id>": <Score>,...}`,
         },
