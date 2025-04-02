@@ -7,7 +7,7 @@ import { IconlyHeart } from 'components/UI/Iconly'
 import { IconlySend } from 'components/UI/Iconly'
 import { IconlyEdit } from 'components/UI/Iconly'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
-import { Button } from '@chakra-ui/react'
+import { Button, Avatar } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -186,7 +186,10 @@ const Article = forwardRef(
 
                 <div className="flex items-center gap-3">
                     <div className="w-[65px]">
-                        <img src={avt} className="w-[65px]  rounded-full" />
+                        <Avatar.Root className="w-[50px] h-[50px] rounded-full">
+                            <Avatar.Fallback name={user[0].name} />
+                            <Avatar.Image src={user[0].avatar} />
+                        </Avatar.Root>
                     </div>
                     <div className="flex items-center justify-between w-full">
                         <div className="flex flex-col w-9/12 gap-2 text-base font-medium">

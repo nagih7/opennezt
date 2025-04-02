@@ -65,12 +65,40 @@ export const getArticleList = async (user, requestQuery) => {
                 status: 'published',
             },
         },
+        // {
+        //     $lookup: {
+        //         from: 'users',
+        //         localField: 'user_id',
+        //         foreignField: '_id',
+        //         as: 'user',
+        //     },
+        // },
         {
             $lookup: {
                 from: 'users',
                 localField: 'user_id',
                 foreignField: '_id',
                 as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '$avatar',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
             },
         },
         {
