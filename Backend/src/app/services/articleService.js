@@ -3,7 +3,6 @@ import Article from '../../models/article.js'
 import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
 import {
-    ACCESS_TYPE,
     ARTICLE_COMMENT,
     ARTICLE_CREATE,
     ARTICLE_REACTION,
