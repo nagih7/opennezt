@@ -38,7 +38,7 @@ const ProjectMenu = ({ setTab }) => {
                             Home
                         </span>
                     </li>
-                    <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6] bg-[#ffffff]">
+                    {/* <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6] bg-[#ffffff]">
                         <span
                             className={`no-underline mx-[60px] w-12 h-12 rounded-md flex justify-center items-center gap-2 cursor-pointer ${
                                 activeTab === 'forum' ? 'bg-[#4374c0]' : 'bg-[#f8f9fa]'
@@ -54,7 +54,7 @@ const ProjectMenu = ({ setTab }) => {
                         >
                             Forum
                         </span>
-                    </li>
+                    </li> */}
                     <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6] bg-[#ffffff]">
                         <span
                             className={`no-underline mx-[60px] w-12 h-12 rounded-md flex justify-center items-center gap-2 cursor-pointer ${
@@ -89,7 +89,7 @@ const ProjectMenu = ({ setTab }) => {
                             Send Invites
                         </span>
                     </li>
-                    <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6] bg-[#ffffff]">
+                    {/* <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6] bg-[#ffffff]">
                         <span
                             className={`no-underline mx-[60px] w-12 h-12 rounded-md flex justify-center items-center gap-2 cursor-pointer ${
                                 activeTab === 'media' ? 'bg-[#4374c0]' : 'bg-[#f8f9fa]'
@@ -105,7 +105,7 @@ const ProjectMenu = ({ setTab }) => {
                         >
                             Media
                         </span>
-                    </li>
+                    </li> */}
                     {/* <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6] bg-[#ffffff]">
                         <span
                             className={`no-underline mx-[60px] w-12 h-12 rounded-md flex justify-center items-center gap-2 cursor-pointer ${

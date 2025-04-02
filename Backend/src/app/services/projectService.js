@@ -281,8 +281,75 @@ export async function getMyProjectDetails(user, projectId) {
                         ],
                     },
                 },
+                {
+                    $lookup: {
+                        from: 'roles',
+                        localField: 'role_id',
+                        foreignField: '_id',
+                        as: 'role',
+                        pipeline: [
+                            {
+                                $match: { type_id: { $ne: null } },
+                            },
+                            {
+                                $project: {
+                                    _id: 0,
+                                    name: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'roles',
+                        localField: 'team_role_id',
+                        foreignField: '_id',
+                        as: 'team_role',
+                        pipeline: [
+                            {
+                                $match: { type_id: { $ne: null } },
+                            },
+                            {
+                                $project: {
+                                    _id: 0,
+                                    name: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'friends',
+                        localField: 'user_id',
+                        foreignField: 'friend_id',
+                        as: 'friend',
+                        pipeline: [
+                            {
+                                $match: { user_id: user._id },
+                            },
+                        ],
+                    },
+                },
                 { $unwind: '$user' },
-                { $project: { _id: 0, user: 1, role_id: 1, team_role_id: 1 } },
+                { $unwind: '$role' },
+                { $unwind: '$team_role' },
+                { $unwind: { path: '$friend', preserveNullAndEmptyArrays: true } },
+                {
+                    $addFields: {
+                        role: '$role.name',
+                        team_role: '$team_role.name',
+                        friend: {
+                            $cond: {
+                                if: { $eq: [{ $ifNull: ['$friend', ''] }, ''] },
+                                then: false,
+                                else: true,
+                            },
+                        },
+                    },
+                },
+                { $project: { _id: 0, user: 1, role: 1, team_role: 1, friend: 1 } },
             ],
         },
     }
