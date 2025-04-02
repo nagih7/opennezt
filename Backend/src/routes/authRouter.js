@@ -1,5 +1,5 @@
-import {Router} from 'express'
-import {asyncHandler} from '@/utils/helpers'
+import { Router } from 'express'
+import { asyncHandler } from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
 import validate from '@/app/middleware/common/validate'
 import * as authMiddleware from '../app/middleware/authMiddleware'
@@ -10,11 +10,7 @@ const authRouter = Router()
 
 authRouter.post('/login', asyncHandler(validate(authRequest.login)), asyncHandler(authController.login))
 
-authRouter.post(
-    '/register',
-    asyncHandler(validate(authRequest.register)),
-    asyncHandler(authController.register)
-)
+authRouter.post('/register', asyncHandler(validate(authRequest.register)), asyncHandler(authController.register))
 
 authRouter.get(
     '/verify-email/:token',

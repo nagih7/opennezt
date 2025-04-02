@@ -1,4 +1,4 @@
-import callApi from '../callApi';
+import callApi from '../callApi'
 import {
     startRequestGetMe,
     startRequestGetMeFail,
@@ -21,9 +21,9 @@ import {
     requestGetAuthRole,
     getAuthRoleSuccess,
     getAuthRoleFail,
-} from '../../states/modules/auth';
+} from '../../states/modules/auth'
 
-const baseUrlApi = process.env.REACT_APP_API_URL;
+const baseUrlApi = process.env.REACT_APP_API_URL
 
 export const login = (data) => async (dispatch, getState) => {
     return callApi({
@@ -36,8 +36,8 @@ export const login = (data) => async (dispatch, getState) => {
         },
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 export const getMe = () => async (dispatch, getState) => {
     return callApi({
@@ -47,8 +47,8 @@ export const getMe = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 export const getAuthRole = () => async (dispatch, getState) => {
     return callApi({
@@ -58,8 +58,8 @@ export const getAuthRole = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 export const register = (data) => async (dispatch, getState) => {
     return callApi({
@@ -75,8 +75,8 @@ export const register = (data) => async (dispatch, getState) => {
         },
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 export const logout = () => async (dispatch, getState) => {
     return callApi({
@@ -86,42 +86,34 @@ export const logout = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 export const forgotPassword = (email) => async (dispatch, getState) => {
     return callApi({
         method: 'post',
         apiPath: `auth/forgot-password`,
-        actionTypes: [
-            startRequestForgotPassword,
-            startRequestForgotPasswordSuccess,
-            startRequestForgotPasswordFail,
-        ],
+        actionTypes: [startRequestForgotPassword, startRequestForgotPasswordSuccess, startRequestForgotPasswordFail],
         variables: {
             email: email,
         },
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 export const resetPassword = (token, password) => async (dispatch, getState) => {
     return callApi({
         method: 'post',
         apiPath: `auth/reset-password/${token}`,
-        actionTypes: [
-            startRequestResetPassword,
-            startRequestResetPasswordSuccess,
-            startRequestResetPasswordFail,
-        ],
+        actionTypes: [startRequestResetPassword, startRequestResetPasswordSuccess, startRequestResetPasswordFail],
         variables: { password },
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // Login with social
 export const loginWithSocial = (social) => {
-    window.location.href = `${baseUrlApi}/auth/${social}`;
-};
+    window.location.href = `${baseUrlApi}/auth/${social}`
+}
