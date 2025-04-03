@@ -1,18 +1,19 @@
-import { Avatar, Stack, Tabs } from '@chakra-ui/react';
-import { IconlyChat, IconlyHome, IconlyProfile, IconlyUser } from 'components/UI/Iconly';
-import React from 'react';
-import { CheckCircleFilled } from '@ant-design/icons';
-import img_project from '../../../../../../../assets/images/logo/opennezt_black.png';
-import img_avt from '../../../../../../../assets/images/background/avt.jpg';
-import { useSelector } from 'react-redux';
-import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants';
-import moment from 'moment';
-import { useNavigate } from 'react-router-dom';
+import { Avatar, Stack, Tabs } from '@chakra-ui/react'
+import { IconlyChat, IconlyHome, IconlyProfile, IconlyUser } from 'components/UI/Iconly'
+import React from 'react'
+import { CheckCircleFilled } from '@ant-design/icons'
+import img_project from '../../../../../../../assets/images/logo/opennezt_black.png'
+import img_avt from '../../../../../../../assets/images/background/avt.jpg'
+import { useSelector } from 'react-redux'
+import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants'
+import moment from 'moment'
+import { useNavigate } from 'react-router-dom'
 
 const Conversations = () => {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     // ========== STATE FROM REDUX STORE =========== //
-    const { conversations } = useSelector((state) => state.chat);
+    const { conversations } = useSelector((state) => state.chat)
+    const { authUser } = useSelector((state) => state.auth)
 
     // ========== COMPONENT RENDER =========== //
     return (
@@ -54,16 +55,25 @@ const Conversations = () => {
                                                         <Avatar.Image src={conversation.members[0].avatar} />
                                                     </Avatar.Root>
                                                     <div className="flex-1">
-                                                        <span className="flex items-center gap-2 text-sm font-medium">
-                                                            {conversation.members[0]?.name}
-                                                            <CheckCircleFilled className="text-blue-500" />
+                                                        <span className="flex items-center gap-2 text-sm font-bold">
+                                                            {conversation.members[0].name}
                                                         </span>
-                                                        <p className="text-xs mb-0 text-[#6f7f92] font-medium">
+                                                        <p className="text-xs mb-0 text-[#6f7f92] font-bold">
+                                                            {(() => {
+                                                                switch (conversation.last_message?.user?._id) {
+                                                                    case authUser._id:
+                                                                        return 'You: '
+                                                                    default:
+                                                                        return conversation.last_message?.user?.name
+                                                                            ? `${conversation.last_message?.user?.name}: `
+                                                                            : ''
+                                                                }
+                                                            })()}
                                                             {conversation.last_message?.content || 'No message'}
                                                         </p>
                                                     </div>
                                                 </Stack>
-                                            );
+                                            )
                                         case GROUP_CONVERSATION:
                                             return (
                                                 <Stack className="items-center gap-3" direction={'row'}>
@@ -72,25 +82,34 @@ const Conversations = () => {
                                                         <Avatar.Image src={conversation.data?.project?.logo} />
                                                     </Avatar.Root>
                                                     <div className="flex-1">
-                                                        <span className="flex items-center gap-2 text-sm font-medium">
+                                                        <span className="flex items-center gap-2 text-sm font-bold">
                                                             {conversation.data?.project?.name}
-                                                            <CheckCircleFilled className="text-blue-500" />
                                                         </span>
-                                                        <p className="text-xs mb-0 text-[#6f7f92] font-medium">
+                                                        <p className="text-xs mb-0 text-[#6f7f92] font-bold">
+                                                            {(() => {
+                                                                switch (conversation.last_message?.user?._id) {
+                                                                    case authUser._id:
+                                                                        return 'You: '
+                                                                    default:
+                                                                        return conversation.last_message?.user?.name
+                                                                            ? `${conversation.last_message?.user?.name}: `
+                                                                            : ''
+                                                                }
+                                                            })()}
                                                             {conversation.last_message?.content || 'No message'}
                                                         </p>
                                                     </div>
                                                 </Stack>
-                                            );
+                                            )
                                         default:
-                                            return null;
+                                            return null
                                     }
                                 })()}
                                 <div className="text-xs text-[#6f7f92] ml-auto font-bold">
                                     <span>{moment(conversation.updated_at).fromNow()}</span>
                                 </div>
                             </Stack>
-                        );
+                        )
                     })}
                 </Tabs.Content>
                 <Tabs.Content value="friend">
@@ -142,7 +161,7 @@ const Conversations = () => {
                 </Tabs.Content>
             </Tabs.Root>
         </div>
-    );
-};
+    )
+}
 
-export default Conversations;
+export default Conversations

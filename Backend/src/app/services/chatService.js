@@ -62,6 +62,34 @@ export async function getConversations(user) {
             localField: 'last_message_id',
             foreignField: '_id',
             as: 'last_message',
+            pipeline: [
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user_id',
+                        foreignField: '_id',
+                        as: 'user',
+                        pipeline: [
+                            {
+                                $project: {
+                                    name: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $unwind: '$user',
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        user: 1,
+                        content: 1,
+                        timestamp: 1,
+                    },
+                },
+            ],
         },
     }
     const unwindLastMessageStage = {
