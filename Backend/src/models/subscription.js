@@ -1,8 +1,8 @@
-import createModel from './base'
+import createModel, { ObjectId } from './base'
 
-const Subscribe = createModel(
-    'Subscribe',
-    'subscribes',
+const Subscription = createModel(
+    'Subscription',
+    'subscriptions',
     {
         endpoint: {
             type: String,
@@ -12,7 +12,7 @@ const Subscribe = createModel(
         },
         expirationTime: {
             type: Date,
-            required: true,
+            required: false,
         },
         keys: {
             p256dh: {
@@ -26,24 +26,24 @@ const Subscribe = createModel(
         },
         // Thông tin người dùng
         user_id: {
-            type: String,
-            ref: 'User',
+            type: ObjectId,
+            ref: 'Users',
             required: true,
             index: true,
         },
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-            index: true,
-        },
-        ip: {
-            type: String,
-            required: true,
-            index: true,
-        },
-    },
-    { timestamps: true }
+        // email: {
+        //     type: String,
+        //     required: true,
+        //     unique: true,
+        //     index: true,
+        // },
+        // ip: {
+        //     type: String,
+        //     required: true,
+        //     index: true,
+        // },
+    }
+    // { timestamps: true }
 )
 
-export default Subscribe
+export default Subscription
