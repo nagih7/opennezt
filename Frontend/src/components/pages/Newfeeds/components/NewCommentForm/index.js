@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { resetComment, resetReply } from 'states/modules/article'
 import { useDispatch } from 'react-redux'
 import resizeBackground from 'utils/files/resizeBackground'
-const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrReply }) => {
+const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrReply, handleClickReply, onReset }) => {
     const dispatch = useDispatch()
     const authUser = useSelector((state) => state.auth.authUser)
     const [formData, setFormData] = useState({
@@ -37,8 +37,8 @@ const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrRepl
         await onSubmit(formData)
         if (isCommentOrReply === 'reply') {
             dispatch(resetReply())
-        } else {
-            dispatch(resetComment())
+            onReset()
+            handleClickReply()
         }
         setFormData({
             article_id: article_id,
@@ -92,6 +92,16 @@ const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrRepl
         }
     }
 
+    const handleCancelReply = () => {
+        setFormData({
+            article_id: article_id,
+            content: {
+                caption: '',
+                image: '',
+            },
+        })
+        handleClickReply()
+    }
     return (
         <div>
             <div className="flex items-center w-full rounded-md " onKeyDown={handleKeyDown}>
@@ -108,21 +118,39 @@ const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrRepl
                     <div className="w-full flex-2">
                         <div className="w-full pb-2 flex-2">
                             {isCommentOrReply === 'reply' ? (
-                                <input
-                                    type="text"
-                                    placeholder={`Replying to ${selectedComment.user[0].name} ...`}
-                                    className="w-full h-9 bg-[#F8F9FA] pr-[50px] outline-none "
-                                    onChange={(e) =>
-                                        setFormData({
-                                            ...formData,
-                                            content: {
-                                                ...formData.content,
-                                                caption: e.target.value,
-                                            },
-                                        })
-                                    }
-                                    value={formData.content.caption}
-                                />
+                                <div className="space-y-2">
+                                    <div className="relative w-full bg-gray-50 rounded-lg overflow-hidden">
+                                        <div className="relative border-l-4 border-blue-500 p-3">
+                                            <button
+                                                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 rounded-full w-6 h-6 flex items-center justify-center transition-colors duration-200"
+                                                onClick={() => handleCancelReply()}
+                                            >
+                                                <span className="text-xl">×</span>
+                                            </button>
+                                            <div className="text-xs text-blue-500 font-medium mb-1">
+                                                Replying to {selectedComment.user[0].name}
+                                            </div>
+                                            <p className="text-sm text-gray-600 pr-8 line-clamp-2">
+                                                {selectedComment.content.caption}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Write your reply..."
+                                        className="w-full h-9 bg-[#F8F9FA] pr-[50px] outline-none focus:ring-1 focus:ring-blue-500 rounded-md transition-all duration-200"
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                content: {
+                                                    ...formData.content,
+                                                    caption: e.target.value,
+                                                },
+                                            })
+                                        }
+                                        value={formData.content.caption}
+                                    />
+                                </div>
                             ) : (
                                 <input
                                     type="text"
