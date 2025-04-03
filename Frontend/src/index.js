@@ -11,7 +11,6 @@ import { RootProvider } from 'context/RootContext'
 import Mobile_Responsive from 'components/common/Mobile_Responsive'
 import ChakraProvider from 'components/UI/provider'
 import { Toaster } from 'components/UI/toaster'
-import WebPushNotification from 'components/common/WebPushNotification'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
@@ -19,17 +18,26 @@ const isMobileDevice = () => {
     return /Mobi|Android/i.test(navigator.userAgent)
 }
 
-// Register service worker for PWA
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker
-            .register('/service-worker.js')
-            .then((registration) => {
-                // console.log('✅ Service Worker registered: ', registration)
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+    window.addEventListener('load', async () => {
+        try {
+            // Tạo ID phiên bản dựa trên thời gian để đảm bảo cập nhật
+            const version = new Date().getTime()
+
+            // Đăng ký service worker với phiên bản mới
+            const registration = await navigator.serviceWorker.register('/service-worker.js?v=' + version, {
+                scope: '/',
             })
-            .catch((registrationError) => {
-                console.log('❌ Service Worker registration failed: ', registrationError)
-            })
+            // Kiểm tra xem service worker có đang chờ cài đặt không
+            if (registration.waiting) {
+                console.log('Có phiên bản service worker mới đang chờ')
+            }
+
+            // Đăng ký nhận thông báo push
+            setupPushSubscription(registration)
+        } catch (error) {
+            console.error('Đăng ký Service Worker thất bại:', error)
+        }
     })
 }
 
@@ -41,7 +49,6 @@ root.render(
                     <Mobile_Responsive />
                 ) : (
                     <>
-                        <WebPushNotification />
                         <Toaster />
                         <RouterProvider router={router} />
                     </>

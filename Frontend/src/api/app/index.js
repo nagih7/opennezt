@@ -43,11 +43,22 @@ export const unsubscribe = (payload) => async (dispatch, getState) => {
     })
 }
 
+export const trackingEvent = (payload) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: '/subscribe/notification-event',
+        actionTypes: [requestWebPush, webPushSuccess, webPushFail],
+        variables: payload,
+        dispatch,
+        getState,
+    })
+}
+
 export const fetchStats = () => async (dispatch, getState) => {
     return callApi({
         method: 'get',
         apiPath: '/subscribe/stats',
-        actionTypes: [startRequest, requestSuccess, requestError],
+        actionTypes: [requestWebPush, webPushSuccess, webPushFail],
         variables: {},
         dispatch,
         getState,

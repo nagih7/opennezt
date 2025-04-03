@@ -27,19 +27,6 @@ export async function sendMessage(req, res) {
     res.status(200).jsonify(message)
 }
 
-export const saveMessage = async (data, io, socketId) => {
-    const { message, members } = await chatService.saveMessage(data, userSockets[socketId])
-
-    members.forEach((member) => {
-        const receiverSocketId = Object.keys(userSockets).find(
-            (socketId) => userSockets[socketId] === member.user_id.toString()
-        )
-        if (receiverSocketId) {
-            io.to(receiverSocketId).emit('message', message)
-        }
-    })
-}
-
 export const getReceiverIds = async (userId) => {
     try {
         const senderIds = await Message.find({

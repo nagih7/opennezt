@@ -3,7 +3,6 @@ import webpush from 'web-push'
 
 export async function subscribe(user, requestBody) {
     const { endpoint, expirationTime, keys } = requestBody
-    console.log('Đang xử lý đăng ký nhận thông báo...', requestBody)
 
     // Kiểm tra xem subscription đã tồn tại chưa
     const existingSubscription = await Subscription.findOne({ endpoint: endpoint })
@@ -43,4 +42,8 @@ export async function subscribe(user, requestBody) {
 export async function unsubscribe(user, endpoint) {
     console.log('Đang xử lý hủy đăng ký nhận thông báo...', endpoint)
     await Subscription.findOneAndDelete({ endpoint: endpoint, user_id: user._id })
+}
+
+export async function trackingEvent(user, requestBody) {
+    await console.log('Đang xử lý sự kiện theo dõi...', requestBody)
 }
