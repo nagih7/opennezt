@@ -1,7 +1,7 @@
 import React from 'react'
 import { CheckCircleFilled } from '@ant-design/icons'
 import fb_img from 'assets/images/background/left-banner.webp'
-import Logo from 'assets/images/logo/opennezt_full_black.png'
+import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import moment from 'moment'
 import { Avatar } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
@@ -26,13 +26,12 @@ function RightSidebar({ activities, action }) {
             <div className="flex flex-col bg-[#ffffff] p-8 rounded-md mt-3 mb-4">
                 <span className="mb-3 text-xl font-semibold">Latest Activities</span>
                 {activities?.map((activity, index) => (
-                    <div
-                        className="border-gray-200 border-t-[1px] cursor-pointer"
-                        key={index}
-                        onClick={() => handleViewTalentDetails(activity.user)}
-                    >
+                    <div className="border-gray-200 border-t-[1px]" key={index}>
                         <div className="flex items-center gap-3 my-3">
-                            <Avatar.Root className="w-[50px] h-[50px] rounded-full">
+                            <Avatar.Root
+                                className="w-[50px] h-[50px] rounded-full cursor-pointer"
+                                onClick={() => handleViewTalentDetails(activity.user)}
+                            >
                                 <Avatar.Fallback name={activity.user.name} />
                                 <Avatar.Image src={activity.user.avatar} />
                             </Avatar.Root>
@@ -41,7 +40,7 @@ function RightSidebar({ activities, action }) {
                                     {activity.user.name}
                                 </a>
                                 <CheckCircleFilled className="text-[#3897f0] mx-1" />
-                                {action(activity.project ? activity.project?.name : activity)}
+                                {action(activity.project ? activity.project?.name : activity)}{' '}
                                 <a href="#" className="no-underline text-[#6f7f92]">
                                     <span className="text-xs">{moment().fromNow(activity.timestamp)}</span>
                                 </a>

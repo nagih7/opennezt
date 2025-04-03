@@ -1,15 +1,6 @@
-import {
-    Alert,
-    Blockquote,
-    Button,
-    CloseButton,
-    Dialog,
-    Image,
-    Portal,
-    Stack,
-} from '@chakra-ui/react';
-import { applyToJoinProject } from 'api/project';
-import { getProjectRoleFramework } from 'api/user';
+import { Alert, Blockquote, Button, CloseButton, Dialog, Image, Portal, Stack } from '@chakra-ui/react'
+import { applyToJoinProject } from 'api/project'
+import { getProjectRoleFramework } from 'api/user'
 import {
     IconlyIndustry,
     IconlyInfoSquare,
@@ -18,48 +9,48 @@ import {
     IconlyFundingSource,
     IconlyParticipants,
     IconlyRevenue,
-} from 'components/UI/Iconly';
-import SelectCustom from 'components/UI/SelectCustom';
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setOpenModalConfirmApply } from 'states/modules/project';
-import { OPENNEZT_BG_BLACK } from 'utils/constants';
+} from 'components/UI/Iconly'
+import SelectCustom from 'components/UI/SelectCustom'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setOpenModalConfirmApply } from 'states/modules/project'
+import { OPENNEZT_BG_BLACK } from 'utils/constants'
 
 const ProjectMoreInfo = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
     // ========== STATE FROM REDUX STORE ========== //
     const { projectDetails, isOpenModalConfirmApply, isLoadingGetProjectDetails } = useSelector(
         (state) => state.project
-    );
-    const { projectRoleFramework, projectTeamRoleFramework } = useSelector((state) => state.user);
+    )
+    const { projectRoleFramework, projectTeamRoleFramework } = useSelector((state) => state.user)
 
     // ========== STATE ========== //
     const [formRequest, setFormRequest] = useState({
         teamRole: '',
         role: '',
-    });
-    const [imageError, setImageError] = useState(false);
+    })
+    const [imageError, setImageError] = useState(false)
 
     // ========== HANDLE FUNCTION ========== //
     const handleOpenModalConfirmApply = () => {
-        dispatch(getProjectRoleFramework());
-        dispatch(setOpenModalConfirmApply(true));
-    };
+        dispatch(getProjectRoleFramework())
+        dispatch(setOpenModalConfirmApply(true))
+    }
 
     const handleCloseModalConfirmApply = () => {
-        dispatch(setOpenModalConfirmApply(false));
-    };
+        dispatch(setOpenModalConfirmApply(false))
+    }
 
     const handleConfirmApply = () => {
-        dispatch(applyToJoinProject(projectDetails._id, formRequest));
-    };
+        dispatch(applyToJoinProject(projectDetails._id, formRequest))
+    }
 
     const handleChangeFormRequest = (e, name) => {
         setFormRequest((prev) => ({
             ...prev,
             [name]: e.value[0],
-        }));
-    };
+        }))
+    }
 
     // ========== RENDER ========== //
     return (
@@ -68,14 +59,12 @@ const ProjectMoreInfo = () => {
                 <Image
                     src={projectDetails?.background}
                     alt={projectDetails?.name}
-                    onError={setImageError(true)}
+                    onError={() => setImageError(true)}
                     aspectRatio={5 / 3}
                     width="100%"
                 />
             ) : (
-                <div className="bg-[#EAEFF8] h-[12.6rem]  flex items-center justify-center px-8 ">
-                    <Image src={OPENNEZT_BG_BLACK} alt={projectDetails?.name} />
-                </div>
+                <Image aspectRatio={5 / 3} src={OPENNEZT_BG_BLACK} alt={projectDetails?.name} width="100%" />
             )}
 
             <div className="bg-[#EAEFF8] h-[7.5rem]">
@@ -120,22 +109,20 @@ const ProjectMoreInfo = () => {
                     </p>
                 )}
             </div>
-            {projectDetails &&
-                projectDetails?.applied === false &&
-                isLoadingGetProjectDetails === false && (
-                    <Button
-                        className="px-4 py-2 mt-4 text-white rounded-sm"
-                        // loading={isLoadingSeekProjects}
-                        onClick={handleOpenModalConfirmApply}
-                        width={'100%'}
-                        height={'3rem'}
-                        borderRadius={4}
-                        loadingText="Loading..."
-                        spinnerPlacement="start"
-                    >
-                        Apply
-                    </Button>
-                )}
+            {projectDetails && projectDetails?.applied === false && isLoadingGetProjectDetails === false && (
+                <Button
+                    className="px-4 py-2 mt-4 text-white rounded-sm"
+                    // loading={isLoadingSeekProjects}
+                    onClick={handleOpenModalConfirmApply}
+                    width={'100%'}
+                    height={'3rem'}
+                    borderRadius={4}
+                    loadingText="Loading..."
+                    spinnerPlacement="start"
+                >
+                    Apply
+                </Button>
+            )}
             <Dialog.Root
                 size={'lg'}
                 open={isOpenModalConfirmApply}
@@ -154,9 +141,7 @@ const ProjectMoreInfo = () => {
                                 <Stack>
                                     <Alert.Root status="info">
                                         <Alert.Indicator />
-                                        <Alert.Title>
-                                            Would you like to request to join this project?
-                                        </Alert.Title>
+                                        <Alert.Title>Would you like to request to join this project?</Alert.Title>
                                     </Alert.Root>
                                     <Stack spacing={4} className="flex flex-col gap-4 my-4">
                                         <SelectCustom
@@ -185,9 +170,8 @@ const ProjectMoreInfo = () => {
                                         }}
                                     >
                                         <Blockquote.Content cite="OpenNezt">
-                                            If you would like to request to participate in this
-                                            project, please let me know what position you would like
-                                            to participate in.
+                                            If you would like to request to participate in this project, please let me
+                                            know what position you would like to participate in.
                                         </Blockquote.Content>
                                         <Blockquote.Caption>
                                             — <cite>OpenNezt</cite>
@@ -197,10 +181,7 @@ const ProjectMoreInfo = () => {
                             </Dialog.Body>
                             <Dialog.Footer>
                                 <Dialog.ActionTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        onClick={handleCloseModalConfirmApply}
-                                    >
+                                    <Button variant="outline" onClick={handleCloseModalConfirmApply}>
                                         Cancel
                                     </Button>
                                 </Dialog.ActionTrigger>
@@ -221,7 +202,7 @@ const ProjectMoreInfo = () => {
                 </Portal>
             </Dialog.Root>
         </div>
-    );
-};
+    )
+}
 
-export default ProjectMoreInfo;
+export default ProjectMoreInfo

@@ -1,92 +1,88 @@
-import React, { useEffect, useRef, useState } from 'react';
-import PopoverProfile from './components/PopoverProfile';
-import PopoverMessage from './components/PopoverMessage';
-import PopoverNotification from './components/PopoverNotification';
-import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
-import ZoomInMapIcon from '@mui/icons-material/ZoomInMap';
-import { useSelector, useDispatch } from 'react-redux';
-import { LANG } from 'utils/constants';
-import { setLanguage } from 'states/modules/app';
-import { IconlyChat, IconlyNotification, IconlySearch } from 'components/UI/Iconly';
-import { Avatar, Popover, Portal, Stack } from '@chakra-ui/react';
-import Logo from 'assets/images/logo/opennezt_full_black.png';
+import React, { useEffect, useRef, useState } from 'react'
+import PopoverProfile from './components/PopoverProfile'
+import PopoverMessage from './components/PopoverMessage'
+import PopoverNotification from './components/PopoverNotification'
+import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap'
+import ZoomInMapIcon from '@mui/icons-material/ZoomInMap'
+import { useSelector, useDispatch } from 'react-redux'
+import { LANG } from 'utils/constants'
+import { setLanguage } from 'states/modules/app'
+import { IconlyChat, IconlyNotification, IconlySearch } from 'components/UI/Iconly'
+import { Avatar, Popover, Portal, Stack } from '@chakra-ui/react'
+import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 
 const Header = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
     // const [isShowThemeLight, setIsShowThemeLight] = useState(true);
-    const [isFullScreen, setIsFullScreen] = useState(false);
-    const authUser = useSelector((state) => state.auth.authUser);
-    const { language } = useSelector((state) => state.app);
-    const chatListRef = useRef(null);
+    const [isFullScreen, setIsFullScreen] = useState(false)
+    const authUser = useSelector((state) => state.auth.authUser)
+    const { language } = useSelector((state) => state.app)
+    const chatListRef = useRef(null)
 
     useEffect(() => {
         const handleFullScreenChange = () => {
-            setIsFullScreen(!!document.fullscreenElement);
-        };
-        document.addEventListener('fullscreenchange', handleFullScreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullScreenChange); // Safari
-        document.addEventListener('mozfullscreenchange', handleFullScreenChange); // Firefox
-        document.addEventListener('MSFullscreenChange', handleFullScreenChange); // IE
+            setIsFullScreen(!!document.fullscreenElement)
+        }
+        document.addEventListener('fullscreenchange', handleFullScreenChange)
+        document.addEventListener('webkitfullscreenchange', handleFullScreenChange) // Safari
+        document.addEventListener('mozfullscreenchange', handleFullScreenChange) // Firefox
+        document.addEventListener('MSFullscreenChange', handleFullScreenChange) // IE
 
         // Cleanup event listener khi component unmount
         return () => {
-            document.removeEventListener('fullscreenchange', handleFullScreenChange);
-            document.removeEventListener('webkitfullscreenchange', handleFullScreenChange);
-            document.removeEventListener('mozfullscreenchange', handleFullScreenChange);
-            document.removeEventListener('MSFullscreenChange', handleFullScreenChange);
-        };
-    }, []);
+            document.removeEventListener('fullscreenchange', handleFullScreenChange)
+            document.removeEventListener('webkitfullscreenchange', handleFullScreenChange)
+            document.removeEventListener('mozfullscreenchange', handleFullScreenChange)
+            document.removeEventListener('MSFullscreenChange', handleFullScreenChange)
+        }
+    }, [])
 
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (chatListRef.current && !chatListRef.current.contains(event.target)) {
-                setIsShowChatList(false);
+                setIsShowChatList(false)
             }
-        };
+        }
 
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('mousedown', handleClickOutside)
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [])
 
     const openFullScreen = () => {
         if (!document.fullscreenElement) {
             if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
+                document.documentElement.requestFullscreen()
             } else if (document.documentElement.webkitRequestFullscreen) {
                 /* Safari */
-                document.documentElement.webkitRequestFullscreen();
+                document.documentElement.webkitRequestFullscreen()
             } else if (document.documentElement.msRequestFullscreen) {
                 /* IE11 */
-                document.documentElement.msRequestFullscreen();
+                document.documentElement.msRequestFullscreen()
             }
         } else {
             if (document.exitFullscreen) {
-                document.exitFullscreen();
+                document.exitFullscreen()
             } else if (document.webkitExitFullscreen) {
                 /* Safari */
-                document.webkitExitFullscreen();
+                document.webkitExitFullscreen()
             } else if (document.msExitFullscreen) {
                 /* IE11 */
-                document.msExitFullscreen();
+                document.msExitFullscreen()
             }
         }
-    };
+    }
 
     const handleChangeLanguage = (e) => {
-        dispatch(setLanguage(e.target.value));
-    };
+        dispatch(setLanguage(e.target.value))
+    }
 
     return (
         <header className="bg-[#ffffff] w-full">
             <div className="flex items-center h-[70px] pr-4">
                 <div className="h-full">
-                    <img
-                        src={Logo}
-                        alt="logo-opennezt"
-                        className="py-[18px] px-8 bg-[#ffffff]  h-full"
-                    />
+                    <img src={Logo} alt="logo-opennezt" className="py-[18px] px-8 bg-[#ffffff]  h-full" />
                 </div>
                 <div className="flex items-center justify-between flex-1">
                     <div className="flex items-center gap-4 text-sm font-semibold text-[#6f7f92]" />
@@ -96,11 +92,7 @@ const Header = () => {
                             className="flex items-center bg-[#f8f9fa] rounded-md w-[240px] h-[40px] border-[1px]  border-gray-200 "
                         >
                             <button className="flex items-center justify-center w-10 h-10">
-                                <IconlySearch
-                                    size={16}
-                                    color={'#6f7f92'}
-                                    className="text-gray-400"
-                                />
+                                <IconlySearch size={16} color={'#6f7f92'} className="text-gray-400" />
                             </button>
                             <input
                                 type="text"
@@ -126,7 +118,6 @@ const Header = () => {
                             <Portal>
                                 <Popover.Positioner>
                                     <Popover.Content>
-
                                         <Popover.Body className="p-0 bg-white">
                                             <PopoverNotification />
                                         </Popover.Body>
@@ -141,12 +132,11 @@ const Header = () => {
                                     <IconlyChat size={24} color="#6f7f92" />
                                 </span>
                             </Popover.Trigger>
-                            <Portal >
-                                <Popover.Positioner >
-                                    <Popover.Content >
+                            <Portal>
+                                <Popover.Positioner>
+                                    <Popover.Content>
                                         <Popover.Body className="bg-white">
                                             <Stack spacing={4}>
-
                                                 <PopoverMessage />
                                             </Stack>
                                         </Popover.Body>
@@ -180,7 +170,7 @@ const Header = () => {
                 </div>
             </div>
         </header>
-    );
-};
+    )
+}
 
-export default Header;
+export default Header

@@ -1,5 +1,5 @@
-import {Router} from 'express'
-import {asyncHandler} from '@/utils/helpers'
+import { Router } from 'express'
+import { asyncHandler } from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
 import validate from '@/app/middleware/common/validate'
 import * as projectMiddleware from '@/app/middleware/projectMiddleware'
@@ -15,42 +15,58 @@ projectRouter.get('/tags', asyncHandler(projectController.getProjectsToTag))
 
 // ========== PATCH [Project - Basic] ========== //
 projectRouter.patch(
-    '/:id/basic',
+    '/me/:id/basic',
     asyncHandler(validate(projectRequest.updateBasic)),
     asyncHandler(projectController.updateBasic)
 )
 
 // ========== PATCH [Project - Sector] ========== //
 projectRouter.patch(
-    '/:id/sector',
+    '/me/:id/sector',
     asyncHandler(validate(projectRequest.updateSector)),
     asyncHandler(projectController.updateSector)
 )
 
-// ========== PATCH [Project - Revenue] ========== //
+// ========== PATCH [Project - Revenues] ========== //
 projectRouter.patch(
-    '/:id/revenue',
+    '/me/:id/revenues',
     asyncHandler(validate(projectRequest.updateRevenue)),
     asyncHandler(projectController.updateRevenue)
 )
 
 // ========== PATCH [Project - FundingSource] ========== //
 projectRouter.patch(
-    '/:id/funding-source',
+    '/me/:id/funding-sources',
     asyncHandler(validate(projectRequest.updateFundingSource)),
     asyncHandler(projectController.updateFundingSource)
 )
 
 // ========== PATCH [Project - AdditionalInfo] ========== //
 projectRouter.patch(
-    '/:id/additional-info',
+    '/me/:id/additional-infos',
     asyncHandler(validate(projectRequest.updateAdditionalInfo)),
     asyncHandler(projectController.updateAdditionalInfo)
 )
 
+// ========== PATCH [Project - Logo] ========== //
+projectRouter.patch(
+    '/me/:id/logo',
+    asyncHandler(projectMiddleware.decodeLogo),
+    asyncHandler(validate(projectRequest.updateLogo)),
+    asyncHandler(projectController.updateLogo)
+)
+
+// ========= PATCH [Project - Background] ========== //
+projectRouter.patch(
+    '/me/:id/background',
+    asyncHandler(projectMiddleware.decodeBackground),
+    asyncHandler(validate(projectRequest.updateBackground)),
+    asyncHandler(projectController.updateBackground)
+)
+
 // ========== POST [Project - Requirement] ========== //
 projectRouter.post(
-    '/:id/requirement',
+    '/me/:id/requirement',
     asyncHandler(validate(projectRequest.addProjectRequirement)),
     asyncHandler(projectController.addProjectRequirement)
 )

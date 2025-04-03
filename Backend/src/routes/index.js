@@ -3,7 +3,7 @@ import manageRouteMap from './manageRouter'
 import userRouter from './userRouter'
 import homeRouter from './homeRouter'
 import chatrouter from './chatRouter'
-import LandingPageRouter from './subscribe.js'
+import subscribeRouter from './subscribeRouter'
 import notificationRouter from './notificationRouter'
 import projectRouter from './projectRouter'
 import socketRoutes from './socket'
@@ -27,7 +27,7 @@ function route(app, io) {
     app.use('/profile', profileRouter)
     app.use('/home', homeRouter)
     app.use('/chat', chatrouter)
-    app.use('/subscribe', LandingPageRouter)
+    app.use('/subscribe', subscribeRouter)
     app.use('/notifications', notificationRouter)
     app.use('/projects', projectRouter)
     app.use('/ai', artificialIntelligenceRouter)

@@ -1,7 +1,6 @@
 import { isValidObjectId } from 'mongoose'
 import { User } from '@/models'
 import { abort } from '@/utils/helpers'
-import { DecodeBase64 } from '@/utils/classes'
 
 export async function checkUserId(req, res, next) {
     // if (isValidObjectId(req.params.id)) {

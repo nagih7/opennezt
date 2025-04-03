@@ -1,4 +1,4 @@
-import callApi from 'api/callApi';
+import callApi from 'api/callApi'
 import {
     // ========== MY PROJECTS ========== //
     requestGetListMyProjects,
@@ -12,6 +12,10 @@ import {
     requestGetMyProjectDetails,
     getMyProjectDetailsSuccess,
     getMyProjectDetailsFail,
+    // ========= UPDATE PROJECT ========== //
+    requestUpdateMyProject,
+    updateMyProjectSuccess,
+    updateMyProjectFail,
     // ========== DELETE MY PROJECT ========== //
     requestDeleteMyProject,
     deleteMyProjectSuccess,
@@ -40,20 +44,20 @@ import {
     requestInviteMember,
     inviteMemberSuccess,
     inviteMemberFail,
-} from '../../states/modules/project';
+} from '../../states/modules/project'
 
 // ========== My projects ========== //
 export const getListMyProjects = (dataFilter) => async (dispatch, getState) => {
-    let path = `projects/me?per_page=${dataFilter.perPage}&page=${dataFilter.currentPage}`;
+    let path = `projects/me?per_page=${dataFilter.perPage}&page=${dataFilter.currentPage}`
     if (dataFilter.keySearch) {
-        path += `&q=${dataFilter.keySearch}`;
+        path += `&q=${dataFilter.keySearch}`
     }
     if (dataFilter.status && dataFilter.status.length > 0) {
-        path += `&status=${dataFilter.status}`;
+        path += `&status=${dataFilter.status}`
     }
 
     if (dataFilter.order && dataFilter.column) {
-        path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+        path += `&order=${dataFilter.order}&column=${dataFilter.column}`
     }
     return callApi({
         method: 'get',
@@ -62,8 +66,8 @@ export const getListMyProjects = (dataFilter) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== CREATE NEW PROJECT ========== //
 export const createNewProject = (data) => async (dispatch, getState) => {
@@ -74,8 +78,8 @@ export const createNewProject = (data) => async (dispatch, getState) => {
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== GET MY PROJECT DETAILS ========== //
 export const getMyProjectDetails = (projectId) => async (dispatch, getState) => {
@@ -86,8 +90,92 @@ export const getMyProjectDetails = (projectId) => async (dispatch, getState) => 
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
+
+// ========== UPDATE PROJECT BASIC ========== //
+export const updateProjectBasic = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/basic`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========== UPDATE PROJECT SECTORS ========== //
+export const updateProjectSector = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/sector`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========== UPDATE PROJECT REVENUES ========== //
+export const updateProjectRevenue = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/revenues`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========= UPDATE PROJECT FUNDING SOURCES ========== //
+export const updateProjectFundingSources = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/funding-sources`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========== UPDATE PROJECT ADDITIONAL INFOS ========== //
+export const updateProjectAdditionalInfos = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/additional-infos`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========== UPDATE PROJECT LOGO ========== //
+export const updateProjectLogo = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/logo`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========== UPDATE PROJECT BACKGROUND ========== //
+export const updateProjectBackground = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/background`,
+        actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
 
 // ========== DELETE MY PROJECT ========== //
 export const deleteMyProject = (projectId) => async (dispatch, getState) => {
@@ -98,8 +186,8 @@ export const deleteMyProject = (projectId) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== GET PROJECT DETAILS ========== //
 export const getProjectDetails = (projectId) => async (dispatch, getState) => {
@@ -110,21 +198,21 @@ export const getProjectDetails = (projectId) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // =========== SEEK PROJECTS =========== //
 export const seekProjects = (dataFilter) => async (dispatch, getState) => {
-    let path = `projects/seek?page=${dataFilter.page}&per_page=${dataFilter.perPage}`;
+    let path = `projects/seek?page=${dataFilter.page}&per_page=${dataFilter.perPage}`
 
     if (dataFilter.keySearch) {
-        path += `&q=${dataFilter.keySearch}`;
+        path += `&q=${dataFilter.keySearch}`
     }
     if (dataFilter.industry) {
-        path += `&industry=${dataFilter.industry}`;
+        path += `&industry=${dataFilter.industry}`
     }
     if (dataFilter.stage) {
-        path += `&stage=${dataFilter.stage}`;
+        path += `&stage=${dataFilter.stage}`
     }
 
     return callApi({
@@ -134,8 +222,8 @@ export const seekProjects = (dataFilter) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // =========== APPLY TO JOIN PROJECT =========== //
 export const applyToJoinProject = (projectId, formRequest) => async (dispatch, getState) => {
@@ -146,8 +234,8 @@ export const applyToJoinProject = (projectId, formRequest) => async (dispatch, g
         variables: formRequest,
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== PROJECT REQUIREMENT ========== //
 export const addProjectRequirement = (projectId, formRequest) => async (dispatch, getState) => {
@@ -158,8 +246,8 @@ export const addProjectRequirement = (projectId, formRequest) => async (dispatch
         variables: formRequest,
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== SEARCH PROJECT ========== //
 export const searchMyProjects = (keySearch) => async (dispatch, getState) => {
@@ -170,8 +258,8 @@ export const searchMyProjects = (keySearch) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== INVITE MEMBER ========== //
 export const inviteMember = (projectId, formRequest) => async (dispatch, getState) => {
@@ -182,5 +270,5 @@ export const inviteMember = (projectId, formRequest) => async (dispatch, getStat
         variables: formRequest,
         dispatch,
         getState,
-    });
-};
+    })
+}

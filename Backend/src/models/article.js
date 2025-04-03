@@ -1,9 +1,8 @@
-import createModel, {ObjectId} from './base'
-import {Schema} from 'mongoose'
+import createModel, { ObjectId } from './base'
+import { Schema } from 'mongoose'
 import User from './user'
 import Project from './project'
-import {ARTICLE_AUDIENCE_ENUM, ARTICLE_STATUS_ENUM} from '@/configs'
-import {de} from '@faker-js/faker'
+import { ARTICLE_AUDIENCE_ENUM, ARTICLE_STATUS_ENUM } from '@/configs'
 
 const Content = new Schema(
     {
@@ -36,7 +35,6 @@ const Article = createModel('Article', 'articles', {
         type: ObjectId,
         ref: Project,
         required: false,
-        default: null,
     },
     content: {
         type: Content,

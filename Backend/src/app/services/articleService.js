@@ -3,7 +3,7 @@ import Article from '../../models/article.js'
 import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
 import {
-    ACCESS_TYPE,
+    ARTICLE_COMMENT,
     ARTICLE_CREATE,
     ARTICLE_REACTION,
     ARTICLE_REPLY_COMMENT,
@@ -65,12 +65,40 @@ export const getArticleList = async (user, requestQuery) => {
                 status: 'published',
             },
         },
+        // {
+        //     $lookup: {
+        //         from: 'users',
+        //         localField: 'user_id',
+        //         foreignField: '_id',
+        //         as: 'user',
+        //     },
+        // },
         {
             $lookup: {
                 from: 'users',
                 localField: 'user_id',
                 foreignField: '_id',
                 as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '$avatar',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
             },
         },
         {
@@ -211,14 +239,17 @@ export const updateArticle = async (user_id, id, requestBody) => {
             requestBody.content.attachment = listAttachment
         }
 
-        // Kiểm tra nếu project_id thay đổi và update project mảng
-        if (requestBody.project_id && requestBody.project_id !== validArticle.project_id.toString()) {
-            const updatedProject = await Project.findById(requestBody.project_id) // Lấy project mới theo ID
-            if (updatedProject) {
-                // Cập nhật lại mảng project với project mới
-                requestBody.project = [updatedProject] // Mảng chứa 1 project mới
+        if ('project_id' in requestBody) {
+            if (requestBody.project_id === 'null' || requestBody.project_id === null) {
+                requestBody.project_id = null
+                requestBody.project = []
             } else {
-                throw new Error('Project not found')
+                const updatedProject = await Project.findById(requestBody.project_id)
+                if (updatedProject) {
+                    requestBody.project = [updatedProject]
+                } else {
+                    throw new Error('Project not found')
+                }
             }
         }
 
@@ -238,9 +269,7 @@ export const updateArticle = async (user_id, id, requestBody) => {
 //Article Reaction
 export const reactArticle = async (id, user, requestBody) => {
     const target_type = requestBody.target_type
-
     const type = requestBody.type
-
     const user_id = user._id.toString()
 
     const existingReaction = await Reaction.findOne({
@@ -252,8 +281,10 @@ export const reactArticle = async (id, user, requestBody) => {
         const article = await Article.findById(id)
         if (existingReaction) {
             if (existingReaction.type === type) {
+                // Delete the reaction
                 await Reaction.deleteOne({ _id: existingReaction._id })
                 article.reaction_count = article.reaction_count - 1
+                await deleteActivityReactionArticle(user, id)
                 await article.save()
             } else {
                 existingReaction.type = type
@@ -268,11 +299,15 @@ export const reactArticle = async (id, user, requestBody) => {
             })
             await newReaction.save()
             article.reaction_count = article.reaction_count + 1
-
             await article.save()
+
+            // Create activity record for the new reaction
+            await postActivityReactionArticle(user, id)
         }
     }
+
     if (target_type === 'comment') {
+        // Same logic for comments
         const comment = await Comment.findById(id)
         if (existingReaction) {
             if (existingReaction.type === type) {
@@ -292,7 +327,6 @@ export const reactArticle = async (id, user, requestBody) => {
             })
             await newReaction.save()
             comment.reaction_count += 1
-
             await comment.save()
         }
     }
@@ -356,6 +390,7 @@ export const replyComment = async (user, requestBody) => {
     await parentComment.save()
     await updatedArticle.save()
     await newComment.save()
+    await postActivityReplyComment(user, newComment._id)
     return newComment
 }
 //Get Article's Reactions
@@ -528,6 +563,8 @@ export const createComment = async (user, requestBody) => {
 
     await Article.findByIdAndUpdate(articleId, { $inc: { comment_count: 1 } })
 
+    await postActivityComment(user, newComment._id)
+
     return newComment
 }
 //End Create Comment
@@ -544,11 +581,6 @@ export const getUserCommentReactions = async (user_id, target_ids) => {
     })
 
     return reactions
-}
-
-// Update project name after update article
-export const updateProjectName = async (project_id) => {
-    const articles = await Article.find({ project_id: project_id })
 }
 
 export const bookmarkArticle = async (requestBody, user) => {
@@ -676,6 +708,7 @@ export const postActivityReactionArticle = async (user, articleId) => {
 
 export const postActivityReplyComment = async (user, commentId) => {
     const comment = await Comment.findById(new ObjectId(commentId))
+    const parentComment = await Comment.findById(new ObjectId(comment?.parent_id))
     const commentReplyType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_REPLY_COMMENT })
     const oldActivity = await ActivityLog.findOne({
         user_id: user._id,
@@ -690,7 +723,32 @@ export const postActivityReplyComment = async (user, commentId) => {
         const newActivity = new ActivityLog({
             user_id: user._id,
             type_id: commentReplyType._id,
-            data: { comment_id: comment._id, article_id: comment.article_id, owner_id: comment.user_id },
+            data: { comment_id: comment._id, article_id: comment.article_id, owner_id: parentComment.user_id },
+            metadata: {},
+        })
+        await newActivity.save()
+        return newActivity
+    }
+}
+
+export const postActivityComment = async (user, commentId) => {
+    const comment = await Comment.findById(new ObjectId(commentId))
+    const article = await Article.findById(comment.article_id)
+    const commentType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_COMMENT })
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        type_id: commentType._id,
+        'data.comment_id': comment._id,
+    })
+
+    if (oldActivity) {
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        const newActivity = new ActivityLog({
+            user_id: user._id,
+            type_id: commentType._id,
+            data: { comment_id: comment._id, article_id: article._id, owner_id: article.user_id },
             metadata: {},
         })
 
@@ -955,14 +1013,15 @@ export const getActivityReactionArticle = async (user) => {
     const activities = await ActivityLog.aggregate([
         {
             $match: {
-                user_id: user._id,
+                'data.owner_id': user._id, // Articles owned by current user
                 type_id: articleReactionType._id,
+                user_id: { $ne: user._id }, // Exclude user's own reactions
             },
         },
         {
             $lookup: {
                 from: 'users',
-                localField: 'user_id',
+                localField: 'user_id', // This now shows the user who reacted
                 foreignField: '_id',
                 as: 'user',
                 pipeline: [
@@ -987,6 +1046,7 @@ export const getActivityReactionArticle = async (user) => {
                 ],
             },
         },
+        // Rest of the pipeline remains the same
         {
             $lookup: {
                 from: 'articles',
@@ -1003,10 +1063,28 @@ export const getActivityReactionArticle = async (user) => {
             },
         },
         {
+            $lookup: {
+                from: 'types',
+                localField: 'type_id',
+                foreignField: '_id',
+                as: 'activity_type',
+                pipeline: [
+                    {
+                        $project: {
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
             $unwind: '$user',
         },
         {
             $unwind: '$article',
+        },
+        {
+            $unwind: '$activity_type',
         },
         {
             $limit: 10,
@@ -1018,6 +1096,7 @@ export const getActivityReactionArticle = async (user) => {
             $project: {
                 user: 1,
                 article: { caption: 1 },
+                activity_type: { name: 1 },
                 timestamp: 1,
                 data: 1,
                 type_id: 1,
@@ -1032,14 +1111,15 @@ export const getActivityReplyComment = async (user) => {
     const activities = await ActivityLog.aggregate([
         {
             $match: {
-                user_id: user._id,
+                'data.owner_id': user._id, // Comments owned by current user
                 type_id: commentReplyType._id,
+                user_id: { $ne: user._id }, // Exclude user's own replies
             },
         },
         {
             $lookup: {
                 from: 'users',
-                localField: 'user_id',
+                localField: 'user_id', // The user who replied
                 foreignField: '_id',
                 as: 'user',
                 pipeline: [
@@ -1074,6 +1154,37 @@ export const getActivityReplyComment = async (user) => {
                     {
                         $project: {
                             content: 1,
+                            article_id: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'articles',
+                localField: 'data.article_id',
+                foreignField: '_id',
+                as: 'article',
+                pipeline: [
+                    {
+                        $project: {
+                            caption: '$content.caption',
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'types',
+                localField: 'type_id',
+                foreignField: '_id',
+                as: 'activity_type',
+                pipeline: [
+                    {
+                        $project: {
+                            name: 1,
                         },
                     },
                 ],
@@ -1086,6 +1197,12 @@ export const getActivityReplyComment = async (user) => {
             $unwind: '$comment',
         },
         {
+            $unwind: '$article',
+        },
+        {
+            $unwind: '$activity_type',
+        },
+        {
             $limit: 10,
         },
         {
@@ -1095,9 +1212,126 @@ export const getActivityReplyComment = async (user) => {
             $project: {
                 user: 1,
                 comment: { content: 1 },
+                activity_type: { name: 1 },
+                article: { caption: 1 },
                 timestamp: 1,
                 data: 1,
-                type_id: 1,
+            },
+        },
+    ])
+    return activities
+}
+
+export const getActivityComment = async (user) => {
+    const commentType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_COMMENT })
+    const activities = await ActivityLog.aggregate([
+        {
+            $match: {
+                'data.owner_id': user._id, // Articles owned by current user
+                type_id: commentType._id,
+                user_id: { $ne: user._id }, // Exclude user's own comments
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id', // The user who commented
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '$avatar',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'comments',
+                localField: 'data.comment_id',
+                foreignField: '_id',
+                as: 'comment',
+                pipeline: [
+                    {
+                        $project: {
+                            content: 1,
+                            article_id: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'articles',
+                localField: 'data.article_id',
+                foreignField: '_id',
+                as: 'article',
+                pipeline: [
+                    {
+                        $project: {
+                            caption: '$content.caption',
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'types',
+                localField: 'type_id',
+                foreignField: '_id',
+                as: 'activity_type',
+                pipeline: [
+                    {
+                        $project: {
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $unwind: '$comment',
+        },
+        {
+            $unwind: '$article',
+        },
+        {
+            $unwind: '$activity_type',
+        },
+        {
+            $limit: 10,
+        },
+        {
+            $sort: { timestamp: -1 },
+        },
+        {
+            $project: {
+                user: 1,
+                comment: { content: 1 },
+                activity_type: { name: 1 },
+                article: { caption: 1 },
+                timestamp: 1,
+                data: 1,
             },
         },
     ])
@@ -1121,6 +1355,40 @@ export const deleteActivitySaveArticle = async (user, articleId) => {
             'data.article_id': objectIdArticle,
         }
         await ActivityLog.deleteOne(data)
+    } catch (error) {
+        console.error('Lỗi khi xóa bài viết:', error)
+    }
+}
+
+// ========== DELETE [ARTICLE REACTIONS] ========== //
+export const deleteActivityReactionArticle = async (user, activityOrArticleId) => {
+    try {
+        const articleReactionType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_REACTION })
+        if (!articleReactionType) {
+            console.log('Không tìm thấy loại bài viết.')
+            return
+        }
+
+        // Try first by activity ID (direct ID match)
+        let deleteResult = await ActivityLog.deleteOne({
+            _id: new ObjectId(activityOrArticleId),
+            user_id: user._id,
+            type_id: articleReactionType._id,
+        })
+
+        if (deleteResult.deletedCount === 0) {
+            // If not found, try by article ID (data.article_id match)
+            deleteResult = await ActivityLog.deleteOne({
+                user_id: user._id,
+                type_id: articleReactionType._id,
+                'data.article_id': new ObjectId(activityOrArticleId),
+            })
+        }
+        if (deleteResult.deletedCount === 0) {
+            console.log('No document was deleted')
+        } else {
+            console.log(`Successfully deleted ${deleteResult.deletedCount} document`)
+        }
     } catch (error) {
         console.error('Lỗi khi xóa bài viết:', error)
     }
