@@ -1,15 +1,10 @@
-import React, { forwardRef, useCallback, useState } from 'react';
-import avt from 'assets/images/background/avt.jpg';
-import { Image } from '@chakra-ui/react';
-import {
-    differenceInDays,
-    differenceInHours,
-    differenceInMinutes,
-    differenceInSeconds,
-} from 'date-fns';
+import React, { forwardRef, useCallback, useState } from 'react'
+import avt from 'assets/images/background/avt.jpg'
+import { Image } from '@chakra-ui/react'
+import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
 
-import ReplyComment from '../ReplyComment';
-import { CheckCircleFilled } from '@ant-design/icons';
+import ReplyComment from '../ReplyComment'
+import { CheckCircleFilled } from '@ant-design/icons'
 
 const Comment = forwardRef(
     (
@@ -27,46 +22,46 @@ const Comment = forwardRef(
         },
         ref
     ) => {
-        const [showReplies, setShowReplies] = useState(false);
+        const [showReplies, setShowReplies] = useState(false)
 
         if (!comment?._id || !comment?.user?.[0]) {
-            return null;
+            return null
         }
 
-        const { _id, content, user, created_at } = comment;
-        const userData = user[0];
+        const { _id, content, user, created_at } = comment
+        const userData = user[0]
 
-        const postedAt = new Date(created_at);
-        const postedDate = postedAt.toDateString();
-        const today = new Date();
-        const day = differenceInDays(today, postedAt);
-        const hour = differenceInHours(today, postedAt) % 24;
-        const minute = differenceInMinutes(today, postedAt) % 60;
-        const second = differenceInSeconds(today, postedAt) % 60;
+        const postedAt = new Date(created_at)
+        const postedDate = postedAt.toDateString()
+        const today = new Date()
+        const day = differenceInDays(today, postedAt)
+        const hour = differenceInHours(today, postedAt) % 24
+        const minute = differenceInMinutes(today, postedAt) % 60
+        const second = differenceInSeconds(today, postedAt) % 60
 
         const handleReaction = (type) => {
-            if (isLoading) return;
-            const data = new FormData();
-            data.append('type', type);
-            data.append('target_type', 'comment');
-            onCommentReaction(_id, data);
-        };
+            if (isLoading) return
+            const data = new FormData()
+            data.append('type', type)
+            data.append('target_type', 'comment')
+            onCommentReaction(_id, data)
+        }
 
         const handleSetParentId = () => {
-            setParentId(comment);
-        };
+            setParentId(comment)
+        }
 
         const handleToggleReplies = () => {
             if (!showReplies && setParentId && comment) {
-                setParentId(comment);
+                setParentId(comment)
             }
-            setShowReplies(!showReplies);
-        };
+            setShowReplies(!showReplies)
+        }
 
         const handleReply = () => {
-            selectComment(comment);
-            handleClickReply();
-        };
+            selectComment(comment)
+            handleClickReply()
+        }
 
         return (
             <div className="pt-[20px]">
@@ -107,11 +102,7 @@ const Comment = forwardRef(
                             <p className="text-sm mb-0">{content.caption}</p>
                             {comment.content.image ? (
                                 <div className="flex p-2 ">
-                                    <Image
-                                        width="15vw"
-                                        className="rounded-md"
-                                        src={comment.content.image}
-                                    />
+                                    <Image width="15vw" className="rounded-md" src={comment.content.image} />
                                 </div>
                             ) : null}
                         </div>
@@ -135,26 +126,27 @@ const Comment = forwardRef(
                                     </span>
                                 )}
                             </div>
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs text-[#6f7f92]">
+                                        <a className="no-underline ml-[2px] text-black font-medium">
+                                            {comment.reaction_count > 0
+                                                ? comment.reaction_count != 1
+                                                    ? comment.reaction_count > 1000
+                                                        ? Math.floor(comment.reaction_count / 1000) + 'k' + ' likes'
+                                                        : comment.reaction_count + ' likes'
+                                                    : comment.reaction_count + ' like'
+                                                : ' '}{' '}
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
                             <a
                                 onClick={handleReply}
                                 className="no-underline text-[#6f7f92] text-xs font-medium cursor-pointer"
                             >
                                 Reply
                             </a>
-                            <div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-xs text-[#6f7f92]">
-                                        <a className="no-underline ml-[2px] text-black font-medium">
-                                            {comment.reaction_count > 0
-                                                ? comment.reaction_count > 1000
-                                                    ? Math.floor(comment.reaction_count / 1000) +
-                                                      'k'
-                                                    : comment.reaction_count
-                                                : ' '}{' '}
-                                        </a>
-                                    </span>
-                                </div>
-                            </div>
                         </div>
                     </li>
                 </ul>
@@ -201,10 +193,10 @@ const Comment = forwardRef(
                     </span>
                 </div>
             </div>
-        );
+        )
     }
-);
+)
 
-Comment.displayName = 'Comment';
+Comment.displayName = 'Comment'
 
-export default Comment;
+export default Comment

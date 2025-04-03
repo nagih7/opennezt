@@ -96,10 +96,12 @@ const ReplyComment = ({ reply, reaction, handleReactionReplyComment }) => {
                         <span className="text-xs text-[#6f7f92]">
                             <a className="no-underline ml-[2px] text-black font-medium">
                                 {reply.reaction_count > 0
-                                    ? reply.reaction_count > 1000
-                                        ? Math.floor(reply.reaction_count / 1000) + 'k'
-                                        : reply.reaction_count
-                                    : ' '}
+                                    ? reply.reaction_count != 1
+                                        ? reply.reaction_count > 1000
+                                            ? Math.floor(reply.reaction_count / 1000) + 'k' + ' likes'
+                                            : reply.reaction_count + ' likes'
+                                        : reply.reaction_count + ' like'
+                                    : ' '}{' '}
                             </a>
                         </span>
                     </div>
