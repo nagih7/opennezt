@@ -17,6 +17,7 @@ const articleSlice = createSlice({
             hasMore: true,
         },
         comment: [],
+        createdComment: null,
         onetimecomments: [],
         isLoadingGetComments: false,
         comment_reactions: [],
@@ -242,17 +243,30 @@ const articleSlice = createSlice({
             ...state,
             isLoadingReactComment: false,
         }),
+        updateCreatedComment: (state, action) => {
+            const { createdComment, authUser } = action.payload
+            if (createdComment) {
+                const commentWithUser = {
+                    ...createdComment,
+                    user: [authUser],
+                }
+                state.comment.unshift(commentWithUser)
+            }
+            state.createdComment = null
+        },
         createComment: (state) => ({
             ...state,
             isLoadingCreateComment: true,
         }),
-        createCommentSuccess: (state) => ({
+        createCommentSuccess: (state, action) => ({
             ...state,
             isLoadingCreateComment: false,
+            createdComment: action.payload.data,
         }),
         createCommentFail: (state) => ({
             ...state,
             isLoadingCreateComment: true,
+            createdComment: {},
         }),
         updateUpdatedArticle: (state, action) => ({
             ...state,
@@ -404,8 +418,6 @@ const articleSlice = createSlice({
         updateBookmarks: (state, action) => {
             const { article_id, marked } = action.payload
 
-            console.log(action.payload)
-
             const existingBookmarkIndex = state.bookmarks.findIndex(
                 (bm) => bm.article_id.toString() === article_id.toString()
             )
@@ -418,8 +430,6 @@ const articleSlice = createSlice({
                     marked: marked,
                 })
             }
-
-            console.log(state.bookmarks)
         },
     },
 })
@@ -451,6 +461,7 @@ export const {
     reactComment,
     reactCommentSuccess,
     reactCommentFail,
+    updateCreatedComment,
     createComment,
     createCommentSuccess,
     createCommentFail,
