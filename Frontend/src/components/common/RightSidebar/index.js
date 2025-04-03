@@ -26,13 +26,12 @@ function RightSidebar({ activities, action }) {
             <div className="flex flex-col bg-[#ffffff] p-8 rounded-md mt-3 mb-4">
                 <span className="mb-3 text-xl font-semibold">Latest Activities</span>
                 {activities?.map((activity, index) => (
-                    <div
-                        className="border-gray-200 border-t-[1px] cursor-pointer"
-                        key={index}
-                        onClick={() => handleViewTalentDetails(activity.user)}
-                    >
+                    <div className="border-gray-200 border-t-[1px]" key={index}>
                         <div className="flex items-center gap-3 my-3">
-                            <Avatar.Root className="w-[50px] h-[50px] rounded-full">
+                            <Avatar.Root
+                                className="w-[50px] h-[50px] rounded-full cursor-pointer"
+                                onClick={() => handleViewTalentDetails(activity.user)}
+                            >
                                 <Avatar.Fallback name={activity.user.name} />
                                 <Avatar.Image src={activity.user.avatar} />
                             </Avatar.Root>

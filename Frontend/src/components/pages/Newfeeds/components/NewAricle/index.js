@@ -9,7 +9,7 @@ const NewArticle = ({ onOpenForm }) => {
    };
    return (
       <>
-         <div className="flex gap-3 bg-[#ffffff] p-8 rounded-md mb-4">
+         <div className="flex gap-3 bg-[#ffffff] p-8 rounded-md mb-4 w-full">
             <img
                src={authUser.avatar || AvatarDefault}
                className="w-[50px] h-[50px] rounded-full"

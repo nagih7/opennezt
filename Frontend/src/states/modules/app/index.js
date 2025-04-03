@@ -14,6 +14,11 @@ const appSlice = createSlice({
         },
         // ========== WEB PUSH ========== //
         isLoadingWebPush: false,
+        isSubscribed: false,
+        subscription: null,
+        registration: null,
+        stats: null,
+        error: null,
     },
     reducers: {
         startRequest: (state) => ({

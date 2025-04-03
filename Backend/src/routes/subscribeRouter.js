@@ -2,9 +2,10 @@ import { Router } from 'express'
 import { asyncHandler } from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
 import * as subscriptionController from '../app/controllers/subscriptionController'
-import { Subscription } from '@/models'
 
 const subscribeRouter = Router()
+
+subscribeRouter.post('/notification-event', asyncHandler(subscriptionController.trackingEvent))
 
 subscribeRouter.use(asyncHandler(requireAuthentication))
 
@@ -35,21 +36,21 @@ subscribeRouter.use(asyncHandler(requireAuthentication))
 //     }
 // })
 
-subscribeRouter.get('/stats', async (req, res) => {
-    try {
-        const totalSubscriptions = await Subscription.countDocuments()
-        const latestSubscriptions = await Subscription.find().sort({ createdAt: -1 }).limit(5)
-        // .select('-keys')
+// subscribeRouter.get('/stats', async (req, res) => {
+//     try {
+//         const totalSubscriptions = await Subscription.countDocuments()
+//         const latestSubscriptions = await Subscription.find().sort({ createdAt: -1 }).limit(5)
+//         // .select('-keys')
 
-        res.status(200).json({
-            totalSubscriptions,
-            latestSubscriptions,
-        })
-    } catch (error) {
-        console.error('Lỗi khi lấy thống kê:', error)
-        res.status(500).json({ error: 'Không thể lấy thống kê' })
-    }
-})
+//         res.status(200).json({
+//             totalSubscriptions,
+//             latestSubscriptions,
+//         })
+//     } catch (error) {
+//         console.error('Lỗi khi lấy thống kê:', error)
+//         res.status(500).json({ error: 'Không thể lấy thống kê' })
+//     }
+// })
 
 subscribeRouter.post('/unsubscribe', asyncHandler(subscriptionController.unsubscribe))
 
