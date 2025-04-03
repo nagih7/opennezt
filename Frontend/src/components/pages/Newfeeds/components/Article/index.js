@@ -149,6 +149,10 @@ const Article = forwardRef(
             }
         }
 
+        const handleViewTalentDetails = (user) => {
+            navigate(`/talents/${user._id}/details`)
+        }
+
         return (
             <div className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8 mt-3" ref={ref}>
                 {isConfirmDelete ? (
@@ -185,8 +189,8 @@ const Article = forwardRef(
                 ) : null}
 
                 <div className="flex items-center gap-3">
-                    <div className="w-[65px]">
-                        <Avatar.Root className="w-[50px] h-[50px] rounded-full">
+                    <div className="w-[65px] cursor-pointer" onClick={() => handleViewTalentDetails(user[0])}>
+                        <Avatar.Root className="w-[50px] h-[50px] rounded-full ">
                             <Avatar.Fallback name={user[0].name} />
                             <Avatar.Image src={user[0].avatar} />
                         </Avatar.Root>
@@ -194,7 +198,15 @@ const Article = forwardRef(
                     <div className="flex items-center justify-between w-full">
                         <div className="flex flex-col w-9/12 gap-2 text-base font-medium">
                             <div className="flex items-center gap-1">
-                                {user[0].name}
+                                <div>
+                                    <a
+                                        onClick={() => handleViewTalentDetails(user[0])}
+                                        className="text-black no-underline cursor-pointer"
+                                    >
+                                        {user[0].name}
+                                    </a>
+                                </div>
+                                {/* {user[0].name} */}
                                 <CheckCircleFilled className="text-[#3897f0]" />
                                 {project[0] ? (
                                     <>
