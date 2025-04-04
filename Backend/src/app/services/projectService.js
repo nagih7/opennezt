@@ -186,6 +186,136 @@ export async function getListMyProjects(user, { q, page, per_page, field, order 
     return { total, page, per_page, last_page, projects }
 }
 
+// ========== GET [Projects - Participated] ========== //
+export async function getListProjectsParticipated(user, { q, page, per_page, field, order }) {
+    page = parseInt(page)
+    per_page = parseInt(per_page)
+    q = q ? q : ''
+    order = order === '-1' ? -1 : 1
+
+    const participated = await ProjectMember.aggregate([
+        { $match: { user_id: user._id } },
+        {
+            $lookup: {
+                from: 'projects',
+                localField: 'project_id',
+                foreignField: '_id',
+                as: 'project',
+                pipeline: [
+                    {
+                        $match: {
+                            user_id: { $ne: user._id },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        { $unwind: '$project' },
+        { $replaceRoot: { newRoot: '$project' } },
+        { $match: { name: { $regex: q, $options: 'i' } } },
+    ])
+
+    const matchStage = {
+        $match: {
+            _id: { $in: participated.map((item) => item._id) },
+        },
+    }
+    const lookupMemberStage = {
+        $lookup: {
+            from: 'project_members',
+            localField: '_id',
+            foreignField: 'project_id',
+            as: 'members',
+            pipeline: [
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user_id',
+                        foreignField: '_id',
+                        as: 'user',
+                        pipeline: [
+                            {
+                                $project: {
+                                    _id: 0,
+                                    name: 1,
+                                    avatar: {
+                                        $cond: {
+                                            if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                            then: '$avatar',
+                                            else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+                { $unwind: '$user' },
+                { $project: { _id: 0, user: 1 } },
+            ],
+        },
+    }
+    const lookupArticleStage = {
+        $lookup: {
+            from: 'articles',
+            localField: '_id',
+            foreignField: 'project_id',
+            as: 'articles',
+        },
+    }
+    const sortStage = {
+        $sort: { [field]: order },
+    }
+    const skipStage = {
+        $skip: (page - 1) * per_page,
+    }
+    const limitStage = {
+        $limit: per_page,
+    }
+    const projectStage = {
+        $project: {
+            _id: 1,
+            name: 1,
+            logo: {
+                $cond: {
+                    if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
+                    then: '$logo',
+                    else: { $concat: [LINK_STATIC_URL, '$logo'] },
+                },
+            },
+            background: {
+                $cond: {
+                    if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
+                    then: '$background',
+                    else: { $concat: [LINK_STATIC_URL, '$background'] },
+                },
+            },
+            members: 1,
+            articles: 1,
+        },
+    }
+
+    const projects = await Project.aggregate([
+        matchStage,
+        lookupMemberStage,
+        lookupArticleStage,
+        sortStage,
+        skipStage,
+        limitStage,
+        projectStage,
+    ])
+
+    const total = participated.length
+    const last_page = Math.ceil(total / per_page)
+    return { total, page, per_page, last_page, projects }
+}
+
 // ========== GET [My Project Details] ========== //
 export async function getMyProjectDetails(user, projectId) {
     const matchStage = {

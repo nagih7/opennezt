@@ -162,6 +162,8 @@ const Comment = forwardRef(
                                     reaction={replyReactionMap.get(reply._id)}
                                     onReplyReaction={onCommentReaction}
                                     handleReactionReplyComment={handleReactionReplyComment}
+                                    handleClickReply={handleClickReply}
+                                    selectComment={selectComment}
                                 />
                             ))}
                         </div>

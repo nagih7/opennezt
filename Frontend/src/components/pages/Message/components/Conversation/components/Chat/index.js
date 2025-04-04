@@ -97,7 +97,7 @@ const Chat = () => {
                                                     case message?.user?._id:
                                                         return <OtherMessage message={message} />
                                                     default:
-                                                        return <OtherMessage message={message} haveAvatar />
+                                                        return <OtherMessage message={message} newUser />
                                                 }
                                             })()}
                                         </div>

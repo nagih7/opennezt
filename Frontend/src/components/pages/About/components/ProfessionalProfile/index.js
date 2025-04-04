@@ -84,7 +84,7 @@ const ProfessionalProfile = () => {
                 </div>
                 <div className="bg-[#ffffff] rounded-md mt-8">
                     <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
-                        <h5 className="mb-0">Eduaction</h5>
+                        <h5 className="mb-0">Education</h5>
                         <span
                             onClick={() => navigate('/about/edit-profile/educations')}
                             className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"

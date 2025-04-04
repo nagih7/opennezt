@@ -13,7 +13,8 @@ self.addEventListener('push', (event) => {
             badge: data.badge || '/opennezt.png',
             tag: data.tag || 'default-tag', // Thêm tag để quản lý thông báo
             data: data.data || {},
-            requireInteraction: true, // Giữ thông báo cho đến khi người dùng tương tác
+            requireInteraction: false, // Giữ thông báo cho đến khi người dùng tương tác
+            renotify: true,
         })
 
         // Hiển thị notification
