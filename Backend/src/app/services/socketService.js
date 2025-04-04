@@ -32,6 +32,7 @@ export async function sendMessage(user, { conversation_id, content }, io, socket
     })
     await message.save()
     conversation.updated_at = new Date()
+    conversation.last_message_id = message._id
     conversation.save()
 
     const me = await User.aggregate([
@@ -117,7 +118,7 @@ export async function sendMessage(user, { conversation_id, content }, io, socket
         title: 'OpenNezt',
         body: payloadBody,
         icon: me[0].avatar ? me[0].avatar : null,
-        tag: 'message',
+        tag: conversation._id,
         data: {
             url: `/conversation/${message.conversation_id}`,
             notificationId: message._id,
