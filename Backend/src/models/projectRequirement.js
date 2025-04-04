@@ -1,4 +1,4 @@
-import createModel, {ObjectId} from './base'
+import createModel, { ObjectId } from './base'
 
 const ProjectRequirement = createModel('Project_Requirement', 'project_requirements', {
     project_id: {
@@ -6,44 +6,51 @@ const ProjectRequirement = createModel('Project_Requirement', 'project_requireme
         ref: 'Project',
         required: true,
     },
-    team_role_id: {
-        type: ObjectId,
-        ref: 'Team_Role',
-        required: true,
-    },
-    role_id: {
-        type: ObjectId,
+    team_role_ids: {
+        type: [ObjectId],
         ref: 'Role',
-        required: true,
+        required: false,
+        default: [],
+    },
+    role_ids: {
+        type: [ObjectId],
+        ref: 'Role',
+        required: false,
+        default: [],
     },
     industry_ids: {
         type: [ObjectId],
         ref: 'Industry',
-        required: true,
+        required: false,
+        default: [],
     },
-    experience_level_id: {
-        type: ObjectId,
+    experience_level_ids: {
+        type: [ObjectId],
         ref: 'Experience_Level',
-        required: true,
+        required: false,
+        default: [],
     },
-    category_ids: {
-        type: [ObjectId],
-        ref: 'Category',
-        required: true,
-    },
-    subcategory_ids: {
-        type: [ObjectId],
-        ref: 'Subcategory',
-        required: true,
-    },
+    // category_ids: {
+    //     type: [ObjectId],
+    //     ref: 'Category',
+    //     required: false,
+    //     default: [],
+    // },
+    // subcategory_ids: {
+    //     type: [ObjectId],
+    //     ref: 'Subcategory',
+    //     required: false,
+    //     default: [],
+    // },
     skill_ids: {
         type: [ObjectId],
         ref: 'Skill',
-        required: true,
+        required: false,
+        default: [],
     },
     metadata: {
         type: Object,
-        required: true,
+        required: false,
         default: {},
     },
 })

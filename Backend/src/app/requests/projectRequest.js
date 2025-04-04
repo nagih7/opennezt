@@ -253,35 +253,49 @@ export const applyToJoinProject = Joi.object({
         ),
 })
 
-// ========== POST [Project - Requirement] ========== //
-export const addProjectRequirement = Joi.object({
-    team_role_id: Joi.string()
+// ========== POST [Project Requirement - Role] ========== //
+export const updateRoleRequirement = Joi.object({
+    teamRoles: Joi.array()
         .required()
-        .label('Team Role ID')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async () => {
-                    const role = await Role.findById(value)
-                    return role ? value : helpers.error('any.empty')
-                })
+        .label('Team Role')
+        .items(
+            Joi.string()
+                .trim()
+                .allow('')
+                .custom(
+                    (value, helpers) =>
+                        new AsyncValidate(value, async () => {
+                            const role = await Role.findById(new ObjectId(value))
+                            return role ? value : helpers.error('any.empty')
+                        })
+                )
         ),
-    role_id: Joi.string()
+    roles: Joi.array()
         .required()
-        .label('Role ID')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async () => {
-                    const role = await Role.findById(value)
-                    return role ? value : helpers.error('any.empty')
-                })
+        .label('Role')
+        .items(
+            Joi.string()
+                .trim()
+                .allow('')
+                .custom(
+                    (value, helpers) =>
+                        new AsyncValidate(value, async () => {
+                            const role = await Role.findById(new ObjectId(value))
+                            return role ? value : helpers.error('any.empty')
+                        })
+                )
         ),
-    industry_ids: Joi.array()
+})
+
+// ========== POST [Project Requirement - Sector] ========== //
+export const updateSectorRequirement = Joi.object({
+    industries: Joi.array()
         .required()
         .label('Industry')
         .items(
             Joi.string()
                 .trim()
-                .required()
+                .allow('')
                 .custom(
                     (value, helpers) =>
                         new AsyncValidate(value, async () => {
@@ -290,60 +304,42 @@ export const addProjectRequirement = Joi.object({
                         })
                 )
         ),
-    experience_level_id: Joi.string()
+    experienceLevels: Joi.array()
         .required()
-        .label('Experience Level ID')
-        .custom(
-            (value, helpers) =>
-                new AsyncValidate(value, async () => {
-                    const experienceLevel = await ExperienceLevel.findById(value)
-                    return experienceLevel ? value : helpers.error('any.empty')
-                })
-        ),
-    category_ids: Joi.array()
-        .required()
-        .label('Category')
+        .label('Experience Level')
         .items(
             Joi.string()
                 .trim()
-                .required()
+                .allow('')
                 .custom(
                     (value, helpers) =>
                         new AsyncValidate(value, async () => {
-                            const category = await Category.findById(new ObjectId(value))
-                            return category ? value : helpers.error('any.empty')
+                            const experienceLevel = await ExperienceLevel.findById(new ObjectId(value))
+                            return experienceLevel ? value : helpers.error('any.empty')
                         })
                 )
         ),
-    subcategory_ids: Joi.array()
-        .required()
-        .label('Sub Category')
-        .items(
-            Joi.string()
-                .trim()
-                .required()
-                .custom(
-                    (value, helpers) =>
-                        new AsyncValidate(value, async () => {
-                            const category = await Category.findById(new ObjectId(value))
-                            return category ? value : helpers.error('any.empty')
-                        })
-                )
-        ),
-    skill_ids: Joi.array()
+})
+
+// ========== POST [Project Requirement - Skill] ========== //
+export const updateSkillRequirement = Joi.object({
+    skills: Joi.array()
         .required()
         .label('Skill')
         .items(
-            Joi.string()
-                .trim()
-                .required()
-                .custom(
-                    (value, helpers) =>
-                        new AsyncValidate(value, async () => {
-                            const skill = await Skill.findById(new ObjectId(value))
-                            return skill ? value : helpers.error('any.empty')
-                        })
-                )
+            Joi.object({
+                _id: Joi.string()
+                    .trim()
+                    .required()
+                    .custom(
+                        (value, helpers) =>
+                            new AsyncValidate(value, async () => {
+                                const skill = await Skill.findById(new ObjectId(value))
+                                return skill ? value : helpers.error('any.empty')
+                            })
+                    ),
+                name: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Name'),
+            })
         ),
 })
 

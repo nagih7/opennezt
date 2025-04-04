@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addProjectRequirement } from 'api/project'
+import { updateRoleRequirement } from 'api/project'
 import SelectCustom from 'components/UI/SelectCustom'
 import { getProjectRoleFramework } from 'api/user'
+import { useParams } from 'react-router-dom'
 
 const RoleRequirement = () => {
     const dispatch = useDispatch()
     // ========== STATE FROM REDUX STORE  ========== //
-    const { isLoadingCreateProjectRequirement, myProjectDetails } = useSelector((state) => state.project)
+    const { myProjectDetails, isLoadingUpdateRoleRequirement } = useSelector((state) => state.project)
 
     const { projectTeamRoleFramework, projectRoleFramework } = useSelector((state) => state.user)
 
@@ -17,6 +18,22 @@ const RoleRequirement = () => {
         teamRoles: [],
         roles: [],
     })
+
+    // ========== EFFECTS  ========== //
+    useEffect(() => {
+        if (myProjectDetails?.requirements?.team_role_ids.length > 0) {
+            setFormData((prev) => ({
+                ...prev,
+                teamRoles: myProjectDetails?.requirements?.team_role_ids,
+            }))
+        }
+        if (myProjectDetails?.requirements?.role_ids.length > 0) {
+            setFormData((prev) => ({
+                ...prev,
+                roles: myProjectDetails?.requirements?.role_ids,
+            }))
+        }
+    }, [myProjectDetails])
 
     useEffect(() => {
         if (projectTeamRoleFramework.items?.length === 0 || projectRoleFramework.items?.length === 0)
@@ -32,12 +49,13 @@ const RoleRequirement = () => {
     }
 
     const handleSaveProjectRequirement = () => {
-        dispatch(addProjectRequirement(id, formData))
+        dispatch(updateRoleRequirement(myProjectDetails._id, formData))
     }
 
     // ========= RENDER  ========== //
     return (
-        <div className="flex flex-col gap-4 mb-8">
+        <div className="flex flex-col gap-4 mb-4">
+            <h5>What positions are missing in your project?</h5>
             <div className="relative">
                 <SelectCustom
                     multiple
@@ -63,7 +81,7 @@ const RoleRequirement = () => {
                     height={50}
                     className=" text-sm px-[28px] bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
                     borderRadius={4}
-                    loading={isLoadingCreateProjectRequirement}
+                    loading={isLoadingUpdateRoleRequirement}
                     loadingText="Loading..."
                     spinnerPlacement="start"
                     onClick={handleSaveProjectRequirement}

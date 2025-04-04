@@ -1,21 +1,46 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addProjectRequirement } from 'api/project'
 import SelectCustom from 'components/UI/SelectCustom'
+import { updateSectorRequirement } from 'api/project'
+import { getExperienceLevelFramwork, getIndustryFramework } from 'api/user'
 
 const SectorRequirement = () => {
     const dispatch = useDispatch()
     // ========== STATE FROM REDUX STORE  ========== //
-    const { isLoadingCreateProjectRequirement, myProjectDetails } = useSelector((state) => state.project)
-
+    const { myProjectDetails, isLoadingUpdateSectorRequirement } = useSelector((state) => state.project)
     const { industryFramework, experienceLevelFramework } = useSelector((state) => state.user)
 
     // ========== STATE  ========== //
     const [formData, setFormData] = useState({
         industries: [],
-        experienceLevel: [],
+        experienceLevels: [],
     })
+
+    // ========== EFFECTS  ========== //
+    useEffect(() => {
+        if (myProjectDetails?.requirements?.industry_ids.length > 0) {
+            setFormData((prev) => ({
+                ...prev,
+                industries: myProjectDetails?.requirements?.industry_ids,
+            }))
+        }
+        if (myProjectDetails?.requirements?.experience_level_ids.length > 0) {
+            setFormData((prev) => ({
+                ...prev,
+                experienceLevels: myProjectDetails?.requirements?.experience_level_ids,
+            }))
+        }
+    }, [myProjectDetails])
+
+    useEffect(() => {
+        if (industryFramework.items?.length === 0) dispatch(getIndustryFramework())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch])
+    useEffect(() => {
+        if (experienceLevelFramework.items?.length === 0) dispatch(getExperienceLevelFramwork())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch])
 
     // ========== HANDLE CHANGE  ========== //
     const handleChange = (event, nameSelect) => {
@@ -25,12 +50,12 @@ const SectorRequirement = () => {
     }
 
     const handleSaveProjectRequirement = () => {
-        dispatch(addProjectRequirement(id, formData))
+        dispatch(updateSectorRequirement(myProjectDetails._id, formData))
     }
 
     // ========= RENDER  ========== //
     return (
-        <div className="flex flex-col gap-4 mb-8">
+        <div className="flex flex-col gap-4 mt-8 mb-4">
             <div className="relative">
                 <SelectCustom
                     multiple
@@ -38,16 +63,15 @@ const SectorRequirement = () => {
                     collection={industryFramework}
                     onChange={(e) => handleChange(e, 'industries')}
                     value={formData.industries}
-                    name="industries"
                 />
             </div>
             <div className="relative">
                 <SelectCustom
+                    multiple
                     label="Experience Level"
                     collection={experienceLevelFramework}
-                    onChange={(e) => handleChange(e, 'experienceLevel')}
-                    value={formData.experienceLevel}
-                    name="experienceLevel"
+                    onChange={(e) => handleChange(e, 'experienceLevels')}
+                    value={formData.experienceLevels}
                 />
             </div>
             <div className="flex justify-end">
@@ -55,7 +79,7 @@ const SectorRequirement = () => {
                     height={50}
                     className=" text-sm px-[28px] bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
                     borderRadius={4}
-                    loading={isLoadingCreateProjectRequirement}
+                    loading={isLoadingUpdateSectorRequirement}
                     loadingText="Loading..."
                     spinnerPlacement="start"
                     onClick={handleSaveProjectRequirement}

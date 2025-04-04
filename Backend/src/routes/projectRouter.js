@@ -64,11 +64,23 @@ projectRouter.patch(
     asyncHandler(projectController.updateBackground)
 )
 
-// ========== POST [Project - Requirement] ========== //
-projectRouter.post(
-    '/me/:id/requirement',
-    asyncHandler(validate(projectRequest.addProjectRequirement)),
-    asyncHandler(projectController.addProjectRequirement)
+// ========== PATCH [Project Requirement - Role ] ========== //
+projectRouter.patch(
+    '/me/:id/requirements/role',
+    asyncHandler(validate(projectRequest.updateRoleRequirement)),
+    asyncHandler(projectController.updateRoleRequirement)
+)
+// ========== PATCH [Project Requirement - Sector ] ========== //
+projectRouter.patch(
+    '/me/:id/requirements/sector',
+    asyncHandler(validate(projectRequest.updateSectorRequirement)),
+    asyncHandler(projectController.updateSectorRequirement)
+)
+// ========== PATCH [Project Requirement - Skill ] ========== //
+projectRouter.patch(
+    '/me/:id/requirements/skill',
+    asyncHandler(validate(projectRequest.updateSkillRequirement)),
+    asyncHandler(projectController.updateSkillRequirement)
 )
 
 // ========== DELETE [Project] ========== //

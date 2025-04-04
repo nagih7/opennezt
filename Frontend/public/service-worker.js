@@ -5,7 +5,7 @@ self.addEventListener('push', (event) => {
     // Lấy dữ liệu từ push message
     try {
         const data = event.data ? event.data.json() : {}
-        console.log('Nhận push event:', data)
+        // console.log('Nhận push event:', data)
 
         const showNotification = self.registration.showNotification(data.title || 'Thông báo mới', {
             body: data.body || 'Bạn có một thông báo mới',
@@ -26,7 +26,7 @@ self.addEventListener('push', (event) => {
 
 // Xử lý khi người dùng click vào thông báo
 self.addEventListener('notificationclick', (event) => {
-    console.log('Notification click được kích hoạt')
+    // console.log('Notification click được kích hoạt')
 
     // Đóng notification
     event.notification.close()
@@ -77,7 +77,7 @@ self.addEventListener('notificationclick', (event) => {
 
 // Xử lý khi người dùng đóng thông báo
 self.addEventListener('notificationclose', (event) => {
-    console.log('Notification close được kích hoạt')
+    // console.log('Notification close được kích hoạt')
 
     // Lấy dữ liệu từ notification
     const notificationData = event.notification.data || {}
@@ -86,13 +86,13 @@ self.addEventListener('notificationclose', (event) => {
 
 // Xử lý khi service worker được cài đặt
 self.addEventListener('install', (event) => {
-    console.log('Service Worker đang được cài đặt')
+    // console.log('Service Worker đang được cài đặt')
     self.skipWaiting() // Cho phép service worker mới thay thế service worker cũ ngay lập tức
 })
 
 // Xử lý khi service worker được kích hoạt
 self.addEventListener('activate', (event) => {
-    console.log('Service Worker đã được kích hoạt')
+    // console.log('Service Worker đã được kích hoạt')
     // Lấy quyền kiểm soát các trang ngay lập tức mà không cần tải lại
     event.waitUntil(clients.claim())
 })
