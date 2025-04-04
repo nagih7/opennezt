@@ -5,7 +5,7 @@ import { Image } from '@chakra-ui/react'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
 import { getReplyComment } from 'api/activity'
 
-const ReplyComment = ({ reply, reaction, handleReactionReplyComment }) => {
+const ReplyComment = ({ reply, reaction, handleReactionReplyComment, selectComment, handleClickReply }) => {
     if (!reply?._id || !reply?.user?.[0]) return null
 
     const { _id, content, user, created_at } = reply
@@ -27,6 +27,11 @@ const ReplyComment = ({ reply, reaction, handleReactionReplyComment }) => {
             await handleReactionReplyComment(reply, data)
             await getReplyComment()
         }
+    }
+
+    const handleReply = () => {
+        selectComment(reply)
+        handleClickReply()
     }
     return (
         <div className="mb-3">
@@ -106,6 +111,9 @@ const ReplyComment = ({ reply, reaction, handleReactionReplyComment }) => {
                         </span>
                     </div>
                 </div>
+                <a onClick={handleReply} className="no-underline text-[#6f7f92] text-xs font-medium cursor-pointer">
+                    Reply
+                </a>
             </div>
         </div>
     )
