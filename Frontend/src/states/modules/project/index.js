@@ -22,14 +22,23 @@ const projectSlice = createSlice({
             logo: null,
             background: null,
         },
+        isLoadingGetListMyProjects: false,
         paginationListMyProjects: {
             currentPage: 1,
             perPage: 6,
             totalPage: 1,
             totalRecord: 0,
         },
+        // ========== PROJECTS PARTICIPATED ========== //
+        projectsParticipated: [],
+        paginationProjectsParticipated: {
+            currentPage: 1,
+            perPage: 6,
+            totalPage: 1,
+            totalRecord: 0,
+        },
+        isLoadingGetListProjectsParticipated: false,
         // ========== MY PROJECT DETAILS ========== //
-        isLoadingGetListMyProjects: false,
         isLoadingGetMyProjectDetails: false,
         // ========= UPDATE PROJECT ========== //
         isLoadingUpdateMyProject: false,
@@ -90,6 +99,22 @@ const projectSlice = createSlice({
         getListMyProjectsFail: (state) => ({
             ...state,
             isLoadingGetListMyProjects: false,
+        }),
+        // ========== PROJECTS PARTICIPATED ========== //
+        requestGetListProjectsParticipated: (state) => ({
+            ...state,
+            isLoadingGetListProjectsParticipated: true,
+        }),
+        getListProjectsParticipatedSuccess: (state, action) => ({
+            ...state,
+            projectsParticipated: [...state.projectsParticipated, ...action.payload.data.projects],
+            paginationProjectsParticipated: {
+                currentPage: action.payload.data.page,
+                perPage: action.payload.data.per_page,
+                lastPage: action.payload.data.last_page,
+                totalRecord: action.payload.data.total,
+            },
+            isLoadingGetListProjectsParticipated: false,
         }),
 
         // ========== CREATE NEW PROJECT ========== //
@@ -364,6 +389,10 @@ export const {
     requestGetListMyProjects,
     getListMyProjectsSuccess,
     getListMyProjectsFail,
+    // ========== PROJECTS PARTICIPATED ========== //
+    requestGetListProjectsParticipated,
+    getListProjectsParticipatedSuccess,
+    getListProjectsParticipatedFail,
     // ========= CREATE NEW PROJECT ========== //
     requestCreateNewProject,
     createNewProjectSuccess,

@@ -10,6 +10,11 @@ export async function getListMyProjects(req, res) {
     const result = await projectService.getListMyProjects(req.currentUser, req.query)
     res.jsonify(result)
 }
+// ========== GET [Projects - Participated] ========== //
+export async function getListProjectsParticipated(req, res) {
+    const result = await projectService.getListProjectsParticipated(req.currentUser, req.query)
+    res.jsonify(result)
+}
 
 // ========== GET [My Project Details] ========== //
 export async function getMyProjectDetails(req, res) {

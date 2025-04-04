@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getListMyProjects } from 'api/project'
+import { getListProjectsParticipated } from 'api/project'
 import ProjectBox from './ProjectBox'
 
-const MyProjects = ({ isBottom, setIsBottom }) => {
+const ProjectsParticipated = ({ isBottom, setIsBottom }) => {
     const dispatch = useDispatch()
 
     // ========== STATE FROM REDUX ========== //
-    const { myProjects, paginationListMyProjects, isLoadingGetListMyProjects } = useSelector((state) => state.project)
+    const { projectsParticipated, paginationProjectsParticipated, isLoadingGetListProjectsParticipated } = useSelector(
+        (state) => state.project
+    )
 
     // ========== USE EFFECT ========== //
     useEffect(() => {
-        if (!myProjects || myProjects.length === 0) {
-            dispatch(getListMyProjects(paginationListMyProjects))
+        if (!projectsParticipated || projectsParticipated.length === 0) {
+            dispatch(getListProjectsParticipated(paginationProjectsParticipated))
         }
         // eslint-disable-next-line
     }, [dispatch])
@@ -23,18 +24,18 @@ const MyProjects = ({ isBottom, setIsBottom }) => {
         if (isBottom) {
             // Call API hoặc load thêm dữ liệu
             dispatch(
-                getListMyProjects({
-                    ...paginationListMyProjects,
-                    currentPage: parseInt(paginationListMyProjects.currentPage) + 1,
+                getListProjectsParticipated({
+                    ...paginationProjectsParticipated,
+                    currentPage: parseInt(paginationProjectsParticipated.currentPage) + 1,
                 })
             )
             setIsBottom(false)
         }
-    }, [isBottom, dispatch, paginationListMyProjects, setIsBottom])
+    }, [isBottom, dispatch, paginationProjectsParticipated, setIsBottom])
 
     return (
         <>
-            {myProjects && myProjects.length === 0 && !isLoadingGetListMyProjects && (
+            {projectsParticipated && projectsParticipated.length === 0 && !isLoadingGetListProjectsParticipated && (
                 <div className="flex flex-col items-center justify-center">
                     <img
                         alt="Not found"
@@ -47,15 +48,15 @@ const MyProjects = ({ isBottom, setIsBottom }) => {
                 </div>
             )}
             <div className="grid grid-cols-2 gap-8">
-                {myProjects && myProjects.length > 0 ? (
-                    myProjects.map((project, index) => <ProjectBox project={project} key={index} />)
+                {projectsParticipated && projectsParticipated.length > 0 ? (
+                    projectsParticipated.map((project, index) => <ProjectBox project={project} key={index} />)
                 ) : (
                     <div className="hidden text-center text-gray-500 "></div>
                 )}
             </div>
-            {isLoadingGetListMyProjects && <div className="text-center">Loading...</div>}
+            {isLoadingGetListProjectsParticipated && <div className="text-center">Loading...</div>}
         </>
     )
 }
 
-export default MyProjects
+export default ProjectsParticipated

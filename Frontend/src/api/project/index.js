@@ -4,6 +4,10 @@ import {
     requestGetListMyProjects,
     getListMyProjectsSuccess,
     getListMyProjectsFail,
+    // ========== PROJECTS PARTICIPATED ========== //
+    requestGetListProjectsParticipated,
+    getListProjectsParticipatedSuccess,
+    getListProjectsParticipatedFail,
     // ========== CREATE NEW PROJECT ========== //
     requestCreateNewProject,
     createNewProjectSuccess,
@@ -63,6 +67,32 @@ export const getListMyProjects = (dataFilter) => async (dispatch, getState) => {
         method: 'get',
         apiPath: path,
         actionTypes: [requestGetListMyProjects, getListMyProjectsSuccess, getListMyProjectsFail],
+        variables: {},
+        dispatch,
+        getState,
+    })
+}
+
+// ========== PROJECTS PARTICIPATED ========== //
+export const getListProjectsParticipated = (dataFilter) => async (dispatch, getState) => {
+    let path = `projects/me/participated?per_page=${dataFilter.perPage}&page=${dataFilter.currentPage}`
+    if (dataFilter.keySearch) {
+        path += `&q=${dataFilter.keySearch}`
+    }
+    if (dataFilter.status && dataFilter.status.length > 0) {
+        path += `&status=${dataFilter.status}`
+    }
+    if (dataFilter.order && dataFilter.column) {
+        path += `&order=${dataFilter.order}&column=${dataFilter.column}`
+    }
+    return callApi({
+        method: 'get',
+        apiPath: path,
+        actionTypes: [
+            requestGetListProjectsParticipated,
+            getListProjectsParticipatedSuccess,
+            getListProjectsParticipatedFail,
+        ],
         variables: {},
         dispatch,
         getState,

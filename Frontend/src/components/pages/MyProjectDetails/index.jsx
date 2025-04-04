@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getMyProjectDetails } from 'api/project';
-import ProjectMenu from './components/ProjectMenu';
-import ProjectCard from './components/ProjectCard';
-import ProjectOverview from './components/ProjectOverview';
-import ProjectManage from './components/ProjectManage';
-import Members from './components/Members';
-import Sendinvite from './components/Sendinvite';
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getMyProjectDetails } from 'api/project'
+import ProjectMenu from './components/ProjectMenu'
+import ProjectCard from './components/ProjectCard'
+import ProjectOverview from './components/ProjectOverview'
+import ProjectManage from './components/ProjectManage'
+import Members from './components/Members'
+import Sendinvite from './components/Sendinvite'
 
 const MyProjectDetails = () => {
-    const { id } = useParams();
-    const dispatch = useDispatch();
+    const { id } = useParams()
+    const dispatch = useDispatch()
     // ========== STATE FROM REDUX ========== //
-    const project = useSelector((state) => state.project.myProjectDetails);
+    const project = useSelector((state) => state.project.myProjectDetails)
     // ========== STATE ========== //
-    const [tab, setTab] = useState('overview');
+    const [tab, setTab] = useState('overview')
 
     useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+        window.scrollTo(0, 0)
+    }, [])
 
     useEffect(() => {
-        dispatch(getMyProjectDetails(id));
-    }, [id, dispatch]);
+        dispatch(getMyProjectDetails(id))
+    }, [id, dispatch])
 
     return (
         <div className="w-full h-full">
@@ -36,7 +36,7 @@ const MyProjectDetails = () => {
             {tab === 'media' && <ProjectOverview project={project} />}
             {tab === 'invite' && <Sendinvite project={project} />}
         </div>
-    );
-};
+    )
+}
 
-export default MyProjectDetails;
+export default MyProjectDetails

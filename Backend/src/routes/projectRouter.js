@@ -120,6 +120,13 @@ projectRouter.post(
     asyncHandler(projectController.inviteMember)
 )
 
+// ========= GET [Projects - Participated] ========== //
+projectRouter.get(
+    '/me/participated',
+    // asyncHandler(validate(projectRequest.getListProjectsParticipated)),
+    asyncHandler(projectController.getListProjectsParticipated)
+)
+
 // ========== GET [My Projects] ========== //
 projectRouter.get('/me', asyncHandler(projectController.getListMyProjects))
 
