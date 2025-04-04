@@ -4,6 +4,7 @@ import { IconlyEditSquare } from 'components/UI/Iconly'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { DataList } from "@chakra-ui/react"
 
 const action = () => {
     return <div>has accessed your profile.</div>
@@ -92,22 +93,41 @@ const ProfessionalProfile = () => {
                         </span>
                     </div>
                     <div className="flex flex-col gap-4 p-4">
+
                         {profile?.educations?.length > 0 ? (
-                            profile.educations.map((education, index) => (
-                                <div key={index} className="p-3  mt-2 mr-1 shadow rounded-[0.6rem]">
-                                    <h4 className="font-semibold">{education.school || 'N/A'}</h4>
-                                    <p>Degree: {education.degree || 'N/A'}</p>
-                                    <p>Field of Study: {education.field_of_study || 'N/A'}</p>
-                                    <p>
-                                        Years: {formatDate(education.start_date || 'N/A')} -{' '}
-                                        {formatDate(education.end_date || 'N/A')}
-                                    </p>
-                                    <p>Grade: {education.grade || 'N/A'}</p>
-                                </div>
-                            ))
+
+                            (
+                                profile.educations.map((education, index) => (
+                                    <DataList.Root orientation="horizontal" key={index}>
+                                        <div className="p-3  mt-2 mr-1 shadow rounded-[0.6rem]">
+                                            <h4 className="font-semibold">{education.school || 'N/A'}</h4>
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <DataList.ItemLabel>Degree</DataList.ItemLabel>
+                                                <DataList.ItemValue className='mb-0'>{education.degree || 'N/A'}</DataList.ItemValue>
+                                            </div>
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <DataList.ItemLabel>Field of Study </DataList.ItemLabel>
+                                                <DataList.ItemValue className='mb-0'>{education.field_of_study || 'N/A'}</DataList.ItemValue>
+                                            </div>
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <DataList.ItemLabel>
+                                                    Years
+                                                </DataList.ItemLabel>
+                                                <DataList.ItemValue className='mb-0'>{formatDate(education.start_date)} - {formatDate(education.end_date)}</DataList.ItemValue>
+                                            </div>
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <DataList.ItemLabel>Grade </DataList.ItemLabel>
+                                                <DataList.ItemValue className='mb-0'>{education.grade || 'N/A'}</DataList.ItemValue>
+                                            </div>
+                                        </div>
+                                    </DataList.Root>
+                                ))
+                            )
+
                         ) : (
                             <p className="text-gray-500">No education information available.</p>
                         )}
+
                     </div>
                 </div>
                 <div className="bg-[#ffffff] rounded-md mt-8">
@@ -122,12 +142,17 @@ const ProfessionalProfile = () => {
                     </div>
                     <div className="flex flex-col gap-4 p-4">
                         {profile?.certifications?.length > 0 ? (
-                            profile.certifications.map((certification, index) => (
-                                <div key={index} className="p-3    mt-2 mr-1 shadow rounded-[0.6rem]">
-                                    <h4 className="font-semibold">{certification.name || 'N/A'}</h4>
-                                    <p>Certificate Expiration: {formatDate(certification.issue_date || 'N/A')}</p>
-                                </div>
-                            ))
+                            (profile.certifications.map((certification, index) => (
+                                <DataList.Root orientation="horizontal" key={index}>
+                                    <div key={index} className="p-3    mt-2 mr-1 shadow rounded-[0.6rem]">
+                                        <h4 className="font-semibold">{certification.name || 'N/A'}</h4>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <DataList.ItemLabel>Certificate Expiration </DataList.ItemLabel>
+                                            <DataList.ItemValue className='mb-0'>{formatDate(certification.expiration_date)}</DataList.ItemValue>
+                                        </div>
+                                    </div>
+                                </DataList.Root>
+                            )))
                         ) : (
                             <p className="text-gray-500">No education information available.</p>
                         )}
