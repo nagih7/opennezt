@@ -1,119 +1,177 @@
 import { Tabs } from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { EyeInvisibleOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import RightSidebar from 'components/common/RightSidebar'
+import { getNotifications, replyNotification, readRoot } from 'api/notification'
+import moment from 'moment'
 
 function NotificationProject() {
+    const dispatch = useDispatch()
     const { language } = useSelector((state) => state.app)
+    const { notifications } = useSelector((state) => state.notification)
+    
     const [dataFilter, setDataFilter] = useState({
         page: 1,
         perPage: 10,
-        order: null,
+        order: 'desc', // Default to newest first
     })
-    // new code
-    const notifications = [
-        {
-            id: 1,
-            name: 'Jerome Bell',
-            message: 'accepted your friendship request',
-            time: '14 hours, 48 minutes ago',
-        },
-        {
-            id: 2,
-            name: 'Aaron Jones',
-            message: 'liked your post',
-            time: '5 days, 15 hours ago',
-        },
-        {
-            id: 3,
-            name: 'Jenny Wilson',
-            message: 'commented on your photo',
-            time: '5 days, 15 hours ago',
-        },
-        {
-            id: 4,
-            name: 'Aaron Jones',
-            message: 'sent you a friend request',
-            time: '1 week ago',
-        },
-        {
-            id: 5,
-            name: 'Jenny Wilson',
-            message: 'shared your post',
-            time: '1 week ago',
-        },
-        {
-            id: 6,
-            name: 'Curtis Campher',
-            message: 'mentioned you in a comment',
-            time: '2 weeks ago',
-        },
-        {
-            id: 7,
-            name: 'Jenny Wilson',
-            message: 'tagged you in a photo',
-            time: '2 weeks, 4 days ago',
-        },
-        {
-            id: 8,
-            name: 'Felix Deo',
-            message: 'reacted to your story',
-            time: '2 weeks, 6 days ago',
-        },
-        {
-            id: 9,
-            name: 'Jenny Wilson',
-            message: 'sent you a message',
-            time: '3 weeks ago',
-        },
-        {
-            id: 10,
-            name: 'Jerome Bell',
-            message: 'joined your group',
-            time: '3 weeks, 4 days ago',
-        },
-    ]
+    
     const [unreadNotifications, setUnreadNotifications] = useState([])
-    const [readNotifications, setReadNotifications] = useState(notifications)
-    const [data, setData] = useState(notifications)
+    const [readNotifications, setReadNotifications] = useState([])
     const [selected, setSelected] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+    
+    // Fetch notifications from API
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            setIsLoading(true)
+            try {
+                // Call the readRoot API with current filters
+                await dispatch(readRoot(dataFilter))
+                // Also fetch regular notifications
+                await dispatch(getNotifications())
+            } catch (error) {
+                console.error('Error fetching notifications:', error)
+            } finally {
+                setIsLoading(false)
+            }
+        }
+        
+        fetchNotifications()
+    }, [dispatch, dataFilter])
+    
+    // Process notifications from API response
+    useEffect(() => {
+        if (notifications) {
+            // Filter notifications into read and unread
+            const read = notifications.filter(notification => 
+                notification.metadata && notification.metadata.read === true
+            )
+            
+            const unread = notifications.filter(notification => 
+                !notification.metadata || notification.metadata.read === false
+            )
+            
+            setReadNotifications(read.map(notification => ({
+                id: notification.id,
+                name: notification.user?.name || 'Unknown User',
+                message: notification.message || '',
+                time: moment(notification.timestamp).fromNow(),
+                raw: notification // Keep the raw notification for API calls
+            })))
+            
+            setUnreadNotifications(unread.map(notification => ({
+                id: notification.id,
+                name: notification.user?.name || 'Unknown User',
+                message: notification.message || '',
+                time: moment(notification.timestamp).fromNow(),
+                raw: notification // Keep the raw notification for API calls
+            })))
+        }
+    }, [notifications])
+    
+    // Handle sort order change
+    const handleSortChange = (e) => {
+        const newOrder = e.target.value === 'Newest First' ? 'desc' : 'asc'
+        setDataFilter({
+            ...dataFilter,
+            order: newOrder
+        })
+    }
+    
     const toggleSelectAll = (e) => {
+        const currentTab = document.querySelector('[data-state="active"]').getAttribute('value')
+        const notificationsToSelect = currentTab === 'Unread' ? unreadNotifications : readNotifications
+        
         if (e.target.checked) {
-            setSelected(data.map((notification) => notification.id))
+            setSelected(notificationsToSelect.map((notification) => notification.id))
         } else {
             setSelected([])
         }
     }
-    //Read
-    const markAsUnread = (id) => {
+    
+    // Mark as unread API call
+    const markAsUnread = async (id) => {
         const notificationToMove = readNotifications.find((n) => n.id === id)
-
+        
         if (notificationToMove) {
-            setUnreadNotifications([...unreadNotifications, notificationToMove])
-            setReadNotifications(readNotifications.filter((n) => n.id !== id))
+            try {
+                // Call API to mark as unread
+                await dispatch(replyNotification(id, 'mark_as_unread'))
+                
+                // Update local state
+                setUnreadNotifications([...unreadNotifications, notificationToMove])
+                setReadNotifications(readNotifications.filter((n) => n.id !== id))
+            } catch (error) {
+                console.error('Error marking notification as unread:', error)
+            }
         }
     }
-    //Unread
-    const markAsRead = (id) => {
+    
+    // Mark as read API call
+    const markAsRead = async (id) => {
         const notificationToMove = unreadNotifications.find((n) => n.id === id)
-
+        
         if (notificationToMove) {
-            setReadNotifications([...readNotifications, notificationToMove])
-            setUnreadNotifications(unreadNotifications.filter((n) => n.id !== id))
+            try {
+                // Call API to mark as read
+                await dispatch(replyNotification(id, 'mark_as_read'))
+                
+                // Update local state
+                setReadNotifications([...readNotifications, notificationToMove])
+                setUnreadNotifications(unreadNotifications.filter((n) => n.id !== id))
+            } catch (error) {
+                console.error('Error marking notification as read:', error)
+            }
         }
     }
+    
     const toggleSelect = (id) => {
         setSelected((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
     }
-    // Read
-    const deleteNotification = (id) => {
-        setData(data.filter((notification) => notification.id !== id))
+    
+    // Delete notification API call
+    const deleteNotification = async (id) => {
+        try {
+            // Call API to delete notification
+            await dispatch(replyNotification(id, 'delete'))
+            
+            // Update local state
+            setReadNotifications(readNotifications.filter((notification) => notification.id !== id))
+            setUnreadNotifications(unreadNotifications.filter((notification) => notification.id !== id))
+        } catch (error) {
+            console.error('Error deleting notification:', error)
+        }
     }
-    //Unread
-    const deleteUnreadnotification = (id) => {
-        setUnreadNotifications(unreadNotifications.filter((unreadnotification) => unreadnotification.id !== id))
+    
+    // Apply bulk actions
+    const applyBulkAction = async () => {
+        const action = document.querySelector('select[value="Bulk Actions"]').value
+        
+        if (selected.length === 0 || action === 'Bulk Actions') return
+        
+        try {
+            // Process each selected notification
+            for (const id of selected) {
+                if (action === 'Mark Unread') {
+                    await dispatch(replyNotification(id, 'mark_as_unread'))
+                } else if (action === 'Delete') {
+                    await dispatch(replyNotification(id, 'delete'))
+                }
+            }
+            
+            // Refresh notifications after bulk action
+            dispatch(readRoot(dataFilter))
+            dispatch(getNotifications())
+            
+            // Clear selection
+            setSelected([])
+        } catch (error) {
+            console.error('Error applying bulk action:', error)
+        }
     }
+    
     return (
         <>
             <div className="flex w-full gap-8 mt-[1rem] px-[16px]">
@@ -132,7 +190,11 @@ function NotificationProject() {
 
                                 <div className="flex items-center space-x-2 2xl:ml-[31.5rem] ">
                                     <span className="text-black ">Order By:</span>
-                                    <select className="text-sm font-medium text-gray-600 bg-transparent outline-none border border-[#F3F3F3] w-[10rem] h-[2rem] rounded-sm">
+                                    <select 
+                                        className="text-sm font-medium text-gray-600 bg-transparent outline-none border border-[#F3F3F3] w-[10rem] h-[2rem] rounded-sm"
+                                        onChange={handleSortChange}
+                                        defaultValue="Newest First"
+                                    >
                                         <option value="Newest First">Newest First</option>
                                         <option value="Oldest First">Oldest First</option>
                                     </select>
@@ -142,7 +204,11 @@ function NotificationProject() {
                         <div className="mt-[2.5rem] bg-white ">
                             <Tabs.Content value="Unread">
                                 <div className="p-4">
-                                    {unreadNotifications.length === 0 ? (
+                                    {isLoading ? (
+                                        <div className="flex justify-center p-4">
+                                            <div className="loader">Loading...</div>
+                                        </div>
+                                    ) : unreadNotifications.length === 0 ? (
                                         <div className="bg-[#E3F1F6] p-3 border-l-2 border-[#0098CB] text-[#1599CC]">
                                             You have no unread notifications.
                                         </div>
@@ -157,7 +223,8 @@ function NotificationProject() {
                                                                 type="checkbox"
                                                                 onChange={toggleSelectAll}
                                                                 checked={
-                                                                    selected.length === data.length && data.length > 0
+                                                                    selected.length === unreadNotifications.length && 
+                                                                    unreadNotifications.length > 0
                                                                 }
                                                             />
                                                         </th>
@@ -193,9 +260,7 @@ function NotificationProject() {
                                                                 </button>
                                                                 <button
                                                                     className="p-2 bg-red-100 rounded hover:bg-red-200 h-[2.25rem] w-[2.25rem]"
-                                                                    onClick={() =>
-                                                                        deleteUnreadnotification(notification.id)
-                                                                    }
+                                                                    onClick={() => deleteNotification(notification.id)}
                                                                 >
                                                                     <DeleteOutlined className="text-red-600" />
                                                                 </button>
@@ -212,7 +277,11 @@ function NotificationProject() {
                             <Tabs.Content value="Read">
                                 <>
                                     <div className="p-4">
-                                        {readNotifications.length === 0 ? (
+                                        {isLoading ? (
+                                            <div className="flex justify-center p-4">
+                                                <div className="loader">Loading...</div>
+                                            </div>
+                                        ) : readNotifications.length === 0 ? (
                                             <div className="bg-[#E3F1F6] p-3 border-l-2 border-[#0098CB] text-[#1599CC]">
                                                 You have no read notifications.
                                             </div>
@@ -228,8 +297,8 @@ function NotificationProject() {
                                                                         type="checkbox"
                                                                         onChange={toggleSelectAll}
                                                                         checked={
-                                                                            selected.length === data.length &&
-                                                                            data.length > 0
+                                                                            selected.length === readNotifications.length &&
+                                                                            readNotifications.length > 0
                                                                         }
                                                                     />
                                                                 </th>
@@ -287,7 +356,10 @@ function NotificationProject() {
                                                         <option value="Mark Unread">Mark Unread</option>
                                                         <option value="Delete">Delete</option>
                                                     </select>
-                                                    <button className="bg-[#2F65B9] text-white w-[6rem] h-[3rem] rounded-[0.4rem] mr-3">
+                                                    <button 
+                                                        className="bg-[#2F65B9] text-white w-[6rem] h-[3rem] rounded-[0.4rem] mr-3"
+                                                        onClick={applyBulkAction}
+                                                    >
                                                         Apply
                                                     </button>
                                                 </div>
@@ -305,4 +377,4 @@ function NotificationProject() {
     )
 }
 
-export default NotificationProject
+export default NotificationProject;
