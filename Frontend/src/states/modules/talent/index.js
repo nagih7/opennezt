@@ -27,6 +27,8 @@ const talentSlice = createSlice({
         isLoadingGetTalentDetails: false,
         // REQUEST ADD FRIEND
         isLoadingSendFriendRequest: false,
+        // REPLY FRIEND REQUEST
+        isLoadingReplyFriendRequest: false,
     },
     reducers: {
         // ========== RECRUIT TALENTS ========== //
@@ -98,13 +100,30 @@ const talentSlice = createSlice({
             ...state,
             talentDetails: {
                 ...state.talentDetails,
-                is_friend_requested: action.payload.data.is_friend_requested,
+                friend_request: action.payload.data,
             },
             isLoadingSendFriendRequest: false,
         }),
         sendFriendRequestFail: (state) => ({
             ...state,
             isLoadingSendFriendRequest: false,
+        }),
+        // =========== REPLY FRIEND REQUEST =========== //
+        requestReplyFriendRequest: (state) => ({
+            ...state,
+            isLoadingReplyFriendRequest: true,
+        }),
+        replyFriendRequestSuccess: (state, action) => ({
+            ...state,
+            talentDetails: {
+                ...state.talentDetails,
+                friend_request: action.payload.data,
+            },
+            isLoadingReplyFriendRequest: false,
+        }),
+        replyFriendRequestFail: (state) => ({
+            ...state,
+            isLoadingReplyFriendRequest: false,
         }),
     },
 })
@@ -119,10 +138,14 @@ export const {
     requestGetTalentDetails,
     getTalentDetailsSuccess,
     getTalentDetailsFail,
-    // REQUEST ADD FRIEND
+    // ========== REQUEST ADD FRIEND ========== //
     requestSendFriendRequest,
     sendFriendRequestSuccess,
     sendFriendRequestFail,
+    // =========== REPLY FRIEND REQUEST =========== //
+    requestReplyFriendRequest,
+    replyFriendRequestSuccess,
+    replyFriendRequestFail,
 } = talentSlice.actions
 
 export default talentSlice.reducer

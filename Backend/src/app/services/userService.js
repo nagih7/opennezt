@@ -283,7 +283,12 @@ export async function sendFriendRequest(user, { userId }, { action }, io) {
                     })
                 }
             }
-            return { is_friend_requested: true }
+            return {
+                _id: newNotification._id,
+                source_id: newNotification.source_id,
+                metadata: newNotification.metadata,
+                timestamp: newNotification.timestamp,
+            }
         }
         case CANCEL_ACTION: {
             const notification = await NotificationFeed.deleteOne({
@@ -294,7 +299,7 @@ export async function sendFriendRequest(user, { userId }, { action }, io) {
             if (!notification.deletedCount) {
                 throw new Error('Notification not found')
             } else {
-                return { is_friend_requested: false }
+                return
             }
         }
         default:

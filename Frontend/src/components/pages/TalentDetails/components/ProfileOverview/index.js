@@ -1,15 +1,33 @@
-import { Avatar, Button } from '@chakra-ui/react'
+import { Avatar, Button, Spinner } from '@chakra-ui/react'
+import { replyFriendRequest } from 'api/talent'
 import { sendFriendRequest } from 'api/user'
-import { IconlyAddUser, IconlyBookmark, IconlyLocation, IconlyShieldDone } from 'components/UI/Iconly'
+import {
+    IconlyAddUser,
+    IconlyBookmark,
+    IconlyDelete,
+    IconlyLocation,
+    IconlyShieldDone,
+    IconlyUser,
+} from 'components/UI/Iconly'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { CANCEL_ACTION, SEND_ACTION } from 'utils/constants'
+import {
+    CANCEL_ACTION,
+    CONFIRM_ACTION,
+    CONFIRM_STATUS,
+    DELETE_ACTION,
+    SEND_ACTION,
+    WAITING_STATUS,
+} from 'utils/constants'
 
-const ProfileOverview = ({ user, isFriendRequested }) => {
+const ProfileOverview = ({ user, friendRequest }) => {
     const dispatch = useDispatch()
 
     // ========== STATE FROM REDUX ========== //
-    const { isLoadingSendFriendRequest } = useSelector((state) => state.talent)
+    const { authUser } = useSelector((state) => state.auth)
+    const { isLoadingSendFriendRequest, isLoadingReplyFriendRequest, isLoadingGetTalentDetails } = useSelector(
+        (state) => state.talent
+    )
 
     // ========== HANDLE FUNCTION ========== //
     const handleSendFriendRequest = () => {
@@ -18,6 +36,11 @@ const ProfileOverview = ({ user, isFriendRequested }) => {
 
     const handleCancelFriendRequest = () => {
         dispatch(sendFriendRequest(user._id, CANCEL_ACTION))
+    }
+
+    // ========== HANDLE REPLY NOTIFICATION ========== //
+    const handleReplyFriendRequest = async (notification_id, action) => {
+        dispatch(replyFriendRequest(notification_id, action))
     }
 
     return (
@@ -68,40 +91,89 @@ const ProfileOverview = ({ user, isFriendRequested }) => {
                 </div>
                 <div className="w-4/12">
                     <div className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
-                        {(() => {
-                            switch (isFriendRequested) {
-                                case true:
-                                    return (
-                                        <div className="flex">
-                                            <Button className="bg-[#F4F5F6] text-black rounded-[0.3rem] ml-4 border-none ">
-                                                Requested
-                                            </Button>
-                                            <Button
-                                                className="bg-[#0866FF] text-white rounded-[0.3rem] ml-4"
-                                                onClick={handleCancelFriendRequest}
-                                                loading={isLoadingSendFriendRequest}
-                                                loadingText="Canceling..."
-                                            >
-                                                Cancel request
-                                            </Button>
-                                        </div>
-                                    )
-                                case false:
-                                    return (
-                                        <Button
-                                            className="bg-[#0866FF] text-white rounded-[0.3rem]"
-                                            onClick={handleSendFriendRequest}
-                                            loading={isLoadingSendFriendRequest}
-                                            loadingText="Sending..."
-                                            spinnerPlacement="start"
-                                            variant="solid"
-                                        >
-                                            <IconlyAddUser size={24} color={'#fff'} />
-                                            Add friend
-                                        </Button>
-                                    )
-                            }
-                        })()}
+                        {friendRequest
+                            ? (() => {
+                                  switch (friendRequest?.metadata?.status) {
+                                      case WAITING_STATUS:
+                                          switch (friendRequest?.source_id) {
+                                              case authUser?._id:
+                                                  return (
+                                                      <div className="flex">
+                                                          <Button className="bg-[#F4F5F6] text-black rounded-[0.3rem] ml-4 border-none ">
+                                                              Requested
+                                                          </Button>
+                                                          <Button
+                                                              className="bg-[#0866FF] text-white rounded-[0.3rem] ml-4"
+                                                              onClick={handleCancelFriendRequest}
+                                                              loading={isLoadingSendFriendRequest}
+                                                              loadingText="Canceling..."
+                                                          >
+                                                              Cancel request
+                                                          </Button>
+                                                      </div>
+                                                  )
+                                              default:
+                                                  switch (isLoadingReplyFriendRequest) {
+                                                      case true:
+                                                          return <Spinner size="md" />
+                                                      default:
+                                                          return (
+                                                              <div className="flex">
+                                                                  <Button
+                                                                      className="bg-[#0866FF] text-white rounded-[0.3rem]"
+                                                                      onClick={() =>
+                                                                          handleReplyFriendRequest(
+                                                                              friendRequest?._id,
+                                                                              CONFIRM_ACTION
+                                                                          )
+                                                                      }
+                                                                      variant="solid"
+                                                                  >
+                                                                      <IconlyUser size={24} color={'#fff'} />
+                                                                      Confirm
+                                                                  </Button>
+                                                                  <Button
+                                                                      variant="subtle"
+                                                                      className="rounded-[0.3rem] ml-4"
+                                                                      onClick={() =>
+                                                                          handleReplyFriendRequest(
+                                                                              friendRequest?._id,
+                                                                              DELETE_ACTION
+                                                                          )
+                                                                      }
+                                                                  >
+                                                                      <IconlyDelete size={24} color={'#000'} />
+                                                                      Delete
+                                                                  </Button>
+                                                              </div>
+                                                          )
+                                                  }
+                                          }
+                                      case CONFIRM_STATUS:
+                                          return (
+                                              <Button className="bg-[#F4F5F6] text-black rounded-[0.3rem]">
+                                                  <IconlyUser size={24} color={'#000'} />
+                                                  Friends
+                                              </Button>
+                                          )
+                                      default:
+                                          return null
+                                  }
+                              })()
+                            : user &&
+                              !isLoadingGetTalentDetails && (
+                                  <Button
+                                      className="bg-[#0866FF] text-white rounded-[0.3rem]"
+                                      onClick={handleSendFriendRequest}
+                                      loading={isLoadingSendFriendRequest}
+                                      loadingText="Sending..."
+                                      spinnerPlacement="start"
+                                      variant="solid"
+                                  >
+                                      <IconlyAddUser size={24} color={'#fff'} />
+                                      Add friend
+                                  </Button>
+                              )}
                     </div>
                 </div>
             </div>
