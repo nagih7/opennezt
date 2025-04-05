@@ -28,10 +28,21 @@ import ConfirmProjectInvitationNoitification from './components/ConfirmProjectIn
 function PopoverNotification() {
     // ========== STATE FROM REDUX ========== //
     const { notifications, isLoadingReplyNotification } = useSelector((state) => state.notification)
+
     const { language } = useSelector((state) => state.app)
 
     // ========== STATE ========== //
     const [notificationIndex, setNotificationIndex] = useState(null)
+    // ========= Phan biet thong bao chua doc va da doc ========== //
+    const unreadNotifications = notifications.filter(
+        (notification) => notification.metadata?.read === false
+    );
+
+    const readNotifications = notifications.filter(
+        (notification) => notification.metadata?.read === true
+    );
+
+
 
     // ========== HANDLE REPLY NOTIFICATION ========== //
     const handleReplyNotification = async (notification_id, action, index) => {
@@ -47,111 +58,222 @@ function PopoverNotification() {
                 {NOTIFICATIONS.NOTIFICATIONS[language]}
             </div>
             <div
-                className={`${
-                    notifications && notifications.length >= 3
-                        ? 'flex flex-col items-center max-h-[250px] p-0 m-0 overflow-y-scroll scrollbar-thumb-gray-400 scrollbar-track-gray-200 w-full'
-                        : ''
-                }`}
+                className={`${notifications && notifications.length >= 3
+                    ? 'flex flex-col items-center max-h-[250px] p-0 m-0 overflow-y-scroll scrollbar-thumb-gray-400 scrollbar-track-gray-200 w-full'
+                    : ''
+                    }`}
             >
+
                 <Stack spacing={4}>
-                    <Stack spacing={2}>
-                        {notifications &&
-                            notifications.length > 0 &&
-                            notifications.map((notification, index) => (
-                                <div className="px-4 py-[16px] hover:bg-[#f6f5f5]" key={index}>
-                                    <Stack>
-                                        <Stack direction="row" spacing={4}>
-                                            <Avatar.Root size={'sm'}>
-                                                <Avatar.Fallback name={notification.user?.name} />
-                                                <Avatar.Image src={notification.user.avatar} />
-                                            </Avatar.Root>
-                                            <Stack spacing={2}>
-                                                {(() => {
-                                                    switch (notification.type?.name) {
-                                                        case PROJECT_INVITATION_NOTIFICATION:
-                                                            return <ProjectInvitation notification={notification} />
-                                                        case FRIEND_REQUEST_NOTIFICATION:
-                                                            return <FriendRequest notification={notification} />
-                                                        case CONFIRM_FRIEND_REQUEST_NOTIFICATION:
-                                                            return (
-                                                                <ConfirmFriendRequestNotification
-                                                                    notification={notification}
-                                                                />
-                                                            )
-                                                        case PROJECT_APPLICATION_NOTIFICATION:
-                                                            return (
-                                                                <ProjectApplicationNotification
-                                                                    notification={notification}
-                                                                />
-                                                            )
-                                                        case CONFIRM_PROJECT_INVITATION_NOTIFICATION:
-                                                            return (
-                                                                <ConfirmProjectInvitationNoitification
-                                                                    notification={notification}
-                                                                />
-                                                            )
-                                                        default:
-                                                            return (
-                                                                <div className="text-[#6f7f92] text-sm font-medium">
-                                                                    {notification.message || 'New notification'}
-                                                                </div>
-                                                            )
-                                                    }
-                                                })()}
-                                                <span className="text-[#6f7f92] text-xs">
-                                                    {moment(notification.timestamp).fromNow()}
-                                                </span>
-                                            </Stack>
-                                        </Stack>
-                                        <div className="flex items-center justify-end">
-                                            {(() => {
-                                                switch (notificationIndex) {
-                                                    case index:
-                                                        switch (isLoadingReplyNotification) {
-                                                            case true:
-                                                                return <Spinner size="md" />
-                                                            default:
-                                                                switch (notification.metadata.status) {
-                                                                    case WAITING_STATUS:
-                                                                        return (
-                                                                            <Actions
-                                                                                notification={notification}
-                                                                                handleReplyNotification={
-                                                                                    handleReplyNotification
-                                                                                }
-                                                                                index={index}
-                                                                            />
-                                                                        )
-                                                                    case CONFIRM_STATUS:
-                                                                        return null
-                                                                    default:
-                                                                        return null
-                                                                }
-                                                        }
-                                                    default:
-                                                        switch (notification.metadata.status) {
-                                                            case WAITING_STATUS:
+                    {/* Hiển thị thông báo chưa đọc */}
+                    {unreadNotifications.length > 0 && (
+                        <div>
+                            <div className="mx-4 py-[8px] text-md font-semibold text-gray-600">
+                                Thông báo chưa đọc
+                            </div>
+                            <Stack spacing={2}>
+                                {unreadNotifications.map((notification, index) => (
+                                    <div className="px-4 py-[16px] hover:bg-[#f6f5f5] cursor-pointer" key={index}>
+                                        <Stack>
+                                            <Stack direction="row" spacing={4}>
+                                                <Avatar.Root size={'sm'}>
+                                                    <Avatar.Fallback name={notification.user?.name} />
+                                                    <Avatar.Image src={notification.user.avatar} />
+                                                </Avatar.Root>
+                                                <Stack spacing={2}>
+                                                    {(() => {
+                                                        switch (notification.type?.name) {
+                                                            case PROJECT_INVITATION_NOTIFICATION:
+                                                                return <ProjectInvitation notification={notification} />
+                                                            case FRIEND_REQUEST_NOTIFICATION:
+                                                                return <FriendRequest notification={notification} />
+                                                            case CONFIRM_FRIEND_REQUEST_NOTIFICATION:
                                                                 return (
-                                                                    <Actions
+                                                                    <ConfirmFriendRequestNotification
                                                                         notification={notification}
-                                                                        handleReplyNotification={
-                                                                            handleReplyNotification
-                                                                        }
-                                                                        index={index}
                                                                     />
                                                                 )
-                                                            case CONFIRM_STATUS:
-                                                                return null
+                                                            case PROJECT_APPLICATION_NOTIFICATION:
+                                                                return (
+                                                                    <ProjectApplicationNotification
+                                                                        notification={notification}
+                                                                    />
+                                                                )
+                                                            case CONFIRM_PROJECT_INVITATION_NOTIFICATION:
+                                                                return (
+                                                                    <ConfirmProjectInvitationNoitification
+                                                                        notification={notification}
+                                                                    />
+                                                                )
                                                             default:
-                                                                return null
+                                                                return (
+                                                                    <div className="text-[#6f7f92] text-sm font-medium">
+                                                                        {notification.message || 'New notification'}
+                                                                    </div>
+                                                                )
                                                         }
-                                                }
-                                            })()}
-                                        </div>
-                                    </Stack>
-                                </div>
-                            ))}
-                    </Stack>
+                                                    })()}
+                                                    <span className="text-[#6f7f92] text-xs">
+                                                        {moment(notification.timestamp).fromNow()}
+                                                    </span>
+                                                </Stack>
+                                            </Stack>
+                                            <div className="flex items-center justify-end">
+                                                {(() => {
+                                                    switch (notificationIndex) {
+                                                        case index:
+                                                            switch (isLoadingReplyNotification) {
+                                                                case true:
+                                                                    return <Spinner size="md" />
+                                                                default:
+                                                                    switch (notification.metadata.status) {
+                                                                        case WAITING_STATUS:
+                                                                            return (
+                                                                                <Actions
+                                                                                    notification={notification}
+                                                                                    handleReplyNotification={
+                                                                                        handleReplyNotification
+                                                                                    }
+                                                                                    index={index}
+                                                                                />
+                                                                            )
+                                                                        case CONFIRM_STATUS:
+                                                                            return null
+                                                                        default:
+                                                                            return null
+                                                                    }
+                                                            }
+                                                        default:
+                                                            switch (notification.metadata.status) {
+                                                                case WAITING_STATUS:
+                                                                    return (
+                                                                        <Actions
+                                                                            notification={notification}
+                                                                            handleReplyNotification={
+                                                                                handleReplyNotification
+                                                                            }
+                                                                            index={index}
+                                                                        />
+                                                                    )
+                                                                case CONFIRM_STATUS:
+                                                                    return null
+                                                                default:
+                                                                    return null
+                                                            }
+                                                    }
+                                                })()}
+                                            </div>
+                                        </Stack>
+                                    </div>
+                                ))}
+                            </Stack>
+                        </div>
+                    )}
+
+                    {/* Hiển thị thông báo đã đọc */}
+                    {readNotifications.length > 0 && (
+                        <div>
+                            <div className="mx-4 py-[8px] text-md font-semibold text-gray-600">
+                                Thông báo đã đọc
+                            </div>
+                            <Stack spacing={2}>
+                                {readNotifications.map((notification, index) => (
+                                    <div className="px-4 py-[16px] hover:bg-[#f6f5f5] cursor-pointer" key={index}>
+                                        <Stack>
+                                            <Stack direction="row" spacing={4}>
+                                                <Avatar.Root size={'sm'}>
+                                                    <Avatar.Fallback name={notification.user?.name} />
+                                                    <Avatar.Image src={notification.user.avatar} />
+                                                </Avatar.Root>
+                                                <Stack spacing={2}>
+                                                    {(() => {
+                                                        switch (notification.type?.name) {
+                                                            case PROJECT_INVITATION_NOTIFICATION:
+                                                                return <ProjectInvitation notification={notification} />
+                                                            case FRIEND_REQUEST_NOTIFICATION:
+                                                                return <FriendRequest notification={notification} />
+                                                            case CONFIRM_FRIEND_REQUEST_NOTIFICATION:
+                                                                return (
+                                                                    <ConfirmFriendRequestNotification
+                                                                        notification={notification}
+                                                                    />
+                                                                )
+                                                            case PROJECT_APPLICATION_NOTIFICATION:
+                                                                return (
+                                                                    <ProjectApplicationNotification
+                                                                        notification={notification}
+                                                                    />
+                                                                )
+                                                            case CONFIRM_PROJECT_INVITATION_NOTIFICATION:
+                                                                return (
+                                                                    <ConfirmProjectInvitationNoitification
+                                                                        notification={notification}
+                                                                    />
+                                                                )
+                                                            default:
+                                                                return (
+                                                                    <div className="text-[#6f7f92] text-sm font-medium">
+                                                                        {notification.message || 'New notification'}
+                                                                    </div>
+                                                                )
+                                                        }
+                                                    })()}
+                                                    <span className="text-[#6f7f92] text-xs">
+                                                        {moment(notification.timestamp).fromNow()}
+                                                    </span>
+                                                </Stack>
+                                            </Stack>
+                                            <div className="flex items-center justify-end">
+                                                {(() => {
+                                                    switch (notificationIndex) {
+                                                        case index:
+                                                            switch (isLoadingReplyNotification) {
+                                                                case true:
+                                                                    return <Spinner size="md" />
+                                                                default:
+                                                                    switch (notification.metadata.status) {
+                                                                        case WAITING_STATUS:
+                                                                            return (
+                                                                                <Actions
+                                                                                    notification={notification}
+                                                                                    handleReplyNotification={
+                                                                                        handleReplyNotification
+                                                                                    }
+                                                                                    index={index}
+                                                                                />
+                                                                            )
+                                                                        case CONFIRM_STATUS:
+                                                                            return null
+                                                                        default:
+                                                                            return null
+                                                                    }
+                                                            }
+                                                        default:
+                                                            switch (notification.metadata.status) {
+                                                                case WAITING_STATUS:
+                                                                    return (
+                                                                        <Actions
+                                                                            notification={notification}
+                                                                            handleReplyNotification={
+                                                                                handleReplyNotification
+                                                                            }
+                                                                            index={index}
+                                                                        />
+                                                                    )
+                                                                case CONFIRM_STATUS:
+                                                                    return null
+                                                                default:
+                                                                    return null
+                                                            }
+                                                    }
+                                                })()}
+                                            </div>
+                                        </Stack>
+                                    </div>
+                                ))}
+                            </Stack>
+                        </div>
+                    )}
                 </Stack>
             </div>
             <Footer />

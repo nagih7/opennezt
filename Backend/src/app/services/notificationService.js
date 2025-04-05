@@ -260,7 +260,8 @@ export async function replyNotification(user, { notificationId }, { action }, io
         notification.metadata.read = true
         notification.markModified('metadata')
         await notification.save()
-        return { notification_id: notification._id, status: CONFIRM_STATUS }
+
+        return notification
     } else if (action === DELETE_STATUS) {
         await NotificationFeed.findByIdAndDelete(new ObjectId(notificationId))
         return
@@ -268,7 +269,7 @@ export async function replyNotification(user, { notificationId }, { action }, io
 }
 
 // ========== REPLY FRIEND REQUEST ========== //
-const replyFriendRequest = async (user, notification, io) => {
+export const replyFriendRequest = async (user, notification, io) => {
     const { source_id } = notification
 
     // ========== CHECK IF THE USER IS ALREADY FRIENDS ========== //
@@ -379,20 +380,22 @@ const replyFriendRequest = async (user, notification, io) => {
     }
     // ========== [WEBPUSH] ========== //
     const subscription = await Subscription.findOne({ user_id: source_id })
-    const payload = JSON.stringify({
-        title: 'OpenNezt',
-        body: `${user.name} has accepted your friend request!`,
-        icon: user.avatar ? user.avatar : null,
-        tag: CONFIRM_FRIEND_REQUEST_NOTIFICATION,
-        data: {
-            url: '',
-            type: CONFIRM_FRIEND_REQUEST_NOTIFICATION,
-        },
-    })
-    webpush.sendNotification(subscription, payload).catch(async (err) => {
-        console.error('Error sending notification:', err)
-        await Subscription.deleteOne({ user_id: source_id })
-    })
+    if (subscription) {
+        const payload = JSON.stringify({
+            title: 'OpenNezt',
+            body: `${user.name} has accepted your friend request!`,
+            icon: user.avatar ? user.avatar : null,
+            tag: CONFIRM_FRIEND_REQUEST_NOTIFICATION,
+            data: {
+                url: '',
+                type: CONFIRM_FRIEND_REQUEST_NOTIFICATION,
+            },
+        })
+        webpush.sendNotification(subscription, payload).catch(async (err) => {
+            console.error('Error sending notification:', err)
+            await Subscription.deleteOne({ user_id: source_id })
+        })
+    }
 }
 
 // ========== PUT [Notification - Reply Invitation Member] ========== //

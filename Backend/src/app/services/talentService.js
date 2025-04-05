@@ -301,12 +301,13 @@ export async function getTalentDetails(user, { id }) {
     const requestType = await Type.findOne({ class: NOTIFICATION_TYPE, name: FRIEND_REQUEST_NOTIFICATION })
 
     const friendRequest = await NotificationFeed.findOne({
-        user_id: new ObjectId(id),
-        source_id: user._id,
-        type_id: requestType._id,
-    })
+        $or: [
+            { type_id: requestType._id, user_id: user._id, source_id: new ObjectId(id) },
+            { type_id: requestType._id, user_id: new ObjectId(id), source_id: user._id },
+        ],
+    }).select('source_id data timestamp metadata _id')
 
-    talent[0].is_friend_requested = !!friendRequest
+    talent[0].friend_request = friendRequest || null
 
     return talent[0]
 }

@@ -58,7 +58,7 @@ const notificationSlice = createSlice({
             isLoadingReplyNotification: true,
         }),
         replyNotificationSuccess: (state, action) => {
-            const { notification_id, status } = action.payload
+            const newNotification = action.payload.data
             toaster.create({
                 title: `Reply notification successfully.`,
                 type: 'success',
@@ -66,13 +66,10 @@ const notificationSlice = createSlice({
             return {
                 ...state,
                 notifications: state.notifications.map((notification) => {
-                    if (notification.notification_id === notification_id) {
+                    if (notification._id === newNotification._id) {
                         return {
                             ...notification,
-                            metadata: {
-                                ...notification.metadata,
-                                status: status,
-                            },
+                            metadata: newNotification.metadata,
                         }
                     }
                     return notification
