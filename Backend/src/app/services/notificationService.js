@@ -286,9 +286,9 @@ const replyFriendRequest = async (user, notification, io) => {
             $all: [{ $elemMatch: { user_id: user._id } }, { $elemMatch: { user_id: source_id } }],
         },
     })
-    // ========== CREATE A NEW CONVERSATION IF IT DOESN'T EXIST ========== //
+
     if (!conversation) {
-        // GET CONVERSATION ADMIN ROLE
+        // ========== CREATE A NEW CONVERSATION IF IT DOESN'T EXIST ========== //
         const conversationAdminRole = await Role.findOne({
             name: CONVERSATION_ADMIN_ROLE,
             type_id: directChatType._id,
@@ -414,8 +414,8 @@ export async function replyProjectInvitation(user, notification, io) {
     // CHECK IF THE CONVERSATION ALREADY EXISTS
     const conversation = await Conversation.findOne({
         type_id: groupChatType._id,
-        members: {
-            $all: [{ $elemMatch: { user_id: user._id } }, { $elemMatch: { user_id: source_id } }],
+        data: {
+            project_id: project_id,
         },
     })
     // ========== CREATE A NEW CONVERSATION IF IT DOESN'T EXIST ========== //
@@ -448,8 +448,28 @@ export async function replyProjectInvitation(user, notification, io) {
                 },
             ],
             type_id: groupChatType._id,
+            data: {
+                project_id: project_id,
+            },
         })
         await newConversation.save()
+    } else {
+        // ========== ADD USER TO THE CONVERSATION ========== //
+        const existingMember = conversation.members.find((member) => member.user_id.toString() === user._id.toString())
+        if (!existingMember) {
+            const conversationMemberRole = await Role.findOne({
+                name: CONVERSATION_MEMBER_ROLE,
+                type_id: groupChatType._id,
+            })
+            if (!conversationMemberRole) {
+                throw new Error('Conversation member role not found!')
+            }
+            conversation.members.push({
+                user_id: user._id,
+                role_id: conversationMemberRole._id,
+            })
+            await conversation.save()
+        }
     }
 
     // ========== CREATE NOTIFICATION ========== //

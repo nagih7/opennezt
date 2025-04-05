@@ -104,7 +104,7 @@ export async function sendMessage(user, { conversation_id, content }, io, socket
     const project = await Project.findById(conversation.data.project_id).select('name')
     switch (conversation.type_id.name) {
         case GROUP_CONVERSATION:
-            payloadBody = `${me[0].name} sent you a message in group ${project.name}: ${message.content}`
+            payloadBody = `${me[0].name} sent a message in ${project.name}: ${message.content}`
             break
         case DIRECT_CONVERSATION:
             payloadBody = `${message.user.name} sent you a message: ${message.content}`
