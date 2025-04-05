@@ -17,7 +17,15 @@ const Header = () => {
     const [isFullScreen, setIsFullScreen] = useState(false)
     const authUser = useSelector((state) => state.auth.authUser)
     const { language } = useSelector((state) => state.app)
+    const { notifications, isLoadingReplyNotification } = useSelector((state) => state.notification)
     const chatListRef = useRef(null)
+    const unreadNotifications = notifications.filter(
+        (notification) => notification.metadata?.read === false
+    );
+
+    const readNotifications = notifications.filter(
+        (notification) => notification.metadata?.read === true
+    );
 
     useEffect(() => {
         const handleFullScreenChange = () => {
@@ -115,6 +123,11 @@ const Header = () => {
                                     <IconlyNotification size={24} color="#6f7f92" />
                                 </span>
                             </Popover.Trigger>
+                            {unreadNotifications.length > 0 && (
+                                <span className="absolute top-[1rem] right-[7.5rem] bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                                    {unreadNotifications?.length}
+                                </span>
+                            )}
                             <Portal>
                                 <Popover.Positioner>
                                     <Popover.Content>
