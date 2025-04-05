@@ -2,8 +2,13 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import moment from 'moment'
 import store from 'states/configureStore'
-import { replyNotification, getNotifications } from 'api/notification'
-import { NOTIFICATIONS } from 'utils/constants'
+import { replyNotification } from 'api/notification'
+import {
+    CONFIRM_FRIEND_REQUEST_NOTIFICATION,
+    CONFIRM_PROJECT_INVITATION_NOTIFICATION,
+    NOTIFICATIONS,
+    PROJECT_APPLICATION_NOTIFICATION,
+} from 'utils/constants'
 import { Avatar, Spinner, Stack } from '@chakra-ui/react'
 import { getConversations } from 'api/chat'
 import {
@@ -16,6 +21,9 @@ import Actions from './components/Actions'
 import FriendRequest from './components/FriendRequestNotification'
 import ProjectInvitation from './components/ProjectInvitationNotification'
 import Footer from './components/FooterPopoverNotification'
+import ConfirmFriendRequestNotification from './components/ConfirmFriendRequestNotification'
+import ProjectApplicationNotification from './components/ProjectApplicationNotification'
+import ConfirmProjectInvitationNoitification from './components/ConfirmProjectInvitationNoitification'
 
 function PopoverNotification() {
     // ========== STATE FROM REDUX ========== //
@@ -64,6 +72,24 @@ function PopoverNotification() {
                                                             return <ProjectInvitation notification={notification} />
                                                         case FRIEND_REQUEST_NOTIFICATION:
                                                             return <FriendRequest notification={notification} />
+                                                        case CONFIRM_FRIEND_REQUEST_NOTIFICATION:
+                                                            return (
+                                                                <ConfirmFriendRequestNotification
+                                                                    notification={notification}
+                                                                />
+                                                            )
+                                                        case PROJECT_APPLICATION_NOTIFICATION:
+                                                            return (
+                                                                <ProjectApplicationNotification
+                                                                    notification={notification}
+                                                                />
+                                                            )
+                                                        case CONFIRM_PROJECT_INVITATION_NOTIFICATION:
+                                                            return (
+                                                                <ConfirmProjectInvitationNoitification
+                                                                    notification={notification}
+                                                                />
+                                                            )
                                                         default:
                                                             return (
                                                                 <div className="text-[#6f7f92] text-sm font-medium">

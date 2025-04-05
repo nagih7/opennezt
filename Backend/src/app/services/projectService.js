@@ -21,10 +21,11 @@ import {
     Role,
     ActivityLog,
     ProjectRequirement,
+    Subscription,
 } from '@/models'
 import { FileUpload } from '@/utils/classes'
 import { userSockets } from '@/routes'
-import { pipeline } from 'nodemailer/lib/xoauth2'
+import webpush from 'web-push'
 
 // ========== POST [Project] ========== //
 export async function createProject(user, requestBody) {
@@ -331,16 +332,7 @@ export async function getMyProjectDetails(user, projectId) {
             localField: 'industry_ids',
             foreignField: '_id',
             as: 'industries',
-            pipeline: [
-                {
-                    $project: {
-                        // _id: 0,
-                        // name: 1,
-                        created_at: 0,
-                        updated_at: 0,
-                    },
-                },
-            ],
+            pipeline: [{ $project: { created_at: 0, updated_at: 0 } }],
         },
     }
     const stagesStage = {
@@ -431,14 +423,7 @@ export async function getMyProjectDetails(user, projectId) {
                         localField: 'skill_ids',
                         foreignField: '_id',
                         as: 'skills',
-                        pipeline: [
-                            {
-                                $project: {
-                                    _id: 1,
-                                    name: 1,
-                                },
-                            },
-                        ],
+                        pipeline: [{ $project: { _id: 1, name: 1 } }],
                     },
                 },
                 {
@@ -992,7 +977,6 @@ export async function updateSkillRequirement(user, { id }, requestBody) {
         throw new Error('Project not found')
     }
     const { skills } = requestBody
-    console.log('skills', skills)
     const projectRequirement = await ProjectRequirement.findOne({ project_id: project._id })
     if (!projectRequirement) {
         const requirement = new ProjectRequirement({
@@ -1500,15 +1484,7 @@ export async function inviteMember(user, projectId, requestBody, io) {
                 localField: 'type_id',
                 foreignField: '_id',
                 as: 'type',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 0,
-                            class: 1,
-                            name: 1,
-                        },
-                    },
-                ],
+                pipeline: [{ $project: { _id: 0, class: 1, name: 1 } }],
             },
         },
         { $unwind: '$type' },
@@ -1536,21 +1512,30 @@ export async function inviteMember(user, projectId, requestBody, io) {
             },
         },
         { $unwind: '$data.project' },
-        {
-            $project: {
-                _id: 1,
-                user: 1,
-                data: {
-                    project: 1,
-                },
-                type: 1,
-                timestamp: 1,
-                metadata: 1,
-            },
-        },
+        { $project: { _id: 1, user: 1, data: { project: 1 }, type: 1, timestamp: 1, metadata: 1 } },
     ])
     const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === userId.toString())
     if (userSocketId) {
         io.to(userSocketId).emit(PROJECT_INVITATION_NOTIFICATION, notification[0])
     }
+
+    // ========== [WEBPUSH] ========== //
+    const subscription = await Subscription.findOne({ user_id: userId })
+    const payload = JSON.stringify({
+        title: 'OpenNezt',
+        body: `${user.name} invited you to join the ${project.name} project`,
+        icon: user.avatar ? user.avatar : null,
+        tag: typeNotification._id,
+        data: {
+            url: '',
+            type: PROJECT_INVITATION_NOTIFICATION,
+        },
+    })
+    webpush.sendNotification(subscription, payload).catch(async (err) => {
+        if (err.statusCode === 410 || err.statusCode === 404) {
+            await Subscription.deleteOne({ endpoint: subscription.endpoint })
+        } else {
+            console.error('Error sending notification:', err)
+        }
+    })
 }

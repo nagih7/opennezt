@@ -10,6 +10,7 @@ import {
     Stage,
     Type,
     Role,
+    Subscription,
 } from '@/models'
 import { FileUpload } from '@/utils/classes'
 import {
@@ -21,6 +22,7 @@ import {
     WAITING_STATUS,
 } from '@/configs'
 import { userSockets } from '@/routes'
+import webpush from 'web-push'
 
 export async function create(requestBody) {
     const user = new User(requestBody)
@@ -255,9 +257,31 @@ export async function sendFriendRequest(user, { userId }, { action }, io) {
             ]).exec()
 
             if (notification.length > 0) {
+                // ========== SEND NOTIFICATION ========== //
                 const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === userId)
-
                 io.to(userSocketId).emit(FRIEND_REQUEST_NOTIFICATION, notification[0])
+
+                // ========== [WEBPUSH] ========== //
+                const subscription = await Subscription.findOne({ user_id: userId })
+                if (subscription) {
+                    const payload = JSON.stringify({
+                        title: 'OpenNezt',
+                        body: `${user.name} sent you a friend request`,
+                        icon: user.avatar ? user.avatar : null,
+                        tag: requestType._id,
+                        data: {
+                            url: '',
+                            type: FRIEND_REQUEST_NOTIFICATION,
+                        },
+                    })
+                    webpush.sendNotification(subscription, payload).catch(async (err) => {
+                        if (err.statusCode === 410 || err.statusCode === 404) {
+                            await Subscription.deleteOne({ endpoint: subscription.endpoint })
+                        } else {
+                            console.error('Error sending notification:', err)
+                        }
+                    })
+                }
             }
             return { is_friend_requested: true }
         }

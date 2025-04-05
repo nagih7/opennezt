@@ -26,11 +26,4 @@ notificationRouter.put(
     asyncHandler(notificationController.replyNotification)
 )
 
-// ========== PUT [Notification - Reply Invitation Member] ========== //
-notificationRouter.put(
-    '/reply/invite-member',
-    asyncHandler(validate(notificationRequest.replyInvitationMember)),
-    asyncHandler(notificationController.replyInvitationMember)
-)
-
 export default notificationRouter

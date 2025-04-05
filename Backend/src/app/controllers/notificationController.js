@@ -13,12 +13,6 @@ export async function getNotifications(req, res) {
 
 // ========== PUT [Notification - Reply Notification] ========== //
 export async function replyNotification(req, res) {
-    const result = await notificationService.replyNotification(req.params, req.body, req.io)
+    const result = await notificationService.replyNotification(req.currentUser, req.params, req.body, req.io)
     res.jsonify(result, 'Reply notification successfully.')
-}
-
-// ========== PUT [Notification - Reply Invitation Member] ========== //
-export async function replyInvitationMember(req, res) {
-    await notificationService.replyInvitationMember(req.currentUser, req.body, req.io)
-    res.jsonify('Reply invitation member successfully.')
 }

@@ -1,12 +1,12 @@
-export const STATUS_USER = [];
-STATUS_USER['INACTIVATE'] = 0;
-STATUS_USER['ACTIVATE'] = 1;
+export const STATUS_USER = []
+STATUS_USER['INACTIVATE'] = 0
+STATUS_USER['ACTIVATE'] = 1
 
 export const LANG = [
     { label: 'VI', value: 'Vietnamese' },
     { label: 'EN', value: 'English' },
     { label: 'ZH', value: 'Chinese' },
-];
+]
 
 export const NAVBAR_LABEL = {
     ACTIVITY: 'ACTIVITY',
@@ -19,7 +19,7 @@ export const NAVBAR_LABEL = {
     SEEK_PROJECTS: 'SEEK_PROJECTS',
     NOTIFICATIONS: 'NOTIFICATIONS',
     MESSAGES: 'MESSAGES',
-};
+}
 
 export const NAVBAR = {
     ACTIVITY: {
@@ -72,13 +72,13 @@ export const NAVBAR = {
         VI: 'Tin nhắn',
         ZH: '消息',
     },
-};
+}
 
 export const WELCOME_TO_OPENNEZT = {
     EN: `<b>Hello!</b> Welcome to <b>OpenNezt</b>, where innovation meets opportunity and collaboration sparks success`,
     VI: `<b>Xin chào!</b> Chào mừng đến với <b>OpenNezt</b>, nơi sáng tạo gặp gỡ cơ hội và sự hợp tác tạo nên thành công`,
     ZH: `<b>你好!</b> 欢迎来到 <b>OpenNezt</b>，在这里，创新遇见机会，合作引发成功`,
-};
+}
 
 export const STEPS = {
     STEP_1: {
@@ -122,13 +122,13 @@ export const STEPS = {
         VI: '99+ tài năng trong hàng đợi của bạn đáp ứng yêu cầu của bạn',
         ZH: '您的队列中有99+个人才符合您的要求',
     },
-};
+}
 
 export const RECRUIT_NOW = {
     EN: 'Recruit now',
     VI: 'Tuyển dụng ngay',
     ZH: '立即招聘',
-};
+}
 
 // Professional Background
 
@@ -264,109 +264,109 @@ export const PROFESSIONAL_PROFILE = {
         VI: 'Bạn đang tìm kiếm lĩnh vực chuyên môn nào?',
         ZH: '您正在寻找哪个专业领域?',
     },
-};
+}
 
 export const MATCHING_PROJECTS_WITH_AI = {
     EN: 'Matching projects with AI',
     VI: 'Kết hợp dự án với AI',
     ZH: '与AI匹配项目',
-};
+}
 
 export const LINKEDIN_PROFILE = {
     EN: 'LinkedIn Profile',
     VI: 'Hồ sơ LinkedIn',
     ZH: '领英档案',
-};
+}
 
 export const VIEW_MATCHING_PROJECTS = {
     EN: 'View Matching Projects',
     VI: 'Xem dự án phù hợp',
     ZH: '查看匹配项目',
-};
+}
 
 export const UPDATE_PROFILE = {
     EN: 'Update Profile',
     VI: 'Cập nhật hồ sơ',
     ZH: '更新个人资料',
-};
+}
 
 export const PROJECT_MANAGEMENT = {
     EN: 'Project Management',
     VI: 'Quản lý dự án',
     ZH: '项目管理',
-};
+}
 
 export const VIEW_MATCHING_TALENTS = {
     EN: 'View matching talents',
     VI: 'Xem tài năng phù hợp',
     ZH: '查看匹配人才',
-};
+}
 
 export const MATCHING_TALENT_WITH_AI = {
     EN: 'Matching talent with AI',
     VI: 'Kết hợp tài năng với AI',
     ZH: '与AI匹配人才',
-};
+}
 
 export const CREATE_NEW_PROJECT = {
     EN: 'Create new project',
     VI: 'Tạo dự án mới',
     ZH: '创建新项目',
-};
+}
 
 export const UPDATE = {
     EN: 'Update',
     VI: 'Cập nhật',
     ZH: '更新',
-};
+}
 
 export const DELETE = {
     EN: 'Delete',
     VI: 'Xóa',
     ZH: '删除',
-};
+}
 
 export const COMPATIBILITY = {
     EN: 'Compatibility',
     VI: 'Tương thích',
     ZH: '兼容性',
-};
+}
 
 export const VIEW_DETAILS = {
     EN: 'View Details',
     VI: 'Xem chi tiết',
     ZH: '查看详情',
-};
+}
 
 export const INDUSTRY_FIELD = {
     EN: 'Industry Field',
     VI: 'Lĩnh vực ngành',
     ZH: '行业领域',
-};
+}
 
 export const STAGE_OF_DEVELOPMENT = {
     EN: 'Stage of Development',
     VI: 'Giai đoạn phát triển',
     ZH: '发展阶段',
-};
+}
 
 export const SEARCH = {
     EN: 'Search',
     VI: 'Tìm kiếm',
     ZH: '搜索',
-};
+}
 
 export const RESET = {
     EN: 'Reset',
     VI: 'Làm mới',
     ZH: '重置',
-};
+}
 
 export const FRIENDS = {
     EN: 'Friends',
     VI: 'Bạn bè',
     ZH: '朋友',
-};
+}
 
 export const ACTIONS = {
     ACTIONS: {
@@ -419,7 +419,7 @@ export const ACTIONS = {
         VI: 'Mời',
         ZH: '邀请',
     },
-};
+}
 
 export const STATUS = {
     STATUS: {
@@ -452,7 +452,7 @@ export const STATUS = {
         VI: 'Đã mời',
         ZH: '已邀请',
     },
-};
+}
 
 export const TYPE = {
     TYPE: {
@@ -460,19 +460,19 @@ export const TYPE = {
         VI: 'Loại',
         ZH: '类型',
     },
-};
+}
 
 export const REQUEST_BY = {
     EN: 'Request by',
     VI: 'Yêu cầu bởi',
     ZH: '请求者',
-};
+}
 
 export const REQUEST_AT = {
     EN: 'Request at',
     VI: 'Yêu cầu lúc',
     ZH: '请求时间',
-};
+}
 
 export const NOTIFICATIONS = {
     NOTIFICATIONS: {
@@ -495,6 +495,21 @@ export const NOTIFICATIONS = {
         VI: 'gửi bạn một lời kết bạn',
         ZH: '向您发送了好友请求',
     },
+    CONFIRMED_FRIEND_REQUEST: {
+        EN: 'has accepted your friend request',
+        VI: 'đã chấp nhận lời mời kết bạn của bạn',
+        ZH: '已接受您的好友请求',
+    },
+    CONFIRMED_PROJECT_INVITATION: {
+        EN: 'has accepted your project invitation',
+        VI: 'đã chấp nhận lời mời tham gia dự án của bạn',
+        ZH: '已接受您的项目邀请',
+    },
+    PROJECT_APPLICATION: {
+        EN: 'has requested to apply for the project',
+        VI: 'đã yêu cầu tham gia dự án',
+        ZH: '已申请加入项目',
+    },
     VIEW_ALL_NOTIFICATIONS: {
         EN: 'View all notifications',
         VI: 'Xem tất cả thông báo',
@@ -510,7 +525,7 @@ export const NOTIFICATIONS = {
         VI: 'Bạn có chắc chắn muốn mời?',
         ZH: '您确定要邀请吗？',
     },
-};
+}
 
 export const CHATS = {
     CHATS: {
@@ -528,7 +543,7 @@ export const CHATS = {
         VI: 'Trò chuyện mới',
         ZH: '新聊天',
     },
-};
+}
 
 export const MESSAGES = {
     MESSAGES: {
@@ -551,7 +566,7 @@ export const MESSAGES = {
         VI: 'Tin nhắn',
         ZH: '消息',
     },
-};
+}
 
 export const TOOLTIP = {
     EN: 'Tooltip',
@@ -563,4 +578,4 @@ export const TOOLTIP = {
         VI: 'Bạn cần tạo một dự án trước',
         ZH: '您需要先创建一个项目',
     },
-};
+}
