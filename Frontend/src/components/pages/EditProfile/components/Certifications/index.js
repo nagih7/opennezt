@@ -14,7 +14,7 @@ import {
 	getOrganizationFramework,
 } from "api/profile";
 import { Checkbox } from "components/UI/checkbox";
-
+import { DataList } from "@chakra-ui/react"
 const Certifications = () => {
 	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX STORE ========== //
@@ -163,58 +163,61 @@ const Certifications = () => {
 						<div className="px-[16px]">
 							<div>
 								{certifications?.map((certification, index) => (
-									<div key={index}>
-										<div className="shadow rounded-[0.6rem]">
-											<div className="relative p-4 mt-[2rem]">
-												<span className="cursor-pointer md:float-right 2xl:float-right"><IconlyDelete size={24} color={"#000"} /></span>
-												<span
-													className="cursor-pointer md:float-right 2xl:float-right"
-													onClick={() =>
-														handleUpdateCertification(
-															certification
-														)
-													}>
-													<IconlyEdit size={24} color={"#000"} />
-												</span>
-												{certification.name && (
-													<h4 className="flex font-bold mb-[0.75rem]">
-														{certification.name}
-													</h4>
-												)}
-												{certification.issue_date && (
-													<p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
-														{`${moment(
-															certification.issue_date
-														).format("MMM YYYY")} ${certification.expiration_date
-															? `- ${moment(
-																certification.expiration_date
-															).format("MMM YYYY")}`
-															: ""
-															}`}
-													</p>
-												)}
-												{certification.description && (
-													<p className="flex ">
-														{" "}
-														Desciption:{" "}
-														{certification.description}
-													</p>
-												)}
-												{certification.verification_url && (
-													<p className="flex ">
-														Verification URL:
-														<a
-															href={`https://${certification.verification_url}`}
-															target="_blank"
-															rel="noreferrer">
-															https://
-															{certification.verification_url}
-														</a>
-													</p>
-												)}
+									<DataList.Root orientation="horizontal" key={index}>
+										<div key={index}>
+											<div className="shadow rounded-[0.6rem]">
+												<div className="relative p-4 mt-[2rem]">
+													<span className="cursor-pointer md:float-right 2xl:float-right"><IconlyDelete size={24} color={"#000"} /></span>
+													<span
+														className="cursor-pointer md:float-right 2xl:float-right"
+														onClick={() =>
+															handleUpdateCertification(
+																certification
+															)
+														}>
+														<IconlyEdit size={24} color={"#000"} />
+													</span>
+													{certification.name && (
+														<h4 className="flex font-bold mb-[0.75rem]">
+															{certification.name}
+														</h4>
+													)}
+													{certification.issue_date && (
+														<p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
+															{`${moment(
+																certification.issue_date
+															).format("MMM YYYY")} ${certification.expiration_date
+																? `- ${moment(
+																	certification.expiration_date
+																).format("MMM YYYY")}`
+																: ""
+																}`}
+														</p>
+													)}
+
+													{certification.verification_url && (
+														<>
+															<div className="flex gap-2">
+																<DataList.ItemLabel className="flex ">
+																	Verification URL:
+
+																</DataList.ItemLabel>
+																<DataList.ItemValue className="mb-0">
+																	<a
+																		href={`https://${certification.verification_url}`}
+																		target="_blank"
+																		rel="noreferrer">
+																		https://
+																		{certification.verification_url}
+																	</a>
+																</DataList.ItemValue>
+															</div>
+														</>
+													)}
+												</div>
 											</div>
 										</div>
-									</div>
+									</DataList.Root>
 								))}
 							</div>
 						</div>
