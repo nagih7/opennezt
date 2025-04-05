@@ -24,6 +24,7 @@ import {
 } from '@/models'
 import { FileUpload } from '@/utils/classes'
 import { userSockets } from '@/routes'
+import { pipeline } from 'nodemailer/lib/xoauth2'
 
 // ========== POST [Project] ========== //
 export async function createProject(user, requestBody) {
@@ -417,6 +418,47 @@ export async function getMyProjectDetails(user, projectId) {
             ],
         },
     }
+    const requirementStage = {
+        $lookup: {
+            from: 'project_requirements',
+            localField: '_id',
+            foreignField: 'project_id',
+            as: 'requirements',
+            pipeline: [
+                {
+                    $lookup: {
+                        from: 'skills',
+                        localField: 'skill_ids',
+                        foreignField: '_id',
+                        as: 'skills',
+                        pipeline: [
+                            {
+                                $project: {
+                                    _id: 1,
+                                    name: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        project_id: 0,
+                        skill_ids: 0,
+                        create_at: 0,
+                        update_at: 0,
+                    },
+                },
+            ],
+        },
+    }
+    const unwindRequirementStage = {
+        $unwind: {
+            path: '$requirements',
+            preserveNullAndEmptyArrays: true,
+        },
+    }
     const membersStage = {
         $lookup: {
             from: 'project_members',
@@ -561,6 +603,8 @@ export async function getMyProjectDetails(user, projectId) {
         revenuesStage,
         fundingSourcesStage,
         additionalInfosStage,
+        requirementStage,
+        unwindRequirementStage,
         membersStage,
         articlesStage,
         addFieldsStage,
@@ -897,6 +941,71 @@ export async function updateBackground(user, { id }, requestBody) {
     return { background: `${LINK_STATIC_URL}${project.background}` }
 }
 
+// ========= POST [Project Requirement - Role ] ========== //
+export async function updateRoleRequirement(user, { id }, requestBody) {
+    const project = await Project.findOne({ user_id: user._id, _id: id })
+    if (!project) {
+        throw new Error('Project not found')
+    }
+    const { teamRoles, roles } = requestBody
+
+    const projectRequirement = await ProjectRequirement.findOne({ project_id: project._id })
+    if (!projectRequirement) {
+        const requirement = new ProjectRequirement({
+            project_id: project._id,
+            team_role_ids: teamRoles,
+            role_ids: roles,
+        })
+        await requirement.save()
+    } else {
+        await ProjectRequirement.updateOne({ project_id: project._id }, { team_role_ids: teamRoles, role_ids: roles })
+    }
+    return { teamRoles, roles }
+}
+// ========= PATCH [Project Requirement - Sector ] ========== //
+export async function updateSectorRequirement(user, { id }, requestBody) {
+    const project = await Project.findOne({ user_id: user._id, _id: id })
+    if (!project) {
+        throw new Error('Project not found')
+    }
+    const { industries, experienceLevels } = requestBody
+    const projectRequirement = await ProjectRequirement.findOne({ project_id: project._id })
+    if (!projectRequirement) {
+        const requirement = new ProjectRequirement({
+            project_id: project._id,
+            industry_ids: industries,
+            experience_level_ids: experienceLevels,
+        })
+        await requirement.save()
+    } else {
+        await ProjectRequirement.updateOne(
+            { project_id: project._id },
+            { industry_ids: industries, experience_level_ids: experienceLevels }
+        )
+    }
+    return { industries, experienceLevels }
+}
+// ========= PATCH [Project Requirement - Skill] ========== //
+export async function updateSkillRequirement(user, { id }, requestBody) {
+    const project = await Project.findOne({ user_id: user._id, _id: id })
+    if (!project) {
+        throw new Error('Project not found')
+    }
+    const { skills } = requestBody
+    console.log('skills', skills)
+    const projectRequirement = await ProjectRequirement.findOne({ project_id: project._id })
+    if (!projectRequirement) {
+        const requirement = new ProjectRequirement({
+            project_id: project._id,
+            skill_ids: skills,
+        })
+        await requirement.save()
+    } else {
+        await ProjectRequirement.updateOne({ project_id: project._id }, { skill_ids: skills })
+    }
+    return { skills }
+}
+
 // ========== DELETE [Project] ========== //
 export async function deleteProject(user, projectId) {
     const project = await Project.findOne({ user_id: user._id, _id: projectId })
@@ -912,6 +1021,7 @@ export async function deleteProject(user, projectId) {
     await FundingSource.deleteMany({ project_id: projectId }).exec()
     await ProjectAdditionalInfo.deleteMany({ project_id: projectId }).exec()
     await ProjectMember.deleteMany({ project_id: projectId }).exec()
+    await ProjectRequirement.deleteOne({ project_id: projectId }).exec()
 }
 
 // ========== GET [Project - TAGS] ========== //
@@ -1129,33 +1239,6 @@ export async function accessToProject(user, projectId) {
         })
         await activity.save()
     }
-}
-
-// ========== POST [Project - add Requirement] ========== //
-export async function addProjectRequirement(user, projectId, requestBody) {
-    const project = await Project.findById(new ObjectId(projectId))
-    const {
-        team_role_id,
-        role_id,
-        industry_ids,
-        experience_level_id,
-        category_ids,
-        subcategory_ids,
-        skill_ids,
-        metadata,
-    } = requestBody
-    const requirement = new ProjectRequirement({
-        project_id: project._id,
-        team_role_id: team_role_id,
-        role_id: role_id,
-        industry_ids: industry_ids,
-        experience_level_id: experience_level_id,
-        category_ids: category_ids,
-        subcategory_ids: subcategory_ids,
-        skill_ids: skill_ids,
-        metadata: metadata,
-    })
-    await requirement.save()
 }
 
 // ========== GET [My Project Access] ========== //

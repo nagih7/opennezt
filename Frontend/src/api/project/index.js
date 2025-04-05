@@ -36,10 +36,18 @@ import {
     requestGetProjectDetails,
     getProjectDetailsSuccess,
     getProjectDetailsFail,
-    // ========== CREATE PROJECT REQUIREMENT ========== //
-    requestCreateProjectRequirement,
-    createProjectRequirementSuccess,
-    createProjectRequirementFail,
+    // ========== PROJECT REQUIREMENT - ROLE ========== //
+    requestUpdateRoleRequirement,
+    updateRoleRequirementSuccess,
+    updateRoleRequirementFail,
+    // ========= PROJECT REQUIREMENT - SECTOR ========== //
+    requestUpdateSectorRequirement,
+    updateSectorRequirementSuccess,
+    updateSectorRequirementFail,
+    // ========= PROJECT REQUIREMENT - SKILL ========== //
+    requestUpdateSkillRequirement,
+    updateSkillRequirementSuccess,
+    updateSkillRequirementFail,
     // ========== SEARCH MY PROJECT ========== //
     requestSearchMyProjects,
     searchMyProjectsSuccess,
@@ -267,12 +275,36 @@ export const applyToJoinProject = (projectId, formRequest) => async (dispatch, g
     })
 }
 
-// ========== PROJECT REQUIREMENT ========== //
-export const addProjectRequirement = (projectId, formRequest) => async (dispatch, getState) => {
+// ========== PROJECT REQUIREMENT - ROLE ========== //
+export const updateRoleRequirement = (projectId, formRequest) => async (dispatch, getState) => {
     return callApi({
-        method: 'post',
-        apiPath: `projects/${projectId}/requirement`,
-        actionTypes: [requestCreateProjectRequirement, createProjectRequirementSuccess, createProjectRequirementFail],
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/requirements/role`,
+        actionTypes: [requestUpdateRoleRequirement, updateRoleRequirementSuccess, updateRoleRequirementFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========= PROJECT REQUIREMENT - SECTOR ========== //
+export const updateSectorRequirement = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/requirements/sector`,
+        actionTypes: [requestUpdateSectorRequirement, updateSectorRequirementSuccess, updateSectorRequirementFail],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+
+// ========= PROJECT REQUIREMENT - SKILL ========== //
+export const updateSkillRequirement = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'patch',
+        apiPath: `projects/me/${projectId}/requirements/skill`,
+        actionTypes: [requestUpdateSkillRequirement, updateSkillRequirementSuccess, updateSkillRequirementFail],
         variables: formRequest,
         dispatch,
         getState,

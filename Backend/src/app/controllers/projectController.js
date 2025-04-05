@@ -70,6 +70,22 @@ export async function updateBackground(req, res) {
     res.status(200).jsonify(result, 'Update background successfully.')
 }
 
+// ========== POST [Project Requirement - Role ] ========== //
+export async function updateRoleRequirement(req, res) {
+    const result = await projectService.updateRoleRequirement(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update role requirement successfully.')
+}
+// ========= POST [Project Requirement - Sector ] ========== //
+export async function updateSectorRequirement(req, res) {
+    const result = await projectService.updateSectorRequirement(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update sector requirement successfully.')
+}
+// ========= POST [Project Requirement - Skill ] ========== //
+export async function updateSkillRequirement(req, res) {
+    const result = await projectService.updateSkillRequirement(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update skill requirement successfully.')
+}
+
 // ========== DELETE [Project] ========== //
 export async function deleteProject(req, res) {
     await projectService.deleteProject(req.currentUser, req.params.id)
@@ -100,11 +116,6 @@ export async function accessToProject(req, res) {
     res.status(200).jsonify('Access to project successfully.')
 }
 
-// ========== POST [Project - Requirement] ========== //
-export async function addProjectRequirement(req, res) {
-    await projectService.addProjectRequirement(req.currentUser, req.params.id, req.body)
-    res.status(200).jsonify('Add requirement successfully.')
-}
 // ========== GET [My Project Access] ========== //
 export async function getMyProjectAccess(req, res) {
     const result = await projectService.getMyProjectAccess(req.currentUser)

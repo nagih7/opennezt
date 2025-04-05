@@ -66,8 +66,12 @@ const projectSlice = createSlice({
         // ========== APPLY TO JOIN PROJECT ========== //
         isLoadingApplyToJoinProject: false,
         isOpenModalConfirmApply: false,
-        // ========== REQUIREMENT PROJECT ========== //
-        isLoadingCreateProjectRequirement: false,
+        // ========== PROJECT REQUIREMENT - ROLE  ========== //
+        isLoadingUpdateRoleRequirement: false,
+        // ========= PROJECT REQUIREMENT - SECTOR  ========== //
+        isLoadingUpdateSectorRequirement: false,
+        // ========= PROJECT REQUIREMENT - SKILL  ========== //
+        isLoadingUpdateSkillRequirement: false,
         // ========== SEARCH MY PROJECTS ========== //
         isLoadingSearchMyProjects: false,
         myProjectsBySearch: [],
@@ -270,8 +274,6 @@ const projectSlice = createSlice({
             ...state,
             isOpenModalConfirmApply: action.payload,
         }),
-
-        // ========== UPDATE PROJECT ========== //
         // ========== DELETE PROJECT ========== //
         requestDeleteMyProject: (state) => ({
             ...state,
@@ -306,31 +308,102 @@ const projectSlice = createSlice({
                 state.formCreateProject[key] = action.payload[key]
             })
         },
-        // ========== REQUIREMENT PROJECT ========== //
-        requestCreateProjectRequirement: (state) => ({
+        // ========== PROJECT REQUIREMENT - ROLE ========== //
+        requestUpdateRoleRequirement: (state) => ({
             ...state,
-            isLoadingCreateProjectRequirement: true,
+            isLoadingUpdateRoleRequirement: true,
         }),
-        createProjectRequirementSuccess: (state) => {
+        updateRoleRequirementSuccess: (state, action) => {
             toaster.create({
-                title: 'Create project requirement successfully',
-                description: 'You have successfully created the project requirement',
+                title: 'Update role requirement successfully',
                 type: 'success',
             })
             return {
                 ...state,
-                isLoadingCreateProjectRequirement: false,
+                projectDetails: {
+                    ...state.projectDetails,
+                    requirements: {
+                        ...state.projectDetails.requirements,
+                        team_role_ids: action.payload.data?.teamRoles,
+                        role_ids: action.payload.data?.roles,
+                    },
+                },
+                isLoadingUpdateRoleRequirement: false,
             }
         },
-        createProjectRequirementFail: (state) => {
+        updateRoleRequirementFail: (state) => {
             toaster.create({
-                title: 'Create project requirement failed',
-                description: 'You have failed to create the project requirement',
+                title: 'Update role requirement failed',
                 type: 'error',
             })
             return {
                 ...state,
-                isLoadingCreateProjectRequirement: false,
+                isLoadingUpdateRoleRequirement: false,
+            }
+        },
+        // ========= PROJECT REQUIREMENT - SECTOR ========== //
+        requestUpdateSectorRequirement: (state) => ({
+            ...state,
+            isLoadingUpdateSectorRequirement: true,
+        }),
+        updateSectorRequirementSuccess: (state, action) => {
+            toaster.create({
+                title: 'Update sector requirement successfully',
+                type: 'success',
+            })
+            return {
+                ...state,
+                myProjectDetails: {
+                    ...state.myProjectDetails,
+                    requirements: {
+                        ...state.myProjectDetails.requirements,
+                        industry_ids: action.payload.data?.industries,
+                        experience_level_ids: action.payload.data?.experienceLevels,
+                    },
+                },
+                isLoadingUpdateSectorRequirement: false,
+            }
+        },
+        updateSectorRequirementFail: (state) => {
+            toaster.create({
+                title: 'Update sector requirement failed',
+                type: 'error',
+            })
+            return {
+                ...state,
+                isLoadingUpdateSectorRequirement: false,
+            }
+        },
+        // ========= PROJECT REQUIREMENT - SKILL ========== //
+        requestUpdateSkillRequirement: (state) => ({
+            ...state,
+            isLoadingUpdateSkillRequirement: true,
+        }),
+        updateSkillRequirementSuccess: (state, action) => {
+            toaster.create({
+                title: 'Update skill requirement successfully',
+                type: 'success',
+            })
+            return {
+                ...state,
+                myProjectDetails: {
+                    ...state.myProjectDetails,
+                    requirements: {
+                        ...state.myProjectDetails.requirements,
+                        skill_ids: action.payload.data?.skills,
+                    },
+                },
+                isLoadingUpdateSkillRequirement: false,
+            }
+        },
+        updateSkillRequirementFail: (state) => {
+            toaster.create({
+                title: 'Update skill requirement failed',
+                type: 'error',
+            })
+            return {
+                ...state,
+                isLoadingUpdateSkillRequirement: false,
             }
         },
 
@@ -419,17 +492,24 @@ export const {
     applyToJoinProjectSuccess,
     applyToJoinProjectFail,
     setOpenModalConfirmApply,
-    // ========== UPDATE PROJECT ========== //
     // ========== DELETE PROJECT ========== //
     requestDeleteMyProject,
     deleteMyProjectSuccess,
     deleteMyProjectFail,
     // ========== SEEK PROJECTS ========== //
     onChangeFormCreateProject,
-    // ========== REQUIREMENT PROJECT ========== //
-    requestCreateProjectRequirement,
-    createProjectRequirementSuccess,
-    createProjectRequirementFail,
+    // ========== PROJECT REQUIREMENT - ROLE ========== //
+    requestUpdateRoleRequirement,
+    updateRoleRequirementSuccess,
+    updateRoleRequirementFail,
+    // ========= PROJECT REQUIREMENT - SECTOR ========== //
+    requestUpdateSectorRequirement,
+    updateSectorRequirementSuccess,
+    updateSectorRequirementFail,
+    // ======== PROJECT REQUIREMENT - SKILL ========== //
+    requestUpdateSkillRequirement,
+    updateSkillRequirementSuccess,
+    updateSkillRequirementFail,
     // ========== SEARCH MY PROJECTS ========== //
     requestSearchMyProjects,
     searchMyProjectsSuccess,

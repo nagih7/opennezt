@@ -10,7 +10,7 @@ import moment from 'moment'
 import { IconlyEdit } from 'components/UI/Iconly'
 import { IconlyDelete } from 'components/UI/Iconly'
 import { createOrUpdateEducation } from 'api/profile'
-
+import { DataList } from "@chakra-ui/react"
 const Educations = () => {
     const dispatch = useDispatch()
     // ========== STATE FROM REDUX STORE ========== //
@@ -123,39 +123,47 @@ const Educations = () => {
                     <div>
                         <div className="px-[16px]">
                             {educations?.map((education, index) => (
-                                <div key={index}>
-                                    <div className=" shadow rounded-[0.6rem]">
-                                        <div className="relative p-4 mt-[2rem]">
-                                            <span className="cursor-pointer md:float-right 2xl:float-right">
-                                                <IconlyDelete size={24} color={'#000'} />
-                                            </span>
-                                            <span
-                                                className="cursor-pointer md:float-right 2xl:float-right"
-                                                onClick={() => handleUpdateEducation(education)}
-                                            >
-                                                <IconlyEdit size={24} color={'#000'} />
-                                            </span>
+                                <DataList.Root orientation="horizontal" key={index}>
+                                    <div key={index}>
+                                        <div className=" shadow rounded-[0.6rem]">
+                                            <div className="relative p-4 mt-[2rem]">
+                                                <span className="cursor-pointer md:float-right 2xl:float-right">
+                                                    <IconlyDelete size={24} color={'#000'} />
+                                                </span>
+                                                <span
+                                                    className="cursor-pointer md:float-right 2xl:float-right"
+                                                    onClick={() => handleUpdateEducation(education)}
+                                                >
+                                                    <IconlyEdit size={24} color={'#000'} />
+                                                </span>
 
-                                            {education.school && (
-                                                <h4 className="flex font-bold mb-[0.75rem]">{education.school}</h4>
-                                            )}
-                                            {education.start_date && education.end_date && (
-                                                <p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
-                                                    {`${moment(education.start_date).format('MMM YYYY')} ${
-                                                        education.end_date
+                                                {education.school && (
+                                                    <h4 className="flex font-bold mb-[0.75rem]">{education.school}</h4>
+                                                )}
+                                                {education.start_date && education.end_date && (
+                                                    <p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
+                                                        {`${moment(education.start_date).format('MMM YYYY')} ${education.end_date
                                                             ? `- ${moment(education.end_date).format('MMM YYYY')}`
                                                             : ''
-                                                    }`}
-                                                </p>
-                                            )}
-                                            {education.field_of_study && (
-                                                <p className="flex "> Field of study: {education.field_of_study}</p>
-                                            )}
-                                            {education.degree && <p className="flex "> Degree: {education.degree}</p>}
-                                            {education.grade && <p className="flex "> Grade: {education.grade}</p>}
+                                                            }`}
+                                                    </p>
+                                                )}
+                                                {education.field_of_study && (
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <DataList.ItemLabel> Field of study</DataList.ItemLabel>
+                                                        <DataList.ItemValue className='mb-0'>{education.field_of_study}</DataList.ItemValue>
+                                                    </div>
+                                                )}
+                                                {education.degree && <div className="flex items-center gap-2 mb-2"> <DataList.ItemLabel > Degree</DataList.ItemLabel>
+                                                    <DataList.ItemValue className='mb-0'>{education.degree}</DataList.ItemValue>
+                                                </div>}
+                                                {education.grade && <div className="flex items-center gap-2 mb-2"> <DataList.ItemLabel > Grade</DataList.ItemLabel>
+                                                    <DataList.ItemValue className='mb-0'>{education.grade}</DataList.ItemValue>
+                                                </div>}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </DataList.Root>
                             ))}
                         </div>
                     </div>

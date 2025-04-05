@@ -27,7 +27,10 @@ const Skills = () => {
 
     // ========== USE EFFECT ========== //
     useEffect(() => {
-        dispatch(getCategoryFramework())
+        if (!categoryFramework?.items?.length) {
+            dispatch(getCategoryFramework())
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch])
 
     useEffect(() => {
