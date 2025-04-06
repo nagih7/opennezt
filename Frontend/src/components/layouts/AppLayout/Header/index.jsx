@@ -17,15 +17,9 @@ const Header = () => {
     const [isFullScreen, setIsFullScreen] = useState(false)
     const authUser = useSelector((state) => state.auth.authUser)
     const { language } = useSelector((state) => state.app)
-    const { notifications, isLoadingReplyNotification } = useSelector((state) => state.notification)
+    const { notifications } = useSelector((state) => state.notification)
     const chatListRef = useRef(null)
-    const unreadNotifications = notifications.filter(
-        (notification) => notification.metadata?.read === false
-    );
-
-    const readNotifications = notifications.filter(
-        (notification) => notification.metadata?.read === true
-    );
+    const unreadNotifications = notifications.filter((notification) => notification.metadata?.read === false)
 
     useEffect(() => {
         const handleFullScreenChange = () => {
@@ -89,7 +83,7 @@ const Header = () => {
     return (
         <header className="bg-[#ffffff] w-full">
             <div className="flex items-center h-[70px] pr-4">
-                <div className="h-full">
+                <div className="h-full cursor-pointer" onClick={() => (window.location.href = '/')}>
                     <img src={Logo} alt="logo-opennezt" className="py-[18px] px-8 bg-[#ffffff]  h-full" />
                 </div>
                 <div className="flex items-center justify-between flex-1">
