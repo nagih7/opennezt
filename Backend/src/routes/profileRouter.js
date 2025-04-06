@@ -68,6 +68,8 @@ profileRouter.put(
     asyncHandler(validate(profileRequest.updateProfileAdditionalInfo)),
     asyncHandler(profileController.updateProfileAdditionalInfo)
 )
+// ========== DELETE [Additional Info] ========== //
+profileRouter.delete('/additional-info/:id', asyncHandler(profileController.deleteProfileAdditionalInfo))
 
 // ========== GET [Profile - Access] ========== //
 profileRouter.get('/me/access', asyncHandler(profileController.getAccessToMyProfile))

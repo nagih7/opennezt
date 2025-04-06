@@ -4,8 +4,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import ProfileCard from '../ProfileCard'
 import ProfileEditMenu from '../ProfileEditMenu'
 import ActionBar from '../ActionBar'
-import { IconlyEdit } from 'components/UI/Iconly'
-import { createOrUpdateProfileAdditionalInfo, getProfile } from 'api/profile'
+import { IconlyDelete, IconlyEdit } from 'components/UI/Iconly'
+import {
+    createProfileAdditionalInfo,
+    updateProfileAdditionalInfo,
+    deleteProfileAdditionalInfo,
+    getProfile,
+} from 'api/profile'
 import { setIsOpenModalCreateOrUpdateProfileAdditionalInfo } from 'states/modules/profile'
 import { PROFILE_ADDITIONAL } from 'utils/constants'
 import SelectCustom from 'components/UI/SelectCustom'
@@ -25,12 +30,11 @@ const AdditionalInfo = () => {
     const { additional_infos } = profile || []
     const { isOpenModalCreateOrUpdateProfileAdditionalInfo, isLoadingCreateOrUpdateProfileAdditionalInfo } =
         useSelector((state) => state.profile)
-    // // ========== STATE MANAGEMENT ========== //
+    // ========== STATE MANAGEMENT ========== //
     const [action, setAction] = useState('')
-    const [formData, setFormData] = useState({
-        name: '',
-        content: '',
-    })
+    const [formData, setFormData] = useState({})
+    const [targetDelete, setTargetDelete] = useState(null)
+    const [isOpenModalDeleteAdditionalInfo, setIsOpenModalDeleteAdditionalInfo] = useState(false)
     // ========== USE EFFECT ========== //
     useEffect(() => {
         if (!profile) dispatch(getProfile())
@@ -67,8 +71,27 @@ const AdditionalInfo = () => {
         })
     }
 
+    const handleOpenModalDelete = (info) => {
+        setIsOpenModalDeleteAdditionalInfo(true)
+        setTargetDelete(info)
+    }
+
+    const handleDeleteCertification = () => {
+        dispatch(deleteProfileAdditionalInfo(targetDelete._id))
+        setIsOpenModalDeleteAdditionalInfo(false)
+    }
+
     const handleSaveChanges = () => {
-        dispatch(createOrUpdateProfileAdditionalInfo(formData, action))
+        switch (action) {
+            case 'create':
+                dispatch(createProfileAdditionalInfo(formData, action))
+                break
+            case 'update':
+                dispatch(updateProfileAdditionalInfo(formData))
+                break
+            default:
+                break
+        }
     }
 
     const handleClose = () => {
@@ -110,12 +133,23 @@ const AdditionalInfo = () => {
                                 <div key={index}>
                                     <div className="shadow rounded-[0.6rem]">
                                         <div className="relative p-4 mt-[2rem]">
-                                            <span
-                                                className="cursor-pointer md:float-right 2xl:float-right"
-                                                onClick={() => handleUpdateProfileAdditionalInfo(info)}
+                                            <Stack
+                                                className="flex gap-2 md:float-right 2xl:float-right"
+                                                direction={'row'}
                                             >
-                                                <IconlyEdit size={24} color={'#000'} />
-                                            </span>
+                                                <span
+                                                    className="cursor-pointer "
+                                                    onClick={() => handleUpdateProfileAdditionalInfo(info)}
+                                                >
+                                                    <IconlyEdit size={24} color={'#000'} />
+                                                </span>
+                                                <span
+                                                    className="cursor-pointer"
+                                                    onClick={() => handleOpenModalDelete(info)}
+                                                >
+                                                    <IconlyDelete size={24} color={'#000'} />
+                                                </span>
+                                            </Stack>
                                             <h4 className="flex font-bold">{info?.name}</h4>
                                             {info?.content && <p className="flex "> {info?.content}</p>}
                                         </div>
@@ -127,6 +161,7 @@ const AdditionalInfo = () => {
                 </div>
             </div>
 
+            {/* CREATE/UPDATE */}
             <Dialog.Root
                 size={'lg'}
                 open={isOpenModalCreateOrUpdateProfileAdditionalInfo}
@@ -184,6 +219,49 @@ const AdditionalInfo = () => {
                                         className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]"
                                         variant="outline"
                                         onClick={handleClose}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Dialog.ActionTrigger>
+                            </Dialog.Footer>
+                        </Dialog.Content>
+                    </Dialog.Positioner>
+                </Portal>
+            </Dialog.Root>
+            {/* DELETE */}
+            <Dialog.Root
+                size={'md'}
+                open={isOpenModalDeleteAdditionalInfo}
+                key={formData.profile_id}
+                placement={'center'}
+                motionPreset="slide-in-bottom"
+            >
+                <Portal>
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                        <Dialog.Content className="bg-white">
+                            <Dialog.Header>
+                                <Dialog.Title>
+                                    {action === 'create' ? 'Add additional info' : 'Update additional info'}
+                                </Dialog.Title>
+                            </Dialog.Header>
+                            <Dialog.Body>
+                                Do you want to delete this additional info? This action cannot be undone.
+                            </Dialog.Body>
+                            <Dialog.Footer>
+                                <Button
+                                    className="border-[#F4F5F6] bg-[#2F65B9] text-white"
+                                    onClick={handleDeleteCertification}
+                                    borderRadius={4}
+                                    loading={isLoadingCreateOrUpdateProfileAdditionalInfo}
+                                >
+                                    CONFIRM
+                                </Button>
+                                <Dialog.ActionTrigger asChild>
+                                    <Button
+                                        className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]"
+                                        variant="outline"
+                                        onClick={() => setIsOpenModalDeleteAdditionalInfo(false)}
                                     >
                                         Cancel
                                     </Button>

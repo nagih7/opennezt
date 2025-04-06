@@ -55,13 +55,19 @@ export async function getOrganizationFramework(req, res) {
 }
 // ========== POST [Additional Info] ========== //
 export async function createProfileAdditionalInfos(req, res) {
-    await profileService.createProfileAdditionalInfos(req.currentUser, req.body)
-    res.status(201).jsonify('Create profile additional info successfully.')
+    const result = await profileService.createProfileAdditionalInfos(req.currentUser, req.body)
+    res.status(201).jsonify(result, 'Create profile additional info successfully.')
 }
 // ========== PUT [Additional Info] ========== //
 export async function updateProfileAdditionalInfo(req, res) {
-    await profileService.updateProfileAdditionalInfo(req.currentUser, req.body)
-    res.jsonify('Update profile additional info successfully.')
+    const result = await profileService.updateProfileAdditionalInfo(req.currentUser, req.body)
+    res.jsonify(result, 'Update profile additional info successfully.')
+}
+
+// ========== DELETE [Additional Info] ========== //
+export async function deleteProfileAdditionalInfo(req, res) {
+    const result = await profileService.deleteProfileAdditionalInfo(req.currentUser, req.params.id)
+    res.jsonify(result, 'Delete profile additional info successfully.')
 }
 
 // ========== GET [Profile Access] ========== //

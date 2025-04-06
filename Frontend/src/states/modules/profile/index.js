@@ -360,13 +360,34 @@ const profileSlice = createSlice({
             ...state,
             isLoadingCreateOrUpdateProfileAdditionalInfo: true,
         }),
-        createOrUpdateProfileAdditionalInfoSuccess: (state, action) => {
+        createProfileAdditionalInfoSuccess: (state, action) => {
             toaster.create({
                 title: `${action.payload.message}`,
                 type: 'success',
             })
             return {
                 ...state,
+                profile: {
+                    ...state.profile,
+                    additional_infos: [...state.profile.additional_infos, action.payload.data],
+                },
+                isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+                isOpenModalCreateOrUpdateProfileAdditionalInfo: false,
+            }
+        },
+        updateProfileAdditionalInfoSuccess: (state, action) => {
+            toaster.create({
+                title: `${action.payload.message}`,
+                type: 'success',
+            })
+            return {
+                ...state,
+                profile: {
+                    ...state.profile,
+                    additional_infos: state.profile.additional_infos.map((item) =>
+                        item._id === action.payload.data._id ? action.payload.data : item
+                    ),
+                },
                 isLoadingCreateOrUpdateProfileAdditionalInfo: false,
                 isOpenModalCreateOrUpdateProfileAdditionalInfo: false,
             }
@@ -385,6 +406,35 @@ const profileSlice = createSlice({
             ...state,
             isOpenModalCreateOrUpdateProfileAdditionalInfo: action.payload,
         }),
+        // ========== Additional Info - Delete ========== //
+        requestDeleleProfileAdditionalInfo: (state) => ({
+            ...state,
+            isLoadingCreateOrUpdateProfileAdditionalInfo: true,
+        }),
+        deleteProfileAdditionalInfoSuccess: (state, action) => {
+            toaster.create({
+                title: `${action.payload.message}`,
+                type: 'success',
+            })
+            return {
+                ...state,
+                profile: {
+                    ...state.profile,
+                    additional_infos: state.profile.additional_infos.filter((item) => item._id !== action.payload.data),
+                },
+                isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+            }
+        },
+        deleteProfileAdditionalInfoFail: (state, action) => {
+            toaster.create({
+                title: `${Object.values(action.payload.data.detail)[0]}`,
+                type: 'error',
+            })
+            return {
+                ...state,
+                isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+            }
+        },
     },
 })
 
@@ -441,9 +491,14 @@ export const {
     requestgetOrganizationFrameworkFail,
     // ========== Additional Info ========== //
     requestCreateOrUpdateProfileAdditionalInfo,
-    createOrUpdateProfileAdditionalInfoSuccess,
+    createProfileAdditionalInfoSuccess,
+    updateProfileAdditionalInfoSuccess,
     createOrUpdateProfileAdditionalInfoFail,
     setIsOpenModalCreateOrUpdateProfileAdditionalInfo,
+    // ========== Additional Info - Delete ========== //
+    requestDeleleProfileAdditionalInfo,
+    deleteProfileAdditionalInfoSuccess,
+    deleteProfileAdditionalInfoFail,
 } = profileSlice.actions
 
 export default profileSlice.reducer

@@ -47,8 +47,12 @@ import {
     requestgetOrganizationFrameworkFail,
     // ========== Additional Info ========== //
     requestCreateOrUpdateProfileAdditionalInfo,
-    createOrUpdateProfileAdditionalInfoSuccess,
+    createProfileAdditionalInfoSuccess,
+    updateProfileAdditionalInfoSuccess,
     createOrUpdateProfileAdditionalInfoFail,
+    requestDeleleProfileAdditionalInfo,
+    deleteProfileAdditionalInfoSuccess,
+    deleteProfileAdditionalInfoFail,
 } from '../../states/modules/profile'
 
 export const updateUser = (data) => async (dispatch, getState) => {
@@ -211,16 +215,43 @@ export const updateSkillProfile = (data) => async (dispatch, getState) => {
 }
 
 // ========== Additional Info ========== //
-export const createOrUpdateProfileAdditionalInfo = (data, action) => async (dispatch, getState) => {
+export const createProfileAdditionalInfo = (data, action) => async (dispatch, getState) => {
     return callApi({
         method: action === 'create' ? 'post' : 'put',
         apiPath: `/profile/additional-info`,
         actionTypes: [
             requestCreateOrUpdateProfileAdditionalInfo,
-            createOrUpdateProfileAdditionalInfoSuccess,
+            createProfileAdditionalInfoSuccess,
             createOrUpdateProfileAdditionalInfoFail,
         ],
         variables: data,
+        dispatch,
+        getState,
+    })
+}
+export const updateProfileAdditionalInfo = (data) => async (dispatch, getState) => {
+    return callApi({
+        method: 'put',
+        apiPath: `/profile/additional-info`,
+        actionTypes: [
+            requestCreateOrUpdateProfileAdditionalInfo,
+            updateProfileAdditionalInfoSuccess,
+            createOrUpdateProfileAdditionalInfoFail,
+        ],
+        variables: data,
+        dispatch,
+        getState,
+    })
+}
+export const deleteProfileAdditionalInfo = (id) => async (dispatch, getState) => {
+    return callApi({
+        method: 'delete',
+        apiPath: `/profile/additional-info/${id}`,
+        actionTypes: [
+            requestDeleleProfileAdditionalInfo,
+            deleteProfileAdditionalInfoSuccess,
+            deleteProfileAdditionalInfoFail,
+        ],
         dispatch,
         getState,
     })

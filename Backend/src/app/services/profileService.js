@@ -308,11 +308,26 @@ export async function getOrganizationFramework() {
 // ========== POST [Additional Info] ========== //
 export async function createProfileAdditionalInfos(user, requestBody) {
     const profile = await Profile.findOne({ user_id: user._id })
-    const additionalInfo = new ProfileAdditionalInfo({
-        ...requestBody,
-        profile_id: profile._id,
-    })
-    await additionalInfo.save()
+    if (!profile) {
+        const newProfile = new Profile({
+            user_id: user._id,
+        })
+        await newProfile.save()
+        const additionalInfo = new ProfileAdditionalInfo({
+            ...requestBody,
+            profile_id: newProfile._id,
+        })
+
+        await additionalInfo.save()
+        return additionalInfo
+    } else {
+        const additionalInfo = new ProfileAdditionalInfo({
+            ...requestBody,
+            profile_id: profile._id,
+        })
+        await additionalInfo.save()
+        return additionalInfo
+    }
 }
 
 // ========== PUT [Additional Info] ========== //
@@ -332,6 +347,23 @@ export async function updateProfileAdditionalInfo(user, requestBody) {
     if (!additionalInfo) {
         throw new Error('Additional Info not found.')
     }
+    return additionalInfo
+}
+
+// ========== DELETE [Additional Info] ========== //
+export async function deleteProfileAdditionalInfo(user, additionalInfoId) {
+    const profile = await Profile.findOne({ user_id: user._id })
+    if (!profile) {
+        throw new Error('Profile not found.')
+    }
+    const additionalInfo = await ProfileAdditionalInfo.findOneAndDelete({
+        profile_id: profile._id,
+        _id: additionalInfoId,
+    })
+    if (!additionalInfo) {
+        throw new Error('Additional Info not found.')
+    }
+    return additionalInfo._id
 }
 
 // ========== GET [Profile Access] ========== //
