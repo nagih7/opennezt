@@ -45,6 +45,13 @@ const Stage = () => {
 
     // ========== ONCHANGE FUNCTION ========== //
     const handleChange = (event, nameSelect) => {
+        if (event.value.length > 2) {
+            toaster.create({
+                type: 'error',
+                title: 'You can only select up to 2 industries',
+            })
+            return
+        }
         if (nameSelect) {
             setFormData({ ...formData, [nameSelect]: event.value })
         }

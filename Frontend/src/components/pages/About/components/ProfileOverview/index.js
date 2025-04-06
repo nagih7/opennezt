@@ -1,17 +1,5 @@
-import {
-    Avatar,
-    Badge,
-    Blockquote,
-    Button,
-    CloseButton,
-    Dialog,
-    Image,
-    Input,
-    Portal,
-    Stack,
-    Text,
-} from '@chakra-ui/react';
-import { changeAvatar } from 'api/profile';
+import { Avatar, Badge, Button, Image, Input, Text } from '@chakra-ui/react'
+import { changeAvatar } from 'api/profile'
 import {
     DialogActionTrigger,
     DialogBody,
@@ -20,56 +8,49 @@ import {
     DialogFooter,
     DialogHeader,
     DialogRoot,
-} from 'components/UI/dialog';
-import {
-    IconlyBookmark,
-    IconlyCamera,
-    IconlyLocation,
-    IconlySearch,
-    IconlyShieldDone,
-} from 'components/UI/Iconly';
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setIsOpenAvatarPreview } from 'states/modules/profile';
-import Loading from './components/Loading';
-import { Alert } from 'antd';
+} from 'components/UI/dialog'
+import { IconlyBookmark, IconlyCamera, IconlyLocation, IconlySearch, IconlyShieldDone } from 'components/UI/Iconly'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setIsOpenAvatarPreview } from 'states/modules/profile'
+import Loading from './components/Loading'
 
 const ProfileOverview = () => {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleClick = () => {
-        setIsLoading(true); // Thay đổi trạng thái để hiển thị Loading và ẩn phần tử ban đầu
-    };
+        setIsLoading(true) // Thay đổi trạng thái để hiển thị Loading và ẩn phần tử ban đầu
+    }
 
     // ========== DISPATCH ========== //
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
     // ========== STATE FROM REDUX STORE ========== //
-    const { authUser } = useSelector((state) => state.auth);
-    const { isLoadingBtnChangeAvatar, isOpenAvatarPreview } = useSelector((state) => state.profile);
+    const { authUser } = useSelector((state) => state.auth)
+    const { isLoadingBtnChangeAvatar, isOpenAvatarPreview } = useSelector((state) => state.profile)
     // ========== STATE ========== //
-    const [avatarFile, setAvatarFile] = useState(null);
-    const [avatarFileSrc, setAvatarFileSrc] = useState(null);
+    const [avatarFile, setAvatarFile] = useState(null)
+    const [avatarFileSrc, setAvatarFileSrc] = useState(null)
 
     // ========== LOGIC ========== //
     const handleUploadAvatar = (event) => {
-        const file = event.target.files[0]; // Lấy file đầu tiên từ input
+        const file = event.target.files[0] // Lấy file đầu tiên từ input
         if (file) {
-            setAvatarFile(file);
-            setAvatarFileSrc(URL.createObjectURL(file));
-            dispatch(setIsOpenAvatarPreview(true));
+            setAvatarFile(file)
+            setAvatarFileSrc(URL.createObjectURL(file))
+            dispatch(setIsOpenAvatarPreview(true))
         }
-    };
+    }
 
     const handleCloseAvatarPreview = (event) => {
-        dispatch(setIsOpenAvatarPreview(event));
-        document.getElementById('file-upload').value = '';
-    };
+        dispatch(setIsOpenAvatarPreview(event))
+        document.getElementById('file-upload').value = ''
+    }
 
     const handleSaveAvatar = async (file) => {
-        const formData = new FormData();
-        formData.append('avatar', file);
-        dispatch(changeAvatar(formData));
-    };
+        const formData = new FormData()
+        formData.append('avatar', file)
+        dispatch(changeAvatar(formData))
+    }
 
     return (
         <div className="p-8 bg-[#ffffff] rounded-md">
@@ -97,7 +78,7 @@ const ProfileOverview = () => {
                     <div
                         className="relative flex flex-col items-center bg-[#ffffff] mb-10 p-1 rounded-md"
                         onClick={() => {
-                            console.log('click');
+                            console.log('click')
                         }}
                     >
                         <label
@@ -141,9 +122,7 @@ const ProfileOverview = () => {
                     >
                         <DialogContent className="flex items-center justify-center">
                             <DialogHeader className="flex">
-                                <Text className="text-lg font-bold from-stone-900">
-                                    Choose profile picture
-                                </Text>
+                                <Text className="text-lg font-bold from-stone-900">Choose profile picture</Text>
                             </DialogHeader>
                             <DialogBody>
                                 <Image
@@ -173,11 +152,7 @@ const ProfileOverview = () => {
                     </DialogRoot>
                     <h5 className="text-[#000000] font-bold text-lg flex gap-1 items-center">
                         {authUser?.name}
-                        <IconlyShieldDone
-                            size={24}
-                            color="#3897f0"
-                            className="text-[#3897f0] mx-[6px]"
-                        />
+                        <IconlyShieldDone size={24} color="#3897f0" className="text-[#3897f0] mx-[6px]" />
                     </h5>
                     <div className="flex items-center mt-[8px] gap-4">
                         {authUser?.region && (
@@ -222,7 +197,7 @@ const ProfileOverview = () => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ProfileOverview;
+export default ProfileOverview

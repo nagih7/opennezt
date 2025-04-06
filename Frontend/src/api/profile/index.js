@@ -1,4 +1,4 @@
-import callApi from '../callApi';
+import callApi from '../callApi'
 
 import {
     changePassword,
@@ -22,12 +22,21 @@ import {
     UpdateProfessionalProfileFail,
     // ========== Education ========== //
     requestCreateOrUpdateEducation,
-    createOrUpdateEducationSuccess,
+    createEducationSuccess,
+    updateEducationSuccess,
     createOrUpdateEducationFail,
+    // ========== Delete Education ========== //
+    requestDeleleEducation,
+    deleteEducationSuccess,
+    deleteEducationFail,
     // ========== Certification ========== //
     requestCreateOrUpdateCertification,
-    createOrUpdateCertificationSuccess,
+    createCertificationSuccess,
+    updateCertificationSuccess,
     createOrUpdateCertificationFail,
+    requestDeleleCertification,
+    deleteCertificationSuccess,
+    deleteCertificationFail,
     // ========== Skills ========== //
     requestUpdateSkills,
     updateSkillsSuccess,
@@ -40,7 +49,7 @@ import {
     requestCreateOrUpdateProfileAdditionalInfo,
     createOrUpdateProfileAdditionalInfoSuccess,
     createOrUpdateProfileAdditionalInfoFail,
-} from '../../states/modules/profile';
+} from '../../states/modules/profile'
 
 export const updateUser = (data) => async (dispatch, getState) => {
     return callApi({
@@ -50,8 +59,8 @@ export const updateUser = (data) => async (dispatch, getState) => {
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 export const handleChangePassword = (data) => async (dispatch, getState) => {
     return callApi({
@@ -61,8 +70,8 @@ export const handleChangePassword = (data) => async (dispatch, getState) => {
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 export const changeAvatar = (formData) => async (dispatch, getState) => {
     return callApi({
@@ -72,8 +81,8 @@ export const changeAvatar = (formData) => async (dispatch, getState) => {
         variables: formData,
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 export const changeBackground = (formData) => async (dispatch, getState) => {
     return callApi({
@@ -83,8 +92,8 @@ export const changeBackground = (formData) => async (dispatch, getState) => {
         variables: formData,
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== Profile ========== //
 export const getProfile = () => async (dispatch, getState) => {
@@ -94,8 +103,8 @@ export const getProfile = () => async (dispatch, getState) => {
         actionTypes: [requestGetProfile, requestGetProfileSuccess, requestGetProfileFail],
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 export const updateProfessionalProfile = (data) => async (dispatch, getState) => {
     return callApi({
@@ -109,44 +118,71 @@ export const updateProfessionalProfile = (data) => async (dispatch, getState) =>
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== Education ========== //
-export const createOrUpdateEducation = (data, action) => async (dispatch, getState) => {
-    const method = action === 'create' ? 'post' : 'put';
+export const createEducation = (data) => async (dispatch, getState) => {
     return callApi({
-        method: method,
+        method: 'post',
         apiPath: `/profile/education`,
-        actionTypes: [
-            requestCreateOrUpdateEducation,
-            createOrUpdateEducationSuccess,
-            createOrUpdateEducationFail,
-        ],
+        actionTypes: [requestCreateOrUpdateEducation, createEducationSuccess, createOrUpdateEducationFail],
         variables: data,
         dispatch,
         getState,
-        action,
-    });
-};
+    })
+}
+export const updateEducation = (data) => async (dispatch, getState) => {
+    return callApi({
+        method: 'put',
+        apiPath: `/profile/education`,
+        actionTypes: [requestCreateOrUpdateEducation, updateEducationSuccess, createOrUpdateEducationFail],
+        variables: data,
+        dispatch,
+        getState,
+    })
+}
+export const deleteEducation = (id) => async (dispatch, getState) => {
+    return callApi({
+        method: 'delete',
+        apiPath: `/profile/education/${id}`,
+        actionTypes: [requestDeleleEducation, deleteEducationSuccess, deleteEducationFail],
+        dispatch,
+        getState,
+    })
+}
 
 // ========== Certification ========== //
-export const createOrUpdateCertification = (data, action) => async (dispatch, getState) => {
-    const method = action === 'create' ? 'post' : 'put';
+export const createCertification = (data, action) => async (dispatch, getState) => {
     return callApi({
-        method: method,
+        method: 'post',
         apiPath: `/profile/certification`,
-        actionTypes: [
-            requestCreateOrUpdateCertification,
-            createOrUpdateCertificationSuccess,
-            createOrUpdateCertificationFail,
-        ],
+        actionTypes: [requestCreateOrUpdateCertification, createCertificationSuccess, createOrUpdateCertificationFail],
         variables: data,
         dispatch,
         getState,
         action,
-    });
-};
+    })
+}
+export const updateCertification = (data) => async (dispatch, getState) => {
+    return callApi({
+        method: 'put',
+        apiPath: `/profile/certification`,
+        actionTypes: [requestCreateOrUpdateCertification, updateCertificationSuccess, createOrUpdateCertificationFail],
+        variables: data,
+        dispatch,
+        getState,
+    })
+}
+export const deleteCertification = (id) => async (dispatch, getState) => {
+    return callApi({
+        method: 'delete',
+        apiPath: `/profile/certification/${id}`,
+        actionTypes: [requestDeleleCertification, deleteCertificationSuccess, deleteCertificationFail],
+        dispatch,
+        getState,
+    })
+}
 
 // ========== Organization ========== //
 export const getOrganizationFramework = () => async (dispatch, getState) => {
@@ -160,8 +196,8 @@ export const getOrganizationFramework = () => async (dispatch, getState) => {
         ],
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 export const updateSkillProfile = (data) => async (dispatch, getState) => {
     return callApi({
@@ -171,8 +207,8 @@ export const updateSkillProfile = (data) => async (dispatch, getState) => {
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ========== Additional Info ========== //
 export const createOrUpdateProfileAdditionalInfo = (data, action) => async (dispatch, getState) => {
@@ -187,5 +223,5 @@ export const createOrUpdateProfileAdditionalInfo = (data, action) => async (disp
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}

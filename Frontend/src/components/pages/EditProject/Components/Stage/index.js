@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getMyProjectDetails, updateProjectSector } from 'api/project'
 import { getIndustryFramework, getStageFramework } from 'api/user'
+import { toaster } from 'components/UI/toaster'
 
 const EditStage = () => {
     const dispatch = useDispatch()
@@ -55,6 +56,19 @@ const EditStage = () => {
 
     // ========== HANDLE CHANGE FUNCTION ========== //
     const handleChange = (event, nameSelect) => {
+        if (formData.industries.length > 2) {
+            setFormData({
+                ...formData,
+                industries: formData.industries.slice(0, 2),
+            })
+        }
+        if (event.value.length > 2) {
+            toaster.create({
+                type: 'error',
+                title: 'You can only select up to 2 industries',
+            })
+            return
+        }
         if (nameSelect) {
             setFormData({ ...formData, [nameSelect]: event.value })
         }

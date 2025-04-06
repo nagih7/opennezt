@@ -13,33 +13,33 @@ export async function updateProfessionalProfile(req, res) {
 
 // ========== POST [Education] ========== //
 export async function createProfileEducation(req, res) {
-    await profileService.createProfileEducation(req.currentUser, req.body)
-    res.status(201).jsonify('Create education successfully.')
+    const result = await profileService.createProfileEducation(req.currentUser, req.body)
+    res.status(201).jsonify(result, 'Create education successfully.')
 }
 // ========== PUT [Education] ========== //
 export async function updateProfileEducation(req, res) {
-    await profileService.updateProfileEducation(req.currentUser, req.body)
-    res.jsonify('Update education successfully.')
+    const result = await profileService.updateProfileEducation(req.currentUser, req.body)
+    res.jsonify(result, 'Update education successfully.')
 }
 // ========== DELETE [Education] ========== //
 export async function deleteProfileEducation(req, res) {
-    await profileService.deleteProfileEducation(req.currentUser, req.params.id)
-    res.jsonify('Delete education successfully.')
+    const result = await profileService.deleteProfileEducation(req.currentUser, req.params.id)
+    res.jsonify(result, 'Delete education successfully.')
 }
 // ========== POST [Certification] ========== //
 export async function createProfileCertifications(req, res) {
-    await profileService.createProfileCertifications(req.currentUser, req.body)
-    res.status(201).jsonify('Create certification successfully.')
+    const result = await profileService.createProfileCertifications(req.currentUser, req.body)
+    res.status(201).jsonify(result, 'Create certification successfully.')
 }
 // ========== PUT [Certification] ========== //
 export async function updateProfileCertification(req, res) {
-    await profileService.updateProfileCertification(req.currentUser, req.body)
-    res.jsonify('Update certification successfully.')
+    const result = await profileService.updateProfileCertification(req.currentUser, req.body)
+    res.jsonify(result, 'Update certification successfully.')
 }
 // ========== DELETE [Certification] ========== //
 export async function deleteProfileCertification(req, res) {
-    await profileService.deleteProfileCertification(req.currentUser, req.params.id)
-    res.jsonify('Delete certification successfully.')
+    const result = await profileService.deleteProfileCertification(req.currentUser, req.params.id)
+    res.jsonify(result, 'Delete certification successfully.')
 }
 
 // ========== PUT [Skills] ========== //

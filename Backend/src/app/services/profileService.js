@@ -1,18 +1,10 @@
-import {ACCESS_TYPE, LINK_STATIC_URL, PROFILE_ACCESS} from '@/configs'
-import {
-    Certification,
-    Education,
-    Profile,
-    ProfileAdditionalInfo,
-    Organization,
-    Type,
-    ActivityLog,
-} from '@/models'
+import { ACCESS_TYPE, LINK_STATIC_URL, PROFILE_ACCESS } from '@/configs'
+import { Certification, Education, Profile, ProfileAdditionalInfo, Organization, Type, ActivityLog } from '@/models'
 
 // ========== GET [Profile] ========== //
 export async function getProfile(user) {
     const matchStage = {
-        $match: {user_id: user._id},
+        $match: { user_id: user._id },
     }
     const lookupIndustry = {
         $lookup: {
@@ -70,7 +62,7 @@ export async function getProfile(user) {
                     },
                 },
                 {
-                    $unwind: {path: '$category', preserveNullAndEmptyArrays: true},
+                    $unwind: { path: '$category', preserveNullAndEmptyArrays: true },
                 },
                 {
                     $project: {
@@ -104,7 +96,7 @@ export async function getProfile(user) {
 
     const unwindStages = [
         {
-            $unwind: {path: '$experience_level', preserveNullAndEmptyArrays: true},
+            $unwind: { path: '$experience_level', preserveNullAndEmptyArrays: true },
         },
     ]
     const projectStage = {
@@ -161,7 +153,7 @@ export async function getProfile(user) {
 
 // ========== PUT [Professional] ========== //
 export async function updateProfessionalProfile(user, requestBody) {
-    const profile = await Profile.findOneAndUpdate({user_id: user.id}, requestBody, {new: true})
+    const profile = await Profile.findOneAndUpdate({ user_id: user.id }, requestBody, { new: true })
     if (!profile) {
         const newProfile = new Profile({
             ...requestBody,
@@ -169,13 +161,13 @@ export async function updateProfessionalProfile(user, requestBody) {
         })
         await newProfile.save()
     } else {
-        await Profile.findOneAndUpdate({user_id: user.id}, requestBody)
+        await Profile.findOneAndUpdate({ user_id: user.id }, requestBody)
     }
 }
 
 // ========== POST [Education] ========== //
 export async function createProfileEducation(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({ user_id: user.id })
     if (!profile) {
         const newProfile = new Profile({
             user_id: user.id,
@@ -186,17 +178,19 @@ export async function createProfileEducation(user, requestBody) {
             profile_id: newProfile._id,
         })
         await education.save()
+        return education
     } else {
         const education = new Education({
             ...requestBody,
             profile_id: profile._id,
         })
         await education.save()
+        return education
     }
 }
 // ========== PUT [Education] ========== //
 export async function updateProfileEducation(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({ user_id: user.id })
     if (!profile) {
         throw new Error('Profile not found.')
     }
@@ -206,15 +200,16 @@ export async function updateProfileEducation(user, requestBody) {
             _id: requestBody._id,
         },
         requestBody,
-        {new: true}
+        { new: true }
     )
     if (!education) {
         throw new Error('Education not found.')
     }
+    return education
 }
 // =========== DELETE [Education] ========== //
 export async function deleteProfileEducation(user, educationId) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({ user_id: user.id })
     if (!profile) {
         throw new Error('Profile not found.')
     }
@@ -225,23 +220,35 @@ export async function deleteProfileEducation(user, educationId) {
     if (!education) {
         throw new Error('Education not found.')
     }
+    return education._id
 }
 
 // ========== POST [Certification] ========== //
 export async function createProfileCertifications(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({ user_id: user.id })
     if (!profile) {
-        throw new Error('Profile not found.')
+        const newProfile = new Profile({
+            user_id: user.id,
+        })
+        await newProfile.save()
+        const certification = new Certification({
+            ...requestBody,
+            profile_id: newProfile._id,
+        })
+        await certification.save()
+        return certification
+    } else {
+        const certification = new Certification({
+            ...requestBody,
+            profile_id: profile._id,
+        })
+        await certification.save()
+        return certification
     }
-    const certification = new Certification({
-        ...requestBody,
-        profile_id: profile._id,
-    })
-    await certification.save()
 }
 // ========== PUT [Certification] ========== //
 export async function updateProfileCertification(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({ user_id: user.id })
     if (!profile) {
         throw new Error('Profile not found.')
     }
@@ -252,15 +259,16 @@ export async function updateProfileCertification(user, requestBody) {
             _id: requestBody._id,
         },
         requestBody,
-        {new: true}
+        { new: true }
     )
     if (!certification) {
         throw new Error('Certification not found.')
     }
+    return certification
 }
 // ========== DELETE [Certification] ========== //
 export async function deleteProfileCertification(user, certificationId) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({ user_id: user.id })
     if (!profile) {
         throw new Error('Profile not found.')
     }
@@ -271,13 +279,14 @@ export async function deleteProfileCertification(user, certificationId) {
     if (!certification) {
         throw new Error('Certification not found.')
     }
+    return certification._id
 }
 
 // ========== PUT [Skills] ========== //
 export async function updateProfileSkills(user, requestBody) {
     const skills = [...new Set(requestBody.skills.map((skill) => skill._id._id.toString()))]
     const categories = [...new Set(requestBody.skills.map((skill) => skill._id.category_id.toString()))]
-    const profile = await Profile.findOne({user_id: user._id})
+    const profile = await Profile.findOne({ user_id: user._id })
     if (!profile) {
         const newProfile = new Profile({
             user_id: user._id,
@@ -286,7 +295,7 @@ export async function updateProfileSkills(user, requestBody) {
         })
         await newProfile.save()
     } else {
-        await Profile.findOneAndUpdate({user_id: user._id}, {skill_ids: skills, category_ids: categories})
+        await Profile.findOneAndUpdate({ user_id: user._id }, { skill_ids: skills, category_ids: categories })
     }
 }
 
@@ -298,7 +307,7 @@ export async function getOrganizationFramework() {
 
 // ========== POST [Additional Info] ========== //
 export async function createProfileAdditionalInfos(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user._id})
+    const profile = await Profile.findOne({ user_id: user._id })
     const additionalInfo = new ProfileAdditionalInfo({
         ...requestBody,
         profile_id: profile._id,
@@ -308,7 +317,7 @@ export async function createProfileAdditionalInfos(user, requestBody) {
 
 // ========== PUT [Additional Info] ========== //
 export async function updateProfileAdditionalInfo(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user._id})
+    const profile = await Profile.findOne({ user_id: user._id })
     if (!profile) {
         throw new Error('Profile not found.')
     }
@@ -318,7 +327,7 @@ export async function updateProfileAdditionalInfo(user, requestBody) {
             _id: requestBody._id,
         },
         requestBody,
-        {new: true}
+        { new: true }
     )
     if (!additionalInfo) {
         throw new Error('Additional Info not found.')
@@ -327,7 +336,7 @@ export async function updateProfileAdditionalInfo(user, requestBody) {
 
 // ========== GET [Profile Access] ========== //
 export async function getAccessToMyProfile(user) {
-    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROFILE_ACCESS})
+    const accessType = await Type.findOne({ class: ACCESS_TYPE, name: PROFILE_ACCESS })
     const activities = await ActivityLog.aggregate([
         {
             $match: {
@@ -346,9 +355,9 @@ export async function getAccessToMyProfile(user) {
                         $addFields: {
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -370,7 +379,7 @@ export async function getAccessToMyProfile(user) {
             $limit: 10,
         },
         {
-            $sort: {timestamp: -1},
+            $sort: { timestamp: -1 },
         },
         {
             $project: {

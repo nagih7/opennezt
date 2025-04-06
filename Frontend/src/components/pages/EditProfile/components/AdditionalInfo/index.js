@@ -1,15 +1,15 @@
-import { Button, CloseButton, createListCollection, Dialog, Portal, Stack } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { Button, createListCollection, Dialog, Portal, Stack } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ProfileCard from '../ProfileCard'
 import ProfileEditMenu from '../ProfileEditMenu'
 import ActionBar from '../ActionBar'
-import InputCustom from 'components/UI/InputCustom'
 import { IconlyEdit } from 'components/UI/Iconly'
-import { createOrUpdateProfileAdditionalInfo } from 'api/profile'
+import { createOrUpdateProfileAdditionalInfo, getProfile } from 'api/profile'
 import { setIsOpenModalCreateOrUpdateProfileAdditionalInfo } from 'states/modules/profile'
 import { PROFILE_ADDITIONAL } from 'utils/constants'
 import SelectCustom from 'components/UI/SelectCustom'
+import TextAreaCustom from 'components/UI/TextAreaCustom'
 
 const AdditionalInfoFramework = createListCollection({
     items: PROFILE_ADDITIONAL['EN'].map((item) => ({
@@ -31,6 +31,11 @@ const AdditionalInfo = () => {
         name: '',
         content: '',
     })
+    // ========== USE EFFECT ========== //
+    useEffect(() => {
+        if (!profile) dispatch(getProfile())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch])
     // ========== HANDLE CHANGE FUNCTION ========== //
     const handleChangeSelect = (event, nameSelect) => {
         setFormData({
@@ -151,11 +156,12 @@ const AdditionalInfo = () => {
                                         name="name"
                                     />
                                 </Stack>
-                                <Stack direction="row" h="20">
-                                    <InputCustom
+                                <Stack direction="row">
+                                    <TextAreaCustom
+                                        resize="none"
+                                        required
                                         label="Content"
                                         placeholder="Ex: I can offer you a lot of things"
-                                        height="40px"
                                         name="content"
                                         onChange={handleChange}
                                         value={formData.content}

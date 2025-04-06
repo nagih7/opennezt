@@ -309,6 +309,7 @@ const router = createBrowserRouter([
                 <Educations />
             </AppLayout>
         ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
     },
     {
         path: '/about/edit-profile/certifications',
@@ -317,6 +318,7 @@ const router = createBrowserRouter([
                 <Certifications />
             </AppLayout>
         ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
     },
     {
         path: '/about/edit-profile/skills',

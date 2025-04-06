@@ -1,337 +1,421 @@
-import { Button, Dialog, Portal, Stack } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import ProfileCard from "../ProfileCard";
-import ProfileEditMenu from "../ProfileEditMenu";
-import ActionBar from "../ActionBar";
-import InputCustom from "components/UI/InputCustom";
-import { setIsOpenModalCreateOrUpdateCertification } from "states/modules/profile";
-import moment from "moment";
-import { IconlyEdit, IconlyDelete } from "components/UI/Iconly";
-import SelectCustom from "components/UI/SelectCustom";
+import { Button, Dialog, Portal, Stack } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import ProfileCard from '../ProfileCard'
+import ProfileEditMenu from '../ProfileEditMenu'
+import ActionBar from '../ActionBar'
+import InputCustom from 'components/UI/InputCustom'
+import { setIsOpenModalCreateOrUpdateCertification } from 'states/modules/profile'
+import moment from 'moment'
+import { IconlyEdit, IconlyDelete } from 'components/UI/Iconly'
+import SelectCustom from 'components/UI/SelectCustom'
 import {
-	createOrUpdateCertification,
-	getOrganizationFramework,
-} from "api/profile";
-import { Checkbox } from "components/UI/checkbox";
-import { DataList } from "@chakra-ui/react"
+    createCertification,
+    updateCertification,
+    deleteCertification,
+    getOrganizationFramework,
+    getProfile,
+} from 'api/profile'
+import { Checkbox } from 'components/UI/checkbox'
+import { DataList } from '@chakra-ui/react'
 const Certifications = () => {
-	const dispatch = useDispatch();
-	// ========== STATE FROM REDUX STORE ========== //
-	const { profile } = useSelector((state) => state.profile)
-	const { certifications } = profile || []
-	const {
-		isOpenModalCreateOrUpdateCertification,
-		isLoadingCreateOrUpdateCertification,
-		organizationFramework,
-	} = useSelector((state) => state.profile);
-	// ========== STATE MANAGEMENT ========== //
+    const dispatch = useDispatch()
+    // ========== STATE FROM REDUX STORE ========== //
+    const { profile } = useSelector((state) => state.profile)
+    const { certifications } = profile || []
+    const { isOpenModalCreateOrUpdateCertification, isLoadingCreateOrUpdateCertification, organizationFramework } =
+        useSelector((state) => state.profile)
+    // ========== STATE MANAGEMENT ========== //
 
-	const [action, setAction] = useState("");
-	const [formData, setFormData] = useState({
-		organization_id: "",
-		name: "",
-		description: "",
-		issue_date: "",
-		expiration_date: "",
-		is_lifetime: false,
-		verification_url: "",
-	});
-	// ========== USE EFFECT ========== //
-	useEffect(() => {
-		dispatch(getOrganizationFramework());
-	}, [dispatch]);
-	// ========== HANDLE CHANGE FUNCTION ========== //
-	const handleChange = (e, nameSelect) => {
-		if (nameSelect) {
-			setFormData({
-				...formData,
-				[nameSelect]: e.value,
-			});
-		} else {
-			setFormData({
-				...formData,
-				[e.target.name]: e.target.value,
-			});
-		}
-	};
+    const [action, setAction] = useState('')
+    const [formData, setFormData] = useState({})
+    const [targetDelete, setTargetDelete] = useState(null)
+    const [isOpenModalDeleteEducation, setIsOpenModalDeleteCertification] = useState(false)
+    // ========== USE EFFECT ========== //
+    useEffect(() => {
+        if (!profile) dispatch(getProfile())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch])
+    useEffect(() => {
+        dispatch(getOrganizationFramework())
+    }, [dispatch])
+    // ========== HANDLE CHANGE FUNCTION ========== //
+    const handleChange = (e, nameSelect) => {
+        if (nameSelect) {
+            setFormData({
+                ...formData,
+                [nameSelect]: e.value,
+            })
+        } else {
+            setFormData({
+                ...formData,
+                [e.target.name]: e.target.value,
+            })
+        }
+    }
 
-	const handleAddCertification = () => {
-		dispatch(setIsOpenModalCreateOrUpdateCertification(true));
-		setAction("create");
-		setFormData({
-			organization_id: "",
-			name: "",
-			description: "",
-			issue_date: "",
-			expiration_date: "",
-			is_lifetime: false,
-			verification_url: "",
-		});
-	};
+    const handleAddCertification = () => {
+        dispatch(setIsOpenModalCreateOrUpdateCertification(true))
+        setAction('create')
+        setFormData({
+            organization_id: '',
+            name: '',
+            description: '',
+            issue_date: '',
+            expiration_date: '',
+            is_lifetime: false,
+            verification_url: '',
+        })
+    }
 
-	const handleUpdateCertification = (certification) => {
-		dispatch(setIsOpenModalCreateOrUpdateCertification(true));
-		setAction("update");
-		setFormData({
-			...certification,
-			issue_date: moment(certification.issue_date).format("YYYY-MM"),
-			expiration_date: moment(certification.expiration_date).format(
-				"YYYY-MM"
-			),
-		});
-	};
+    const handleUpdateCertification = (certification) => {
+        dispatch(setIsOpenModalCreateOrUpdateCertification(true))
+        setAction('update')
+        setFormData({
+            ...certification,
+            issue_date: moment(certification.issue_date).format('YYYY-MM'),
+            expiration_date: moment(certification.expiration_date).format('YYYY-MM'),
+        })
+    }
 
-	const handleSaveChanges = () => {
-		if (formData.is_lifetime) {
-			const { organization_id, expiration_date, ...rest } = formData;
-			dispatch(
-				createOrUpdateCertification(
-					{
-						...rest,
-						expiration_date: null,
-						organization_id:
-							typeof organization_id === "object"
-								? organization_id[0]
-								: Array(organization_id)[0],
-					},
-					action
-				)
-			);
-		} else {
-			const { organization_id, ...rest } = formData;
-			dispatch(
-				createOrUpdateCertification(
-					{
-						...rest,
-						organization_id:
-							typeof organization_id === "object"
-								? organization_id[0]
-								: Array(organization_id)[0],
-					},
-					action
-				)
-			);
-		}
-	};
+    const handleOpenModalDelete = (education) => {
+        setIsOpenModalDeleteCertification(true)
+        setTargetDelete(education)
+    }
 
-	const onCheckedChange = (event, nameSelect) => {
-		if (event.checked === true) {
-			setFormData({
-				...formData,
-				expiration_date: "",
-			});
-		}
-		setFormData({
-			...formData,
-			[nameSelect]: event.checked,
-		});
-	};
+    const handleDeleteCertification = () => {
+        dispatch(deleteCertification(targetDelete._id))
+        setIsOpenModalDeleteCertification(false)
+    }
 
-	const handleClose = () => {
-		dispatch(setIsOpenModalCreateOrUpdateCertification(false));
-	};
+    const handleSaveChanges = () => {
+        if (formData.is_lifetime) {
+            const { organization_id, expiration_date, ...rest } = formData
+            switch (action) {
+                case 'create':
+                    dispatch(
+                        createCertification(
+                            {
+                                ...rest,
+                                expiration_date: null,
+                                organization_id:
+                                    typeof organization_id === 'object'
+                                        ? organization_id[0]
+                                        : Array(organization_id)[0],
+                            },
+                            action
+                        )
+                    )
+                    break
+                case 'update':
+                    dispatch(
+                        updateCertification({
+                            ...rest,
+                            expiration_date: null,
+                            organization_id:
+                                typeof organization_id === 'object' ? organization_id[0] : Array(organization_id)[0],
+                        })
+                    )
+                    break
+                default:
+                    break
+            }
+        } else {
+            const { organization_id, ...rest } = formData
+            switch (action) {
+                case 'create':
+                    dispatch(
+                        createCertification(
+                            {
+                                ...rest,
+                                organization_id:
+                                    typeof organization_id === 'object'
+                                        ? organization_id[0]
+                                        : Array(organization_id)[0],
+                            },
+                            action
+                        )
+                    )
+                    break
+                case 'update':
+                    dispatch(
+                        updateCertification({
+                            ...rest,
+                            organization_id:
+                                typeof organization_id === 'object' ? organization_id[0] : Array(organization_id)[0],
+                        })
+                    )
+                    break
+                default:
+                    break
+            }
+        }
+    }
 
-	// ========== COMPONENT RENDER ========== //
-	return (
-		<div className="flex gap-8 w-full py-8 px-[16px]">
-			<ProfileEditMenu />
-			<div className="w-8/12">
-				<div className="bg-[#ffffff] p-8 rounded-md">
-					{/* =========== Profile Card ========== */}
-					<ProfileCard />
-					{/* =========== Action Bar  ========== */}
-					<ActionBar />
-				</div>
-				<div className="bg-[#ffffff] p-8 rounded-md mt-8">
-					<div className="pb-[20px] mb-8 border-b-[1px] border-gray-200 flex justify-between">
-						<div>
-							<h4 className="">Certifications</h4>
-						</div>
-						<Button
-							onClick={handleAddCertification}
-							height={50}
-							className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-							borderRadius={4}
-							loading={false}
-							loadingText="Loading..."
-							spinnerPlacement="start">
-							Add Certification
-						</Button>
-					</div>
-					<div>
-						<div className="px-[16px]">
-							<div>
-								{certifications?.map((certification, index) => (
-									<DataList.Root orientation="horizontal" key={index}>
-										<div key={index}>
-											<div className="shadow rounded-[0.6rem]">
-												<div className="relative p-4 mt-[2rem]">
-													<span className="cursor-pointer md:float-right 2xl:float-right"><IconlyDelete size={24} color={"#000"} /></span>
-													<span
-														className="cursor-pointer md:float-right 2xl:float-right"
-														onClick={() =>
-															handleUpdateCertification(
-																certification
-															)
-														}>
-														<IconlyEdit size={24} color={"#000"} />
-													</span>
-													{certification.name && (
-														<h4 className="flex font-bold mb-[0.75rem]">
-															{certification.name}
-														</h4>
-													)}
-													{certification.issue_date && (
-														<p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
-															{`${moment(
-																certification.issue_date
-															).format("MMM YYYY")} ${certification.expiration_date
-																? `- ${moment(
-																	certification.expiration_date
-																).format("MMM YYYY")}`
-																: ""
-																}`}
-														</p>
-													)}
+    const onCheckedChange = (event, nameSelect) => {
+        if (event.checked === true) {
+            setFormData({
+                ...formData,
+                expiration_date: '',
+            })
+        }
+        setFormData({
+            ...formData,
+            [nameSelect]: event.checked,
+        })
+    }
 
-													{certification.verification_url && (
-														<>
-															<div className="flex gap-2">
-																<DataList.ItemLabel className="flex ">
-																	Verification URL:
+    const handleClose = () => {
+        dispatch(setIsOpenModalCreateOrUpdateCertification(false))
+    }
 
-																</DataList.ItemLabel>
-																<DataList.ItemValue className="mb-0">
-																	<a
-																		href={`https://${certification.verification_url}`}
-																		target="_blank"
-																		rel="noreferrer">
-																		https://
-																		{certification.verification_url}
-																	</a>
-																</DataList.ItemValue>
-															</div>
-														</>
-													)}
-												</div>
-											</div>
-										</div>
-									</DataList.Root>
-								))}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<Dialog.Root
-				size={"lg"}
-				open={isOpenModalCreateOrUpdateCertification}
-				placement={"center"}
-				motionPreset="slide-in-bottom">
-				<Portal>
-					<Dialog.Backdrop />
-					<Dialog.Positioner>
-						<Dialog.Content className="bg-white">
-							<Dialog.Header>
-								<Dialog.Title>
-									{action === "create"
-										? "Add certification"
-										: "Update certification"}
-								</Dialog.Title>
-							</Dialog.Header>
-							<Dialog.Body gap={6}>
-								<Stack gap="6">
-									<Stack direction="row">
-										<SelectCustom
-											required
-											label="Organization"
-											collection={organizationFramework}
-											height="40px"
-											placeholder="Ex: AWS"
-											onChange={(e) =>
-												handleChange(e, "organization_id")
-											}
-											value={formData.organization_id}
-											name="organization_id"
-										/>
-									</Stack>
-									<Stack direction="row">
-										<InputCustom
-											label="Name"
-											required
-											placeholder="Ex: AWS Certified Solutions Architect"
-											height="40px"
-											name="name"
-											onChange={handleChange}
-											value={formData.name}
-										/>
-									</Stack>
-									<Checkbox
-										onCheckedChange={(event) =>
-											onCheckedChange(event, "is_lifetime")
-										}>
-										Certified for life
-									</Checkbox>
-									<Stack direction="row">
-										<InputCustom
-											type="month"
-											label="Issue Date"
-											required
-											height="40px"
-											name="issue_date"
-											onChange={handleChange}
-											value={formData.issue_date}
-										/>
-										<InputCustom
-											type="month"
-											disabled={formData.is_lifetime}
-											label="Expiration Date"
-											required
-											height="40px"
-											name="expiration_date"
-											onChange={handleChange}
-											value={formData.expiration_date}
-										/>
-									</Stack>
-									<Stack direction="row">
-										<InputCustom
-											ps="4.5rem"
-											label="Verification URL"
-											startElement="https://"
-											placeholder="www.yourcertification.com"
-											height="40px"
-											name="verification_url"
-											onChange={handleChange}
-											value={formData.verification_url}
-										/>
-									</Stack>
-								</Stack>
-							</Dialog.Body>
-							<Dialog.Footer>
-								<Button
-									className="border-[#F4F5F6] bg-[#2F65B9] text-white"
-									onClick={handleSaveChanges}
-									borderRadius={4}
-									loading={isLoadingCreateOrUpdateCertification}
-									loadingText="Loading..."
-									spinnerPlacement="start">
-									SAVE CHANGES
-								</Button>
-								<Dialog.ActionTrigger asChild>
-									<Button className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]" variant="outline" onClick={handleClose}>
-										Cancel
-									</Button>
-								</Dialog.ActionTrigger>
+    // ========== COMPONENT RENDER ========== //
+    return (
+        <div className="flex gap-8 w-full py-8 px-[16px]">
+            <ProfileEditMenu />
+            <div className="w-8/12">
+                <div className="bg-[#ffffff] p-8 rounded-md">
+                    {/* =========== Profile Card ========== */}
+                    <ProfileCard />
+                    {/* =========== Action Bar  ========== */}
+                    <ActionBar />
+                </div>
+                <div className="bg-[#ffffff] p-8 rounded-md mt-8">
+                    <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200 flex justify-between">
+                        <div>
+                            <h4 className="">Certifications</h4>
+                        </div>
+                        <Button
+                            onClick={handleAddCertification}
+                            height={50}
+                            className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                            borderRadius={4}
+                            loading={false}
+                            loadingText="Loading..."
+                            spinnerPlacement="start"
+                        >
+                            Add Certification
+                        </Button>
+                    </div>
+                    <div>
+                        <div className="px-[16px]">
+                            <div>
+                                {certifications?.map((certification, index) => (
+                                    <DataList.Root orientation="horizontal" key={index}>
+                                        <div key={index}>
+                                            <div className="shadow rounded-[0.6rem]">
+                                                <div className="relative p-4 mt-[2rem]">
+                                                    <Stack
+                                                        className="flex gap-2 md:float-right 2xl:float-right"
+                                                        direction={'row'}
+                                                    >
+                                                        <span
+                                                            className="cursor-pointer "
+                                                            onClick={() => handleUpdateCertification(certification)}
+                                                        >
+                                                            <IconlyEdit size={24} color={'#000'} />
+                                                        </span>
+                                                        <span
+                                                            className="cursor-pointer"
+                                                            onClick={() => handleOpenModalDelete(certification)}
+                                                        >
+                                                            <IconlyDelete size={24} color={'#000'} />
+                                                        </span>
+                                                    </Stack>
+                                                    {certification.name && (
+                                                        <h4 className="flex font-bold mb-[0.75rem]">
+                                                            {certification.name}
+                                                        </h4>
+                                                    )}
+                                                    {certification.issue_date && (
+                                                        <p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
+                                                            {`${moment(certification.issue_date).format('MMM YYYY')} ${
+                                                                certification.expiration_date
+                                                                    ? `- ${moment(certification.expiration_date).format(
+                                                                          'MMM YYYY'
+                                                                      )}`
+                                                                    : ''
+                                                            }`}
+                                                        </p>
+                                                    )}
 
-							</Dialog.Footer>
+                                                    {certification.verification_url && (
+                                                        <>
+                                                            <div className="flex gap-2">
+                                                                <DataList.ItemLabel className="flex ">
+                                                                    Verification URL:
+                                                                </DataList.ItemLabel>
+                                                                <DataList.ItemValue className="mb-0">
+                                                                    <a
+                                                                        href={`https://${certification.verification_url}`}
+                                                                        target="_blank"
+                                                                        rel="noreferrer"
+                                                                    >
+                                                                        https://
+                                                                        {certification.verification_url}
+                                                                    </a>
+                                                                </DataList.ItemValue>
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </DataList.Root>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* =========== MODAL CREATE OR UPDATE CERTIFICATION ========== */}
+            <Dialog.Root
+                size={'lg'}
+                open={isOpenModalCreateOrUpdateCertification}
+                placement={'center'}
+                motionPreset="slide-in-bottom"
+            >
+                <Portal>
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                        <Dialog.Content className="bg-white">
+                            <Dialog.Header>
+                                <Dialog.Title>
+                                    {action === 'create' ? 'Add certification' : 'Update certification'}
+                                </Dialog.Title>
+                            </Dialog.Header>
+                            <Dialog.Body gap={6}>
+                                <Stack gap="6">
+                                    <Stack direction="row">
+                                        <SelectCustom
+                                            required
+                                            label="Organization"
+                                            collection={organizationFramework}
+                                            height="40px"
+                                            placeholder="Ex: AWS"
+                                            onChange={(e) => handleChange(e, 'organization_id')}
+                                            value={formData.organization_id}
+                                            name="organization_id"
+                                        />
+                                    </Stack>
+                                    <Stack direction="row">
+                                        <InputCustom
+                                            label="Name"
+                                            required
+                                            placeholder="Ex: AWS Certified Solutions Architect"
+                                            height="40px"
+                                            name="name"
+                                            onChange={handleChange}
+                                            value={formData.name}
+                                        />
+                                    </Stack>
+                                    <Checkbox onCheckedChange={(event) => onCheckedChange(event, 'is_lifetime')}>
+                                        Certified for life
+                                    </Checkbox>
+                                    <Stack direction="row">
+                                        <InputCustom
+                                            type="month"
+                                            label="Issue Date"
+                                            required
+                                            height="40px"
+                                            name="issue_date"
+                                            onChange={handleChange}
+                                            value={formData.issue_date}
+                                        />
+                                        <InputCustom
+                                            type="month"
+                                            disabled={formData.is_lifetime}
+                                            label="Expiration Date"
+                                            required
+                                            height="40px"
+                                            name="expiration_date"
+                                            onChange={handleChange}
+                                            value={formData.expiration_date}
+                                        />
+                                    </Stack>
+                                    <Stack direction="row">
+                                        <InputCustom
+                                            ps="4.5rem"
+                                            label="Verification URL"
+                                            startElement="https://"
+                                            placeholder="www.yourcertification.com"
+                                            height="40px"
+                                            name="verification_url"
+                                            onChange={handleChange}
+                                            value={formData.verification_url}
+                                        />
+                                    </Stack>
+                                </Stack>
+                            </Dialog.Body>
+                            <Dialog.Footer>
+                                <Button
+                                    className="border-[#F4F5F6] bg-[#2F65B9] text-white"
+                                    onClick={handleSaveChanges}
+                                    borderRadius={4}
+                                    loading={isLoadingCreateOrUpdateCertification}
+                                    loadingText="Loading..."
+                                    spinnerPlacement="start"
+                                >
+                                    SAVE CHANGES
+                                </Button>
+                                <Dialog.ActionTrigger asChild>
+                                    <Button
+                                        className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]"
+                                        variant="outline"
+                                        onClick={handleClose}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Dialog.ActionTrigger>
+                            </Dialog.Footer>
+                        </Dialog.Content>
+                    </Dialog.Positioner>
+                </Portal>
+            </Dialog.Root>
+            {/* =========== MODAL DELETE CERTIFICATION ========== */}
+            <Dialog.Root
+                size={'md'}
+                open={isOpenModalDeleteEducation}
+                placement={'center'}
+                motionPreset="slide-in-bottom"
+            >
+                <Portal>
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                        <Dialog.Content className="bg-white">
+                            <Dialog.Header>
+                                <Dialog.Title>Delete certification</Dialog.Title>
+                            </Dialog.Header>
+                            <Dialog.Body gap={6}>
+                                <Stack gap="6">Do you want to delete this certification?</Stack>
+                            </Dialog.Body>
+                            <Dialog.Footer>
+                                <Button
+                                    className="border-[#F4F5F6] bg-[#2F65B9] text-white"
+                                    onClick={handleDeleteCertification}
+                                    borderRadius={4}
+                                    loading={isLoadingCreateOrUpdateCertification}
+                                    loadingText="Loading..."
+                                    spinnerPlacement="start"
+                                >
+                                    CONFIRM
+                                </Button>
+                                <Dialog.ActionTrigger asChild>
+                                    <Button
+                                        className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]"
+                                        variant="outline"
+                                        onClick={() => setIsOpenModalDeleteCertification(false)}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Dialog.ActionTrigger>
+                            </Dialog.Footer>
+                        </Dialog.Content>
+                    </Dialog.Positioner>
+                </Portal>
+            </Dialog.Root>
+        </div>
+    )
+}
 
-						</Dialog.Content>
-					</Dialog.Positioner>
-				</Portal>
-			</Dialog.Root>
-		</div>
-	);
-};
-
-export default Certifications;
+export default Certifications

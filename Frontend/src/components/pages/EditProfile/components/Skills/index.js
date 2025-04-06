@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/react'
-import { updateProfessionalProfile, updateSkillProfile } from 'api/profile'
+import { getProfile, updateProfessionalProfile, updateSkillProfile } from 'api/profile'
 import { getCategoryFramework, getSkillFramework, getSubCategoryFramework } from 'api/user'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,6 +26,11 @@ const Skills = () => {
     const [mySkills, setMySkills] = useState([])
 
     // ========== USE EFFECT ========== //
+    useEffect(() => {
+        if (!profile) dispatch(getProfile())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch])
+
     useEffect(() => {
         if (!categoryFramework?.items?.length) {
             dispatch(getCategoryFramework())
@@ -113,7 +118,7 @@ const Skills = () => {
                 <div className="bg-[#ffffff] p-8 rounded-md mt-8">
                     <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
                         <div>
-                            <h4 className="">Professional Background</h4>
+                            <h4 className="">Skills</h4>
                         </div>
                     </div>
                     <div className="px-[16px] flex flex-col gap-8">
