@@ -1,5 +1,5 @@
-import {Router} from 'express'
-import {asyncHandler} from '@/utils/helpers'
+import { Router } from 'express'
+import { asyncHandler } from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
 import validate from '@/app/middleware/common/validate'
 import * as profileRequest from '../app/requests/profileRequest'
@@ -67,6 +67,15 @@ profileRouter.put(
     '/additional-info',
     asyncHandler(validate(profileRequest.updateProfileAdditionalInfo)),
     asyncHandler(profileController.updateProfileAdditionalInfo)
+)
+// ========== DELETE [Additional Info] ========== //
+profileRouter.delete('/additional-info/:id', asyncHandler(profileController.deleteProfileAdditionalInfo))
+
+// ========== GET [Friends] ========== //
+profileRouter.get(
+    '/friends',
+    // asyncHandler(validate(profileController.getMyFriends)),
+    asyncHandler(profileController.getMyFriends)
 )
 
 // ========== GET [Profile - Access] ========== //

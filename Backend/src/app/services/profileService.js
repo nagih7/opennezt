@@ -1,4 +1,4 @@
-import {ACCESS_TYPE, LINK_STATIC_URL, PROFILE_ACCESS} from '@/configs'
+import { ACCESS_TYPE, FRIEND_REQUEST_NOTIFICATION, LINK_STATIC_URL, NOTIFICATION_TYPE, PROFILE_ACCESS } from '@/configs'
 import {
     Certification,
     Education,
@@ -7,12 +7,16 @@ import {
     Organization,
     Type,
     ActivityLog,
+    Friend,
+    NotificationFeed,
 } from '@/models'
 
 // ========== GET [Profile] ========== //
 export async function getProfile(user) {
+    const accessType = await Type.findOne({ class: ACCESS_TYPE, name: PROFILE_ACCESS })
+
     const matchStage = {
-        $match: {user_id: user._id},
+        $match: { user_id: user._id },
     }
     const lookupIndustry = {
         $lookup: {
@@ -70,7 +74,7 @@ export async function getProfile(user) {
                     },
                 },
                 {
-                    $unwind: {path: '$category', preserveNullAndEmptyArrays: true},
+                    $unwind: { path: '$category', preserveNullAndEmptyArrays: true },
                 },
                 {
                     $project: {
@@ -92,6 +96,84 @@ export async function getProfile(user) {
             as: 'additional_infos',
         },
     }
+    const lookupArticle = {
+        $lookup: {
+            from: 'articles',
+            localField: 'user_id',
+            foreignField: 'user_id',
+            as: 'articles',
+            pipeline: [
+                // {
+                //     $lookup: {
+                //         from: 'projects',
+                //         localField: 'project_id',
+                //         foreignField: '_id',
+                //         as: 'project',
+                //     },
+                // },
+                // {
+                //     $unwind: { path: '$project', preserveNullAndEmptyArrays: true },
+                // },
+                // {
+                //     $lookup: {
+                //         from: 'users',
+                //         localField: 'user_id',
+                //         foreignField: '_id',
+                //         as: 'user',
+                //     },
+                // },
+                // {
+                //     $unwind: { path: '$user', preserveNullAndEmptyArrays: true },
+                // },
+                // {
+                //     $addFields: {
+                //         'user.avatar': {
+                //             $cond: {
+                //                 if: { $eq: [{ $ifNull: ['$user.avatar', ''] }, ''] },
+                //                 then: '$user.avatar',
+                //                 else: { $concat: [LINK_STATIC_URL, '$user.avatar'] },
+                //             },
+                //         },
+                //     },
+                // },
+            ],
+        },
+    }
+    const lookupActivity = {
+        $lookup: {
+            from: 'activity_logs',
+            localField: '_id',
+            foreignField: 'data.profile_id',
+            as: 'activities',
+            pipeline: [
+                {
+                    $match: {
+                        type_id: accessType._id,
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        metadata: 1,
+                    },
+                },
+            ],
+        },
+    }
+    const addfieldStage = {
+        $addFields: {
+            activities: {
+                $reduce: {
+                    input: '$activities',
+                    initialValue: 0,
+                    in: {
+                        $add: ['$$value', { $ifNull: [{ $toInt: '$$this.metadata.count' }, 0] }],
+                    },
+                },
+            },
+        },
+    }
+
     const lookupStages = [
         lookupIndustry,
         lookupExperienceLevel,
@@ -100,11 +182,13 @@ export async function getProfile(user) {
         lookupCategory,
         lookupSkill,
         lookupAdditionalInfo,
+        lookupArticle,
+        lookupActivity,
     ]
 
     const unwindStages = [
         {
-            $unwind: {path: '$experience_level', preserveNullAndEmptyArrays: true},
+            $unwind: { path: '$experience_level', preserveNullAndEmptyArrays: true },
         },
     ]
     const projectStage = {
@@ -155,13 +239,13 @@ export async function getProfile(user) {
             'additional_infos.__v': 0,
         },
     }
-    const profile = await Profile.aggregate([matchStage, ...lookupStages, ...unwindStages, projectStage])
+    const profile = await Profile.aggregate([matchStage, ...lookupStages, ...unwindStages, addfieldStage, projectStage])
     return profile[0]
 }
 
 // ========== PUT [Professional] ========== //
 export async function updateProfessionalProfile(user, requestBody) {
-    const profile = await Profile.findOneAndUpdate({user_id: user.id}, requestBody, {new: true})
+    const profile = await Profile.findOneAndUpdate({ user_id: user.id }, requestBody, { new: true })
     if (!profile) {
         const newProfile = new Profile({
             ...requestBody,
@@ -169,13 +253,13 @@ export async function updateProfessionalProfile(user, requestBody) {
         })
         await newProfile.save()
     } else {
-        await Profile.findOneAndUpdate({user_id: user.id}, requestBody)
+        await Profile.findOneAndUpdate({ user_id: user.id }, requestBody)
     }
 }
 
 // ========== POST [Education] ========== //
 export async function createProfileEducation(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({ user_id: user.id })
     if (!profile) {
         const newProfile = new Profile({
             user_id: user.id,
@@ -186,17 +270,19 @@ export async function createProfileEducation(user, requestBody) {
             profile_id: newProfile._id,
         })
         await education.save()
+        return education
     } else {
         const education = new Education({
             ...requestBody,
             profile_id: profile._id,
         })
         await education.save()
+        return education
     }
 }
 // ========== PUT [Education] ========== //
 export async function updateProfileEducation(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({ user_id: user.id })
     if (!profile) {
         throw new Error('Profile not found.')
     }
@@ -206,15 +292,16 @@ export async function updateProfileEducation(user, requestBody) {
             _id: requestBody._id,
         },
         requestBody,
-        {new: true}
+        { new: true }
     )
     if (!education) {
         throw new Error('Education not found.')
     }
+    return education
 }
 // =========== DELETE [Education] ========== //
 export async function deleteProfileEducation(user, educationId) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({ user_id: user.id })
     if (!profile) {
         throw new Error('Profile not found.')
     }
@@ -225,23 +312,35 @@ export async function deleteProfileEducation(user, educationId) {
     if (!education) {
         throw new Error('Education not found.')
     }
+    return education._id
 }
 
 // ========== POST [Certification] ========== //
 export async function createProfileCertifications(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({ user_id: user.id })
     if (!profile) {
-        throw new Error('Profile not found.')
+        const newProfile = new Profile({
+            user_id: user.id,
+        })
+        await newProfile.save()
+        const certification = new Certification({
+            ...requestBody,
+            profile_id: newProfile._id,
+        })
+        await certification.save()
+        return certification
+    } else {
+        const certification = new Certification({
+            ...requestBody,
+            profile_id: profile._id,
+        })
+        await certification.save()
+        return certification
     }
-    const certification = new Certification({
-        ...requestBody,
-        profile_id: profile._id,
-    })
-    await certification.save()
 }
 // ========== PUT [Certification] ========== //
 export async function updateProfileCertification(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({ user_id: user.id })
     if (!profile) {
         throw new Error('Profile not found.')
     }
@@ -252,15 +351,16 @@ export async function updateProfileCertification(user, requestBody) {
             _id: requestBody._id,
         },
         requestBody,
-        {new: true}
+        { new: true }
     )
     if (!certification) {
         throw new Error('Certification not found.')
     }
+    return certification
 }
 // ========== DELETE [Certification] ========== //
 export async function deleteProfileCertification(user, certificationId) {
-    const profile = await Profile.findOne({user_id: user.id})
+    const profile = await Profile.findOne({ user_id: user.id })
     if (!profile) {
         throw new Error('Profile not found.')
     }
@@ -271,13 +371,14 @@ export async function deleteProfileCertification(user, certificationId) {
     if (!certification) {
         throw new Error('Certification not found.')
     }
+    return certification._id
 }
 
 // ========== PUT [Skills] ========== //
 export async function updateProfileSkills(user, requestBody) {
     const skills = [...new Set(requestBody.skills.map((skill) => skill._id._id.toString()))]
     const categories = [...new Set(requestBody.skills.map((skill) => skill._id.category_id.toString()))]
-    const profile = await Profile.findOne({user_id: user._id})
+    const profile = await Profile.findOne({ user_id: user._id })
     if (!profile) {
         const newProfile = new Profile({
             user_id: user._id,
@@ -286,7 +387,7 @@ export async function updateProfileSkills(user, requestBody) {
         })
         await newProfile.save()
     } else {
-        await Profile.findOneAndUpdate({user_id: user._id}, {skill_ids: skills, category_ids: categories})
+        await Profile.findOneAndUpdate({ user_id: user._id }, { skill_ids: skills, category_ids: categories })
     }
 }
 
@@ -298,17 +399,32 @@ export async function getOrganizationFramework() {
 
 // ========== POST [Additional Info] ========== //
 export async function createProfileAdditionalInfos(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user._id})
-    const additionalInfo = new ProfileAdditionalInfo({
-        ...requestBody,
-        profile_id: profile._id,
-    })
-    await additionalInfo.save()
+    const profile = await Profile.findOne({ user_id: user._id })
+    if (!profile) {
+        const newProfile = new Profile({
+            user_id: user._id,
+        })
+        await newProfile.save()
+        const additionalInfo = new ProfileAdditionalInfo({
+            ...requestBody,
+            profile_id: newProfile._id,
+        })
+
+        await additionalInfo.save()
+        return additionalInfo
+    } else {
+        const additionalInfo = new ProfileAdditionalInfo({
+            ...requestBody,
+            profile_id: profile._id,
+        })
+        await additionalInfo.save()
+        return additionalInfo
+    }
 }
 
 // ========== PUT [Additional Info] ========== //
 export async function updateProfileAdditionalInfo(user, requestBody) {
-    const profile = await Profile.findOne({user_id: user._id})
+    const profile = await Profile.findOne({ user_id: user._id })
     if (!profile) {
         throw new Error('Profile not found.')
     }
@@ -318,16 +434,33 @@ export async function updateProfileAdditionalInfo(user, requestBody) {
             _id: requestBody._id,
         },
         requestBody,
-        {new: true}
+        { new: true }
     )
     if (!additionalInfo) {
         throw new Error('Additional Info not found.')
     }
+    return additionalInfo
+}
+
+// ========== DELETE [Additional Info] ========== //
+export async function deleteProfileAdditionalInfo(user, additionalInfoId) {
+    const profile = await Profile.findOne({ user_id: user._id })
+    if (!profile) {
+        throw new Error('Profile not found.')
+    }
+    const additionalInfo = await ProfileAdditionalInfo.findOneAndDelete({
+        profile_id: profile._id,
+        _id: additionalInfoId,
+    })
+    if (!additionalInfo) {
+        throw new Error('Additional Info not found.')
+    }
+    return additionalInfo._id
 }
 
 // ========== GET [Profile Access] ========== //
 export async function getAccessToMyProfile(user) {
-    const accessType = await Type.findOne({class: ACCESS_TYPE, name: PROFILE_ACCESS})
+    const accessType = await Type.findOne({ class: ACCESS_TYPE, name: PROFILE_ACCESS })
     const activities = await ActivityLog.aggregate([
         {
             $match: {
@@ -346,9 +479,9 @@ export async function getAccessToMyProfile(user) {
                         $addFields: {
                             avatar: {
                                 $cond: {
-                                    if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
                         },
@@ -370,7 +503,7 @@ export async function getAccessToMyProfile(user) {
             $limit: 10,
         },
         {
-            $sort: {timestamp: -1},
+            $sort: { timestamp: -1 },
         },
         {
             $project: {
@@ -382,4 +515,103 @@ export async function getAccessToMyProfile(user) {
     ])
 
     return activities
+}
+
+// ========= GET [Friends] ========== //
+export async function getMyFriends(user, { page, per_page }) {
+    const friends = await Friend.aggregate([
+        {
+            $match: { user_id: user._id },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'friend_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            email: 1,
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '$avatar',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        // {
+        //     $skip: (page - 1) * per_page,
+        // },
+        // {
+        //     $limit: per_page,
+        // },
+        {
+            $project: {
+                _id: 0,
+                user: 1,
+                status: 1,
+                is_favorite: 1,
+                created_at: 1,
+            },
+        },
+    ])
+
+    // const requestType = await Type.findOne({ class: NOTIFICATION_TYPE, name: FRIEND_REQUEST_NOTIFICATION })
+    // const friendRequests = await NotificationFeed.aggregate([
+    //     {
+    //         $match: {
+    //             user_id: user._id,
+    //             type: requestType._id,
+    //         },
+    //     },
+    //     {
+    //         $lookup: {
+    //             from: 'users',
+    //             localField: 'source_id',
+    //             foreignField: '_id',
+    //             as: 'user',
+    //             pipeline: [
+    //                 {
+    //                     $project: {
+    //                         _id: 1,
+    //                         name: 1,
+    //                         avatar: {
+    //                             $cond: {
+    //                                 if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+    //                                 then: '$avatar',
+    //                                 else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+    //                             },
+    //                         },
+    //                     },
+    //                 },
+    //             ],
+    //         },
+    //     },
+    //     {
+    //         $unwind: '$user',
+    //     },
+    //     {
+    //         $sort: { timestamp: -1 },
+    //     },
+    //     {
+    //         $project: {
+    //             _id: 1,
+    //             user: 1,
+    //             timestamp: 1,
+    //         },
+    //     },
+    // ])
+
+    return friends
 }

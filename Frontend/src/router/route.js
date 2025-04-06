@@ -26,6 +26,13 @@ import EditBackground from 'components/pages/EditProject/Components/Background'
 import Members from 'components/pages/MyProjectDetails/components/Members'
 import ProjectManage from 'components/pages/MyProjectDetails/components/ProjectManage'
 // import NewConversation from 'components/pages/Message/components/NewConversation';
+// Account Settings
+import AccountSettings from 'components/pages/AccountSettings'
+import ProfileVisibility from 'components/pages/AccountSettings/components/ProfileVisibility'
+import PrivacyAndSecurity from 'components/pages/AccountSettings/components/PrivacyAndSecurity'
+import Shop from 'components/pages/AccountSettings/components/Shop'
+import BlockList from 'components/pages/AccountSettings/components/BlockList'
+import ExportData from 'components/pages/AccountSettings/components/ExportData'
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import('../components/pages/Auth/Login'))
@@ -302,6 +309,7 @@ const router = createBrowserRouter([
                 <Educations />
             </AppLayout>
         ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
     },
     {
         path: '/about/edit-profile/certifications',
@@ -310,6 +318,7 @@ const router = createBrowserRouter([
                 <Certifications />
             </AppLayout>
         ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
     },
     {
         path: '/about/edit-profile/skills',
@@ -517,6 +526,61 @@ const router = createBrowserRouter([
             </AppLayout>
         ),
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CONVERSATION_PAGE'),
+    },
+    {
+        path: '/account-settings',
+        element: (
+            <AppLayout>
+                <AccountSettings />
+            </AppLayout>
+        ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_ACCOUNT_SETTINGS_PAGE'),
+    },
+    {
+        path: '/account-settings/profile-visibility',
+        element: (
+            <AppLayout>
+                <ProfileVisibility />
+            </AppLayout>
+        ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PROFILE_VISIBILITY_PAGE'),
+    },
+
+    {
+        path: '/account-settings/privacy-and-security',
+        element: (
+            <AppLayout>
+                <PrivacyAndSecurity />
+            </AppLayout>
+        ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PRIVACY_AND_SECURITY_PAGE'),
+    },
+    {
+        path: '/account-settings/shop',
+        element: (
+            <AppLayout>
+                <Shop />
+            </AppLayout>
+        ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_SHOP_PAGE'),
+    },
+    {
+        path: '/account-settings/block-list',
+        element: (
+            <AppLayout>
+                <BlockList />
+            </AppLayout>
+        ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_BLOCK_LIST_PAGE'),
+    },
+    {
+        path: '/account-settings/export-data',
+        element: (
+            <AppLayout>
+                <ExportData />
+            </AppLayout>
+        ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EXPORT_DATA_PAGE'),
     },
 ])
 

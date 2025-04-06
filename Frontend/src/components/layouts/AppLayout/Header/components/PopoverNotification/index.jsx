@@ -28,21 +28,13 @@ import ConfirmProjectInvitationNoitification from './components/ConfirmProjectIn
 function PopoverNotification() {
     // ========== STATE FROM REDUX ========== //
     const { notifications, isLoadingReplyNotification } = useSelector((state) => state.notification)
-    console.log('notifications', notifications)
     const { language } = useSelector((state) => state.app)
 
     // ========== STATE ========== //
     const [notificationIndex, setNotificationIndex] = useState(null)
-    // ========= Phan biet thong bao chua doc va da doc ========== //
-    const unreadNotifications = notifications.filter(
-        (notification) => notification.metadata?.read === false
-    );
-
-    const readNotifications = notifications.filter(
-        (notification) => notification.metadata?.read === true
-    );
-
-
+    // ========= UNREAD/READ ========== //
+    const unreadNotifications = notifications.filter((notification) => notification.metadata?.read === false)
+    const readNotifications = notifications.filter((notification) => notification.metadata?.read === true)
 
     // ========== HANDLE REPLY NOTIFICATION ========== //
     const handleReplyNotification = async (notification_id, action, index) => {
@@ -58,22 +50,23 @@ function PopoverNotification() {
                 {NOTIFICATIONS.NOTIFICATIONS[language]}
             </div>
             <div
-                className={`${notifications && notifications.length >= 3
-                    ? 'flex flex-col items-center max-h-[250px] p-0 m-0 overflow-y-scroll scrollbar-thumb-gray-400 scrollbar-track-gray-200 w-full'
-                    : ''
-                    }`}
+                className={`${
+                    notifications && notifications.length >= 3
+                        ? 'flex flex-col items-center max-h-[350px] p-0 m-0 overflow-y-scroll scrollbar-thumb-gray-400 scrollbar-track-gray-200 w-full'
+                        : ''
+                }`}
             >
-
                 <Stack spacing={4}>
-                    {/* Hiển thị thông báo chưa đọc */}
+                    {/* UNREAD */}
                     {unreadNotifications.length > 0 && (
                         <div>
-                            <div className="mx-4 py-[8px] text-md font-semibold text-gray-600">
-                                Thông báo chưa đọc
-                            </div>
-                            <Stack spacing={2}>
+                            <div className="mx-4 py-[8px] text-md font-semibold text-gray-600">Unread</div>
+                            <Stack className="gap-0">
                                 {unreadNotifications.map((notification, index) => (
-                                    <div className="px-4 py-[16px] bg-gray-100 hover:bg-[#f6f5f5] cursor-pointer" key={index}>
+                                    <div
+                                        className="px-4 py-[16px] bg-gray-100 hover:bg-[#f6f5f5] cursor-pointer"
+                                        key={index}
+                                    >
                                         <Stack>
                                             <Stack direction="row" spacing={4}>
                                                 <Avatar.Root size={'sm'}>
@@ -113,18 +106,19 @@ function PopoverNotification() {
                                                                 )
                                                         }
                                                     })()}
-                                                    <div className='flex justify-between items-center'>
+                                                    <div className="flex items-center justify-between">
                                                         <span className="text-[#6f7f92] text-xs">
                                                             {moment(notification.timestamp).fromNow()}
                                                         </span>
                                                         {notification.metadata?.read === false ? (
-                                                            <span className="inline-block w-3 h-3 rounded-full bg-blue-400 ml-2"></span>
+                                                            <span className="inline-block w-3 h-3 ml-2 bg-blue-400 rounded-full"></span>
                                                         ) : (
                                                             <></>
                                                         )}
                                                     </div>
                                                 </Stack>
                                             </Stack>
+                                            {/* ACTION */}
                                             <div className="flex items-center justify-end">
                                                 {(() => {
                                                     switch (notificationIndex) {
@@ -176,13 +170,10 @@ function PopoverNotification() {
                             </Stack>
                         </div>
                     )}
-
-                    {/* Hiển thị thông báo đã đọc */}
+                    {/* READ */}
                     {readNotifications.length > 0 && (
                         <div>
-                            <div className="mx-4 py-[8px] text-md font-semibold text-gray-600">
-                                Thông báo đã đọc
-                            </div>
+                            <div className="mx-4 py-[8px] text-md font-semibold text-gray-600">Read</div>
                             <Stack spacing={2}>
                                 {readNotifications.map((notification, index) => (
                                     <div className="px-4 py-[16px] hover:bg-[#f6f5f5] cursor-pointer" key={index}>

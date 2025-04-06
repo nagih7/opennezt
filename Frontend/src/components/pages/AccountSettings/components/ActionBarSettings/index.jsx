@@ -1,12 +1,10 @@
 import React from 'react'
-import { CheckCircleFilled } from '@ant-design/icons'
-import { useSelector } from 'react-redux'
 import { Avatar } from '@chakra-ui/react'
+import { useSelector } from 'react-redux'
+import { CheckCircleFilled } from '@ant-design/icons'
 
-const ProfileCard = () => {
-    // ========== STATE FROM REDUX STORE ========== //
+const ActionBarSettings = () => {
     const { authUser } = useSelector((state) => state.auth)
-    // ========== COMPONENT RENDER ========== //
     return (
         <div className="flex items-center gap-3 pb-8 border-b-[1px] border-gray-200 mb-8">
             <div>
@@ -28,4 +26,4 @@ const ProfileCard = () => {
     )
 }
 
-export default ProfileCard
+export default ActionBarSettings

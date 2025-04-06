@@ -1,62 +1,62 @@
-import React, { useState } from 'react';
-import styles from './styles.module.scss';
-import PropTypes from 'prop-types';
-import NavItem from './components/NavItem';
-import manageRouteMap from '../../../../router/manageRouteMap';
-import { handleCheckRoute } from '../../../../utils/helper';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { logout } from '../../../../api/auth';
-import store from 'states/configureStore';
-import { IconlyLogout, IconlySetting } from 'components/UI/Iconly';
-import ProfileCardSidebar from './components/ProfileCardSidebar';
-import appRouteMap from 'router/appRouteMap';
+import React, { useState } from 'react'
+import styles from './styles.module.scss'
+import PropTypes from 'prop-types'
+import NavItem from './components/NavItem'
+import manageRouteMap from '../../../../router/manageRouteMap'
+import { handleCheckRoute } from '../../../../utils/helper'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { logout } from '../../../../api/auth'
+import store from 'states/configureStore'
+import { IconlyLogout, IconlySetting, IconlyUser } from 'components/UI/Iconly'
+import ProfileCardSidebar from './components/ProfileCardSidebar'
+import appRouteMap from 'router/appRouteMap'
 
 SideBar.prototype = {
     isShowSideBar: PropTypes.bool.isRequired,
     handleToggleIsShowSideBar: PropTypes.func,
-};
+}
 
 SideBar.defaultProps = {
     isShowSideBar: true,
-};
+}
 
 function SideBar(props) {
-    const { isShowSideBar, handleToggleIsShowSideBar } = props;
-    const [indexNavItemSelect, setIndexNavItemSelect] = useState(null);
-    const [menuSub, setMenuSub] = useState([]);
-    const [topMenuSub, setTopMenuSub] = useState(0);
-    const location = useLocation();
-    const navigate = useNavigate();
+    const { isShowSideBar, handleToggleIsShowSideBar } = props
+    const [indexNavItemSelect, setIndexNavItemSelect] = useState(null)
+    const [menuSub, setMenuSub] = useState([])
+    const [topMenuSub, setTopMenuSub] = useState(0)
+    const location = useLocation()
+    const navigate = useNavigate()
 
-    const { authRole } = useSelector((state) => state.auth);
+    const { authRole } = useSelector((state) => state.auth)
     const handleToggleMenu = (indexNavItem, menuNavItem) => {
         if (menuNavItem.path) {
-            navigate(menuNavItem.path);
+            navigate(menuNavItem.path)
         }
         if (isShowSideBar) {
-            setIndexNavItemSelect(indexNavItem !== indexNavItemSelect ? indexNavItem : null);
+            setIndexNavItemSelect(indexNavItem !== indexNavItemSelect ? indexNavItem : null)
         }
-    };
+    }
 
     const handleHoverMenuNavItem = (e, menuNavItem) => {
-        const { top } = e.target.getBoundingClientRect();
-        setTopMenuSub(top);
+        const { top } = e.target.getBoundingClientRect()
+        setTopMenuSub(top)
         if (menuNavItem.children) {
-            setMenuSub(menuNavItem.children);
+            setMenuSub(menuNavItem.children)
         } else {
-            setMenuSub([]);
+            setMenuSub([])
         }
-    };
+    }
 
     const handleLeaveMenuNavItem = () => {
-        setMenuSub([]);
-    };
+        setMenuSub([])
+    }
 
     const handleConfirmLogOut = async () => {
-        await store.dispatch(logout());
-        window.location.reload();
-    };
+        await store.dispatch(logout())
+        window.location.reload()
+    }
 
     return (
         <div
@@ -77,10 +77,7 @@ function SideBar(props) {
                                       return (
                                           <div
                                               className={`flex items-center px-3 py-[10px] rounded-md text-gray-500  hover:text-[#2f65b9] cursor-pointer gap-2 ${
-                                                  handleCheckRoute(
-                                                      route.routeActive,
-                                                      location.pathname
-                                                  )
+                                                  handleCheckRoute(route.routeActive, location.pathname)
                                                       ? styles.menuNavItemActive
                                                       : styles.menuNavItem
                                               }`}
@@ -88,21 +85,15 @@ function SideBar(props) {
                                               onMouseEnter={(e) => handleHoverMenuNavItem(e, route)}
                                               onClick={() => handleToggleMenu(index, route)}
                                           >
-                                              <NavItem
-                                                  route={route}
-                                                  isShowMenu={index === indexNavItemSelect}
-                                              />
+                                              <NavItem route={route} isShowMenu={index === indexNavItemSelect} />
                                           </div>
-                                      );
+                                      )
                                   })
                                 : appRouteMap.map((route, index) => {
                                       return (
                                           <div
                                               className={`flex items-center px-3 py-[10px] rounded-md text-gray-500  hover:text-[#2f65b9] cursor-pointer gap-2 ${
-                                                  handleCheckRoute(
-                                                      route.routeActive,
-                                                      location.pathname
-                                                  )
+                                                  handleCheckRoute(route.routeActive, location.pathname)
                                                       ? styles.menuNavItemActive
                                                       : styles.menuNavItem
                                               }`}
@@ -110,12 +101,9 @@ function SideBar(props) {
                                               onMouseEnter={(e) => handleHoverMenuNavItem(e, route)}
                                               onClick={() => handleToggleMenu(index, route)}
                                           >
-                                              <NavItem
-                                                  route={route}
-                                                  isShowMenu={index === indexNavItemSelect}
-                                              />
+                                              <NavItem route={route} isShowMenu={index === indexNavItemSelect} />
                                           </div>
-                                      );
+                                      )
                                   })}
                         </div>
                     </div>
@@ -131,17 +119,14 @@ function SideBar(props) {
                                 margin: '0',
                             }}
                         >
-                            <li style={{ cursor: 'pointer' }}>
-                                <IconlySetting
-                                    size={24}
-                                    color={'rgb(107 114 128 / var(--tw-text-opacity, 1))'}
-                                />
+                            <li style={{ cursor: 'pointer' }} onClick={() => navigate('/account-settings')}>
+                                <IconlySetting size={24} color={'rgb(107 114 128 / var(--tw-text-opacity, 1))'} />
                             </li>
-                            <li onClick={() => handleConfirmLogOut()} style={{ cursor: 'pointer' }}>
-                                <IconlyLogout
-                                    size={24}
-                                    color={'rgb(107 114 128 / var(--tw-text-opacity, 1))'}
-                                />
+                            <li style={{ cursor: 'pointer' }} onClick={() => navigate('/profile')}>
+                                <IconlyUser size={24} color={'rgb(107 114 128 / var(--tw-text-opacity, 1))'} />
+                            </li>
+                            <li style={{ cursor: 'pointer' }} onClick={() => handleConfirmLogOut()}>
+                                <IconlyLogout size={24} color={'rgb(107 114 128 / var(--tw-text-opacity, 1))'} />
                             </li>
                         </ul>
                     </div>
@@ -159,10 +144,7 @@ function SideBar(props) {
                         <ul className={styles.menuSubClose}>
                             {manageRouteMap.map((menuSubItem) => {
                                 return (
-                                    <li
-                                        className={styles.menuSubCloseItem}
-                                        key={`close${menuSubItem.path}`}
-                                    >
+                                    <li className={styles.menuSubCloseItem} key={`close${menuSubItem.path}`}>
                                         <div
                                             onClick={() => navigate(menuSubItem.path)}
                                             className={`
@@ -175,13 +157,11 @@ function SideBar(props) {
                             `}
                                         >
                                             <div className={styles.textWrap}>
-                                                <span className={styles.text}>
-                                                    {menuSubItem.label}
-                                                </span>
+                                                <span className={styles.text}>{menuSubItem.label}</span>
                                             </div>
                                         </div>
                                     </li>
-                                );
+                                )
                             })}
                         </ul>
                     </div>
@@ -190,7 +170,7 @@ function SideBar(props) {
                 ''
             )}
         </div>
-    );
+    )
 }
 
-export default SideBar;
+export default SideBar

@@ -1,5 +1,5 @@
 import { Button, Dialog, Portal, Stack } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ProfileCard from '../ProfileCard'
 import ProfileEditMenu from '../ProfileEditMenu'
@@ -9,8 +9,8 @@ import { setIsOpenModalCreateOrUpdateEducation } from 'states/modules/profile'
 import moment from 'moment'
 import { IconlyEdit } from 'components/UI/Iconly'
 import { IconlyDelete } from 'components/UI/Iconly'
-import { createOrUpdateEducation } from 'api/profile'
-import { DataList } from "@chakra-ui/react"
+import { createEducation, updateEducation, deleteEducation, getProfile } from 'api/profile'
+import { DataList } from '@chakra-ui/react'
 const Educations = () => {
     const dispatch = useDispatch()
     // ========== STATE FROM REDUX STORE ========== //
@@ -21,9 +21,16 @@ const Educations = () => {
     )
 
     // ========== STATE MANAGEMENT ========== //
-
     const [action, setAction] = useState('')
     const [formData, setFormData] = useState({})
+    const [targetDelete, setTargetDelete] = useState(null)
+    const [isOpenModalDeleteEducation, setIsOpenModalDeleteEducation] = useState(false)
+
+    // ========== USE EFFECT ========== //
+    useEffect(() => {
+        if (!profile) dispatch(getProfile())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch])
 
     // ========== HANDLE CHANGE FUNCTION ========== //
     const handleChange = (e) => {
@@ -56,35 +63,67 @@ const Educations = () => {
             end_date: education.end_date ? moment(education.end_date).format('YYYY-MM') : '',
         })
     }
-    const hangdleDeleteEducation = () => {
-        setAction('delete')
+
+    const handleOpenModalDelete = (education) => {
+        setIsOpenModalDeleteEducation(true)
+        setTargetDelete(education)
+    }
+
+    const handleDeleteEducation = () => {
+        dispatch(deleteEducation(targetDelete._id))
+        setIsOpenModalDeleteEducation(false)
     }
     const handleSaveChanges = () => {
         if (formData.is_lifetime) {
             const { organization_id, expiration_date, ...rest } = formData
-            dispatch(
-                createOrUpdateEducation(
-                    {
-                        ...rest,
-                        expiration_date: null,
-                        organization_id:
-                            typeof organization_id === 'object' ? organization_id[0] : Array(organization_id)[0],
-                    },
-                    action
-                )
-            )
+            switch (action) {
+                case 'create':
+                    dispatch(
+                        createEducation({
+                            ...rest,
+                            expiration_date: null,
+                            organization_id:
+                                typeof organization_id === 'object' ? organization_id[0] : Array(organization_id)[0],
+                        })
+                    )
+                    break
+                case 'update':
+                    dispatch(
+                        updateEducation({
+                            ...rest,
+                            expiration_date: null,
+                            organization_id:
+                                typeof organization_id === 'object' ? organization_id[0] : Array(organization_id)[0],
+                        })
+                    )
+                    break
+                default:
+                    break
+            }
         } else {
             const { organization_id, ...rest } = formData
-            dispatch(
-                createOrUpdateEducation(
-                    {
-                        ...rest,
-                        organization_id:
-                            typeof organization_id === 'object' ? organization_id[0] : Array(organization_id)[0],
-                    },
-                    action
-                )
-            )
+            switch (action) {
+                case 'create':
+                    dispatch(
+                        createEducation({
+                            ...rest,
+                            organization_id:
+                                typeof organization_id === 'object' ? organization_id[0] : Array(organization_id)[0],
+                        })
+                    )
+                    break
+                case 'update':
+                    dispatch(
+                        updateEducation({
+                            ...rest,
+                            organization_id:
+                                typeof organization_id === 'object' ? organization_id[0] : Array(organization_id)[0],
+                        })
+                    )
+                    break
+                default:
+                    break
+            }
         }
     }
 
@@ -127,39 +166,62 @@ const Educations = () => {
                                     <div key={index}>
                                         <div className=" shadow rounded-[0.6rem]">
                                             <div className="relative p-4 mt-[2rem]">
-                                                <span className="cursor-pointer md:float-right 2xl:float-right">
-                                                    <IconlyDelete size={24} color={'#000'} />
-                                                </span>
-                                                <span
-                                                    className="cursor-pointer md:float-right 2xl:float-right"
-                                                    onClick={() => handleUpdateEducation(education)}
+                                                <Stack
+                                                    className="flex gap-2 md:float-right 2xl:float-right"
+                                                    direction={'row'}
                                                 >
-                                                    <IconlyEdit size={24} color={'#000'} />
-                                                </span>
+                                                    <span
+                                                        className="cursor-pointer"
+                                                        onClick={() => handleUpdateEducation(education)}
+                                                    >
+                                                        <IconlyEdit size={24} color={'#000'} />
+                                                    </span>
+                                                    <span
+                                                        className="cursor-pointer"
+                                                        onClick={() => handleOpenModalDelete(education)}
+                                                    >
+                                                        <IconlyDelete size={24} color={'#000'} />
+                                                    </span>
+                                                </Stack>
 
                                                 {education.school && (
                                                     <h4 className="flex font-bold mb-[0.75rem]">{education.school}</h4>
                                                 )}
                                                 {education.start_date && education.end_date && (
                                                     <p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
-                                                        {`${moment(education.start_date).format('MMM YYYY')} ${education.end_date
-                                                            ? `- ${moment(education.end_date).format('MMM YYYY')}`
-                                                            : ''
-                                                            }`}
+                                                        {`${moment(education.start_date).format('MMM YYYY')} ${
+                                                            education.end_date
+                                                                ? `- ${moment(education.end_date).format('MMM YYYY')}`
+                                                                : ''
+                                                        }`}
                                                     </p>
                                                 )}
                                                 {education.field_of_study && (
                                                     <div className="flex items-center gap-2 mb-2">
                                                         <DataList.ItemLabel> Field of study</DataList.ItemLabel>
-                                                        <DataList.ItemValue className='mb-0'>{education.field_of_study}</DataList.ItemValue>
+                                                        <DataList.ItemValue className="mb-0">
+                                                            {education.field_of_study}
+                                                        </DataList.ItemValue>
                                                     </div>
                                                 )}
-                                                {education.degree && <div className="flex items-center gap-2 mb-2"> <DataList.ItemLabel > Degree</DataList.ItemLabel>
-                                                    <DataList.ItemValue className='mb-0'>{education.degree}</DataList.ItemValue>
-                                                </div>}
-                                                {education.grade && <div className="flex items-center gap-2 mb-2"> <DataList.ItemLabel > Grade</DataList.ItemLabel>
-                                                    <DataList.ItemValue className='mb-0'>{education.grade}</DataList.ItemValue>
-                                                </div>}
+                                                {education.degree && (
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        {' '}
+                                                        <DataList.ItemLabel> Degree</DataList.ItemLabel>
+                                                        <DataList.ItemValue className="mb-0">
+                                                            {education.degree}
+                                                        </DataList.ItemValue>
+                                                    </div>
+                                                )}
+                                                {education.grade && (
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        {' '}
+                                                        <DataList.ItemLabel> Grade</DataList.ItemLabel>
+                                                        <DataList.ItemValue className="mb-0">
+                                                            {education.grade}
+                                                        </DataList.ItemValue>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -169,6 +231,7 @@ const Educations = () => {
                     </div>
                 </div>
             </div>
+            {/* CREATE/UPDATE */}
             <Dialog.Root
                 size={'lg'}
                 open={isOpenModalCreateOrUpdateEducation}
@@ -274,6 +337,48 @@ const Educations = () => {
                                         className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]"
                                         variant="outline"
                                         onClick={handleClose}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Dialog.ActionTrigger>
+                            </Dialog.Footer>
+                        </Dialog.Content>
+                    </Dialog.Positioner>
+                </Portal>
+            </Dialog.Root>
+            {/* DELETE */}
+            <Dialog.Root
+                size={'md'}
+                open={isOpenModalDeleteEducation}
+                placement={'center'}
+                motionPreset="slide-in-bottom"
+            >
+                <Portal>
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                        <Dialog.Content className="bg-white">
+                            <Dialog.Header>
+                                <Dialog.Title>Delete education</Dialog.Title>
+                            </Dialog.Header>
+                            <Dialog.Body gap={6}>
+                                <Stack gap="6">Do you want to delete this education?</Stack>
+                            </Dialog.Body>
+                            <Dialog.Footer>
+                                <Button
+                                    className="border-[#F4F5F6] bg-[#2F65B9] text-white"
+                                    onClick={handleDeleteEducation}
+                                    borderRadius={4}
+                                    loading={isLoadingCreateOrUpdateEducation}
+                                    loadingText="Loading..."
+                                    spinnerPlacement="start"
+                                >
+                                    CONFIRM
+                                </Button>
+                                <Dialog.ActionTrigger asChild>
+                                    <Button
+                                        className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]"
+                                        variant="outline"
+                                        onClick={() => setIsOpenModalDeleteEducation(false)}
                                     >
                                         Cancel
                                     </Button>

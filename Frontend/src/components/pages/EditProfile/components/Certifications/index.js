@@ -10,7 +10,7 @@ import moment from "moment";
 import { IconlyEdit, IconlyDelete } from "components/UI/Iconly";
 import SelectCustom from "components/UI/SelectCustom";
 import {
-	createOrUpdateCertification,
+
 	getOrganizationFramework,
 } from "api/profile";
 import { Checkbox } from "components/UI/checkbox";
