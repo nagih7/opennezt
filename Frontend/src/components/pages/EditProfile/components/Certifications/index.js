@@ -14,7 +14,7 @@ import {
 	getOrganizationFramework,
 } from "api/profile";
 import { Checkbox } from "components/UI/checkbox";
-import { DataList } from "@chakra-ui/react"
+import { Table } from "@chakra-ui/react"
 const Certifications = () => {
 	const dispatch = useDispatch();
 	// ========== STATE FROM REDUX STORE ========== //
@@ -131,7 +131,11 @@ const Certifications = () => {
 	const handleClose = () => {
 		dispatch(setIsOpenModalCreateOrUpdateCertification(false));
 	};
-
+	const formatDate = (dateString) => {
+		if (!dateString) return 'N/A'
+		const date = new Date(dateString)
+		return `${date.getMonth() + 1}/${date.getFullYear()}`
+	}
 	// ========== COMPONENT RENDER ========== //
 	return (
 		<div className="flex gap-8 w-full py-8 px-[16px]">
@@ -163,7 +167,7 @@ const Certifications = () => {
 						<div className="px-[16px]">
 							<div>
 								{certifications?.map((certification, index) => (
-									<DataList.Root orientation="horizontal" key={index}>
+									<Table.Root size="lg" key={index} striped>
 										<div key={index}>
 											<div className="shadow rounded-[0.6rem]">
 												<div className="relative p-4 mt-[2rem]">
@@ -177,47 +181,44 @@ const Certifications = () => {
 														}>
 														<IconlyEdit size={24} color={"#000"} />
 													</span>
-													{certification.name && (
-														<h4 className="flex font-bold mb-[0.75rem]">
-															{certification.name}
-														</h4>
-													)}
-													{certification.issue_date && (
-														<p className="relative text-[#9B9B9B] top-[-1rem] left-[-0.1rem] text-[1rem]">
-															{`${moment(
-																certification.issue_date
-															).format("MMM YYYY")} ${certification.expiration_date
-																? `- ${moment(
-																	certification.expiration_date
-																).format("MMM YYYY")}`
-																: ""
-																}`}
-														</p>
-													)}
-
-													{certification.verification_url && (
-														<>
-															<div className="flex gap-2">
-																<DataList.ItemLabel className="flex ">
-																	Verification URL:
-
-																</DataList.ItemLabel>
-																<DataList.ItemValue className="mb-0">
-																	<a
-																		href={`https://${certification.verification_url}`}
-																		target="_blank"
-																		rel="noreferrer">
-																		https://
-																		{certification.verification_url}
-																	</a>
-																</DataList.ItemValue>
-															</div>
-														</>
-													)}
+													<Table.Header className="flex justify-between items-center">
+														<Table.Row className="flex justify-between items-center">
+															<Table.ColumnHeader >Name</Table.ColumnHeader>
+															<Table.ColumnHeader >Certificate Expiration</Table.ColumnHeader>
+															<Table.ColumnHeader >Date</Table.ColumnHeader>
+															<Table.ColumnHeader textAlign="end">Verification URL</Table.ColumnHeader>
+														</Table.Row>
+													</Table.Header>
+													<Table.Body>
+														<Table.Row className="flex justify-between items-center ">
+															<Table.Cell className="text-[#000] font-semibold">
+																{certification.name || " N/A"}
+															</Table.Cell>
+															<Table.Cell className="text-[#000] font-semibold pl-[5rem]">
+																{formatDate(certification.expiration_date) || "N/A"}
+															</Table.Cell>
+															<Table.Cell className="text-[#000] font-semibold pl-[2.5rem]">
+																{moment(
+																	certification.issue_date
+																).format("YYYY-MM") || " N/A"}
+															</Table.Cell>
+															<Table.Cell textAlign="end" className="text-[#000] font-semibold max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap">
+																<a
+																	href={certification.verification_url}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	title={certification.verification_url}
+																	className="text-black underline"
+																>
+																	{certification.verification_url.replace(/^https?:\/\//, '').slice(0, 30) || " N/A"}...
+																</a>
+															</Table.Cell>
+														</Table.Row>
+													</Table.Body>
 												</div>
 											</div>
 										</div>
-									</DataList.Root>
+									</Table.Root>
 								))}
 							</div>
 						</div>

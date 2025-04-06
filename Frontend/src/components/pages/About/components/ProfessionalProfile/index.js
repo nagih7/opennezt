@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { DataList } from "@chakra-ui/react"
-
+import moment from "moment";
 const action = () => {
     return <div>has accessed your profile.</div>
 }
@@ -148,7 +148,26 @@ const ProfessionalProfile = () => {
                                         <h4 className="font-semibold">{certification.name || 'N/A'}</h4>
                                         <div className="flex items-center gap-2 mb-2">
                                             <DataList.ItemLabel>Certificate Expiration </DataList.ItemLabel>
-                                            <DataList.ItemValue className='mb-0'>{formatDate(certification.expiration_date)}</DataList.ItemValue>
+                                            <DataList.ItemValue className='mb-0'>{formatDate(certification.expiration_date) || "N/A"}</DataList.ItemValue>
+                                        </div>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <DataList.ItemLabel>Date</DataList.ItemLabel>
+                                            <DataList.ItemValue className='mb-0'>{moment(
+                                                certification.issue_date
+                                            ).format("YYYY-MM")}</DataList.ItemValue>
+                                        </div>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <DataList.ItemLabel>Certificate URL</DataList.ItemLabel>
+                                            <DataList.ItemValue className='mb-0  max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap'><a
+                                                href={certification.verification_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                title={certification.verification_url}
+                                                className="text-black underline"
+                                            >
+                                                {certification.verification_url.replace(/^https?:\/\//, '').slice(0, 30) || " N/A"}...
+                                            </a>
+                                            </DataList.ItemValue>
                                         </div>
                                     </div>
                                 </DataList.Root>
