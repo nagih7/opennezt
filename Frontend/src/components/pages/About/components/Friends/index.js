@@ -1,139 +1,198 @@
-import React, { useState, useEffect } from "react";
-import RightSidebar from "components/common/RightSidebar";
-import NotificationBadge from "./NotificationBadge";
-import { IconlyDelete } from "components/UI/Iconly";
-import { message } from "antd"
+import React, { useState, useEffect } from 'react'
+import RightSidebar from 'components/common/RightSidebar'
+import NotificationBadge from './NotificationBadge'
+import { IconlyDelete } from 'components/UI/Iconly'
+import { message } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
+import { getMyFriends } from 'api/profile'
+import { Avatar, Tabs } from '@chakra-ui/react'
+import moment from 'moment'
+import { useNavigate } from 'react-router-dom'
+import { FRIEND_REQUEST_NOTIFICATION, WAITING_STATUS } from 'utils/constants'
 const Friends = () => {
-    const [activeTab, setActiveTab] = useState("Friendships");
-    const [orderBy, setOrderBy] = useState("Last Active");
-
-    const friendsList = [
-        { id: 1, name: "Jenny Wilson", username: "@jenny", avatar: "https://i.pravatar.cc/50?img=1", verified: true, lastActive: "16 hours ago", timestamp: 1610000000 },
-        { id: 2, name: "Darlin Robertson", username: "@darlin", avatar: "https://i.pravatar.cc/50?img=2", verified: false, lastActive: "a day ago", timestamp: 1609000000 },
-    ];
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    // ========== STATE ========== //
+    const [activeTab, setActiveTab] = useState('Friendships')
+    const [orderBy, setOrderBy] = useState('Last Active')
+    const [isActive, setIsActive] = useState('friends')
 
     const friendRequests = [
-        { id: 3, name: "John Doe", username: "@john", avatar: "https://i.pravatar.cc/50?img=3", verified: false, lastActive: "2 days ago", timestamp: 1608000000 },
-        { id: 4, name: "Alice Smith", username: "@alice", avatar: "https://i.pravatar.cc/50?img=4", verified: true, lastActive: "5 hours ago", timestamp: 1620000000 },
-    ];
+        {
+            id: 3,
+            name: 'John Doe',
+            username: '@john',
+            avatar: 'https://i.pravatar.cc/50?img=3',
+            verified: false,
+            lastActive: '2 days ago',
+            timestamp: 1608000000,
+        },
+        {
+            id: 4,
+            name: 'Alice Smith',
+            username: '@alice',
+            avatar: 'https://i.pravatar.cc/50?img=4',
+            verified: true,
+            lastActive: '5 hours ago',
+            timestamp: 1620000000,
+        },
+    ]
+    // ========== STATE FROM REDUX ========== //
+    const friends = useSelector((state) => state.profile.myFriends)
+    const notis = useSelector((state) => state.notification.notifications)
 
-    const [friends, setFriendsList] = useState(friendsList);
-    const [Requests, setFriendRequests] = useState(friendRequests);
-
+    const notifications = notis.filter((notification) => {
+        notification.type?.name === FRIEND_REQUEST_NOTIFICATION, notification.metadata?.status === WAITING_STATUS
+    })
+    // ========== STATE ========== //
+    // const [friends, setFriendsList] = useState(friendsList)
+    const [Requests, setFriendRequests] = useState(friendRequests)
 
     const sortList = (list) => {
         return [...list].sort((a, b) => {
-            if (orderBy === "Newest") return b.timestamp - a.timestamp;
-            if (orderBy === "Oldest") return a.timestamp - b.timestamp;
-            return b.lastActive.localeCompare(a.lastActive);
-        });
-    };
+            if (orderBy === 'Newest') return b.timestamp - a.timestamp
+            if (orderBy === 'Oldest') return a.timestamp - b.timestamp
+            return b.lastActive.localeCompare(a.lastActive)
+        })
+    }
 
+    // ========== USE EFFECT ========== //
+    useEffect(() => {
+        if (friends?.length === 0) {
+            dispatch(getMyFriends())
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch])
 
-    const sortedFriends = sortList(friends);
-    const sortedRequests = sortList(Requests);
-    const displayList = activeTab === "Friendships" ? sortedFriends : sortedRequests;
-
-    const handleAcceptRequest = (user) => {
-        setFriendsList((prevFriends) => sortList([...prevFriends, user]));
-        setFriendRequests((prevRequests) => prevRequests.filter((req) => req.id !== user.id));
-        message.success("Accept successfully")
-    };
-
-    const handleDeleteRequest = (user) => {
-        setFriendRequests((prevRequests) => prevRequests.filter((req) => req.id !== user.id));
-        message.success("Delete request successfully")
-    };
+    // ========== HANDLER ========== //
     const handleDeleteFriend = (friend) => {
-        setFriendsList((preFriends) => preFriends.filter((req) => req.id !== friend.id))
-        message.success("Delete friend successfully")
+        message.success(`You have removed ${friend.name} from your friends.`)
+    }
+    const handleDeleteRequest = (request) => {
+        message.success(`You have deleted ${request.name} from your friend requests.`)
+    }
+    const handleAcceptRequest = (request) => {
+        message.success(`You have accepted ${request.name}'s friend request.`)
+    }
+    const handleNavigateToChat = (friend) => {
+        // navigate(`/conversation/${friend.user?._id}`)
     }
 
     return (
         <div className="flex gap-8">
             <div className="w-10/12">
-                <div className="flex justify-between items-center pb-2 bg-white h-[5.25rem]">
-                    <div className="flex space-x-6 ml-10">
-                        <button
-                            onClick={() => setActiveTab("Friendships")}
-                            className={`text-[1rem] font-medium ${activeTab === "Friendships" ? "text-black" : "text-gray-400"}`}
-                        >
-                            Friendships
-                        </button>
+                <Tabs.Root defaultValue={isActive} className="flex flex-col w-full h-full">
+                    <Tabs.List className="flex justify-between items-center pb-2 bg-white h-[5.25rem]  px-8">
+                        <div className="mt-[1rem] font-bold flex gap-2">
+                            <Tabs.Trigger value="friends">
+                                <span onClick={() => setIsActive('friends')}>Friends</span>
+                                <NotificationBadge count={friends.length} />
+                            </Tabs.Trigger>
+                            <Tabs.Trigger value="friend-requests">
+                                <span onClick={() => setIsActive('friend-requests')}>Friend Requests</span>
+                                <NotificationBadge count={notifications.length} />
+                            </Tabs.Trigger>
+                        </div>
+                    </Tabs.List>
 
-                        <NotificationBadge
-                            label="Request"
-                            count={Requests.length}
-                            onClick={() => setActiveTab("Request")}
-                            isActive={activeTab === "Request"}
-                        />
-                    </div>
+                    <div className="mt-[2rem] flex-1 bg-white rounded-lg mb-4">
+                        <Tabs.Content value="friends">
+                            <div className="p-6">
+                                <h4 className="mb-4 text-lg font-semibold">Friends ({friends.length})</h4>
+                                <hr className="mb-4" />
 
-                    <div className="flex items-center space-x-2 mr-6">
-                        <span className="text-[1rem] text-gray-500">Order By:</span>
-                        <select
-                            className="text-sm font-medium text-gray-600 bg-transparent outline-none border border-[#F3F3F3] w-[10rem] h-[2rem] rounded-sm"
-                            value={orderBy}
-                            onChange={(e) => setOrderBy(e.target.value)}
-                        >
-                            <option value="Last Active">Last Active</option>
-                            <option value="Newest">Newest</option>
-                            <option value="Oldest">Oldest</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div className="mt-5">
-                    <div className="bg-white rounded-lg p-6">
-                        <h4 className="text-lg font-semibold mb-4">
-                            {activeTab === "Friendships" ? `Friends (${friends.length})` : `Requests (${Requests.length})`}
-                        </h4>
-                        <hr className="mb-4" />
-
-                        {displayList.map((user) => (
-                            <div key={user.id} className="flex justify-between items-center bg-gray-100 rounded-lg p-4 mb-3">
-                                <div className="flex items-center space-x-4">
-                                    <img src={user.avatar} alt={user.name} className="w-[4.5rem] h-[4.5rem] rounded-full" />
-                                    <div>
-                                        <div className="flex items-center space-x-1">
-                                            <span className="font-medium">{user.name}</span>
-                                            {user.verified && <span className="text-blue-500">✅</span>}
+                                {friends.map((friend) => (
+                                    <div
+                                        key={friend.user._id}
+                                        className="flex items-center justify-between p-4 mb-3 bg-gray-100 rounded-lg"
+                                    >
+                                        <div className="flex items-center space-x-4">
+                                            <Avatar.Root className="w-[4.5rem] h-[4.5rem] rounded-full">
+                                                <Avatar.Image src={friend.user.avatar} />
+                                                <Avatar.Fallback name={friend.user?.name} />
+                                            </Avatar.Root>
+                                            <div>
+                                                <div className="flex items-center space-x-1">
+                                                    <span className="font-medium">{friend.user?.name}</span>
+                                                    <span className="text-blue-500">✅</span>
+                                                </div>
+                                                <span className="text-sm text-gray-500">{friend.user?.email}</span>
+                                            </div>
                                         </div>
-                                        <span className="text-gray-500 text-sm">{user.username}</span>
-                                    </div>
-                                </div>
 
-                                <div className="flex items-center space-x-4">
-                                    <span className="text-gray-500 text-sm">{user.lastActive}</span>
-                                    {activeTab === "Request" ? (
-                                        <>
+                                        <div className="flex items-center space-x-4">
+                                            <span className="text-sm text-gray-500">
+                                                {moment(friend.created_at).fromNow()}
+                                            </span>
+
+                                            <button
+                                                className="text-lg text-blue-500"
+                                                onClick={() => handleNavigateToChat(friend)}
+                                            >
+                                                ✉️
+                                            </button>
+                                            <button onClick={() => handleDeleteFriend(friend)} className="text-lg">
+                                                <IconlyDelete size={23} color={'#FF0000'} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </Tabs.Content>
+                        <Tabs.Content value="friend-requests">
+                            <div className="p-6 bg-white rounded-lg">
+                                <h4 className="mb-4 text-lg font-semibold">Requests ({notifications.length})</h4>
+                                <hr className="mb-4" />
+                                {notifications.map((notification) => (
+                                    <div
+                                        key={notification._id}
+                                        className="flex items-center justify-between p-4 mb-3 bg-gray-100 rounded-lg"
+                                    >
+                                        <div className="flex items-center space-x-4">
+                                            <Avatar.Root className="w-[4.5rem] h-[4.5rem] rounded-full">
+                                                <Avatar.Image src={notification.user.avatar} />
+                                                <Avatar.Fallback name={notification.user?.name} />
+                                            </Avatar.Root>
+                                            <div>
+                                                <div className="flex items-center space-x-1">
+                                                    <span className="font-medium">{notification.user?.name}</span>
+                                                    <span className="text-blue-500">✅</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center space-x-4">
+                                            <span className="text-sm text-gray-500">
+                                                {moment(notification.timestamp).fromNow()}
+                                            </span>
                                             <button className="text-lg">
-                                                <svg onClick={() => handleAcceptRequest(user)} xmlns="http://www.w3.org/2000/svg" className="text-green-500" fill="currentColor" width="24" height="24" viewBox="0 0 24 24">
+                                                <svg
+                                                    onClick={() => handleAcceptRequest(user)}
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="text-green-500"
+                                                    fill="currentColor"
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                >
                                                     <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" />
                                                 </svg>
                                             </button>
                                             <button onClick={() => handleDeleteRequest(user)} className="text-lg">
-                                                <IconlyDelete size={23} color={"#FF0000"} />
+                                                <IconlyDelete size={23} color={'#FF0000'} />
                                             </button>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <button className="text-blue-500 text-lg">✉️</button>
-                                            <button onClick={() => handleDeleteFriend(user)} className="text-lg">
-                                                <IconlyDelete size={23} color={"#FF0000"} />
-                                            </button>
-                                        </>
-                                    )}
-                                </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        </Tabs.Content>
                     </div>
-                </div>
+                </Tabs.Root>
             </div>
 
             <RightSidebar />
-        </div >
-    );
-};
+        </div>
+    )
+}
 
-export default Friends;
+export default Friends

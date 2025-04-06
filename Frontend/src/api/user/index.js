@@ -1,4 +1,4 @@
-import callApi from '../callApi';
+import callApi from '../callApi'
 import {
     // INDUSTRY
     requestgetIndustryFramework,
@@ -28,13 +28,13 @@ import {
     requestGetProjectRoleFramework,
     getProjectRoleFrameworkSuccess,
     getProjectRoleFrameworkFail,
-} from '../../states/modules/user';
+} from '../../states/modules/user'
 import {
     // REQUEST ADD FRIEND
     requestSendFriendRequest,
     sendFriendRequestSuccess,
     sendFriendRequestFail,
-} from '../../states/modules/talent';
+} from '../../states/modules/talent'
 
 // INDUSTRY
 export const getIndustryFramework = () => async (dispatch, getState) => {
@@ -45,8 +45,8 @@ export const getIndustryFramework = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // EXPERIENCE LEVEL
 export const getExperienceLevelFramwork = () => async (dispatch, getState) => {
@@ -61,8 +61,8 @@ export const getExperienceLevelFramwork = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // CATEGORIES
 export const getCategoryFramework = () => async (dispatch, getState) => {
@@ -73,8 +73,8 @@ export const getCategoryFramework = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // SUB CATEGORIES
 export const getSubCategoryFramework = (categoryId) => async (dispatch, getState) => {
@@ -85,8 +85,8 @@ export const getSubCategoryFramework = (categoryId) => async (dispatch, getState
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // SKILLS
 export const getSkillFramework = (categoryId) => async (dispatch, getState) => {
@@ -97,8 +97,8 @@ export const getSkillFramework = (categoryId) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // STAGES
 export const getStageFramework = () => async (dispatch, getState) => {
@@ -109,8 +109,8 @@ export const getStageFramework = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // PROJECT ROLE
 export const getProjectRoleFramework = () => async (dispatch, getState) => {
@@ -121,8 +121,8 @@ export const getProjectRoleFramework = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // REQUEST ADD FRIEND
 export const sendFriendRequest = (userId, action) => async (dispatch, getState) => {
@@ -133,5 +133,5 @@ export const sendFriendRequest = (userId, action) => async (dispatch, getState) 
         variables: { action },
         dispatch,
         getState,
-    });
-};
+    })
+}

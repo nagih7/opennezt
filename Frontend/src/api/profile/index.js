@@ -53,6 +53,10 @@ import {
     requestDeleleProfileAdditionalInfo,
     deleteProfileAdditionalInfoSuccess,
     deleteProfileAdditionalInfoFail,
+    // ========== FRIENDS ========= //
+    requestGetMyFriends,
+    getMyFriendsSuccess,
+    getMyFriendsFail,
 } from '../../states/modules/profile'
 
 export const updateUser = (data) => async (dispatch, getState) => {
@@ -252,6 +256,18 @@ export const deleteProfileAdditionalInfo = (id) => async (dispatch, getState) =>
             deleteProfileAdditionalInfoSuccess,
             deleteProfileAdditionalInfoFail,
         ],
+        dispatch,
+        getState,
+    })
+}
+
+// ========== GET [Friends] ========== //
+export const getMyFriends = () => async (dispatch, getState) => {
+    return callApi({
+        method: 'get',
+        apiPath: `/profile/friends`,
+        actionTypes: [requestGetMyFriends, getMyFriendsSuccess, getMyFriendsFail],
+        variables: {},
         dispatch,
         getState,
     })

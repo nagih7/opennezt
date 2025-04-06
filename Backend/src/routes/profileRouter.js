@@ -71,6 +71,13 @@ profileRouter.put(
 // ========== DELETE [Additional Info] ========== //
 profileRouter.delete('/additional-info/:id', asyncHandler(profileController.deleteProfileAdditionalInfo))
 
+// ========== GET [Friends] ========== //
+profileRouter.get(
+    '/friends',
+    // asyncHandler(validate(profileController.getMyFriends)),
+    asyncHandler(profileController.getMyFriends)
+)
+
 // ========== GET [Profile - Access] ========== //
 profileRouter.get('/me/access', asyncHandler(profileController.getAccessToMyProfile))
 

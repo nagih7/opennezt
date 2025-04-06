@@ -1,4 +1,4 @@
-import createModel, {ObjectId} from './base'
+import createModel, { ObjectId } from './base'
 
 const ActivityLog = createModel('ActivityLog', 'activity_logs', {
     user_id: {
@@ -16,7 +16,6 @@ const ActivityLog = createModel('ActivityLog', 'activity_logs', {
         required: false,
         default: {},
     },
-    // ttl: 60 * 60 * 24 * 14, // 14 days
     timestamp: {
         type: Date,
         required: true,

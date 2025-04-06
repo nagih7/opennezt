@@ -1,6 +1,6 @@
-import { createListCollection } from '@chakra-ui/react';
-import { createSlice } from '@reduxjs/toolkit';
-import { toaster } from 'components/UI/toaster';
+import { createListCollection } from '@chakra-ui/react'
+import { createSlice } from '@reduxjs/toolkit'
+import { toaster } from 'components/UI/toaster'
 
 const userSlice = createSlice({
     name: 'home',
@@ -183,7 +183,7 @@ const userSlice = createSlice({
             isLoadingGetProjectRoleFramework: false,
         }),
     },
-});
+})
 
 export const {
     // INDUSTRIES
@@ -213,6 +213,6 @@ export const {
     requestGetProjectRoleFramework,
     getProjectRoleFrameworkSuccess,
     getProjectRoleFrameworkFail,
-} = userSlice.actions;
+} = userSlice.actions
 
-export default userSlice.reducer;
+export default userSlice.reducer

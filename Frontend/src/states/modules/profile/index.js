@@ -39,6 +39,9 @@ const profileSlice = createSlice({
         // ========== Additional Info ========== //
         isOpenModalCreateOrUpdateProfileAdditionalInfo: false,
         isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+        // ========= FRIENDS ========= //
+        myFriends: [],
+        isLoadingGetMyFriends: false,
     },
     reducers: {
         setErrorInfoUser: (state, action) => ({
@@ -435,6 +438,20 @@ const profileSlice = createSlice({
                 isLoadingCreateOrUpdateProfileAdditionalInfo: false,
             }
         },
+        // ========== FRIENDS ========= //
+        requestGetMyFriends: (state) => ({
+            ...state,
+            isLoadingGetMyFriends: true,
+        }),
+        getMyFriendsSuccess: (state, action) => ({
+            ...state,
+            isLoadingGetMyFriends: false,
+            myFriends: action.payload.data,
+        }),
+        getMyFriendsFail: (state) => ({
+            ...state,
+            isLoadingGetMyFriends: false,
+        }),
     },
 })
 
@@ -499,6 +516,10 @@ export const {
     requestDeleleProfileAdditionalInfo,
     deleteProfileAdditionalInfoSuccess,
     deleteProfileAdditionalInfoFail,
+    // ========== FRIENDS ========= //
+    requestGetMyFriends,
+    getMyFriendsSuccess,
+    getMyFriendsFail,
 } = profileSlice.actions
 
 export default profileSlice.reducer

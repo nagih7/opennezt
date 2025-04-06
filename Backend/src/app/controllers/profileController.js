@@ -75,3 +75,9 @@ export async function getAccessToMyProfile(req, res) {
     const access = await profileService.getAccessToMyProfile(req.currentUser)
     res.jsonify(access)
 }
+
+// ========== GET [Friends] ========== //
+export async function getMyFriends(req, res) {
+    const result = await profileService.getMyFriends(req.currentUser, req.query)
+    res.jsonify(result, 'Get friends successfully.')
+}

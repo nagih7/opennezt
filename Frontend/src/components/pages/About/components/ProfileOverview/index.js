@@ -27,6 +27,7 @@ const ProfileOverview = () => {
     // ========== STATE FROM REDUX STORE ========== //
     const { authUser } = useSelector((state) => state.auth)
     const { isLoadingBtnChangeAvatar, isOpenAvatarPreview } = useSelector((state) => state.profile)
+    const { profile } = useSelector((state) => state.profile)
     // ========== STATE ========== //
     const [avatarFile, setAvatarFile] = useState(null)
     const [avatarFileSrc, setAvatarFileSrc] = useState(null)
@@ -180,18 +181,18 @@ const ProfileOverview = () => {
                     <div className="mt-[16px]"></div>
                 </div>
                 <div className="w-4/12">
-                    <ul className="flex flex-wrap items-center justify-center gap-5 p-0 m-0">
+                    <ul className="flex flex-wrap items-center justify-center gap-5 p-0 m-0 ">
+                        {/* <li className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
+                            <h5>{profile.activities}</h5>
+                            Views
+                        </li> */}
                         <li className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
-                            <h5>0</h5>
-                            Posts
+                            <h5>{profile?.articles?.length || 0}</h5>
+                            <span className="text-[#6f7f92] font-medium">Posts</span>
                         </li>
-                        <li>
-                            <h5>0</h5>
-                            Posts
-                        </li>
-                        <li>
-                            <h5>0</h5>
-                            Posts
+                        <li className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
+                            <h5>{profile?.activities || 0}</h5>
+                            <span className="text-[#6f7f92] font-medium">Views</span>
                         </li>
                     </ul>
                 </div>

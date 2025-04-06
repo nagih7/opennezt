@@ -1,8 +1,20 @@
-import { ACCESS_TYPE, LINK_STATIC_URL, PROFILE_ACCESS } from '@/configs'
-import { Certification, Education, Profile, ProfileAdditionalInfo, Organization, Type, ActivityLog } from '@/models'
+import { ACCESS_TYPE, FRIEND_REQUEST_NOTIFICATION, LINK_STATIC_URL, NOTIFICATION_TYPE, PROFILE_ACCESS } from '@/configs'
+import {
+    Certification,
+    Education,
+    Profile,
+    ProfileAdditionalInfo,
+    Organization,
+    Type,
+    ActivityLog,
+    Friend,
+    NotificationFeed,
+} from '@/models'
 
 // ========== GET [Profile] ========== //
 export async function getProfile(user) {
+    const accessType = await Type.findOne({ class: ACCESS_TYPE, name: PROFILE_ACCESS })
+
     const matchStage = {
         $match: { user_id: user._id },
     }
@@ -84,6 +96,84 @@ export async function getProfile(user) {
             as: 'additional_infos',
         },
     }
+    const lookupArticle = {
+        $lookup: {
+            from: 'articles',
+            localField: 'user_id',
+            foreignField: 'user_id',
+            as: 'articles',
+            pipeline: [
+                // {
+                //     $lookup: {
+                //         from: 'projects',
+                //         localField: 'project_id',
+                //         foreignField: '_id',
+                //         as: 'project',
+                //     },
+                // },
+                // {
+                //     $unwind: { path: '$project', preserveNullAndEmptyArrays: true },
+                // },
+                // {
+                //     $lookup: {
+                //         from: 'users',
+                //         localField: 'user_id',
+                //         foreignField: '_id',
+                //         as: 'user',
+                //     },
+                // },
+                // {
+                //     $unwind: { path: '$user', preserveNullAndEmptyArrays: true },
+                // },
+                // {
+                //     $addFields: {
+                //         'user.avatar': {
+                //             $cond: {
+                //                 if: { $eq: [{ $ifNull: ['$user.avatar', ''] }, ''] },
+                //                 then: '$user.avatar',
+                //                 else: { $concat: [LINK_STATIC_URL, '$user.avatar'] },
+                //             },
+                //         },
+                //     },
+                // },
+            ],
+        },
+    }
+    const lookupActivity = {
+        $lookup: {
+            from: 'activity_logs',
+            localField: '_id',
+            foreignField: 'data.profile_id',
+            as: 'activities',
+            pipeline: [
+                {
+                    $match: {
+                        type_id: accessType._id,
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        metadata: 1,
+                    },
+                },
+            ],
+        },
+    }
+    const addfieldStage = {
+        $addFields: {
+            activities: {
+                $reduce: {
+                    input: '$activities',
+                    initialValue: 0,
+                    in: {
+                        $add: ['$$value', { $ifNull: [{ $toInt: '$$this.metadata.count' }, 0] }],
+                    },
+                },
+            },
+        },
+    }
+
     const lookupStages = [
         lookupIndustry,
         lookupExperienceLevel,
@@ -92,6 +182,8 @@ export async function getProfile(user) {
         lookupCategory,
         lookupSkill,
         lookupAdditionalInfo,
+        lookupArticle,
+        lookupActivity,
     ]
 
     const unwindStages = [
@@ -147,7 +239,7 @@ export async function getProfile(user) {
             'additional_infos.__v': 0,
         },
     }
-    const profile = await Profile.aggregate([matchStage, ...lookupStages, ...unwindStages, projectStage])
+    const profile = await Profile.aggregate([matchStage, ...lookupStages, ...unwindStages, addfieldStage, projectStage])
     return profile[0]
 }
 
@@ -423,4 +515,103 @@ export async function getAccessToMyProfile(user) {
     ])
 
     return activities
+}
+
+// ========= GET [Friends] ========== //
+export async function getMyFriends(user, { page, per_page }) {
+    const friends = await Friend.aggregate([
+        {
+            $match: { user_id: user._id },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'friend_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            email: 1,
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '$avatar',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        // {
+        //     $skip: (page - 1) * per_page,
+        // },
+        // {
+        //     $limit: per_page,
+        // },
+        {
+            $project: {
+                _id: 0,
+                user: 1,
+                status: 1,
+                is_favorite: 1,
+                created_at: 1,
+            },
+        },
+    ])
+
+    // const requestType = await Type.findOne({ class: NOTIFICATION_TYPE, name: FRIEND_REQUEST_NOTIFICATION })
+    // const friendRequests = await NotificationFeed.aggregate([
+    //     {
+    //         $match: {
+    //             user_id: user._id,
+    //             type: requestType._id,
+    //         },
+    //     },
+    //     {
+    //         $lookup: {
+    //             from: 'users',
+    //             localField: 'source_id',
+    //             foreignField: '_id',
+    //             as: 'user',
+    //             pipeline: [
+    //                 {
+    //                     $project: {
+    //                         _id: 1,
+    //                         name: 1,
+    //                         avatar: {
+    //                             $cond: {
+    //                                 if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+    //                                 then: '$avatar',
+    //                                 else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+    //                             },
+    //                         },
+    //                     },
+    //                 },
+    //             ],
+    //         },
+    //     },
+    //     {
+    //         $unwind: '$user',
+    //     },
+    //     {
+    //         $sort: { timestamp: -1 },
+    //     },
+    //     {
+    //         $project: {
+    //             _id: 1,
+    //             user: 1,
+    //             timestamp: 1,
+    //         },
+    //     },
+    // ])
+
+    return friends
 }

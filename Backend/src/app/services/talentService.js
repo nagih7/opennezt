@@ -324,6 +324,7 @@ export async function accessToTalent(user, { id }) {
     if (oldActivity) {
         // Update timestamp
         oldActivity.timestamp = new Date()
+        oldActivity.metadata = { ...oldActivity.metadata, count: (oldActivity.metadata.count || 0) + 1 }
         await oldActivity.save()
     } else {
         // Create new activity
@@ -331,7 +332,9 @@ export async function accessToTalent(user, { id }) {
             user_id: user._id,
             type_id: accessType._id,
             data: { profile_id: profile._id, owner_id: new ObjectId(id) },
-            metadata: {},
+            metadata: {
+                count: 1,
+            },
         })
         await activity.save()
     }
