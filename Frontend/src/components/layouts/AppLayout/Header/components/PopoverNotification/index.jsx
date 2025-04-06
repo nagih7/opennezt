@@ -28,7 +28,7 @@ import ConfirmProjectInvitationNoitification from './components/ConfirmProjectIn
 function PopoverNotification() {
     // ========== STATE FROM REDUX ========== //
     const { notifications, isLoadingReplyNotification } = useSelector((state) => state.notification)
-
+    console.log('notifications', notifications)
     const { language } = useSelector((state) => state.app)
 
     // ========== STATE ========== //
@@ -73,7 +73,7 @@ function PopoverNotification() {
                             </div>
                             <Stack spacing={2}>
                                 {unreadNotifications.map((notification, index) => (
-                                    <div className="px-4 py-[16px] hover:bg-[#f6f5f5] cursor-pointer" key={index}>
+                                    <div className="px-4 py-[16px] bg-gray-100 hover:bg-[#f6f5f5] cursor-pointer" key={index}>
                                         <Stack>
                                             <Stack direction="row" spacing={4}>
                                                 <Avatar.Root size={'sm'}>
@@ -113,9 +113,16 @@ function PopoverNotification() {
                                                                 )
                                                         }
                                                     })()}
-                                                    <span className="text-[#6f7f92] text-xs">
-                                                        {moment(notification.timestamp).fromNow()}
-                                                    </span>
+                                                    <div className='flex justify-between items-center'>
+                                                        <span className="text-[#6f7f92] text-xs">
+                                                            {moment(notification.timestamp).fromNow()}
+                                                        </span>
+                                                        {notification.metadata?.read === false ? (
+                                                            <span className="inline-block w-3 h-3 rounded-full bg-blue-400 ml-2"></span>
+                                                        ) : (
+                                                            <></>
+                                                        )}
+                                                    </div>
                                                 </Stack>
                                             </Stack>
                                             <div className="flex items-center justify-end">
