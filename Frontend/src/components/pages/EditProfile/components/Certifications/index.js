@@ -168,56 +168,35 @@ const Certifications = () => {
 							<div>
 								{certifications?.map((certification, index) => (
 									<Table.Root size="lg" key={index} striped>
-										<div key={index}>
-											<div className="shadow rounded-[0.6rem]">
-												<div className="relative p-4 mt-[2rem]">
+										<Table.Header>
+											<Table.Row >
+												<Table.ColumnHeader>Name</Table.ColumnHeader>
+												<Table.ColumnHeader>Certificate Expiration</Table.ColumnHeader>
+												<Table.ColumnHeader>Date</Table.ColumnHeader>
+												<Table.ColumnHeader >Verification URL</Table.ColumnHeader>
+												<Table.ColumnHeader textAlign="end">Actions</Table.ColumnHeader>
+											</Table.Row>
+										</Table.Header>
+										<Table.Body>
+											<Table.Row>
+												<Table.Cell>{certification.name}</Table.Cell>
+												<Table.Cell>{formatDate(certification.expiration_date) || "N/A"}</Table.Cell>
+												<Table.Cell>{formatDate(certification.issue_date)}</Table.Cell>
+												<Table.Cell className="max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap" ><a
+													href={certification.verification_url}
+													target="_blank"
+													rel="noopener noreferrer"
+													title={certification.verification_url}
+													className="text-blue-500 underline"
+												>
+													{certification.verification_url.replace(/^https?:\/\//, '').slice(0, 30) || " N/A"}...
+												</a></Table.Cell>
+												<Table.Cell textAlign="end">
 													<span className="cursor-pointer md:float-right 2xl:float-right"><IconlyDelete size={24} color={"#000"} /></span>
-													<span
-														className="cursor-pointer md:float-right 2xl:float-right"
-														onClick={() =>
-															handleUpdateCertification(
-																certification
-															)
-														}>
-														<IconlyEdit size={24} color={"#000"} />
-													</span>
-													<Table.Header className="flex justify-between items-center">
-														<Table.Row className="flex justify-between items-center">
-															<Table.ColumnHeader >Name</Table.ColumnHeader>
-															<Table.ColumnHeader >Certificate Expiration</Table.ColumnHeader>
-															<Table.ColumnHeader >Date</Table.ColumnHeader>
-															<Table.ColumnHeader textAlign="end">Verification URL</Table.ColumnHeader>
-														</Table.Row>
-													</Table.Header>
-													<Table.Body>
-														<Table.Row className="flex justify-between items-center ">
-															<Table.Cell className="text-[#000] font-semibold">
-																{certification.name || " N/A"}
-															</Table.Cell>
-															<Table.Cell className="text-[#000] font-semibold pl-[5rem]">
-																{formatDate(certification.expiration_date) || "N/A"}
-															</Table.Cell>
-															<Table.Cell className="text-[#000] font-semibold pl-[2.5rem]">
-																{moment(
-																	certification.issue_date
-																).format("YYYY-MM") || " N/A"}
-															</Table.Cell>
-															<Table.Cell textAlign="end" className="text-[#000] font-semibold max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap">
-																<a
-																	href={certification.verification_url}
-																	target="_blank"
-																	rel="noopener noreferrer"
-																	title={certification.verification_url}
-																	className="text-black underline"
-																>
-																	{certification.verification_url.replace(/^https?:\/\//, '').slice(0, 30) || " N/A"}...
-																</a>
-															</Table.Cell>
-														</Table.Row>
-													</Table.Body>
-												</div>
-											</div>
-										</div>
+													<span className="cursor-pointer md:float-right 2xl:float-right" onClick={() => handleUpdateCertification(certification)}><IconlyEdit size={24} color={"#000"} /></span>
+												</Table.Cell>
+											</Table.Row>
+										</Table.Body>
 									</Table.Root>
 								))}
 							</div>

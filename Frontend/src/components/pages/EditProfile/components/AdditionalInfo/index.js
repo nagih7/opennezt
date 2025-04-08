@@ -102,31 +102,21 @@ const AdditionalInfo = () => {
                     <div>
                         <div>
                             {additional_infos?.map((info, index) => (
-                                <Table.Root size="lg" striped key={index} className="mb-4">
-                                    <div key={index}>
-                                        <div className="shadow rounded-[0.6rem]">
-                                            <div className="relative p-4 mt-[2rem]">
-                                                <span
-                                                    className="cursor-pointer md:float-right 2xl:float-right"
-                                                    onClick={() => handleUpdateProfileAdditionalInfo(info)}
-                                                >
-                                                    <IconlyEdit size={24} color={'#000'} />
-                                                </span>
-                                                <Table.Header className="flex justify-between items-center">
-                                                    <Table.Row className="flex justify-between items-center">
-                                                        <Table.ColumnHeader className='mr-20'>Name</Table.ColumnHeader>
-                                                        <Table.ColumnHeader textAlign="end">Content</Table.ColumnHeader>
-                                                    </Table.Row>
-                                                </Table.Header>
-                                                <Table.Body className="flex justify-between items-center">
-                                                    <Table.Row className="flex justify-between items-center">
-                                                        <Table.Cell className="text-[#000] font-semibold">{info.name}</Table.Cell>
-                                                        <Table.Cell textAlign="end" className="text-[#000] font-semibold">{info.content}</Table.Cell>
-                                                    </Table.Row>
-                                                </Table.Body>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <Table.Root size="lg" striped key={index} >
+                                    <Table.Header>
+                                        <Table.Row>
+                                            <Table.ColumnHeader>Name</Table.ColumnHeader>
+                                            <Table.ColumnHeader>Content</Table.ColumnHeader>
+                                            <Table.ColumnHeader>Action</Table.ColumnHeader>
+                                        </Table.Row>
+                                    </Table.Header>
+                                    <Table.Body>
+                                        <Table.Row>
+                                            <Table.Cell>{info.name}</Table.Cell>
+                                            <Table.Cell>{info.content}</Table.Cell>
+                                            <Table.Cell className='cursor-pointer' onClick={() => handleUpdateProfileAdditionalInfo(info)}><IconlyEdit size={24} color={"#000"} /></Table.Cell>
+                                        </Table.Row>
+                                    </Table.Body>
                                 </Table.Root>
                             ))}
                         </div>
