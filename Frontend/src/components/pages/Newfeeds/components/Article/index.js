@@ -153,6 +153,19 @@ const Article = forwardRef(
             navigate(`/talents/${user._id}/details`)
         }
 
+        const [isModalOpen, setIsModalOpen] = useState(false)
+        const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+
+        const handlePrevImage = (e) => {
+            e.stopPropagation()
+            setSelectedImageIndex((prev) => (prev === 0 ? content.attachment.length - 1 : prev - 1))
+        }
+
+        const handleNextImage = (e) => {
+            e.stopPropagation()
+            setSelectedImageIndex((prev) => (prev === content.attachment.length - 1 ? 0 : prev + 1))
+        }
+
         return (
             <div className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8 mt-3" ref={ref}>
                 {isConfirmDelete ? (
@@ -271,13 +284,137 @@ const Article = forwardRef(
                 <div className="mt-6">
                     <p className="my-[6px]">{content.caption}</p>
                 </div>
-                <div className="flex flex-wrap gap-2 ">
-                    {content.attachment &&
-                        content.attachment.length > 0 &&
-                        content.attachment.map((img, index) => {
-                            return <img key={index} src={typeof img === 'string' ? img : URL.createObjectURL(img)} />
-                        })}
+                <div className="mt-4">
+                    {content.attachment && content.attachment.length > 0 && (
+                        <div
+                            className={`
+                            grid gap-2 
+                            ${content.attachment.length === 1 ? 'grid-cols-1' : ''}
+                            ${content.attachment.length === 2 ? 'grid-cols-2' : ''}
+                            ${content.attachment.length === 3 ? 'grid-cols-2' : ''}
+                            ${content.attachment.length >= 4 ? 'grid-cols-2' : ''}
+                            max-h-[400px]
+                        `}
+                        >
+                            {content.attachment.map((img, index) => {
+                                let className = 'relative h-[200px]' // Default cho ảnh vuông
+
+                                if (content.attachment.length === 1) {
+                                    className = 'relative h-[400px]' // Ảnh đơn
+                                } else if (content.attachment.length === 2) {
+                                    className = 'relative h-[200px]' // 2 ảnh cạnh nhau
+                                } else if (content.attachment.length === 3) {
+                                    if (index === 0) {
+                                        className = 'relative h-[250px] col-span-2' // Ảnh đầu tiên khi có 3 ảnh
+                                    } else {
+                                        className = 'relative h-[146px]' // 2 ảnh dưới khi có 3 ảnh
+                                    }
+                                } else if (content.attachment.length >= 4) {
+                                    className = 'relative h-[200px]' // 4 ảnh hoặc nhiều hơn
+                                }
+
+                                if (index > 3) return null
+
+                                return (
+                                    <div
+                                        key={index}
+                                        className={className}
+                                        onClick={() => {
+                                            setSelectedImageIndex(index)
+                                            setIsModalOpen(true)
+                                        }}
+                                    >
+                                        <img
+                                            src={typeof img === 'string' ? img : URL.createObjectURL(img)}
+                                            alt={`Preview ${index + 1}`}
+                                            className="w-full h-full object-cover cursor-pointer rounded-lg hover:opacity-95 transition-opacity"
+                                        />
+
+                                        {content.attachment.length > 4 && index === 3 && (
+                                            <div className="absolute inset-0 flex items-center justify-center rounded-lg overflow-hidden">
+                                                <div className="absolute inset-0 bg-black/25 hover:bg-black/30 transition-all duration-200" />
+                                                <span className="relative z-10 text-white text-2xl font-semibold drop-shadow">
+                                                    +{content.attachment.length - 4}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )}
                 </div>
+                {isModalOpen && (
+                    <div
+                        className="fixed inset-0 bg-black/95 z-[999999] flex items-center justify-center"
+                        onClick={() => setIsModalOpen(false)}
+                    >
+                        <div className="relative w-full max-w-[90%] flex flex-col items-center">
+                            <div className="relative max-h-[90vh]">
+                                {content.attachment.length > 1 && (
+                                    <>
+                                        <button
+                                            className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-4xl bg-black/50 w-12 h-12 rounded-full flex items-center justify-center hover:bg-black/70 transition-all z-50"
+                                            onClick={handlePrevImage}
+                                        >
+                                            ‹
+                                        </button>
+                                        <button
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-4xl bg-black/50 w-12 h-12 rounded-full flex items-center justify-center hover:bg-black/70 transition-all z-50"
+                                            onClick={handleNextImage}
+                                        >
+                                            ›
+                                        </button>
+                                    </>
+                                )}
+                                <img
+                                    src={
+                                        typeof content.attachment[selectedImageIndex] === 'string'
+                                            ? content.attachment[selectedImageIndex]
+                                            : URL.createObjectURL(content.attachment[selectedImageIndex])
+                                    }
+                                    alt="Full size preview"
+                                    className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                                />
+                                <button
+                                    className="absolute top-4 right-4 text-white text-xl bg-black/50 w-10 h-10 rounded-full hover:bg-black/70 transition-all flex items-center justify-center"
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        setIsModalOpen(false)
+                                    }}
+                                >
+                                    ×
+                                </button>
+                            </div>
+
+                            {/* Controls container */}
+                            <div className="absolute bottom-4 flex flex-col items-center gap-4">
+                                {/* Số trang */}
+                                <div className="text-white bg-black/50 px-6 py-2 rounded-full text-sm font-medium">
+                                    {selectedImageIndex + 1} / {content.attachment.length}
+                                </div>
+
+                                {/* Dots */}
+                                <div className="flex items-center justify-center gap-3">
+                                    {content.attachment.map((_, index) => (
+                                        <button
+                                            key={index}
+                                            className={`w-2.5 h-2.5 rounded-full transition-all ${
+                                                index === selectedImageIndex
+                                                    ? 'bg-white scale-110'
+                                                    : 'bg-white/40 hover:bg-white/60'
+                                            }`}
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                setSelectedImageIndex(index)
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
                     <span className="text-[#6f7f92]"></span>
                 </div>
