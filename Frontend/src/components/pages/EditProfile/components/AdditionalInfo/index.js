@@ -1,4 +1,4 @@
-import { Button, createListCollection, Dialog, Portal, Stack } from '@chakra-ui/react'
+import { Button, createListCollection, Dialog, Portal, Stack, Table } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ProfileCard from '../ProfileCard'
@@ -129,33 +129,31 @@ const AdditionalInfo = () => {
                     </div>
                     <div>
                         <div>
-                            {additional_infos?.map((info, index) => (
-                                <div key={index}>
-                                    <div className="shadow rounded-[0.6rem]">
-                                        <div className="relative p-4 mt-[2rem]">
-                                            <Stack
-                                                className="flex gap-2 md:float-right 2xl:float-right"
-                                                direction={'row'}
-                                            >
-                                                <span
-                                                    className="cursor-pointer "
-                                                    onClick={() => handleUpdateProfileAdditionalInfo(info)}
-                                                >
-                                                    <IconlyEdit size={24} color={'#000'} />
-                                                </span>
-                                                <span
-                                                    className="cursor-pointer"
-                                                    onClick={() => handleOpenModalDelete(info)}
-                                                >
-                                                    <IconlyDelete size={24} color={'#000'} />
-                                                </span>
-                                            </Stack>
-                                            <h4 className="flex font-bold">{info?.name}</h4>
-                                            {info?.content && <p className="flex "> {info?.content}</p>}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+
+
+                            <Table.Root size="lg" striped  >
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.ColumnHeader>Name</Table.ColumnHeader>
+                                        <Table.ColumnHeader>Content</Table.ColumnHeader>
+                                        <Table.ColumnHeader >Action</Table.ColumnHeader>
+                                    </Table.Row>
+                                </Table.Header>
+                                <Table.Body>
+                                    {additional_infos?.map((info, index) => (
+                                        <Table.Row key={index}>
+                                            <Table.Cell>{info.name}</Table.Cell>
+                                            <Table.Cell>{info.content}</Table.Cell>
+                                            <Table.Cell textAlign="end" className='flex ' >
+                                                <span className='cursor-pointer' onClick={() => handleUpdateProfileAdditionalInfo(info)}><IconlyEdit size={24} color={"#000"} /></span>
+                                                <span className="cursor-pointer"
+                                                    onClick={() => handleOpenModalDelete(info)}><IconlyDelete size={24} color={"#000"} /></span></Table.Cell>
+                                        </Table.Row>
+                                    ))}
+                                </Table.Body>
+                            </Table.Root>
+
+
                         </div>
                     </div>
                 </div>
