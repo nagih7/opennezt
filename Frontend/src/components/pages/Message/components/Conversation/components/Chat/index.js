@@ -9,6 +9,9 @@ import MyMessage from './components/MyMessage'
 import OtherMessage from './components/OtherMessage'
 import { Spinner, Text, VStack } from '@chakra-ui/react'
 import { useSocket } from 'context/SocketContext'
+import TextAreaCustom from 'components/UI/TextAreaCustom'
+import validateMessage from 'utils/validateMessage'
+import { toaster } from 'components/UI/toaster'
 
 const Chat = () => {
     const dispatch = useDispatch()
@@ -19,6 +22,8 @@ const Chat = () => {
     // ========== STATE FROM REDUX ========== //
     const { authUser } = useSelector((state) => state.auth)
     const { conversation, isLoadingGetConversation } = useSelector((state) => state.chat)
+
+    console.log('conversation', conversation.messages)
 
     // ========== STATE ========== //
     const [message, setMessage] = useState('')
@@ -47,12 +52,26 @@ const Chat = () => {
     }
 
     const handleSendMessage = () => {
-        dispatch(sendMessage(conversation._id, message, socket))
-        setMessage('')
+        const { valid, cleanedMessage } = validateMessage(message)
+        if (valid) {
+            // const messageData = {
+            //     conversation_id: conversation._id,
+            //     content: cleanedMessage,
+            //     status: 'sent',
+            //     user: {
+            //         // _id: authUser._id,
+            //         name: authUser.name,
+            //         avatar: authUser.avatar,
+            //     },
+            // }
+            dispatch(sendMessage(conversation._id, cleanedMessage, socket))
+            setMessage('')
+        }
     }
 
     const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+            e.preventDefault() // Ngăn xuống dòng nếu chỉ Enter
             handleSendMessage()
         }
     }
@@ -120,13 +139,15 @@ const Chat = () => {
                     <LinkOutlined className="text-xl w-[30px] h-[30px]" />
                 </div>
                 <div className="py-[12px] w-full">
-                    <input
+                    <TextAreaCustom
+                        nomax
+                        height="45px"
                         onKeyDown={handleKeyDown}
                         value={message}
                         onChange={handleChangeMessage}
                         type="text"
                         placeholder="Write your message"
-                        className="w-full bg-white outline-none"
+                        className="w-full bg-white outline-none  py-[8px] scrollbar-hide"
                     />
                 </div>
                 <div

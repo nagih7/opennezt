@@ -3,11 +3,29 @@ import React from 'react'
 import { Textarea } from '@chakra-ui/react'
 
 const TextAreaCustom = ({ ...rest }) => {
-    const { label, value, required, placeholder, type, name, htmlFor, height, onChange, disabled, resize } = rest
+    const {
+        label,
+        value,
+        required,
+        placeholder,
+        type,
+        name,
+        htmlFor,
+        height,
+        onChange,
+        disabled,
+        resize,
+        onKeyDown,
+        size,
+        className,
+        nomax,
+    } = rest
 
     return (
         <Field.Root invalid>
             <Textarea
+                size={size || 'md'}
+                onKeyDown={onKeyDown}
                 resize={resize || 'none'}
                 name={name}
                 disabled={disabled}
@@ -17,9 +35,9 @@ const TextAreaCustom = ({ ...rest }) => {
                 height={height || 'auto'}
                 type={type || 'url'}
                 placeholder={placeholder}
-                className="p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md"
+                className={`p-[16px] border-[1px] w-full outline-none border-gray-200 rounded-md ${className || ''}`}
             />
-            <Field.HelperText>Max 500 characters.</Field.HelperText>
+            {!nomax && <Field.HelperText>Max 500 characters.</Field.HelperText>}
             <Field.Label
                 htmlFor={htmlFor}
                 className="text-xs bg-[#ffffff] px-1 border-x-[1px]

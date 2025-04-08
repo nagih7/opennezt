@@ -63,10 +63,24 @@ const chatSlice = createSlice({
         }),
 
         // ========== SEND MESSAGE ========== //
-        requestSendMessage: (state) => ({
-            ...state,
-            loadingSendMessage: true,
-        }),
+        requestSendMessage: (state, action) => {
+            console.log('requestSendMessage', action.payload)
+            return {
+                ...state,
+                // conversation: {
+                //     ...state.conversation,
+                //     messages: [
+                //         ...state.conversation.messages,
+                //         {
+                //             content: action.payload.content,
+                //             sender: action.payload.sender,
+                //             createdAt: action.payload.createdAt,
+                //         },
+                //     ],
+                // },
+                loadingSendMessage: true,
+            }
+        },
         sendMessageSuccess: (state, action) => ({
             ...state,
             conversation: {

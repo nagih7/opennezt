@@ -1,8 +1,9 @@
-import { Avatar } from '@chakra-ui/react';
-import { MoreOutlined } from '@ant-design/icons';
-import { IconlyStar } from 'components/UI/Iconly';
-import moment from 'moment';
-import React from 'react';
+import { Avatar } from '@chakra-ui/react'
+import { MoreOutlined } from '@ant-design/icons'
+import { IconlyStar } from 'components/UI/Iconly'
+import moment from 'moment'
+import React from 'react'
+import formatMessage from 'utils/formatMessage'
 
 const MyMessage = ({ message, haveAvatar }) => {
     return (
@@ -21,25 +22,25 @@ const MyMessage = ({ message, haveAvatar }) => {
                     <div className="group flex flex-row-reverse pl-[10px] w-full">
                         <div className="flex items-center bg-[#2f65b9] rounded-md w-fit px-[12px] py-[7px] text-[#ffffff]">
                             <span className="text-sm font-medium ">
-                                <p className="mb-0">{message?.content}</p>
+                                <p className="mb-0">{formatMessage(message?.content)}</p>
                             </span>
                             <span className="ml-[10px] text-[10px] font-semibold">
                                 <span>{moment(message?.timestamp).format('HH:mm')}</span>
                             </span>
                         </div>
-                        <span className="ml-[5px] hidden items-center group-hover:flex transition-opacity duration-300 ease-in-out">
+                        {/* <span className="ml-[5px] hidden items-center group-hover:flex transition-opacity duration-300 ease-in-out">
                             <span className="mx-[5px] cursor-pointer">
                                 <MoreOutlined className="w-[15px] h-[15px] text-black" />
                             </span>
                             <span className="mx-[5px] cursor-pointer">
                                 <IconlyStar size={15} color={'#000000'} />
                             </span>
-                        </span>
+                        </span> */}
                     </div>
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default MyMessage;
+export default MyMessage

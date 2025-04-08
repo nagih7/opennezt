@@ -3,6 +3,7 @@ import { RollbackOutlined, MoreOutlined } from '@ant-design/icons'
 import { IconlyStar } from 'components/UI/Iconly'
 import moment from 'moment'
 import React from 'react'
+import formatMessage from 'utils/formatMessage'
 
 const OtherMessage = ({ message, newUser }) => {
     return (
@@ -30,7 +31,7 @@ const OtherMessage = ({ message, newUser }) => {
                                                 <div className="group flex pr-[10px] w-full">
                                                     <div className="flex items-center bg-[#f8f9fa] rounded-md w-fit px-[12px] py-[7px] gap-4">
                                                         <span className="text-sm font-medium">
-                                                            <p className="mb-0">{message?.content}</p>
+                                                            <p className="mb-0">{formatMessage(message?.content)}</p>
                                                         </span>
                                                         <span className="ml-[10px] text-[10px] font-semibold">
                                                             <span>{moment(message?.timestamp).format('HH:mm')}</span>
