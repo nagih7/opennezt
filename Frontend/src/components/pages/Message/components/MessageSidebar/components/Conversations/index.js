@@ -42,34 +42,41 @@ const Conversations = () => {
                             <Stack
                                 key={index}
                                 onClick={() => navigate(`/conversation/${conversation._id}`)}
-                                className="p-[15px] bg-[#ffffff] cursor-pointer"
+                                className="p-[15px] bg-[#ffffff] cursor-pointer overflow-hidden flex items-center gap-3 hover:bg-[#f8f9fa] rounded-md"
                                 direction={'row'}
                             >
                                 {(() => {
                                     switch (conversation.type.name) {
                                         case DIRECT_CONVERSATION:
                                             return (
-                                                <Stack className="items-center gap-3" direction={'row'}>
+                                                <Stack
+                                                    className="items-center flex-1 gap-3 overflow-hidden"
+                                                    direction={'row'}
+                                                >
                                                     <Avatar.Root size={'xl'}>
                                                         <Avatar.Fallback name={conversation.members[0].name} />
                                                         <Avatar.Image src={conversation.members[0].avatar} />
                                                     </Avatar.Root>
-                                                    <div className="flex-1">
+                                                    <div className="flex-1 overflow-hidden">
                                                         <span className="flex items-center gap-2 text-sm font-bold">
                                                             {conversation.members[0].name}
                                                         </span>
-                                                        <p className="text-xs mb-0 text-[#6f7f92] font-bold">
+
+                                                        <p className="text-xs mb-0 text-[#6f7f92] font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
                                                             {(() => {
-                                                                switch (conversation.last_message?.user?._id) {
-                                                                    case authUser._id:
-                                                                        return 'You: '
-                                                                    default:
-                                                                        return conversation.last_message?.user?.name
-                                                                            ? `${conversation.last_message?.user?.name}: `
-                                                                            : ''
-                                                                }
+                                                                const sender =
+                                                                    conversation.last_message?.user?._id ===
+                                                                    authUser._id
+                                                                        ? 'You: '
+                                                                        : conversation.last_message?.user?.name
+                                                                        ? `${conversation.last_message?.user?.name}: `
+                                                                        : ''
+
+                                                                const content =
+                                                                    conversation.last_message?.content || 'No message'
+
+                                                                return `${sender}${content}`
                                                             })()}
-                                                            {conversation.last_message?.content || 'No message'}
                                                         </p>
                                                     </div>
                                                 </Stack>
@@ -85,7 +92,7 @@ const Conversations = () => {
                                                         <span className="flex items-center gap-2 text-sm font-bold">
                                                             {conversation.data?.project?.name}
                                                         </span>
-                                                        <p className="text-xs mb-0 text-[#6f7f92] font-bold">
+                                                        <p className="text-xs mb-0 text-[#6f7f92] font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
                                                             {(() => {
                                                                 switch (conversation.last_message?.user?._id) {
                                                                     case authUser._id:

@@ -76,7 +76,27 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                         ×
                     </button>
                 )}
-                <div>
+                <div
+                    className="max-h-[36vh] overflow-y-auto scrollbar-thin"
+                    style={{
+                        scrollbarWidth: 'thin',
+                        scrollbarColor: '#CBD5E1 #F1F5F9',
+                        '&::-webkit-scrollbar': {
+                            width: '8px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                            background: '#F1F5F9',
+                            borderRadius: '4px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                            background: '#CBD5E1',
+                            borderRadius: '4px',
+                        },
+                        '&::-webkit-scrollbar-thumb:hover': {
+                            background: '#94A3B8',
+                        },
+                    }}
+                >
                     {formData.content.attachment.map((image, index) => (
                         <div key={index} className="relative">
                             <img

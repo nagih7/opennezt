@@ -1,16 +1,21 @@
-import { Button, CloseButton, createListCollection, Dialog, Portal, Stack } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { Button, createListCollection, Dialog, Portal, Stack, Table } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ProfileCard from '../ProfileCard'
 import ProfileEditMenu from '../ProfileEditMenu'
 import ActionBar from '../ActionBar'
-import InputCustom from 'components/UI/InputCustom'
-import { IconlyEdit } from 'components/UI/Iconly'
-// import { createOrUpdateProfileAdditionalInfo } from 'api/profile'
+import { IconlyDelete, IconlyEdit } from 'components/UI/Iconly'
+import {
+    createProfileAdditionalInfo,
+    updateProfileAdditionalInfo,
+    deleteProfileAdditionalInfo,
+    getProfile,
+} from 'api/profile'
 import { setIsOpenModalCreateOrUpdateProfileAdditionalInfo } from 'states/modules/profile'
 import { PROFILE_ADDITIONAL } from 'utils/constants'
 import SelectCustom from 'components/UI/SelectCustom'
-import { Table } from "@chakra-ui/react"
+import TextAreaCustom from 'components/UI/TextAreaCustom'
+
 const AdditionalInfoFramework = createListCollection({
     items: PROFILE_ADDITIONAL['EN'].map((item) => ({
         label: item.label,
@@ -25,12 +30,16 @@ const AdditionalInfo = () => {
     const { additional_infos } = profile || []
     const { isOpenModalCreateOrUpdateProfileAdditionalInfo, isLoadingCreateOrUpdateProfileAdditionalInfo } =
         useSelector((state) => state.profile)
-    // // ========== STATE MANAGEMENT ========== //
+    // ========== STATE MANAGEMENT ========== //
     const [action, setAction] = useState('')
-    const [formData, setFormData] = useState({
-        name: '',
-        content: '',
-    })
+    const [formData, setFormData] = useState({})
+    const [targetDelete, setTargetDelete] = useState(null)
+    const [isOpenModalDeleteAdditionalInfo, setIsOpenModalDeleteAdditionalInfo] = useState(false)
+    // ========== USE EFFECT ========== //
+    useEffect(() => {
+        if (!profile) dispatch(getProfile())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch])
     // ========== HANDLE CHANGE FUNCTION ========== //
     const handleChangeSelect = (event, nameSelect) => {
         setFormData({
@@ -62,8 +71,27 @@ const AdditionalInfo = () => {
         })
     }
 
+    const handleOpenModalDelete = (info) => {
+        setIsOpenModalDeleteAdditionalInfo(true)
+        setTargetDelete(info)
+    }
+
+    const handleDeleteCertification = () => {
+        dispatch(deleteProfileAdditionalInfo(targetDelete._id))
+        setIsOpenModalDeleteAdditionalInfo(false)
+    }
+
     const handleSaveChanges = () => {
-        dispatch(createOrUpdateProfileAdditionalInfo(formData, action))
+        switch (action) {
+            case 'create':
+                dispatch(createProfileAdditionalInfo(formData, action))
+                break
+            case 'update':
+                dispatch(updateProfileAdditionalInfo(formData))
+                break
+            default:
+                break
+        }
     }
 
     const handleClose = () => {
@@ -101,29 +129,37 @@ const AdditionalInfo = () => {
                     </div>
                     <div>
                         <div>
-                            {additional_infos?.map((info, index) => (
-                                <Table.Root size="lg" striped key={index} >
-                                    <Table.Header>
-                                        <Table.Row>
-                                            <Table.ColumnHeader>Name</Table.ColumnHeader>
-                                            <Table.ColumnHeader>Content</Table.ColumnHeader>
-                                            <Table.ColumnHeader>Action</Table.ColumnHeader>
-                                        </Table.Row>
-                                    </Table.Header>
-                                    <Table.Body>
-                                        <Table.Row>
+
+
+                            <Table.Root size="lg" striped  >
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.ColumnHeader>Name</Table.ColumnHeader>
+                                        <Table.ColumnHeader>Content</Table.ColumnHeader>
+                                        <Table.ColumnHeader >Action</Table.ColumnHeader>
+                                    </Table.Row>
+                                </Table.Header>
+                                <Table.Body>
+                                    {additional_infos?.map((info, index) => (
+                                        <Table.Row key={index}>
                                             <Table.Cell>{info.name}</Table.Cell>
                                             <Table.Cell>{info.content}</Table.Cell>
-                                            <Table.Cell className='cursor-pointer' onClick={() => handleUpdateProfileAdditionalInfo(info)}><IconlyEdit size={24} color={"#000"} /></Table.Cell>
+                                            <Table.Cell textAlign="end" className='flex ' >
+                                                <span className='cursor-pointer' onClick={() => handleUpdateProfileAdditionalInfo(info)}><IconlyEdit size={24} color={"#000"} /></span>
+                                                <span className="cursor-pointer"
+                                                    onClick={() => handleOpenModalDelete(info)}><IconlyDelete size={24} color={"#000"} /></span></Table.Cell>
                                         </Table.Row>
-                                    </Table.Body>
-                                </Table.Root>
-                            ))}
+                                    ))}
+                                </Table.Body>
+                            </Table.Root>
+
+
                         </div>
                     </div>
                 </div>
             </div>
 
+            {/* CREATE/UPDATE */}
             <Dialog.Root
                 size={'lg'}
                 open={isOpenModalCreateOrUpdateProfileAdditionalInfo}
@@ -153,11 +189,12 @@ const AdditionalInfo = () => {
                                         name="name"
                                     />
                                 </Stack>
-                                <Stack direction="row" h="20">
-                                    <InputCustom
+                                <Stack direction="row">
+                                    <TextAreaCustom
+                                        resize="none"
+                                        required
                                         label="Content"
                                         placeholder="Ex: I can offer you a lot of things"
-                                        height="40px"
                                         name="content"
                                         onChange={handleChange}
                                         value={formData.content}
@@ -180,6 +217,49 @@ const AdditionalInfo = () => {
                                         className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]"
                                         variant="outline"
                                         onClick={handleClose}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Dialog.ActionTrigger>
+                            </Dialog.Footer>
+                        </Dialog.Content>
+                    </Dialog.Positioner>
+                </Portal>
+            </Dialog.Root>
+            {/* DELETE */}
+            <Dialog.Root
+                size={'md'}
+                open={isOpenModalDeleteAdditionalInfo}
+                key={formData.profile_id}
+                placement={'center'}
+                motionPreset="slide-in-bottom"
+            >
+                <Portal>
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                        <Dialog.Content className="bg-white">
+                            <Dialog.Header>
+                                <Dialog.Title>
+                                    {action === 'create' ? 'Add additional info' : 'Update additional info'}
+                                </Dialog.Title>
+                            </Dialog.Header>
+                            <Dialog.Body>
+                                Do you want to delete this additional info? This action cannot be undone.
+                            </Dialog.Body>
+                            <Dialog.Footer>
+                                <Button
+                                    className="border-[#F4F5F6] bg-[#2F65B9] text-white"
+                                    onClick={handleDeleteCertification}
+                                    borderRadius={4}
+                                    loading={isLoadingCreateOrUpdateProfileAdditionalInfo}
+                                >
+                                    CONFIRM
+                                </Button>
+                                <Dialog.ActionTrigger asChild>
+                                    <Button
+                                        className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]"
+                                        variant="outline"
+                                        onClick={() => setIsOpenModalDeleteAdditionalInfo(false)}
                                     >
                                         Cancel
                                     </Button>
