@@ -1,6 +1,6 @@
 import moment from 'moment'
 import jwt from 'jsonwebtoken'
-import {User, Role} from '@/models'
+import { User, Role } from '@/models'
 import {
     cache,
     LOGIN_EXPIRE_IN,
@@ -15,14 +15,14 @@ import {
     LINKEDIN_SCOPE,
     LINKEDIN_STATE,
 } from '@/configs'
-import {FileUpload} from '@/utils/classes'
-import {generateToken} from '@/utils/helpers'
+import { FileUpload } from '@/utils/classes'
+import { generateToken } from '@/utils/helpers'
 import axios from 'axios'
 
 export const tokenBlocklist = cache.create('t   oken-block-list')
 
-export async function checkValidLogin({email, password}) {
-    const user = await User.findOne({email: email})
+export async function checkValidLogin({ email, password }) {
+    const user = await User.findOne({ email: email })
 
     if (user && user.password) {
         const verified = user.verifyPassword(password)
@@ -36,7 +36,7 @@ export async function checkValidLogin({email, password}) {
 
 export function authToken(user) {
     // Generate access token
-    const accessToken = generateToken({user_id: user._id}, TOKEN_TYPE.AUTHORIZATION, LOGIN_EXPIRE_IN)
+    const accessToken = generateToken({ user_id: user._id }, TOKEN_TYPE.AUTHORIZATION, LOGIN_EXPIRE_IN)
 
     // Decode access token to get expire time
     const decode = jwt.decode(accessToken)
@@ -50,20 +50,20 @@ export function authToken(user) {
     }
 }
 
-export async function register({...requestBody}) {
-    const user = await User.findOne({email: requestBody.email})
+export async function register({ ...requestBody }) {
+    const user = await User.findOne({ email: requestBody.email })
     if (user && user.is_active === false) {
         // update user info
         user.set(requestBody)
         await user.save()
-        return generateToken({user_id: user._id}, TOKEN_TYPE.VERIFY_EMAIL, VERIFY_EMAIL_EXPIRE_IN)
+        return generateToken({ user_id: user._id }, TOKEN_TYPE.VERIFY_EMAIL, VERIFY_EMAIL_EXPIRE_IN)
     } else {
         const newUser = new User(requestBody)
-        const userRole = await Role.findOne({name: 'User'})
+        const userRole = await Role.findOne({ name: 'User' })
         newUser.role_id = userRole._id
         await newUser.save()
 
-        return generateToken({user_id: newUser._id}, TOKEN_TYPE.VERIFY_EMAIL, VERIFY_EMAIL_EXPIRE_IN)
+        return generateToken({ user_id: newUser._id }, TOKEN_TYPE.VERIFY_EMAIL, VERIFY_EMAIL_EXPIRE_IN)
     }
 }
 
@@ -80,18 +80,18 @@ export async function blockToken(token) {
 }
 
 export async function profile(userId) {
-    const user = await User.findOne({_id: userId})
+    const user = await User.findOne({ _id: userId })
     user.avatar = user.avatar && LINK_STATIC_URL + user.avatar
     user.background = user.background && LINK_STATIC_URL + user.background
     return user
 }
 
 export async function getRole(role_id) {
-    const role = await Role.findOne({_id: role_id})
-    return {role: role.name}
+    const role = await Role.findOne({ _id: role_id })
+    return { role: role.name }
 }
 
-export async function updateProfile(currentUser, {name, email, phone, avatar}) {
+export async function updateProfile(currentUser, { name, email, phone, avatar }) {
     currentUser.name = name
     currentUser.email = email
     currentUser.phone = phone
@@ -131,18 +131,21 @@ export async function loginWithLinkedInCallback(code) {
         },
     })
 
-    const user = await User.findOne({email: userInfo.data.email})
-    if (!user) {
-        const newUser = new User({
-            name: userInfo.data.name,
-            email: userInfo.data.email,
-            is_active: true,
-        })
-        const userRole = await Role.findOne({name: 'User'})
-        newUser.role_id = userRole._id
-        await newUser.save()
-        return newUser
-    }
+    console.log('userInfo', userInfo.data)
+    if (userInfo.data) {
+        const user = await User.findOne({ email: userInfo.data.email })
+        if (!user) {
+            const newUser = new User({
+                name: userInfo.data.name,
+                email: userInfo.data.email,
+                is_active: true,
+            })
+            const userRole = await Role.findOne({ name: 'User' })
+            newUser.role_id = userRole._id
+            await newUser.save()
+            return newUser
+        }
 
-    return user
+        return user
+    }
 }
