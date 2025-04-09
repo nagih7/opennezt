@@ -446,7 +446,7 @@ export async function replyProjectInvitation(user, notification, io) {
                     role_id: conversationAdminRole._id,
                 },
                 {
-                    user_id: source_id,
+                    user_id: user._id,
                     role_id: conversationMemberRole._id,
                 },
             ],

@@ -40,10 +40,16 @@ function NotificationProject() {
         }
     }, [notifications])
 
+    // ========== HANDLE REPLY NOTIFICATION ========== //
+    const handleReplyNotification = async (notification_id, action) => {
+        await store.dispatch(replyNotification(notification_id, action))
+        await store.dispatch(getConversations())
+    }
+
     // ========== STATE ========== //
     const [selection, setSelection] = useState([])
     const hasSelection = selection.length > 0
-    const indeterminate = hasSelection && selection.length < unread.length
+    // const indeterminate = hasSelection && selection.length < unread.length
     const allRows = notifications.map((notification, index) => (
         <Table.Row key={notification._id} data-selected={selection.includes(notification._id) ? '' : undefined}>
             {/* <Table.Cell>
@@ -85,7 +91,13 @@ function NotificationProject() {
                 })()}
             </Table.Cell>
             <Table.Cell>{moment(notification.timestamp).fromNow()}</Table.Cell>
-            <Table.Cell textAlign="center">
+            <Table.Cell
+                justifyContent={'center'}
+                textAlign="center"
+                display={'flex'}
+                alignItems={'center'}
+                height={'68px'}
+            >
                 {/* <button
                     onClick={() => markAsRead(notification._id)}
                     className="p-2 bg-gray-200 rounded hover:bg-gray-300 w-[2.5rem] h-[2.5rem] mx-1"
@@ -305,12 +317,6 @@ function NotificationProject() {
         </Table.Row>
     ))
 
-    // ========== HANDLE REPLY NOTIFICATION ========== //
-    const handleReplyNotification = async (notification_id, action) => {
-        await store.dispatch(replyNotification(notification_id, action))
-        await store.dispatch(getConversations())
-    }
-
     // ========== RENDER ========== //
     return (
         <>
@@ -374,7 +380,7 @@ function NotificationProject() {
                                 </Table.Header>
                                 <Table.Body>{allRows}</Table.Body>
                             </Table.Root>
-                            <ActionBar.Root open={hasSelection}>
+                            {/* <ActionBar.Root open={hasSelection}>
                                 <Portal>
                                     <ActionBar.Positioner>
                                         <ActionBar.Content>
@@ -391,7 +397,7 @@ function NotificationProject() {
                                         </ActionBar.Content>
                                     </ActionBar.Positioner>
                                 </Portal>
-                            </ActionBar.Root>
+                            </ActionBar.Root> */}
                         </Tabs.Content>
                         <Tabs.Content value="unread" className="flex flex-col w-full h-full p-0">
                             <Table.Root size="sm" striped>

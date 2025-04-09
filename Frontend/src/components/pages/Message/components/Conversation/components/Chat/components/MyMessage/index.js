@@ -9,7 +9,7 @@ const MyMessage = ({ message, haveAvatar }) => {
     return (
         <div className="flex w-full">
             <div className="flex flex-col items-start w-[30%] mb-[5px]" />
-            <div className="flex items-center w-[70%] mb-[5px] flex-row-reverse gap-2">
+            <div className="flex w-[70%] mb-[5px] flex-row-reverse gap-2">
                 <div className="w-[35px] h-[35px]">
                     {haveAvatar && (
                         <Avatar.Root size={'md'} className="w-[35px] h-[35px] rounded-full">

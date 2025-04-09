@@ -30,32 +30,32 @@ const ProjectCard = ({ project }) => {
 
             <div className="p-8 bg-[#ffffff]">
                 <div className="flex justify-between w-full px-[16px]">
-                    <div className="item-left">
-                        <div className="flex justify-between gap-3">
+                    <div className="flex-1 item-left">
+                        <div className="flex gap-3">
                             <div className="p-[4px] mt-[-60px] rounded-md bg-[#ffffff]">
-                                <a href="#">
-                                    {!logoError ? (
-                                        <Image
-                                            src={project.logo}
-                                            className="w-[150px] h-[150px] rounded-md"
-                                            alt={project.name}
-                                            aspectRatio={4 / 4}
-                                            width="100%"
-                                            objectFit="cover"
-                                            onError={() => setLogoError(true)}
-                                        />
-                                    ) : (
-                                        <div className="h-[150px] w-[150px] flex items-center justify-center bg-gray-200 p-4 user-select-none">
-                                            <Image src={OPENNEZT_LOGO} alt="OpenNezt" />
-                                        </div>
-                                    )}
-                                </a>
+                                {!logoError ? (
+                                    <Image
+                                        src={project.logo}
+                                        className="w-[150px] h-[150px] rounded-md"
+                                        alt={project.name}
+                                        aspectRatio={4 / 4}
+                                        width="100%"
+                                        objectFit="cover"
+                                        onError={() => setLogoError(true)}
+                                    />
+                                ) : (
+                                    <div className="h-[150px] w-[150px] flex items-center justify-center bg-gray-200 p-4 user-select-none">
+                                        <Image src={OPENNEZT_LOGO} alt="OpenNezt" />
+                                    </div>
+                                )}
                             </div>
                             <div>
-                                <h5>{project.name}</h5>
+                                <h5 className="text-2xl font-bold">{project.name}</h5>
                                 {project.description && (
                                     <div>
-                                        <p>{project.description}</p>
+                                        <p className="italic font-medium text-gray-500 text-md">
+                                            {project.description}
+                                        </p>
                                     </div>
                                 )}
                             </div>

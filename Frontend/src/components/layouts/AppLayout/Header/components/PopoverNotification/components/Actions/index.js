@@ -17,7 +17,7 @@ const Actions = ({ notification, handleReplyNotification, index }) => {
                 {ACTIONS.CONFIRM[language]}
             </button>
             <button
-                className="px-[12px] py-[8px] text-xs font-medium bg-[#f8f9fa] text-[#6f7f92] rounded-md"
+                className="px-[12px] py-[8px] text-xs font-medium bg-[gray] text-[white] rounded-md"
                 icon={<CloseOutlined />}
                 onClick={() => handleReplyNotification(notification._id, DELETE_ACTION)}
             >
