@@ -23,9 +23,7 @@ const ProjectManage = () => {
                         </div>
                     </Tabs.Root>
                 </div>
-                <div className="w-4/12 mt-8">
-                    <ProjectActivity />
-                </div>
+                <ProjectActivity />
             </div>
         </div>
     )
