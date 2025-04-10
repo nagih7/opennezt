@@ -1,5 +1,4 @@
 export * from './constants'
-export * from './linkedin'
 export * from './typeConstants'
 export * from './fileConstants'
 

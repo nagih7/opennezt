@@ -14,10 +14,18 @@ import {
     LINKEDIN_REDIRECT_URI,
     LINKEDIN_SCOPE,
     LINKEDIN_STATE,
+    GOOGLE_AUTH_URL,
+    GOOGLE_CLIENT_ID,
+    GOOGLE_REDIRECT_URI,
+    GOOGLE_CLIENT_SECRET,
+    GOOGLE_TOKEN_ENDPOINT,
 } from '@/configs'
 import { FileUpload } from '@/utils/classes'
 import { generateToken } from '@/utils/helpers'
 import axios from 'axios'
+import crypto from 'crypto'
+
+const stateStore = new Map()
 
 export const tokenBlocklist = cache.create('t   oken-block-list')
 
@@ -131,7 +139,6 @@ export async function loginWithLinkedInCallback(code) {
         },
     })
 
-    console.log('userInfo', userInfo.data)
     if (userInfo.data) {
         const user = await User.findOne({ email: userInfo.data.email })
         if (!user) {
@@ -147,5 +154,86 @@ export async function loginWithLinkedInCallback(code) {
         }
 
         return user
+    }
+}
+
+// ========== Google Login ========== //
+export async function loginWithGoogle(req) {
+    try {
+        // Tạo state ngẫu nhiên để bảo vệ chống CSRF
+        const state = await crypto.randomBytes(16).toString('hex')
+
+        // Lưu trạng thái với thời gian hết hạn (10 phút)
+        stateStore.set(state, {
+            timestamp: Date.now(),
+            redirectUrl: req.query.redirect || '/', // URL chuyển hướng sau khi đăng nhập
+        })
+
+        // Tạo URL xác thực Google với các tham số cần thiết
+        const authUrl = new URL(GOOGLE_AUTH_URL)
+        authUrl.searchParams.append('client_id', GOOGLE_CLIENT_ID)
+        authUrl.searchParams.append('redirect_uri', GOOGLE_REDIRECT_URI)
+        authUrl.searchParams.append('response_type', 'code')
+        authUrl.searchParams.append('scope', 'profile email')
+        authUrl.searchParams.append('state', state)
+        authUrl.searchParams.append('access_type', 'offline') // Để nhận refresh token
+        authUrl.searchParams.append('prompt', 'consent') // Luôn yêu cầu người dùng đồng ý
+
+        // Chuyển hướng người dùng đến trang đăng nhập Google
+        return authUrl.toString()
+    } catch (error) {
+        console.error('Error initiating Google login:', error)
+        throw new Error('Failed to initiate Google login')
+    }
+}
+
+export async function loginWithGoogleCallback(requestQuery, state) {
+    try {
+        const { code, state } = requestQuery
+        // Kiểm tra state để ngăn CSRF attack
+        if (!stateStore.has(state)) {
+            throw new Error('Invalid state parameter')
+        }
+        stateStore.delete(state) // Xóa state sau khi đã sử dụng
+        // GỬI YÊU CẦU ĐẾN GOOGLE ĐỂ LẤY ACCESS TOKEN
+        const tokenResponse = await axios.post(
+            GOOGLE_TOKEN_ENDPOINT,
+            new URLSearchParams({
+                code,
+                client_id: GOOGLE_CLIENT_ID,
+                client_secret: GOOGLE_CLIENT_SECRET,
+                redirect_uri: GOOGLE_REDIRECT_URI,
+                grant_type: 'authorization_code',
+            })
+        )
+
+        const { access_token } = tokenResponse.data
+        // Sử dụng access token để lấy thông tin người dùng từ Google
+        const userResponse = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        })
+        const userData = userResponse.data
+        if (userData.email) {
+            const user = await User.findOne({ email: userData.email })
+            if (!user) {
+                const newUser = new User({
+                    name: userData.name,
+                    email: userData.email,
+                    is_active: true,
+                })
+                const userRole = await Role.findOne({ name: 'User' })
+                newUser.role_id = userRole._id
+                await newUser.save()
+                return newUser
+            }
+
+            return user
+        }
+        // Kiểm tra xem người dùng đã tồn tại trong cơ sở dữ liệu hay chưa
+    } catch (error) {
+        console.error('Error during Google login callback:', error)
+        throw new Error('Failed to complete Google login')
     }
 }
