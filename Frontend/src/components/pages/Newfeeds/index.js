@@ -206,7 +206,7 @@ function NewFeeds() {
     useEffect(() => {
         if (onetimefeeds.length > 0) {
             // Lấy tất cả article IDs
-            const articleIds = onetimefeeds.filter((feed) => feed._id).map((feed) => feed._id)
+            const articleIds = onetimefeeds.filter((feed) => feed?._id).map((feed) => feed?._id)
 
             // Gọi API một lần với array của IDs
             if (articleIds.length > 0) {
@@ -312,7 +312,7 @@ function NewFeeds() {
 
     useEffect(() => {
         if (onetimefeeds.length > 0) {
-            const articleIds = onetimefeeds.filter((r) => r._id).map((r) => r._id)
+            const articleIds = onetimefeeds.filter((r) => r?._id).map((r) => r?._id)
 
             if (articleIds.length > 0) {
                 dispatch(handleGetUserBookmarks(articleIds))
@@ -352,10 +352,10 @@ function NewFeeds() {
                 ) : null}
                 {isOpenComment ? (
                     <CommentList
-                        key={selectedArticle._id}
+                        key={selectedArticle?._id}
                         feed={selectedArticle}
                         onClose={handleCloseComment}
-                        reaction={reactionMap.get(selectedArticle._id)}
+                        reaction={reactionMap.get(selectedArticle?._id)}
                         onReaction={handleReaction}
                         isLoading={isLoadingReactArticle}
                     />
@@ -374,31 +374,31 @@ function NewFeeds() {
                     if (index === feeds.length - 1) {
                         return (
                             <Article
-                                key={feed._id}
+                                key={feed?._id}
                                 ref={lastElementRef}
                                 feed={feed}
-                                reaction={reactionMap.get(feed._id)}
+                                reaction={reactionMap.get(feed?._id)}
                                 onReaction={handleReaction}
                                 isLoading={isLoadingReactArticle}
                                 onSelect={handleSelectArticle}
                                 onEdit={handleOpenUpdateForm}
                                 onDelete={handleDelete}
-                                bookmark={bookmarksMap.get(feed._id)}
+                                bookmark={bookmarksMap.get(feed?._id)}
                                 onBookmark={bookmarkArticle}
                             />
                         )
                     } else {
                         return (
                             <Article
-                                key={feed._id}
+                                key={feed?._id}
                                 feed={feed}
-                                reaction={reactionMap.get(feed._id)}
+                                reaction={reactionMap.get(feed?._id)}
                                 onReaction={handleReaction}
                                 isLoading={isLoadingReactArticle}
                                 onSelect={handleSelectArticle}
                                 onEdit={handleOpenUpdateForm}
                                 onDelete={handleDelete}
-                                bookmark={bookmarksMap.get(feed._id)}
+                                bookmark={bookmarksMap.get(feed?._id)}
                                 onBookmark={bookmarkArticle}
                             />
                         )
