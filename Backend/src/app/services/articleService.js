@@ -1111,15 +1111,15 @@ export const getActivityReplyComment = async (user) => {
     const activities = await ActivityLog.aggregate([
         {
             $match: {
-                'data.owner_id': user._id, // Comments owned by current user
+                'data.owner_id': user._id,
                 type_id: commentReplyType._id,
-                user_id: { $ne: user._id }, // Exclude user's own replies
+                user_id: { $ne: user._id },
             },
         },
         {
             $lookup: {
                 from: 'users',
-                localField: 'user_id', // The user who replied
+                localField: 'user_id',
                 foreignField: '_id',
                 as: 'user',
                 pipeline: [
@@ -1227,15 +1227,15 @@ export const getActivityComment = async (user) => {
     const activities = await ActivityLog.aggregate([
         {
             $match: {
-                'data.owner_id': user._id, // Articles owned by current user
+                'data.owner_id': user._id,
                 type_id: commentType._id,
-                user_id: { $ne: user._id }, // Exclude user's own comments
+                user_id: { $ne: user._id },
             },
         },
         {
             $lookup: {
                 from: 'users',
-                localField: 'user_id', // The user who commented
+                localField: 'user_id',
                 foreignField: '_id',
                 as: 'user',
                 pipeline: [

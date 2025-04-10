@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { updateProjectBackground } from 'api/project'
 import resizeBackground from 'utils/files/resizeBackground'
+import { postProjectDetailsActivitiesBackground } from 'api/activity'
 
 const Background = () => {
     const dispatch = useDispatch()
@@ -42,6 +43,7 @@ const Background = () => {
         const formData = new FormData()
         formData.append('background', bgFile)
         dispatch(updateProjectBackground(id, formData))
+        dispatch(postProjectDetailsActivitiesBackground(id))
     }
 
     return (
