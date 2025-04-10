@@ -11,6 +11,7 @@ import SelectCustom from 'components/UI/SelectCustom'
 import InputCustom from 'components/UI/InputCustom'
 import { CURRENCY, FUNDING_SOURCES } from 'utils/constants'
 import { updateProjectFundingSources } from 'api/project'
+import { postProjectDetailsActivitiesFundingSource } from 'api/activity'
 const currencyFramework = createListCollection({
     items: CURRENCY['EN'],
 })
@@ -88,6 +89,15 @@ const EditFundingSources = () => {
     const handleSaveChanges = () => {
         dispatch(
             updateProjectFundingSources(id, {
+                funding_sources: formData.map((item) => ({
+                    name: item.name[0],
+                    amount: item.amount,
+                    currency: item.currency[0],
+                })),
+            })
+        )
+        dispatch(
+            postProjectDetailsActivitiesFundingSource(id, {
                 funding_sources: formData.map((item) => ({
                     name: item.name[0],
                     amount: item.amount,
