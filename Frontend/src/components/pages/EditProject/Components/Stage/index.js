@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom'
 import { getMyProjectDetails, updateProjectSector } from 'api/project'
 import { getIndustryFramework, getStageFramework } from 'api/user'
 import { toaster } from 'components/UI/toaster'
+import { postProjectDetailsActivitiesSector } from 'api/activity'
 
 const EditStage = () => {
     const dispatch = useDispatch()
@@ -73,9 +74,15 @@ const EditStage = () => {
             setFormData({ ...formData, [nameSelect]: event.value })
         }
     }
-    const handleSaveChanges = () => {
-        dispatch(
+    const handleSaveChanges = async () => {
+        await dispatch(
             updateProjectSector(id, {
+                industries: formData.industries,
+                stage: formData.stage[0],
+            })
+        )
+        await dispatch(
+            postProjectDetailsActivitiesSector(id, {
                 industries: formData.industries,
                 stage: formData.stage[0],
             })

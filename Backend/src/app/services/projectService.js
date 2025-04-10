@@ -8,6 +8,14 @@ import {
     PROJECT_INVITATION_NOTIFICATION,
     PROJECT_LOGO_PATH,
     PROJECT_BACKGROUND_PATH,
+    PROJECT_ACTIVITY,
+    PROJECT_ACTIVITY_BASIC,
+    PROJECT_ACTIVITY_SECTOR,
+    PROJECT_ACTIVITY_REVENUE,
+    PROJECT_ACTIVITY_FUNDING,
+    PROJECT_ACTIVITY_LOGO,
+    PROJECT_ACTIVITY_BACKGROUND,
+    PROJECT_ACTIVITY_ADDITIONAL,
 } from '@/configs'
 import {
     Project,
@@ -1538,4 +1546,376 @@ export async function inviteMember(user, projectId, requestBody, io) {
             console.error('Error sending notification:', err)
         }
     })
+}
+
+// ========== GET [My Projects - All Activities] ========== //
+export async function getAllActivities(user, projectId) {
+    const project = await Project.findOne(new ObjectId(projectId))
+    const activityTypes = [
+        { name: PROJECT_ACTIVITY_BASIC, key: 'basic' },
+        { name: PROJECT_ACTIVITY_SECTOR, key: 'sector' },
+        { name: PROJECT_ACTIVITY_REVENUE, key: 'revenue' },
+        { name: PROJECT_ACTIVITY_FUNDING, key: 'funding' },
+        { name: PROJECT_ACTIVITY_ADDITIONAL, key: 'additional' },
+        { name: PROJECT_ACTIVITY_LOGO, key: 'logo' },
+        { name: PROJECT_ACTIVITY_BACKGROUND, key: 'background' },
+    ]
+
+    const activities = {}
+
+    for (const activityType of activityTypes) {
+        const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: activityType.name })
+        const activityLogs = await ActivityLog.aggregate([
+            {
+                $match: {
+                    user_id: user._id,
+                    type_id: typeNotification._id,
+                    'data.project_id': project._id,
+                },
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'user_id',
+                    foreignField: '_id',
+                    as: 'user',
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 0,
+                                name: 1,
+                                avatar: {
+                                    $cond: {
+                                        if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                        then: '$avatar',
+                                        else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                    },
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+            { $unwind: '$user' },
+            {
+                $lookup: {
+                    from: 'types',
+                    localField: 'type_id',
+                    foreignField: '_id',
+                    as: 'type',
+                    pipeline: [{ $project: { _id: 0, class: 1, name: 1 } }],
+                },
+            },
+            { $unwind: '$type' },
+            {
+                $lookup: {
+                    from: 'projects',
+                    localField: 'data.project_id',
+                    foreignField: '_id',
+                    as: 'data.project',
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 0,
+                                name: 1,
+                                logo: {
+                                    $cond: {
+                                        if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
+                                        then: '$logo',
+                                        else: { $concat: [LINK_STATIC_URL, '$logo'] },
+                                    },
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+            { $unwind: '$data.project' },
+            {
+                $project: {
+                    _id: 1,
+                    user: 1,
+                    type: 1,
+                    data: {
+                        project: 1,
+                    },
+                    timestamp: 1,
+                    metadata: 1,
+                },
+            },
+            { $sort: { timestamp: -1 } },
+            { $limit: 10 },
+        ])
+
+        activities[activityType.key] = activityLogs
+    }
+
+    return activities
+}
+
+// ========== GET [Project - Activity Basic] ========== //
+export async function getBasicActivity(user, projectId) {
+    const project = await Project.findOne(new ObjectId(projectId))
+    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_BASIC })
+    const activities = await ActivityLog.aggregate([
+        {
+            $match: {
+                user_id: user._id,
+                type_id: typeNotification._id,
+                'data.project_id': project._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '$avatar',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $lookup: {
+                from: 'types',
+                localField: 'type_id',
+                foreignField: '_id',
+                as: 'type',
+                pipeline: [{ $project: { _id: 0, class: 1, name: 1 } }],
+            },
+        },
+        {
+            $unwind: '$type',
+        },
+        {
+            $lookup: {
+                from: 'projects',
+                localField: 'data.project_id',
+                foreignField: '_id',
+                as: 'data.project',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                            logo: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
+                                    then: '$logo',
+                                    else: { $concat: [LINK_STATIC_URL, '$logo'] },
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$data.project',
+        },
+        {
+            $project: {
+                _id: 1,
+                user: 1,
+                type: 1,
+                data: {
+                    project: 1,
+                },
+                timestamp: 1,
+                metadata: 1,
+            },
+        },
+        {
+            $sort: { timestamp: -1 },
+        },
+        {
+            $limit: 10,
+        },
+    ])
+    return activities
+}
+
+// ========== POST [Project - Activity Basic] ========== //
+export async function updateBasicActivity(user, projectId) {
+    const project = await Project.findOne(new ObjectId(projectId))
+    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_BASIC })
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        'data.project_id': project._id,
+        type_id: typeNotification._id,
+    })
+    if (oldActivity) {
+        // Update timestamp
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        // Create new activity
+        const activity = new ActivityLog({
+            user_id: user._id,
+            type_id: typeNotification._id,
+            data: { project_id: project._id },
+            metadata: {},
+        })
+        await activity.save()
+    }
+}
+// ========== POST [Project - Activity Sector] ========== //
+export async function updateSectorActivity(user, projectId) {
+    const project = await Project.findOne(new ObjectId(projectId))
+    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_SECTOR })
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        'data.project_id': project._id,
+        type_id: typeNotification._id,
+    })
+    if (oldActivity) {
+        // Update timestamp
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        // Create new activity
+        const activity = new ActivityLog({
+            user_id: user._id,
+            type_id: typeNotification._id,
+            data: { project_id: project._id },
+            metadata: {},
+        })
+        await activity.save()
+    }
+}
+// ========== POST [Project - Activity Revenue] ========== //
+export async function updateRevenueActivity(user, projectId) {
+    const project = await Project.findOne(new ObjectId(projectId))
+    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_REVENUE })
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        'data.project_id': project._id,
+        type_id: typeNotification._id,
+    })
+    if (oldActivity) {
+        // Update timestamp
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        // Create new activity
+        const activity = new ActivityLog({
+            user_id: user._id,
+            type_id: typeNotification._id,
+            data: { project_id: project._id },
+            metadata: {},
+        })
+        await activity.save()
+    }
+}
+// ========== POST [Project - Activity FundingSource] ========== //
+export async function updateFundingSourceActivity(user, projectId) {
+    const project = await Project.findOne(new ObjectId(projectId))
+    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_FUNDING })
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        'data.project_id': project._id,
+        type_id: typeNotification._id,
+    })
+    if (oldActivity) {
+        // Update timestamp
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        // Create new activity
+        const activity = new ActivityLog({
+            user_id: user._id,
+            type_id: typeNotification._id,
+            data: { project_id: project._id },
+            metadata: {},
+        })
+        await activity.save()
+    }
+}
+// ========== POST [Project - Activity AdditionalInfo] ========== //
+export async function updateAdditionalInfoActivity(user, projectId) {
+    const project = await Project.findOne(new ObjectId(projectId))
+    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_ADDITIONAL })
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        'data.project_id': project._id,
+        type_id: typeNotification._id,
+    })
+    if (oldActivity) {
+        // Update timestamp
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        // Create new activity
+        const activity = new ActivityLog({
+            user_id: user._id,
+            type_id: typeNotification._id,
+            data: { project_id: project._id },
+            metadata: {},
+        })
+        await activity.save()
+    }
+}
+// ========== POST [Project - Activity Logo] ========== //
+export async function updateLogoActivity(user, projectId) {
+    const project = await Project.findOne(new ObjectId(projectId))
+    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_LOGO })
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        'data.project_id': project._id,
+        type_id: typeNotification._id,
+    })
+    if (oldActivity) {
+        // Update timestamp
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        // Create new activity
+        const activity = new ActivityLog({
+            user_id: user._id,
+            type_id: typeNotification._id,
+            data: { project_id: project._id },
+            metadata: {},
+        })
+        await activity.save()
+    }
+}
+// ========== POST [Project - Activity Background] ========== //
+export async function updateBackgroundActivity(user, projectId) {
+    const project = await Project.findOne(new ObjectId(projectId))
+    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_BACKGROUND })
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        'data.project_id': project._id,
+        type_id: typeNotification._id,
+    })
+    if (oldActivity) {
+        // Update timestamp
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+    } else {
+        // Create new activity
+        const activity = new ActivityLog({
+            user_id: user._id,
+            type_id: typeNotification._id,
+            data: { project_id: project._id },
+            metadata: {},
+        })
+        await activity.save()
+    }
 }

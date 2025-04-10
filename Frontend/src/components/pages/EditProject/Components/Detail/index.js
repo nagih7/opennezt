@@ -8,6 +8,7 @@ import InputCustom from 'components/UI/InputCustom'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
 import { getMyProjectDetails, updateProjectBasic } from 'api/project'
 import { useParams } from 'react-router-dom'
+import { postProjectDetailsActivitiesBasic } from 'api/activity'
 
 const EditDetail = () => {
     const dispatch = useDispatch()
@@ -58,6 +59,7 @@ const EditDetail = () => {
                 description: formData.description,
             })
         )
+        dispatch(postProjectDetailsActivitiesBasic(id, formData))
     }
     // ========== COMPONENT RENDER ========== //
     return (

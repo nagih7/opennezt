@@ -77,6 +77,38 @@ import {
     requestDeleteReactionArticleActivity,
     deleteReactionArticleActivitySuccess,
     deleteReactionArticleActivityFail,
+    // ========== GET PROJECT DETAILS ACTIVITIES ========== //
+    requestGetProjectDetailsActivity,
+    getProjectDetailsActivitySuccess,
+    getProjectDetailsActivityFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ BASIC ] ========== //
+    requestPostProjectDetailsActivityBasic,
+    postProjectDetailsActivityBasicSuccess,
+    postProjectDetailsActivityBasicFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ SECTOR ] ========== //
+    requestPostProjectDetailsActivitySector,
+    postProjectDetailsActivitySectorSuccess,
+    postProjectDetailsActivitySectorFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ REVENUE ] ========== //
+    requestPostProjectDetailsActivityRevenue,
+    postProjectDetailsActivityRevenueSuccess,
+    postProjectDetailsActivityRevenueFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ FUNDING SOURCE ] ========== //
+    requestPostProjectDetailsActivityFunding,
+    postProjectDetailsActivityFundingSuccess,
+    postProjectDetailsActivityFundingFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ ADDITIONAL INFO ] ========== //
+    requestPostProjectDetailsActivityAdditional,
+    postProjectDetailsActivityAdditionalSuccess,
+    postProjectDetailsActivityAdditionalFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ LOGO ] ========== //
+    requestPostProjectDetailsActivityLogo,
+    postProjectDetailsActivityLogoSuccess,
+    postProjectDetailsActivityLogoFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ BACKGROUND ] ========== //
+    requestPostProjectDetailsActivityBackground,
+    postProjectDetailsActivityBackgroundSuccess,
+    postProjectDetailsActivityBackgroundFail,
 } from 'states/modules/activity'
 
 // ========== PROJECT ACCESS ========== //
@@ -326,6 +358,127 @@ export const deleteActivityReactionArticle = (avitityId) => async (dispatch, get
             deleteReactionArticleActivityFail,
         ],
         variables: {},
+        dispatch,
+        getState,
+    })
+}
+
+// ========== GET PROJECT DETAILS ACTIVITIES ========== //
+export const getProjectDetailsActivities = (projectId) => async (dispatch, getState) => {
+    return callApi({
+        method: 'get',
+        apiPath: `projects/me/${projectId}/activities`,
+        actionTypes: [
+            requestGetProjectDetailsActivity,
+            getProjectDetailsActivitySuccess,
+            getProjectDetailsActivityFail,
+        ],
+        variables: {},
+        dispatch,
+        getState,
+    })
+}
+// ========== POST PROJECT DETAILS ACTIVITIES [ BASIC ] ========== //
+export const postProjectDetailsActivitiesBasic = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `projects/me/${projectId}/basic/activity`,
+        actionTypes: [
+            requestPostProjectDetailsActivityBasic,
+            postProjectDetailsActivityBasicSuccess,
+            postProjectDetailsActivityBasicFail,
+        ],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+// ========== POST PROJECT DETAILS ACTIVITIES [ SECTOR ] ========== //
+export const postProjectDetailsActivitiesSector = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `projects/me/${projectId}/sector/activity`,
+        actionTypes: [
+            requestPostProjectDetailsActivitySector,
+            postProjectDetailsActivitySectorSuccess,
+            postProjectDetailsActivitySectorFail,
+        ],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+// ========== POST PROJECT DETAILS ACTIVITIES [ REVENUE ] ========== //
+export const postProjectDetailsActivitiesRevenue = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `projects/me/${projectId}/revenues/activity`,
+        actionTypes: [
+            requestPostProjectDetailsActivityRevenue,
+            postProjectDetailsActivityRevenueSuccess,
+            postProjectDetailsActivityRevenueFail,
+        ],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+// ========== POST PROJECT DETAILS ACTIVITIES [ FUNDING SOURCE ] ========== //
+export const postProjectDetailsActivitiesFundingSource = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `projects/me/${projectId}/funding-sources/activity`,
+        actionTypes: [
+            requestPostProjectDetailsActivityFunding,
+            postProjectDetailsActivityFundingSuccess,
+            postProjectDetailsActivityFundingFail,
+        ],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+// ========== POST PROJECT DETAILS ACTIVITIES [ ADDITIONAL INFO ] ========== //
+export const postProjectDetailsActivitiesAdditionalInfo = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `projects/me/${projectId}/additional-infos/activity`,
+        actionTypes: [
+            requestPostProjectDetailsActivityAdditional,
+            postProjectDetailsActivityAdditionalSuccess,
+            postProjectDetailsActivityAdditionalFail,
+        ],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+// ========== POST PROJECT DETAILS ACTIVITIES [ LOGO ] ========== //
+export const postProjectDetailsActivitiesLogo = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `projects/me/${projectId}/logo/activity`,
+        actionTypes: [
+            requestPostProjectDetailsActivityLogo,
+            postProjectDetailsActivityLogoSuccess,
+            postProjectDetailsActivityLogoFail,
+        ],
+        variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+// ========== POST PROJECT DETAILS ACTIVITIES [ BACKGROUND ] ========== //
+export const postProjectDetailsActivitiesBackground = (projectId, formRequest) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `projects/me/${projectId}/background/activity`,
+        actionTypes: [
+            requestPostProjectDetailsActivityBackground,
+            postProjectDetailsActivityBackgroundSuccess,
+            postProjectDetailsActivityBackgroundFail,
+        ],
+        variables: formRequest,
         dispatch,
         getState,
     })
