@@ -28,20 +28,20 @@
 	}
 
 	.mainWrapWithConditionSideBarClose {
-		width: calc(100% - 64px);
-		margin-left: 64px;
+		// width: calc(100% - 64px);
+		// margin-left: 64px;
 	}
 
 	@media only screen and (max-width: 1024px) {
 		.mainWrap {
-			width: calc(100% - 64px);
-			margin-left: 64px;
+			// width: calc(100% - 64px);
+			// margin-left: 64px;
 			transition: all 0.5s;
 			height: 100vh;
 		}
 		.mainWrapWithConditionSideBarClose {
-			width: calc(100% - 64px);
-			margin-left: 64px;
+			// width: calc(100% - 64px);
+			// margin-left: 64px;
 		}
 	}
 }

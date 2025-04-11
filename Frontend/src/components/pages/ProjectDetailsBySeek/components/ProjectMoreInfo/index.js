@@ -1,6 +1,7 @@
 import { Alert, Blockquote, Button, CloseButton, Dialog, Image, Portal, Stack } from '@chakra-ui/react'
 import { applyToJoinProject } from 'api/project'
 import { getProjectRoleFramework } from 'api/user'
+import ChatBotIframe from 'components/common/ChatBotIframe'
 import {
     IconlyIndustry,
     IconlyInfoSquare,
@@ -30,6 +31,7 @@ const ProjectMoreInfo = () => {
         role: '',
     })
     const [imageError, setImageError] = useState(false)
+    const [isOpenChatBotIframe, setIsOpenChatBotIframe] = useState(false)
 
     // ========== HANDLE FUNCTION ========== //
     const handleOpenModalConfirmApply = () => {
@@ -42,7 +44,8 @@ const ProjectMoreInfo = () => {
     }
 
     const handleConfirmApply = () => {
-        dispatch(applyToJoinProject(projectDetails._id, formRequest))
+        // dispatch(applyToJoinProject(projectDetails._id, formRequest))
+        setIsOpenChatBotIframe(true)
     }
 
     const handleChangeFormRequest = (e, name) => {
@@ -194,6 +197,28 @@ const ProjectMoreInfo = () => {
                                     CONFIRM
                                 </Button>
                             </Dialog.Footer>
+                            <Dialog.CloseTrigger asChild>
+                                <CloseButton size="sm" onClick={handleCloseModalConfirmApply} />
+                            </Dialog.CloseTrigger>
+                        </Dialog.Content>
+                    </Dialog.Positioner>
+                </Portal>
+            </Dialog.Root>
+            <Dialog.Root
+                size="cover"
+                open={isOpenChatBotIframe}
+                onOpenChange={(e) => setIsOpenChatBotIframe(e.open)}
+                motionPreset="slide-in-bottom"
+                footer={false}
+            >
+                <Portal>
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                        <Dialog.Content>
+                            <Dialog.Header></Dialog.Header>
+                            <Dialog.Body>
+                                <ChatBotIframe />
+                            </Dialog.Body>
                             <Dialog.CloseTrigger asChild>
                                 <CloseButton size="sm" onClick={handleCloseModalConfirmApply} />
                             </Dialog.CloseTrigger>
