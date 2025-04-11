@@ -43,12 +43,10 @@ function AppLayout(props) {
                             !isShowSideBar ? styles.mainWrapWithConditionSideBarClose : ''
                         }, h-full `}
                     >
-                        <div className='lg:block hidden'>
-                            <SideBar
-                            // isThemeLight={isThemeLight}
-                            // isShowSideBar={isShowSideBar}
-                            />
-                        </div>
+                        <SideBar
+                        // isThemeLight={isThemeLight}
+                        // isShowSideBar={isShowSideBar}
+                        />
                         <div className="flex justify-center flex-1 w-full h-full max-h-full ">
                             <main className={`${styles.mainContentWrap} w-full flex flex-col  items-center`}>
                                 <LazyLoading>{children}</LazyLoading>
