@@ -52,6 +52,12 @@ const getActivityMessage = (activity) => {
                     you has updated <b>background</b> of project <b>{projectName}</b>
                 </div>
             )
+        case 'project_activity_requirement':
+            return (
+                <div>
+                    you has updated <b>project requirement</b> of project <b>{projectName}</b>
+                </div>
+            )
         default:
             return (
                 <div>
