@@ -26,7 +26,7 @@ function PopoverProfile() {
     return (
         <Stack className="bg-[#ffffff] rounded-md gap-0" direction={'column'} spacing={0}>
             <Stack className="mx-2 p-[16px] border-b border-gray-200 text-md font-bold ">
-                <div className={styles.name}>{authUser.name}</div>
+                <div className={styles.name}>{authUser?.name}</div>
             </Stack>
             <Stack
                 direction={'row'}

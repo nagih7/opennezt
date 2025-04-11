@@ -156,8 +156,8 @@ const Header = () => {
                             <Popover.Trigger asChild>
                                 <span>
                                     <Avatar.Root size={'md'}>
-                                        <Avatar.Fallback name={authUser.name} />
-                                        <Avatar.Image src={authUser.avatar} />
+                                        <Avatar.Fallback name={authUser?.name} />
+                                        <Avatar.Image src={authUser?.avatar} />
                                     </Avatar.Root>
                                 </span>
                             </Popover.Trigger>

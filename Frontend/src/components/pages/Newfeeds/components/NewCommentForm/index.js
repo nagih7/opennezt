@@ -108,7 +108,7 @@ const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrRepl
                 <div className="flex items-center p-3">
                     <div className="w-8 h-8">
                         {authUser?.avatar ? (
-                            <img src={authUser.avatar} className="w-8 h-8 rounded-full" />
+                            <img src={authUser?.avatar} className="w-8 h-8 rounded-full" />
                         ) : (
                             <img src={avt} className="w-8 h-8 rounded-full" />
                         )}
@@ -128,7 +128,7 @@ const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrRepl
                                                 <span className="text-xl">×</span>
                                             </button>
                                             <div className="text-xs text-blue-500 font-medium mb-1">
-                                                Replying to {selectedComment.user[0].name}
+                                                Replying to {selectedComment.user[0]?.name}
                                             </div>
                                             <p className="text-sm text-gray-600 pr-8 line-clamp-2">
                                                 {selectedComment.content.caption}
