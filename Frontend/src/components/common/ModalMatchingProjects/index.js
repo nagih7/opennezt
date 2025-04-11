@@ -1,14 +1,27 @@
 import { Badge, Button, Dialog, FormatNumber, HStack, Portal, Stack, Stat } from '@chakra-ui/react'
+import { accessToProject } from 'api/activity'
 import ProjectGrid from 'components/pages/SeekProjects/components/ListProjects/ProjectGrid'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { setOpenModalMatchingProjects } from 'states/modules/artificialIntelligence'
 
 const ModalMatchingProjects = () => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     // ========== STATE FROM REDUX ========== //
     const { projects, isOpenModalMatchingProjects } = useSelector((state) => state.artificialIntelligence)
     // console.log('projects', projects)
+
+    // ========== HANDLER ========== //
+    const handleViewProjectDetails = useCallback(
+        (project) => {
+            dispatch(accessToProject(project._id))
+            navigate(`/projects/${project._id}/details`)
+            dispatch(setOpenModalMatchingProjects(false))
+        },
+        [dispatch, navigate]
+    )
 
     // ========== RENDER ========== //
     return (
@@ -33,7 +46,10 @@ const ModalMatchingProjects = () => {
                                             className="flex flex-row w-full p-4 bg-white rounded-lg shadow-md "
                                         >
                                             <div className="flex-1 pr-4 border-r-2 border-gray-200">
-                                                <ProjectGrid project={project} handleViewProjectDetails={() => {}} />
+                                                <ProjectGrid
+                                                    project={project}
+                                                    handleViewProjectDetails={() => handleViewProjectDetails(project)}
+                                                />
                                             </div>
                                             <Stack className="flex items-center justify-center w-1/4 p-4">
                                                 <Stat.Root className="flex flex-col items-center justify-center w-full">

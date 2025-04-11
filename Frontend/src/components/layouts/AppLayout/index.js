@@ -7,6 +7,7 @@ import LazyLoading from 'components/UI/LazyLoading'
 import { RealtimeProvider } from 'context/RealtimeContext'
 import { useNavigate } from 'react-router-dom'
 import { setLocation } from 'states/modules/app'
+import { AppProvider } from 'context/AppContext'
 // import { SkeletonTheme } from "react-loading-skeleton";
 
 function AppLayout(props) {
@@ -33,30 +34,32 @@ function AppLayout(props) {
     }, [location, navigate, dispatch])
 
     return (
-        <RealtimeProvider>
-            <div className={`${styles.boxMainLayout}`}>
-                <div className={styles.mainLayoutWrap}>
-                    <Header />
-                    <div
-                        style={{ display: 'flex' }}
-                        className={`${styles.mainWrap} ${
-                            !isShowSideBar ? styles.mainWrapWithConditionSideBarClose : ''
-                        }, h-full `}
-                    >
-                        <SideBar
-                        // isThemeLight={isThemeLight}
-                        // isShowSideBar={isShowSideBar}
-                        />
-                        <div className="flex justify-center flex-1 w-full h-full max-h-full ">
-                            <main className={`${styles.mainContentWrap} w-full flex flex-col  items-center`}>
-                                <LazyLoading>{children}</LazyLoading>
-                                {/* <Footer /> */}
-                            </main>
+        <AppProvider>
+            <RealtimeProvider>
+                <div className={`${styles.boxMainLayout}`}>
+                    <div className={styles.mainLayoutWrap}>
+                        <Header />
+                        <div
+                            style={{ display: 'flex' }}
+                            className={`${styles.mainWrap} ${
+                                !isShowSideBar ? styles.mainWrapWithConditionSideBarClose : ''
+                            }, h-full `}
+                        >
+                            <SideBar
+                            // isThemeLight={isThemeLight}
+                            // isShowSideBar={isShowSideBar}
+                            />
+                            <div className="flex justify-center flex-1 w-full h-full max-h-full ">
+                                <main className={`${styles.mainContentWrap} w-full flex flex-col  items-center`}>
+                                    <LazyLoading>{children}</LazyLoading>
+                                    {/* <Footer /> */}
+                                </main>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </RealtimeProvider>
+            </RealtimeProvider>
+        </AppProvider>
     )
 }
 
