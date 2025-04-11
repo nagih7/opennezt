@@ -1,5 +1,5 @@
-import {LINK_RESET_PASSWORD_URL, LINK_VERIFY_EMAIL_URL, TOKEN_TYPE, APP_URL_CLIENT} from '@/configs'
-import {abort, generateToken, getToken} from '@/utils/helpers'
+import { LINK_RESET_PASSWORD_URL, LINK_VERIFY_EMAIL_URL, TOKEN_TYPE, APP_URL_CLIENT } from '@/configs'
+import { abort, generateToken, getToken } from '@/utils/helpers'
 import * as authService from '../services/authService'
 import * as userService from '../services/userService'
 
@@ -64,7 +64,7 @@ export async function changePassword(req, res) {
 }
 
 export async function forgotPassword(req, res) {
-    const token = generateToken({user_id: req.currentUser._id}, TOKEN_TYPE.FORGOT_PASSWORD, 600)
+    const token = generateToken({ user_id: req.currentUser._id }, TOKEN_TYPE.FORGOT_PASSWORD, 600)
     await res.sendMail(req.currentUser.email, 'Forgot password', 'emails/forgot-password', {
         name: req.currentUser.name,
         linkResetPassword: `${LINK_RESET_PASSWORD_URL}?token=${encodeURIComponent(token)}`,
@@ -74,7 +74,7 @@ export async function forgotPassword(req, res) {
 
 export async function requestResetPassword(req, res) {
     if (req.currentUser) {
-        await res.render('forms/reset-password', {token: req.params.token, email: req.currentUser.email})
+        await res.render('forms/reset-password', { token: req.params.token, email: req.currentUser.email })
     } else {
         abort(403, 'Token is invalid.')
     }
@@ -91,9 +91,27 @@ export async function loginWithLinkedIn(req, res) {
     const url = await authService.loginWithLinkedIn(req)
     res.redirect(url)
 }
+export async function loginWithGoogle(req, res) {
+    const url = await authService.loginWithGoogle(req)
+    res.redirect(url)
+}
 
 export async function loginWithLinkedInCallback(req, res) {
     const result = await authService.loginWithLinkedInCallback(req.query.code)
-    const accessToken = authService.authToken(result).access_token
-    res.redirect(`${APP_URL_CLIENT}/login?access_token=${accessToken}`)
+    if (result) {
+        const accessToken = authService.authToken(result).access_token
+        res.redirect(`${APP_URL_CLIENT}/login?access_token=${accessToken}`)
+    } else {
+        res.redirect(`${APP_URL_CLIENT}/login`)
+    }
+}
+
+export async function loginWithGoogleCallback(req, res) {
+    const result = await authService.loginWithGoogleCallback(req.query)
+    if (result) {
+        const accessToken = authService.authToken(result).access_token
+        res.redirect(`${APP_URL_CLIENT}/login?access_token=${accessToken}`)
+    } else {
+        res.redirect(`${APP_URL_CLIENT}/login`)
+    }
 }

@@ -37,15 +37,15 @@ const ReplyComment = ({ reply, reaction, handleReactionReplyComment, selectComme
         <div className="mb-3">
             <div className="flex items-center gap-2">
                 <div className="w-[32px] h-[32px]">
-                    {userData.avatar ? (
-                        <img src={userData.avatar} className="rounded-full w-full h-full" />
+                    {userData?.avatar ? (
+                        <img src={userData?.avatar} className="rounded-full w-full h-full" />
                     ) : (
                         <img src={avt} className="rounded-full w-full h-full" />
                     )}
                 </div>
                 <div className="flex items-center">
                     <a className="flex items-center gap-1 text-sm font-medium no-underline text-black">
-                        <span className="hover:text-[#3897f0]">{userData.name}</span>
+                        <span className="hover:text-[#3897f0]">{userData?.name}</span>
                         {userData.verified && <CheckCircleFilled className="text-[#3897f0] w-[12px] h-[12px]" />}
                     </a>
                     <div className="pl-3">

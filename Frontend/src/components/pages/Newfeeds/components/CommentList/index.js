@@ -58,7 +58,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
         if (comment.length === 0 && hasMore === true) {
             dispatch(
                 handleGetListComment({
-                    articleId: feed._id,
+                    articleId: feed?._id,
                     page: 1,
                     limit: limit,
                 })
@@ -163,7 +163,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                         const first = entries[0]
                         if (first.isIntersecting && hasMore && !isLoadingRef.current) {
                             setDataFilter({
-                                articleId: feed._id,
+                                articleId: feed?._id,
                                 page: pageRef.current,
                                 limit: limit,
                             })
@@ -183,7 +183,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
     useEffect(() => {
         if (onetimecomments.length > 0) {
             // Lấy tất cả article IDs
-            const commentIds = onetimecomments.filter((comment) => comment._id).map((comment) => comment._id)
+            const commentIds = onetimecomments.filter((comment) => comment?._id).map((comment) => comment?._id)
 
             // Gọi API một lần với array của IDs
             if (commentIds.length > 0) {
@@ -223,7 +223,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                 }
                 const newFormData = new FormData()
                 newFormData.append('article_id', formData.article_id)
-                newFormData.append('comment_id', selectedComment._id)
+                newFormData.append('comment_id', selectedComment?._id)
                 newFormData.append('caption', formData.content.caption)
                 newFormData.append('image', formData.content.image)
                 await store.dispatch(handleReplyComment({ data: newFormData }))
@@ -271,7 +271,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
 
                 // Lọc ra những comments mới để tránh trùng lặp
                 const newReplies = replyComments.filter(
-                    (newReply) => !existingReplies.some((existing) => existing._id === newReply._id)
+                    (newReply) => !existingReplies.some((existing) => existing?._id === newReply?._id)
                 )
 
                 return {
@@ -289,27 +289,27 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
         limit: 3,
         page: 1,
         hasMore: true,
-        article_id: feed._id,
+        article_id: feed?._id,
         parent_id: '',
     })
 
     const getParentId = useCallback(
         (comment) => {
-            if (comment._id && replyCommentList[comment._id]) {
-                if (replyCommentList[comment._id].pagination.hasMore === true) {
+            if (comment?._id && replyCommentList[comment?._id]) {
+                if (replyCommentList[comment?._id].pagination.hasMore === true) {
                     setReplyDataFilter((prev) => ({
                         ...prev,
-                        parent_id: comment._id,
-                        limit: replyCommentList[comment._id].pagination?.limit || 3,
-                        hasMore: replyCommentList[comment._id].pagination?.hasMore ?? true,
-                        page: replyCommentList[comment._id].pagination?.page || 1,
+                        parent_id: comment?._id,
+                        limit: replyCommentList[comment?._id].pagination?.limit || 3,
+                        hasMore: replyCommentList[comment?._id].pagination?.hasMore ?? true,
+                        page: replyCommentList[comment?._id].pagination?.page || 1,
                     }))
                 }
             } else {
                 // Nếu comment là comment gốc hoặc chưa có trong replyCommentList
                 setReplyDataFilter((prev) => ({
                     ...prev,
-                    parent_id: comment._id,
+                    parent_id: comment?._id,
                     limit: 3,
                     hasMore: true,
                     page: 1,
@@ -343,7 +343,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
 
     useEffect(() => {
         if (replyComments.length > 0) {
-            const replyCommentIds = replyComments.filter((replyCmt) => replyCmt._id).map((replyCmt) => replyCmt._id)
+            const replyCommentIds = replyComments.filter((replyCmt) => replyCmt?._id).map((replyCmt) => replyCmt?._id)
 
             if (replyCommentIds.length > 0) {
                 dispatch(handleGetUserReplyCommentReactions(replyCommentIds))
@@ -364,11 +364,11 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
     const updateReplyCommentReactions = useCallback(
         (reply, type) => {
             const replyCommentIndex = replyCommentList[reply.parent_id]?.replyComments.findIndex(
-                (replyCmt) => replyCmt._id.toString() === reply._id.toString()
+                (replyCmt) => replyCmt?._id.toString() === reply?._id.toString()
             )
 
             const existingReactionIndex = replyCommentReactions.findIndex(
-                (reaction) => reaction.target_id.toString() === reply._id.toString()
+                (reaction) => reaction.target_id.toString() === reply?._id.toString()
             )
 
             if (existingReactionIndex !== -1) {
@@ -412,7 +412,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                 setReplyCommentReactions((prevReactions) => [
                     ...prevReactions,
                     {
-                        target_id: reply._id,
+                        target_id: reply?._id,
                         type: type,
                     },
                 ])
@@ -442,7 +442,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
     const handleReactionReplyComment = useCallback(
         async (reply, formData) => {
             const type = await formData.get('type')
-            await store.dispatch(handleReactComment({ commentId: reply._id, data: formData }))
+            await store.dispatch(handleReactComment({ commentId: reply?._id, data: formData }))
             updateReplyCommentReactions(reply, type)
         },
         [updateReplyCommentReactions]
@@ -458,9 +458,9 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
             <div className="flex flex-col bg-[#ffffff] w-[50vw] max-h-[85vh] mb-8 rounded-md relative z-10">
                 <div className="flex items-center w-full p-[10px] justify-center rounded-md border-[1px] border-gray-200 gap-3">
                     {feed.parent_id ? (
-                        <span className="text-lg">{`${feed.user[0].name}'s share post`}</span>
+                        <span className="text-lg">{`${feed.user[0]?.name}'s share post`}</span>
                     ) : (
-                        <span className="text-lg font-semibold">{`${feed.user[0].name}'s post`}</span>
+                        <span className="text-lg font-semibold">{`${feed.user[0]?.name}'s post`}</span>
                     )}
                 </div>
                 {/* Add a scrollable container for the content */}
@@ -492,7 +492,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                         <div className="flex justify-between items-center w-full">
                             <div className="flex flex-col gap-2 w-9/12 text-base font-medium">
                                 <div className="flex items-center gap-2">
-                                    {user[0].name}
+                                    {user[0]?.name}
                                     <CheckCircleFilled className="text-[#3897f0]" />
                                     <span className="text-sm">posted in</span>
                                     <span className="">{project[0]?.name || 'no name'}</span>
@@ -561,15 +561,15 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                             if (index === comment.length - 1) {
                                 return (
                                     <Comment
-                                        key={cmt._id}
+                                        key={cmt?._id}
                                         comment={cmt}
                                         ref={lastElementRef}
-                                        reaction={reactionMap.get(cmt._id)}
+                                        reaction={reactionMap.get(cmt?._id)}
                                         replyReactionMap={replyReactionMap}
                                         onCommentReaction={handleCommentReaction}
                                         isLoading={isLoadingReactComment}
                                         setParentId={getParentId}
-                                        replyCommentList={replyCommentList[cmt._id]}
+                                        replyCommentList={replyCommentList[cmt?._id]}
                                         handleClickReply={handleClickReply}
                                         selectComment={selectComment}
                                         handleReactionReplyComment={handleReactionReplyComment}
@@ -578,14 +578,14 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                             }
                             return (
                                 <Comment
-                                    key={cmt._id}
+                                    key={cmt?._id}
                                     comment={cmt}
-                                    reaction={reactionMap.get(cmt._id)}
+                                    reaction={reactionMap.get(cmt?._id)}
                                     replyReactionMap={replyReactionMap}
                                     onCommentReaction={handleCommentReaction}
                                     isLoading={isLoadingReactComment}
                                     setParentId={getParentId}
-                                    replyCommentList={replyCommentList[cmt._id]}
+                                    replyCommentList={replyCommentList[cmt?._id]}
                                     handleClickReply={handleClickReply}
                                     selectComment={selectComment}
                                     handleReactionReplyComment={handleReactionReplyComment}

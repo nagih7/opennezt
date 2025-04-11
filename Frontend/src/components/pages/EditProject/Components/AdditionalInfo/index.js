@@ -12,6 +12,7 @@ import { PROJECT_ADDITIONAL_INFO } from 'utils/constants'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
 import { toaster } from 'components/UI/toaster'
 import { updateProjectAdditionalInfos } from 'api/project'
+import { postProjectDetailsActivitiesAdditionalInfo } from 'api/activity'
 
 const projectAdditionalInfoFramework = createListCollection({
     items: PROJECT_ADDITIONAL_INFO['EN'],
@@ -86,6 +87,16 @@ const EditAdditionalInfo = () => {
     const handleSaveChanges = () => {
         dispatch(
             updateProjectAdditionalInfos(id, {
+                additional_infos: formData.map((item) => {
+                    return {
+                        name: item.name[0],
+                        content: item.content,
+                    }
+                }),
+            })
+        )
+        dispatch(
+            postProjectDetailsActivitiesAdditionalInfo(id, {
                 additional_infos: formData.map((item) => {
                     return {
                         name: item.name[0],

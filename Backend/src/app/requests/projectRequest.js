@@ -1,18 +1,7 @@
 import Joi from 'joi'
 import { MAX_STRING_SIZE } from '@/configs'
 import { AsyncValidate, FileUpload } from '@/utils/classes'
-import {
-    Category,
-    ExperienceLevel,
-    Industry,
-    NotificationFeed,
-    ObjectId,
-    Project,
-    Role,
-    Skill,
-    Stage,
-    User,
-} from '@/models'
+import { ExperienceLevel, Industry, NotificationFeed, ObjectId, Project, Role, Skill, Stage, User } from '@/models'
 import { tryValidateOrDefault } from '@/utils/helpers'
 
 // ========== POST [Project] ========== //
@@ -382,4 +371,115 @@ export const inviteMember = Joi.object({
                     return role ? value : helpers.error('any.empty')
                 })
         ),
+})
+
+// ========== POST [Project - Activity Basic] ========== //
+export const updateBasicActivity = Joi.object({
+    name: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Project name')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async (req) => {
+                    const project = await Project.findOne({
+                        _id: {
+                            $ne: new ObjectId(req.params.id),
+                        },
+                        name: value,
+                        user_id: req.currentUser._id,
+                    })
+                    return project ? helpers.error('any.empty') : value
+                })
+        ),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).allow('', null).label('Description'),
+})
+// ========== POST [Project - Activity Sector] ========== //
+export const updateSectorActivity = Joi.object({
+    industries: Joi.array()
+        .required()
+        .label('Industry')
+        .items(
+            Joi.string()
+                .trim()
+                .required()
+                .custom(
+                    (value, helpers) =>
+                        new AsyncValidate(value, async () => {
+                            const industry = await Industry.findById(new ObjectId(value))
+                            return industry ? industry : helpers.error('any.empty')
+                        })
+                )
+        ),
+    stage: Joi.string()
+        .trim()
+        .required()
+        .label('Stage')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const stage = await Stage.findById(new ObjectId(value))
+                    return stage ? stage : helpers.error('any.empty')
+                })
+        ),
+})
+// ========== POST [Project - Activity Revenue] ========== //
+export const updateRevenueActivity = Joi.object({
+    revenues: Joi.array()
+        .allow(null)
+        .label('Revenue')
+        .items(
+            Joi.object({
+                date: Joi.date().required().label('Date'),
+                amount: Joi.number().required().label('Amount'),
+                currency: Joi.string().trim().required().label('Currency'),
+            })
+        ),
+})
+// ========== POST [Project - Activity FundingSource] ========== //
+export const updateFundingSourceActivity = Joi.object({
+    funding_sources: Joi.array()
+        .items(
+            Joi.object({
+                name: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Name'),
+                amount: Joi.number().required().label('Amount'),
+                currency: Joi.string().trim().required().label('Currency'),
+            })
+        )
+        .allow(null)
+        .label('Funding Sources'),
+})
+// ========== POST [Project - Activity AdditionalInfo] ========== //
+export const updateAdditionalInfoActivity = Joi.object({
+    additional_infos: Joi.array()
+        .items(
+            Joi.object({
+                name: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Name'),
+                description: Joi.string().trim().allow('').max(MAX_STRING_SIZE).label('Description'),
+                content: Joi.string().trim().required().max(MAX_STRING_SIZE).label('Content'),
+            })
+        )
+        .label('Profile Additional Info')
+        .allow(null),
+})
+// ========== POST [Project - Activity Logo] ========== //
+export const updateLogoActivity = Joi.object({
+    logo: Joi.object({
+        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp').required().label('Image format'),
+    })
+        .unknown(true)
+        .instance(FileUpload)
+        .allow('', {}, 'null')
+        .label('Logo'),
+})
+// ========== POST [Project - Activity Background] ========== //
+export const updateBackgroundActivity = Joi.object({
+    background: Joi.object({
+        mimetype: Joi.valid('image/jpeg', 'image/png', 'image/svg+xml', 'image/webp').required().label('Image format'),
+    })
+        .unknown(true)
+        .instance(FileUpload)
+        .allow('', {}, 'null')
+        .label('Background'),
 })

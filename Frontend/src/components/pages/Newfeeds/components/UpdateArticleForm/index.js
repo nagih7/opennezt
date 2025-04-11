@@ -36,7 +36,9 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
         const resizeFiles = await Promise.all(resizePromises)
 
         const filteredFiles = resizeFiles.filter((newFile) => {
-            const isDuplicate = formData.content.attachment.some((existingFiles) => existingFiles.name === newFile.name)
+            const isDuplicate = formData.content.attachment.some(
+                (existingFiles) => existingFiles?.name === newFile?.name
+            )
             return !isDuplicate
         })
         setFormData({
@@ -54,7 +56,7 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
     const dispatch = useDispatch()
     const { projectsToTag, isLoadingMyProjectToTag } = useSelector((state) => state.article)
     const [projectNameState, setProjectNameState] = useState(
-        projectsToTag?.find((project) => project._id === formData.project_id)?.name || ''
+        projectsToTag?.find((project) => project?._id === formData.project_id)?.name || ''
     )
 
     const [dataFilter, setDataFilter] = useState({
@@ -68,7 +70,7 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
     useEffect(() => {
         // Khởi tạo tên dự án khi có dữ liệu
         if (formData.project_id && projectsToTag?.length > 0) {
-            const projectName = projectsToTag.find((project) => project._id === formData.project_id)?.name
+            const projectName = projectsToTag.find((project) => project?._id === formData.project_id)?.name
             if (projectName) setProjectNameState(projectName)
         }
     }, [projectsToTag, formData.project_id])
@@ -77,10 +79,10 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
         setSelectedProject(project)
         setFormData({
             ...formData,
-            project_id: project._id,
-            project_name: project.name,
+            project_id: project?._id,
+            project_name: project?.name,
         })
-        setProjectNameState(project.name)
+        setProjectNameState(project?.name)
         setIsModalOpen(false)
     }
 
@@ -165,9 +167,9 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
 
     const handleSubmit = async () => {
         try {
-            await onSubmit(feed._id, formData)
+            await onSubmit(feed?._id, formData)
             console.log('Update article success')
-            dispatch(postActivityUpdateArticle(feed._id))
+            dispatch(postActivityUpdateArticle(feed?._id))
             console.log('Post activity update article success')
             setFileKey((prev) => prev + 1)
         } catch (error) {
@@ -196,14 +198,14 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
                             </div>
                         </div>
                         <div className="flex gap-3 justify-start w-full">
-                            <Avatar size={50} src={authUser.avatar} style={{ cursor: 'pointer' }}></Avatar>
+                            <Avatar size={50} src={authUser?.avatar} style={{ cursor: 'pointer' }}></Avatar>
                             <div>
                                 <div href="#" className="flex items-center gap-2 text-black no-underline text-nowrap">
                                     <span className="font-semibold ">
-                                        {authUser.name} {projectNameState ? `in project ${projectNameState}` : ''}
+                                        {authUser?.name} {projectNameState ? `in project ${projectNameState}` : ''}
                                     </span>
                                 </div>
-                                <div className="text-xs text-gray-500">@{authUser.email}</div>
+                                <div className="text-xs text-gray-500">@{authUser?.email}</div>
                             </div>
                         </div>
                         <div className="w-full text-wrap p-2 ">
@@ -276,7 +278,7 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
                                                                                         href="#"
                                                                                         className="text-black no-underline"
                                                                                     >
-                                                                                        {project.name}
+                                                                                        {project?.name}
                                                                                     </a>
                                                                                 </h5>
                                                                             </div>

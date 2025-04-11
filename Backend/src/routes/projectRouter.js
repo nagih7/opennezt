@@ -142,4 +142,52 @@ projectRouter.get(
 // ========== GET [My Projects] ========== //
 projectRouter.get('/me', asyncHandler(projectController.getListMyProjects))
 
+// ========== GET [My Projects - All Activity] ========== //
+projectRouter.get('/me/:id/activities', asyncHandler(projectController.getAllActivities))
+
+// ========== ACTIVITY UPDATE PROJECT BASIC ========== //
+projectRouter.post(
+    '/me/:id/basic/activity',
+    asyncHandler(validate(projectRequest.updateBasicActivity)),
+    asyncHandler(projectController.updateBasicActivity)
+)
+// ========== ACTIVITY UPDATE PROJECT SECTOR ========== //
+projectRouter.post(
+    '/me/:id/sector/activity',
+    asyncHandler(validate(projectRequest.updateSectorActivity)),
+    asyncHandler(projectController.updateSectorActivity)
+)
+// ========== ACTIVITY UPDATE PROJECT REVENUE ========== //
+projectRouter.post(
+    '/me/:id/revenues/activity',
+    asyncHandler(validate(projectRequest.updateRevenueActivity)),
+    asyncHandler(projectController.updateRevenueActivity)
+)
+// ========== ACTIVITY UPDATE PROJECT FUNDING SOURCE ========== //
+projectRouter.post(
+    '/me/:id/funding-sources/activity',
+    asyncHandler(validate(projectRequest.updateFundingSourceActivity)),
+    asyncHandler(projectController.updateFundingSourceActivity)
+)
+// ========== ACTIVITY UPDATE PROJECT ADDITIONAL INFO ========== //
+projectRouter.post(
+    '/me/:id/additional-infos/activity',
+    asyncHandler(validate(projectRequest.updateAdditionalInfoActivity)),
+    asyncHandler(projectController.updateAdditionalInfoActivity)
+)
+// ========== ACTIVITY UPDATE PROJECT LOGO ========== //
+projectRouter.post(
+    '/me/:id/logo/activity',
+    asyncHandler(validate(projectRequest.updateLogoActivity)),
+    asyncHandler(projectController.updateLogoActivity)
+)
+// ========== ACTIVITY UPDATE PROJECT BACKGROUND ========== //
+projectRouter.post(
+    '/me/:id/background/activity',
+    asyncHandler(validate(projectRequest.updateBackgroundActivity)),
+    asyncHandler(projectController.updateBackgroundActivity)
+)
+// ========== POST [Project - Activity ProjectRequirement] ========== //
+projectRouter.post('/me/:id/requirements/activity', asyncHandler(projectController.updateProjectRequirementActivity))
+
 export default projectRouter

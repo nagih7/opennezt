@@ -54,6 +54,25 @@ const activitySlice = createSlice({
         // ========== DELETE REACTION ARTICLE ACTIVITIES ========== //
         deleteReactionArticleActivity: [],
         isLoadingDeleteReactionArticleActivity: false,
+        // ========== GET PROJECT DETAILS ACTIVITIES ========== //
+        projectDetailsActivity: [],
+        isLoadingProjectDetailsActivity: false,
+        // ========== POST PROJECT DETAILS ACTIVITIES [ BASIC ] ========== //
+        isLoadingPostProjectDetailsActivityBasic: false,
+        // ========== POST PROJECT DETAILS ACTIVITIES [ SECTOR ] ========== //
+        isLoadingPostProjectDetailsActivitySector: false,
+        // ========== POST PROJECT DETAILS ACTIVITIES [ REVENUE ] ========== //
+        isLoadingPostProjectDetailsActivityRevenue: false,
+        // ========== POST PROJECT DETAILS ACTIVITIES [ FUNDING ] ========== //
+        isLoadingPostProjectDetailsActivityFunding: false,
+        // ========== POST PROJECT DETAILS ACTIVITIES [ ADDITIONAL ] ========== //
+        isLoadingPostProjectDetailsActivityAdditional: false,
+        // ========== POST PROJECT DETAILS ACTIVITIES [ LOGO ] ========== //
+        isLoadingPostProjectDetailsActivityLogo: false,
+        // ========== POST PROJECT DETAILS ACTIVITIES [ BACKGROUND ] ========== //
+        isLoadingPostProjectDetailsActivityBackground: false,
+        // ========== POST PROJECT DETAILS ACTIVITIES [ REQUIREMENT ] ========== //
+        isLoadingPostProjectDetailsActivityRequirement: false,
     },
     reducers: {
         // ========== PROJECT ACCESS ========== //
@@ -312,6 +331,124 @@ const activitySlice = createSlice({
             ...state,
             isLoadingDeleteReactionArticleActivity: false,
         }),
+        // ========== GET PROJECT DETAILS ACTIVITIES ========== //
+        requestGetProjectDetailsActivity: (state) => ({
+            ...state,
+            isLoadingProjectDetailsActivity: true,
+        }),
+        getProjectDetailsActivitySuccess: (state, action) => ({
+            ...state,
+            projectDetailsActivity: action.payload.data,
+            isLoadingProjectDetailsActivity: false,
+        }),
+        getProjectDetailsActivityFail: (state) => ({
+            ...state,
+            isLoadingProjectDetailsActivity: false,
+        }),
+        // ========== POST PROJECT DETAILS ACTIVITIES [ BASIC ] ========== //
+        requestPostProjectDetailsActivityBasic: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityBasic: true,
+        }),
+        postProjectDetailsActivityBasicSuccess: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityBasic: false,
+        }),
+        postProjectDetailsActivityBasicFail: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityBasic: false,
+        }),
+        // ========== POST PROJECT DETAILS ACTIVITIES [ SECTOR ] ========== //
+        requestPostProjectDetailsActivitySector: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivitySector: true,
+        }),
+        postProjectDetailsActivitySectorSuccess: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivitySector: false,
+        }),
+        postProjectDetailsActivitySectorFail: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivitySector: false,
+        }),
+        // ========== POST PROJECT DETAILS ACTIVITIES [ REVENUE ] ========== //
+        requestPostProjectDetailsActivityRevenue: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityRevenue: true,
+        }),
+        postProjectDetailsActivityRevenueSuccess: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityRevenue: false,
+        }),
+        postProjectDetailsActivityRevenueFail: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityRevenue: false,
+        }),
+        // ========== POST PROJECT DETAILS ACTIVITIES [ FUNDING ] ========== //
+        requestPostProjectDetailsActivityFunding: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityFunding: true,
+        }),
+        postProjectDetailsActivityFundingSuccess: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityFunding: false,
+        }),
+        postProjectDetailsActivityFundingFail: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityFunding: false,
+        }),
+        // ========== POST PROJECT DETAILS ACTIVITIES [ ADDITIONAL ] ========== //
+        requestPostProjectDetailsActivityAdditional: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityAdditional: true,
+        }),
+        postProjectDetailsActivityAdditionalSuccess: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityAdditional: false,
+        }),
+        postProjectDetailsActivityAdditionalFail: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityAdditional: false,
+        }),
+        // ========== POST PROJECT DETAILS ACTIVITIES [ LOGO ] ========== //
+        requestPostProjectDetailsActivityLogo: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityLogo: true,
+        }),
+        postProjectDetailsActivityLogoSuccess: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityLogo: false,
+        }),
+        postProjectDetailsActivityLogoFail: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityLogo: false,
+        }),
+        // ========== POST PROJECT DETAILS ACTIVITIES [ BACKGROUND ] ========== //
+        requestPostProjectDetailsActivityBackground: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityBackground: true,
+        }),
+        postProjectDetailsActivityBackgroundSuccess: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityBackground: false,
+        }),
+        postProjectDetailsActivityBackgroundFail: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityBackground: false,
+        }),
+        // ========== POST PROJECT DETAILS ACTIVITIES [ REQUIREMENT ] ========== //
+        requestPostProjectDetailsActivityRequirement: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityRequirement: true,
+        }),
+        postProjectDetailsActivityRequirementSuccess: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityRequirement: false,
+        }),
+        postProjectDetailsActivityRequirementFail: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityRequirement: false,
+        }),
     },
 })
 
@@ -392,6 +529,42 @@ export const {
     requestDeleteReactionArticleActivity,
     deleteReactionArticleActivitySuccess,
     deleteReactionArticleActivityFail,
+    // ========== GET PROJECT DETAILS ACTIVITIES ========== //
+    requestGetProjectDetailsActivity,
+    getProjectDetailsActivitySuccess,
+    getProjectDetailsActivityFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ BASIC ] ========== //
+    requestPostProjectDetailsActivityBasic,
+    postProjectDetailsActivityBasicSuccess,
+    postProjectDetailsActivityBasicFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ SECTOR ] ========== //
+    requestPostProjectDetailsActivitySector,
+    postProjectDetailsActivitySectorSuccess,
+    postProjectDetailsActivitySectorFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ REVENUE ] ========== //
+    requestPostProjectDetailsActivityRevenue,
+    postProjectDetailsActivityRevenueSuccess,
+    postProjectDetailsActivityRevenueFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ FUNDING ] ========== //
+    requestPostProjectDetailsActivityFunding,
+    postProjectDetailsActivityFundingSuccess,
+    postProjectDetailsActivityFundingFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ ADDITIONAL ] ========== //
+    requestPostProjectDetailsActivityAdditional,
+    postProjectDetailsActivityAdditionalSuccess,
+    postProjectDetailsActivityAdditionalFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ LOGO ] ========== //
+    requestPostProjectDetailsActivityLogo,
+    postProjectDetailsActivityLogoSuccess,
+    postProjectDetailsActivityLogoFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ BACKGROUND ] ========== //
+    requestPostProjectDetailsActivityBackground,
+    postProjectDetailsActivityBackgroundSuccess,
+    postProjectDetailsActivityBackgroundFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ REQUIREMENT ] ========== //
+    requestPostProjectDetailsActivityRequirement,
+    postProjectDetailsActivityRequirementSuccess,
+    postProjectDetailsActivityRequirementFail,
 } = activitySlice.actions
 
 export default activitySlice.reducer

@@ -11,6 +11,7 @@ import { getConversations } from 'api/chat'
 import { PROJECT_INVITATION_NOTIFICATION } from 'utils/constants'
 import { setNotifications } from 'states/modules/notification'
 import { setMessages } from 'states/modules/chat'
+import ModalMatchingProjects from 'components/common/ModalMatchingProjects'
 
 export const RealtimeContext = React.createContext()
 
@@ -62,5 +63,10 @@ export const RealtimeProvider = ({ children }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket, dispatch])
 
-    return <RealtimeContext.Provider>{children}</RealtimeContext.Provider>
+    return (
+        <RealtimeContext.Provider>
+            <ModalMatchingProjects />
+            {children}
+        </RealtimeContext.Provider>
+    )
 }

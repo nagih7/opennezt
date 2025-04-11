@@ -7,7 +7,7 @@ const authSlice = createSlice({
         isAuthSuccess: false,
         authorize: 'user',
         authRegister: {},
-        authUser: {},
+        authUser: null,
         authRole: '',
         resetPasswordSuccess: false,
         errorRegister: {
@@ -111,7 +111,7 @@ const authSlice = createSlice({
         }),
         resetAuthRegister: (state) => ({
             ...state,
-            authRegister: {},
+            authRegister: null,
         }),
         startRequestLogout: (state) => ({
             ...state,
@@ -119,7 +119,7 @@ const authSlice = createSlice({
         startRequestLogoutSuccess: (state) => ({
             ...state,
             isAuthSuccess: false,
-            authUser: {},
+            authUser: null,
         }),
         startRequestLogoutFail: (state) => ({
             ...state,

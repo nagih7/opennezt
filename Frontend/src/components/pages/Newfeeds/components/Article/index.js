@@ -106,7 +106,7 @@ const Article = forwardRef(
                         style={{ cursor: 'pointer' }}
                         onClick={() =>
                             handleBookmark({
-                                article_id: feed._id,
+                                article_id: feed?._id,
                                 marked: 'no',
                             })
                         }
@@ -122,7 +122,7 @@ const Article = forwardRef(
                         style={{ cursor: 'pointer' }}
                         onClick={() =>
                             handleBookmark({
-                                article_id: feed._id,
+                                article_id: feed?._id,
                                 marked: 'yes',
                             })
                         }
@@ -136,7 +136,7 @@ const Article = forwardRef(
         const authUser = useSelector((state) => state.auth.authUser)
 
         const verifyAction = () => {
-            if (authUser._id === user[0]._id) {
+            if (authUser?._id === user[0]?._id) {
                 return (
                     <div
                         className="flex text-2xl items-start pr-4"
@@ -150,7 +150,7 @@ const Article = forwardRef(
         }
 
         const handleViewTalentDetails = (user) => {
-            navigate(`/talents/${user._id}/details`)
+            navigate(`/talents/${user?._id}/details`)
         }
 
         const [isModalOpen, setIsModalOpen] = useState(false)
@@ -227,7 +227,7 @@ const Article = forwardRef(
                                         <span className="text-sm">posted in</span>
                                         <span
                                             className="cursor-pointer"
-                                            onClick={() => navigate(`/projects/${project[0]._id}/details`)}
+                                            onClick={() => navigate(`/projects/${project[0]?._id}/details`)}
                                         >
                                             <b> {project[0]?.name}</b>
                                         </span>

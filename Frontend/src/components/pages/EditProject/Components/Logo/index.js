@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { updateProjectLogo } from 'api/project'
 import resizeLogo from 'utils/files/resizeLogo'
+import { postProjectDetailsActivitiesLogo } from 'api/activity'
 
 const EditLogo = () => {
     const dispatch = useDispatch()
@@ -38,10 +39,11 @@ const EditLogo = () => {
         setLogoURL(URL.createObjectURL(logo))
     }
 
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async () => {
         const formData = new FormData()
         formData.append('logo', logoFile)
-        dispatch(updateProjectLogo(id, formData))
+        await dispatch(updateProjectLogo(id, formData))
+        await dispatch(postProjectDetailsActivitiesLogo(id, formData))
     }
 
     return (

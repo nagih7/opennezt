@@ -69,15 +69,15 @@ const Comment = forwardRef(
                     <li ref={ref}>
                         <div className="flex items-center gap-2">
                             <div className="w-[40px] h-[40px]">
-                                {userData.avatar ? (
-                                    <img src={userData.avatar} className="rounded-full" />
+                                {userData?.avatar ? (
+                                    <img src={userData?.avatar} className="rounded-full" />
                                 ) : (
                                     <img src={avt} className="rounded-full" />
                                 )}
                             </div>
                             <div className="flex items-center">
                                 <a className="flex items-center gap-1 text-sm font-medium no-underline text-black">
-                                    <span className="hover:text-[#3897f0]">{userData.name}</span>
+                                    <span className="hover:text-[#3897f0]">{userData?.name}</span>
                                     <CheckCircleFilled className="text-[#3897f0] w-[14px] h-[14px]" />
                                 </a>
                                 <div className="pl-3">
@@ -157,9 +157,9 @@ const Comment = forwardRef(
                         <div className="border-l-2 border-gray-200 pl-4">
                             {replyCommentList.replyComments.map((reply) => (
                                 <ReplyComment
-                                    key={reply._id}
+                                    key={reply?._id}
                                     reply={reply}
-                                    reaction={replyReactionMap.get(reply._id)}
+                                    reaction={replyReactionMap.get(reply?._id)}
                                     onReplyReaction={onCommentReaction}
                                     handleReactionReplyComment={handleReactionReplyComment}
                                     handleClickReply={handleClickReply}

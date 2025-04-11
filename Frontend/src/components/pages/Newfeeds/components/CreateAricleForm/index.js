@@ -37,7 +37,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
         keySearch: '',
     })
 
-    const selectedProjectName = projectsToTag?.find((project) => project._id === formData.project_id)?.name
+    const selectedProjectName = projectsToTag?.find((project) => project?._id === formData.project_id)?.name
 
     useEffect(() => {
         dispatch(getProjectsToTag(dataFilter))
@@ -47,7 +47,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
         setSelectedProject(project)
         setFormData({
             ...formData,
-            project_id: project._id || null,
+            project_id: project?._id || null,
         })
         setIsModalOpen(false)
     }
@@ -118,7 +118,9 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
         const resizeFiles = await Promise.all(resizePromises)
 
         const filteredFiles = resizeFiles.filter((newFile) => {
-            const isDuplicate = formData.content.attachment.some((existingFiles) => existingFiles.name === newFile.name)
+            const isDuplicate = formData.content.attachment.some(
+                (existingFiles) => existingFiles?.name === newFile?.name
+            )
             return !isDuplicate
         })
         setFormData({
@@ -168,11 +170,12 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                             </div>
                         </div>
                         <div className="flex gap-3 justify-start w-full">
-                            <Avatar size={50} src={authUser.avatar} style={{ cursor: 'pointer' }}></Avatar>
+                            <Avatar size={50} src={authUser?.avatar} style={{ cursor: 'pointer' }}></Avatar>
                             <div>
                                 <div href="#" className="flex items-center gap-2 text-black no-underline text-nowrap">
                                     <span className="font-semibold">
-                                        {authUser.name} {selectedProjectName ? `in project ${selectedProjectName}` : ''}
+                                        {authUser?.name}{' '}
+                                        {selectedProjectName ? `in project ${selectedProjectName}` : ''}
                                     </span>
                                 </div>
                                 <div className="text-xs text-gray-500">@{authUser.email}</div>
@@ -243,7 +246,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                                                                                         href="#"
                                                                                         className="text-black no-underline"
                                                                                     >
-                                                                                        {project.name}
+                                                                                        {project?.name}
                                                                                     </a>
                                                                                 </h5>
                                                                             </div>

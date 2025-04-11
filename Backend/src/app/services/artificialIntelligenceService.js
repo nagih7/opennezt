@@ -1,90 +1,424 @@
-import {Profile, Project, User, ObjectId} from '@/models'
+import { Profile, Project, User, ObjectId } from '@/models'
 import callOpenAI from '@/configs/openAI'
-import {LINK_STATIC_URL, MATCHING_PROJECTS_PROMPT, MATCHING_TALENTS_PROMPT} from '@/configs/constants'
+import { AI_API_TOKEN, AI_API_URL, LINK_STATIC_URL, MATCHING_TALENTS_PROMPT } from '@/configs/constants'
+import axios from 'axios'
 
 export async function matchingProjects(user) {
-    const founderProfile = await Profile.findOne({user_id: user._id}).lean()
-    const projects = await Project.aggregate([
+    const profile = await Profile.aggregate([
         {
             $match: {
-                user_id: {$ne: user._id},
+                user_id: user._id,
             },
         },
         {
-            $addFields: {
-                background: {
-                    $cond: {
-                        if: {$eq: [{$ifNull: ['$background', '']}, '']},
-                        then: '$background',
-                        else: {$concat: [LINK_STATIC_URL, '$background']},
+            $lookup: {
+                from: 'industries',
+                localField: 'industry_ids',
+                foreignField: '_id',
+                as: 'industries',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                        },
                     },
-                },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'experience_levels',
+                localField: 'experience_level_id',
+                foreignField: '_id',
+                as: 'experience_level',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$experience_level',
+        },
+        {
+            $lookup: {
+                from: 'skills',
+                localField: 'skill_ids',
+                foreignField: '_id',
+                as: 'skills',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'profile_additional_infos',
+                localField: '_id',
+                foreignField: 'profile_id',
+                as: 'additional_infos',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                            description: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'educations',
+                localField: '_id',
+                foreignField: 'profile_id',
+                as: 'educations',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            school: 1,
+                            degree: 1,
+                            field_of_study: 1,
+                            start_date: 1,
+                            end_date: 1,
+                            grade: 1,
+                            activities: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'certifications',
+                localField: '_id',
+                foreignField: 'profile_id',
+                as: 'certifications',
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: 'organizations',
+                            localField: 'organization_id',
+                            foreignField: '_id',
+                            as: 'organization',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        _id: 0,
+                                        name: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $unwind: '$organization',
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            organization: '$organization.name',
+                            name: 1,
+                            description: 1,
+                            issue_date: 1,
+                            expiration_date: 1,
+                            is_lifetime: 1,
+                        },
+                    },
+                ],
             },
         },
         {
             $project: {
-                related_industries: 1,
-                stage: 1,
-                user_id: 1,
-                created_at: 1,
-                name: 1,
-                _id: 1,
-                background: 1,
+                _id: 0,
+                user_id: 0,
+                name: 0,
+                industry_ids: 0,
+                experience_level_id: 0,
+                category_ids: 0,
+                skill_ids: 0,
+                education_ids: 0,
+                certification_ids: 0,
+                created_at: 0,
+                updated_at: 0,
             },
         },
     ])
 
-    // Get user skills and project requirements
-    const userSkills = {
-        industry: founderProfile.industry,
-        skills: founderProfile.areas_of_expertise,
+    // Extract profile from array and transform industries to array of names
+    const queryData = profile[0] || {}
+    queryData.industries = queryData.industries ? queryData.industries.map((industry) => industry.name) : []
+    queryData.experience_level = queryData.experience_level ? queryData.experience_level.name : ''
+    queryData.skills = queryData.skills ? queryData.skills.map((skill) => skill.name) : []
+
+    // const queryData = {
+    //     industries: ['Technology Software', 'Information Technology'],
+    //     experience_level: 'Junior/Associate',
+    //     skills: [
+    //         'Java',
+    //         'Adobe XD',
+    //         'InVision',
+    //         'Balsamiq',
+    //         'Axure RP',
+    //         'Blender',
+    //         'AutoCAD',
+    //         '3ds Max',
+    //         'Maya',
+    //         'Cinema 4D',
+    //         'Unity',
+    //         'Unreal Engine',
+    //         'HTML',
+    //         'CSS',
+    //         'JavaScript',
+    //         'Webflow',
+    //         'WordPress',
+    //         'Wix',
+    //         'B2B',
+    //         'B2C',
+    //         'B2B2C',
+    //         'B2E',
+    //     ],
+    //     educations: [
+    //         {
+    //             school: 'HaNoi University of Science and Technology',
+    //             degree: 'Bachelor of Information Technology',
+    //             field_of_study: 'Information Technology',
+    //             start_date: '2018-09-01',
+    //             end_date: '2022-06-01',
+    //             grade: 'GPA 3.5/4.0',
+    //             activities:
+    //                 "Member of the university's programming club, participated in several hackathons and coding competitions.",
+    //         },
+    //     ],
+    //     additional_infos: [
+    //         {
+    //             name: 'My career goal',
+    //             description:
+    //                 'I am a recent graduate with a strong foundation in information technology and a passion for software development. I am eager to apply my skills in a dynamic and innovative environment, where I can contribute to exciting projects and continue to learn and grow as a professional.',
+    //         },
+    //         {
+    //             name: 'What I can offer',
+    //             description:
+    //                 'I have a solid understanding of programming languages such as Java, Python, and C++. I am proficient in web development technologies including HTML, CSS, and JavaScript. Additionally, I have experience with database management systems like MySQL and MongoDB. I am a quick learner and adaptable to new technologies.',
+    //         },
+    //         {
+    //             name: 'Professional summary',
+    //             description:
+    //                 'I am a motivated and detail-oriented individual with a strong background in information technology. I have experience in software development, web design, and database management. I am passionate about technology and continuously seek to improve my skills and knowledge in the field.',
+    //         },
+    //     ],
+    //     certifications: [
+    //         {
+    //             name: 'Certified Java Developer',
+    //             issuing_organization: 'Oracle',
+    //             issue_date: '2022-07-01',
+    //             expiration_date: '2025-07-01',
+    //         },
+    //         {
+    //             name: 'AWS Certified Solutions Architect',
+    //             issuing_organization: 'Amazon Web Services',
+    //             issue_date: '2023-01-15',
+    //             expiration_date: '2026-01-15',
+    //         },
+    //         {
+    //             name: 'Google Data Analytics Professional Certificate',
+    //             issuing_organization: 'Google',
+    //             issue_date: '2023-03-10',
+    //             expiration_date: '2026-03-10',
+    //         },
+    //         {
+    //             name: 'Microsoft Certified: Azure Fundamentals',
+    //             issuing_organization: 'Microsoft',
+    //             issue_date: '2023-05-20',
+    //             expiration_date: '2026-05-20',
+    //         },
+    //     ],
+    // }
+
+    // API request data
+    const requestData = {
+        inputs: {},
+        query: JSON.stringify(queryData),
+        response_mode: 'blocking',
+        conversation_id: '',
+        user: 'abc-123',
+        files: [
+            {
+                type: 'image',
+                transfer_method: 'remote_url',
+                url: 'https://cloud.dify.ai/logo/logo-site.png',
+            },
+        ],
     }
-    const skillRequirements = projects.map((project) => ({
-        _id: project._id,
-        related_industries: project.related_industries,
-        // problem_solving: project.problem,
-    }))
 
-    // Generate prompt for OpenAI API
-    const prompt = MATCHING_PROJECTS_PROMPT(userSkills, skillRequirements)
-
-    // Call OpenAI API to get matching projects
+    // API call function
     try {
-        const response = await callOpenAI(prompt)
+        const response = await axios.post(`${AI_API_URL}chat-messages`, requestData, {
+            headers: {
+                Authorization: `Bearer ${AI_API_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+        })
 
-        // const cleanResponse = response.replace(/```json\n|```/g, '')
-        // console.log('Response from OpenAI API: ', cleanResponse)
-        // const projectsByMatching = JSON.parse(cleanResponse)
+        const matches = JSON.parse(response.data?.answer)?.matches
 
-        const jsonString = response.replace('Output:\n\n', '')
-        const jsonData = JSON.parse(jsonString)
+        const matchesId = matches.map((match) => new ObjectId(match.id))
+        const projects = await Project.aggregate([
+            {
+                $match: {
+                    _id: { $in: matchesId },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'stages',
+                    localField: 'stage_id',
+                    foreignField: '_id',
+                    as: 'stage',
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 0,
+                                name: 1,
+                            },
+                        },
+                    ],
+                },
+            },
+            {
+                $unwind: '$stage',
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'user_id',
+                    foreignField: '_id',
+                    as: 'user',
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 0,
+                                name: 1,
+                                avatar: {
+                                    $cond: {
+                                        if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                        then: '$avatar',
+                                        else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                    },
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+            {
+                $unwind: '$user',
+            },
+            {
+                $lookup: {
+                    from: 'project_members',
+                    localField: '_id',
+                    foreignField: 'project_id',
+                    as: 'members',
+                    pipeline: [
+                        {
+                            $lookup: {
+                                from: 'users',
+                                localField: 'user_id',
+                                foreignField: '_id',
+                                as: 'user',
+                                pipeline: [
+                                    {
+                                        $project: {
+                                            _id: 0,
+                                            name: 1,
+                                            avatar: {
+                                                $cond: {
+                                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                                    then: '$avatar',
+                                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                                },
+                                            },
+                                        },
+                                    },
+                                ],
+                            },
+                        },
+                        { $unwind: '$user' },
+                        { $project: { _id: 0, user: 1 } },
+                    ],
+                },
+            },
+            {
+                $lookup: {
+                    from: 'articles',
+                    localField: '_id',
+                    foreignField: 'project_id',
+                    as: 'articles',
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    user: 1,
+                    description: 1,
+                    stage: 1,
+                    logo: {
+                        $cond: {
+                            if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
+                            then: '$logo',
+                            else: { $concat: [LINK_STATIC_URL, '$logo'] },
+                        },
+                    },
+                    background: {
+                        $cond: {
+                            if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
+                            then: '$background',
+                            else: { $concat: [LINK_STATIC_URL, '$background'] },
+                        },
+                    },
+                    members: 1,
+                    articles: 1,
+                },
+            },
+        ])
+        // Map the job_titles from matches to projects
+        const projectsWithJobTitles = projects.map((project) => {
+            const matchInfo = matches.find((match) => match.id === project._id.toString())
+            return {
+                ...project,
+                job_title: matchInfo ? matchInfo.job_title : null,
+                percent_match: matchInfo ? matchInfo.percent_match : null,
+            }
+        })
+        // Sort projects by percent_match in descending order
+        projectsWithJobTitles.sort((a, b) => {
+            return (b.percent_match || 0) - (a.percent_match || 0)
+        })
 
-        // Filter projects with projectsByMatching
-        const result = projects
-            .map((project) => {
-                const match = jsonData.find((p) => p.projectId === project._id.toString())
-                if (match) {
-                    return {
-                        ...project,
-                        matchScore: match.matchScore,
-                    }
-                } else {
-                    return null
-                }
-            })
-            .filter((project) => project !== null)
-            .sort((a, b) => b.matchScore - a.matchScore)
-
-        return result
+        return projectsWithJobTitles
     } catch (error) {
-        console.error(error)
+        console.error('Error calling Dify API:', error.response?.data || error.message)
         throw error
     }
 }
 
 export async function matchingTalents(user) {
-    const projects = await Project.find({user_id: user._id}).lean().select('related_industries ')
-    const founderProfile = await Profile.find({user_id: {$ne: user._id}})
+    const projects = await Project.find({ user_id: user._id }).lean().select('related_industries ')
+    const founderProfile = await Profile.find({ user_id: { $ne: user._id } })
         .lean()
         .select('industry  user_id')
 
@@ -128,13 +462,13 @@ export async function matchingTalents(user) {
         const result = await User.aggregate([
             {
                 $match: {
-                    _id: {$in: userIds},
+                    _id: { $in: userIds },
                 },
             },
             {
                 // Thêm trường mới `_id_str` để lưu `_id` dưới dạng chuỗi
                 $addFields: {
-                    user_id: {$toString: '$_id'},
+                    user_id: { $toString: '$_id' },
                 },
             },
 
@@ -142,7 +476,7 @@ export async function matchingTalents(user) {
                 $addFields: {
                     match_score: {
                         $let: {
-                            vars: {jsonData}, // Truyền trực tiếp ánh xạ
+                            vars: { jsonData }, // Truyền trực tiếp ánh xạ
                             in: {
                                 $getField: {
                                     field: '$user_id',
@@ -153,9 +487,9 @@ export async function matchingTalents(user) {
                     },
                     avatar: {
                         $cond: {
-                            if: {$eq: [{$ifNull: ['$avatar', '']}, '']},
+                            if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                             then: '$avatar',
-                            else: {$concat: [LINK_STATIC_URL, '$avatar']},
+                            else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                         },
                     },
                 },

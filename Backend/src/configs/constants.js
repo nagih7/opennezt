@@ -202,37 +202,6 @@ export const OPENAI_ANALYZE_PROMPT_FREQUENCY_PENALTY = 0
 export const OPENAI_ANALYZE_PROMPT_PRESENCE_PENALTY = 0
 export const OPENAI_ANALYZE_PROMPT_STOP = ['###']
 
-export const MATCHING_PROJECTS_PROMPT = (userSkills, projects) => {
-    const messages = [
-        {
-            role: 'system',
-            content: `
-You are an AI system that matches user skills with project requirements. Analyze input data carefully and return structured output.`,
-        },
-        {
-            role: 'user',
-            content: `
-Input:
-
-1. User Skills:
-Industry: ${userSkills.industry.join(', ')}
-Skills: ${Object.keys(userSkills.skills)
-        .map((key) => `${key}: ${userSkills.skills[key].join(', ')}`)
-        .join('\n')}         
-2. Projects:${projects
-        .map(
-            (project) => `
-Project ID: ${project._id}; Related Industries: ${project.related_industries.join(', ')}`
-        )
-        .join('\n')}
-Task: Analyze the user's skills against the skill requirements of each project; Return an array of projects that match the user.; Limit the top 6 projects to the highest score; Return at least 3 most relevant projects; For each relevant project, include: "projectId": ID of the project; "matchScore": score from 1 to 99 indicating the match rate (do not create even numbers).
-Output format:[{"projectId": "<Project ID>", "matchScore": <Score>},...]`,
-        },
-    ]
-
-    return messages
-}
-
 export const MATCHING_TALENTS_PROMPT = (projects, talents) => {
     const messages = [
         {
@@ -260,3 +229,23 @@ export const ARTICLE_STATUS_ENUM = ['draft', 'published', 'archived']
 export const ARTICLE_AUDIENCE_ENUM = ['public', 'private', 'friends']
 export const REACTION_TARGET_TYPE_ENUM = ['article', 'comment']
 //END ARTICLE CONST
+
+// LINKEDIN
+export const LINKEDIN_URL = process.env.LINKEDIN_URL
+export const LINKEDIN_RESPONSE_TYPE = process.env.LINKEDIN_RESPONSE_TYPE
+export const LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID
+export const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET
+export const LINKEDIN_REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI
+export const LINKEDIN_SCOPE = process.env.LINKEDIN_SCOPE
+export const LINKEDIN_STATE = process.env.LINKEDIN_STATE
+
+// GOOGLE
+export const GOOGLE_AUTH_URL = process.env.GOOGLE_AUTH_URL
+export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+export const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
+export const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI
+export const GOOGLE_TOKEN_ENDPOINT = process.env.GOOGLE_TOKEN_ENDPOINT
+
+// AI
+export const AI_API_URL = process.env.AI_API_URL
+export const AI_API_TOKEN = process.env.AI_API_TOKEN

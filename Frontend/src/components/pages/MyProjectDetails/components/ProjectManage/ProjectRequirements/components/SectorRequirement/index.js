@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import SelectCustom from 'components/UI/SelectCustom'
 import { updateSectorRequirement } from 'api/project'
 import { getExperienceLevelFramwork, getIndustryFramework } from 'api/user'
+import { postProjectDetailsActivitiesProjectRequirement } from 'api/activity'
 
 const SectorRequirement = () => {
     const dispatch = useDispatch()
@@ -51,6 +52,7 @@ const SectorRequirement = () => {
 
     const handleSaveProjectRequirement = () => {
         dispatch(updateSectorRequirement(myProjectDetails._id, formData))
+        dispatch(postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id))
     }
 
     // ========= RENDER  ========== //

@@ -5,6 +5,7 @@ import SelectCustom from 'components/UI/SelectCustom'
 import { getCategoryFramework, getSkillFramework, getSubCategoryFramework } from 'api/user'
 import { Tag } from 'antd'
 import { updateSkillRequirement } from 'api/project'
+import { postProjectDetailsActivitiesProjectRequirement } from 'api/activity'
 
 const SkillRequirement = () => {
     const dispatch = useDispatch()
@@ -24,7 +25,7 @@ const SkillRequirement = () => {
     // ========== USE EFFECT ========== //
     // ========== EFFECTS  ========== //
     useEffect(() => {
-        if (myProjectDetails?.requirements?.skills.length > 0) {
+        if (myProjectDetails?.requirements?.skills?.length > 0) {
             setMySkills(myProjectDetails?.requirements?.skills)
         }
     }, [myProjectDetails])
@@ -96,6 +97,7 @@ const SkillRequirement = () => {
         const skills = mySkills.filter((skill, index, self) => index === self.findIndex((s) => s._id === skill._id))
 
         dispatch(updateSkillRequirement(myProjectDetails._id, { skills }))
+        dispatch(postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id))
     }
 
     // ========= RENDER  ========== //

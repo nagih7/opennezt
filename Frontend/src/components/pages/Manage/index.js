@@ -20,74 +20,74 @@ function Manage() {
         }
     }, [totalUsers]);
 
+    const stats = [
+        {
+            label: 'Total Users',
+            value: totalUsersView,
+            subtitle: 'last week',
+            icon: <IconlyUser color={'#3b82f6'} size={48} />,
+        },
+        {
+            label: 'Total Users',
+            value: '44,278',
+            subtitle: 'last year',
+            icon: <IconlyActivity color={'#10b981'} size={48} />,
+        },
+        {
+            label: 'Total Users',
+            value: '44,278',
+            subtitle: 'last 9 days',
+            icon: <IconlyChart color={'#f59e0b'} size={48} />,
+        },
+        {
+            label: 'Total Money',
+            value: '$44,278',
+            subtitle: 'last 6 days',
+            icon: <IconlyWallet color={'#8b5cf6'} size={48} />,
+        },
+    ];
+
+    const manageItems = [
+        { label: 'User Manage', route: 'users' },
+        { label: 'Role Manage', route: 'roles' },
+        { label: 'Type Manage', route: 'types' },
+        { label: 'Industry Manage', route: 'industries' },
+        { label: 'Experience Level Manage', route: 'experience-levels' },
+        { label: 'Category Manage', route: 'categories' },
+        { label: 'Skill Manage', route: 'skills' },
+        { label: 'Organization Manage', route: 'organizations' },
+    ];
+
     return (
-        <div className="px-[16px] py-8 flex flex-col gap-8">
-            <div className="flex justify-around gap-8 mb-8">
-                <div className="bg-[#ffffff] p-8 rounded-md flex items-center gap-8">
-                    <div className="flex flex-col gap-2">
-                        <span>Total Users</span>
-                        {totalUsersView}
-                        <span>last week</span>
+        <div className="p-6 flex flex-col gap-10 w-full ">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {stats.map((stat, index) => (
+                    <div
+                        key={index}
+                        className="bg-white p-6 rounded-xl shadow-md flex justify-between items-center hover:shadow-lg transition-all"
+                    >
+                        <div className="flex flex-col gap-1">
+                            <span className="text-sm text-gray-500">{stat.label}</span>
+                            <span className="text-2xl font-semibold">{stat.value}</span>
+                            <span className="text-xs text-gray-400">{stat.subtitle}</span>
+                        </div>
+                        <div>{stat.icon}</div>
                     </div>
-                    <IconlyUser color={'#000000'} size={70} />
-                </div>
-                <div className="bg-[#ffffff] p-8 rounded-md flex items-center gap-8">
-                    <div className="flex flex-col gap-2">
-                        <span>Total Users</span>
-                        44,278
-                        <span>last year</span>
-                    </div>
-                    <IconlyActivity color={'#000000'} size={70} />
-                </div>
-                <div className="bg-[#ffffff] p-8 rounded-md flex items-center gap-8">
-                    <div className="flex flex-col gap-2">
-                        <span>Total Users</span>
-                        44,278
-                        <span>last 9 days</span>
-                    </div>
-                    <IconlyChart color={'#000000'} size={70} />
-                </div>
-                <div className="bg-[#ffffff] p-8 rounded-md flex items-center gap-8">
-                    <div className="flex flex-col gap-2">
-                        <span>Total Money</span>
-                        44,278
-                        <span>last 6 days</span>
-                    </div>
-                    <IconlyWallet color={'#000000'} size={70} />
-                </div>
+                ))}
             </div>
-            <div className="flex flex-col">
-                <div className="cursor-pointer" onClick={() => navigate('users')}>
-                    User Manage
-                </div>
-                <div className="border-b-[1px] my-2" />
-                <div className="cursor-pointer" onClick={() => navigate('roles')}>
-                    Role Manage
-                </div>
-                <div className="border-b-[1px] my-2" />
-                <div className="cursor-pointer" onClick={() => navigate('types')}>
-                    Type Manage
-                </div>
-                <div className="border-b-[1px] my-2" />
-                <div className="cursor-pointer" onClick={() => navigate('industries')}>
-                    Industry Manage
-                </div>
-                <div className="border-b-[1px] my-2" />
-                <div className="cursor-pointer" onClick={() => navigate('experience-levels')}>
-                    Experience Level Manage
-                </div>
-                <div className="border-b-[1px] my-2" />
-                <div className="cursor-pointer" onClick={() => navigate('categories')}>
-                    Category Manage
-                </div>
-                <div className="border-b-[1px] my-2" />
-                <div className="cursor-pointer" onClick={() => navigate('skills')}>
-                    Skill Manage
-                </div>
-                <div className="border-b-[1px] my-2" />
-                <div className="cursor-pointer" onClick={() => navigate('organizations')}>
-                    Organization Manage
-                </div>
+
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {manageItems.map((item, index) => (
+                    <div
+                        key={index}
+                        onClick={() => navigate(item.route)}
+                        className="bg-gray-50 hover:bg-blue-50 hover:border-blue-400 transition-all border border-gray-200 p-4 rounded-lg cursor-pointer shadow-sm"
+                    >
+                        <span className="font-medium text-gray-800">{item.label}</span>
+                    </div>
+                ))}
             </div>
         </div>
     );
