@@ -1,18 +1,7 @@
 import Joi from 'joi'
 import { MAX_STRING_SIZE } from '@/configs'
 import { AsyncValidate, FileUpload } from '@/utils/classes'
-import {
-    Category,
-    ExperienceLevel,
-    Industry,
-    NotificationFeed,
-    ObjectId,
-    Project,
-    Role,
-    Skill,
-    Stage,
-    User,
-} from '@/models'
+import { ExperienceLevel, Industry, NotificationFeed, ObjectId, Project, Role, Skill, Stage, User } from '@/models'
 import { tryValidateOrDefault } from '@/utils/helpers'
 
 // ========== POST [Project] ========== //

@@ -10,7 +10,7 @@ import { Conversation, Message, Project, Subscription, Type, User } from '@/mode
 import { userSockets } from '@/routes'
 import webpush from 'web-push'
 
-export async function sendMessage(user, { conversation_id, content }, io, socketId) {
+export async function sendMessage(user, { conversation_id, content }, io) {
     const conversation = await Conversation.findOne({
         _id: conversation_id,
         members: { $elemMatch: { user_id: user._id } },

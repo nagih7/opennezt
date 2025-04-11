@@ -163,6 +163,90 @@ export async function matchingProjects(user) {
     queryData.experience_level = queryData.experience_level ? queryData.experience_level.name : ''
     queryData.skills = queryData.skills ? queryData.skills.map((skill) => skill.name) : []
 
+    // const queryData = {
+    //     industries: ['Technology Software', 'Information Technology'],
+    //     experience_level: 'Junior/Associate',
+    //     skills: [
+    //         'Java',
+    //         'Adobe XD',
+    //         'InVision',
+    //         'Balsamiq',
+    //         'Axure RP',
+    //         'Blender',
+    //         'AutoCAD',
+    //         '3ds Max',
+    //         'Maya',
+    //         'Cinema 4D',
+    //         'Unity',
+    //         'Unreal Engine',
+    //         'HTML',
+    //         'CSS',
+    //         'JavaScript',
+    //         'Webflow',
+    //         'WordPress',
+    //         'Wix',
+    //         'B2B',
+    //         'B2C',
+    //         'B2B2C',
+    //         'B2E',
+    //     ],
+    //     educations: [
+    //         {
+    //             school: 'HaNoi University of Science and Technology',
+    //             degree: 'Bachelor of Information Technology',
+    //             field_of_study: 'Information Technology',
+    //             start_date: '2018-09-01',
+    //             end_date: '2022-06-01',
+    //             grade: 'GPA 3.5/4.0',
+    //             activities:
+    //                 "Member of the university's programming club, participated in several hackathons and coding competitions.",
+    //         },
+    //     ],
+    //     additional_infos: [
+    //         {
+    //             name: 'My career goal',
+    //             description:
+    //                 'I am a recent graduate with a strong foundation in information technology and a passion for software development. I am eager to apply my skills in a dynamic and innovative environment, where I can contribute to exciting projects and continue to learn and grow as a professional.',
+    //         },
+    //         {
+    //             name: 'What I can offer',
+    //             description:
+    //                 'I have a solid understanding of programming languages such as Java, Python, and C++. I am proficient in web development technologies including HTML, CSS, and JavaScript. Additionally, I have experience with database management systems like MySQL and MongoDB. I am a quick learner and adaptable to new technologies.',
+    //         },
+    //         {
+    //             name: 'Professional summary',
+    //             description:
+    //                 'I am a motivated and detail-oriented individual with a strong background in information technology. I have experience in software development, web design, and database management. I am passionate about technology and continuously seek to improve my skills and knowledge in the field.',
+    //         },
+    //     ],
+    //     certifications: [
+    //         {
+    //             name: 'Certified Java Developer',
+    //             issuing_organization: 'Oracle',
+    //             issue_date: '2022-07-01',
+    //             expiration_date: '2025-07-01',
+    //         },
+    //         {
+    //             name: 'AWS Certified Solutions Architect',
+    //             issuing_organization: 'Amazon Web Services',
+    //             issue_date: '2023-01-15',
+    //             expiration_date: '2026-01-15',
+    //         },
+    //         {
+    //             name: 'Google Data Analytics Professional Certificate',
+    //             issuing_organization: 'Google',
+    //             issue_date: '2023-03-10',
+    //             expiration_date: '2026-03-10',
+    //         },
+    //         {
+    //             name: 'Microsoft Certified: Azure Fundamentals',
+    //             issuing_organization: 'Microsoft',
+    //             issue_date: '2023-05-20',
+    //             expiration_date: '2026-05-20',
+    //         },
+    //     ],
+    // }
+
     // API request data
     const requestData = {
         inputs: {},
@@ -190,7 +274,6 @@ export async function matchingProjects(user) {
 
         const matches = JSON.parse(response.data?.answer)?.matches
 
-        console.log('matches', matches)
         const matchesId = matches.map((match) => new ObjectId(match.id))
         const projects = await Project.aggregate([
             {

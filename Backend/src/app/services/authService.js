@@ -187,7 +187,7 @@ export async function loginWithGoogle(req) {
     }
 }
 
-export async function loginWithGoogleCallback(requestQuery, state) {
+export async function loginWithGoogleCallback(requestQuery) {
     try {
         const { code, state } = requestQuery
         // Kiểm tra state để ngăn CSRF attack

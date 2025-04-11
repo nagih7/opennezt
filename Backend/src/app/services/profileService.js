@@ -1,4 +1,4 @@
-import { ACCESS_TYPE, FRIEND_REQUEST_NOTIFICATION, LINK_STATIC_URL, NOTIFICATION_TYPE, PROFILE_ACCESS } from '@/configs'
+import { ACCESS_TYPE, LINK_STATIC_URL, PROFILE_ACCESS } from '@/configs'
 import {
     Certification,
     Education,
@@ -8,7 +8,6 @@ import {
     Type,
     ActivityLog,
     Friend,
-    NotificationFeed,
 } from '@/models'
 
 // ========== GET [Profile] ========== //
@@ -518,7 +517,10 @@ export async function getAccessToMyProfile(user) {
 }
 
 // ========= GET [Friends] ========== //
-export async function getMyFriends(user, { page, per_page }) {
+export async function getMyFriends(
+    user
+    // { page, per_page }
+) {
     const friends = await Friend.aggregate([
         {
             $match: { user_id: user._id },
