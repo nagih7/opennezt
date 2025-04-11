@@ -5,6 +5,7 @@ import { updateRoleRequirement } from 'api/project'
 import SelectCustom from 'components/UI/SelectCustom'
 import { getProjectRoleFramework } from 'api/user'
 import { useParams } from 'react-router-dom'
+import { postProjectDetailsActivitiesProjectRequirement } from 'api/activity'
 
 const RoleRequirement = () => {
     const dispatch = useDispatch()
@@ -50,6 +51,7 @@ const RoleRequirement = () => {
 
     const handleSaveProjectRequirement = () => {
         dispatch(updateRoleRequirement(myProjectDetails._id, formData))
+        dispatch(postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id))
     }
 
     // ========= RENDER  ========== //

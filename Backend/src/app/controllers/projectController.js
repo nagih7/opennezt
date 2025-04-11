@@ -145,7 +145,6 @@ export async function getAllActivities(req, res) {
     const result = await projectService.getAllActivities(req.currentUser, req.params.id)
     res.jsonify(result)
 }
-
 // ========== POST [Project - Activity Basic] ========== //
 export async function updateBasicActivity(req, res) {
     const result = await projectService.updateBasicActivity(req.currentUser, req.params, req.body)
@@ -180,4 +179,9 @@ export async function updateLogoActivity(req, res) {
 export async function updateBackgroundActivity(req, res) {
     const result = await projectService.updateBackgroundActivity(req.currentUser, req.params, req.body)
     res.status(200).jsonify(result, 'Update activity background successfully.')
+}
+// ========== POST [Project - Activity ProjectRequirement] ========== //
+export async function updateProjectRequirementActivity(req, res) {
+    const result = await projectService.updateProjectRequirementActivity(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update activity project requirement successfully.')
 }

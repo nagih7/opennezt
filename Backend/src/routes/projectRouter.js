@@ -187,5 +187,7 @@ projectRouter.post(
     asyncHandler(validate(projectRequest.updateBackgroundActivity)),
     asyncHandler(projectController.updateBackgroundActivity)
 )
+// ========== POST [Project - Activity ProjectRequirement] ========== //
+projectRouter.post('/me/:id/requirements/activity', asyncHandler(projectController.updateProjectRequirementActivity))
 
 export default projectRouter

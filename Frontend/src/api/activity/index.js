@@ -109,6 +109,10 @@ import {
     requestPostProjectDetailsActivityBackground,
     postProjectDetailsActivityBackgroundSuccess,
     postProjectDetailsActivityBackgroundFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ PROJECT REQUIREMENT ] ========== //
+    requestPostProjectDetailsActivityRequirement,
+    postProjectDetailsActivityRequirementSuccess,
+    postProjectDetailsActivityRequirementFail,
 } from 'states/modules/activity'
 
 // ========== PROJECT ACCESS ========== //
@@ -479,6 +483,22 @@ export const postProjectDetailsActivitiesBackground = (projectId, formRequest) =
             postProjectDetailsActivityBackgroundFail,
         ],
         variables: formRequest,
+        dispatch,
+        getState,
+    })
+}
+// ========== POST PROJECT DETAILS ACTIVITIES [ PROJECT REQUIREMENT ] ========== //
+export const postProjectDetailsActivitiesProjectRequirement = (projectId) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `projects/me/${projectId}/requirements/activity`,
+        actionTypes: [
+            requestPostProjectDetailsActivityRequirement,
+            postProjectDetailsActivityRequirementSuccess,
+            postProjectDetailsActivityRequirementFail,
+        ],
+        // Không gửi biến
+        variables: {},
         dispatch,
         getState,
     })
