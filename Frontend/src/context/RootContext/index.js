@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { SocketProvider } from 'context/SocketContext'
 import { WebPushProvider } from 'context/WebPushContext'
+import { AppProvider } from 'context/AppContext'
 
 export const RootContext = React.createContext()
 
@@ -12,7 +13,9 @@ export const RootProvider = ({ children }) => {
             return (
                 <RootContext.Provider>
                     <SocketProvider>
-                        <WebPushProvider>{children}</WebPushProvider>
+                        <AppProvider>
+                            <WebPushProvider>{children}</WebPushProvider>
+                        </AppProvider>
                     </SocketProvider>
                 </RootContext.Provider>
             )
