@@ -11,8 +11,6 @@ import store from 'states/configureStore'
 import { IconlyLogout, IconlySetting, IconlyUser } from 'components/UI/Iconly'
 import ProfileCardSidebar from './components/ProfileCardSidebar'
 import appRouteMap from 'router/appRouteMap'
-import { Button, CloseButton, Drawer, For, HStack, Portal } from '@chakra-ui/react'
-import { HiMenuAlt1 } from 'react-icons/hi'
 
 SideBar.prototype = {
     isShowSideBar: PropTypes.bool.isRequired,
@@ -67,7 +65,7 @@ function SideBar(props) {
                 !isShowSideBar ? styles.sideBarWrapClose : ''
             } border-t-2 border-gray-100`}
         >
-            <div className="lg:flex hidden  relative flex-col h-full">
+            <div className="relative flex flex-col h-full">
                 <div className="flex-1 max-h-[610px] 2xl:max-h-full overflow-y-scroll scrollbar-hide bg-[#ffffff] p-8">
                     <ProfileCardSidebar />
                     {/* MENU */}
