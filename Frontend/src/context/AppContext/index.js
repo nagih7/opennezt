@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { getConversations } from 'api/chat'
 import { getNotifications } from 'api/notification'
 import { getAuthRole } from 'api/auth'
+import ModalMatchingProjects from 'components/common/ModalMatchingProjects'
 
 export const AppContext = React.createContext()
 
@@ -15,5 +16,10 @@ export const AppProvider = ({ children }) => {
         dispatch(getNotifications())
     }, [dispatch])
 
-    return <AppContext.Provider>{children}</AppContext.Provider>
+    return (
+        <AppContext.Provider>
+            <ModalMatchingProjects />
+            {children}
+        </AppContext.Provider>
+    )
 }

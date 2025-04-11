@@ -338,6 +338,15 @@ const router = createBrowserRouter([
         ),
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
     },
+    // {
+    //     path: '/about/edit-profile/cv',
+    //     element: (
+    //         <AppLayout>
+    //             <UploadCV />
+    //         </AppLayout>
+    //     ),
+    //     loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
+    // },
     {
         path: '/project/details',
         element: (

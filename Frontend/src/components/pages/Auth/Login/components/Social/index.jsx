@@ -50,7 +50,7 @@ function Social() {
                         </div>
                     </div>
                 </Tooltip>
-                <Tooltip title="Coming soon" placement="top">
+                <Tooltip title="Google" placement="top">
                     <div className={styles.socialItemWrap} onClick={loginWithGoogle}>
                         <div className={styles.imgWrap}>
                             <svg className={styles.google} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">

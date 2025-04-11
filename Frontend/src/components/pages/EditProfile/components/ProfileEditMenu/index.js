@@ -61,11 +61,16 @@ const ProfileEditMenu = () => {
                                     Skills
                                 </Link>
                             </li>
-                            <li className=" w-full text-sm py-[21px] ">
+                            <li className=" w-full text-sm py-[21px]">
                                 <Link to={'/about/edit-profile/more'} className="text-[#6f7f92]  no-underline ">
                                     More
                                 </Link>
                             </li>
+                            {/* <li className=" w-full text-sm py-[21px] ">
+                                <Link to={'/about/edit-profile/cv'} className="text-[#6f7f92]  no-underline ">
+                                    CV
+                                </Link>
+                            </li> */}
                         </ul>
                     </div>
                 </div>

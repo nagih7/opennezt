@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Image, Input, Text } from '@chakra-ui/react'
+import { Alert, Avatar, Badge, Button, Image, Input, Stack, Text } from '@chakra-ui/react'
 import { changeAvatar } from 'api/profile'
 import {
     DialogActionTrigger,
@@ -9,28 +9,35 @@ import {
     DialogHeader,
     DialogRoot,
 } from 'components/UI/dialog'
-import { IconlyBookmark, IconlyCamera, IconlyLocation, IconlySearch, IconlyShieldDone } from 'components/UI/Iconly'
+import {
+    IconlyBookmark,
+    IconlyCamera,
+    IconlyFolder,
+    IconlyLocation,
+    IconlySearch,
+    IconlyShieldDone,
+} from 'components/UI/Iconly'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsOpenAvatarPreview } from 'states/modules/profile'
 import Loading from './components/Loading'
+import { matchingProjects } from 'api/artificialIntelligence'
+import { setOpenModalMatchingProjects } from 'states/modules/artificialIntelligence'
 
 const ProfileOverview = () => {
-    const [isLoading, setIsLoading] = useState(false)
-
-    const handleClick = () => {
-        setIsLoading(true) // Thay đổi trạng thái để hiển thị Loading và ẩn phần tử ban đầu
-    }
-
     // ========== DISPATCH ========== //
     const dispatch = useDispatch()
     // ========== STATE FROM REDUX STORE ========== //
     const { authUser } = useSelector((state) => state.auth)
     const { isLoadingBtnChangeAvatar, isOpenAvatarPreview } = useSelector((state) => state.profile)
     const { profile } = useSelector((state) => state.profile)
+    const { projects, isLoadingMatchingProjects } = useSelector((state) => state.artificialIntelligence)
     // ========== STATE ========== //
     const [avatarFile, setAvatarFile] = useState(null)
     const [avatarFileSrc, setAvatarFileSrc] = useState(null)
+    const [isOpenModalConfirmMatchingProjects, setIsOpenModalConfirmMatchingProjects] = useState(false)
+
+    console.log('isOpenModalConfirmMatchingProjects', isOpenModalConfirmMatchingProjects)
 
     // ========== LOGIC ========== //
     const handleUploadAvatar = (event) => {
@@ -53,16 +60,21 @@ const ProfileOverview = () => {
         dispatch(changeAvatar(formData))
     }
 
+    const handleMatchingProjects = () => {
+        dispatch(matchingProjects())
+        setIsOpenModalConfirmMatchingProjects(false)
+    }
+
     return (
         <div className="p-8 bg-[#ffffff] rounded-md">
             <div className="flex items-center w-full">
                 <div className="w-4/12">
                     <div className="flex items-center justify-center">
-                        {/* Nếu không đang loading, hiển thị div ban đầu */}
-                        {!isLoading && (
+                        {isLoadingMatchingProjects && <Loading />}
+                        {projects.length === 0 && !isLoadingMatchingProjects && (
                             <div
                                 className="flex items-center gap-2 bg-[#2f65b9] cursor-pointer py-2 px-[15px] rounded-md"
-                                onClick={handleClick}
+                                onClick={() => setIsOpenModalConfirmMatchingProjects(true)}
                             >
                                 <IconlySearch color={'#ffffff'} size={15} />
                                 <button className="text-[#ffffff] font-medium text-sm">
@@ -70,18 +82,19 @@ const ProfileOverview = () => {
                                 </button>
                             </div>
                         )}
-
-                        {/* Khi đang loading, hiển thị component Loading */}
-                        {isLoading && <Loading />}
+                        {projects.length > 0 && !isLoadingMatchingProjects && (
+                            <div
+                                className="flex items-center gap-2 bg-[#2f65b9] cursor-pointer py-2 px-[15px] rounded-md"
+                                onClick={() => dispatch(setOpenModalMatchingProjects(true))}
+                            >
+                                <IconlyFolder color={'#ffffff'} size={15} />
+                                <button className="text-[#ffffff] font-medium text-sm">View matching projects</button>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="flex flex-col items-center w-4/12">
-                    <div
-                        className="relative flex flex-col items-center bg-[#ffffff] mb-10 p-1 rounded-md"
-                        onClick={() => {
-                            console.log('click')
-                        }}
-                    >
+                    <div className="relative flex flex-col items-center bg-[#ffffff] mb-10 p-1 rounded-md">
                         <label
                             htmlFor="file-upload"
                             className="absolute top-[-150px] right-[-80px] z-50 bg-[#2f65b9] w-8 h-8 rounded-full flex items-center justify-center
@@ -197,6 +210,58 @@ const ProfileOverview = () => {
                     </ul>
                 </div>
             </div>
+            {/* AI MATCHING */}
+            <DialogRoot
+                size={'lg'}
+                placement={'center'}
+                lazyMount
+                open={isOpenModalConfirmMatchingProjects}
+                // onOpenChange={}
+            >
+                <DialogContent>
+                    <DialogHeader className="flex">
+                        <Text className="text-lg font-bold from-stone-900">Matching projects with AI</Text>
+                    </DialogHeader>
+                    <DialogBody>
+                        <Stack spacing={4} className="w-full">
+                            <div className="text-[#000000] font-[500] text-md flex gap-1 items-center">
+                                To provide you with the most accurate and relevant matches, our AI system needs to
+                                analyze the following:
+                            </div>
+                            <div className="text-[#2f65b9] font-[500] text-md flex gap-1 items-center">
+                                - Your project profile, including its description, goals, tractions and requirements.
+                            </div>
+                            <div className="text-[#2f65b9] font-[500] text-md flex gap-1 items-center">
+                                - Profiles of your founding team and core team, including skills, roles, and expertise.
+                            </div>
+                            <div className="italic">
+                                This information will only be used to enhance the matching process and recommend talents
+                                who best align with your needs. Your data will remain confidential and protected under
+                                our Privacy Policy.
+                            </div>
+
+                            <Alert.Root status="info">
+                                <Alert.Indicator />
+                                <Alert.Title>
+                                    Do you consent to allowing our AI system to access this information for the purpose
+                                    of generating matches?
+                                </Alert.Title>
+                            </Alert.Root>
+                        </Stack>
+                    </DialogBody>
+                    <DialogFooter className="user-select-none">
+                        <DialogActionTrigger asChild>
+                            <Button variant="outline" onClick={() => setIsOpenModalConfirmMatchingProjects(false)}>
+                                Cancel
+                            </Button>
+                        </DialogActionTrigger>
+                        <Button variant="solid" onClick={handleMatchingProjects}>
+                            Save
+                        </Button>
+                    </DialogFooter>
+                    <DialogCloseTrigger onClick={() => setIsOpenModalConfirmMatchingProjects(false)} />
+                </DialogContent>
+            </DialogRoot>
         </div>
     )
 }

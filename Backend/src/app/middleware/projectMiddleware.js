@@ -9,8 +9,8 @@ export const decodeFormData = async (req, res, next) => {
     const revenuesDecoded = JSON.parse(revenues)
     const fundingSourcesDecoded = JSON.parse(funding_sources)
     const additionalInfosDecoded = JSON.parse(additional_infos)
-    const logoDecoded = logo
-    const backgroundDecoded = background
+    const logoDecoded = logo && logo !== 'null' ? logo : ''
+    const backgroundDecoded = background && background !== 'null' ? background : ''
 
     req.body = {
         name: await nameDecoded,
@@ -23,6 +23,7 @@ export const decodeFormData = async (req, res, next) => {
         logo: await logoDecoded,
         background: await backgroundDecoded,
     }
+    console.log(req.body)
     next()
 }
 
