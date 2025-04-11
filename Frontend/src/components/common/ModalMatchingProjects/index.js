@@ -37,18 +37,18 @@ const ModalMatchingProjects = () => {
                                             </div>
                                             <Stack className="flex items-center justify-center w-1/4 p-4">
                                                 <Stat.Root className="flex flex-col items-center justify-center w-full">
-                                                    <Stat.Label>Suitable job</Stat.Label>
+                                                    {/* <Stat.Label>Suitable job</Stat.Label> */}
+                                                    <Stat.Label>statistical</Stat.Label>
                                                     <HStack>
-                                                        <Stat.ValueText className="flex items-center justify-center m-0 text-2xl font-bold text-gray-800">
-                                                            {/* <FormatNumber value={'fdsf'} /> */}
+                                                        {/* <Stat.ValueText className="flex items-center justify-center m-0 text-2xl font-bold text-gray-800">
                                                             <span className="text-gray-500"> {project?.job_title}</span>
-                                                        </Stat.ValueText>
+                                                        </Stat.ValueText> */}
                                                         <Badge colorPalette="green" gap="0">
                                                             <Stat.UpIndicator />
                                                             {project?.percent_match}%
                                                         </Badge>
                                                     </HStack>
-                                                    <Stat.HelpText>statistical</Stat.HelpText>
+                                                    {/* <Stat.HelpText>statistical</Stat.HelpText> */}
                                                 </Stat.Root>
                                             </Stack>
                                         </Stack>
