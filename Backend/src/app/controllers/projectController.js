@@ -139,3 +139,45 @@ export async function inviteMember(req, res) {
     await projectService.inviteMember(req.currentUser, req.params.id, req.body, req.io)
     res.status(200).jsonify('Invite member to my project successfully.')
 }
+
+// ========== GET [My Projects - All Activities] ========== //
+export async function getAllActivities(req, res) {
+    const result = await projectService.getAllActivities(req.currentUser, req.params.id)
+    res.jsonify(result)
+}
+
+// ========== POST [Project - Activity Basic] ========== //
+export async function updateBasicActivity(req, res) {
+    const result = await projectService.updateBasicActivity(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update activity basic successfully.')
+}
+// ========== POST [Project - Activity Sector] ========== //
+export async function updateSectorActivity(req, res) {
+    const result = await projectService.updateSectorActivity(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update activity sector successfully.')
+}
+// ========== POST [Project - Activity Revenue] ========== //
+export async function updateRevenueActivity(req, res) {
+    const result = await projectService.updateRevenueActivity(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update activity revenue successfully.')
+}
+// ========== POST [Project - Activity FundingSource] ========== //
+export async function updateFundingSourceActivity(req, res) {
+    const result = await projectService.updateFundingSourceActivity(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update activity funding source successfully.')
+}
+// ========== POST [Project - Activity AdditionalInfo] ========== //
+export async function updateAdditionalInfoActivity(req, res) {
+    const result = await projectService.updateAdditionalInfoActivity(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update activity additional information successfully.')
+}
+// ========== POST [Project - Activity Logo] ========== //
+export async function updateLogoActivity(req, res) {
+    const result = await projectService.updateLogoActivity(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update activity logo successfully.')
+}
+// ========== POST [Project - Activity Background] ========== //
+export async function updateBackgroundActivity(req, res) {
+    const result = await projectService.updateBackgroundActivity(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update activity background successfully.')
+}

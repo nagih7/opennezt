@@ -79,6 +79,8 @@ export const register = (data) => async (dispatch, getState) => {
 }
 
 export const logout = () => async (dispatch, getState) => {
+    // Clear local storage
+    localStorage.removeItem('token')
     return callApi({
         method: 'post',
         apiPath: `auth/logout`,

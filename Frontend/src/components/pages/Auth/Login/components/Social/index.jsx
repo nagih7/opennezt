@@ -20,6 +20,9 @@ function Social() {
     const loginWithLinkedIn = () => {
         loginWithSocial('linkedin')
     }
+    const loginWithGoogle = () => {
+        loginWithSocial('google')
+    }
 
     return (
         <div className={styles.socialWrap}>
@@ -48,7 +51,7 @@ function Social() {
                     </div>
                 </Tooltip>
                 <Tooltip title="Coming soon" placement="top">
-                    <div className={styles.socialItemWrap}>
+                    <div className={styles.socialItemWrap} onClick={loginWithGoogle}>
                         <div className={styles.imgWrap}>
                             <svg className={styles.google} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
                                 <path

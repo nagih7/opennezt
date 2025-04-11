@@ -260,3 +260,19 @@ export const ARTICLE_STATUS_ENUM = ['draft', 'published', 'archived']
 export const ARTICLE_AUDIENCE_ENUM = ['public', 'private', 'friends']
 export const REACTION_TARGET_TYPE_ENUM = ['article', 'comment']
 //END ARTICLE CONST
+
+// LINKEDIN
+export const LINKEDIN_URL = process.env.LINKEDIN_URL
+export const LINKEDIN_RESPONSE_TYPE = process.env.LINKEDIN_RESPONSE_TYPE
+export const LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID
+export const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET
+export const LINKEDIN_REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI
+export const LINKEDIN_SCOPE = process.env.LINKEDIN_SCOPE
+export const LINKEDIN_STATE = process.env.LINKEDIN_STATE
+
+// GOOGLE
+export const GOOGLE_AUTH_URL = process.env.GOOGLE_AUTH_URL
+export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+export const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
+export const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI
+export const GOOGLE_TOKEN_ENDPOINT = process.env.GOOGLE_TOKEN_ENDPOINT

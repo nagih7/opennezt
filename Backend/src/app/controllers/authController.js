@@ -91,11 +91,27 @@ export async function loginWithLinkedIn(req, res) {
     const url = await authService.loginWithLinkedIn(req)
     res.redirect(url)
 }
+export async function loginWithGoogle(req, res) {
+    const url = await authService.loginWithGoogle(req)
+    res.redirect(url)
+}
 
 export async function loginWithLinkedInCallback(req, res) {
     const result = await authService.loginWithLinkedInCallback(req.query.code)
     if (result) {
         const accessToken = authService.authToken(result).access_token
         res.redirect(`${APP_URL_CLIENT}/login?access_token=${accessToken}`)
+    } else {
+        res.redirect(`${APP_URL_CLIENT}/login`)
+    }
+}
+
+export async function loginWithGoogleCallback(req, res) {
+    const result = await authService.loginWithGoogleCallback(req.query)
+    if (result) {
+        const accessToken = authService.authToken(result).access_token
+        res.redirect(`${APP_URL_CLIENT}/login?access_token=${accessToken}`)
+    } else {
+        res.redirect(`${APP_URL_CLIENT}/login`)
     }
 }

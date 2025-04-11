@@ -12,6 +12,7 @@ import { IconlyDelete } from 'components/UI/Iconly'
 import { CURRENCY } from 'utils/constants'
 import { updateProjectRevenue } from 'api/project'
 import { toaster } from 'components/UI/toaster'
+import { postProjectDetailsActivitiesRevenue } from 'api/activity'
 const currencyFramework = createListCollection({
     items: CURRENCY['EN'],
 })
@@ -86,6 +87,15 @@ const EditRevenue = () => {
     const handleSaveChanges = () => {
         dispatch(
             updateProjectRevenue(id, {
+                revenues: formData.map((item) => ({
+                    date: item.date,
+                    amount: item.amount,
+                    currency: item.currency[0],
+                })),
+            })
+        )
+        dispatch(
+            postProjectDetailsActivitiesRevenue(id, {
                 revenues: formData.map((item) => ({
                     date: item.date,
                     amount: item.amount,

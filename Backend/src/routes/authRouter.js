@@ -58,7 +58,10 @@ authRouter.post(
 
 // ================== Social Login ================== //
 authRouter.get('/linkedin', asyncHandler(authController.loginWithLinkedIn))
-
 authRouter.get('/linkedin/callback', asyncHandler(authController.loginWithLinkedInCallback))
+
+// ==================== Google Login ================== //
+authRouter.get('/google', asyncHandler(authController.loginWithGoogle))
+authRouter.get('/google/callback', asyncHandler(authController.loginWithGoogleCallback))
 
 export default authRouter
