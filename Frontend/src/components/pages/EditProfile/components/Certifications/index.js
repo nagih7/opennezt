@@ -213,7 +213,7 @@ const Certifications = () => {
 											<Table.ColumnHeader>Certificate Expiration</Table.ColumnHeader>
 											<Table.ColumnHeader>Date</Table.ColumnHeader>
 											<Table.ColumnHeader >Verification URL</Table.ColumnHeader>
-											<Table.ColumnHeader textAlign="end">Actions</Table.ColumnHeader>
+											<Table.ColumnHeader >Actions</Table.ColumnHeader>
 										</Table.Row>
 									</Table.Header>
 									<Table.Body>
