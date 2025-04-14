@@ -193,6 +193,7 @@ export const deleteArticle = async (user, id) => {
     }
 
     if (validArticle.user_id.toString() === user._id.toString()) {
+        await Comment.deleteMany({ article_id: id })
         await Article.findByIdAndDelete(id)
         return 'Delete Article Success'
     }

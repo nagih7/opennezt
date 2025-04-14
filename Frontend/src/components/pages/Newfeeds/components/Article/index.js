@@ -204,7 +204,7 @@ const Article = forwardRef(
                 <div className="flex items-center gap-3">
                     <div className="w-[65px] cursor-pointer" onClick={() => handleViewTalentDetails(user[0])}>
                         <Avatar.Root className="w-[50px] h-[50px] rounded-full ">
-                            <Avatar.Fallback name={user[0].name} />
+                            <Avatar.Fallback name={user[0]?.name} />
                             <Avatar.Image src={user[0].avatar} />
                         </Avatar.Root>
                     </div>
@@ -216,7 +216,7 @@ const Article = forwardRef(
                                         onClick={() => handleViewTalentDetails(user[0])}
                                         className="text-black no-underline cursor-pointer"
                                     >
-                                        {user[0].name}
+                                        {user[0]?.name}
                                     </a>
                                 </div>
                                 {/* {user[0].name} */}
