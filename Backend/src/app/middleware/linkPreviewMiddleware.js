@@ -1,3 +1,4 @@
+import { BLACKLISTED_URLS, URL_PATTERN } from '@/configs'
 import NodeCache from 'node-cache'
 
 const cache = new NodeCache({
@@ -5,6 +6,7 @@ const cache = new NodeCache({
     checkperiod: 120, // Kiểm tra và xóa cache hết hạn mỗi 2 phút
 })
 
+//Kiểm tra xem URL có trong cache hay không
 export const linkPreviewCache = async (req, res, next) => {
     const url = await req.body.url
     if (!url) {
@@ -32,33 +34,78 @@ export const linkPreviewCache = async (req, res, next) => {
     next()
 }
 
-export const validateLickPreview = (req, res, next) => {
-    const { url } = req.body
-    if (!url) {
-        return res.status(400).json({
-            success: false,
-            message: 'URL is required',
-        })
+// Kiểm tra blacklist
+const isBlacklisted = (url) => {
+    try {
+        const urlObj = new URL(url)
+        return BLACKLISTED_URLS.some((domain) => urlObj.hostname === domain || urlObj.hostname.endsWith(`.${domain}`))
+    } catch {
+        return false
     }
-
-    // Kiểm tra định dạng URL
-    const urlPattern = new RegExp(
-        '^(https?:\\/\\/)' + // protocol
-            '((([a-z\\d]([a-z\\d-]*[a-z\\d])?)\\.)+[a-z]{2,}|' + // domain name
-            'localhost|' + // localhost
-            '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|' + // ipv4
-            '\\[([0-9a-f]{1,4}:){7}[0-9a-f]{1,4}\\])' + // ipv6
-            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-            '(\\#[-a-z\\d_]*)?$',
-        'i' // fragment locator
-    )
-    if (!urlPattern.test(url)) {
-        return res.status(400).json({
-            success: false,
-            message: 'Invalid URL format',
-        })
-    }
-
-    next()
 }
+
+export const checkBlacklist = async (req, res, next) => {
+    try {
+        const url = await req.body.url
+        if (!url) {
+            return next()
+        }
+
+        if (isBlacklisted(url)) {
+            return res.status(403).json({
+                success: false,
+                message: 'this domain is not allowed',
+            })
+        }
+        next()
+    } catch (error) {
+        next(error)
+    }
+}
+//
+
+/// Middleware để kiểm tra định dạng URL
+export const validLinkPreview = async (req, res, next) => {
+    try {
+        const { url } = await req.body
+
+        // Check if URL exists
+        if (!url) {
+            return res.status(400).json({
+                success: false,
+                message: 'URL is required',
+            })
+        }
+
+        // Check URL length
+        if (url.length > 2048) {
+            return res.status(400).json({
+                success: false,
+                message: 'URL is too long (max 2048 characters)',
+            })
+        }
+
+        // Check URL format using regex
+        if (!URL_PATTERN.test(url)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid URL format',
+            })
+        }
+
+        // Validate URL can be parsed
+        try {
+            new URL(url)
+        } catch (err) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid URL structure',
+            })
+        }
+
+        next()
+    } catch (error) {
+        next(error)
+    }
+}
+//

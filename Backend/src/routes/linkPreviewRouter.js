@@ -11,6 +11,8 @@ linkPreviewRouter.use(asyncHandler(requireAuthentication))
 
 linkPreviewRouter.post(
     '/link-preview',
+    asyncHandler(linkPreviewMiddleware.validLinkPreview),
+    asyncHandler(linkPreviewMiddleware.checkBlacklist),
     asyncHandler(linkPreviewMiddleware.linkPreviewCache),
     asyncHandler(linkPreviewController.getLinkPreview)
 )
