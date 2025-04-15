@@ -17,6 +17,7 @@ import {
     PROJECT_ACTIVITY_BACKGROUND,
     PROJECT_ACTIVITY_ADDITIONAL,
     PROJECT_ACTIVITY_REQUIREMENT,
+    PROJECT_ACTIVITY_NEW_MEMBER,
 } from '@/configs'
 import {
     Project,
@@ -1844,5 +1845,55 @@ export async function updateProjectRequirementActivity(user, projectId) {
             metadata: {},
         })
         await activity.save()
+    }
+}
+// ========== POST [Project - Activity New member] ========== //
+export async function updateNewMemberActivity(user, { id, invitationId }, requestBody) {
+    // Tìm kiếm project
+    const project = await Project.findOne({ user_id: user._id, _id: id })
+    if (!project) {
+        throw new Error('Không tìm thấy dự án')
+    }
+
+    // Tìm thông báo lời mời để kiểm tra trạng thái
+    const invitation = await NotificationFeed.findOne({
+        _id: new ObjectId(invitationId),
+    })
+
+    if (!invitation) {
+        throw new Error('Không tìm thấy lời mời')
+    }
+
+    // Sửa lỗi: Kiểm tra cả hai trạng thái 'confirm' và 'confirmed'
+    if (invitation.metadata?.status === 'confirm' || invitation.metadata?.status === 'confirmed') {
+        const typeNotification = await Type.findOne({
+            class: PROJECT_ACTIVITY,
+            name: PROJECT_ACTIVITY_NEW_MEMBER,
+        })
+
+        // Lấy thông tin người đã chấp nhận lời mời
+        const memberId = invitation.user_id
+        const teamRoleId = invitation.data.team_role_id
+        const roleId = invitation.data.role_id
+
+        // Tạo activity mới
+        const activity = new ActivityLog({
+            user_id: user._id, // Chủ dự án
+            type_id: typeNotification._id,
+            data: {
+                project_id: project._id,
+                invitation_id: invitationId,
+                user_joined_id: memberId,
+                team_role_id: teamRoleId,
+                role_id: roleId,
+            },
+            metadata: {},
+        })
+        await activity.save()
+        return activity
+    } else {
+        throw new Error(
+            `Lời mời chưa được xác nhận. Trạng thái hiện tại: ${invitation.metadata?.status || 'không có trạng thái'}`
+        )
     }
 }
