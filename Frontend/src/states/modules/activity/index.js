@@ -73,6 +73,8 @@ const activitySlice = createSlice({
         isLoadingPostProjectDetailsActivityBackground: false,
         // ========== POST PROJECT DETAILS ACTIVITIES [ REQUIREMENT ] ========== //
         isLoadingPostProjectDetailsActivityRequirement: false,
+        // ========== POST PROJECT DETAILS ACTIVITIES [ NEW MEMBER ] ========== //
+        isLoadingPostProjectDetailsActivityNewMember: false,
     },
     reducers: {
         // ========== PROJECT ACCESS ========== //
@@ -449,6 +451,19 @@ const activitySlice = createSlice({
             ...state,
             isLoadingPostProjectDetailsActivityRequirement: false,
         }),
+        // ========== POST PROJECT DETAILS ACTIVITIES [ NEW MEMBER ] ========== //
+        requestPostProjectDetailsActivityNewMember: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityNewMember: true,
+        }),
+        postProjectDetailsActivityNewMemberSuccess: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityNewMember: false,
+        }),
+        postProjectDetailsActivityNewMemberFail: (state) => ({
+            ...state,
+            isLoadingPostProjectDetailsActivityNewMember: false,
+        }),
     },
 })
 
@@ -565,6 +580,10 @@ export const {
     requestPostProjectDetailsActivityRequirement,
     postProjectDetailsActivityRequirementSuccess,
     postProjectDetailsActivityRequirementFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ NEW MEMBER ] ========== //
+    requestPostProjectDetailsActivityNewMember,
+    postProjectDetailsActivityNewMemberSuccess,
+    postProjectDetailsActivityNewMemberFail,
 } = activitySlice.actions
 
 export default activitySlice.reducer

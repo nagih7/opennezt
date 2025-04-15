@@ -185,3 +185,8 @@ export async function updateProjectRequirementActivity(req, res) {
     const result = await projectService.updateProjectRequirementActivity(req.currentUser, req.params, req.body)
     res.status(200).jsonify(result, 'Update activity project requirement successfully.')
 }
+// ========== POST [Project - Activity New member] ========== //
+export async function updateNewMemberActivity(req, res) {
+    const result = await projectService.updateNewMemberActivity(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(result, 'Update activity new member successfully.')
+}

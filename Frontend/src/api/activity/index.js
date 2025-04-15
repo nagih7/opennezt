@@ -113,6 +113,10 @@ import {
     requestPostProjectDetailsActivityRequirement,
     postProjectDetailsActivityRequirementSuccess,
     postProjectDetailsActivityRequirementFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ NEW MEMBER ] ========== //
+    requestPostProjectDetailsActivityNewMember,
+    postProjectDetailsActivityNewMemberSuccess,
+    postProjectDetailsActivityNewMemberFail,
 } from 'states/modules/activity'
 
 // ========== PROJECT ACCESS ========== //
@@ -503,3 +507,19 @@ export const postProjectDetailsActivitiesProjectRequirement = (projectId) => asy
         getState,
     })
 }
+// ========== POST PROJECT DETAILS ACTIVITIES [ NEW MEMBER ] ========== //
+export const postProjectDetailsActivitiesNewMember =
+    (projectId, invitationId, formRequest) => async (dispatch, getState) => {
+        return callApi({
+            method: 'post',
+            apiPath: `projects/me/${projectId}/new-member/activity/${invitationId}`,
+            actionTypes: [
+                requestPostProjectDetailsActivityNewMember,
+                postProjectDetailsActivityNewMemberSuccess,
+                postProjectDetailsActivityNewMemberFail,
+            ],
+            variables: formRequest,
+            dispatch,
+            getState,
+        })
+    }
