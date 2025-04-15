@@ -68,6 +68,10 @@ const Article = createModel('Article', 'articles', {
         required: true,
         default: null,
     },
+    link_preview: {
+        type: String,
+        required: false,
+    },
 })
 
 export default Article
