@@ -19,6 +19,7 @@ const notificationSlice = createSlice({
         loadingGetNotifications: false,
         loadingSendRequestAddFriend: false,
         isLoadingReplyNotification: false,
+        loadingMarkAsRead: false,
     },
     reducers: {
         startRequestReadRoot: (state) => ({
@@ -92,6 +93,41 @@ const notificationSlice = createSlice({
             ...state,
             notifications: [action.payload, ...state.notifications],
         }),
+        // ========== Mask as read ========== //
+        loadingMarkAsRead: (state) => ({
+            ...state,
+            loadingMarkAsRead: true,
+        }),
+        markAsReadSuccess: (state, action) => {
+            const newNotification = action.payload.data
+            toaster.create({
+                title: `Mark as read successfully.`,
+                type: 'success',
+            })
+            return {
+                ...state,
+                notifications: state.notifications.map((notification) => {
+                    if (notification._id === newNotification._id) {
+                        return {
+                            ...notification,
+                            metadata: newNotification.metadata,
+                        }
+                    }
+                    return notification
+                }),
+                loadingMarkAsRead: false,
+            }
+        },
+        markAsReadFail: (state) => {
+            toaster.create({
+                title: `Mark as read failed.`,
+                type: 'error',
+            })
+            return {
+                ...state,
+                loadingMarkAsRead: false,
+            }
+        },
     },
 })
 
@@ -109,6 +145,10 @@ export const {
     replyNotificationFail,
     // ========== Set Notification =========== //
     setNotifications,
+    // ========== Mask as read ========== //
+    loadingMarkAsRead,
+    markAsReadSuccess,
+    markAsReadFail,
 } = notificationSlice.actions
 
 export default notificationSlice.reducer

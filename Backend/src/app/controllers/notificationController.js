@@ -16,3 +16,9 @@ export async function replyNotification(req, res) {
     const result = await notificationService.replyNotification(req.currentUser, req.params, req.body, req.io)
     res.jsonify(result, 'Reply notification successfully.')
 }
+
+// ========== PUT [Notification - Mark as Read] ========== //
+export async function markAsRead(req, res) {
+    const result = await notificationService.markAsRead(req.currentUser, req.params)
+    res.jsonify(result, 'Mark as read successfully.')
+}

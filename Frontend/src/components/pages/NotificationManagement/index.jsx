@@ -2,6 +2,7 @@ import { ActionBar, Button, Kbd, Portal, Spinner, Table, Tabs } from '@chakra-ui
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import RightSidebar from 'components/common/RightSidebar'
+import store from 'states/configureStore'
 import moment from 'moment'
 import {
     CONFIRM_FRIEND_REQUEST_NOTIFICATION,
@@ -18,7 +19,7 @@ import ConfirmProjectInvitationNoitification from 'components/layouts/AppLayout/
 import ProjectInvitationNotification from 'components/layouts/AppLayout/Header/components/PopoverNotification/components/ProjectInvitationNotification'
 import FriendRequestNotification from 'components/layouts/AppLayout/Header/components/PopoverNotification/components/FriendRequestNotification'
 import Actions from 'components/layouts/AppLayout/Header/components/PopoverNotification/components/Actions'
-import { replyNotification } from 'api/notification'
+import { markAsRead, replyNotification } from 'api/notification'
 import { postProjectDetailsActivitiesNewMember } from 'api/activity'
 
 function NotificationProject() {
@@ -49,13 +50,29 @@ function NotificationProject() {
             await store.dispatch(postProjectDetailsActivitiesNewMember(notification_id, {}))
         }
     }
+    // ========== HANDLE MARK AS READ ========== //
+    const handleMarkAsRead = async (notification) => {
+        if (notification.metadata?.read === false) {
+            await store.dispatch(markAsRead(notification._id))
+        }
+    }
 
     // ========== STATE ========== //
     const [selection, setSelection] = useState([])
     const hasSelection = selection.length > 0
     // const indeterminate = hasSelection && selection.length < unread.length
     const allRows = notifications.map((notification, index) => (
-        <Table.Row key={notification._id} data-selected={selection.includes(notification._id) ? '' : undefined}>
+        <Table.Row
+            key={notification._id}
+            data-selected={selection.includes(notification._id) ? '' : undefined}
+            onClick={() => {
+                // Chỉ áp dụng handleMarkAsRead nếu thông báo chưa đọc
+                if (notification.metadata?.read === false) {
+                    handleMarkAsRead(notification)
+                }
+            }}
+            className={notification.metadata?.read === false ? 'cursor-pointer hover:bg-gray-50' : ''}
+        >
             {/* <Table.Cell>
                 <Checkbox.Root
                     size="sm"
@@ -157,7 +174,12 @@ function NotificationProject() {
         </Table.Row>
     ))
     const unreadRows = unread.map((notification, index) => (
-        <Table.Row key={notification._id} data-selected={selection.includes(notification._id) ? '' : undefined}>
+        <Table.Row
+            key={notification._id}
+            data-selected={selection.includes(notification._id) ? '' : undefined}
+            onClick={() => handleMarkAsRead(notification)}
+            className="cursor-pointer hover:bg-gray-50"
+        >
             {/* <Table.Cell>
                 <Checkbox.Root
                     size="sm"
