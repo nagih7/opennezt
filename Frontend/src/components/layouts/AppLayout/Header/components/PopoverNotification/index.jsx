@@ -24,6 +24,7 @@ import Footer from './components/FooterPopoverNotification'
 import ConfirmFriendRequestNotification from './components/ConfirmFriendRequestNotification'
 import ProjectApplicationNotification from './components/ProjectApplicationNotification'
 import ConfirmProjectInvitationNoitification from './components/ConfirmProjectInvitationNoitification'
+import { postProjectDetailsActivitiesNewMember } from 'api/activity'
 
 function PopoverNotification() {
     // ========== STATE FROM REDUX ========== //
@@ -41,6 +42,9 @@ function PopoverNotification() {
         setNotificationIndex(index)
         await store.dispatch(replyNotification(notification_id, action))
         await store.dispatch(getConversations())
+        if (action === 'confirm') {
+            await store.dispatch(postProjectDetailsActivitiesNewMember(notification_id, {}))
+        }
     }
 
     // ========== RENDER ========== //

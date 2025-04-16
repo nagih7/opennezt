@@ -19,6 +19,7 @@ import ProjectInvitationNotification from 'components/layouts/AppLayout/Header/c
 import FriendRequestNotification from 'components/layouts/AppLayout/Header/components/PopoverNotification/components/FriendRequestNotification'
 import Actions from 'components/layouts/AppLayout/Header/components/PopoverNotification/components/Actions'
 import { replyNotification } from 'api/notification'
+import { postProjectDetailsActivitiesNewMember } from 'api/activity'
 
 function NotificationProject() {
     const dispatch = useDispatch()
@@ -44,6 +45,9 @@ function NotificationProject() {
     const handleReplyNotification = async (notification_id, action) => {
         await store.dispatch(replyNotification(notification_id, action))
         await store.dispatch(getConversations())
+        if (action === 'confirm') {
+            await store.dispatch(postProjectDetailsActivitiesNewMember(notification_id, {}))
+        }
     }
 
     // ========== STATE ========== //
