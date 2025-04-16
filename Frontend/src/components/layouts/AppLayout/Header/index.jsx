@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useMemo } from 'react'
 import PopoverProfile from './components/PopoverProfile'
 import PopoverMessage from './components/PopoverMessage'
 import PopoverNotification from './components/PopoverNotification'
@@ -7,7 +7,14 @@ import ZoomInMapIcon from '@mui/icons-material/ZoomInMap'
 import { useSelector, useDispatch } from 'react-redux'
 import { LANG } from 'utils/constants'
 import { setLanguage } from 'states/modules/app'
-import { IconlyChat, IconlyLogout, IconlyNotification, IconlySearch, IconlySetting, IconlyUser } from 'components/UI/Iconly'
+import {
+    IconlyChat,
+    IconlyLogout,
+    IconlyNotification,
+    IconlySearch,
+    IconlySetting,
+    IconlyUser,
+} from 'components/UI/Iconly'
 import { Avatar, Button, CloseButton, Drawer, For, HStack, Popover, Portal, Stack } from '@chakra-ui/react'
 import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import { HiMenuAlt1 } from 'react-icons/hi'
@@ -20,7 +27,7 @@ import { useNavigate } from 'react-router-dom'
 import { logout } from 'api/auth'
 import store from 'states/configureStore'
 import styles from './styles.module.scss'
-
+import { NAVBAR, SEARCH } from 'utils/constants/app'
 
 const Header = () => {
     const dispatch = useDispatch()
@@ -112,6 +119,72 @@ const Header = () => {
     const handleConfirmLogOut = async () => {
         await store.dispatch(logout())
         window.location.reload()
+    }
+    //Search
+    const [searchQuery, setSearchQuery] = useState('')
+    const [searchResults, setSearchResults] = useState([])
+    const [showResults, setShowResults] = useState(false)
+    const searchRef = useRef(null)
+
+    // Generate navigation mapping from route keys to paths
+    const navRoutes = useMemo(() => ({
+        ACTIVITY: '/activity',
+        ADMIN: '/admin/manage',
+        ABOUT_ME: '/about',
+        PROJECT: '/projects',
+        RECRUIT_TALENTS: '/recruit-talents',
+        SEEK_PROJECTS: '/seek-projects',
+        NOTIFICATIONS: '/notification-management',
+        MESSAGES: '/conversation',
+    }), []);
+
+    // Handle search functionality
+    useEffect(() => {
+        if (searchQuery.trim() === '') {
+            setSearchResults([])
+            setShowResults(false)
+            return
+        }
+        const results = Object.entries(NAVBAR)
+            .filter(([key, value]) => {
+                const searchTerm = searchQuery.toLowerCase()
+                const itemText = value[language]?.toLowerCase() || ''
+                return itemText.includes(searchTerm)
+            })
+            .map(([key, value]) => ({
+                key,
+                text: value[language],
+                path: navRoutes[key] || '/',
+            }))
+
+        setSearchResults(results)
+        setShowResults(results.length > 0)
+    }, [searchQuery, language, navRoutes])
+
+    // Close search results when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (searchRef.current && !searchRef.current.contains(event.target)) {
+                setShowResults(false)
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
+    const handleSearchSubmit = (e) => {
+        e.preventDefault()
+        if (searchResults.length > 0) {
+            navigate(searchResults[0].path)
+            setSearchQuery('')
+            setShowResults(false)
+        }
+    }
+
+    const handleResultClick = (path) => {
+        navigate(path)
+        setSearchQuery('')
+        setShowResults(false)
     }
 
     return (
@@ -271,19 +344,36 @@ const Header = () => {
                 <div className="md:absolute md:right-0 lg:static flex items-center justify-between flex-1">
                     <div className="flex items-center gap-4 text-sm font-semibold text-[#6f7f92]" />
                     <div className="flex items-center gap-4">
-                        <form
-                            action=""
-                            className="hidden lg:flex items-center bg-[#f8f9fa] rounded-md w-[240px] h-[40px] border-[1px]  border-gray-200 "
-                        >
-                            <button className="flex items-center justify-center w-10 h-10">
-                                <IconlySearch size={16} color={'#6f7f92'} className="text-gray-400" />
-                            </button>
-                            <input
-                                type="text"
-                                placeholder="Search Here"
-                                className="bg-[#f8f9fa] outline-none text-sm font-medium pr-4 text-[#6f7f92]"
-                            />
-                        </form>
+                        <div className="relative" ref={searchRef}>
+                            <form
+                                onSubmit={handleSearchSubmit}
+                                className="hidden lg:flex items-center bg-[#f8f9fa] rounded-md w-[240px] h-[40px] border-[1px]  border-gray-200 "
+                            >
+                                <button type="submit" className="flex items-center justify-center w-10 h-10">
+                                    <IconlySearch size={16} color={'#6f7f92'} className="text-gray-400" />
+                                </button>
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder={SEARCH[language] || 'Search'}
+                                    className="bg-[#f8f9fa] outline-none text-sm font-medium pr-4 text-[#6f7f92] w-full"
+                                />
+                            </form>
+                            {showResults && (
+                                <div className="absolute top-[42px] left-0 w-[240px] bg-white shadow-lg rounded-md z-50 border border-gray-200">
+                                    {searchResults.map((result) => (
+                                        <div
+                                            key={result.key}
+                                            className="px-4 py-2 hover:bg-[#f8f9fa] cursor-pointer text-[#6f7f92] text-sm"
+                                            onClick={() => handleResultClick(result.path)}
+                                        >
+                                            {result.text}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                         <div onClick={() => openFullScreen()}>
                             <div className="cursor-pointer">
                                 {isFullScreen ? (
