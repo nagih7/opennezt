@@ -24,7 +24,7 @@ const Members = () => {
         <div className="w-full h-full">
             <div className="px-[16px]">
                 <div className="flex w-full gap-8">
-                    <div className="w-10/12 mt-8">
+                    <div className="lg:w-10/12 w-full">
                         <div className="p-8 bg-[#ffffff] rounded-md">
                             <div className="flex justify-between items-center border-[1px] rounded-md caret-[#2f65b9] bg-[#f8f9fa] pl-[15px]">
                                 <input

@@ -6,7 +6,7 @@ import TimelinePost from './TimelinePost';
 const Timeline = () => {
     return (<>
         <div className="flex gap-8">
-            <div className="w-10/12">
+            <div className="lg:w-10/12 w-full">
                 <Tabs.Root className="h-4" defaultValue="All Post">
                     <div className="2xl:w-full w-full">
                         <Tabs.List>

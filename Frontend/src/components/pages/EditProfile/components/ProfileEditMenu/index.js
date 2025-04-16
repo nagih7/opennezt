@@ -7,7 +7,7 @@ const ProfileEditMenu = () => {
     const [isOpen, setIsOpen] = useState(true)
     // ========== COMPONENT RENDER ========== //
     return (
-        <div className="w-4/12">
+        <div className="md:w-4/12 w-full">
             {/* ========== Profile Edit Menu ========== */}
             <h6>
                 <div

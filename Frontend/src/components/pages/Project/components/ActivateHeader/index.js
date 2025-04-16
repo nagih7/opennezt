@@ -14,7 +14,7 @@ const ActivateHeader = ({ isBottom, setIsBottom }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f3f4f5]">
                 <Tabs.Root defaultValue={isActive} className="w-full p-2">
                     <Tabs.List className="flex items-center justify-between border-b-[1px] border-[#f3f4f5]">
-                        <div className="mt-[1rem] font-bold flex gap-5">
+                        <div className="flex w-full sm:flex-row flex-col justify-center sm:justify-start items-center text-nowrap mt-[1rem] font-bold gap-8">
                             <Tabs.Trigger value="my-projects">
                                 <span onClick={() => setIsActive('my-projects')}>My Projects</span>
                             </Tabs.Trigger>

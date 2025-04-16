@@ -64,7 +64,7 @@ function ChangePassword() {
         <div className={styles.editProfile}>
             <div className="bg-[#fff] rounded-md">
                 <div className="p-8 border-b-[1px] border-gray-200">
-                    <div className="text-2xl font-medium text-center">Change Password</div>
+                    <div className="sm:text-2xl text-xl font-medium text-center">Change Password</div>
                 </div>
 
                 <div className="p-8">
@@ -126,7 +126,7 @@ function ChangePassword() {
                             onClick={() => handleConfirmChangePassword()}
                             loading={loadingBtnChangePassword}
                             height={50}
-                            className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                            className="mt-[14px]  text-sm px-[18px] py-2 sm:text-base sm:px-[28px] sm:py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
                             borderRadius={4}
                             loadingText="Loading..."
                             spinnerPlacement="start"

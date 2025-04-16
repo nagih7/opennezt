@@ -8,11 +8,11 @@ import { HiCheck, HiX } from 'react-icons/hi'
 function AccountSettings() {
     return (
         <div className="w-full h-full py-8">
-            <div className="px-[16px] w-full flex  gap-8">
+            <div className="px-[16px] w-full flex flex-col md:flex-row md:gap-8">
                 {/* Account Settings Menu */}
                 <AccountSettingsMenu />
-                <div className="w-8/12">
-                    <div className="bg-[#ffffff] p-8 rounded-md">
+                <div className="w-full md:w-8/12">
+                    <div className="bg-[#ffffff] hidden md:block p-8 rounded-md">
                         <ActionBarSettings />
                         <AccountSettingsCard />
                     </div>

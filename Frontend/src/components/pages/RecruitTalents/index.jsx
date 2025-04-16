@@ -8,11 +8,11 @@ function RecruitTalents() {
 	return (
 		<div className="w-full">
 			<RecruitTalentActiveBanner />
-			<div className="py-8 px-[16px] flex w-full gap-8">
-				<div className="w-3/12 ">
+			<div className="py-8 px-[16px] flex md:flex-row flex-col w-full gap-8">
+				<div className="md:w-3/12 w-full">
 					<FilterSidebar />
 				</div>
-				<div className="w-9/12">
+				<div className="md:w-9/12 w-full">
 					<RecruitTalentsHeader />
 					<ListTalents />
 				</div>

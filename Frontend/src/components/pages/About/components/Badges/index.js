@@ -60,7 +60,7 @@ const Badges = () => {
     return (
         <>
             <div className="flex gap-8">
-                <div className="w-10/12">
+                <div className="lg:w-10/12 w-full">
                     <div className="">
                         <div className="bg-white rounded-lg p-6">
                             <h4 className="text-lg font-semibold mb-4">Badges({badges.length})</h4>

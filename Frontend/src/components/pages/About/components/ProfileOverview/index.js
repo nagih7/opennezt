@@ -67,7 +67,7 @@ const ProfileOverview = () => {
 
     return (
         <div className="p-8 bg-[#ffffff] rounded-md">
-            <div className="flex items-center w-full">
+            <div className="flex flex-nowrap items-center w-full">
                 <div className="w-4/12">
                     <div className="flex items-center justify-center">
                         {isLoadingMatchingProjects && <Loading />}
@@ -88,7 +88,7 @@ const ProfileOverview = () => {
                                 onClick={() => dispatch(setOpenModalMatchingProjects(true))}
                             >
                                 <IconlyFolder color={'#ffffff'} size={15} />
-                                <button className="text-[#ffffff] font-medium text-sm">View matching projects</button>
+                                <button className="text-[#ffffff] font-medium text-xs md:text-sm">View matching projects</button>
                             </div>
                         )}
                     </div>
@@ -164,7 +164,7 @@ const ProfileOverview = () => {
                             <DialogCloseTrigger onClick={() => handleCloseAvatarPreview(false)} />
                         </DialogContent>
                     </DialogRoot>
-                    <h5 className="text-[#000000] font-bold text-lg flex gap-1 items-center">
+                    <h5 className="text-[#000000] font-bold text-xs md:text-lg flex gap-1 items-center">
                         {authUser?.name}
                         <IconlyShieldDone size={24} color="#3897f0" className="text-[#3897f0] mx-[6px]" />
                     </h5>
@@ -194,7 +194,7 @@ const ProfileOverview = () => {
                     <div className="mt-[16px]"></div>
                 </div>
                 <div className="w-4/12">
-                    <ul className="flex flex-wrap items-center justify-center gap-5 p-0 m-0 ">
+                    <ul className="flex text-xs md:text-base flex-wrap items-center justify-center gap-5 p-0 m-0 ">
                         {/* <li className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
                             <h5>{profile.activities}</h5>
                             Views

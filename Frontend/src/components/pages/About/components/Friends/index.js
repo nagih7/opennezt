@@ -80,7 +80,7 @@ const Friends = () => {
 
     return (
         <div className="flex gap-8">
-            <div className="w-10/12">
+            <div className="lg:w-10/12 w-full">
                 <Tabs.Root defaultValue={isActive} className="flex flex-col w-full h-full">
                     <Tabs.List className="flex justify-between items-center pb-2 bg-white h-[5.25rem]  px-8">
                         <div className="mt-[1rem] font-bold flex gap-2">

@@ -41,7 +41,14 @@ const Conversation = () => {
             <>
                 <div className="flex justify-between p-[10px] mb-[18px] bg-[#ffffff] rounded-md">
                     <div className="flex items-center">
-                        <Link to={'/conversation'} className="flex justify-center items-center w-[50px] h-11">
+                        <Link to={'/conversation'} className="hidden md:flex justify-center items-center w-[50px] h-11">
+                            <IconlyArrowLeft2 size={18} color={'#6f7f92'} />
+                        </Link>
+
+                        <Link
+                            to={'/messages-sidebar'}
+                            className="flex md:hidden justify-center items-center w-[50px] h-11 "
+                        >
                             <IconlyArrowLeft2 size={18} color={'#6f7f92'} />
                         </Link>
                         {(() => {
