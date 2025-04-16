@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const AccountSettingsMenu = () => {
      const [isOpen, setIsOpen] = useState(true)
     return (
-        <div className="w-4/12">
+        <div className="w-full md:w-4/12">
             <h6>
                 <div
                     className="flex items-center justify-between text-[#ffffff] bg-[#2f65b9] py-[16px] px-[20px] rounded-md cursor-pointer"

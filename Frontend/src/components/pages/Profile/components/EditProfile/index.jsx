@@ -93,10 +93,10 @@ function EditProfile() {
         <div className={styles.editProfile}>
             <div className="bg-[#fff] rounded-md">
                 <div className="p-8 border-b-[1px] border-gray-200">
-                    <div className="text-2xl font-medium text-center">Personal Information</div>
+                    <div className="sm:text-2xl text-xl font-medium text-center">Personal Information</div>
                 </div>
                 <div className="p-8">
-                    <div className="flex items-center w-full gap-8 ">
+                    <div className="flex sm:flex-row flex-col items-center w-full sm:gap-8 ">
                         <div className="w-full">
                             <div className="relative mb-8">
                                 <input
@@ -259,7 +259,7 @@ function EditProfile() {
                             onClick={() => handleConfirmSaveInfoUser()}
                             loading={loadingBtnUpdateInfoUser}
                             height={50}
-                            className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                            className="mt-[14px]  text-sm px-[18px] py-2 sm:text-base sm:px-[28px] sm:py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
                             borderRadius={4}
                             loadingText="Loading..."
                             spinnerPlacement="start"

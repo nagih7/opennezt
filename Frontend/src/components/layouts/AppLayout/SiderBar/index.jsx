@@ -11,8 +11,6 @@ import store from 'states/configureStore'
 import { IconlyLogout, IconlySetting, IconlyUser } from 'components/UI/Iconly'
 import ProfileCardSidebar from './components/ProfileCardSidebar'
 import appRouteMap from 'router/appRouteMap'
-import { Button, CloseButton, Drawer, For, HStack, Portal } from '@chakra-ui/react'
-import { HiMenuAlt1 } from 'react-icons/hi'
 
 SideBar.prototype = {
     isShowSideBar: PropTypes.bool.isRequired,

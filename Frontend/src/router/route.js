@@ -33,6 +33,7 @@ import PrivacyAndSecurity from 'components/pages/AccountSettings/components/Priv
 import Shop from 'components/pages/AccountSettings/components/Shop'
 import BlockList from 'components/pages/AccountSettings/components/BlockList'
 import ExportData from 'components/pages/AccountSettings/components/ExportData'
+import MessageSidebar from 'components/pages/Message/components/MessageSidebar'
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import('../components/pages/Auth/Login'))
@@ -591,6 +592,15 @@ const router = createBrowserRouter([
         ),
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EXPORT_DATA_PAGE'),
     },
+    {
+        path:'/messages-sidebar',
+        element: (
+            <AppLayout>
+                <MessageSidebar />
+            </AppLayout>
+        ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_MESSAGES_SIDEBAR_PAGE'),
+    }
 ])
 
 export default router

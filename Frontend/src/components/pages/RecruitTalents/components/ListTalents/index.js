@@ -30,8 +30,8 @@ const ListTalents = () => {
 
     // ========== RENDER COMPONENT ========== //
     return (
-        <div className="container flex flex-col items-center justify-center gap-20 py-12 mx-auto">
-            <div className="grid w-full grid-cols-3 gap-8">
+        <div className="container flex w-full flex-col items-center justify-center gap-10 md:gap-20 py-8 mx-auto">
+            <div className="grid w-full lg:grid-cols-3 grid-cols-1 sm:grid-cols-2 sm:gap-6 md:gap-8">
                 {talents?.map((talent, index) => (
                     <div
                         key={index}

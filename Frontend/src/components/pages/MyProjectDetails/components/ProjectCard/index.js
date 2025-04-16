@@ -29,7 +29,7 @@ const ProjectCard = ({ project }) => {
             </div>
 
             <div className="p-8 bg-[#ffffff]">
-                <div className="flex justify-between w-full px-[16px]">
+                <div className="flex justify-between flex-col md:flex-row w-full px-[16px]">
                     <div className="flex-1 item-left">
                         <div className="flex gap-3">
                             <div className="p-[4px] mt-[-60px] rounded-md bg-[#ffffff]">
@@ -61,7 +61,7 @@ const ProjectCard = ({ project }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="item-right">
+                    <div className="item-right mt-5 md:mt-0">
                         <ul className="flex flex-wrap items-center justify-center gap-5 p-0 m-0">
                             <li className="flex flex-col items-center">
                                 <h5>0</h5>

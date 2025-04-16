@@ -18,7 +18,7 @@ const ProjectMenu = ({ setTab }) => {
     }
 
     return (
-        <div className="w-full px-[16px] pt-8">
+        <div className="w-full px-[16px] pt-8 mb-8">
             <div className="px-4 bg-[#ffffff] rounded-md ">
                 <ul className="flex items-center 2xl:max-w-full max-w-[1170px] p-0 m-0 overflow-x-scroll scrollbar-hide">
                     <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6] bg-[#ffffff]">

@@ -8,7 +8,7 @@ const ProjectManage = () => {
     return (
         <div className="px-[16px]">
             <div className="flex w-full gap-8">
-                <div className="w-10/12 mt-8">
+                <div className="lg:w-10/12 w-full">
                     <Tabs.Root defaultValue="Project Requirement" variant="plain">
                         <div className="p-8 bg-[#ffffff] rounded-md">
                             <Tabs.List>

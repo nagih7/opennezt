@@ -24,6 +24,9 @@ import appRouteMap from 'router/appRouteMap'
 import manageRouteMap from 'router/manageRouteMap'
 import { handleCheckRoute } from 'utils/helper'
 import styles from './styles.module.scss'
+import { useNavigate } from 'react-router-dom'
+import { logout } from 'api/auth'
+import store from 'states/configureStore'
 
 const Header = () => {
     const dispatch = useDispatch()
@@ -91,9 +94,8 @@ const Header = () => {
         }
     }
 
-    const handleChangeLanguage = (e) => {
-        dispatch(setLanguage(e.target.value))
-    }
+    //Siderbar
+    const navigate = useNavigate()
 
     const { authRole } = useSelector((state) => state.auth)
     const handleToggleMenu = (indexNavItem, menuNavItem) => {
@@ -104,10 +106,25 @@ const Header = () => {
             setIndexNavItemSelect(indexNavItem !== indexNavItemSelect ? indexNavItem : null)
         }
     }
+
+    const handleHoverMenuNavItem = (e, menuNavItem) => {
+        const { top } = e.target.getBoundingClientRect()
+        setTopMenuSub(top)
+        if (menuNavItem.children) {
+            setMenuSub(menuNavItem.children)
+        } else {
+            setMenuSub([])
+        }
+    }
+    const handleConfirmLogOut = async () => {
+        await store.dispatch(logout())
+        window.location.reload()
+    }
+
     return (
         <header className="bg-[#ffffff] w-full">
             <div className="relative flex justify-center items-center h-[70px] pr-4">
-                <div className="lg:hidden absolute  left-0">
+                <div className="lg:hidden md:absolute  md:left-0">
                     <HStack wrap="wrap">
                         <For each={['start']}>
                             {(placement) => (
@@ -127,7 +144,7 @@ const Header = () => {
                                                 <div className="relative flex flex-col h-full">
                                                     <div className="flex-1 max-h-[610px] 2xl:max-h-full overflow-y-scroll scrollbar-hide bg-[#ffffff] p-8">
                                                         <ProfileCardSidebar />
-                                                        {/* MENU */}
+
                                                         <div className="border-b-[1px] border-gray-200">
                                                             <span className="text-xs font-semibold text-gray-400">
                                                                 MENU
@@ -253,17 +270,17 @@ const Header = () => {
                     </HStack>
                 </div>
                 <div
-                    className="h-full flex justify-center  cursor-pointer"
+                    className="h-full hidden md:flex justify-center  cursor-pointer"
                     onClick={() => (window.location.href = '/')}
                 >
                     <img src={Logo} alt="logo-opennezt" className="py-[18px] px-8 bg-[#ffffff]  h-full" />
                 </div>
-                <div className=" lg:flex hidden items-center justify-between flex-1">
+                <div className="md:absolute md:right-0 lg:static flex items-center justify-between flex-1">
                     <div className="flex items-center gap-4 text-sm font-semibold text-[#6f7f92]" />
                     <div className="flex items-center gap-4">
                         <form
                             action=""
-                            className="flex items-center bg-[#f8f9fa] rounded-md w-[240px] h-[40px] border-[1px]  border-gray-200 "
+                            className="hidden lg:flex items-center bg-[#f8f9fa] rounded-md w-[240px] h-[40px] border-[1px]  border-gray-200 "
                         >
                             <button className="flex items-center justify-center w-10 h-10">
                                 <IconlySearch size={16} color={'#6f7f92'} className="text-gray-400" />
@@ -347,7 +364,7 @@ const Header = () => {
                         </Popover.Root>
                     </div>
                 </div>
-                <div className="lg:hidden absolute right-0">
+                {/* <div className="lg:hidden absolute right-0">
                     <HStack wrap="wrap">
                         <For each={['top']}>
                             {(placement) => (
@@ -470,7 +487,7 @@ const Header = () => {
                             )}
                         </For>
                     </HStack>
-                </div>
+                </div> */}
             </div>
         </header>
     )

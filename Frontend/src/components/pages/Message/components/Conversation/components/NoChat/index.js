@@ -23,8 +23,14 @@ const NoChat = () => {
                     <p className="mb-0 text-[#6f7f92]">or</p>
                     <p className="mb-0">
                         <Link
-                            // to={'/messages/new-conversation'}
-                            className="px-[28px] text-sm font-semibold py-[11px] bg-[#2f65b9] rounded-md no-underline text-[#ffffff]"
+                            to={'/messages-sidebar'}
+                            className="block md:hidden px-[28px] text-sm font-semibold py-[11px] bg-[#2f65b9] rounded-md no-underline text-[#ffffff]"
+                        >
+                            START A NEW CONVERSATION
+                        </Link>
+                        <Link
+                            // to={'/messages-sidebar'}
+                            className="hidden md:block px-[28px] text-sm font-semibold py-[11px] bg-[#2f65b9] rounded-md no-underline text-[#ffffff]"
                         >
                             START A NEW CONVERSATION
                         </Link>

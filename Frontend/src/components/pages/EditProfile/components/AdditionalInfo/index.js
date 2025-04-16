@@ -100,16 +100,16 @@ const AdditionalInfo = () => {
 
     // ========== COMPONENT RENDER ========== //
     return (
-        <div className="flex gap-8 w-full py-8 px-[16px]">
+        <div className="flex gap-8 flex-col md:flex-row w-full py-8 px-[16px]">
             <ProfileEditMenu />
-            <div className="w-8/12">
-                <div className="bg-[#ffffff] p-8 rounded-md">
+            <div className="md:w-8/12 w-full">
+                <div className="bg-[#ffffff] p-8 hidden md:block rounded-md">
                     {/* =========== Profile Card ========== */}
                     <ProfileCard />
                     {/* =========== Action Bar  ========== */}
                     <ActionBar />
                 </div>
-                <div className="bg-[#ffffff] p-8 rounded-md mt-8">
+                <div className="bg-[#ffffff] p-8 rounded-md md:mt-8">
                     <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200 flex justify-between">
                         <div>
                             <h4 className="">More</h4>
@@ -118,7 +118,7 @@ const AdditionalInfo = () => {
                             disabled={isLoadingCreateOrUpdateProfileAdditionalInfo}
                             onClick={handleAddProfileAdditionInfo}
                             height={50}
-                            className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                            className="mt-[14px]  text-sm px-[18px] py-2 sm:text-base sm:px-[28px] sm:py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
                             borderRadius={4}
                             loading={false}
                             loadingText="Loading..."
@@ -128,7 +128,7 @@ const AdditionalInfo = () => {
                         </Button>
                     </div>
                     <div>
-                        <div>
+                        <div className='px-[16px] text-nowrap max-w-full p-0 m-0 overflow-x-scroll scrollbar-hide'>
 
 
                             <Table.Root size="lg" striped  >

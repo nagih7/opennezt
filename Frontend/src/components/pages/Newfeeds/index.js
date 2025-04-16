@@ -341,7 +341,7 @@ function NewFeeds() {
 
     return (
         <div className="flex w-full gap-[16px] pt-[16px] px-[16px]">
-            <div className="md:w-10/12 w-full">
+            <div className="lg:w-8/12 w-full">
                 {isOpenUpdateForm ? (
                     <UpdateArticleForm
                         feed={selectedArticle}
