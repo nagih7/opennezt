@@ -585,3 +585,20 @@ export async function replyProjectInvitation(user, notification, io) {
         })
     }
 }
+
+// ========== PUT [Notification - Mark as Read] ========== //
+export async function markAsRead(user, { notificationId }) {
+    const notification = await NotificationFeed.findOne({
+        _id: new ObjectId(notificationId),
+        user_id: user._id,
+    })
+    // Check if notification exists
+    if (!notification) {
+        throw new Error('Notification not found!')
+    }
+    // Update notification
+    notification.metadata.read = true
+    notification.markModified('metadata')
+    await notification.save()
+    return notification
+}

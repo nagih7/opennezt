@@ -4,12 +4,15 @@ import Reaction from '@/models/reaction.js'
 import Comment from '../../models/comment.js'
 import {
     ARTICLE_COMMENT,
+    ARTICLE_COMMENT_NOTIFICATION,
     ARTICLE_CREATE,
+    ARTICLE_LIKE_NOTIFICATION,
     ARTICLE_REACTION,
     ARTICLE_REPLY_COMMENT,
     ARTICLE_SAVE,
     ARTICLE_TYPE,
     ARTICLE_UPDATE,
+    COMMENT_REPLY_NOTIFICATION,
     LINK_STATIC_URL,
 } from '@/configs'
 import { ObjectId } from 'mongodb'
@@ -19,6 +22,9 @@ import Bookmark from '@/models/bookmark.js'
 import Type from '@/models/type.js'
 import AccessLog from '@/models/accessLog.js'
 import ActivityLog from '@/models/activityLog.js'
+import NotificationFeed from '@/models/notificationFeed.js'
+import Subscription from '@/models/subscription.js'
+import webpush from 'web-push'
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa
@@ -268,6 +274,7 @@ export const updateArticle = async (user_id, id, requestBody) => {
 //End Update Article
 
 //Article Reaction
+//Article Reaction
 export const reactArticle = async (id, user, requestBody) => {
     const target_type = requestBody.target_type
     const type = requestBody.type
@@ -304,6 +311,48 @@ export const reactArticle = async (id, user, requestBody) => {
 
             // Create activity record for the new reaction
             await postActivityReactionArticle(user, id)
+
+            // Gửi web push khi người dùng thích bài viết và không phải tự thích bài viết của mình
+            if (type === 'like' && article.user_id.toString() !== user_id) {
+                try {
+                    // Lấy loại thông báo
+                    const notificationType = await Type.findOne({
+                        class: ARTICLE_TYPE,
+                        name: ARTICLE_LIKE_NOTIFICATION,
+                    })
+
+                    if (notificationType) {
+                        // Kiểm tra và gửi web push notification
+                        const subscription = await Subscription.findOne({ user_id: article.user_id })
+
+                        if (subscription) {
+                            const payload = JSON.stringify({
+                                title: 'OpenNezt',
+                                body: `${user.name} liked your post`,
+                                icon: user.avatar ? user.avatar : null,
+                                tag: ARTICLE_LIKE_NOTIFICATION,
+                                data: {
+                                    url: `/article/${article._id}`,
+                                    type: ARTICLE_LIKE_NOTIFICATION,
+                                    article_id: article._id.toString(),
+                                },
+                            })
+
+                            try {
+                                await webpush.sendNotification(subscription, payload)
+                            } catch (err) {
+                                console.error('Web Push Error:', err.message)
+
+                                if (err.statusCode === 410 || err.statusCode === 404) {
+                                    await Subscription.deleteOne({ user_id: article.user_id })
+                                }
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error in notification process:', error)
+                }
+            }
         }
     }
 
@@ -329,6 +378,52 @@ export const reactArticle = async (id, user, requestBody) => {
             await newReaction.save()
             comment.reaction_count += 1
             await comment.save()
+
+            // Gửi web push khi người dùng thích comment và không phải tự thích comment của mình
+            if (type === 'like' && comment.user_id.toString() !== user_id) {
+                try {
+                    // Lấy loại thông báo (có thể cần tạo thêm COMMENT_LIKE_NOTIFICATION trong configs)
+                    const notificationType = await Type.findOne({
+                        class: ARTICLE_TYPE,
+                        name: ARTICLE_LIKE_NOTIFICATION, // Có thể sử dụng COMMENT_LIKE_NOTIFICATION nếu cần riêng
+                    })
+
+                    if (notificationType) {
+                        // Kiểm tra và gửi web push notification
+                        const subscription = await Subscription.findOne({ user_id: comment.user_id })
+
+                        if (subscription) {
+                            // Lấy thông tin bài viết để hiển thị trong thông báo
+                            const article = await Article.findById(comment.article_id)
+
+                            const payload = JSON.stringify({
+                                title: 'OpenNezt',
+                                body: `${user.name} liked your comment`,
+                                icon: user.avatar ? user.avatar : null,
+                                tag: ARTICLE_LIKE_NOTIFICATION,
+                                data: {
+                                    url: `/article/${comment.article_id}`, // Dẫn đến bài viết có comment
+                                    type: ARTICLE_LIKE_NOTIFICATION,
+                                    comment_id: comment._id.toString(),
+                                    article_id: comment.article_id.toString(),
+                                },
+                            })
+
+                            try {
+                                await webpush.sendNotification(subscription, payload)
+                            } catch (err) {
+                                console.error('Web Push Error:', err.message)
+
+                                if (err.statusCode === 410 || err.statusCode === 404) {
+                                    await Subscription.deleteOne({ user_id: comment.user_id })
+                                }
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error in comment notification process:', error)
+                }
+            }
         }
     }
 }
@@ -392,6 +487,51 @@ export const replyComment = async (user, requestBody) => {
     await updatedArticle.save()
     await newComment.save()
     await postActivityReplyComment(user, newComment._id)
+
+    // Gửi web push khi người dùng trả lời bình luận và không phải tự trả lời bình luận của mình
+    if (parentComment.user_id.toString() !== user._id.toString()) {
+        try {
+            // Lấy loại thông báo
+            const notificationType = await Type.findOne({
+                class: ARTICLE_TYPE,
+                name: COMMENT_REPLY_NOTIFICATION,
+            })
+
+            if (notificationType) {
+                // Kiểm tra và gửi web push notification
+                const subscription = await Subscription.findOne({ user_id: parentComment.user_id })
+
+                if (subscription) {
+                    const payload = JSON.stringify({
+                        title: 'OpenNezt',
+                        body: `${user.name} replied to your comment`,
+                        icon: user.avatar ? user.avatar : null,
+                        tag: COMMENT_REPLY_NOTIFICATION,
+                        data: {
+                            url: `/article/${article_id}`,
+                            type: COMMENT_REPLY_NOTIFICATION,
+                            article_id: article_id.toString(),
+                            comment_id: comment_id.toString(),
+                            reply_id: newComment._id.toString(),
+                        },
+                    })
+
+                    try {
+                        await webpush.sendNotification(subscription, payload)
+                    } catch (err) {
+                        console.error('Web Push Error:', err.message)
+
+                        if (err.statusCode === 410 || err.statusCode === 404) {
+                            await Subscription.deleteOne({ user_id: parentComment.user_id })
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error in reply notification process:', error)
+        }
+    }
+
     return newComment
 }
 //Get Article's Reactions
@@ -565,6 +705,52 @@ export const createComment = async (user, requestBody) => {
     await Article.findByIdAndUpdate(articleId, { $inc: { comment_count: 1 } })
 
     await postActivityComment(user, newComment._id)
+
+    // Lấy thông tin bài viết để gửi thông báo cho chủ bài viết
+    const article = await Article.findById(articleId)
+
+    // Gửi web push khi người dùng bình luận và không phải tự bình luận bài viết của mình
+    if (article.user_id.toString() !== user._id.toString()) {
+        try {
+            // Lấy loại thông báo
+            const notificationType = await Type.findOne({
+                class: ARTICLE_TYPE,
+                name: ARTICLE_COMMENT_NOTIFICATION,
+            })
+
+            if (notificationType) {
+                // Kiểm tra và gửi web push notification
+                const subscription = await Subscription.findOne({ user_id: article.user_id })
+
+                if (subscription) {
+                    const payload = JSON.stringify({
+                        title: 'OpenNezt',
+                        body: `${user.name} commented on your post`,
+                        icon: user.avatar ? user.avatar : null,
+                        tag: ARTICLE_COMMENT_NOTIFICATION,
+                        data: {
+                            url: `/article/${article._id}`,
+                            type: ARTICLE_COMMENT_NOTIFICATION,
+                            article_id: article._id.toString(),
+                            comment_id: newComment._id.toString(),
+                        },
+                    })
+
+                    try {
+                        await webpush.sendNotification(subscription, payload)
+                    } catch (err) {
+                        console.error('Web Push Error:', err.message)
+
+                        if (err.statusCode === 410 || err.statusCode === 404) {
+                            await Subscription.deleteOne({ user_id: article.user_id })
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error in comment notification process:', error)
+        }
+    }
 
     return newComment
 }
