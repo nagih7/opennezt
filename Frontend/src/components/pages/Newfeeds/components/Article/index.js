@@ -399,11 +399,10 @@ const Article = forwardRef(
                                     {content.attachment.map((_, index) => (
                                         <button
                                             key={index}
-                                            className={`w-2.5 h-2.5 rounded-full transition-all ${
-                                                index === selectedImageIndex
+                                            className={`w-2.5 h-2.5 rounded-full transition-all ${index === selectedImageIndex
                                                     ? 'bg-white scale-110'
                                                     : 'bg-white/40 hover:bg-white/60'
-                                            }`}
+                                                }`}
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 setSelectedImageIndex(index)

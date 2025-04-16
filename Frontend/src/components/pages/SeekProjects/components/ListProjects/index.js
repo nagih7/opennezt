@@ -35,7 +35,7 @@ const ListProjects = ({ action }) => {
 
     // ========== RENDER COMPONENT ========== //
     return (
-        <div className="flex flex-col items-center gap-4 ">
+        <div className="flex flex-col items-center gap-4 mt-6">
             {(() => {
                 switch (action) {
                     case 'grid':

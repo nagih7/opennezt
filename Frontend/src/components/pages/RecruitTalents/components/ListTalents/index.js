@@ -35,7 +35,6 @@ const ListTalents = () => {
                 {talents?.map((talent, index) => (
                     <div
                         key={index}
-                        onClick={() => handleViewTalentDetails(talent.user)}
                         className="relative group h-[380px] cursor-pointer"
                         onMouseEnter={(e) => {
                             const children = e.currentTarget.querySelectorAll('.fade-element')
@@ -46,7 +45,7 @@ const ListTalents = () => {
                             children.forEach((child) => (child.style.opacity = 0))
                         }}
                     >
-                        <TalentBox talent={talent} />
+                        <TalentBox handleViewTalentDetails={handleViewTalentDetails} talent={talent} />
                     </div>
                 ))}
             </div>

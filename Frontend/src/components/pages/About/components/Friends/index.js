@@ -17,26 +17,7 @@ const Friends = () => {
     const [orderBy, setOrderBy] = useState('Last Active')
     const [isActive, setIsActive] = useState('friends')
 
-    const friendRequests = [
-        {
-            id: 3,
-            name: 'John Doe',
-            username: '@john',
-            avatar: 'https://i.pravatar.cc/50?img=3',
-            verified: false,
-            lastActive: '2 days ago',
-            timestamp: 1608000000,
-        },
-        {
-            id: 4,
-            name: 'Alice Smith',
-            username: '@alice',
-            avatar: 'https://i.pravatar.cc/50?img=4',
-            verified: true,
-            lastActive: '5 hours ago',
-            timestamp: 1620000000,
-        },
-    ]
+
     // ========== STATE FROM REDUX ========== //
     const friends = useSelector((state) => state.profile.myFriends)
     const notis = useSelector((state) => state.notification.notifications)
@@ -45,8 +26,7 @@ const Friends = () => {
         notification.type?.name === FRIEND_REQUEST_NOTIFICATION, notification.metadata?.status === WAITING_STATUS
     })
     // ========== STATE ========== //
-    // const [friends, setFriendsList] = useState(friendsList)
-    const [Requests, setFriendRequests] = useState(friendRequests)
+
 
     const sortList = (list) => {
         return [...list].sort((a, b) => {

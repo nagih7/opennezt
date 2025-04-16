@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-
+import { toaster } from 'components/UI/toaster'
 const talentSlice = createSlice({
     name: 'Talent',
     initialState: {
@@ -29,6 +29,10 @@ const talentSlice = createSlice({
         isLoadingSendFriendRequest: false,
         // REPLY FRIEND REQUEST
         isLoadingReplyFriendRequest: false,
+        // BOOKMARK TALENTS
+
+        bookmarks: [], // Danh sách các talent đã bookmark
+        isLoadingBookmarkTalent: false,
     },
     reducers: {
         // ========== RECRUIT TALENTS ========== //
@@ -125,6 +129,31 @@ const talentSlice = createSlice({
             ...state,
             isLoadingReplyFriendRequest: false,
         }),
+        // ========== HANDLE BOOKMARK TALENT ========== //
+        bookmarkTalent: (state) => ({
+            ...state,
+            isLoadingBookmarkTalent: true,
+        }),
+        bookmarkTalentSuccess: (state, action) => ({
+            ...state,
+            isLoadingBookmarkTalent: false,
+            bookmarks: [...state.bookmarks, action.payload],
+        }),
+        bookmarkTalentFail: (state) => ({
+            ...state,
+            isLoadingBookmarkTalent: false,
+        }),
+        updateTalentBookmarks: (state, action) => {
+            const { talent_id, marked } = action.payload;
+            if (marked === 'yes') {
+                state.bookmarks.push({ talent_id });
+            } else {
+                state.bookmarks = state.bookmarks.filter(
+                    (bookmark) => bookmark.talent_id !== talent_id
+                );
+            }
+        },
+
     },
 })
 
@@ -146,6 +175,12 @@ export const {
     requestReplyFriendRequest,
     replyFriendRequestSuccess,
     replyFriendRequestFail,
+    // ========== HANDLE BOOKMARK TALENT ========== //
+    bookmarkTalent,
+    bookmarkTalentSuccess,
+    bookmarkTalentFail,
+    updateTalentBookmarks,
+
 } = talentSlice.actions
 
 export default talentSlice.reducer

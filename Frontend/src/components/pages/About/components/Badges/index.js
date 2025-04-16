@@ -1,6 +1,9 @@
 import RightSidebar from "components/common/RightSidebar";
 import React from "react";
-
+import { Avatar, Tabs } from '@chakra-ui/react'
+import BookmarkedArticle from "./BookmarkArticle";
+import BookmarkProject from "./BookmarkProject";
+import BookmarkTalent from "./BookmarkTalent";
 const Badges = () => {
     const badges = [
         {
@@ -61,35 +64,37 @@ const Badges = () => {
         <>
             <div className="flex gap-8">
                 <div className="w-10/12">
-                    <div className="">
-                        <div className="bg-white rounded-lg p-6">
-                            <h4 className="text-lg font-semibold mb-4">Badges({badges.length})</h4>
-                            <hr className="mb-4" />
-                            <div className="flex flex-wrap gap-6">
-                                {badges.map((badge) => (
-                                    <div key={badge.id} className="bg-[#F8F9FA]  rounded-xl p-6 w-[21rem] h-[24.5rem] text-center border">
-                                        <img src={badge.img} alt={badge.name} className="w-16 h-16 mx-auto rounded-lg" />
-                                        <h3 className="text-lg font-semibold mt-4">{badge.name}</h3>
-                                        <p className="text-[#6F7F92] text-[1rem] mt-4">{badge.description}</p>
-                                        <div className="mt-4 bg-white w-[18rem] h-[6.75rem]">
-                                            <div className="flex justify-center -space-x-5">
-                                                {badge.people.map((person, index) => (
-                                                    <img
-                                                        key={index}
-                                                        src={person.avatar}
-                                                        alt={person.name}
-                                                        className="w-10 h-10 rounded-full border border-white mt-6 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-125 hover:z-10 hover:shadow-lg"
-                                                    />
-                                                ))}
-                                            </div>
-
-                                            <p className="text-gray-400 text-[0.9rem] mt-2">People who have earned this</p>
-                                        </div>
+                    <Tabs.Root defaultValue="Articles" >
+                        <div className=" rounded-lg p-6">
+                            <Tabs.List >
+                                <div className="flex justify-between bg-white  p-4 font-bold w-full">
+                                    <div className='flex'>
+                                        <Tabs.Trigger className="text-lg font-semibold" value="Articles">
+                                            Articles
+                                        </Tabs.Trigger>
+                                        <Tabs.Trigger value="Project" className="text-lg font-semibold">
+                                            Project
+                                        </Tabs.Trigger>
+                                        <Tabs.Trigger value="Talent" className="text-lg font-semibold">
+                                            Talent
+                                        </Tabs.Trigger>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            </Tabs.List>
+
+                            <Tabs.Content value="Articles" >
+                                <BookmarkedArticle />
+                            </Tabs.Content>
+
+                            <Tabs.Content value="Project" className="flex flex-wrap gap-6 mt-4">
+                                <BookmarkProject />
+                            </Tabs.Content>
+
+                            <Tabs.Content value="Talent" className="flex flex-wrap gap-6 mt-4">
+                                <BookmarkTalent />
+                            </Tabs.Content>
                         </div>
-                    </div>
+                    </Tabs.Root>
                 </div>
                 <RightSidebar />
             </div>
