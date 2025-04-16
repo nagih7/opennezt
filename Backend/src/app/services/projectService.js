@@ -17,6 +17,7 @@ import {
     PROJECT_ACTIVITY_BACKGROUND,
     PROJECT_ACTIVITY_ADDITIONAL,
     PROJECT_ACTIVITY_REQUIREMENT,
+    PROJECT_ACTIVITY_NEW_MEMBER,
 } from '@/configs'
 import {
     Project,
@@ -1561,6 +1562,7 @@ export async function getAllActivities(user, projectId) {
         { name: PROJECT_ACTIVITY_LOGO, key: 'logo' },
         { name: PROJECT_ACTIVITY_BACKGROUND, key: 'background' },
         { name: PROJECT_ACTIVITY_REQUIREMENT, key: 'requirement' },
+        { name: PROJECT_ACTIVITY_NEW_MEMBER, key: 'new_member' },
     ]
 
     const activities = {}
@@ -1570,7 +1572,6 @@ export async function getAllActivities(user, projectId) {
         const activityLogs = await ActivityLog.aggregate([
             {
                 $match: {
-                    user_id: user._id,
                     type_id: typeNotification._id,
                     'data.project_id': project._id,
                 },
@@ -1634,13 +1635,38 @@ export async function getAllActivities(user, projectId) {
             },
             { $unwind: '$data.project' },
             {
+                $lookup: {
+                    from: 'users',
+                    localField: 'data.user_joined_id',
+                    foreignField: '_id',
+                    as: 'data.new_member',
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 0,
+                                name: 1,
+                                avatar: {
+                                    $cond: {
+                                        if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                        then: '$avatar',
+                                        else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                    },
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+            {
                 $project: {
                     _id: 1,
                     user: 1,
                     type: 1,
                     data: {
                         project: 1,
+                        new_member: { $arrayElemAt: ['$data.new_member', 0] },
                     },
+                    members: 1,
                     timestamp: 1,
                     metadata: 1,
                 },
@@ -1844,5 +1870,57 @@ export async function updateProjectRequirementActivity(user, projectId) {
             metadata: {},
         })
         await activity.save()
+    }
+}
+// ========== POST [Project - Activity New member] ========== //
+export async function updateNewMemberActivity(user, { invitationId }) {
+    const invitation = await NotificationFeed.findOne({
+        _id: new ObjectId(invitationId),
+    })
+
+    if (!invitation) {
+        throw new Error('Không tìm thấy lời mời')
+    }
+
+    const projectId = invitation.data?.project_id
+
+    if (!projectId) {
+        throw new Error('Không tìm thấy thông tin dự án trong lời mời')
+    }
+
+    const project = await Project.findOne({ _id: projectId })
+    if (!project) {
+        throw new Error('Không tìm thấy dự án')
+    }
+
+    if (invitation.metadata?.status === 'confirm') {
+        const typeNotification = await Type.findOne({
+            class: PROJECT_ACTIVITY,
+            name: PROJECT_ACTIVITY_NEW_MEMBER,
+        })
+
+        // Lấy thông tin người đã chấp nhận lời mời
+        const memberId = invitation.user_id
+        const teamRoleId = invitation.data.team_role_id
+        const roleId = invitation.data.role_id
+
+        // Tạo activity mới
+        const activity = new ActivityLog({
+            user_id: memberId,
+            type_id: typeNotification._id,
+            data: {
+                project_id: projectId,
+                invitation_id: invitationId,
+                team_role_id: teamRoleId,
+                role_id: roleId,
+            },
+            metadata: {},
+        })
+        await activity.save()
+        return activity
+    } else {
+        throw new Error(
+            `Lời mời chưa được xác nhận. Trạng thái hiện tại: ${invitation.metadata?.status || 'không có trạng thái'}`
+        )
     }
 }

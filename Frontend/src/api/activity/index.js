@@ -113,6 +113,10 @@ import {
     requestPostProjectDetailsActivityRequirement,
     postProjectDetailsActivityRequirementSuccess,
     postProjectDetailsActivityRequirementFail,
+    // ========== POST PROJECT DETAILS ACTIVITIES [ NEW MEMBER ] ========== //
+    requestPostProjectDetailsActivityNewMember,
+    postProjectDetailsActivityNewMemberSuccess,
+    postProjectDetailsActivityNewMemberFail,
 } from 'states/modules/activity'
 
 // ========== PROJECT ACCESS ========== //
@@ -497,7 +501,21 @@ export const postProjectDetailsActivitiesProjectRequirement = (projectId) => asy
             postProjectDetailsActivityRequirementSuccess,
             postProjectDetailsActivityRequirementFail,
         ],
-        // Không gửi biến
+        variables: {},
+        dispatch,
+        getState,
+    })
+}
+// ========== POST PROJECT DETAILS ACTIVITIES [ NEW MEMBER ] ========== //
+export const postProjectDetailsActivitiesNewMember = (invitationId) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `projects/me/new-member/activity/${invitationId}`,
+        actionTypes: [
+            requestPostProjectDetailsActivityNewMember,
+            postProjectDetailsActivityNewMemberSuccess,
+            postProjectDetailsActivityNewMemberFail,
+        ],
         variables: {},
         dispatch,
         getState,

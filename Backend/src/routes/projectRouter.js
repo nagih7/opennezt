@@ -190,4 +190,11 @@ projectRouter.post(
 // ========== POST [Project - Activity ProjectRequirement] ========== //
 projectRouter.post('/me/:id/requirements/activity', asyncHandler(projectController.updateProjectRequirementActivity))
 
+// ========== POST [Project - Activity New member] ========== //
+projectRouter.post(
+    '/me/new-member/activity/:invitationId',
+    asyncHandler(projectMiddleware.decodeNewMemberActivity),
+    asyncHandler(projectController.updateNewMemberActivity)
+)
+
 export default projectRouter
