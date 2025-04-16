@@ -10,10 +10,6 @@ import { setLanguage } from 'states/modules/app'
 import { IconlyChat, IconlyLogout, IconlyNotification, IconlySearch, IconlySetting, IconlyUser } from 'components/UI/Iconly'
 import { Avatar, Button, CloseButton, Drawer, For, HStack, Popover, Portal, Stack } from '@chakra-ui/react'
 import Logo from 'assets/images/logo/opennezt_full_black_old.png'
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 8eee5f5d07d252c31aae3682ce3600a47d7557ae
 import { HiMenuAlt1 } from 'react-icons/hi'
 import ProfileCardSidebar from '../SiderBar/components/ProfileCardSidebar'
 import NavItem from '../SiderBar/components/NavItem'
@@ -23,12 +19,8 @@ import { handleCheckRoute } from 'utils/helper'
 import { useNavigate } from 'react-router-dom'
 import { logout } from 'api/auth'
 import store from 'states/configureStore'
-<<<<<<< HEAD
 import styles from './styles.module.scss'
-=======
-=======
->>>>>>> f4da3f9c2720a18179b23875b7b279546eb85b56
->>>>>>> 8eee5f5d07d252c31aae3682ce3600a47d7557ae
+
 
 const Header = () => {
     const dispatch = useDispatch()
@@ -98,11 +90,6 @@ const Header = () => {
 
     //Siderbar
     const navigate = useNavigate()
-<<<<<<< HEAD
-=======
-
-<<<<<<< HEAD
->>>>>>> 8eee5f5d07d252c31aae3682ce3600a47d7557ae
     const { authRole } = useSelector((state) => state.auth)
     const handleToggleMenu = (indexNavItem, menuNavItem) => {
         if (menuNavItem.path) {
@@ -282,18 +269,6 @@ const Header = () => {
                     <img src={Logo} alt="logo-opennezt" className="py-[18px] px-8 bg-[#ffffff]  h-full" />
                 </div>
                 <div className="md:absolute md:right-0 lg:static flex items-center justify-between flex-1">
-<<<<<<< HEAD
-=======
-=======
-    return (
-        <header className="bg-[#ffffff] w-full">
-            <div className="flex items-center h-[70px] pr-4">
-                <div className="h-full cursor-pointer" onClick={() => (window.location.href = '/')}>
-                    <img src={Logo} alt="logo-opennezt" className="py-[18px] px-8 bg-[#ffffff]  h-full" />
-                </div>
-                <div className="flex items-center justify-between flex-1">
->>>>>>> f4da3f9c2720a18179b23875b7b279546eb85b56
->>>>>>> 8eee5f5d07d252c31aae3682ce3600a47d7557ae
                     <div className="flex items-center gap-4 text-sm font-semibold text-[#6f7f92]" />
                     <div className="flex items-center gap-4">
                         <form
@@ -382,10 +357,6 @@ const Header = () => {
                         </Popover.Root>
                     </div>
                 </div>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 8eee5f5d07d252c31aae3682ce3600a47d7557ae
                 {/* <div className="lg:hidden absolute right-0">
                     <HStack wrap="wrap">
                         <For each={['top']}>
@@ -510,11 +481,6 @@ const Header = () => {
                         </For>
                     </HStack>
                 </div> */}
-<<<<<<< HEAD
-=======
-=======
->>>>>>> f4da3f9c2720a18179b23875b7b279546eb85b56
->>>>>>> 8eee5f5d07d252c31aae3682ce3600a47d7557ae
             </div>
         </header>
     )

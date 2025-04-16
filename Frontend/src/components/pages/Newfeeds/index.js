@@ -340,18 +340,8 @@ function NewFeeds() {
     //End Delete Article
 
     return (
-<<<<<<< HEAD
         <div className="flex w-full gap-[16px] pt-[16px] px-[16px]">
             <div className="lg:w-8/12 w-full">
-=======
-<<<<<<< HEAD
-        <div className="flex w-full gap-[16px] pt-[16px] px-[16px]">
-            <div className="lg:w-8/12 w-full">
-=======
-        <div className="flex w-full gap-8 pt-4 px-[16px]">
-            <div className="w-10/12">
->>>>>>> f4da3f9c2720a18179b23875b7b279546eb85b56
->>>>>>> 8eee5f5d07d252c31aae3682ce3600a47d7557ae
                 {isOpenUpdateForm ? (
                     <UpdateArticleForm
                         feed={selectedArticle}
