@@ -167,7 +167,7 @@ const Article = forwardRef(
         }
 
         return (
-            <div className="bg-[#ffffff] w-full max-h-full mb-[16px] rounded-md p-8 mt-3" ref={ref}>
+            <div className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8 mt-3" ref={ref}>
                 {isConfirmDelete ? (
                     <div
                         className="fixed inset-0 flex justify-center items-center z-[999999] bg-gray-900 bg-opacity-50"
@@ -204,7 +204,7 @@ const Article = forwardRef(
                 <div className="flex items-center gap-3">
                     <div className="w-[65px] cursor-pointer" onClick={() => handleViewTalentDetails(user[0])}>
                         <Avatar.Root className="w-[50px] h-[50px] rounded-full ">
-                            <Avatar.Fallback name={user[0].name} />
+                            <Avatar.Fallback name={user[0]?.name} />
                             <Avatar.Image src={user[0].avatar} />
                         </Avatar.Root>
                     </div>
@@ -216,7 +216,7 @@ const Article = forwardRef(
                                         onClick={() => handleViewTalentDetails(user[0])}
                                         className="text-black no-underline text-sm md:text-base cursor-pointer"
                                     >
-                                        {user[0].name}
+                                        {user[0]?.name}
                                     </a>
                                 <CheckCircleFilled className="text-[#3897f0]" />
                                 </div>

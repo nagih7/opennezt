@@ -7,14 +7,7 @@ import ZoomInMapIcon from '@mui/icons-material/ZoomInMap'
 import { useSelector, useDispatch } from 'react-redux'
 import { LANG } from 'utils/constants'
 import { setLanguage } from 'states/modules/app'
-import {
-    IconlyChat,
-    IconlyLogout,
-    IconlyNotification,
-    IconlySearch,
-    IconlySetting,
-    IconlyUser,
-} from 'components/UI/Iconly'
+import { IconlyChat, IconlyLogout, IconlyNotification, IconlySearch, IconlySetting, IconlyUser } from 'components/UI/Iconly'
 import { Avatar, Button, CloseButton, Drawer, For, HStack, Popover, Portal, Stack } from '@chakra-ui/react'
 import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import { HiMenuAlt1 } from 'react-icons/hi'
@@ -23,21 +16,21 @@ import NavItem from '../SiderBar/components/NavItem'
 import appRouteMap from 'router/appRouteMap'
 import manageRouteMap from 'router/manageRouteMap'
 import { handleCheckRoute } from 'utils/helper'
-import styles from './styles.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { logout } from 'api/auth'
 import store from 'states/configureStore'
+import styles from './styles.module.scss'
 
 const Header = () => {
     const dispatch = useDispatch()
     // const [isShowThemeLight, setIsShowThemeLight] = useState(true);
     const [isFullScreen, setIsFullScreen] = useState(false)
     const authUser = useSelector((state) => state.auth.authUser)
+    const [indexNavItemSelect, setIndexNavItemSelect] = useState(null)
     const { language } = useSelector((state) => state.app)
     const { notifications } = useSelector((state) => state.notification)
     const chatListRef = useRef(null)
     const unreadNotifications = notifications.filter((notification) => notification.metadata?.read === false)
-    const [indexNavItemSelect, setIndexNavItemSelect] = useState(null)
 
     useEffect(() => {
         const handleFullScreenChange = () => {
@@ -96,7 +89,6 @@ const Header = () => {
 
     //Siderbar
     const navigate = useNavigate()
-
     const { authRole } = useSelector((state) => state.auth)
     const handleToggleMenu = (indexNavItem, menuNavItem) => {
         if (menuNavItem.path) {

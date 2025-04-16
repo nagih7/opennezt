@@ -249,3 +249,19 @@ export const GOOGLE_TOKEN_ENDPOINT = process.env.GOOGLE_TOKEN_ENDPOINT
 // AI
 export const AI_API_URL = process.env.AI_API_URL
 export const AI_API_TOKEN = process.env.AI_API_TOKEN
+
+//BLACKLISTED URLS
+export const BLACKLISTED_URLS = ['traodocu.vn']
+
+// VALID URLS TYPE
+export const URL_PATTERN = new RegExp(
+    '^(https?:\\/\\/)' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])?)\\.)+[a-z]{2,}|' + // domain name
+        'localhost|' + // localhost
+        '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|' + // ipv4
+        '\\[([0-9a-f]{1,4}:){7}[0-9a-f]{1,4}\\])' + // ipv6
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$',
+    'i'
+)

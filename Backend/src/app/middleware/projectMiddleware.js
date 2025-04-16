@@ -43,3 +43,15 @@ export const decodeBackground = async (req, res, next) => {
     }
     next()
 }
+
+export const decodeNewMemberActivity = async (req, res, next) => {
+    const { user_id, project_id } = req.body
+    const userIdDecoded = user_id
+    const projectIdDecoded = project_id
+
+    req.body = {
+        user_id: await userIdDecoded,
+        project_id: await projectIdDecoded,
+    }
+    next()
+}
