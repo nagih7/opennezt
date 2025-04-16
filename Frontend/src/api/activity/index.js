@@ -501,25 +501,23 @@ export const postProjectDetailsActivitiesProjectRequirement = (projectId) => asy
             postProjectDetailsActivityRequirementSuccess,
             postProjectDetailsActivityRequirementFail,
         ],
-        // Không gửi biến
         variables: {},
         dispatch,
         getState,
     })
 }
 // ========== POST PROJECT DETAILS ACTIVITIES [ NEW MEMBER ] ========== //
-export const postProjectDetailsActivitiesNewMember =
-    (projectId, invitationId, formRequest) => async (dispatch, getState) => {
-        return callApi({
-            method: 'post',
-            apiPath: `projects/me/${projectId}/new-member/activity/${invitationId}`,
-            actionTypes: [
-                requestPostProjectDetailsActivityNewMember,
-                postProjectDetailsActivityNewMemberSuccess,
-                postProjectDetailsActivityNewMemberFail,
-            ],
-            variables: formRequest,
-            dispatch,
-            getState,
-        })
-    }
+export const postProjectDetailsActivitiesNewMember = (invitationId) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `projects/me/new-member/activity/${invitationId}`,
+        actionTypes: [
+            requestPostProjectDetailsActivityNewMember,
+            postProjectDetailsActivityNewMemberSuccess,
+            postProjectDetailsActivityNewMemberFail,
+        ],
+        variables: {},
+        dispatch,
+        getState,
+    })
+}

@@ -192,7 +192,7 @@ projectRouter.post('/me/:id/requirements/activity', asyncHandler(projectControll
 
 // ========== POST [Project - Activity New member] ========== //
 projectRouter.post(
-    '/me/:id/new-member/activity/:invitationId',
+    '/me/new-member/activity/:invitationId',
     asyncHandler(projectMiddleware.decodeNewMemberActivity),
     asyncHandler(projectController.updateNewMemberActivity)
 )

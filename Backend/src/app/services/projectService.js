@@ -1562,6 +1562,7 @@ export async function getAllActivities(user, projectId) {
         { name: PROJECT_ACTIVITY_LOGO, key: 'logo' },
         { name: PROJECT_ACTIVITY_BACKGROUND, key: 'background' },
         { name: PROJECT_ACTIVITY_REQUIREMENT, key: 'requirement' },
+        { name: PROJECT_ACTIVITY_NEW_MEMBER, key: 'new_member' },
     ]
 
     const activities = {}
@@ -1571,7 +1572,6 @@ export async function getAllActivities(user, projectId) {
         const activityLogs = await ActivityLog.aggregate([
             {
                 $match: {
-                    user_id: user._id,
                     type_id: typeNotification._id,
                     'data.project_id': project._id,
                 },
@@ -1635,13 +1635,38 @@ export async function getAllActivities(user, projectId) {
             },
             { $unwind: '$data.project' },
             {
+                $lookup: {
+                    from: 'users',
+                    localField: 'data.user_joined_id',
+                    foreignField: '_id',
+                    as: 'data.new_member',
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 0,
+                                name: 1,
+                                avatar: {
+                                    $cond: {
+                                        if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                        then: '$avatar',
+                                        else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                    },
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+            {
                 $project: {
                     _id: 1,
                     user: 1,
                     type: 1,
                     data: {
                         project: 1,
+                        new_member: { $arrayElemAt: ['$data.new_member', 0] },
                     },
+                    members: 1,
                     timestamp: 1,
                     metadata: 1,
                 },
@@ -1848,14 +1873,7 @@ export async function updateProjectRequirementActivity(user, projectId) {
     }
 }
 // ========== POST [Project - Activity New member] ========== //
-export async function updateNewMemberActivity(user, { id, invitationId }, requestBody) {
-    // Tìm kiếm project
-    const project = await Project.findOne({ user_id: user._id, _id: id })
-    if (!project) {
-        throw new Error('Không tìm thấy dự án')
-    }
-
-    // Tìm thông báo lời mời để kiểm tra trạng thái
+export async function updateNewMemberActivity(user, { invitationId }) {
     const invitation = await NotificationFeed.findOne({
         _id: new ObjectId(invitationId),
     })
@@ -1864,8 +1882,18 @@ export async function updateNewMemberActivity(user, { id, invitationId }, reques
         throw new Error('Không tìm thấy lời mời')
     }
 
-    // Sửa lỗi: Kiểm tra cả hai trạng thái 'confirm' và 'confirmed'
-    if (invitation.metadata?.status === 'confirm' || invitation.metadata?.status === 'confirmed') {
+    const projectId = invitation.data?.project_id
+
+    if (!projectId) {
+        throw new Error('Không tìm thấy thông tin dự án trong lời mời')
+    }
+
+    const project = await Project.findOne({ _id: projectId })
+    if (!project) {
+        throw new Error('Không tìm thấy dự án')
+    }
+
+    if (invitation.metadata?.status === 'confirm') {
         const typeNotification = await Type.findOne({
             class: PROJECT_ACTIVITY,
             name: PROJECT_ACTIVITY_NEW_MEMBER,
@@ -1878,12 +1906,11 @@ export async function updateNewMemberActivity(user, { id, invitationId }, reques
 
         // Tạo activity mới
         const activity = new ActivityLog({
-            user_id: user._id, // Chủ dự án
+            user_id: memberId,
             type_id: typeNotification._id,
             data: {
-                project_id: project._id,
+                project_id: projectId,
                 invitation_id: invitationId,
-                user_joined_id: memberId,
                 team_role_id: teamRoleId,
                 role_id: roleId,
             },
