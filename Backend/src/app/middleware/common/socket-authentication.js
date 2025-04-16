@@ -30,7 +30,6 @@ async function socketAuthentication(socket, token) {
             abort(401, 'Your session has expired. Please log in again!')
         }
     }
-    abort(401)
 }
 
 export default socketAuthentication

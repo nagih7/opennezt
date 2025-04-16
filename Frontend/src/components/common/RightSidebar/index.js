@@ -16,14 +16,14 @@ function RightSidebar({ activities, action }) {
 
     // ========== RENDER COMPONENT ========== //
     return (
-        <div className="w-4/12 hidden lg:block">
-            <div className="bg-[#ffffff] p-8 rounded-md mb-[16px]">
+        <div className="w-4/12">
+            <div className="bg-[#ffffff] p-8 rounded-md mb-4">
                 <div className="flex flex-col">
                     <span className="text-xl font-semibold border-b-[1px] border-gray-200 pb-3">Active Users</span>
                     <span className="pt-4 font-light text-gray-500">There are no recently active members</span>
                 </div>
             </div>
-            <div className="flex flex-col bg-[#ffffff] p-8 rounded-md mb-4">
+            <div className="flex flex-col bg-[#ffffff] p-8 rounded-md mt-3 mb-4">
                 <span className="mb-3 text-xl font-semibold">Latest Activities</span>
                 {activities?.map((activity, index) => (
                     <div className="border-gray-200 border-t-[1px]" key={index}>
