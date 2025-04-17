@@ -19,7 +19,7 @@ export const linkPreviewCache = async (req, res, next) => {
     // Kiểm tra cache
     const cacheData = cache.get(url)
     if (cacheData) {
-        return res.status(200).json({
+        return res.status(200).jsonify({
             success: true,
             data: cacheData,
             cached: true,
@@ -52,9 +52,13 @@ export const checkBlacklist = async (req, res, next) => {
         }
 
         if (isBlacklisted(url)) {
-            return res.status(403).json({
+            return res.status(200).jsonify({
                 success: false,
                 message: 'this domain is not allowed',
+                data: {
+                    isBlacklisted: true,
+                    url: url,
+                },
             })
         }
         next()

@@ -39,6 +39,7 @@ import {
     postActivitySaveArticle,
     postActivityUpdateArticle,
 } from 'api/activity'
+import { resetLinkPreview } from 'states/modules/linkPreview'
 
 const unifiedAction = (activity) => {
     if (typeof activity === 'string' || !activity || activity === null) {
@@ -223,6 +224,7 @@ function NewFeeds() {
 
     const handleOpenForm = useCallback(() => {
         dispatch(openCreateForm())
+        dispatch(resetLinkPreview())
     }, [dispatch])
 
     const handleCloseForm = useCallback(() => {
@@ -252,6 +254,7 @@ function NewFeeds() {
             newFormData.append('audience', formData.audience)
             newFormData.append('status', formData.status)
             newFormData.append('project_id', formData.project_id)
+            newFormData.append('link_preview', formData.link_preview)
             dispatch(handleCreateArticle({ data: newFormData }))
         },
         [dispatch]
