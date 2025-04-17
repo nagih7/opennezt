@@ -202,27 +202,6 @@ export const OPENAI_ANALYZE_PROMPT_FREQUENCY_PENALTY = 0
 export const OPENAI_ANALYZE_PROMPT_PRESENCE_PENALTY = 0
 export const OPENAI_ANALYZE_PROMPT_STOP = ['###']
 
-export const MATCHING_TALENTS_PROMPT = (projects, talents) => {
-    const messages = [
-        {
-            role: 'system',
-            content: `
-You are an AI system that matches projects with talents. Analyze input data carefully and return structured output.`,
-        },
-        {
-            role: 'user',
-            content: `
-Input:
-1. Projects Requirements:${projects.join(', ')}
-2. Talents: ${talents.map((talent) => `User ID: ${talent.user_id}, Industry: ${talent.industry.join(', ')}`).join('; ')}
-Task: Analyze the user's suitability for the project; Return the matching users; Limit the top 6 users to the highest score; For each user, include: "user_id": user ID, "match_score": score from 1 to 99 indicating the match rate (do not create even numbers).
-Output format:{"<user_id>": <Score>,...}`,
-        },
-    ]
-
-    return messages
-}
-
 //ARTICLE CONST
 export const REACTIONS_ENUM = ['like', 'dislike', 'share']
 export const ARTICLE_STATUS_ENUM = ['draft', 'published', 'archived']
@@ -249,6 +228,10 @@ export const GOOGLE_TOKEN_ENDPOINT = process.env.GOOGLE_TOKEN_ENDPOINT
 // AI
 export const AI_API_URL = process.env.AI_API_URL
 export const AI_API_TOKEN = process.env.AI_API_TOKEN
+
+// LINKEDIN CRAWL
+export const LINKEDIN_USERNAME = process.env.LINKEDIN_USERNAME
+export const LINKEDIN_PASSWORD = process.env.LINKEDIN_PASSWORD
 
 //BLACKLISTED URLS
 export const BLACKLISTED_URLS = ['traodocu.vn']
