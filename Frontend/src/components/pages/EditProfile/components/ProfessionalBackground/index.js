@@ -74,16 +74,16 @@ const ProfessionalBackground = () => {
     }
     // ========== COMPONENT RENDER ========== //
     return (
-        <div className="flex gap-8 w-full py-8 px-[16px]">
+        <div className="flex flex-col md:flex-row gap-8 w-full py-8 px-[16px]">
             <ProfileEditMenu />
-            <div className="w-8/12">
-                <div className="bg-[#ffffff] p-8 rounded-md">
+            <div className="md:w-8/12 w-full">
+                <div className="bg-[#ffffff] hidden md:block p-8 rounded-md">
                     {/* =========== Profile Card ========== */}
                     <ProfileCard />
                     {/* =========== Action Bar  ========== */}
                     <ActionBar />
                 </div>
-                <div className="bg-[#ffffff] p-8 rounded-md mt-8">
+                <div className="bg-[#ffffff] p-8 rounded-md md:mt-8">
                     <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
                         <div>
                             <h4 className="">Professional Background</h4>
@@ -115,7 +115,7 @@ const ProfessionalBackground = () => {
                                     <Button
                                         onClick={handleSaveChanges}
                                         height={50}
-                                        className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                                        className="mt-[14px] text-sm  px-[20px] sm:px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
                                         borderRadius={4}
                                         loading={isLoadingUpdateProfile}
                                     >

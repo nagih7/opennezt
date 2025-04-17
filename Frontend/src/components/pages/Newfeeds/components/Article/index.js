@@ -211,18 +211,18 @@ const Article = forwardRef(
                     <div className="flex items-center justify-between w-full">
                         <div className="flex flex-col w-9/12 gap-2 text-base font-medium">
                             <div className="flex items-center gap-1">
-                                <div>
+                                <div className='flex items-center gap-2'>
                                     <a
                                         onClick={() => handleViewTalentDetails(user[0])}
-                                        className="text-black no-underline cursor-pointer"
+                                        className="text-black no-underline text-sm md:text-base cursor-pointer"
                                     >
                                         {user[0]?.name}
                                     </a>
+                                <CheckCircleFilled className="text-[#3897f0]" />
                                 </div>
                                 {/* {user[0].name} */}
-                                <CheckCircleFilled className="text-[#3897f0]" />
                                 {project[0] ? (
-                                    <>
+                                    <div className='hidden md:block'>
                                         {' '}
                                         <span className="text-sm">posted in</span>
                                         <span
@@ -231,12 +231,12 @@ const Article = forwardRef(
                                         >
                                             <b> {project[0]?.name}</b>
                                         </span>
-                                    </>
+                                    </div>
                                 ) : (
-                                    <>
+                                    <div className='hidden md:block'>
                                         {' '}
                                         <span className="text-sm">created a new post</span>
-                                    </>
+                                    </div>
                                 )}
                             </div>
                             <span className="text-xs text-gray-500">

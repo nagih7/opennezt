@@ -16,7 +16,7 @@ function RightSidebar({ activities, action }) {
 
     // ========== RENDER COMPONENT ========== //
     return (
-        <div className="w-4/12">
+        <div className="lg:block hidden w-4/12">
             <div className="bg-[#ffffff] p-8 rounded-md mb-4">
                 <div className="flex flex-col">
                     <span className="text-xl font-semibold border-b-[1px] border-gray-200 pb-3">Active Users</span>

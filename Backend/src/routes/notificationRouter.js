@@ -26,4 +26,7 @@ notificationRouter.put(
     asyncHandler(notificationController.replyNotification)
 )
 
+// ========== PUT [Notification - Mark as Read] ========== //
+notificationRouter.put('/:notificationId/read', asyncHandler(notificationController.markAsRead))
+
 export default notificationRouter

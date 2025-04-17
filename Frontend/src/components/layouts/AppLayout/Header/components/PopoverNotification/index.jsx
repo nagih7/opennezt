@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import moment from 'moment'
 import store from 'states/configureStore'
-import { replyNotification } from 'api/notification'
+import { markAsRead, replyNotification } from 'api/notification'
 import {
     CONFIRM_FRIEND_REQUEST_NOTIFICATION,
     CONFIRM_PROJECT_INVITATION_NOTIFICATION,
@@ -46,6 +46,12 @@ function PopoverNotification() {
             await store.dispatch(postProjectDetailsActivitiesNewMember(notification_id, {}))
         }
     }
+    // ========== HANDLE MARK AS READ ========== //
+    const handleMarkAsRead = async (notification) => {
+        if (notification.metadata?.read === false) {
+            await store.dispatch(markAsRead(notification._id))
+        }
+    }
 
     // ========== RENDER ========== //
     return (
@@ -70,6 +76,7 @@ function PopoverNotification() {
                                     <div
                                         className="px-4 py-[16px] bg-gray-100 hover:bg-[#f6f5f5] cursor-pointer"
                                         key={index}
+                                        onClick={() => handleMarkAsRead(notification)}
                                     >
                                         <Stack>
                                             <Stack direction="row" spacing={4}>

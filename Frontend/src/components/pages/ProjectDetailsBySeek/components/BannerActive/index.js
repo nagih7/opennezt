@@ -1,6 +1,6 @@
 import { Avatar } from "@chakra-ui/react";
 import { IconlyBookmark } from "components/UI/Iconly";
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	FaChevronRight,
 	FaCheckCircle,
@@ -22,9 +22,26 @@ const BannerActive = () => {
 			marked: isBookmarked ? 'no' : 'yes',
 		};
 
+		// Cập nhật Redux store
 		dispatch(handleBookmarkProject(data));
 		dispatch(updateBookmarks(data));
+
+		// Lưu trạng thái bookmark vào localStorage
+		const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedProjects')) || [];
+		if (isBookmarked) {
+			// Xóa project khỏi danh sách bookmark
+			const updatedBookmarks = storedBookmarks.filter((bookmark) => bookmark.project_id !== projectDetails?._id);
+			localStorage.setItem('bookmarkedProjects', JSON.stringify(updatedBookmarks));
+		} else {
+			// Thêm project vào danh sách bookmark
+			storedBookmarks.push({ project_id: projectDetails?._id });
+			localStorage.setItem('bookmarkedProjects', JSON.stringify(storedBookmarks));
+		}
 	};
+	useEffect(() => {
+		const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedProjects')) || [];
+		dispatch(updateBookmarks({ bookmarks: storedBookmarks }));
+	}, [dispatch]);
 	return (
 		<div className=" bg-[#07142e] w-[78.75rem] h-[18.75rem] relative top-[0rem] 2xl:w-[102rem]">
 			<div className="text-white font-bold relative top-[5rem]  border-b border-[#142039] pb-4 2xl:ml-[5.5rem]">

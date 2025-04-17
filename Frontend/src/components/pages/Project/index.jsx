@@ -62,12 +62,12 @@ function Projects() {
     }, [dispatch])
 
     return (
-        <div className="w-full py-8 px-[16px] overflow-y-scroll overflow-x-hidden" ref={scrollContainerRef}>
+        <div className="w-full py-[16px] px-[16px] overflow-y-scroll overflow-x-hidden" ref={scrollContainerRef}>
             <ActiveBanner />
-            <div className="flex gap-8 mt-8">
-                <div className="flex flex-col w-10/12">
+            <div className="flex gap-[16px] mt-[16px]">
+                <div className="flex flex-col lg:w-8/12 w-full">
                     <SearchProjectHeader />
-                    <div className="pb-8 px-8 bg-[#fbfbfb] rounded-md mt-8 flex-1">
+                    <div className="pb-8 px-8 bg-[#fbfbfb] rounded-md mt-[16px] flex-1">
                         <ActivateHeader isBottom={isBottom} setIsBottom={setIsBottom} />
                     </div>
                 </div>

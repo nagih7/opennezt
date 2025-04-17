@@ -481,21 +481,18 @@ const projectSlice = createSlice({
 
         // ========== UPDATE BOOKMARKS ========== //
         updateBookmarks: (state, action) => {
-            const { project_id, marked } = action.payload;
+            if (action.payload.bookmarks) {
 
-            if (marked === 'yes') {
-                // Thêm dự án vào danh sách bookmark nếu chưa có
-                const exists = state.bookmarks.some(
-                    (bookmark) => bookmark.project_id === project_id
-                );
-                if (!exists) {
-                    state.bookmarks.push({ project_id });
-                }
+                state.bookmarks = action.payload.bookmarks;
             } else {
-                // Xóa dự án khỏi danh sách bookmark
-                state.bookmarks = state.bookmarks.filter(
-                    (bookmark) => bookmark.project_id !== project_id
-                );
+                const { project_id, marked } = action.payload;
+                if (marked === 'yes') {
+                    state.bookmarks.push({ project_id });
+                } else {
+                    state.bookmarks = state.bookmarks.filter(
+                        (bookmark) => bookmark.project_id !== project_id
+                    );
+                }
             }
         },
     },

@@ -7,7 +7,7 @@ const RecruitTalentsHeader = () => {
 		useSelector((state) => state.talent);
 
 	return (
-		<div className="flex justify-between items-center bg-[#ffffff] rounded-md p-[16px] mb-8">
+		<div className="flex justify-between items-center w-full bg-[#ffffff] rounded-md p-[16px] mb-8">
 			<p className="mb-0">
 				Showing{" "}
 				{(paginationRecruitTalents.currentPage - 1) *

@@ -46,7 +46,7 @@ const MyProjects = ({ isBottom, setIsBottom }) => {
                     </p>
                 </div>
             )}
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-8">
                 {myProjects && myProjects.length > 0 ? (
                     myProjects.map((project, index) => <ProjectBox project={project} key={index} />)
                 ) : (

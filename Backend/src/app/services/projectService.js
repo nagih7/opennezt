@@ -1238,7 +1238,6 @@ export async function accessToProject(user, projectId) {
 // ========== GET [My Project Access] ========== //
 export async function getMyProjectAccess(user) {
     const accessType = await Type.findOne({ class: ACCESS_TYPE, name: PROJECT_ACCESS })
-    console.log('accessType', accessType._id)
     const activities = await ActivityLog.aggregate([
         {
             $match: {

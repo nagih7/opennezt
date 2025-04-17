@@ -133,16 +133,16 @@ const Educations = () => {
 
     // ========== COMPONENT RENDER ========== //
     return (
-        <div className="flex gap-8 w-full py-8 px-[16px]">
+        <div className="flex gap-8 flex-col md:flex-row w-full py-8 px-[16px]">
             <ProfileEditMenu />
-            <div className="w-8/12">
-                <div className="bg-[#ffffff] p-8 rounded-md">
+            <div className="md:w-8/12 w-full">
+                <div className="bg-[#ffffff] md:block hidden p-8 rounded-md">
                     {/* =========== Profile Card ========== */}
                     <ProfileCard />
                     {/* =========== Action Bar  ========== */}
                     <ActionBar />
                 </div>
-                <div className="bg-[#ffffff] p-8 rounded-md mt-8">
+                <div className="bg-[#ffffff] p-8 rounded-md md:mt-8">
                     <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200 flex justify-between">
                         <div>
                             <h4 className="">Educations</h4>
@@ -150,7 +150,7 @@ const Educations = () => {
                         <Button
                             onClick={handleAddCertification}
                             height={50}
-                            className="mt-[14px] px-[28px] py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                            className="mt-[14px] px-[18px] text-sm sm:px-[28px] py-2 sm:py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
                             borderRadius={4}
                             loading={false}
                             loadingText="Loading..."

@@ -6,7 +6,7 @@ import MessageFooter from './components/MessageFooter';
 
 const MessageSidebar = () => {
     return (
-        <Stack className="flex flex-col h-full overflow-hidden">
+        <Stack className="flex flex-col md:px-0 md:py-0 px-[16px] py-[16px] h-full w-full overflow-hidden">
             <MessageHeader />
             <Conversations />
             <MessageFooter />

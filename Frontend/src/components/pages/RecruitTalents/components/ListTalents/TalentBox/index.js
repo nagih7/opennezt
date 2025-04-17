@@ -16,16 +16,36 @@ const TalentBox = ({ talent, handleViewTalentDetails }) => {
         const data = {
             talent_id: talent._id,
             marked: isBookmarked ? 'no' : 'yes',
+        };
+
+        // Cập nhật Redux store
+        dispatch(bookmarkTalent(data));
+        dispatch(updateTalentBookmarks(data));
+
+        // Lưu trạng thái bookmark vào localStorage
+        const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedTalents')) || [];
+        if (isBookmarked) {
+            // Xóa talent khỏi danh sách bookmark
+            const updatedBookmarks = storedBookmarks.filter((bookmark) => bookmark.talent_id !== talent._id);
+            localStorage.setItem('bookmarkedTalents', JSON.stringify(updatedBookmarks));
+        } else {
+            // Thêm talent vào danh sách bookmark
+            storedBookmarks.push({ talent_id: talent._id });
+            localStorage.setItem('bookmarkedTalents', JSON.stringify(storedBookmarks));
         }
-        dispatch(bookmarkTalent(data))
-        dispatch(updateTalentBookmarks(data))
-    }
+    };
+    useEffect(() => {
+        const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedTalents')) || [];
+        dispatch(updateTalentBookmarks({ bookmarks: storedBookmarks }));
+    }, [dispatch]);
     // ========== RENDER COMPONENT ========== //
     return (
         <>
             <div className="relative">
                 <div className="relative group">
+
                     <Avatar.Root onClick={() => handleViewTalentDetails(talent.user)} className="w-[280px] h-[280px] rounded-md" shape="square">
+
                         <Avatar.Fallback name={talent.user.name} />
                         <Avatar.Image src={talent.user.avatar} />
                     </Avatar.Root>
@@ -50,7 +70,7 @@ const TalentBox = ({ talent, handleViewTalentDetails }) => {
                     </div>
                 </div>
             </div>
-            <div className="absolute bottom-[-40px] group-hover:bottom-[-21px] group-hover:translate-x-0 translate-x-full transition-all duration-700 ease-in-out left-0 w-[280px] p-[16px] bg-[#f6f4f4] flex flex-col justify-center items-center gap-2">
+            <div className="md:absolute bottom-[-40px] group-hover:bottom-[-21px] group-hover:translate-x-0 translate-x-full transition-all duration-700 ease-in-out left-0 w-full p-[16px] bg-[#f6f4f4] flex flex-col justify-center items-center gap-2">
                 <div className="font-semibold text-black no-underline">{talent.user.name}</div>
 
                 <div

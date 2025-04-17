@@ -144,13 +144,18 @@ const talentSlice = createSlice({
             isLoadingBookmarkTalent: false,
         }),
         updateTalentBookmarks: (state, action) => {
-            const { talent_id, marked } = action.payload;
-            if (marked === 'yes') {
-                state.bookmarks.push({ talent_id });
+            if (action.payload.bookmarks) {
+                // Cập nhật toàn bộ danh sách bookmark
+                state.bookmarks = action.payload.bookmarks;
             } else {
-                state.bookmarks = state.bookmarks.filter(
-                    (bookmark) => bookmark.talent_id !== talent_id
-                );
+                const { talent_id, marked } = action.payload;
+                if (marked === 'yes') {
+                    state.bookmarks.push({ talent_id });
+                } else {
+                    state.bookmarks = state.bookmarks.filter(
+                        (bookmark) => bookmark.talent_id !== talent_id
+                    );
+                }
             }
         },
 
