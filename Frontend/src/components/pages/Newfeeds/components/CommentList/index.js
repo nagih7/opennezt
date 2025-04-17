@@ -18,14 +18,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { resetComment, resetReplyReaction, updateCommentReaction, updateCreatedComment } from 'states/modules/article'
 import { useRef, useCallback } from 'react'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
-
 import Comment from '../Comment'
 import NewCommentForm from '../NewCommentForm'
 import { resetReply } from 'states/modules/article'
 import store from 'states/configureStore'
+import { useNavigate } from 'react-router-dom'
+import { handleGetLinkPreview } from 'api/linkPreview'
 
 const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
-    const { _id, user, project, content, reaction_count, created_at, comment_count } = feed
+    const { _id, user, project, content, reaction_count, created_at, comment_count, link_preview } = feed
+    const { linkDataArticle, isLoadingGetLinkPreview } = useSelector((state) => state.linkPreview)
 
     const {
         comment,
@@ -452,6 +454,115 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
         setReplyCommentList({})
     }, [])
 
+    const handleViewTalentDetails = (user) => {
+        navigate(`/talents/${user?._id}/details`)
+    }
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+
+    const handlePrevImage = (e) => {
+        e.stopPropagation()
+        setSelectedImageIndex((prev) => (prev === 0 ? content.attachment.length - 1 : prev - 1))
+    }
+
+    const handleNextImage = (e) => {
+        e.stopPropagation()
+        setSelectedImageIndex((prev) => (prev === content.attachment.length - 1 ? 0 : prev + 1))
+    }
+
+    const [previewData, setPreviewData] = useState(null)
+
+    // Thêm useEffect để lấy link preview data
+    useEffect(() => {
+        if (link_preview) {
+            dispatch(handleGetLinkPreview({ data: { url: link_preview } }))
+        }
+    }, [link_preview, dispatch])
+
+    // Cập nhật preview data khi có response từ API
+    useEffect(() => {
+        if (linkDataArticle?.url === link_preview) {
+            setPreviewData(linkDataArticle)
+        }
+    }, [linkDataArticle, link_preview])
+
+    const LinkPreviewSkeleton = () => {
+        return (
+            <div className="mt-4 border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+                <div className="flex flex-col sm:flex-row animate-pulse">
+                    <div className="sm:w-48 h-48 sm:h-auto flex-shrink-0 bg-gray-200"></div>
+                    <div className="flex-1 p-4">
+                        <div className="space-y-3">
+                            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    // Thêm hàm render link preview
+    const renderLinkPreview = () => {
+        if (isLoadingGetLinkPreview) {
+            return <LinkPreviewSkeleton />
+        }
+
+        if (!previewData) return null
+
+        // Hàm kiểm tra và format URL
+        const getDisplayUrl = (url) => {
+            try {
+                const urlObject = new URL(url)
+                return urlObject.hostname
+            } catch (error) {
+                // Nếu URL không hợp lệ, trả về URL gốc
+                return url
+            }
+        }
+
+        return (
+            <div
+                className="mt-4 border border-gray-200 hover:border-gray-300 rounded-xl overflow-hidden transition-all duration-200 bg-white shadow-sm cursor-pointer"
+                onClick={() => {
+                    // Kiểm tra URL trước khi mở
+                    try {
+                        new URL(previewData.url)
+                        window.open(previewData.url, '_blank')
+                    } catch (error) {
+                        console.error('Invalid URL:', previewData.url)
+                    }
+                }}
+            >
+                <div className="flex flex-col sm:flex-row">
+                    {previewData.image && (
+                        <div className="sm:w-48 h-48 sm:h-auto flex-shrink-0">
+                            <img
+                                src={previewData.image}
+                                alt={previewData.title}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    )}
+                    <div className="flex-1 p-4">
+                        <div className="space-y-2">
+                            <h4 className="font-semibold text-gray-900 line-clamp-2">{previewData.title}</h4>
+                            <p className="text-sm text-gray-600 line-clamp-2">{previewData.description}</p>
+                            <div className="flex items-center gap-2 pt-1">
+                                {previewData.favicon && (
+                                    <img src={previewData.favicon} alt="" className="w-4 h-4 rounded-full" />
+                                )}
+                                <span className="text-sm text-gray-500 truncate">{getDisplayUrl(previewData.url)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    const navigate = useNavigate()
     return (
         <div className="fixed inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 100 }}>
             <div className="fixed inset-0 bg-black bg-opacity-50" onClick={handleCloseComment}></div>
@@ -511,16 +622,149 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="mt-6">
-                        <p className="my-[6px]">{content.caption}</p>
+
+                    {feed.link_preview ? (
+                        <div className="mt-6">
+                            <p className="my-[6px]">{content.caption}</p>
+                            {renderLinkPreview()}
+                        </div>
+                    ) : (
+                        <div className="mt-6">
+                            <p className="my-[6px]">{content.caption}</p>
+                        </div>
+                    )}
+
+                    <div className="mt-4">
+                        {content.attachment && content.attachment.length > 0 && (
+                            <div
+                                className={`
+                            grid gap-2 
+                            ${content.attachment.length === 1 ? 'grid-cols-1' : ''}
+                            ${content.attachment.length === 2 ? 'grid-cols-2' : ''}
+                            ${content.attachment.length === 3 ? 'grid-cols-2' : ''}
+                            ${content.attachment.length >= 4 ? 'grid-cols-2' : ''}
+                            max-h-[400px]
+                        `}
+                            >
+                                {content.attachment.map((img, index) => {
+                                    let className = 'relative h-[200px]' // Default cho ảnh vuông
+
+                                    if (content.attachment.length === 1) {
+                                        className = 'relative h-[400px]' // Ảnh đơn
+                                    } else if (content.attachment.length === 2) {
+                                        className = 'relative h-[200px]' // 2 ảnh cạnh nhau
+                                    } else if (content.attachment.length === 3) {
+                                        if (index === 0) {
+                                            className = 'relative h-[250px] col-span-2' // Ảnh đầu tiên khi có 3 ảnh
+                                        } else {
+                                            className = 'relative h-[146px]' // 2 ảnh dưới khi có 3 ảnh
+                                        }
+                                    } else if (content.attachment.length >= 4) {
+                                        className = 'relative h-[200px]' // 4 ảnh hoặc nhiều hơn
+                                    }
+
+                                    if (index > 3) return null
+
+                                    return (
+                                        <div
+                                            key={index}
+                                            className={className}
+                                            onClick={() => {
+                                                setSelectedImageIndex(index)
+                                                setIsModalOpen(true)
+                                            }}
+                                        >
+                                            <img
+                                                src={typeof img === 'string' ? img : URL.createObjectURL(img)}
+                                                alt={`Preview ${index + 1}`}
+                                                className="w-full h-full object-cover cursor-pointer rounded-lg hover:opacity-95 transition-opacity"
+                                            />
+
+                                            {content.attachment.length > 4 && index === 3 && (
+                                                <div className="absolute inset-0 flex items-center justify-center rounded-lg overflow-hidden">
+                                                    <div className="absolute inset-0 bg-black/25 hover:bg-black/30 transition-all duration-200" />
+                                                    <span className="relative z-10 text-white text-2xl font-semibold drop-shadow">
+                                                        +{content.attachment.length - 4}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        )}
                     </div>
-                    <div className="flex flex-wrap gap-2 ">
-                        {content.attachment &&
-                            content.attachment.length > 0 &&
-                            content.attachment.map((img, index) => {
-                                return <img src={img} key={index} />
-                            })}
-                    </div>
+                    {isModalOpen && (
+                        <div
+                            className="fixed inset-0 bg-black/95 z-[999999] flex items-center justify-center"
+                            onClick={() => setIsModalOpen(false)}
+                        >
+                            <div className="relative w-full max-w-[90%] flex flex-col items-center">
+                                <div className="relative max-h-[90vh]">
+                                    {content.attachment.length > 1 && (
+                                        <>
+                                            <button
+                                                className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-4xl bg-black/50 w-12 h-12 rounded-full flex items-center justify-center hover:bg-black/70 transition-all z-50"
+                                                onClick={handlePrevImage}
+                                            >
+                                                ‹
+                                            </button>
+                                            <button
+                                                className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-4xl bg-black/50 w-12 h-12 rounded-full flex items-center justify-center hover:bg-black/70 transition-all z-50"
+                                                onClick={handleNextImage}
+                                            >
+                                                ›
+                                            </button>
+                                        </>
+                                    )}
+                                    <img
+                                        src={
+                                            typeof content.attachment[selectedImageIndex] === 'string'
+                                                ? content.attachment[selectedImageIndex]
+                                                : URL.createObjectURL(content.attachment[selectedImageIndex])
+                                        }
+                                        alt="Full size preview"
+                                        className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                                    />
+                                    <button
+                                        className="absolute top-4 right-4 text-white text-xl bg-black/50 w-10 h-10 rounded-full hover:bg-black/70 transition-all flex items-center justify-center"
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            setIsModalOpen(false)
+                                        }}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+
+                                {/* Controls container */}
+                                <div className="absolute bottom-4 flex flex-col items-center gap-4">
+                                    {/* Số trang */}
+                                    <div className="text-white bg-black/50 px-6 py-2 rounded-full text-sm font-medium">
+                                        {selectedImageIndex + 1} / {content.attachment.length}
+                                    </div>
+
+                                    {/* Dots */}
+                                    <div className="flex items-center justify-center gap-3">
+                                        {content.attachment.map((_, index) => (
+                                            <button
+                                                key={index}
+                                                className={`w-2.5 h-2.5 rounded-full transition-all ${
+                                                    index === selectedImageIndex
+                                                        ? 'bg-white scale-110'
+                                                        : 'bg-white/40 hover:bg-white/60'
+                                                }`}
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    setSelectedImageIndex(index)
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     <div className="flex items-center border-b-[1px] border-gray-200 pb-2 text-sm gap-2 mt-[18px]">
                         <span className="text-[#6f7f92]"></span>
                     </div>

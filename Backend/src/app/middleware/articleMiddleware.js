@@ -1,5 +1,5 @@
 export const decodeFormData = async (req, res, next) => {
-    const {caption, hashtags, audience, status, project_id, attachment} = req.body
+    const { caption, hashtags, audience, status, project_id, attachment, link_preview } = req.body
 
     const captionDecode = caption
     const hashtagsDecode = JSON.parse(hashtags)
@@ -7,6 +7,7 @@ export const decodeFormData = async (req, res, next) => {
     const statusDecode = status
     const project_idDecode = project_id
     const attachmentDecode = Array.isArray(attachment) ? attachment : [attachment]
+    const link_previewDecode = link_preview
 
     req.body = {
         content: {
@@ -16,13 +17,14 @@ export const decodeFormData = async (req, res, next) => {
         },
         audience: await audienceDecode,
         status: await statusDecode,
+        link_preview: await link_previewDecode,
         project_id: await project_idDecode,
     }
     next()
 }
 
 export const decodeFormCommentData = async (req, res, next) => {
-    const {article_id, caption, image} = req.body
+    const { article_id, caption, image } = req.body
 
     const captionDecode = caption
     const article_idDecode = article_id
@@ -39,7 +41,7 @@ export const decodeFormCommentData = async (req, res, next) => {
 }
 
 export const decodeFormReplyCommentData = async (req, res, next) => {
-    const {article_id, comment_id, caption, image} = req.body
+    const { article_id, comment_id, caption, image } = req.body
 
     const article_idDecode = article_id
     const comment_idDecode = comment_id
