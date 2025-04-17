@@ -1557,3 +1557,31 @@ export const IconlyRevenue = ({ size = 24, color = 'currentColor' }) => {
         </svg>
     );
 };
+
+export const IconlyArrowLeft = ({ size , color }) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+		    <title>Iconly/Light/Arrow - Left</title>
+		    <g id="Iconly/Light/Arrow---Left" stroke="none" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
+		        <g id="Arrow---Left" transform="translate(12.000000, 12.000000) rotate(-270.000000) translate(-12.000000, -12.000000) translate(5.500000, 4.000000)" stroke={color} strokeWidth="1.5">
+		            <line x1="6.7743" y1="15.75" x2="6.7743" y2="0.75" id="Stroke-1"></line>
+		            <polyline id="Stroke-3" points="12.7987 9.7002 6.7747 15.7502 0.7497 9.7002"></polyline>
+		        </g>
+		    </g>
+		</svg> 
+		) 
+}
+
+export const IconlyTimeCircle = ({ size , color }) => {
+    return (
+		<svg width={size} height={size} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+		    <title>Iconly/Light/Time Circle</title>
+		    <g id="Iconly/Light/Time-Circle" stroke="none" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
+		        <g id="Time-Circle" transform="translate(2.000000, 2.000000)" stroke={color} strokeWidth="1.5">
+		            <path d="M19.2498,10.0005 C19.2498,15.1095 15.1088,19.2505 9.9998,19.2505 C4.8908,19.2505 0.7498,15.1095 0.7498,10.0005 C0.7498,4.8915 4.8908,0.7505 9.9998,0.7505 C15.1088,0.7505 19.2498,4.8915 19.2498,10.0005 Z" id="Stroke-1"></path>
+		            <polyline id="Stroke-3" points="13.4314 12.9429 9.6614 10.6939 9.6614 5.8469"></polyline>
+		        </g>
+		    </g>
+		</svg> 
+		) 
+}
