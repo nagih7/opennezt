@@ -6,7 +6,7 @@ export default {
     theme: {
         extend: {
             screens: {
-                '2xl': '1536px', // Kích thước màn hình 2xl
+                '2xl': '1875px', // Kích thước màn hình 2xl
             },
         },
     },
