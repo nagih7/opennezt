@@ -11,6 +11,10 @@ import {
     requestReplyNotification,
     replyNotificationSuccess,
     replyNotificationFail,
+    // ========== Mask as read ========== //
+    loadingMarkAsRead,
+    markAsReadSuccess,
+    markAsReadFail,
 } from 'states/modules/notification'
 
 // =========== Get Notification =========== //
@@ -71,3 +75,15 @@ export const readRoot =
             getState,
         })
     }
+
+// =========== Mask as read =========== //
+export const markAsRead = (notificationId) => async (dispatch, getState) => {
+    return callApi({
+        method: 'put',
+        apiPath: `notifications/${notificationId}/read`,
+        actionTypes: [loadingMarkAsRead, markAsReadSuccess, markAsReadFail],
+        variables: {},
+        dispatch,
+        getState,
+    })
+}
