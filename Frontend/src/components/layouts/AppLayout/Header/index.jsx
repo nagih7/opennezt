@@ -8,14 +8,22 @@ import { useSelector, useDispatch } from 'react-redux'
 import { LANG } from 'utils/constants'
 import { setLanguage } from 'states/modules/app'
 import {
+    IconlyActivity,
+    IconlyAddUser,
     IconlyArrowLeft,
     IconlyChat,
+    IconlyDocument,
+    IconlyFolder,
+    IconlyGraph,
     IconlyLogout,
     IconlyNotification,
+    IconlyProfile,
     IconlySearch,
     IconlySetting,
+    IconlyShieldDone,
     IconlyTimeCircle,
     IconlyUser,
+    IconlyWork,
 } from 'components/UI/Iconly'
 import { Avatar, Button, CloseButton, Drawer, For, HStack, Popover, Portal, Stack } from '@chakra-ui/react'
 import Logo from 'assets/images/logo/opennezt_full_black_old.png'
@@ -145,6 +153,22 @@ const Header = () => {
         []
     )
 
+    const routeIcons = useMemo(
+        () => ({
+            ACTIVITY: <IconlyActivity size={16} color={'#6f7f92'} />,
+            ADMIN: <IconlyGraph size={16} color={'#6f7f92'} />,
+            ABOUT_ME: <IconlyProfile size={16} color={'#6f7f92'} />,
+            PROJECT: <IconlyFolder size={16} color={'#6f7f92'} />,
+            RECRUIT_TALENTS: <IconlyAddUser size={16} color={'#6f7f92'} />,
+            SEEK_PROJECTS: <IconlyWork size={16} color={'#6f7f92'} />,
+            NOTIFICATIONS: <IconlyNotification size={16} color={'#6f7f92'} />,
+            MESSAGES: <IconlyChat size={16} color={'#6f7f92'} />,
+            // Add a default icon for any path that doesn't have a specific mapping
+            default: <IconlySearch size={16} color={'#6f7f92'} />,
+        }),
+        []
+    )
+
     // Handle search functionality
     useEffect(() => {
         if (searchQuery.trim() === '') {
@@ -162,11 +186,12 @@ const Header = () => {
                 key,
                 text: value[language],
                 path: navRoutes[key] || '/',
+                icon: routeIcons[key] || routeIcons.default, // Add the icon here
             }))
 
         setSearchResults(results)
         setShowResults(results.length > 0)
-    }, [searchQuery, language, navRoutes])
+    }, [searchQuery, language, navRoutes, routeIcons])
 
     // Close search results when clicking outside
     useEffect(() => {
@@ -208,7 +233,7 @@ const Header = () => {
             try {
                 setRecentSearches(JSON.parse(savedSearches))
             } catch (e) {
-                console.error('Error parsing recent searches:', e)
+                // console.error('Error parsing recent searches:', e)
                 setRecentSearches([])
             }
         }
@@ -403,18 +428,21 @@ const Header = () => {
                 <div className="md:absolute md:right-0 lg:static flex items-center justify-between flex-1">
                     <div className="flex items-center gap-4 text-sm font-semibold text-[#6f7f92]" />
                     <div className="flex items-center gap-4">
-                        <div className="relative" ref={searchRef}>
-                            <form
+                        <div className="relative flex" ref={searchRef}>
+                            {/* <div className="bg-[#ffffff] cursor-pointer h-[40px] w-[40px] flex items-center justify-center rounded-l-md">
+                                <IconlyArrowLeft size={16} color={'#6f7f92'} />
+                            </div> */}
+                            {/* <form
                                 onSubmit={handleSearchSubmit}
                                 className="hidden lg:flex items-center bg-[#f8f9fa] rounded-md w-[240px] h-[40px] border-[1px]  border-gray-200 "
                             >
                                 <button
-                                    type="button" // Changed from submit to button to prevent form submission
+                                    type="button" 
                                     className="flex items-center justify-center w-10 h-10"
                                     onClick={(e) => {
                                         e.preventDefault()
                                         if (isSearchActive) {
-                                            // If search is active, clear the search and reset
+                                    
                                             setSearchQuery('')
                                             setIsSearchActive(false)
                                             setShowResults(false)
@@ -435,26 +463,29 @@ const Header = () => {
                                     className="bg-[#f8f9fa] outline-none text-sm font-medium pr-4 text-[#6f7f92] w-full"
                                     onFocus={() => {
                                         setIsSearchActive(true)
-                                        setShowResults(true) // Show results immediately on focus
+                                        setShowResults(true) 
                                     }}
                                 />
                                 {showResults && (
-                                    <div className="absolute top-[42px] left-0 w-[240px] bg-white shadow-lg rounded-md z-50 border border-gray-200">
+                                    <div className="absolute top-[50px] right-0 w-[280px] bg-white rounded-b-md z-50">
                                         {searchQuery.trim() === '' ? (
                                             <>
+                                                <span className="px-3 py-2 text-[#6f7f92] text-sm font-medium">
+                                                    Recent searches
+                                                </span>
                                                 {recentSearches.map((item, index) => (
                                                     <div
                                                         key={index}
                                                         className="px-3 py-2 hover:bg-[#f8f9fa] cursor-pointer text-[#6f7f92] text-sm"
                                                         onClick={() => {
-                                                            // Instead of navigating, set the search query to this text
+                                                            
                                                             setSearchQuery(item.text)
-                                                            // Keep the search active and focused
+                                                           
                                                             setIsSearchActive(true)
-                                                            // Keep the results showing
+                                                         
                                                             setShowResults(true)
 
-                                                            // Optional: Focus the input field
+                                                        
                                                             document.querySelector('input[type="text"]').focus()
                                                         }}
                                                     >
@@ -469,16 +500,17 @@ const Header = () => {
                                             searchResults.map((result) => (
                                                 <div
                                                     key={result.key}
-                                                    className="px-3 py-2 hover:bg-[#f8f9fa] cursor-pointer text-[#6f7f92] text-sm"
+                                                    className="flex items-center gap-2 px-3 py-2 hover:bg-[#f8f9fa] cursor-pointer text-[#6f7f92] text-sm"
                                                     onClick={() => handleResultClick(result.path)}
                                                 >
+                                                    {result.icon}
                                                     {result.text}
                                                 </div>
                                             ))
                                         )}
                                     </div>
                                 )}
-                            </form>
+                            </form> */}
                             {/* {showResults && (
                                 <div className="absolute top-[42px] left-0 w-[240px] bg-white shadow-lg rounded-md z-50 border border-gray-200">
                                     {searchResults.map((result) => (
@@ -492,6 +524,96 @@ const Header = () => {
                                     ))}
                                 </div>
                             )} */}
+                            
+    {/* Arrow icon - only shown when search is active */}
+    {isSearchActive && (
+        <div 
+            className="bg-[#ffffff] cursor-pointer h-[40px] w-[40px] flex items-center justify-center rounded-l-md"
+            onClick={() => {
+                setSearchQuery('');
+                setIsSearchActive(false);
+                setShowResults(false);
+            }}
+        >
+            <IconlyArrowLeft size={20} color={'#6f7f92'} />
+        </div>
+    )}
+    <form
+        onSubmit={handleSearchSubmit}
+        className="hidden lg:flex items-center bg-[#f8f9fa] rounded-md w-[240px] h-[40px] border-[1px] border-gray-200"
+    >
+        {/* Search icon button - only shown when search is NOT active */}
+        {!isSearchActive && (
+            <button
+                type="button"
+                className="flex items-center justify-center w-10 h-10"
+                onClick={() => {
+                    setIsSearchActive(true);
+                    setTimeout(() => document.querySelector('input[type="text"]').focus(), 10);
+                }}
+            >
+                <IconlySearch size={16} color={'#6f7f92'} className="text-gray-400" />
+            </button>
+        )}
+        <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchQueryChange}
+            placeholder={SEARCH[language] || 'Search'}
+            className={`bg-[#f8f9fa] outline-none text-sm font-medium text-[#6f7f92] w-full ${
+                isSearchActive ? 'pl-3' : 'pr-4'
+            }`}
+            onFocus={() => {
+                setIsSearchActive(true);
+                setShowResults(true);
+            }}
+        />
+        {showResults && (
+                                    <div className="absolute top-[50px] right-[-18px] w-[300px] bg-white rounded-b-md z-50">
+                                        {searchQuery.trim() === '' ? (
+                                            <>
+                                                <span className="p-3 text-[#6f7f92] text-sm font-medium">
+                                                    Recent searches
+                                                </span>
+                                                {recentSearches.map((item, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className="px-3 py-2 hover:bg-[#f8f9fa] hover:rounded-md cursor-pointer text-[#6f7f92] text-sm"
+                                                        onClick={() => {
+                                                            
+                                                            setSearchQuery(item.text)
+                                                           
+                                                            setIsSearchActive(true)
+                                                         
+                                                            setShowResults(true)
+
+                                                        
+                                                            document.querySelector('input[type="text"]').focus()
+                                                        }}
+                                                    >
+                                                        <div className="flex items-center gap-1">
+                                                            <IconlyTimeCircle size={16} color={'#6f7f92'} />
+                                                            {item.text}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </>
+                                        ) : (
+                                            searchResults.map((result) => (
+                                                <div
+                                                    key={result.key}
+                                                    className="flex items-center gap-2 px-3 py-2 hover:bg-[#f8f9fa] hover:rounded-md cursor-pointer text-[#6f7f92] text-sm"
+                                                    onClick={() => handleResultClick(result.path)}
+                                                >
+                                                    {result.icon}
+                                                    {result.text}
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                )}
+    </form>
+
                         </div>
                         <div onClick={() => openFullScreen()}>
                             <div className="cursor-pointer">
