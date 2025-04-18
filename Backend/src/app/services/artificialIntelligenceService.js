@@ -1,6 +1,6 @@
-import { Profile, Project, User, ObjectId } from '@/models'
-import callOpenAI from '@/configs/openAI'
-import { AI_API_TOKEN, AI_API_URL, LINK_STATIC_URL, MATCHING_TALENTS_PROMPT } from '@/configs/constants'
+import { Profile, Project, ObjectId } from '@/models'
+// import callOpenAI from '@/configs/openAI'
+import { AI_API_TOKEN, AI_API_URL, LINK_STATIC_URL } from '@/configs/constants'
 import axios from 'axios'
 
 export async function matchingProjects(user) {
@@ -447,72 +447,72 @@ export async function matchingTalents(user) {
     })
 
     // Generate prompt for OpenAI API
-    const prompt = MATCHING_TALENTS_PROMPT(relatedIndustries, userSkills)
-    try {
-        const response = await callOpenAI(prompt)
-        // const cleanResponse = response.replace(/```json\n|```/g, '')
-        // const talentsByMatching = JSON.parse(cleanResponse)
+    // const prompt = MATCHING_TALENTS_PROMPT(relatedIndustries, userSkills)
+    // try {
+    //     const response = await callOpenAI(prompt)
+    //     // const cleanResponse = response.replace(/```json\n|```/g, '')
+    //     // const talentsByMatching = JSON.parse(cleanResponse)
 
-        const jsonString = response.replace('Output:\n', '')
-        const jsonData = JSON.parse(jsonString)
+    //     const jsonString = response.replace('Output:\n', '')
+    //     const jsonData = JSON.parse(jsonString)
 
-        // Matching user_id with User model
+    //     // Matching user_id with User model
 
-        const userIds = Object.keys(jsonData).map((userId) => new ObjectId(userId))
-        const result = await User.aggregate([
-            {
-                $match: {
-                    _id: { $in: userIds },
-                },
-            },
-            {
-                // Thêm trường mới `_id_str` để lưu `_id` dưới dạng chuỗi
-                $addFields: {
-                    user_id: { $toString: '$_id' },
-                },
-            },
+    //     const userIds = Object.keys(jsonData).map((userId) => new ObjectId(userId))
+    //     const result = await User.aggregate([
+    //         {
+    //             $match: {
+    //                 _id: { $in: userIds },
+    //             },
+    //         },
+    //         {
+    //             // Thêm trường mới `_id_str` để lưu `_id` dưới dạng chuỗi
+    //             $addFields: {
+    //                 user_id: { $toString: '$_id' },
+    //             },
+    //         },
 
-            {
-                $addFields: {
-                    match_score: {
-                        $let: {
-                            vars: { jsonData }, // Truyền trực tiếp ánh xạ
-                            in: {
-                                $getField: {
-                                    field: '$user_id',
-                                    input: '$$jsonData',
-                                },
-                            },
-                        },
-                    },
-                    avatar: {
-                        $cond: {
-                            if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
-                            then: '$avatar',
-                            else: { $concat: [LINK_STATIC_URL, '$avatar'] },
-                        },
-                    },
-                },
-            },
-            {
-                $sort: {
-                    match_score: -1,
-                },
-            },
-            {
-                $project: {
-                    _id: 1, // Giữ lại _id
-                    name: 1,
-                    match_score: 1,
-                    avatar: 1,
-                    language: 1,
-                },
-            },
-        ])
+    //         {
+    //             $addFields: {
+    //                 match_score: {
+    //                     $let: {
+    //                         vars: { jsonData }, // Truyền trực tiếp ánh xạ
+    //                         in: {
+    //                             $getField: {
+    //                                 field: '$user_id',
+    //                                 input: '$$jsonData',
+    //                             },
+    //                         },
+    //                     },
+    //                 },
+    //                 avatar: {
+    //                     $cond: {
+    //                         if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+    //                         then: '$avatar',
+    //                         else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+    //                     },
+    //                 },
+    //             },
+    //         },
+    //         {
+    //             $sort: {
+    //                 match_score: -1,
+    //             },
+    //         },
+    //         {
+    //             $project: {
+    //                 _id: 1, // Giữ lại _id
+    //                 name: 1,
+    //                 match_score: 1,
+    //                 avatar: 1,
+    //                 language: 1,
+    //             },
+    //         },
+    //     ])
 
-        return result
-    } catch (error) {
-        console.error(error)
-        throw error
-    }
+    //     return result
+    // } catch (error) {
+    //     console.error(error)
+    //     throw error
+    // }
 }
