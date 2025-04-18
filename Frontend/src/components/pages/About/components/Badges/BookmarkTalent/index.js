@@ -38,7 +38,7 @@ const BookmarkTalent = () => {
 
     return <>
         {bookmarkedTalents.map((talent) => (
-            <div key={talent.user.id} className="relative group w-[280px] h-[23.5rem]">
+            <div key={talent.user.id} className="relative group w-[343px] h-[23.5rem]">
                 <Avatar.Root
                     onClick={() => handleViewTalentDetails(talent.user)}
                     className="w-[280px] h-[280px] rounded-md overflow-hidden cursor-pointer"
