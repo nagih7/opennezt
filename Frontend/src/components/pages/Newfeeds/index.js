@@ -100,14 +100,6 @@ function NewFeeds() {
         bookmarks,
     } = useSelector((state) => state.article)
 
-    // const {
-    //     updateArticleActivity,
-    //     saveArticleActivity,
-    //     reactionArticleActivity,
-    //     replyCommentActivity,
-    //     commentActivity,
-    // } = useSelector((state) => state.activity)
-
     const {
         activities,
         isLoading: isLoadingActivities,
@@ -122,14 +114,6 @@ function NewFeeds() {
         limit: limit,
     })
 
-    // Activities
-    // useEffect(() => {
-    //     dispatch(getUpdateArticle())
-    //     dispatch(getSaveArticle())
-    //     dispatch(getReactionArticle())
-    //     dispatch(getReplyComment())
-    //     dispatch(getComment())
-    // }, [dispatch])
     useEffect(() => {
         dispatch(getActivitiesArticle({ skip: 0, limit: activitiesLimit }))
     }, [dispatch, activitiesLimit])
@@ -408,16 +392,6 @@ function NewFeeds() {
                     }
                 })}
             </div>
-            {/* <RightSidebar
-                activities={[
-                    ...updateArticleActivity,
-                    ...saveArticleActivity,
-                    ...reactionArticleActivity,
-                    ...replyCommentActivity,
-                    ...commentActivity,
-                ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))}
-                action={unifiedAction}
-            />{' '} */}
             <RightSidebar
                 activities={activities}
                 action={unifiedAction}
