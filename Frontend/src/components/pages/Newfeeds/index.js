@@ -31,11 +31,6 @@ import store from 'states/configureStore'
 import {
     deleteActivitySaveArticle,
     getActivitiesArticle,
-    getComment,
-    getReactionArticle,
-    getReplyComment,
-    getSaveArticle,
-    getUpdateArticle,
     postActivitySaveArticle,
     postActivityUpdateArticle,
 } from 'api/activity'

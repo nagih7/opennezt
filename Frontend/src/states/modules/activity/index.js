@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { get } from 'lodash'
-import { updateArticle } from '../article'
 
 const activitySlice = createSlice({
     name: 'Activity',

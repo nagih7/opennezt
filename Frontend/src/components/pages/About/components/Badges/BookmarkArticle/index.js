@@ -28,76 +28,7 @@ import CreateAricleForm from '../../../../Newfeeds/components/CreateAricleForm'
 import CommentList from '../../../../Newfeeds/components/CommentList'
 import UpdateArticleForm from '../../../../Newfeeds/components/UpdateArticleForm'
 import store from 'states/configureStore'
-import { PermPhoneMsg } from '@mui/icons-material'
-import {
-    deleteActivitySaveArticle,
-    getComment,
-    getReactionArticle,
-    getReplyComment,
-    getSaveArticle,
-    getUpdateArticle,
-    postActivitySaveArticle,
-    postActivityUpdateArticle,
-} from 'api/activity'
-
-const unifiedAction = (activity) => {
-    if (typeof activity === 'string' || !activity || activity === null) {
-        return <span>has interacted with {activity}</span>
-    }
-
-    try {
-        const { owner_id, owner_name } = activity
-        const { auth } = store.getState()
-        const currentUserId = auth.user?._id
-        const displayName = owner_id === currentUserId ? 'You' : owner_name || 'Someone'
-        // const displayAccessName = activity?.user?.name || 'Someone'
-
-        const activityType = activity?.activity_type?.name
-        const articleCaption = activity?.article?.caption
-            ? `"${activity.article.caption.length > 20
-                ? activity.article.caption.substring(0, 20) + '...'
-                : activity.article.caption
-            }"`
-            : 'an article'
-
-        // Handle by type
-        switch (activityType) {
-            case 'save':
-                return (
-                    <span>
-                        {displayName} has saved {articleCaption}
-                    </span>
-                )
-            case 'update':
-                return (
-                    <span>
-                        {displayName} has updated {articleCaption}
-                    </span>
-                )
-            case 'create':
-                return (
-                    <span>
-                        {displayName} has created {articleCaption}
-                    </span>
-                )
-            case 'reply_comment':
-                return <span>has replied to your comment on {articleCaption}</span>
-            case 'comment':
-                return <span>has commented on {articleCaption}</span>
-            case 'reaction':
-                return <span>liked your post {articleCaption}</span>
-            default:
-                return (
-                    <span>
-                        {displayName} has interacted with {articleCaption}
-                    </span>
-                )
-        }
-    } catch (error) {
-        console.error('Error processing activity:', error)
-        return <span>has performed an activity</span>
-    }
-}
+import { deleteActivitySaveArticle, postActivitySaveArticle, postActivityUpdateArticle } from 'api/activity'
 
 function BookmarkedArticle() {
     const dispatch = useDispatch()
@@ -116,25 +47,12 @@ function BookmarkedArticle() {
         bookmarks,
     } = useSelector((state) => state.article)
 
-
     const { nextCursor, limit, hasMore } = pagination
-
 
     const [dataFilter, setDataFilter] = useState({
         cursor: 0,
         limit: limit,
     })
-
-    // Activities
-    useEffect(() => {
-        dispatch(getUpdateArticle())
-        dispatch(getSaveArticle())
-        dispatch(getReactionArticle())
-        dispatch(getReplyComment())
-        dispatch(getComment())
-    }, [dispatch])
-
-    // End Activities
 
     useEffect(() => {
         if (feeds.length === 0 && hasMore === true) {
@@ -255,7 +173,6 @@ function BookmarkedArticle() {
     const [selectedArticle, setSelectedArticle] = useState({})
     const [isOpenComment, setIsOpenComment] = useState(false)
 
-
     const handleSelectArticle = useCallback(async (feed) => {
         setSelectedArticle(feed)
         setIsOpenComment(true)
@@ -293,7 +210,6 @@ function BookmarkedArticle() {
         await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }))
         await store.dispatch(updateUpdatedArticle(formData))
         await store.dispatch(postActivityUpdateArticle(id))
-        await store.dispatch(getUpdateArticle())
     }, [])
     //End Update Article
     //Delete Article
@@ -320,8 +236,8 @@ function BookmarkedArticle() {
     }, [bookmarks])
     // Lọc bài viết đã bookmark
     const bookmarkedFeeds = useMemo(() => {
-        return feeds.filter((feed) => bookmarksMap.get(feed._id) === 'yes');
-    }, [feeds, bookmarksMap]);
+        return feeds.filter((feed) => bookmarksMap.get(feed._id) === 'yes')
+    }, [feeds, bookmarksMap])
 
     const bookmarkArticle = useCallback(
         async (data) => {
