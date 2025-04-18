@@ -63,6 +63,9 @@ const projectSlice = createSlice({
             totalPage: 1,
             totalRecord: 0,
         },
+        projects: [],
+        bookmarks: [], // Danh sách các project đã bookmark
+        isLoadingBookmarkProject: false,
         // ========== APPLY TO JOIN PROJECT ========== //
         isLoadingApplyToJoinProject: false,
         isOpenModalConfirmApply: false,
@@ -453,6 +456,45 @@ const projectSlice = createSlice({
             ...state,
             isOpenModalInviteMember: action.payload,
         }),
+        // ========== HANDLE BOOKMARK PROJECT ========== //
+        handleBookmarkProject: (state, action) => {
+            const { project_id, marked } = action.payload;
+
+            if (marked === 'yes') {
+                // Thêm dự án vào danh sách bookmark
+                state.bookmarks.push({ project_id });
+                toaster.create({
+                    title: 'Project bookmarked successfully',
+                    type: 'success',
+                });
+            } else {
+                // Xóa dự án khỏi danh sách bookmark
+                state.bookmarks = state.bookmarks.filter(
+                    (bookmark) => bookmark.project_id !== project_id
+                );
+                toaster.create({
+                    title: 'Project unbookmarked successfully',
+                    type: 'success',
+                });
+            }
+        },
+
+        // ========== UPDATE BOOKMARKS ========== //
+        updateBookmarks: (state, action) => {
+            if (action.payload.bookmarks) {
+
+                state.bookmarks = action.payload.bookmarks;
+            } else {
+                const { project_id, marked } = action.payload;
+                if (marked === 'yes') {
+                    state.bookmarks.push({ project_id });
+                } else {
+                    state.bookmarks = state.bookmarks.filter(
+                        (bookmark) => bookmark.project_id !== project_id
+                    );
+                }
+            }
+        },
     },
 })
 
@@ -519,6 +561,9 @@ export const {
     inviteMemberSuccess,
     inviteMemberFail,
     setModalInviteMember,
+    // ========== HANDLE BOOKMARK PROJECT ========== //
+    handleBookmarkProject,
+    updateBookmarks,
 } = projectSlice.actions
 
 export default projectSlice.reducer

@@ -1,14 +1,53 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { IconlyBookmark, IconlyHeart, IconlyShow } from 'components/UI/Iconly'
 import { Avatar, Button } from '@chakra-ui/react'
+import { useSelector, useDispatch } from "react-redux";
+import { bookmarkTalent, updateTalentBookmarks } from 'states/modules/talent';
+import { getTalentBookmarks } from 'api/talent';
+const TalentBox = ({ talent, handleViewTalentDetails }) => {
+    // ========== STATE FROM REDUX STORE ========== //
+    const dispatch = useDispatch()
+    const { bookmarks } = useSelector((state) => state.talent)
+    const isBookmarked = bookmarks.some(
+        (bookmark) => bookmark.talent_id === talent._id
+    )
 
-const TalentBox = ({ talent }) => {
+    const handleBookmark = () => {
+        const data = {
+            talent_id: talent._id,
+            marked: isBookmarked ? 'no' : 'yes',
+        };
+
+        // Cập nhật Redux store
+        dispatch(bookmarkTalent(data));
+        dispatch(updateTalentBookmarks(data));
+
+        // Lưu trạng thái bookmark vào localStorage
+        const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedTalents')) || [];
+        if (isBookmarked) {
+            // Xóa talent khỏi danh sách bookmark
+            const updatedBookmarks = storedBookmarks.filter((bookmark) => bookmark.talent_id !== talent._id);
+            localStorage.setItem('bookmarkedTalents', JSON.stringify(updatedBookmarks));
+        } else {
+            // Thêm talent vào danh sách bookmark
+            storedBookmarks.push({ talent_id: talent._id });
+            localStorage.setItem('bookmarkedTalents', JSON.stringify(storedBookmarks));
+        }
+    };
+    useEffect(() => {
+        const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedTalents')) || [];
+        dispatch(updateTalentBookmarks({ bookmarks: storedBookmarks }));
+    }, [dispatch]);
     // ========== RENDER COMPONENT ========== //
     return (
         <>
             <div className="relative">
                 <div className="relative group">
-                    <Avatar.Root className="xl:w-[280px] xl:h-[280px] lg:w-[220px] lg:h-[220px] h-[250px] w-[250px] rounded-md" shape="square">
+
+
+                    <Avatar.Root onClick={() => handleViewTalentDetails(talent.user)} className="w-[280px] h-[280px] rounded-md" shape="square">
+
+
                         <Avatar.Fallback name={talent.user.name} />
                         <Avatar.Image src={talent.user.avatar} />
                     </Avatar.Root>
@@ -26,8 +65,8 @@ const TalentBox = ({ talent }) => {
                             <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
                                 <IconlyHeart size={20} color={'#2f65b9'} />
                             </li>
-                            <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
-                                <IconlyBookmark size={20} color={'#2f65b9'} />
+                            <li onClick={handleBookmark} className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
+                                <IconlyBookmark size={20} color={isBookmarked ? "#FFD700" : '#2f65b9'} />
                             </li>
                         </ul>
                     </div>
@@ -35,9 +74,7 @@ const TalentBox = ({ talent }) => {
             </div>
             <div className="md:absolute bottom-[-40px] group-hover:bottom-[-21px] group-hover:translate-x-0 translate-x-full transition-all duration-700 ease-in-out left-0 xl:w-[280px] lg:w-[220px] w-[250px]  p-[16px] bg-[#f6f4f4] flex flex-col justify-center items-center gap-2">
                 <div className="font-semibold text-black no-underline">{talent.user.name}</div>
-                {/* <div className="text-[#6f7f92] text-sm font-medium">
-                                    <span>$18.00 </span>-<span> $45.00</span>
-                                </div> */}
+
                 <div
                     className="mt-[16px] fade-element"
                     style={{
@@ -45,7 +82,7 @@ const TalentBox = ({ talent }) => {
                         transition: 'opacity 0.3s ease-in-out',
                     }}
                 >
-                    <Button className="no-underline text-white font-semibold text-xs bg-[#2f65b9] px-[24px] py-[12px] rounded-md">
+                    <Button onClick={() => handleViewTalentDetails(talent.user)} className="no-underline text-white font-semibold text-xs bg-[#2f65b9] px-[24px] py-[12px] rounded-md">
                         VIEW DETAILS
                     </Button>
                 </div>
