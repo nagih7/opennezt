@@ -25,7 +25,6 @@ const ReplyComment = ({ reply, reaction, handleReactionReplyComment, selectComme
             data.append('type', type)
             data.append('target_type', 'comment')
             await handleReactionReplyComment(reply, data)
-            await getReplyComment()
         }
     }
 

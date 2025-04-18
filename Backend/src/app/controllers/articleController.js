@@ -147,6 +147,25 @@ export const getActivityComment = async (req, res) => {
     res.status(200).jsonify(activity)
 }
 
+export const getArticleActivities = async (req, res) => {
+    const { types, limit, skip, ownedOnly, performedOnly } = req.query
+
+    // Chuyển đổi các tham số từ chuỗi sang kiểu dữ liệu phù hợp
+    const options = {
+        types: types ? types.split(',') : [],
+        limit: limit ? parseInt(limit) : 10,
+        skip: skip ? parseInt(skip) : 0,
+        ownedOnly: ownedOnly === 'true',
+        performedOnly: performedOnly === 'true',
+    }
+
+    const activities = await articleService.getArticleActivities(req.currentUser, options)
+    return res.status(200).json({
+        success: true,
+        data: activities,
+    })
+}
+
 // ========== DELETE [ARTICLE ACTIVITIES] ========== //
 export const deleteActivitySaveArticle = async (req, res) => {
     const result = await articleService.deleteActivitySaveArticle(req.currentUser, req.params.id)

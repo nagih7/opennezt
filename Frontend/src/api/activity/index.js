@@ -45,6 +45,10 @@ import {
     requestGetActivityComment,
     getActivityCommentSuccess,
     getActivityCommentFail,
+    // ========== GET ACTIVITIES ARTICLE ========== //
+    requestGetActivities,
+    getActivitiesSuccess,
+    getActivitiesFail,
     // ========== POST ACTIVITIES CREATE ARTICLE ========== //
     requestPostActivityCreateArticle,
     postActivityCreateArticleSuccess,
@@ -254,6 +258,19 @@ export const getComment = () => async (dispatch, getState) => {
         getState,
     })
 }
+// ========== GET ACTIVITIES ARTICLE ========== //
+export const getActivitiesArticle =
+    (options = {}) =>
+    async (dispatch, getState) => {
+        return callApi({
+            method: 'get',
+            apiPath: `article/activities`,
+            actionTypes: [requestGetActivities, getActivitiesSuccess, getActivitiesFail],
+            variables: options,
+            dispatch,
+            getState,
+        })
+    }
 
 // ========== POST ACTIVITIES CREATE ARTICLE ========== //
 export const postActivityCreateArticle = (articleId) => async (dispatch, getState) => {

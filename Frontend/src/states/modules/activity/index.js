@@ -30,6 +30,12 @@ const activitySlice = createSlice({
         isLoadingReplyComment: false,
         // ========== POST ACTIVITIES COMMENT ========== //
         isLoadingComment: false,
+        // ========== GET ACTIVITIES ARTICLE ========== //
+        activities: [],
+        isLoadingActivities: false,
+        hasMore: true,
+        skip: 0,
+        limit: 10,
         // ========== GET ACTIVITIES CREATE ARTICLE ========== //
         createNewArticleActivity: [],
         isLoadingCreateNewArticleActivity: false,
@@ -228,6 +234,27 @@ const activitySlice = createSlice({
         getActivityCommentFail: (state) => ({
             ...state,
             isLoadingComment: false,
+        }),
+        // ========== GET ACTIVITIES ARTICLE ========== //
+        requestGetActivities: (state) => ({
+            ...state,
+            isLoading: true,
+        }),
+        getActivitiesSuccess: (state, action) => {
+            const newActivities = action.payload.data
+            return {
+                ...state,
+                // Nếu skip = 0, thay thế mảng; nếu không, thêm vào mảng hiện có
+                activities: state.skip === 0 ? newActivities : [...state.activities, ...newActivities],
+                isLoading: false,
+                hasMore: newActivities.length >= state.limit, // Còn dữ liệu nếu số lượng trả về >= limit
+                skip: state.skip + newActivities.length, // Cập nhật skip cho lần sau
+            }
+        },
+        getActivitiesFail: (state, action) => ({
+            ...state,
+            isLoading: false,
+            error: action.payload,
         }),
         // ========== POST ACTIVITIES CREATE ARTICLE ========== //
         requestPostActivityCreateArticle: (state) => ({
@@ -512,6 +539,10 @@ export const {
     requestGetActivityComment,
     getActivityCommentSuccess,
     getActivityCommentFail,
+    // ========== GET ACTIVITIES ARTICLE ========== //
+    requestGetActivities,
+    getActivitiesSuccess,
+    getActivitiesFail,
     // ========== POST ACTIVITIES CREATE ARTICLE ========== //
     requestPostActivityCreateArticle,
     postActivityCreateArticleSuccess,

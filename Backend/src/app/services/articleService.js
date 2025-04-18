@@ -944,6 +944,270 @@ export const postActivityComment = async (user, commentId) => {
     }
 }
 
+export const getArticleActivities = async (user, options = {}) => {
+    if (!user) {
+        throw new Error('User not found')
+    }
+    const { types = [], limit = 10, skip = 0, ownedOnly = false, performedOnly = false } = options
+
+    // Lấy tất cả các loại hoạt động cần thiết
+    let activityTypes = [
+        ARTICLE_CREATE,
+        ARTICLE_UPDATE,
+        ARTICLE_SAVE,
+        ARTICLE_REACTION,
+        ARTICLE_COMMENT,
+        ARTICLE_REPLY_COMMENT,
+    ]
+
+    // Lọc theo loại nếu được chỉ định
+    if (types.length > 0) {
+        activityTypes = activityTypes.filter((type) => types.includes(type))
+    }
+
+    // Lấy tất cả type ID trong một truy vấn
+    const typeObjects = await Type.find({
+        class: ARTICLE_TYPE,
+        name: { $in: activityTypes },
+    })
+
+    const typeIds = typeObjects.map((t) => t._id)
+
+    // Tìm ID của loại hoạt động SAVE
+    const saveTypeId = typeObjects.find((t) => t.name === ARTICLE_SAVE)?._id
+
+    // Xác định điều kiện cơ bản
+    const matchCreateCondition = {}
+    const matchOtherCondition = {}
+    const matchSaveCondition = {}
+
+    // Xử lý điều kiện lọc cho CREATE (AccessLog)
+    if (activityTypes.includes(ARTICLE_CREATE)) {
+        matchCreateCondition.type_id = {
+            $in: typeIds.filter((id) => typeObjects.find((t) => t._id.equals(id))?.name === ARTICLE_CREATE),
+        }
+
+        if (performedOnly) {
+            matchCreateCondition.user_id = user._id
+        }
+    }
+
+    // Xử lý điều kiện lọc cho SAVE (luôn lấy hoạt động do người dùng thực hiện)
+    if (activityTypes.includes(ARTICLE_SAVE) && saveTypeId) {
+        matchSaveCondition.type_id = saveTypeId
+        matchSaveCondition.user_id = user._id // Luôn lấy hoạt động save của người dùng hiện tại
+    }
+
+    // Xử lý điều kiện lọc cho các loại khác (loại bỏ ARTICLE_SAVE)
+    const otherTypes = activityTypes.filter((type) => type !== ARTICLE_CREATE && type !== ARTICLE_SAVE)
+
+    if (otherTypes.length > 0) {
+        matchOtherCondition.type_id = {
+            $in: typeIds.filter((id) => {
+                const typeName = typeObjects.find((t) => t._id.equals(id))?.name
+                return typeName !== ARTICLE_CREATE && typeName !== ARTICLE_SAVE
+            }),
+        }
+
+        if (ownedOnly) {
+            matchOtherCondition['data.owner_id'] = user._id
+            if (!performedOnly) {
+                matchOtherCondition.user_id = { $ne: user._id }
+            }
+        } else if (performedOnly) {
+            matchOtherCondition.user_id = user._id
+        }
+    }
+
+    // Pipeline chung để lookup và projection
+    const commonPipeline = [
+        // User lookup
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '$avatar',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        { $unwind: '$user' },
+
+        // Thêm trường activity_source để biết nguồn
+        {
+            $addFields: {
+                activity_source: {
+                    $cond: {
+                        if: { $eq: [{ $type: '$data' }, 'missing'] },
+                        then: 'access_log',
+                        else: 'activity_log',
+                    },
+                },
+            },
+        },
+    ]
+
+    // Thực hiện ba truy vấn riêng biệt
+    const createActivities =
+        Object.keys(matchCreateCondition).length > 0
+            ? await AccessLog.aggregate([
+                { $match: matchCreateCondition },
+                ...commonPipeline,
+                {
+                    $lookup: {
+                        from: 'types',
+                        localField: 'type_id',
+                        foreignField: '_id',
+                        as: 'activity_type',
+                        pipeline: [{ $project: { name: 1 } }],
+                    },
+                },
+                { $unwind: '$activity_type' },
+            ])
+            : []
+
+    // Hoạt động lưu bài viết
+    const saveActivities =
+        Object.keys(matchSaveCondition).length > 0
+            ? await ActivityLog.aggregate([
+                { $match: matchSaveCondition },
+                ...commonPipeline,
+                // Lookup bài viết
+                {
+                    $lookup: {
+                        from: 'articles',
+                        localField: 'data.article_id',
+                        foreignField: '_id',
+                        as: 'article',
+                        pipeline: [
+                            {
+                                $project: {
+                                    caption: '$content.caption',
+                                    _id: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+                // Lookup loại hoạt động
+                {
+                    $lookup: {
+                        from: 'types',
+                        localField: 'type_id',
+                        foreignField: '_id',
+                        as: 'activity_type',
+                        pipeline: [{ $project: { name: 1 } }],
+                    },
+                },
+                // Unwinding
+                {
+                    $unwind: {
+                        path: '$article',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                { $unwind: '$activity_type' },
+            ])
+            : []
+
+    // Các hoạt động khác (không bao gồm lưu bài viết)
+    const otherActivities =
+        Object.keys(matchOtherCondition).length > 0
+            ? await ActivityLog.aggregate([
+                { $match: matchOtherCondition },
+                ...commonPipeline,
+
+                // Lookup bài viết
+                {
+                    $lookup: {
+                        from: 'articles',
+                        localField: 'data.article_id',
+                        foreignField: '_id',
+                        as: 'article',
+                        pipeline: [
+                            {
+                                $project: {
+                                    caption: '$content.caption',
+                                    _id: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+
+                // Lookup loại hoạt động
+                {
+                    $lookup: {
+                        from: 'types',
+                        localField: 'type_id',
+                        foreignField: '_id',
+                        as: 'activity_type',
+                        pipeline: [{ $project: { name: 1 } }],
+                    },
+                },
+
+                // Lookup bình luận nếu cần
+                {
+                    $lookup: {
+                        from: 'comments',
+                        localField: 'data.comment_id',
+                        foreignField: '_id',
+                        as: 'comment',
+                        pipeline: [
+                            {
+                                $project: {
+                                    content: 1,
+                                    article_id: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+
+                // Unwinding với preserveNullAndEmptyArrays để không mất dữ liệu
+                {
+                    $unwind: {
+                        path: '$article',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                { $unwind: '$activity_type' },
+                {
+                    $unwind: {
+                        path: '$comment',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+            ])
+            : []
+
+    // Gộp kết quả và sắp xếp
+    const allActivities = [...createActivities, ...saveActivities, ...otherActivities]
+    allActivities.sort((a, b) => b.timestamp - a.timestamp)
+
+    // Phân trang kết quả
+    return allActivities.slice(skip, skip + limit)
+}
+
 // ========== GET [ARTICLE ACTIVITIES] ========== //
 export const getActivityCreateArticle = async (user) => {
     const articleCreateType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_CREATE })
