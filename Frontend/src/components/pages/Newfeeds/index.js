@@ -40,6 +40,7 @@ import {
     postActivityUpdateArticle,
 } from 'api/activity'
 import { resetLinkPreview } from 'states/modules/linkPreview'
+import CrawlLinkedin from 'components/common/CrawlLinkedin'
 
 const unifiedAction = (activity) => {
     if (typeof activity === 'string' || !activity || activity === null) {
