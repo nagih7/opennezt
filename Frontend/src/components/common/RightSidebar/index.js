@@ -52,7 +52,7 @@ function RightSidebar({ activities, action }) {
             <div className="relative w-full">
                 <img src={fb_img} alt="logo-fb_img" className="w-full h-[450px] rounded-md mt-4" />
                 <img src={Logo} alt="logo-opennezt" className={`$styles.logo, absolute top-0 py-14 px-12 left-0`} />
-                <div className="absolute left-0 flex flex-col items-center gap-3 px-12 text-white top-32">
+                <div className="absolute left-0 2xl:left-5 2xl:mt-8 2xl:px-10 flex flex-col text-center items-center gap-3 px-12 text-white top-32">
                     Feel free to reach us anytime. we are avaliable 24 hours
                     <button className="bg-[#ffffff] px-3 py-3 text-black font-medium rounded-md">CONTACT US</button>
                 </div>
