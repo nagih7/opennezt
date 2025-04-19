@@ -54,7 +54,7 @@ const unifiedAction = (activity) => {
         // Handle by type
         switch (activityTypeName) {
             case 'save':
-                return <span>has saved {articleCaption}</span>
+                return <span>You has saved {articleCaption}</span>
             case 'update':
                 return <span>has updated {articleCaption}</span>
             case 'create':
@@ -391,8 +391,7 @@ function NewFeeds() {
                 activities={activities}
                 action={unifiedAction}
                 isLoading={isLoadingActivities}
-                onLoadMore={handleLoadMoreActivities}
-                hasMore={hasMoreActivities}
+                fetchMoreActivities={handleLoadMoreActivities}
             />{' '}
         </div>
     )
