@@ -1,18 +1,68 @@
-import React from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { CheckCircleFilled } from '@ant-design/icons'
 import fb_img from 'assets/images/background/left-banner.webp'
 import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import moment from 'moment'
-import { Avatar } from '@chakra-ui/react'
+import { Avatar, Spinner } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 
-function RightSidebar({ activities, action }) {
+function RightSidebar({ activities, action, fetchMoreActivities }) {
     const navigate = useNavigate()
+    const [displayedActivities, setDisplayedActivities] = useState([])
+    const [page, setPage] = useState(1)
+    const [loading, setLoading] = useState(false)
+    const [hasMore, setHasMore] = useState(true)
+    const activitiesContainerRef = useRef(null)
 
     // ========== HANDLE FUNCTION ========== //
     const handleViewTalentDetails = (user) => {
         navigate(`/talents/${user._id}/details`)
     }
+
+    useEffect(() => {
+        if (activities && activities.length > 0) {
+            setDisplayedActivities(activities)
+            setHasMore(activities.length >= 10)
+        }
+    }, [activities])
+
+    const loadMoreActivities = useCallback(async () => {
+        if (loading || !hasMore) return
+
+        setLoading(true)
+
+        try {
+            const nextPage = page + 1
+            const newActivities = await fetchMoreActivities(nextPage)
+
+            if (newActivities && newActivities.length > 0) {
+                setDisplayedActivities((prev) => [...prev, ...newActivities])
+                setPage(nextPage)
+                setHasMore(newActivities.length >= 10)
+            } else {
+                setHasMore(false)
+            }
+        } catch (error) {
+            console.error('Lỗi khi tải thêm activities:', error)
+        } finally {
+            setLoading(false)
+        }
+    }, [loading, hasMore, page, fetchMoreActivities])
+
+    useEffect(() => {
+        const container = activitiesContainerRef.current
+        if (!container) return
+
+        const handleScroll = () => {
+            const { scrollTop, scrollHeight, clientHeight } = container
+            if (scrollHeight - scrollTop - clientHeight < 50 && !loading && hasMore) {
+                loadMoreActivities()
+            }
+        }
+
+        container.addEventListener('scroll', handleScroll)
+        return () => container.removeEventListener('scroll', handleScroll)
+    }, [loading, hasMore, loadMoreActivities])
 
     // ========== RENDER COMPONENT ========== //
     return (
@@ -25,29 +75,39 @@ function RightSidebar({ activities, action }) {
             </div>
             <div className="flex flex-col bg-[#ffffff] p-8 rounded-md mt-3 mb-4">
                 <span className="mb-3 text-xl font-semibold">Latest Activities</span>
-                {activities?.map((activity, index) => (
-                    <div className="border-gray-200 border-t-[1px]" key={index}>
-                        <div className="flex items-center gap-3 my-3">
-                            <Avatar.Root
-                                className="w-[50px] h-[50px] rounded-full cursor-pointer"
-                                onClick={() => handleViewTalentDetails(activity.user)}
-                            >
-                                <Avatar.Fallback name={activity.user.name} />
-                                <Avatar.Image src={activity.user.avatar} />
-                            </Avatar.Root>
-                            <p className="text-[#6f7f92] text-sm mb-0">
-                                <a href="#" className="text-black no-underline">
-                                    {activity.user.name}
-                                </a>
-                                <CheckCircleFilled className="text-[#3897f0] mx-1" />
-                                {action(activity.project ? activity.project?.name : activity)}{' '}
-                                <a href="#" className="no-underline text-[#6f7f92]">
-                                    <span className="text-xs">{moment().fromNow(activity.timestamp)}</span>
-                                </a>
-                            </p>
+                <div ref={activitiesContainerRef} className="max-h-[300px] overflow-y-auto pr-2">
+                    {displayedActivities?.map((activity, index) => (
+                        <div className="border-gray-200 border-t-[1px]" key={index}>
+                            <div className="flex items-center gap-3 my-3">
+                                <Avatar.Root
+                                    className="w-[50px] h-[50px] rounded-full cursor-pointer"
+                                    onClick={() => handleViewTalentDetails(activity.user)}
+                                >
+                                    <Avatar.Fallback name={activity.user.name} />
+                                    <Avatar.Image src={activity.user.avatar} />
+                                </Avatar.Root>
+                                <p className="text-[#6f7f92] text-sm mb-0">
+                                    <a href="#" className="text-black no-underline">
+                                        {activity.user.name}
+                                    </a>
+                                    <CheckCircleFilled className="text-[#3897f0] mx-1" />
+                                    {action(activity.project ? activity.project?.name : activity)}{' '}
+                                    <a href="#" className="no-underline text-[#6f7f92]">
+                                        <span className="text-xs">{moment().fromNow(activity.timestamp)}</span>
+                                    </a>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                    {loading && (
+                        <div className="flex justify-center py-2">
+                            <Spinner size="sm" color="blue.500" />
+                        </div>
+                    )}
+                    {!hasMore && displayedActivities.length > 0 && (
+                        <div className="text-center text-gray-500 text-sm py-2">All activities shown</div>
+                    )}
+                </div>
             </div>
             <div className="relative w-full">
                 <img src={fb_img} alt="logo-fb_img" className="w-full h-[450px] rounded-md mt-4" />

@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { get } from 'lodash'
-import { updateArticle } from '../article'
 
 const activitySlice = createSlice({
     name: 'Activity',
@@ -30,24 +28,12 @@ const activitySlice = createSlice({
         isLoadingReplyComment: false,
         // ========== POST ACTIVITIES COMMENT ========== //
         isLoadingComment: false,
-        // ========== GET ACTIVITIES CREATE ARTICLE ========== //
-        createNewArticleActivity: [],
-        isLoadingCreateNewArticleActivity: false,
-        // ========== GET ACTIVITIES UPDATE ARTICLE ========== //
-        updateArticleActivity: [],
-        isLoadingUpdateArticleActivity: false,
-        // ========== GET ACTIVITIES SAVE ARTICLE ========== //
-        saveArticleActivity: [],
-        isLoadingSaveArticleActivity: false,
-        // ========== GET ACTIVITIES REACTION ARTICLE ========== //
-        reactionArticleActivity: [],
-        isLoadingReactionArticleActivity: false,
-        // ========== GET ACTIVITIES REPLY COMMENT ========== //
-        replyCommentActivity: [],
-        isLoadingReplyCommentActivity: false,
-        // ========== GET ACTIVITIES COMMENT ========== //
-        commentActivity: [],
-        isLoadingCommentActivity: false,
+        // ========== GET ACTIVITIES ARTICLE ========== //
+        activities: [],
+        isLoadingActivities: false,
+        hasMore: true,
+        skip: 0,
+        limit: 10,
         // ========== DELETE SAVE ARTICLE ACTIVITIES ========== //
         deleteSaveArticleActivity: [],
         isLoadingDeleteSaveArticleActivity: false,
@@ -145,89 +131,26 @@ const activitySlice = createSlice({
             ...state,
             isLoadingGetAccessToMyProfile: false,
         }),
-        // ========== ACTIVITIES CREATE ARTICLE ========== //
-        requestGetActivityCreateArticle: (state) => ({
+        // ========== GET ACTIVITIES ARTICLE ========== //
+        requestGetActivities: (state) => ({
             ...state,
-            isLoadingCreateNewArticle: true,
+            isLoading: true,
         }),
-        getActivityCreateArticleSuccess: (state, action) => ({
+        getActivitiesSuccess: (state, action) => {
+            const newActivities = action.payload.data
+            return {
+                ...state,
+                // Nếu skip = 0, thay thế mảng; nếu không, thêm vào mảng hiện có
+                activities: state.skip === 0 ? newActivities : [...state.activities, ...newActivities],
+                isLoading: false,
+                hasMore: newActivities.length >= state.limit, // Còn dữ liệu nếu số lượng trả về >= limit
+                skip: state.skip + newActivities.length, // Cập nhật skip cho lần sau
+            }
+        },
+        getActivitiesFail: (state, action) => ({
             ...state,
-            createNewArticleActivity: action.payload.data,
-            isLoadingCreateNewArticle: false,
-        }),
-        getActivityCreateArticleFail: (state) => ({
-            ...state,
-            isLoadingCreateNewArticle: false,
-        }),
-        // ========== ACTIVITIES UPDATE ARTICLE ========== //
-        requestGetActivityUpdateArticle: (state) => ({
-            ...state,
-            isLoadingUpdateArticle: true,
-        }),
-        getActivityUpdateArticleSuccess: (state, action) => ({
-            ...state,
-            updateArticleActivity: action.payload.data,
-            isLoadingUpdateArticle: false,
-        }),
-        getActivityUpdateArticleFail: (state) => ({
-            ...state,
-            isLoadingUpdateArticle: false,
-        }),
-        // ========== ACTIVITIES SAVE ARTICLE ========== //
-        requestGetActivitySaveArticle: (state) => ({
-            ...state,
-            isLoadingSaveArticle: true,
-        }),
-        getActivitySaveArticleSuccess: (state, action) => ({
-            ...state,
-            saveArticleActivity: action.payload.data,
-            isLoadingSaveArticle: false,
-        }),
-        getActivitySaveArticleFail: (state) => ({
-            ...state,
-            isLoadingSaveArticle: false,
-        }),
-        // ========== ACTIVITIES REACTION ARTICLE ========== //
-        requestGetActivityReactionArticle: (state) => ({
-            ...state,
-            isLoadingReactionArticle: true,
-        }),
-        getActivityReactionArticleSuccess: (state, action) => ({
-            ...state,
-            reactionArticleActivity: action.payload.data,
-            isLoadingReactionArticle: false,
-        }),
-        getActivityReactionArticleFail: (state) => ({
-            ...state,
-            isLoadingReactionArticle: false,
-        }),
-        // ========== ACTIVITIES REPLY COMMENT ========== //
-        requestGetActivityReplyComment: (state) => ({
-            ...state,
-            isLoadingReplyComment: true,
-        }),
-        getActivityReplyCommentSuccess: (state, action) => ({
-            ...state,
-            replyCommentActivity: action.payload.data,
-            isLoadingReplyComment: false,
-        }),
-        getActivityReplyCommentFail: (state) => ({
-            ...state,
-            isLoadingReplyComment: false,
-        }),
-        // ========== ACTIVITIES COMMENT ========== //
-        requestGetActivityComment: (state) => ({
-            ...state,
-            isLoadingComment: true,
-        }),
-        getActivityCommentSuccess: (state, action) => ({
-            ...state,
-            commentActivity: action.payload.data,
-            isLoadingComment: false,
-        }),
-        getActivityCommentFail: (state) => ({
-            ...state,
-            isLoadingComment: false,
+            isLoading: false,
+            error: action.payload,
         }),
         // ========== POST ACTIVITIES CREATE ARTICLE ========== //
         requestPostActivityCreateArticle: (state) => ({
@@ -488,30 +411,10 @@ export const {
     requestGetAccessToMyProfile,
     getAccessToMyProfileSuccess,
     getAccessToMyProfileFail,
-    // ========== GET CREATE ARTICLE ========== //
-    requestGetActivityCreateArticle,
-    getActivityCreateArticleSuccess,
-    getActivityCreateArticleFail,
-    // ========== GET UPDATE ARTICLE ========== //
-    requestGetActivityUpdateArticle,
-    getActivityUpdateArticleSuccess,
-    getActivityUpdateArticleFail,
-    // ========== GET SAVE ARTICLE ========== //
-    requestGetActivitySaveArticle,
-    getActivitySaveArticleSuccess,
-    getActivitySaveArticleFail,
-    // ========== GET REACTION ARTICLE ========== //
-    requestGetActivityReactionArticle,
-    getActivityReactionArticleSuccess,
-    getActivityReactionArticleFail,
-    // ========== GET REPLY COMMENT ========== //
-    requestGetActivityReplyComment,
-    getActivityReplyCommentSuccess,
-    getActivityReplyCommentFail,
-    // ========== GET COMMENT ========== //
-    requestGetActivityComment,
-    getActivityCommentSuccess,
-    getActivityCommentFail,
+    // ========== GET ACTIVITIES ARTICLE ========== //
+    requestGetActivities,
+    getActivitiesSuccess,
+    getActivitiesFail,
     // ========== POST ACTIVITIES CREATE ARTICLE ========== //
     requestPostActivityCreateArticle,
     postActivityCreateArticleSuccess,

@@ -117,34 +117,23 @@ export const postActivityComment = async (req, res) => {
 }
 
 // ========== GET [ARTICLE ACTIVITIES] ========== //
-export const getActivityCreateArticle = async (req, res) => {
-    const activity = await articleService.getActivityCreateArticle(req.currentUser)
-    res.status(200).jsonify(activity)
-}
+export const getArticleActivities = async (req, res) => {
+    const { types, limit, skip, ownedOnly, performedOnly } = req.query
 
-export const getActivityUpdateArticle = async (req, res) => {
-    const activity = await articleService.getActivityUpdateArticle(req.currentUser)
-    res.status(200).jsonify(activity)
-}
+    // Chuyển đổi các tham số từ chuỗi sang kiểu dữ liệu phù hợp
+    const options = {
+        types: types ? types.split(',') : [],
+        limit: limit ? parseInt(limit) : 10,
+        skip: skip ? parseInt(skip) : 0,
+        ownedOnly: ownedOnly === 'true',
+        performedOnly: performedOnly === 'true',
+    }
 
-export const getActivitySaveArticle = async (req, res) => {
-    const activity = await articleService.getActivitySaveArticle(req.currentUser)
-    res.status(200).jsonify(activity)
-}
-
-export const getActivityReactionArticle = async (req, res) => {
-    const activity = await articleService.getActivityReactionArticle(req.currentUser)
-    res.status(200).jsonify(activity)
-}
-
-export const getActivityReplyComment = async (req, res) => {
-    const activity = await articleService.getActivityReplyComment(req.currentUser)
-    res.status(200).jsonify(activity)
-}
-
-export const getActivityComment = async (req, res) => {
-    const activity = await articleService.getActivityComment(req.currentUser)
-    res.status(200).jsonify(activity)
+    const activities = await articleService.getArticleActivities(req.currentUser, options)
+    return res.status(200).json({
+        success: true,
+        data: activities,
+    })
 }
 
 // ========== DELETE [ARTICLE ACTIVITIES] ========== //

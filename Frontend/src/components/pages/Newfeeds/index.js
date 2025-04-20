@@ -28,14 +28,9 @@ import CreateAricleForm from './components/CreateAricleForm'
 import CommentList from './components/CommentList'
 import UpdateArticleForm from './components/UpdateArticleForm'
 import store from 'states/configureStore'
-import { PermPhoneMsg } from '@mui/icons-material'
 import {
     deleteActivitySaveArticle,
-    getComment,
-    getReactionArticle,
-    getReplyComment,
-    getSaveArticle,
-    getUpdateArticle,
+    getActivitiesArticle,
     postActivitySaveArticle,
     postActivityUpdateArticle,
 } from 'api/activity'
@@ -47,41 +42,23 @@ const unifiedAction = (activity) => {
     }
 
     try {
-        const { owner_id, owner_name } = activity
-        const { auth } = store.getState()
-        const currentUserId = auth.user?._id
-        const displayName = owner_id === currentUserId ? 'You' : owner_name || 'Someone'
-        // const displayAccessName = activity?.user?.name || 'Someone'
+        // Sử dụng cấu trúc dữ liệu mới từ API hợp nhất
+        const { data, user, activity_type, article, comment } = activity
+        const displayName = user?.name || 'Someone'
 
-        const activityType = activity?.activity_type?.name
-        const articleCaption = activity?.article?.caption
-            ? `"${
-                  activity.article.caption.length > 20
-                      ? activity.article.caption.substring(0, 20) + '...'
-                      : activity.article.caption
-              }"`
+        const activityTypeName = activity_type?.name
+        const articleCaption = article?.caption
+            ? `"${article.caption.length > 20 ? article.caption.substring(0, 20) + '...' : article.caption}"`
             : 'an article'
 
         // Handle by type
-        switch (activityType) {
+        switch (activityTypeName) {
             case 'save':
-                return (
-                    <span>
-                        {displayName} has saved {articleCaption}
-                    </span>
-                )
+                return <span>You has saved {articleCaption}</span>
             case 'update':
-                return (
-                    <span>
-                        {displayName} has updated {articleCaption}
-                    </span>
-                )
+                return <span>has updated {articleCaption}</span>
             case 'create':
-                return (
-                    <span>
-                        {displayName} has created {articleCaption}
-                    </span>
-                )
+                return <span>has created {articleCaption}</span>
             case 'reply_comment':
                 return <span>has replied to your comment on {articleCaption}</span>
             case 'comment':
@@ -119,13 +96,12 @@ function NewFeeds() {
     } = useSelector((state) => state.article)
 
     const {
-        updateArticleActivity,
-        saveArticleActivity,
-        reactionArticleActivity,
-        replyCommentActivity,
-        commentActivity,
+        activities,
+        isLoading: isLoadingActivities,
+        hasMore: hasMoreActivities,
+        skip: activitiesSkip,
+        limit: activitiesLimit,
     } = useSelector((state) => state.activity)
-
     const { nextCursor, limit, hasMore } = pagination
 
     const [dataFilter, setDataFilter] = useState({
@@ -133,14 +109,20 @@ function NewFeeds() {
         limit: limit,
     })
 
-    // Activities
     useEffect(() => {
-        dispatch(getUpdateArticle())
-        dispatch(getSaveArticle())
-        dispatch(getReactionArticle())
-        dispatch(getReplyComment())
-        dispatch(getComment())
-    }, [dispatch])
+        dispatch(getActivitiesArticle({ skip: 0, limit: activitiesLimit }))
+    }, [dispatch, activitiesLimit])
+
+    const handleLoadMoreActivities = useCallback(() => {
+        if (!isLoadingActivities && hasMoreActivities) {
+            dispatch(
+                getActivitiesArticle({
+                    skip: activitiesSkip,
+                    limit: activitiesLimit,
+                })
+            )
+        }
+    }, [dispatch, activitiesSkip, activitiesLimit, isLoadingActivities, hasMoreActivities])
 
     // End Activities
 
@@ -238,7 +220,6 @@ function NewFeeds() {
 
             //Gọi API để update server
             await dispatch(handleReactArticle({ articleId, data: formData }))
-            await dispatch(getReactionArticle())
         },
         [dispatch]
     )
@@ -301,7 +282,6 @@ function NewFeeds() {
         await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }))
         await store.dispatch(updateUpdatedArticle(formData))
         await store.dispatch(postActivityUpdateArticle(id))
-        await store.dispatch(getUpdateArticle())
     }, [])
     //End Update Article
     //Delete Article
@@ -336,7 +316,6 @@ function NewFeeds() {
             } else if (data.marked === 'no') {
                 await dispatch(deleteActivitySaveArticle(data.article_id))
             }
-            dispatch(getSaveArticle())
         },
         [dispatch]
     )
@@ -409,14 +388,10 @@ function NewFeeds() {
                 })}
             </div>
             <RightSidebar
-                activities={[
-                    ...updateArticleActivity,
-                    ...saveArticleActivity,
-                    ...reactionArticleActivity,
-                    ...replyCommentActivity,
-                    ...commentActivity,
-                ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))}
+                activities={activities}
                 action={unifiedAction}
+                isLoading={isLoadingActivities}
+                fetchMoreActivities={handleLoadMoreActivities}
             />{' '}
         </div>
     )

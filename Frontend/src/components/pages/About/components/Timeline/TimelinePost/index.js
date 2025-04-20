@@ -29,16 +29,7 @@ import CommentList from '../../../../Newfeeds/components/CommentList'
 import UpdateArticleForm from '../../../../Newfeeds/components/UpdateArticleForm'
 import store from 'states/configureStore'
 import { PermPhoneMsg } from '@mui/icons-material'
-import {
-    deleteActivitySaveArticle,
-    getComment,
-    getReactionArticle,
-    getReplyComment,
-    getSaveArticle,
-    getUpdateArticle,
-    postActivitySaveArticle,
-    postActivityUpdateArticle,
-} from 'api/activity'
+import { deleteActivitySaveArticle, postActivitySaveArticle, postActivityUpdateArticle } from 'api/activity'
 
 const unifiedAction = (activity) => {
     if (typeof activity === 'string' || !activity || activity === null) {
@@ -54,10 +45,11 @@ const unifiedAction = (activity) => {
 
         const activityType = activity?.activity_type?.name
         const articleCaption = activity?.article?.caption
-            ? `"${activity.article.caption.length > 20
-                ? activity.article.caption.substring(0, 20) + '...'
-                : activity.article.caption
-            }"`
+            ? `"${
+                  activity.article.caption.length > 20
+                      ? activity.article.caption.substring(0, 20) + '...'
+                      : activity.article.caption
+              }"`
             : 'an article'
 
         // Handle by type
@@ -129,17 +121,6 @@ function TimelinePost() {
         cursor: 0,
         limit: limit,
     })
-
-    // Activities
-    useEffect(() => {
-        dispatch(getUpdateArticle())
-        dispatch(getSaveArticle())
-        dispatch(getReactionArticle())
-        dispatch(getReplyComment())
-        dispatch(getComment())
-    }, [dispatch])
-
-    // End Activities
 
     useEffect(() => {
         if (feeds.length === 0 && hasMore === true) {
@@ -296,7 +277,6 @@ function TimelinePost() {
         await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }))
         await store.dispatch(updateUpdatedArticle(formData))
         await store.dispatch(postActivityUpdateArticle(id))
-        await store.dispatch(getUpdateArticle())
     }, [])
     //End Update Article
     //Delete Article
@@ -339,11 +319,10 @@ function TimelinePost() {
     // loc danh sách bài viết của người dùng hiện tại
     const currentUserId = useSelector((state) => state.auth.authUser)
 
-
     const userFeeds = useMemo(() => {
-        if (!feeds || feeds.length === 0) return [];
-        return feeds.filter((feed) => feed.user_id === currentUserId._id);
-    }, [feeds, currentUserId]);
+        if (!feeds || feeds.length === 0) return []
+        return feeds.filter((feed) => feed.user_id === currentUserId._id)
+    }, [feeds, currentUserId])
 
     return (
         <div className="flex w-full gap-8 pt-4 px-[16px]">
