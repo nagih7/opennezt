@@ -949,7 +949,6 @@ export const postActivityComment = async (user, commentId) => {
 
 // ========== GET [ARTICLE ACTIVITIES] ========== //
 export const getArticleActivities = async (user, options = {}) => {
-    console.log('getArticleActivities', options, user)
     if (!user) {
         throw new Error('User not found')
     }
@@ -1088,15 +1087,12 @@ export const getArticleActivities = async (user, options = {}) => {
         const updateTypeId = typeObjects.find((t) => t.name === ARTICLE_UPDATE)?._id
 
         if (updateTypeId) {
-            // Implement separate filtering for UPDATE activities
             const matchUpdateCondition = { type_id: updateTypeId }
 
             if (ownedOnly) {
-                // Chỉ lấy hoạt động trên nội dung của người dùng hiện tại
                 matchUpdateCondition['data.owner_id'] = user._id
 
                 if (!performedOnly) {
-                    // Chỉ lấy hoạt động do người khác thực hiện (không phải tự mình thực hiện)
                     matchUpdateCondition.user_id = { $ne: user._id }
                     matchUpdateCondition.$and = [
                         { 'data.owner_id': user._id },
@@ -1104,22 +1100,18 @@ export const getArticleActivities = async (user, options = {}) => {
                     ]
                 }
             } else if (performedOnly) {
-                // Chỉ lấy hoạt động do người dùng hiện tại thực hiện
                 matchUpdateCondition.user_id = user._id
 
-                // Không lấy hoạt động tự tương tác với nội dung của mình
                 if (!ownedOnly) {
                     matchUpdateCondition.$expr = { $ne: ['$user_id', '$data.owner_id'] }
                 }
             } else {
-                // Trường hợp mặc định
                 matchUpdateCondition.$expr = { $ne: ['$user_id', '$data.owner_id'] }
             }
 
             const updateActivities = await ActivityLog.aggregate([
                 { $match: matchUpdateCondition },
                 ...commonPipeline,
-                // Lookup bài viết
                 {
                     $lookup: {
                         from: 'articles',
@@ -1189,21 +1181,6 @@ export const getArticleActivities = async (user, options = {}) => {
                 },
                 { $unwind: { path: '$article', preserveNullAndEmptyArrays: true } },
                 { $unwind: '$activity_type' },
-                // Xác minh lại chủ sở hữu bài viết
-                {
-                    $match: {
-                        $expr: { $eq: ['$article.user_id', user._id] },
-                    },
-                },
-                // Thêm trường để xác định hướng hoạt động
-                {
-                    $addFields: {
-                        is_owner: true, // Chắc chắn đây là bài viết của người dùng
-                        owner_verified: true,
-                        activity_direction: 'incoming', // Có người khác thích bài viết của người dùng
-                        activity_message_type: 'someone_liked_your_post',
-                    },
-                },
             ])
 
             allActivities.push(...reactionsOnUserPosts)
@@ -1219,12 +1196,11 @@ export const getArticleActivities = async (user, options = {}) => {
                 {
                     $match: {
                         type_id: commentTypeId,
-                        'data.owner_id': user._id, // Bài viết thuộc về người dùng hiện tại
-                        user_id: { $ne: user._id }, // Comment được thực hiện bởi người khác
+                        'data.owner_id': user._id,
+                        user_id: { $ne: user._id },
                     },
                 },
                 ...commonPipeline,
-                // Lookup bài viết
                 {
                     $lookup: {
                         from: 'articles',
@@ -1236,13 +1212,12 @@ export const getArticleActivities = async (user, options = {}) => {
                                 $project: {
                                     caption: '$content.caption',
                                     _id: 1,
-                                    user_id: 1, // Lấy user_id để xác minh chủ sở hữu
+                                    user_id: 1,
                                 },
                             },
                         ],
                     },
                 },
-                // Lookup bình luận
                 {
                     $lookup: {
                         from: 'comments',
@@ -1254,7 +1229,7 @@ export const getArticleActivities = async (user, options = {}) => {
                                 $project: {
                                     content: 1,
                                     article_id: 1,
-                                    user_id: 1, // Lấy user_id để xác minh người bình luận
+                                    user_id: 1,
                                 },
                             },
                         ],
@@ -1272,21 +1247,6 @@ export const getArticleActivities = async (user, options = {}) => {
                 { $unwind: { path: '$article', preserveNullAndEmptyArrays: true } },
                 { $unwind: '$activity_type' },
                 { $unwind: { path: '$comment', preserveNullAndEmptyArrays: true } },
-                // Xác minh lại chủ sở hữu bài viết
-                {
-                    $match: {
-                        $expr: { $eq: ['$article.user_id', user._id] },
-                    },
-                },
-                // Thêm trường để xác định hướng hoạt động
-                {
-                    $addFields: {
-                        is_owner: true, // Chắc chắn đây là bài viết của người dùng
-                        owner_verified: true,
-                        activity_direction: 'incoming', // Có người khác bình luận bài viết của người dùng
-                        activity_message_type: 'someone_commented_on_your_post',
-                    },
-                },
             ])
 
             allActivities.push(...commentsOnUserPosts)
