@@ -1,5 +1,5 @@
-import React from 'react';
-import { NAVBAR_LABEL } from 'utils/constants';
+import React from 'react'
+import { NAVBAR_LABEL } from 'utils/constants'
 import {
     IconlyActivity,
     IconlyAddUser,
@@ -9,7 +9,7 @@ import {
     IconlyNotification,
     IconlyProfile,
     IconlyWork,
-} from 'components/UI/Iconly';
+} from 'components/UI/Iconly'
 
 const manageRouteMap = [
     {
@@ -54,13 +54,13 @@ const manageRouteMap = [
         routeActive: ['/seek-projects'],
         permissions: ['seek_projects_page'],
     },
-    {
-        label: NAVBAR_LABEL.NOTIFICATIONS,
-        icon: <IconlyNotification size={24} />,
-        path: '/notification-management',
-        routeActive: ['/notification-management'],
-        permissions: ['notification_management_page'],
-    },
+    // {
+    //     label: NAVBAR_LABEL.NOTIFICATIONS,
+    //     icon: <IconlyNotification size={24} />,
+    //     path: '/notification-management',
+    //     routeActive: ['/notification-management'],
+    //     permissions: ['notification_management_page'],
+    // },
     {
         label: NAVBAR_LABEL.MESSAGES,
         icon: <IconlyChat size={24} />,
@@ -68,6 +68,6 @@ const manageRouteMap = [
         routeActive: ['/conversation'],
         permissions: ['conversation_page'],
     },
-];
+]
 
-export default manageRouteMap;
+export default manageRouteMap

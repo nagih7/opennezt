@@ -72,7 +72,7 @@ const TalentBox = ({ talent, handleViewTalentDetails }) => {
                     </div>
                 </div>
             </div>
-            <div className="md:absolute bottom-[-40px] group-hover:bottom-[-21px] group-hover:translate-x-0 translate-x-full transition-all duration-700 ease-in-out left-0 xl:w-[280px] lg:w-[220px] w-[250px]  p-[16px] bg-[#f6f4f4] flex flex-col justify-center items-center gap-2">
+            <div className="md:absolute bottom-[-40px] group-hover:bottom-[-21px] group-hover:translate-x-0 translate-x-full transition-all duration-700 ease-in-out left-0 w-[280px] p-[16px] bg-[#f6f4f4] flex flex-col justify-center items-center gap-2">
                 <div className="font-semibold text-black no-underline">{talent.user.name}</div>
 
                 <div

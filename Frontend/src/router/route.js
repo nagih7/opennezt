@@ -66,7 +66,7 @@ const ProfessionalBackground = React.lazy(() =>
 const Educations = React.lazy(() => import('../components/pages/EditProfile/components/Educations'))
 const Skills = React.lazy(() => import('../components/pages/EditProfile/components/Skills'))
 const AdditionalInfo = React.lazy(() => import('../components/pages/EditProfile/components/AdditionalInfo'))
-const NotificationManagement = React.lazy(() => import('../components/pages/NotificationManagement'))
+// const NotificationManagement = React.lazy(() => import('../components/pages/NotificationManagement'))
 const router = createBrowserRouter([
     {
         path: '/login',
@@ -275,15 +275,15 @@ const router = createBrowserRouter([
         ),
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PROJECT_DETAIL_PAGE'),
     },
-    {
-        path: '/notification-management',
-        element: (
-            <AppLayout>
-                <NotificationManagement />
-            </AppLayout>
-        ),
-        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_NOTIFICATION_MANAGEMENT_PAGE'),
-    },
+    // {
+    //     path: '/notification-management',
+    //     element: (
+    //         <AppLayout>
+    //             <NotificationManagement />
+    //         </AppLayout>
+    //     ),
+    //     loader: ({ request }) => rootLoader({ request }, true, 'LOAD_NOTIFICATION_MANAGEMENT_PAGE'),
+    // },
     // {
     // 	path: "/about/edit-profile",
     // 	element: (
@@ -593,14 +593,14 @@ const router = createBrowserRouter([
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EXPORT_DATA_PAGE'),
     },
     {
-        path:'/messages-sidebar',
+        path: '/messages-sidebar',
         element: (
             <AppLayout>
                 <MessageSidebar />
             </AppLayout>
         ),
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_MESSAGES_SIDEBAR_PAGE'),
-    }
+    },
 ])
 
 export default router
