@@ -324,7 +324,7 @@ function NewFeeds() {
     }, [dispatch, onetimefeeds])
 
     const bookmarksMap = useMemo(() => {
-        return new Map(bookmarks.map((r) => [r.article_id.toString(), r.marked]))
+        return new Map(bookmarks.map((r) => [r.target_id.toString(), r.marked]))
     }, [bookmarks])
 
     const bookmarkArticle = useCallback(

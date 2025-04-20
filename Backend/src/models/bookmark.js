@@ -1,6 +1,6 @@
-import createModel, {ObjectId} from './base'
+import createModel, { ObjectId } from './base'
 import User from './user'
-import Article from './article'
+import { BOOKMARK_TARGET_TYPE_ENUM } from '@/configs'
 
 const Bookmark = createModel('Bookmark', 'bookmark', {
     user_id: {
@@ -8,9 +8,13 @@ const Bookmark = createModel('Bookmark', 'bookmark', {
         ref: User,
         required: true,
     },
-    article_id: {
+    target_id: {
         type: ObjectId,
-        ref: Article,
+        required: true,
+    },
+    target_type: {
+        type: String,
+        enum: BOOKMARK_TARGET_TYPE_ENUM,
         required: true,
     },
     marked: {

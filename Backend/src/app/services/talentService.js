@@ -1,7 +1,7 @@
 // import {LINK_STATIC_URL} from '@/configs'
 
 import { ACCESS_TYPE, FRIEND_REQUEST_NOTIFICATION, LINK_STATIC_URL, NOTIFICATION_TYPE, PROFILE_ACCESS } from '@/configs'
-import { ActivityLog, Category, NotificationFeed, ObjectId, Profile, Type } from '@/models'
+import { ActivityLog, Bookmark, Category, NotificationFeed, ObjectId, Profile, Type } from '@/models'
 
 // =========== GET [Recruit Talents] =========== //
 export async function recruitTalents(
@@ -337,5 +337,31 @@ export async function accessToTalent(user, { id }) {
             },
         })
         await activity.save()
+    }
+}
+
+export const bookmarkTalent = async (requestBody, user) => {
+    const { talent_id, marked } = requestBody
+    const user_id = user._id.toString()
+
+    const existingBookmark = await Bookmark.findOne({
+        target_id: talent_id,
+        target_type: 'talent',
+        user_id: user_id,
+    })
+
+    if (existingBookmark) {
+        existingBookmark.marked = marked
+        await existingBookmark.save()
+        return existingBookmark
+    } else {
+        const newBookmark = new Bookmark({
+            user_id: user_id,
+            target_id: talent_id,
+            target_type: 'talent',
+            marked: marked,
+        })
+        await newBookmark.save()
+        return newBookmark
     }
 }

@@ -197,4 +197,7 @@ projectRouter.post(
     asyncHandler(projectController.updateNewMemberActivity)
 )
 
+// =========== POST [Project - Bookmark] =========== //
+projectRouter.post('/bookmark', asyncHandler(projectController.bookmarkProject))
+
 export default projectRouter
