@@ -255,7 +255,7 @@ function BookmarkedArticle() {
     //End Delete Article
 
     return (
-        <div className="flex w-full gap-8 pt-4">
+        <div className="flex w-full gap-8 pt-4 px-[16px]">
             <div className="w-full 2xl:w-full">
                 {isOpenUpdateForm ? (
                     <UpdateArticleForm
