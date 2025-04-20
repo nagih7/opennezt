@@ -15,6 +15,7 @@ const Conversations = () => {
     const dispatch = useDispatch()
     // ========== STATE FROM REDUX STORE =========== //
     const { conversations } = useSelector((state) => state.chat)
+    console.log('conversations', conversations)
     const { authUser } = useSelector((state) => state.auth)
     const friends = useSelector((state) => state.profile.myFriends)
     useEffect(() => {
@@ -45,90 +46,87 @@ const Conversations = () => {
                     </Tabs.List>
                 </Stack>
                 <Tabs.Content value="message" className="flex-1 h-full overflow-y-scroll scrollbar-hide">
-                    {conversations
-                        .filter((conversation) => conversation.last_message)
-                        .map((conversation, index) => {
-                            return (
-                                <Stack
-                                    key={index}
-                                    onClick={() => navigate(`/conversation/${conversation._id}`)}
-                                    className="p-[15px] bg-[#ffffff] cursor-pointer overflow-hidden flex items-center gap-3 hover:bg-[#f8f9fa] rounded-md"
-                                    direction={'row'}
-                                >
-                                    {(() => {
-                                        switch (conversation.type.name) {
-                                            case DIRECT_CONVERSATION:
-                                                return (
-                                                    <Stack
-                                                        className="items-center flex-1 gap-3 overflow-hidden"
-                                                        direction={'row'}
-                                                    >
-                                                        <Avatar.Root size={'xl'}>
-                                                            <Avatar.Fallback name={conversation.members[0].name} />
-                                                            <Avatar.Image src={conversation.members[0].avatar} />
-                                                        </Avatar.Root>
-                                                        <div className="flex-1 overflow-hidden">
-                                                            <span className="flex items-center gap-2 text-sm font-bold">
-                                                                {conversation.members[0].name}
-                                                            </span>
+                    {conversations.map((conversation, index) => {
+                        return (
+                            <Stack
+                                key={index}
+                                onClick={() => navigate(`/conversation/${conversation._id}`)}
+                                className="p-[15px] bg-[#ffffff] cursor-pointer overflow-hidden flex items-center gap-3 hover:bg-[#f8f9fa] rounded-md"
+                                direction={'row'}
+                            >
+                                {(() => {
+                                    switch (conversation.type.name) {
+                                        case DIRECT_CONVERSATION:
+                                            return (
+                                                <Stack
+                                                    className="items-center flex-1 gap-3 overflow-hidden"
+                                                    direction={'row'}
+                                                >
+                                                    <Avatar.Root size={'xl'}>
+                                                        <Avatar.Fallback name={conversation.members[0].name} />
+                                                        <Avatar.Image src={conversation.members[0].avatar} />
+                                                    </Avatar.Root>
+                                                    <div className="flex-1 overflow-hidden">
+                                                        <span className="flex items-center gap-2 text-sm font-bold">
+                                                            {conversation.members[0].name}
+                                                        </span>
 
-                                                            <p className="text-xs mb-0 text-[#6f7f92] font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
-                                                                {(() => {
-                                                                    const sender =
-                                                                        conversation.last_message?.user?._id === authUser._id
-                                                                            ? 'You: '
-                                                                            : conversation.last_message?.user?.name
-                                                                                ? `${conversation.last_message?.user?.name}: `
-                                                                                : '';
+                                                        <p className="text-xs mb-0 text-[#6f7f92] font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
+                                                            {(() => {
+                                                                const sender =
+                                                                    conversation.last_message?.user?._id ===
+                                                                        authUser._id
+                                                                        ? 'You: '
+                                                                        : conversation.last_message?.user?.name
+                                                                            ? `${conversation.last_message?.user?.name}: `
+                                                                            : ''
 
-                                                                    const content =
-                                                                        conversation.last_message?.content || 'No message';
+                                                                const content =
+                                                                    conversation.last_message?.content || 'No message'
 
-                                                                    return `${sender}${content}`;
-                                                                })()}
-                                                            </p>
-                                                        </div>
-                                                    </Stack>
-                                                );
-                                            case GROUP_CONVERSATION:
-                                                return (
-                                                    <Stack className="items-center gap-3" direction={'row'}>
-                                                        <Avatar.Root size={'xl'}>
-                                                            <Avatar.Fallback name={conversation.data?.project?.name} />
-                                                            <Avatar.Image src={conversation.data?.project?.logo} />
-                                                        </Avatar.Root>
-                                                        <div className="flex-1">
-                                                            <span className="flex items-center gap-2 text-sm font-bold">
-                                                                {conversation.data?.project?.name}
-                                                            </span>
-                                                            <p className="text-xs mb-0 text-[#6f7f92] font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
-                                                                {(() => {
-                                                                    const sender =
-                                                                        conversation.last_message?.user?._id === authUser._id
-                                                                            ? 'You: '
-                                                                            : conversation.last_message?.user?.name
-                                                                                ? `${conversation.last_message?.user?.name}: `
-                                                                                : '';
-
-                                                                    const content =
-                                                                        conversation.last_message?.content || 'No message';
-
-                                                                    return `${sender}${content}`;
-                                                                })()}
-                                                            </p>
-                                                        </div>
-                                                    </Stack>
-                                                );
-                                            default:
-                                                return null;
-                                        }
-                                    })()}
-                                    <div className="text-xs text-[#6f7f92] ml-auto font-bold">
-                                        <span>{moment(conversation.updated_at).fromNow()}</span>
-                                    </div>
-                                </Stack>
-                            );
-                        })}
+                                                                return `${sender}${content}`
+                                                            })()}
+                                                        </p>
+                                                    </div>
+                                                </Stack>
+                                            )
+                                        case GROUP_CONVERSATION:
+                                            return (
+                                                <Stack className="items-center gap-3" direction={'row'}>
+                                                    <Avatar.Root size={'xl'}>
+                                                        <Avatar.Fallback name={conversation.data?.project?.name} />
+                                                        <Avatar.Image src={conversation.data?.project?.logo} />
+                                                    </Avatar.Root>
+                                                    <div className="flex-1">
+                                                        <span className="flex items-center gap-2 text-sm font-bold">
+                                                            {conversation.data?.project?.name}
+                                                        </span>
+                                                        <p className="text-xs mb-0 text-[#6f7f92] font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
+                                                            {(() => {
+                                                                switch (conversation.last_message?.user?._id) {
+                                                                    case authUser._id:
+                                                                        return 'You: '
+                                                                    default:
+                                                                        return conversation.last_message?.user?.name
+                                                                            ? `${conversation.last_message?.user?.name}: `
+                                                                            : ''
+                                                                }
+                                                            })()}
+                                                            {conversation.last_message?.content || 'No message'}
+                                                        </p>
+                                                    </div>
+                                                </Stack>
+                                            )
+                                        default:
+                                            return null
+                                    }
+                                })()}
+                                <div className="text-xs text-[#6f7f92] ml-auto font-bold">
+                                    <span>{moment(conversation.updated_at).fromNow()}</span>
+                                </div>
+                            </Stack>
+                        )
+                    })}
                 </Tabs.Content>
                 <Tabs.Content value="friend" className="flex-1 h-full overflow-y-scroll scrollbar-hide">
                     <div className="flex-1 max-h-[400px] overflow-y-scroll scrollbar-hide">
@@ -240,61 +238,98 @@ const Conversations = () => {
                             />
                         </div>
                         <div className="p-[14px] mt-[15px] rounded-md bg-[#ffffff]">
-                            {conversations.filter((c) => c.members.length >= 2).length > 0 ? (
-                                <>
-                                    {conversations
-                                        .filter((conversation) => conversation.members.length >= 2)
-                                        .map((conversation, index) => {
-                                            return (
-                                                <Stack
-                                                    key={index}
-                                                    onClick={() => navigate(`/conversation/${conversation._id}`)}
-                                                    className="p-[15px] bg-[#ffffff] cursor-pointer overflow-hidden flex items-center gap-3 hover:bg-[#f8f9fa] rounded-md"
-                                                    direction={'row'}
-                                                >
-                                                    {(() => {
-                                                        switch (conversation.type.name) {
-                                                            case GROUP_CONVERSATION:
-                                                                return (
-                                                                    <Stack className="items-center gap-3" direction={'row'}>
-                                                                        <Avatar.Root size={'xl'}>
-                                                                            <Avatar.Fallback name={conversation.data?.project?.name} />
-                                                                            <Avatar.Image src={conversation.data?.project?.logo || img_project} />
+                            {conversations.filter(c => c.members.length > 2).length > 0 ? (<>
+                                {conversations.map((conversation, index) => {
+                                    return (
+                                        <Stack
+                                            key={index}
+                                            onClick={() => navigate(`/conversation/${conversation._id}`)}
+                                            className="p-[15px] bg-[#ffffff] cursor-pointer overflow-hidden flex items-center gap-3 hover:bg-[#f8f9fa] rounded-md"
+                                            direction={'row'}
+                                        >
+                                            {(() => {
+                                                switch (conversation.type.name) {
+                                                    case DIRECT_CONVERSATION:
+                                                        return (
+                                                            <Stack className="items-center flex-1 gap-3 overflow-hidden" direction={'row'}>
+                                                                <Avatar.Root size={'xl'}>
+                                                                    <Avatar.Fallback name={conversation.members[0].name} />
+                                                                    <Avatar.Image src={conversation.members[0].avatar} />
+                                                                </Avatar.Root>
+                                                                <div className="flex-1 overflow-hidden">
+                                                                    <span className="flex items-center gap-2 text-sm font-bold">
+                                                                        {conversation.members[0].name}
+                                                                    </span>
+                                                                    <p className="text-xs mb-0 text-[#6f7f92] font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
+                                                                        {(() => {
+                                                                            const sender =
+                                                                                conversation.last_message?.user?._id === authUser._id
+                                                                                    ? 'You: '
+                                                                                    : conversation.last_message?.user?.name
+                                                                                        ? `${conversation.last_message?.user?.name}: `
+                                                                                        : ''
+
+                                                                            const content = conversation.last_message?.content || 'No message'
+                                                                            return `${sender}${content}`
+                                                                        })()}
+                                                                    </p>
+                                                                </div>
+                                                            </Stack>
+                                                        )
+
+                                                    case GROUP_CONVERSATION:
+                                                        return (
+                                                            <Stack className="items-center flex-1 gap-3 overflow-hidden" direction={'row'}>
+
+                                                                <div className="flex -space-x-2">
+                                                                    {conversation.members.slice(0, 3).map((member, i) => (
+                                                                        <Avatar.Root key={i} size={'sm'}>
+                                                                            <Avatar.Fallback name={member.name} />
+                                                                            <Avatar.Image src={member.avatar} />
                                                                         </Avatar.Root>
-                                                                        <div className="flex-1 overflow-hidden">
-                                                                            <span className="flex items-center gap-2 text-sm font-bold">
-                                                                                {conversation.data?.project?.name ||
-                                                                                    conversation.members.map((m) => m.name).join(', ')}
-                                                                            </span>
-                                                                            <p className="text-xs mb-0 text-[#6f7f92] font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
-                                                                                {(() => {
-                                                                                    const sender =
-                                                                                        conversation.last_message?.user?._id === authUser._id
-                                                                                            ? 'You: '
-                                                                                            : conversation.last_message?.user?.name
-                                                                                                ? `${conversation.last_message?.user?.name}: `
-                                                                                                : '';
-                                                                                    const content = conversation.last_message?.content || 'No message';
-                                                                                    return `${sender}${content}`;
-                                                                                })()}
-                                                                            </p>
+                                                                    ))}
+                                                                    {conversation.members.length > 3 && (
+                                                                        <div className="w-7 h-7 rounded-full bg-gray-300 text-xs flex items-center justify-center text-white font-bold">
+                                                                            +{conversation.members.length - 3}
                                                                         </div>
-                                                                    </Stack>
-                                                                );
-                                                            default:
-                                                                return null;
-                                                        }
-                                                    })()}
-                                                    <div className="text-xs text-[#6f7f92] ml-auto font-bold">
-                                                        <span>{moment(conversation.updated_at).fromNow()}</span>
-                                                    </div>
-                                                </Stack>
-                                            );
-                                        })}
-                                </>
-                            ) : (
-                                <p className="text-sm text-center text-gray-500">You do not have group.</p>
-                            )}
+                                                                    )}
+                                                                </div>
+
+                                                                <div className="flex-1 overflow-hidden">
+                                                                    <span className="flex items-center gap-2 text-sm font-bold">
+
+                                                                        {conversation.data?.project?.name ||
+                                                                            conversation.members.map((m) => m.name).join(', ')}
+                                                                    </span>
+                                                                    <p className="text-xs mb-0 text-[#6f7f92] font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
+                                                                        {(() => {
+                                                                            const sender =
+                                                                                conversation.last_message?.user?._id === authUser._id
+                                                                                    ? 'You: '
+                                                                                    : conversation.last_message?.user?.name
+                                                                                        ? `${conversation.last_message?.user?.name}: `
+                                                                                        : ''
+                                                                            const content = conversation.last_message?.content || 'No message'
+                                                                            return `${sender}${content}`
+                                                                        })()}
+                                                                    </p>
+                                                                </div>
+                                                            </Stack>
+                                                        )
+
+                                                    default:
+                                                        return null
+                                                }
+                                            })()}
+                                            <div className="text-xs text-[#6f7f92] ml-auto font-bold">
+                                                <span>{moment(conversation.updated_at).fromNow()}</span>
+                                            </div>
+                                        </Stack>
+                                    )
+                                })}
+                            </>) : (<p className="text-sm text-center text-gray-500">You do not have group.</p>)}
+
+
                         </div>
                     </div>
                 </Tabs.Content>

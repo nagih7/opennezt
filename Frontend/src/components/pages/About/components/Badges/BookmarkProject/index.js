@@ -30,7 +30,7 @@ const BookmarkProject = () => {
 
     // ========== RENDER ========== //
     return (
-        <ul className='p-0'>
+        <ul>
             {bookmarkedProjects.map((project) => (
                 <li
                     key={project._id}
