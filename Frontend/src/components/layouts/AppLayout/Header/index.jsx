@@ -147,7 +147,6 @@ const Header = () => {
             PROJECT: '/projects',
             RECRUIT_TALENTS: '/recruit-talents',
             SEEK_PROJECTS: '/seek-projects',
-            NOTIFICATIONS: '/notification-management',
             MESSAGES: '/conversation',
         }),
         []
@@ -161,7 +160,6 @@ const Header = () => {
             PROJECT: <IconlyFolder size={16} color={'#6f7f92'} />,
             RECRUIT_TALENTS: <IconlyAddUser size={16} color={'#6f7f92'} />,
             SEEK_PROJECTS: <IconlyWork size={16} color={'#6f7f92'} />,
-            NOTIFICATIONS: <IconlyNotification size={16} color={'#6f7f92'} />,
             MESSAGES: <IconlyChat size={16} color={'#6f7f92'} />,
             // Add a default icon for any path that doesn't have a specific mapping
             default: <IconlySearch size={16} color={'#6f7f92'} />,
@@ -274,7 +272,7 @@ const Header = () => {
     return (
         <header className="bg-[#ffffff] w-full">
             <div className="relative flex justify-center items-center h-[70px] pr-4">
-                <div className="lg:hidden md:absolute  md:left-0">
+                <div className="lg:hidden md:absolute md:left-0">
                     <HStack wrap="wrap">
                         <For each={['start']}>
                             {(placement) => (
@@ -420,12 +418,12 @@ const Header = () => {
                     </HStack>
                 </div>
                 <div
-                    className="h-full hidden md:flex justify-center  cursor-pointer"
+                    className="justify-center hidden h-full cursor-pointer md:flex"
                     onClick={() => (window.location.href = '/')}
                 >
                     <img src={Logo} alt="logo-opennezt" className="py-[18px] px-8 bg-[#ffffff]  h-full" />
                 </div>
-                <div className="md:absolute md:right-0 lg:static flex items-center justify-between flex-1">
+                <div className="flex items-center justify-between flex-1 md:absolute md:right-0 lg:static">
                     <div className="flex items-center gap-4 text-sm font-semibold text-[#6f7f92]" />
                     <div className="flex items-center gap-4">
                         <div className="relative flex" ref={searchRef}>
@@ -524,51 +522,51 @@ const Header = () => {
                                     ))}
                                 </div>
                             )} */}
-                            
-    {/* Arrow icon - only shown when search is active */}
-    {isSearchActive && (
-        <div 
-            className="bg-[#ffffff] cursor-pointer h-[40px] w-[40px] flex items-center justify-center rounded-l-md"
-            onClick={() => {
-                setSearchQuery('');
-                setIsSearchActive(false);
-                setShowResults(false);
-            }}
-        >
-            <IconlyArrowLeft size={20} color={'#6f7f92'} />
-        </div>
-    )}
-    <form
-        onSubmit={handleSearchSubmit}
-        className="hidden lg:flex items-center bg-[#f8f9fa] rounded-md w-[240px] h-[40px] border-[1px] border-gray-200"
-    >
-        {/* Search icon button - only shown when search is NOT active */}
-        {!isSearchActive && (
-            <button
-                type="button"
-                className="flex items-center justify-center w-10 h-10"
-                onClick={() => {
-                    setIsSearchActive(true);
-                    setTimeout(() => document.querySelector('input[type="text"]').focus(), 10);
-                }}
-            >
-                <IconlySearch size={16} color={'#6f7f92'} className="text-gray-400" />
-            </button>
-        )}
-        <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchQueryChange}
-            placeholder={SEARCH[language] || 'Search'}
-            className={`bg-[#f8f9fa] outline-none text-sm font-medium text-[#6f7f92] w-full ${
-                isSearchActive ? 'pl-3' : 'pr-4'
-            }`}
-            onFocus={() => {
-                setIsSearchActive(true);
-                setShowResults(true);
-            }}
-        />
-        {showResults && (
+
+                            {/* Arrow icon - only shown when search is active */}
+                            {isSearchActive && (
+                                <div
+                                    className="bg-[#ffffff] cursor-pointer h-[40px] w-[40px] flex items-center justify-center rounded-l-md"
+                                    onClick={() => {
+                                        setSearchQuery('')
+                                        setIsSearchActive(false)
+                                        setShowResults(false)
+                                    }}
+                                >
+                                    <IconlyArrowLeft size={20} color={'#6f7f92'} />
+                                </div>
+                            )}
+                            <form
+                                onSubmit={handleSearchSubmit}
+                                className="hidden lg:flex items-center bg-[#f8f9fa] rounded-md w-[240px] h-[40px] border-[1px] border-gray-200"
+                            >
+                                {/* Search icon button - only shown when search is NOT active */}
+                                {!isSearchActive && (
+                                    <button
+                                        type="button"
+                                        className="flex items-center justify-center w-10 h-10"
+                                        onClick={() => {
+                                            setIsSearchActive(true)
+                                            setTimeout(() => document.querySelector('input[type="text"]').focus(), 10)
+                                        }}
+                                    >
+                                        <IconlySearch size={16} color={'#6f7f92'} className="text-gray-400" />
+                                    </button>
+                                )}
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={handleSearchQueryChange}
+                                    placeholder={SEARCH[language] || 'Search'}
+                                    className={`bg-[#f8f9fa] outline-none text-sm font-medium text-[#6f7f92] w-full ${
+                                        isSearchActive ? 'pl-3' : 'pr-4'
+                                    }`}
+                                    onFocus={() => {
+                                        setIsSearchActive(true)
+                                        setShowResults(true)
+                                    }}
+                                />
+                                {showResults && (
                                     <div className="absolute top-[50px] right-[-18px] w-[300px] bg-white rounded-b-md z-50">
                                         {searchQuery.trim() === '' ? (
                                             <>
@@ -580,14 +578,12 @@ const Header = () => {
                                                         key={index}
                                                         className="px-3 py-2 hover:bg-[#f8f9fa] hover:rounded-md cursor-pointer text-[#6f7f92] text-sm"
                                                         onClick={() => {
-                                                            
                                                             setSearchQuery(item.text)
-                                                           
+
                                                             setIsSearchActive(true)
-                                                         
+
                                                             setShowResults(true)
 
-                                                        
                                                             document.querySelector('input[type="text"]').focus()
                                                         }}
                                                     >
@@ -612,8 +608,7 @@ const Header = () => {
                                         )}
                                     </div>
                                 )}
-    </form>
-
+                            </form>
                         </div>
                         <div onClick={() => openFullScreen()}>
                             <div className="cursor-pointer">
@@ -688,7 +683,7 @@ const Header = () => {
                         </Popover.Root>
                     </div>
                 </div>
-                {/* <div className="lg:hidden absolute right-0">
+                {/* <div className="absolute right-0 lg:hidden">
                     <HStack wrap="wrap">
                         <For each={['top']}>
                             {(placement) => (
