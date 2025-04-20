@@ -24,7 +24,7 @@ import {
     closeUpdateForm,
     updateBookmarks,
 } from 'states/modules/article'
-import CreateAricleForm from './components/CreateAricleForm'
+import CreateArticleForm from './components/CreateAricleForm'
 import CommentList from './components/CommentList'
 import UpdateArticleForm from './components/UpdateArticleForm'
 import store from 'states/configureStore'
@@ -364,7 +364,7 @@ function NewFeeds() {
                     />
                 ) : null}
                 {isOpenCreateForm ? (
-                    <CreateAricleForm
+                    <CreateArticleForm
                         onSubmitForm={handleFormSubmit}
                         onCloseForm={handleCloseForm}
                         isLoadingCreateArticle={isLoadingCreateArticle}
