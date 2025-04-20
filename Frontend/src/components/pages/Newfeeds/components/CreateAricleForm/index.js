@@ -1,8 +1,8 @@
 import React, { forwardRef, useEffect } from 'react'
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { FileUpload, Input, InputGroup, Button, Textarea, Dialog, Portal, CloseButton } from '@chakra-ui/react'
-import { LuUpload, LuSearch } from 'react-icons/lu'
-import { debounce, last, set } from 'lodash'
+import { LuSearch } from 'react-icons/lu'
+import { debounce } from 'lodash'
 import { CloseOutlined } from '@mui/icons-material'
 import { Avatar } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
@@ -12,6 +12,20 @@ import { getProjectsToTag } from 'api/newfeeds'
 import resizeBackground from 'utils/files/resizeBackground'
 import { handleGetLinkPreview } from 'api/linkPreview'
 import { resetLinkPreview } from 'states/modules/linkPreview'
+import { useCallback } from 'react'
+import CaptionInput from './CaptionInput'
+
+const debouncedLinkPreview = debounce(async (text, dispatch) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g
+    const urls = text.match(urlRegex)
+
+    if (urls && urls.length > 0) {
+        const uniqueUrls = [...new Set(urls)].reverse()
+        uniqueUrls.forEach((url) => {
+            dispatch(handleGetLinkPreview({ data: { url } }))
+        })
+    }
+}, 1000)
 
 const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCreateArticle }, ref) => {
     const [formData, setFormData] = useState({
@@ -164,42 +178,8 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
     const [linkPreviews, setLinkPreviews] = useState([])
     const { linkData, message } = useSelector((state) => state.linkPreview)
 
-    const handleLinkPreview = debounce(async (text) => {
-        const urlRegex = /(https?:\/\/[^\s]+)/g
-        const urls = text.match(urlRegex)
-
-        if (urls && urls.length > 0) {
-            // Lấy danh sách URLs độc nhất và đảo ngược thứ tự
-            const uniqueUrls = [...new Set(urls)].reverse()
-            uniqueUrls.forEach((url) => {
-                dispatch(handleGetLinkPreview({ data: { url } }))
-            })
-        }
-    }, 1000)
-
     // Thêm state để lưu link preview mặc định
     const [defaultPreview, setDefaultPreview] = useState(null)
-
-    // // Sửa useEffect để tự động chọn link đầu tiên
-    // useEffect(() => {
-    //     if (linkData?.url) {
-    //         setLinkPreviews((prev) => {
-    //             const exists = prev.some((item) => item.url === linkData.url)
-    //             if (!exists) {
-    //                 // Nếu chưa có link nào được chọn, set link đầu tiên làm mặc định
-    //                 if (!formData.link_preview) {
-    //                     setFormData((prevForm) => ({
-    //                         ...prevForm,
-    //                         link_preview: linkData.url,
-    //                     }))
-    //                     setDefaultPreview(linkData)
-    //                 }
-    //                 return [...prev, linkData]
-    //             }
-    //             return prev
-    //         })
-    //     }
-    // }, [linkData, formData.link_preview])
 
     // Sửa lại useEffect để lấy link cuối cùng làm mặc định
     useEffect(() => {
@@ -227,17 +207,22 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
         }))
     }
 
-    const handleTextChange = (e) => {
-        const newText = e.target.value
-        setFormData({
-            ...formData,
-            content: {
-                ...formData.content,
-                caption: newText,
-            },
-        })
-        handleLinkPreview(newText)
-    }
+    const handleTextChange = useCallback(
+        (e) => {
+            const newText = e.target.value
+            setFormData((prev) => ({
+                ...prev,
+                content: {
+                    ...prev.content,
+                    caption: newText,
+                },
+            }))
+
+            // Gọi debounced function
+            debouncedLinkPreview(newText, dispatch)
+        },
+        [dispatch]
+    )
 
     // Thêm state để kiểm soát việc hiển thị danh sách link previews
     const [showLinkPreviews, setShowLinkPreviews] = useState(false)
@@ -423,19 +408,6 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
         )
     }
 
-    // Xử lý khi thêm ảnh - xóa link preview
-    const handleAttachmentChange = (files) => {
-        setFormData((prev) => ({
-            ...prev,
-            content: {
-                ...prev.content,
-                attachment: files,
-            },
-            link_preview: '', // Xóa link preview khi thêm ảnh
-        }))
-        dispatch(resetLinkPreview()) // Reset state link preview
-    }
-
     // Xử lý khi có link preview - xóa ảnh
     useEffect(() => {
         if (linkData?.url) {
@@ -448,6 +420,20 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
             }))
         }
     }, [linkData])
+
+    const parseLinks = (text) => {
+        const parts = text.split(/(https?:\/\/[^\s]+)/g)
+        return parts.map((part, index) => {
+            if (part.match(/(https?:\/\/[^\s]+)/g)) {
+                return (
+                    <a key={index} href={part} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                        {part}
+                    </a> // Closing the <a> tag properly
+                )
+            }
+            return part
+        })
+    }
 
     return (
         <>
@@ -478,7 +464,13 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                             </div>
                         </div>
                         <div className="w-full text-wrap p-2 ">
-                            <Textarea
+                            <CaptionInput
+                                ref={ref}
+                                handleTextChange={(e) => {
+                                    handleTextChange(e)
+                                }}
+                            />
+                            {/* <Textarea
                                 ref={ref}
                                 placeholder="Hire Talents For Your Project"
                                 style={{
@@ -488,9 +480,9 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                                 }}
                                 className="gap-2"
                                 maxH="200px"
-                                value={formData.content.caption}
+                                value={parseLinks(formData.content.caption)}
                                 onChange={handleTextChange}
-                            ></Textarea>
+                            ></Textarea> */}
                             {renderDomainWarning()}
                             {renderLinkPreview()}
                             <div>

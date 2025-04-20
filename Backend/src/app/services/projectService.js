@@ -32,6 +32,7 @@ import {
     ActivityLog,
     ProjectRequirement,
     Subscription,
+    Bookmark,
 } from '@/models'
 import { FileUpload } from '@/utils/classes'
 import { userSockets } from '@/routes'
@@ -1921,5 +1922,31 @@ export async function updateNewMemberActivity(user, { invitationId }) {
         throw new Error(
             `Lời mời chưa được xác nhận. Trạng thái hiện tại: ${invitation.metadata?.status || 'không có trạng thái'}`
         )
+    }
+}
+
+export const bookmarkProject = async (requestBody, user) => {
+    const { project_id, marked } = requestBody
+    const user_id = user._id.toString()
+
+    const existingBookmark = await Bookmark.findOne({
+        target_id: project_id,
+        target_type: 'project',
+        user_id: user_id,
+    })
+
+    if (existingBookmark) {
+        existingBookmark.marked = marked
+        await existingBookmark.save()
+        return existingBookmark
+    } else {
+        const newBookmark = new Bookmark({
+            user_id: user_id,
+            target_id: project_id,
+            target_type: 'project',
+            marked: marked,
+        })
+        await newBookmark.save()
+        return newBookmark
     }
 }

@@ -419,14 +419,14 @@ const articleSlice = createSlice({
             const { article_id, marked } = action.payload
 
             const existingBookmarkIndex = state.bookmarks.findIndex(
-                (bm) => bm.article_id.toString() === article_id.toString()
+                (bm) => bm.target_id.toString() === article_id.toString()
             )
 
             if (existingBookmarkIndex !== -1) {
                 state.bookmarks[existingBookmarkIndex].marked = marked
             } else {
                 state.bookmarks.push({
-                    article_id: article_id,
+                    target_id: article_id,
                     marked: marked,
                 })
             }

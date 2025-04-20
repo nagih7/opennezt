@@ -24,7 +24,7 @@ import {
     closeUpdateForm,
     updateBookmarks,
 } from 'states/modules/article'
-import CreateAricleForm from './components/CreateAricleForm'
+import CreateArticleForm from './components/CreateAricleForm'
 import CommentList from './components/CommentList'
 import UpdateArticleForm from './components/UpdateArticleForm'
 import store from 'states/configureStore'
@@ -304,7 +304,7 @@ function NewFeeds() {
     }, [dispatch, onetimefeeds])
 
     const bookmarksMap = useMemo(() => {
-        return new Map(bookmarks.map((r) => [r.article_id.toString(), r.marked]))
+        return new Map(bookmarks.map((r) => [r.target_id.toString(), r.marked]))
     }, [bookmarks])
 
     const bookmarkArticle = useCallback(
@@ -343,7 +343,7 @@ function NewFeeds() {
                     />
                 ) : null}
                 {isOpenCreateForm ? (
-                    <CreateAricleForm
+                    <CreateArticleForm
                         onSubmitForm={handleFormSubmit}
                         onCloseForm={handleCloseForm}
                         isLoadingCreateArticle={isLoadingCreateArticle}

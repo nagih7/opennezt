@@ -17,3 +17,8 @@ export async function accessToTalent(req, res) {
     const result = await talentService.accessToTalent(req.currentUser, req.params)
     res.jsonify(result)
 }
+
+export async function bookmarkTalent(req, res) {
+    const result = await talentService.bookmarkTalent(req.body, req.currentUser)
+    res.status(200).jsonify(result)
+}

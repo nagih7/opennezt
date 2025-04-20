@@ -190,3 +190,8 @@ export async function updateNewMemberActivity(req, res) {
     const result = await projectService.updateNewMemberActivity(req.currentUser, req.params, req.body)
     res.status(200).jsonify(result, 'Update activity new member successfully.')
 }
+
+export async function bookmarkProject(req, res) {
+    const bookmarkProject = await projectService.bookmarkProject(req.body, req.currentUser)
+    res.status(200).jsonify(bookmarkProject)
+}

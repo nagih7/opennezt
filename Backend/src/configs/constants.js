@@ -248,3 +248,5 @@ export const URL_PATTERN = new RegExp(
         '(\\#[-a-z\\d_]*)?$',
     'i'
 )
+
+export const BOOKMARK_TARGET_TYPE_ENUM = ['article', 'project', 'talent']

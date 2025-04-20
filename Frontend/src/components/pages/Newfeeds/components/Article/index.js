@@ -262,6 +262,29 @@ const Article = forwardRef(
             setSelectedImageIndex((prev) => (prev === content.attachment.length - 1 ? 0 : prev + 1))
         }
 
+        const parseContent = (text) => {
+            if (!text) return ''
+
+            const parts = text.split(/(https?:\/\/[^\s]+)/g)
+
+            return parts
+                .map((part, index) => {
+                    if (part.match(/(https?:\/\/[^\s]+)/g)) {
+                        // Cắt ngắn URL nếu quá dài
+                        const displayUrl = part.length > 50 ? part.substring(0, 47) + '...' : part
+                        return `<a 
+                  href="${part}" 
+                  target="_blank" 
+                  rel="noreferrer noopener" 
+                  class="text-blue-500 hover:underline"
+                  title="${part}"
+                >${displayUrl}</a>`
+                    }
+                    return part
+                })
+                .join('')
+        }
+
         return (
             <div className="bg-[#ffffff] w-full max-h-full mb-8 rounded-md p-8 mt-3" ref={ref}>
                 {isConfirmDelete ? (
@@ -379,7 +402,12 @@ const Article = forwardRef(
                 </div>
                 {feed.link_preview ? (
                     <div className="mt-6">
-                        <p className="my-[6px]">{content.caption}</p>
+                        <div
+                            className="whitespace-pre-wrap"
+                            dangerouslySetInnerHTML={{
+                                __html: parseContent(feed.content.caption),
+                            }}
+                        />{' '}
                         {renderLinkPreview()}
                     </div>
                 ) : (
@@ -503,10 +531,11 @@ const Article = forwardRef(
                                     {content.attachment.map((_, index) => (
                                         <button
                                             key={index}
-                                            className={`w-2.5 h-2.5 rounded-full transition-all ${index === selectedImageIndex
+                                            className={`w-2.5 h-2.5 rounded-full transition-all ${
+                                                index === selectedImageIndex
                                                     ? 'bg-white scale-110'
                                                     : 'bg-white/40 hover:bg-white/60'
-                                                }`}
+                                            }`}
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 setSelectedImageIndex(index)

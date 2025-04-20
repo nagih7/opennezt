@@ -775,7 +775,8 @@ export const bookmarkArticle = async (requestBody, user) => {
     const user_id = user._id.toString()
 
     const existingBookmark = await Bookmark.findOne({
-        article_id: article_id,
+        target_id: article_id,
+        target_type: 'article',
         user_id: user_id,
     })
 
@@ -786,7 +787,8 @@ export const bookmarkArticle = async (requestBody, user) => {
     } else {
         const newBookmark = new Bookmark({
             user_id: user_id,
-            article_id: article_id,
+            target_id: article_id,
+            target_type: 'article',
             marked: marked,
         })
         await newBookmark.save()
@@ -800,7 +802,8 @@ export const getUserBookmarks = async (user, article_ids) => {
 
     const bookMarks = await Bookmark.find({
         user_id: user_id,
-        article_id: { $in: articleIdsArray },
+        target_id: { $in: articleIdsArray },
+        target_type: 'article',
     })
 
     return bookMarks

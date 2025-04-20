@@ -1,0 +1,5 @@
+.editor:empty::before {
+    content: attr(data-placeholder);
+    color: #130e0e;
+    pointer-events: none;
+}
