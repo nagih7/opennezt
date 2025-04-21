@@ -195,3 +195,13 @@ export async function bookmarkProject(req, res) {
     const bookmarkProject = await projectService.bookmarkProject(req.body, req.currentUser)
     res.status(200).jsonify(bookmarkProject)
 }
+
+export async function getUserBookmarksStatus(req, res) {
+    const bookmarks = await projectService.getUserBookmarksStatus(req.currentUser, req.params.target_ids)
+    res.status(200).jsonify(bookmarks)
+}
+
+export async function getUserProjectBookmarks(req, res) {
+    const bookmarks = await projectService.getUserProjectBookmarks(req.currentUser, req.query)
+    res.status(200).jsonify(bookmarks)
+}

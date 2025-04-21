@@ -232,7 +232,7 @@ function BookmarkedArticle() {
     }, [dispatch, onetimefeeds])
 
     const bookmarksMap = useMemo(() => {
-        return new Map(bookmarks.map((r) => [r.article_id.toString(), r.marked]))
+        return new Map(bookmarks.map((r) => [r.target_id.toString(), r.marked]))
     }, [bookmarks])
     // Lọc bài viết đã bookmark
     const bookmarkedFeeds = useMemo(() => {
@@ -244,9 +244,9 @@ function BookmarkedArticle() {
             await dispatch(handleBookmarkArticle({ data }))
             dispatch(updateBookmarks(data))
             if (data.marked === 'yes') {
-                await dispatch(postActivitySaveArticle(data.article_id))
+                await dispatch(postActivitySaveArticle(data.target_id))
             } else if (data.marked === 'no') {
-                await dispatch(deleteActivitySaveArticle(data.article_id))
+                await dispatch(deleteActivitySaveArticle(data.target_id))
             }
             dispatch(getSaveArticle())
         },
