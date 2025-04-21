@@ -43,7 +43,7 @@ const unifiedAction = (activity) => {
 
     try {
         // Sử dụng cấu trúc dữ liệu mới từ API hợp nhất
-        const { data, user, activity_type, article, comment } = activity
+        const { user, activity_type, article } = activity
         const displayName = user?.name || 'Someone'
 
         const activityTypeName = activity_type?.name
@@ -98,8 +98,8 @@ function NewFeeds() {
     const {
         activities,
         isLoading: isLoadingActivities,
-        hasMore: hasMoreActivities,
-        skip: activitiesSkip,
+        // hasMore: hasMoreActivities,
+        // skip: activitiesSkip,
         limit: activitiesLimit,
     } = useSelector((state) => state.activity)
     const { nextCursor, limit, hasMore } = pagination
@@ -113,16 +113,16 @@ function NewFeeds() {
         dispatch(getActivitiesArticle({ skip: 0, limit: activitiesLimit }))
     }, [dispatch, activitiesLimit])
 
-    const handleLoadMoreActivities = useCallback(() => {
-        if (!isLoadingActivities && hasMoreActivities) {
-            dispatch(
-                getActivitiesArticle({
-                    skip: activitiesSkip,
-                    limit: activitiesLimit,
-                })
-            )
-        }
-    }, [dispatch, activitiesSkip, activitiesLimit, isLoadingActivities, hasMoreActivities])
+    // const handleLoadMoreActivities = useCallback(() => {
+    //     if (!isLoadingActivities && hasMoreActivities) {
+    //         dispatch(
+    //             getActivitiesArticle({
+    //                 skip: activitiesSkip,
+    //                 limit: activitiesLimit,
+    //             })
+    //         )
+    //     }
+    // }, [dispatch, activitiesSkip, activitiesLimit, isLoadingActivities, hasMoreActivities])
 
     // End Activities
 
@@ -391,8 +391,8 @@ function NewFeeds() {
                 activities={activities}
                 action={unifiedAction}
                 isLoading={isLoadingActivities}
-                fetchMoreActivities={handleLoadMoreActivities}
-            />{' '}
+                // fetchMoreActivities={handleLoadMoreActivities}
+            />
         </div>
     )
 }
