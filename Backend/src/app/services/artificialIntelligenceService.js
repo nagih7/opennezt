@@ -1,6 +1,6 @@
 import { Profile, Project, ObjectId } from '@/models'
 // import callOpenAI from '@/configs/openAI'
-import { AI_API_TOKEN, AI_API_URL, LINK_STATIC_URL } from '@/configs/constants'
+import { AI_API_TOKEN, AI_API_URL } from '@/configs/constants'
 import axios from 'axios'
 
 export async function matchingProjects(user) {
@@ -190,18 +190,6 @@ export async function matchingProjects(user) {
     //         'B2B2C',
     //         'B2E',
     //     ],
-    //     educations: [
-    //         {
-    //             school: 'HaNoi University of Science and Technology',
-    //             degree: 'Bachelor of Information Technology',
-    //             field_of_study: 'Information Technology',
-    //             start_date: '2018-09-01',
-    //             end_date: '2022-06-01',
-    //             grade: 'GPA 3.5/4.0',
-    //             activities:
-    //                 "Member of the university's programming club, participated in several hackathons and coding competitions.",
-    //         },
-    //     ],
     //     additional_infos: [
     //         {
     //             name: 'My career goal',
@@ -249,18 +237,10 @@ export async function matchingProjects(user) {
 
     // API request data
     const requestData = {
-        inputs: {},
+        inputs: queryData,
         query: JSON.stringify(queryData),
         response_mode: 'blocking',
-        conversation_id: '',
-        user: 'abc-123',
-        files: [
-            {
-                type: 'image',
-                transfer_method: 'remote_url',
-                url: 'https://cloud.dify.ai/logo/logo-site.png',
-            },
-        ],
+        user: user._id.toString(),
     }
 
     // API call function
@@ -274,142 +254,14 @@ export async function matchingProjects(user) {
 
         const matches = JSON.parse(response.data?.answer)?.matches
 
-        const matchesId = matches.map((match) => new ObjectId(match.id))
-        const projects = await Project.aggregate([
-            {
-                $match: {
-                    _id: { $in: matchesId },
-                },
-            },
-            {
-                $lookup: {
-                    from: 'stages',
-                    localField: 'stage_id',
-                    foreignField: '_id',
-                    as: 'stage',
-                    pipeline: [
-                        {
-                            $project: {
-                                _id: 0,
-                                name: 1,
-                            },
-                        },
-                    ],
-                },
-            },
-            {
-                $unwind: '$stage',
-            },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'user_id',
-                    foreignField: '_id',
-                    as: 'user',
-                    pipeline: [
-                        {
-                            $project: {
-                                _id: 0,
-                                name: 1,
-                                avatar: {
-                                    $cond: {
-                                        if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
-                                        then: '$avatar',
-                                        else: { $concat: [LINK_STATIC_URL, '$avatar'] },
-                                    },
-                                },
-                            },
-                        },
-                    ],
-                },
-            },
-            {
-                $unwind: '$user',
-            },
-            {
-                $lookup: {
-                    from: 'project_members',
-                    localField: '_id',
-                    foreignField: 'project_id',
-                    as: 'members',
-                    pipeline: [
-                        {
-                            $lookup: {
-                                from: 'users',
-                                localField: 'user_id',
-                                foreignField: '_id',
-                                as: 'user',
-                                pipeline: [
-                                    {
-                                        $project: {
-                                            _id: 0,
-                                            name: 1,
-                                            avatar: {
-                                                $cond: {
-                                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
-                                                    then: '$avatar',
-                                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
-                                                },
-                                            },
-                                        },
-                                    },
-                                ],
-                            },
-                        },
-                        { $unwind: '$user' },
-                        { $project: { _id: 0, user: 1 } },
-                    ],
-                },
-            },
-            {
-                $lookup: {
-                    from: 'articles',
-                    localField: '_id',
-                    foreignField: 'project_id',
-                    as: 'articles',
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    name: 1,
-                    user: 1,
-                    description: 1,
-                    stage: 1,
-                    logo: {
-                        $cond: {
-                            if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
-                            then: '$logo',
-                            else: { $concat: [LINK_STATIC_URL, '$logo'] },
-                        },
-                    },
-                    background: {
-                        $cond: {
-                            if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
-                            then: '$background',
-                            else: { $concat: [LINK_STATIC_URL, '$background'] },
-                        },
-                    },
-                    members: 1,
-                    articles: 1,
-                },
-            },
-        ])
-        // Map the job_titles from matches to projects
-        const projectsWithJobTitles = projects.map((project) => {
-            const matchInfo = matches.find((match) => match.id === project._id.toString())
-            return {
-                ...project,
-                job_title: matchInfo ? matchInfo.job_title : null,
-                percent_match: matchInfo ? matchInfo.percent_match : null,
+        for (const match of matches) {
+            const project = await Project.findById(new ObjectId(match.id)).lean()
+            if (project) {
+                match.project = project
             }
-        })
-        // Sort projects by percent_match in descending order
-        projectsWithJobTitles.sort((a, b) => {
-            return (b.percent_match || 0) - (a.percent_match || 0)
-        })
+        }
 
-        return projectsWithJobTitles
+        return matches
     } catch (error) {
         console.error('Error calling Dify API:', error.response?.data || error.message)
         throw error
@@ -433,86 +285,9 @@ export async function matchingTalents(user) {
     const userSkills = founderProfile.map((profile) => ({
         user_id: profile.user_id,
         industry: profile.industry,
-        // skills: Object.keys(profile.areas_of_expertise).reduce((acc, key) => {
-        //     if (profile.areas_of_expertise[key].length > 0) {
-        //         acc[key] = profile.areas_of_expertise[key]
-        //     }
-        //     return acc
-        // }, {}),
     }))
-    // Filter userSkills with industry - skillRequirements.related_industries
     userSkills.forEach((userSkill) => {
         const commonIndustries = userSkill.industry.filter((industry) => relatedIndustries.includes(industry))
         userSkill.industry = commonIndustries
     })
-
-    // Generate prompt for OpenAI API
-    // const prompt = MATCHING_TALENTS_PROMPT(relatedIndustries, userSkills)
-    // try {
-    //     const response = await callOpenAI(prompt)
-    //     // const cleanResponse = response.replace(/```json\n|```/g, '')
-    //     // const talentsByMatching = JSON.parse(cleanResponse)
-
-    //     const jsonString = response.replace('Output:\n', '')
-    //     const jsonData = JSON.parse(jsonString)
-
-    //     // Matching user_id with User model
-
-    //     const userIds = Object.keys(jsonData).map((userId) => new ObjectId(userId))
-    //     const result = await User.aggregate([
-    //         {
-    //             $match: {
-    //                 _id: { $in: userIds },
-    //             },
-    //         },
-    //         {
-    //             // Thêm trường mới `_id_str` để lưu `_id` dưới dạng chuỗi
-    //             $addFields: {
-    //                 user_id: { $toString: '$_id' },
-    //             },
-    //         },
-
-    //         {
-    //             $addFields: {
-    //                 match_score: {
-    //                     $let: {
-    //                         vars: { jsonData }, // Truyền trực tiếp ánh xạ
-    //                         in: {
-    //                             $getField: {
-    //                                 field: '$user_id',
-    //                                 input: '$$jsonData',
-    //                             },
-    //                         },
-    //                     },
-    //                 },
-    //                 avatar: {
-    //                     $cond: {
-    //                         if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
-    //                         then: '$avatar',
-    //                         else: { $concat: [LINK_STATIC_URL, '$avatar'] },
-    //                     },
-    //                 },
-    //             },
-    //         },
-    //         {
-    //             $sort: {
-    //                 match_score: -1,
-    //             },
-    //         },
-    //         {
-    //             $project: {
-    //                 _id: 1, // Giữ lại _id
-    //                 name: 1,
-    //                 match_score: 1,
-    //                 avatar: 1,
-    //                 language: 1,
-    //             },
-    //         },
-    //     ])
-
-    //     return result
-    // } catch (error) {
-    //     console.error(error)
-    //     throw error
-    // }
 }
