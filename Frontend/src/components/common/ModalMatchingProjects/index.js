@@ -52,7 +52,7 @@ const ModalMatchingProjects = () => {
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
-                    <Dialog.Content className="bg-[#f4f5f6] max-h-full p-0 m-0 overflow-x-scroll scrollbar-hide">
+                    <Dialog.Content className="bg-[#f4f5f6] max-h-full p-0 m-0 overflow-x-scroll">
                         <Dialog.Header>
                             <Dialog.Title width="full" className="flex items-center justify-between ">
                                 <h2 className="text-lg font-semibold text-black">{projectSelected?.project?.name}</h2>
@@ -739,7 +739,7 @@ const ModalMatchingProjects = () => {
                                 </Dialog.Body>
                             </div>
                         </div>
-                        {/* <Dialog.Footer>
+                        <Dialog.Footer>
                             <Button
                                 className="border-[#F4F5F6] bg-[#2F65B9] text-white"
                                 onClick={() => dispatch(setOpenModalMatchingProjects(false))}
@@ -748,7 +748,7 @@ const ModalMatchingProjects = () => {
                             >
                                 OK
                             </Button>
-                        </Dialog.Footer> */}
+                        </Dialog.Footer>
                     </Dialog.Content>
                 </Dialog.Positioner>
             </Portal>
