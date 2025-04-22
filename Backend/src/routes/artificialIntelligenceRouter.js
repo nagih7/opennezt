@@ -19,4 +19,11 @@ openAIRouter.post(
     asyncHandler(aiController.startInterview)
 )
 
+// TIẾP NHẬN CÂU TRẢ LỜI TỪ CLIENT
+openAIRouter.post(
+    '/interview/reply',
+    asyncHandler(validate(aiRequest.replyInterview)),
+    asyncHandler(aiController.replyInterview)
+)
+
 export default openAIRouter

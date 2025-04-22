@@ -1,8 +1,8 @@
-import { Profile, Project, ObjectId, Conversation, Type } from '@/models'
+import { Profile, Project, ObjectId, Conversation, Type, Message } from '@/models'
 // import callOpenAI from '@/configs/openAI'
 import { AI_API_TOKEN, AI_API_URL, AI_INTERVIEW_TOKEN } from '@/configs/constants'
 import axios from 'axios'
-import { CONVERSATION_TYPE, INTERVIEW_CONVERSATION } from '@/configs'
+import { CONVERSATION_TYPE, INTERVIEW_CONVERSATION, INTERVIEW_MESSAGE_TYPE } from '@/configs'
 
 export async function matchingProjects(user) {
     const profile = await Profile.aggregate([
@@ -450,18 +450,91 @@ export async function startInterview(user, projectId) {
 
         // Tạo cuộc hội thoại
         const conversation = new Conversation({
-            conversation_id: result.conversation_id,
             project_id: projectId,
             type_id: conversationType._id,
-            data: { user_id: user._id, project_id: new ObjectId(projectId) },
+            data: { user_id: user._id, project_id: new ObjectId(projectId), interview_id: result.conversation_id },
         })
         await conversation.save()
+
+        // Lấy message type
+        const messageType = await Type.findOne({
+            class: INTERVIEW_MESSAGE_TYPE.TYPE,
+            name: INTERVIEW_MESSAGE_TYPE.BOT,
+        }).lean()
+        // Lưu tin nhắn của AI
+        const message = new Message({
+            conversation_id: conversation._id,
+            user_id: user._id,
+            content: result.answer,
+            type_id: messageType._id,
+        })
+        await message.save()
 
         // Trả về kết quả
         return {
             event: result.event,
             message: {
-                _id: result.message_id,
+                _id: message._id,
+                content: result.answer,
+            },
+            conversation_id: conversation._id,
+        }
+    } catch (error) {
+        console.error('Error calling Dify API:', error.response?.data || error.message)
+        throw error
+    }
+}
+
+export async function replyInterview(user, body) {
+    const { conversation_id, content } = body
+
+    const conversation = await Conversation.findById(new ObjectId(conversation_id)).lean()
+
+    // Gọi API tới AI interview
+    const requestData = {
+        inputs: {},
+        query: JSON.stringify(content),
+        response_mode: 'blocking',
+        conversation_id: conversation.data?.interview_id,
+        user: user._id.toString(),
+    }
+    try {
+        const response = await axios.post(`${AI_API_URL}chat-messages`, requestData, {
+            headers: {
+                Authorization: `Bearer ${AI_INTERVIEW_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+        })
+        const result = typeof response.data === 'object' ? response.data : JSON.parse(response.data)
+
+        // Lấy message type
+        const messageType = await Type.findOne({
+            class: INTERVIEW_MESSAGE_TYPE.TYPE,
+            name: INTERVIEW_MESSAGE_TYPE.USER,
+        }).lean()
+
+        // Lưu tin nhắn của người dùng
+        const userMessage = new Message({
+            conversation_id: conversation._id,
+            user_id: user._id,
+            content: content,
+            type_id: messageType._id,
+        })
+        await userMessage.save()
+
+        // Lưu tin nhắn của AI
+        const aiMessage = new Message({
+            conversation_id: conversation._id,
+            user_id: user._id,
+            content: result.answer,
+            type_id: messageType._id,
+        })
+        await aiMessage.save()
+
+        return {
+            event: result.event,
+            message: {
+                _id: aiMessage._id,
                 content: result.answer,
             },
             conversation_id: conversation._id,
