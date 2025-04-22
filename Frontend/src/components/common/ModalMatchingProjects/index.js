@@ -1,74 +1,70 @@
-import { Badge, Button, Dialog, FormatNumber, HStack, Portal, Stack, Stat } from '@chakra-ui/react'
-import { accessToProject } from 'api/activity'
-import ProjectGrid from 'components/pages/SeekProjects/components/ListProjects/ProjectGrid'
-import React, { useCallback } from 'react'
+import { Button, Dialog, Portal, Stack } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { setOpenModalMatchingProjects } from 'states/modules/artificialIntelligence'
+import Statistical from './components/Statistical'
 
 const ModalMatchingProjects = () => {
     const dispatch = useDispatch()
-    const navigate = useNavigate()
     // ========== STATE FROM REDUX ========== //
     const { projects, isOpenModalMatchingProjects } = useSelector((state) => state.artificialIntelligence)
-    // console.log('projects', projects)
+    // ========== STATE ========== //
+    const [projectSelected, setProjectSelected] = useState(null)
 
-    // ========== HANDLER ========== //
-    const handleViewProjectDetails = useCallback(
-        (project) => {
-            dispatch(accessToProject(project._id))
-            navigate(`/projects/${project._id}/details`)
-            dispatch(setOpenModalMatchingProjects(false))
-        },
-        [dispatch, navigate]
-    )
+    // ========== EFFECT ========== //
+    useEffect(() => {
+        if (projects.length > 0) {
+            setProjectSelected(projects[0])
+        }
+    }, [projects])
 
     // ========== RENDER ========== //
     return (
-        <Dialog.Root size={'xl'} open={isOpenModalMatchingProjects} placement={'center'} motionPreset="slide-in-bottom">
+        <Dialog.Root
+            size="full"
+            motionPreset="slide-in-bottom"
+            open={isOpenModalMatchingProjects}
+            placement={'center'}
+            scrollBehavior="inside"
+        >
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
                     <Dialog.Content className="bg-white">
                         <Dialog.Header>
-                            <Dialog.Title>
-                                <div className="flex items-center justify-between">
-                                    <h2 className="text-lg font-semibold text-black">Matching Projects</h2>
+                            <Dialog.Title width="full" className="flex items-center justify-between ">
+                                <h2 className="text-lg font-semibold text-black">{projectSelected?.project?.name}</h2>
+                                <div className="flex items-center gap-4 text-sm">
+                                    <Button
+                                        className="border-[#F4F5F6] bg-[#2F65B9] text-white"
+                                        onClick={() =>
+                                            setProjectSelected(
+                                                projects[projects.indexOf(projectSelected) - 1] || projects[0]
+                                            )
+                                        }
+                                        borderRadius={4}
+                                        loading={false}
+                                    >
+                                        Previous
+                                    </Button>
+                                    <Button
+                                        className="border-[#F4F5F6] bg-[#2F65B9] text-white"
+                                        onClick={() =>
+                                            setProjectSelected(
+                                                projects[projects.indexOf(projectSelected) + 1] || projects[0]
+                                            )
+                                        }
+                                        borderRadius={4}
+                                        loading={false}
+                                    >
+                                        Next
+                                    </Button>
                                 </div>
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            <Stack spacing={4} className="w-full p-4 bg-gray-100 ">
-                                {projects.length > 0 &&
-                                    projects.map((project) => (
-                                        <Stack
-                                            key={project.id}
-                                            className="flex flex-row w-full p-4 bg-white rounded-lg shadow-md "
-                                        >
-                                            <div className="flex-1 pr-4 border-r-2 border-gray-200">
-                                                <ProjectGrid
-                                                    project={project}
-                                                    handleViewProjectDetails={() => handleViewProjectDetails(project)}
-                                                />
-                                            </div>
-                                            <Stack className="flex items-center justify-center w-1/4 p-4">
-                                                <Stat.Root className="flex flex-col items-center justify-center w-full">
-                                                    {/* <Stat.Label>Suitable job</Stat.Label> */}
-                                                    <Stat.Label>statistical</Stat.Label>
-                                                    <HStack>
-                                                        {/* <Stat.ValueText className="flex items-center justify-center m-0 text-2xl font-bold text-gray-800">
-                                                            <span className="text-gray-500"> {project?.job_title}</span>
-                                                        </Stat.ValueText> */}
-                                                        <Badge colorPalette="green" gap="0">
-                                                            <Stat.UpIndicator />
-                                                            {project?.percent_match}%
-                                                        </Badge>
-                                                    </HStack>
-                                                    {/* <Stat.HelpText>statistical</Stat.HelpText> */}
-                                                </Stat.Root>
-                                            </Stack>
-                                        </Stack>
-                                    ))}
+                            <Stack spacing={4} className="w-full h-full p-4 bg-gray-100 ">
+                                <Statistical project={projectSelected} />
                             </Stack>
                         </Dialog.Body>
                         <Dialog.Footer>
