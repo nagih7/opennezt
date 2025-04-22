@@ -26,43 +26,43 @@ function RightSidebar({ activities, action, fetchMoreActivities }) {
         }
     }, [activities])
 
-    const loadMoreActivities = useCallback(async () => {
-        if (loading || !hasMore) return
+    // const loadMoreActivities = useCallback(async () => {
+    //     if (loading || !hasMore) return
 
-        setLoading(true)
+    //     setLoading(true)
 
-        try {
-            const nextPage = page + 1
-            const newActivities = await fetchMoreActivities(nextPage)
+    //     try {
+    //         const nextPage = page + 1
+    //         const newActivities = await fetchMoreActivities(nextPage)
 
-            if (newActivities && newActivities.length > 0) {
-                setDisplayedActivities((prev) => [...prev, ...newActivities])
-                setPage(nextPage)
-                setHasMore(newActivities.length >= 10)
-            } else {
-                setHasMore(false)
-            }
-        } catch (error) {
-            console.error('Lỗi khi tải thêm activities:', error)
-        } finally {
-            setLoading(false)
-        }
-    }, [loading, hasMore, page, fetchMoreActivities])
+    //         if (newActivities && newActivities.length > 0) {
+    //             setDisplayedActivities((prev) => [...prev, ...newActivities])
+    //             setPage(nextPage)
+    //             setHasMore(newActivities.length >= 10)
+    //         } else {
+    //             setHasMore(false)
+    //         }
+    //     } catch (error) {
+    //         console.error('Lỗi khi tải thêm activities:', error)
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }, [loading, hasMore, page, fetchMoreActivities])
 
-    useEffect(() => {
-        const container = activitiesContainerRef.current
-        if (!container) return
+    // useEffect(() => {
+    //     const container = activitiesContainerRef.current
+    //     if (!container) return
 
-        const handleScroll = () => {
-            const { scrollTop, scrollHeight, clientHeight } = container
-            if (scrollHeight - scrollTop - clientHeight < 50 && !loading && hasMore) {
-                loadMoreActivities()
-            }
-        }
+    //     const handleScroll = () => {
+    //         const { scrollTop, scrollHeight, clientHeight } = container
+    //         if (scrollHeight - scrollTop - clientHeight < 50 && !loading && hasMore) {
+    //             loadMoreActivities()
+    //         }
+    //     }
 
-        container.addEventListener('scroll', handleScroll)
-        return () => container.removeEventListener('scroll', handleScroll)
-    }, [loading, hasMore, loadMoreActivities])
+    //     container.addEventListener('scroll', handleScroll)
+    //     return () => container.removeEventListener('scroll', handleScroll)
+    // }, [loading, hasMore, loadMoreActivities])
 
     // ========== RENDER COMPONENT ========== //
     return (
@@ -75,7 +75,7 @@ function RightSidebar({ activities, action, fetchMoreActivities }) {
             </div>
             <div className="flex flex-col bg-[#ffffff] p-8 rounded-md mt-3 mb-4">
                 <span className="mb-3 text-xl font-semibold">Latest Activities</span>
-                <div ref={activitiesContainerRef} className="max-h-[300px] overflow-y-auto pr-2">
+                <div ref={activitiesContainerRef}>
                     {displayedActivities?.map((activity, index) => (
                         <div className="border-gray-200 border-t-[1px]" key={index}>
                             <div className="flex items-center gap-3 my-3">
@@ -99,14 +99,14 @@ function RightSidebar({ activities, action, fetchMoreActivities }) {
                             </div>
                         </div>
                     ))}
-                    {loading && (
+                    {/* {loading && (
                         <div className="flex justify-center py-2">
                             <Spinner size="sm" color="blue.500" />
                         </div>
                     )}
                     {!hasMore && displayedActivities.length > 0 && (
                         <div className="text-center text-gray-500 text-sm py-2">All activities shown</div>
-                    )}
+                    )} */}
                 </div>
             </div>
             <div className="relative w-full">
