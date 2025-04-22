@@ -4,7 +4,7 @@ import { MAX_STRING_SIZE, VALIDATE_FULL_NAME_REGEX, VALIDATE_PASSWORD_REGEX, VAL
 import { AsyncValidate, FileUpload } from '@/utils/classes'
 
 export const startInterview = Joi.object({
-    projectId: Joi.string()
+    project_id: Joi.string()
         .required()
         .label('Project')
         .custom(

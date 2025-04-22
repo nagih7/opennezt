@@ -6,6 +6,6 @@ export async function matchingProjects(req, res) {
 }
 
 export async function startInterview(req, res) {
-    const result = await aiService.startInterview(req.currentUser, req.body)
+    const result = await aiService.startInterview(req.currentUser, req.body.project_id)
     res.jsonify(result, 'Start interview successfully')
 }

@@ -38,6 +38,7 @@ export const READ_STATUS = 'read'
 export const CONVERSATION_TYPE = 'conversation'
 export const DIRECT_CONVERSATION = 'direct'
 export const GROUP_CONVERSATION = 'group'
+export const INTERVIEW_CONVERSATION = 'interview'
 
 // MESSAGE TYPE
 export const MESSAGE_TYPE = 'message'
