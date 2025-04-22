@@ -268,26 +268,38 @@ export async function matchingProjects(user) {
     }
 }
 
-export async function matchingTalents(user) {
-    const projects = await Project.find({ user_id: user._id }).lean().select('related_industries ')
-    const founderProfile = await Profile.find({ user_id: { $ne: user._id } })
-        .lean()
-        .select('industry  user_id')
-
-    // Get user skills and project requirements
-    const skillRequirements = projects.map((project) => ({
-        related_industries: project.related_industries,
-        // problem_solving: project.problem,
-    }))
-
-    const relatedIndustries = [...new Set(skillRequirements.flatMap((item) => item.related_industries))]
-
-    const userSkills = founderProfile.map((profile) => ({
-        user_id: profile.user_id,
-        industry: profile.industry,
-    }))
-    userSkills.forEach((userSkill) => {
-        const commonIndustries = userSkill.industry.filter((industry) => relatedIndustries.includes(industry))
-        userSkill.industry = commonIndustries
-    })
+export async function startInterview(user, { projectId }) {
+    const project = await Project.aggregate([
+        {
+            $match: {
+                _id: new ObjectId(projectId),
+            },
+        },
+        {
+            $lookup: {
+                from: 'profiles',
+                localField: 'profile_id',
+                foreignField: '_id',
+                as: 'profile',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$profile',
+        },
+        {
+            $project: {
+                _id: 0,
+                name: 1,
+                profile_name: '$profile.name',
+            },
+        },
+    ])
 }
