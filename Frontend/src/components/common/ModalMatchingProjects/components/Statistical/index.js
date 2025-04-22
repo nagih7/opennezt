@@ -36,7 +36,7 @@ const Statistical = ({ project }) => {
 
     // ========== RENDER ========== //
     return (
-        <Stack className="flex flex-row w-full h-full p-4 bg-white rounded-lg shadow-md">
+        <Stack className="flex flex-row w-full h-full p-4 bg-white rounded-md">
             {/* <div className="flex-1 pr-4 border-r-2 border-gray-200">
                 <ProjectGrid project={project} handleViewProjectDetails={() => handleViewProjectDetails(project)} />
             </div> */}
