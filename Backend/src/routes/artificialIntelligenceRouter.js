@@ -1,15 +1,22 @@
 import { Router } from 'express'
 import { asyncHandler } from '@/utils/helpers'
 import requireAuthentication from '@/app/middleware/common/require-authentication'
-// import validate from '@/app/middleware/common/validate'
-import * as artificialIntelligenceController from '../app/controllers/artificialIntelligenceController'
+import validate from '@/app/middleware/common/validate'
+import * as aiRequest from '../app/requests/artificialIntelligenceRequest'
+import * as aiController from '../app/controllers/artificialIntelligenceController'
 
 const openAIRouter = Router()
 
 openAIRouter.use(requireAuthentication)
 
-openAIRouter.get('/matching/projects', asyncHandler(artificialIntelligenceController.matchingProjects))
+// ========= GET [Matching - Projects] ==============//
+openAIRouter.get('/matching/projects', asyncHandler(aiController.matchingProjects))
 
-openAIRouter.get('/matching/talents', asyncHandler(artificialIntelligenceController.matchingTalents))
+// ========= POST [Interview - Start interview] ==============//
+openAIRouter.post(
+    '/interview/start',
+    asyncHandler(validate(aiRequest.startInterview)),
+    asyncHandler(aiController.startInterview)
+)
 
 export default openAIRouter
