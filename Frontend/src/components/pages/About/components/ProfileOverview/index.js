@@ -23,6 +23,7 @@ import { setIsOpenAvatarPreview } from 'states/modules/profile'
 import Loading from './components/Loading'
 import { matchingProjects } from 'api/artificialIntelligence'
 import { setOpenModalMatchingProjects } from 'states/modules/artificialIntelligence'
+import CrawlLinkedin from 'components/common/CrawlLinkedin'
 
 const ProfileOverview = () => {
     // ========== DISPATCH ========== //
@@ -36,8 +37,7 @@ const ProfileOverview = () => {
     const [avatarFile, setAvatarFile] = useState(null)
     const [avatarFileSrc, setAvatarFileSrc] = useState(null)
     const [isOpenModalConfirmMatchingProjects, setIsOpenModalConfirmMatchingProjects] = useState(false)
-
-    console.log('isOpenModalConfirmMatchingProjects', isOpenModalConfirmMatchingProjects)
+    const [isOpenModalCrawlLinkedin, setIsOpenModalCrawlLinkedin] = useState(false)
 
     // ========== LOGIC ========== //
     const handleUploadAvatar = (event) => {
@@ -62,12 +62,13 @@ const ProfileOverview = () => {
 
     const handleMatchingProjects = () => {
         dispatch(matchingProjects())
+        // setIsOpenModalCrawlLinkedin(true)
         setIsOpenModalConfirmMatchingProjects(false)
     }
 
     return (
         <div className="p-8 bg-[#ffffff] rounded-md">
-            <div className="flex flex-nowrap items-center w-full">
+            <div className="flex items-center w-full flex-nowrap">
                 <div className="w-4/12">
                     <div className="flex items-center justify-center">
                         {isLoadingMatchingProjects && <Loading />}
@@ -88,7 +89,9 @@ const ProfileOverview = () => {
                                 onClick={() => dispatch(setOpenModalMatchingProjects(true))}
                             >
                                 <IconlyFolder color={'#ffffff'} size={15} />
-                                <button className="text-[#ffffff] font-medium text-xs md:text-sm">View matching projects</button>
+                                <button className="text-[#ffffff] font-medium text-xs md:text-sm">
+                                    View matching projects
+                                </button>
                             </div>
                         )}
                     </div>
@@ -194,7 +197,7 @@ const ProfileOverview = () => {
                     <div className="mt-[16px]"></div>
                 </div>
                 <div className="w-4/12">
-                    <ul className="flex text-xs md:text-base flex-wrap items-center justify-center gap-5 p-0 m-0 ">
+                    <ul className="flex flex-wrap items-center justify-center gap-5 p-0 m-0 text-xs md:text-base ">
                         {/* <li className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
                             <h5>{profile.activities}</h5>
                             Views
@@ -211,13 +214,7 @@ const ProfileOverview = () => {
                 </div>
             </div>
             {/* AI MATCHING */}
-            <DialogRoot
-                size={'lg'}
-                placement={'center'}
-                lazyMount
-                open={isOpenModalConfirmMatchingProjects}
-                // onOpenChange={}
-            >
+            <DialogRoot size={'lg'} placement={'center'} lazyMount open={isOpenModalConfirmMatchingProjects}>
                 <DialogContent>
                     <DialogHeader className="flex">
                         <Text className="text-lg font-bold from-stone-900">Matching projects with AI</Text>
@@ -256,12 +253,13 @@ const ProfileOverview = () => {
                             </Button>
                         </DialogActionTrigger>
                         <Button variant="solid" onClick={handleMatchingProjects}>
-                            Save
+                            Confirm
                         </Button>
                     </DialogFooter>
                     <DialogCloseTrigger onClick={() => setIsOpenModalConfirmMatchingProjects(false)} />
                 </DialogContent>
             </DialogRoot>
+            <CrawlLinkedin status={isOpenModalCrawlLinkedin} setStatus={setIsOpenModalCrawlLinkedin} />
         </div>
     )
 }

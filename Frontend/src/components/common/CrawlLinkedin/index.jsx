@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import logo_opennezt_img from '../../../assets/images/logo/opennezt_full_black_old.png'
 import { toaster } from 'components/UI/toaster'
 
-const CrawlLinkedin = () => {
+const CrawlLinkedin = ({ status, setStatus }) => {
     const [linkedinUsername, setLinkedinUsername] = useState('')
     const [isConfirmed, setIsConfirmed] = useState(false)
 
@@ -44,7 +44,7 @@ const CrawlLinkedin = () => {
     }
 
     return (
-        <Dialog.Root size="full" motionPreset="slide-in-bottom">
+        <Dialog.Root size="full" motionPreset="slide-in-bottom" lazyMount open={status}>
             <Dialog.Trigger asChild>
                 <Button variant="outline" size="sm">
                     Open Dialog
@@ -62,7 +62,7 @@ const CrawlLinkedin = () => {
                                     <img src={logo_opennezt_img} alt="" className="h-8" />
                                     <span className="text-3xl font-extrabold">profile?</span>
                                 </div>
-                                <div className="flex items-center gap-1 font-semibold text-xl">
+                                <div className="flex items-center gap-1 text-xl font-semibold">
                                     <span>Choose a method to complete your profile. Using</span>
                                     <span className="text-[#2f65b9] font-extrabold">LinkedIn</span>
                                     <span>is recommended for the best matching experience.</span>
@@ -71,7 +71,7 @@ const CrawlLinkedin = () => {
                                     <span>www.linkedin.com/in/</span>
                                     <input
                                         type="text"
-                                        className="outline-none border-b w-20 border-black"
+                                        className="w-20 border-b border-black outline-none"
                                         value={linkedinUsername}
                                         onChange={handleUsernameChange}
                                     />
@@ -86,7 +86,7 @@ const CrawlLinkedin = () => {
                                         </a>
                                     </span>
                                 </div>
-                                <div className="flex items-center gap-2 mt-10 text-md font-medium">
+                                <div className="flex items-center gap-2 mt-10 font-medium text-md">
                                     <input
                                         type="checkbox"
                                         name="name"
@@ -107,13 +107,13 @@ const CrawlLinkedin = () => {
                                     </button>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <div className="border-t-2 border-gray-200 w-full">
+                                    <div className="w-full border-t-2 border-gray-200">
                                         <div className="text-[#ffffff]">
                                             lákjdlaskjdaslkdjsaldjsalkjlaaaaaaaaaaaaaaa
                                         </div>
                                     </div>
                                     <span className="mt-[-22px] text-lg font-medium text-gray-300">or</span>
-                                    <div className="border-t-2 border-gray-200 w-full">
+                                    <div className="w-full border-t-2 border-gray-200">
                                         <div className="text-[#ffffff]">
                                             lákjdlaskjdaslkdjsaldjsalkjlaaaaaaaaaaaaaaa
                                         </div>
