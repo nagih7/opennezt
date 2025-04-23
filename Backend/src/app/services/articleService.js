@@ -975,54 +975,6 @@ export const getArticleActivities = async (user, options = {}) => {
         name: { $in: activityTypes },
     })
 
-    const typeIds = typeObjects.map((t) => t._id)
-
-    // Tìm ID của loại hoạt động SAVE
-    const saveTypeId = typeObjects.find((t) => t.name === ARTICLE_SAVE)?._id
-
-    // Xác định điều kiện cơ bản
-    const matchCreateCondition = {}
-    const matchOtherCondition = {}
-    const matchSaveCondition = {}
-
-    // Xử lý điều kiện lọc cho CREATE (AccessLog)
-    if (activityTypes.includes(ARTICLE_CREATE)) {
-        matchCreateCondition.type_id = {
-            $in: typeIds.filter((id) => typeObjects.find((t) => t._id.equals(id))?.name === ARTICLE_CREATE),
-        }
-
-        if (performedOnly) {
-            matchCreateCondition.user_id = user._id
-        }
-    }
-
-    // Xử lý điều kiện lọc cho SAVE (luôn lấy hoạt động do người dùng thực hiện)
-    if (activityTypes.includes(ARTICLE_SAVE) && saveTypeId) {
-        matchSaveCondition.type_id = saveTypeId
-        matchSaveCondition.user_id = user._id // Luôn lấy hoạt động save của người dùng hiện tại
-    }
-
-    // Xử lý điều kiện lọc cho các loại khác (loại bỏ ARTICLE_SAVE)
-    const otherTypes = activityTypes.filter((type) => type !== ARTICLE_CREATE && type !== ARTICLE_SAVE)
-
-    if (otherTypes.length > 0) {
-        matchOtherCondition.type_id = {
-            $in: typeIds.filter((id) => {
-                const typeName = typeObjects.find((t) => t._id.equals(id))?.name
-                return typeName !== ARTICLE_CREATE && typeName !== ARTICLE_SAVE
-            }),
-        }
-
-        if (ownedOnly) {
-            matchOtherCondition['data.owner_id'] = user._id
-            if (!performedOnly) {
-                matchOtherCondition.user_id = { $ne: user._id }
-            }
-        } else if (performedOnly) {
-            matchOtherCondition.user_id = user._id
-        }
-    }
-
     // Pipeline chung để lookup và projection
     const commonPipeline = [
         // User lookup
@@ -1055,25 +1007,23 @@ export const getArticleActivities = async (user, options = {}) => {
             },
         },
         { $unwind: '$user' },
-
-        // Thêm trường activity_source để biết nguồn
-        {
-            $addFields: {
-                activity_source: {
-                    $cond: {
-                        if: { $eq: [{ $type: '$data' }, 'missing'] },
-                        then: 'access_log',
-                        else: 'activity_log',
-                    },
-                },
-            },
-        },
     ]
 
-    // Thực hiện ba truy vấn riêng biệt
-    const createActivities =
-        Object.keys(matchCreateCondition).length > 0
-            ? await AccessLog.aggregate([
+    // Mảng lưu kết quả từ tất cả các truy vấn
+    const allActivities = []
+
+    // 1. Truy vấn CREATE activities (từ AccessLog)
+    if (activityTypes.includes(ARTICLE_CREATE)) {
+        const createTypeId = typeObjects.find((t) => t.name === ARTICLE_CREATE)?._id
+
+        if (createTypeId) {
+            const matchCreateCondition = { type_id: createTypeId }
+
+            if (performedOnly) {
+                matchCreateCondition.user_id = user._id
+            }
+
+            const createActivities = await AccessLog.aggregate([
                 { $match: matchCreateCondition },
                 ...commonPipeline,
                 {
@@ -1087,12 +1037,22 @@ export const getArticleActivities = async (user, options = {}) => {
                 },
                 { $unwind: '$activity_type' },
             ])
-            : []
 
-    // Hoạt động lưu bài viết
-    const saveActivities =
-        Object.keys(matchSaveCondition).length > 0
-            ? await ActivityLog.aggregate([
+            allActivities.push(...createActivities)
+        }
+    }
+
+    // 2. Truy vấn SAVE activities
+    if (activityTypes.includes(ARTICLE_SAVE)) {
+        const saveTypeId = typeObjects.find((t) => t.name === ARTICLE_SAVE)?._id
+
+        if (saveTypeId) {
+            const matchSaveCondition = {
+                type_id: saveTypeId,
+                user_id: user._id,
+            }
+
+            const saveActivities = await ActivityLog.aggregate([
                 { $match: matchSaveCondition },
                 ...commonPipeline,
                 // Lookup bài viết
@@ -1102,17 +1062,9 @@ export const getArticleActivities = async (user, options = {}) => {
                         localField: 'data.article_id',
                         foreignField: '_id',
                         as: 'article',
-                        pipeline: [
-                            {
-                                $project: {
-                                    caption: '$content.caption',
-                                    _id: 1,
-                                },
-                            },
-                        ],
+                        pipeline: [{ $project: { caption: '$content.caption', _id: 1 } }],
                     },
                 },
-                // Lookup loại hoạt động
                 {
                     $lookup: {
                         from: 'types',
@@ -1122,24 +1074,84 @@ export const getArticleActivities = async (user, options = {}) => {
                         pipeline: [{ $project: { name: 1 } }],
                     },
                 },
-                // Unwinding
-                {
-                    $unwind: {
-                        path: '$article',
-                        preserveNullAndEmptyArrays: true,
-                    },
-                },
+                { $unwind: { path: '$article', preserveNullAndEmptyArrays: true } },
                 { $unwind: '$activity_type' },
             ])
-            : []
 
-    // Các hoạt động khác (không bao gồm lưu bài viết)
-    const otherActivities =
-        Object.keys(matchOtherCondition).length > 0
-            ? await ActivityLog.aggregate([
-                { $match: matchOtherCondition },
+            allActivities.push(...saveActivities)
+        }
+    }
+
+    // 3. Truy vấn UPDATE activities
+    if (activityTypes.includes(ARTICLE_UPDATE)) {
+        const updateTypeId = typeObjects.find((t) => t.name === ARTICLE_UPDATE)?._id
+
+        if (updateTypeId) {
+            const matchUpdateCondition = { type_id: updateTypeId }
+
+            if (ownedOnly) {
+                matchUpdateCondition['data.owner_id'] = user._id
+
+                if (!performedOnly) {
+                    matchUpdateCondition.user_id = { $ne: user._id }
+                    matchUpdateCondition.$and = [
+                        { 'data.owner_id': user._id },
+                        { $expr: { $ne: ['$user_id', '$data.owner_id'] } },
+                    ]
+                }
+            } else if (performedOnly) {
+                matchUpdateCondition.user_id = user._id
+
+                if (!ownedOnly) {
+                    matchUpdateCondition.$expr = { $ne: ['$user_id', '$data.owner_id'] }
+                }
+            } else {
+                matchUpdateCondition.$expr = { $ne: ['$user_id', '$data.owner_id'] }
+            }
+
+            const updateActivities = await ActivityLog.aggregate([
+                { $match: matchUpdateCondition },
                 ...commonPipeline,
+                {
+                    $lookup: {
+                        from: 'articles',
+                        localField: 'data.article_id',
+                        foreignField: '_id',
+                        as: 'article',
+                        pipeline: [{ $project: { caption: '$content.caption', _id: 1 } }],
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'types',
+                        localField: 'type_id',
+                        foreignField: '_id',
+                        as: 'activity_type',
+                        pipeline: [{ $project: { name: 1 } }],
+                    },
+                },
+                { $unwind: { path: '$article', preserveNullAndEmptyArrays: true } },
+                { $unwind: '$activity_type' },
+            ])
 
+            allActivities.push(...updateActivities)
+        }
+    }
+
+    // 4. Truy vấn REACTION activities
+    if (activityTypes.includes(ARTICLE_REACTION)) {
+        const reactionTypeId = typeObjects.find((t) => t.name === ARTICLE_REACTION)?._id
+
+        if (reactionTypeId) {
+            const reactionsOnUserPosts = await ActivityLog.aggregate([
+                {
+                    $match: {
+                        type_id: reactionTypeId,
+                        'data.owner_id': user._id,
+                        user_id: { $ne: user._id },
+                    },
+                },
+                ...commonPipeline,
                 // Lookup bài viết
                 {
                     $lookup: {
@@ -1152,13 +1164,12 @@ export const getArticleActivities = async (user, options = {}) => {
                                 $project: {
                                     caption: '$content.caption',
                                     _id: 1,
+                                    user_id: 1,
                                 },
                             },
                         ],
                     },
                 },
-
-                // Lookup loại hoạt động
                 {
                     $lookup: {
                         from: 'types',
@@ -1168,8 +1179,45 @@ export const getArticleActivities = async (user, options = {}) => {
                         pipeline: [{ $project: { name: 1 } }],
                     },
                 },
+                { $unwind: { path: '$article', preserveNullAndEmptyArrays: true } },
+                { $unwind: '$activity_type' },
+            ])
 
-                // Lookup bình luận nếu cần
+            allActivities.push(...reactionsOnUserPosts)
+        }
+    }
+
+    // 5. Truy vấn COMMENT activities
+    if (activityTypes.includes(ARTICLE_COMMENT)) {
+        const commentTypeId = typeObjects.find((t) => t.name === ARTICLE_COMMENT)?._id
+
+        if (commentTypeId) {
+            const commentsOnUserPosts = await ActivityLog.aggregate([
+                {
+                    $match: {
+                        type_id: commentTypeId,
+                        'data.owner_id': user._id,
+                        user_id: { $ne: user._id },
+                    },
+                },
+                ...commonPipeline,
+                {
+                    $lookup: {
+                        from: 'articles',
+                        localField: 'data.article_id',
+                        foreignField: '_id',
+                        as: 'article',
+                        pipeline: [
+                            {
+                                $project: {
+                                    caption: '$content.caption',
+                                    _id: 1,
+                                    user_id: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
                 {
                     $lookup: {
                         from: 'comments',
@@ -1181,34 +1229,98 @@ export const getArticleActivities = async (user, options = {}) => {
                                 $project: {
                                     content: 1,
                                     article_id: 1,
+                                    user_id: 1,
                                 },
                             },
                         ],
                     },
                 },
-
-                // Unwinding với preserveNullAndEmptyArrays để không mất dữ liệu
                 {
-                    $unwind: {
-                        path: '$article',
-                        preserveNullAndEmptyArrays: true,
+                    $lookup: {
+                        from: 'types',
+                        localField: 'type_id',
+                        foreignField: '_id',
+                        as: 'activity_type',
+                        pipeline: [{ $project: { name: 1 } }],
                     },
                 },
+                { $unwind: { path: '$article', preserveNullAndEmptyArrays: true } },
                 { $unwind: '$activity_type' },
+                { $unwind: { path: '$comment', preserveNullAndEmptyArrays: true } },
+            ])
+
+            allActivities.push(...commentsOnUserPosts)
+        }
+    }
+
+    // 6. Truy vấn REPLY_COMMENT activities
+    if (activityTypes.includes(ARTICLE_REPLY_COMMENT)) {
+        const replyCommentTypeId = typeObjects.find((t) => t.name === ARTICLE_REPLY_COMMENT)?._id
+
+        if (replyCommentTypeId) {
+            const repliesOnUserComments = await ActivityLog.aggregate([
                 {
-                    $unwind: {
-                        path: '$comment',
-                        preserveNullAndEmptyArrays: true,
+                    $match: {
+                        type_id: replyCommentTypeId,
+                        'data.owner_id': user._id,
+                        user_id: { $ne: user._id },
                     },
                 },
+                ...commonPipeline,
+                // Lookup bài viết
+                {
+                    $lookup: {
+                        from: 'articles',
+                        localField: 'data.article_id',
+                        foreignField: '_id',
+                        as: 'article',
+                        pipeline: [
+                            {
+                                $project: {
+                                    caption: '$content.caption',
+                                    _id: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'comments',
+                        localField: 'data.comment_id',
+                        foreignField: '_id',
+                        as: 'comment',
+                        pipeline: [
+                            {
+                                $project: {
+                                    content: 1,
+                                    article_id: 1,
+                                    user_id: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'types',
+                        localField: 'type_id',
+                        foreignField: '_id',
+                        as: 'activity_type',
+                        pipeline: [{ $project: { name: 1 } }],
+                    },
+                },
+                { $unwind: { path: '$article', preserveNullAndEmptyArrays: true } },
+                { $unwind: '$activity_type' },
+                { $unwind: { path: '$comment', preserveNullAndEmptyArrays: true } },
             ])
-            : []
 
-    // Gộp kết quả và sắp xếp
-    const allActivities = [...createActivities, ...saveActivities, ...otherActivities]
+            allActivities.push(...repliesOnUserComments)
+        }
+    }
+
+    // Sắp xếp và phân trang kết quả
     allActivities.sort((a, b) => b.timestamp - a.timestamp)
-
-    // Phân trang kết quả
     return allActivities.slice(skip, skip + limit)
 }
 

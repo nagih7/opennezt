@@ -13,9 +13,9 @@ const Badges = () => {
 
                 <div className="w-10/12">
                     <Tabs.Root defaultValue="Articles" >
-                        <div className=" rounded-lg p-6">
+                        <div className=" rounded-lg">
                             <Tabs.List >
-                                <div className="flex justify-between bg-white  p-4 font-bold w-full">
+                                <div className="flex justify-between bg-white p-4 font-bold w-full">
                                     <div className='flex'>
                                         <Tabs.Trigger className="text-lg font-semibold" value="Articles">
                                             Articles

@@ -38,6 +38,7 @@ export const READ_STATUS = 'read'
 export const CONVERSATION_TYPE = 'conversation'
 export const DIRECT_CONVERSATION = 'direct'
 export const GROUP_CONVERSATION = 'group'
+export const INTERVIEW_CONVERSATION = 'interview'
 
 // MESSAGE TYPE
 export const MESSAGE_TYPE = 'message'
@@ -46,6 +47,13 @@ export const FILE_MESSAGE = 'file'
 export const IMAGE_MESSAGE = 'image'
 export const VIDEO_MESSAGE = 'video'
 export const AUDIO_MESSAGE = 'audio'
+
+// INTERVIEW MESSAGE TYPE
+export const INTERVIEW_MESSAGE_TYPE = {
+    TYPE: 'interview_message',
+    USER: 'user',
+    BOT: 'bot',
+}
 
 // ACTIONS
 export const CONFIRM_ACTION = 'confirm'

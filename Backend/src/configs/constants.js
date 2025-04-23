@@ -228,6 +228,7 @@ export const GOOGLE_TOKEN_ENDPOINT = process.env.GOOGLE_TOKEN_ENDPOINT
 // AI
 export const AI_API_URL = process.env.AI_API_URL
 export const AI_API_TOKEN = process.env.AI_API_TOKEN
+export const AI_INTERVIEW_TOKEN = process.env.AI_INTERVIEW_TOKEN
 
 // LINKEDIN CRAWL
 export const LINKEDIN_USERNAME = process.env.LINKEDIN_USERNAME
