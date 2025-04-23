@@ -13,7 +13,7 @@ import {
     handleBookmarkArticle,
 } from '../../../../../../api/newfeeds'
 import { useDispatch, useSelector } from 'react-redux'
-import RightSidebar from 'components/common/RightSidebar'
+
 import {
     updateDeletedArticle,
     updateReaction,
@@ -24,13 +24,18 @@ import {
     closeUpdateForm,
     updateBookmarks,
 } from 'states/modules/article'
-import CreateAricleForm from '../../../../Newfeeds/components/CreateAricleForm'
 import CommentList from '../../../../Newfeeds/components/CommentList'
 import UpdateArticleForm from '../../../../Newfeeds/components/UpdateArticleForm'
 import store from 'states/configureStore'
-import { deleteActivitySaveArticle, postActivitySaveArticle, postActivityUpdateArticle } from 'api/activity'
+import {
+    deleteActivitySaveArticle,
+    getActivitiesArticle,
+    postActivitySaveArticle,
+    postActivityUpdateArticle,
+} from 'api/activity'
+import { resetLinkPreview } from 'states/modules/linkPreview'
 
-function BookmarkedArticle() {
+function BookmarkArticle() {
     const dispatch = useDispatch()
 
     const {
@@ -47,12 +52,36 @@ function BookmarkedArticle() {
         bookmarks,
     } = useSelector((state) => state.article)
 
+    const {
+        activities,
+        isLoading: isLoadingActivities,
+        hasMore: hasMoreActivities,
+        skip: activitiesSkip,
+        limit: activitiesLimit,
+    } = useSelector((state) => state.activity)
     const { nextCursor, limit, hasMore } = pagination
 
     const [dataFilter, setDataFilter] = useState({
         cursor: 0,
         limit: limit,
     })
+
+    useEffect(() => {
+        dispatch(getActivitiesArticle({ skip: 0, limit: activitiesLimit }))
+    }, [dispatch, activitiesLimit])
+
+    const handleLoadMoreActivities = useCallback(() => {
+        if (!isLoadingActivities && hasMoreActivities) {
+            dispatch(
+                getActivitiesArticle({
+                    skip: activitiesSkip,
+                    limit: activitiesLimit,
+                })
+            )
+        }
+    }, [dispatch, activitiesSkip, activitiesLimit, isLoadingActivities, hasMoreActivities])
+
+    // End Activities
 
     useEffect(() => {
         if (feeds.length === 0 && hasMore === true) {
@@ -134,6 +163,7 @@ function BookmarkedArticle() {
 
     const handleOpenForm = useCallback(() => {
         dispatch(openCreateForm())
+        dispatch(resetLinkPreview())
     }, [dispatch])
 
     const handleCloseForm = useCallback(() => {
@@ -147,7 +177,6 @@ function BookmarkedArticle() {
 
             //Gọi API để update server
             await dispatch(handleReactArticle({ articleId, data: formData }))
-            await dispatch(getReactionArticle())
         },
         [dispatch]
     )
@@ -163,6 +192,7 @@ function BookmarkedArticle() {
             newFormData.append('audience', formData.audience)
             newFormData.append('status', formData.status)
             newFormData.append('project_id', formData.project_id)
+            newFormData.append('link_preview', formData.link_preview)
             dispatch(handleCreateArticle({ data: newFormData }))
         },
         [dispatch]
@@ -172,7 +202,6 @@ function BookmarkedArticle() {
     //Comment Article
     const [selectedArticle, setSelectedArticle] = useState({})
     const [isOpenComment, setIsOpenComment] = useState(false)
-
     const handleSelectArticle = useCallback(async (feed) => {
         setSelectedArticle(feed)
         setIsOpenComment(true)
@@ -232,30 +261,28 @@ function BookmarkedArticle() {
     }, [dispatch, onetimefeeds])
 
     const bookmarksMap = useMemo(() => {
-        return new Map(bookmarks.map((r) => [r.article_id.toString(), r.marked]))
+        return new Map(bookmarks.map((r) => [r.target_id.toString(), r.marked]))
     }, [bookmarks])
     // Lọc bài viết đã bookmark
     const bookmarkedFeeds = useMemo(() => {
         return feeds.filter((feed) => bookmarksMap.get(feed._id) === 'yes')
     }, [feeds, bookmarksMap])
-
     const bookmarkArticle = useCallback(
         async (data) => {
             await dispatch(handleBookmarkArticle({ data }))
             dispatch(updateBookmarks(data))
             if (data.marked === 'yes') {
-                await dispatch(postActivitySaveArticle(data.article_id))
+                await dispatch(postActivitySaveArticle(data.target_id))
             } else if (data.marked === 'no') {
-                await dispatch(deleteActivitySaveArticle(data.article_id))
+                await dispatch(deleteActivitySaveArticle(data.target_id))
             }
-            dispatch(getSaveArticle())
         },
         [dispatch]
     )
     //End Delete Article
 
     return (
-        <div className="flex w-full gap-8 pt-4 px-[16px]">
+        <div className="flex w-full gap-8 pt-4 ">
             <div className="w-full 2xl:w-full">
                 {isOpenUpdateForm ? (
                     <UpdateArticleForm
@@ -275,50 +302,56 @@ function BookmarkedArticle() {
                         isLoading={isLoadingReactArticle}
                     />
                 ) : null}
-                {isOpenCreateForm ? (
-                    <CreateAricleForm
-                        onSubmitForm={handleFormSubmit}
-                        onCloseForm={handleCloseForm}
-                        isLoadingCreateArticle={isLoadingCreateArticle}
-                    />
-                ) : null}
-                {bookmarkedFeeds.map((feed, index) => {
-                    if (index === bookmarkedFeeds.length - 1) {
-                        return (
-                            <Article
-                                key={feed?._id}
-                                ref={lastElementRef}
-                                feed={feed}
-                                reaction={reactionMap.get(feed?._id)}
-                                onReaction={handleReaction}
-                                isLoading={isLoadingReactArticle}
-                                onSelect={handleSelectArticle}
-                                onEdit={handleOpenUpdateForm}
-                                onDelete={handleDelete}
-                                bookmark={bookmarksMap.get(feed?._id)}
-                                onBookmark={bookmarkArticle}
-                            />
-                        )
-                    } else {
-                        return (
-                            <Article
-                                key={feed?._id}
-                                feed={feed}
-                                reaction={reactionMap.get(feed?._id)}
-                                onReaction={handleReaction}
-                                isLoading={isLoadingReactArticle}
-                                onSelect={handleSelectArticle}
-                                onEdit={handleOpenUpdateForm}
-                                onDelete={handleDelete}
-                                bookmark={bookmarksMap.get(feed?._id)}
-                                onBookmark={bookmarkArticle}
-                            />
-                        )
-                    }
-                })}
+                {bookmarkedFeeds.length > 0 ? (
+                    <>
+                        {bookmarkedFeeds.map((feed, index) => {
+                            if (index === bookmarkedFeeds.length - 1) {
+                                return (
+                                    <Article
+                                        key={feed?._id}
+                                        ref={lastElementRef}
+                                        feed={feed}
+                                        reaction={reactionMap.get(feed?._id)}
+                                        onReaction={handleReaction}
+                                        isLoading={isLoadingReactArticle}
+                                        onSelect={handleSelectArticle}
+                                        onEdit={handleOpenUpdateForm}
+                                        onDelete={handleDelete}
+                                        bookmark={bookmarksMap.get(feed?._id)}
+                                        onBookmark={bookmarkArticle}
+                                    />
+                                )
+                            } else {
+                                return (
+                                    <Article
+                                        key={feed?._id}
+                                        feed={feed}
+                                        reaction={reactionMap.get(feed?._id)}
+                                        onReaction={handleReaction}
+                                        isLoading={isLoadingReactArticle}
+                                        onSelect={handleSelectArticle}
+                                        onEdit={handleOpenUpdateForm}
+                                        onDelete={handleDelete}
+                                        bookmark={bookmarksMap.get(feed?._id)}
+                                        onBookmark={bookmarkArticle}
+                                    />
+                                )
+                            }
+                        })}
+                    </>
+                ) : (<>
+                    <div className="bg-[#E3F1F6] pl-4 py-3 border-l-2 border-[#0098CB]">
+                        <p className="relative top-[0.6rem] text-[#1599CC]   ">
+                            You have no saved posts yet.
+                        </p>
+                    </div>
+                </>)
+                }
+
             </div>
+
         </div>
     )
 }
 
-export default BookmarkedArticle
+export default BookmarkArticle

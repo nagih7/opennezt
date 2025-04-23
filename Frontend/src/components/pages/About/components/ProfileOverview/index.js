@@ -61,8 +61,8 @@ const ProfileOverview = () => {
     }
 
     const handleMatchingProjects = () => {
-        dispatch(matchingProjects())
-        // setIsOpenModalCrawlLinkedin(true)
+        // dispatch(matchingProjects())
+        setIsOpenModalCrawlLinkedin(true)
         setIsOpenModalConfirmMatchingProjects(false)
     }
 

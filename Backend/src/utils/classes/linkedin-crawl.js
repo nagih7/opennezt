@@ -153,9 +153,6 @@ async function getSkillsForProfile(username) {
 
         // Scrape skills
         const skills = await scrapeSkills(session.page, username)
-
-        // Log results
-        console.log(`Skills for profile ${username}:`, skills)
         return skills
     } catch (error) {
         console.error('Error:', error.message)

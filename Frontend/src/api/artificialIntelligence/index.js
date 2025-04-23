@@ -9,10 +9,14 @@ import {
     startRequestMatchingTalentsFail,
 } from '../../states/modules/artificialIntelligence'
 
-export const matchingProjects = () => async (dispatch, getState) => {
+export const matchingProjects = (linkedInUsername) => async (dispatch, getState) => {
+    let path = `ai/matching/projects`
+    if (linkedInUsername) {
+        path += `?linkedin_username=${linkedInUsername}`
+    }
     return callApi({
         method: 'get',
-        apiPath: `ai/matching/projects`,
+        apiPath: path,
         actionTypes: [requestMatchingProjects, matchingProjectsSuccess, matchingProjectsFail],
         variables: {},
         dispatch,

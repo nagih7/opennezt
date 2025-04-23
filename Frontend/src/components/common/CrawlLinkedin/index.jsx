@@ -1,9 +1,13 @@
-import { Button, CloseButton, Dialog, Portal } from '@chakra-ui/react'
+import { Dialog, Portal } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import logo_opennezt_img from '../../../assets/images/logo/opennezt_full_black_old.png'
 import { toaster } from 'components/UI/toaster'
+import { useDispatch } from 'react-redux'
+import { matchingProjects } from 'api/artificialIntelligence'
 
 const CrawlLinkedin = ({ status, setStatus }) => {
+    const dispatch = useDispatch()
+    // =========== STATE =========== //
     const [linkedinUsername, setLinkedinUsername] = useState('')
     const [isConfirmed, setIsConfirmed] = useState(false)
 
@@ -36,26 +40,19 @@ const CrawlLinkedin = ({ status, setStatus }) => {
 
     const handleSubmit = () => {
         if (verifyAndSubmit()) {
-            toaster.create({
-                type: 'success',
-                title: `Profile submission initiated for: ${linkedinUsername}`,
-            })
+            dispatch(matchingProjects(linkedinUsername))
+            setStatus(false)
         }
     }
 
     return (
         <Dialog.Root size="full" motionPreset="slide-in-bottom" lazyMount open={status}>
-            <Dialog.Trigger asChild>
-                <Button variant="outline" size="sm">
-                    Open Dialog
-                </Button>
-            </Dialog.Trigger>
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
                     <Dialog.Content>
-                        <Dialog.Header>{/* <Dialog.Title>Dialog Title</Dialog.Title> */}</Dialog.Header>
-                        <Dialog.Body>
+                        {/* <Dialog.Header></Dialog.Header> */}
+                        <Dialog.Body className="flex flex-col items-center justify-center gap-5 p-10">
                             <div className="flex flex-col items-center gap-5">
                                 <div className="flex items-center justify-center gap-2">
                                     <span className="text-3xl font-extrabold">How do you want to complete your</span>
@@ -67,15 +64,15 @@ const CrawlLinkedin = ({ status, setStatus }) => {
                                     <span className="text-[#2f65b9] font-extrabold">LinkedIn</span>
                                     <span>is recommended for the best matching experience.</span>
                                 </div>
-                                <div className="flex items-center gap-3 text-xl font-semibold">
+                                <div className="flex items-center justify-center w-full gap-3 text-xl font-semibold">
                                     <span>www.linkedin.com/in/</span>
                                     <input
                                         type="text"
-                                        className="w-20 border-b border-black outline-none"
+                                        className="w-auto border-b border-black outline-none"
                                         value={linkedinUsername}
                                         onChange={handleUsernameChange}
                                     />
-                                    <span>or</span>
+                                    {/* <span>or</span>
                                     <span className="flex items-center gap-2">
                                         Sign in with
                                         <a
@@ -84,17 +81,17 @@ const CrawlLinkedin = ({ status, setStatus }) => {
                                         >
                                             LinkedIn
                                         </a>
-                                    </span>
+                                    </span> */}
                                 </div>
                                 <div className="flex items-center gap-2 mt-10 font-medium text-md">
                                     <input
                                         type="checkbox"
                                         name="name"
-                                        className="w-4 h-4"
+                                        className="w-4 h-4 cursor-pointer"
                                         checked={isConfirmed}
                                         onChange={handleConfirmationChange}
                                     />
-                                    <label htmlFor="name" className="text-gray-500">
+                                    <label htmlFor="name" className="text-gray-500 user-select-none">
                                         I confirm this is my LinkedIn account. Misuse will result in a permanent ban.
                                     </label>
                                 </div>
@@ -107,34 +104,23 @@ const CrawlLinkedin = ({ status, setStatus }) => {
                                     </button>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <div className="w-full border-t-2 border-gray-200">
-                                        <div className="text-[#ffffff]">
-                                            lákjdlaskjdaslkdjsaldjsalkjlaaaaaaaaaaaaaaa
-                                        </div>
-                                    </div>
+                                    <div className="w-[200px] border-t-2 border-gray-200 pb-3" />
                                     <span className="mt-[-22px] text-lg font-medium text-gray-300">or</span>
-                                    <div className="w-full border-t-2 border-gray-200">
-                                        <div className="text-[#ffffff]">
-                                            lákjdlaskjdaslkdjsaldjsalkjlaaaaaaaaaaaaaaa
-                                        </div>
-                                    </div>
+                                    <div className="w-[200px] border-t-2 border-gray-200 pb-3" />
                                 </div>
                                 <div>
-                                    <button className="bg-[#2f65b9] text-white px-8 py-2 rounded-md font-semibold">
+                                    {/* <button className="bg-[#2f65b9] text-white px-8 py-2 rounded-md font-semibold">
                                         Enter Your Profile Manually
+                                    </button> */}
+                                    <button className="bg-[#2f65b9] text-white px-8 py-2 rounded-md font-semibold">
+                                        Skip for Now
                                     </button>
                                 </div>
                             </div>
                         </Dialog.Body>
-                        {/* <Dialog.Footer>
-                            <Dialog.ActionTrigger asChild>
-                                <Button variant="outline">Cancel</Button>
-                            </Dialog.ActionTrigger>
-                            <Button>Save</Button>
-                        </Dialog.Footer> */}
-                        <Dialog.CloseTrigger asChild>
+                        {/* <Dialog.CloseTrigger asChild>
                             <CloseButton size="sm" />
-                        </Dialog.CloseTrigger>
+                        </Dialog.CloseTrigger> */}
                     </Dialog.Content>
                 </Dialog.Positioner>
             </Portal>

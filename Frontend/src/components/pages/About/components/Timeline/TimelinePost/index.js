@@ -13,7 +13,7 @@ import {
     handleBookmarkArticle,
 } from '../../../../../../api/newfeeds'
 import { useDispatch, useSelector } from 'react-redux'
-import RightSidebar from 'components/common/RightSidebar'
+
 import {
     updateDeletedArticle,
     updateReaction,
@@ -24,72 +24,17 @@ import {
     closeUpdateForm,
     updateBookmarks,
 } from 'states/modules/article'
-import CreateAricleForm from '../../../../Newfeeds/components/CreateAricleForm'
+import CreateArticleForm from '../../../../Newfeeds/components/CreateAricleForm'
 import CommentList from '../../../../Newfeeds/components/CommentList'
 import UpdateArticleForm from '../../../../Newfeeds/components/UpdateArticleForm'
 import store from 'states/configureStore'
-import { PermPhoneMsg } from '@mui/icons-material'
-import { deleteActivitySaveArticle, postActivitySaveArticle, postActivityUpdateArticle } from 'api/activity'
-
-const unifiedAction = (activity) => {
-    if (typeof activity === 'string' || !activity || activity === null) {
-        return <span>has interacted with {activity}</span>
-    }
-
-    try {
-        const { owner_id, owner_name } = activity
-        const { auth } = store.getState()
-        const currentUserId = auth.user?._id
-        const displayName = owner_id === currentUserId ? 'You' : owner_name || 'Someone'
-        // const displayAccessName = activity?.user?.name || 'Someone'
-
-        const activityType = activity?.activity_type?.name
-        const articleCaption = activity?.article?.caption
-            ? `"${
-                  activity.article.caption.length > 20
-                      ? activity.article.caption.substring(0, 20) + '...'
-                      : activity.article.caption
-              }"`
-            : 'an article'
-
-        // Handle by type
-        switch (activityType) {
-            case 'save':
-                return (
-                    <span>
-                        {displayName} has saved {articleCaption}
-                    </span>
-                )
-            case 'update':
-                return (
-                    <span>
-                        {displayName} has updated {articleCaption}
-                    </span>
-                )
-            case 'create':
-                return (
-                    <span>
-                        {displayName} has created {articleCaption}
-                    </span>
-                )
-            case 'reply_comment':
-                return <span>has replied to your comment on {articleCaption}</span>
-            case 'comment':
-                return <span>has commented on {articleCaption}</span>
-            case 'reaction':
-                return <span>liked your post {articleCaption}</span>
-            default:
-                return (
-                    <span>
-                        {displayName} has interacted with {articleCaption}
-                    </span>
-                )
-        }
-    } catch (error) {
-        console.error('Error processing activity:', error)
-        return <span>has performed an activity</span>
-    }
-}
+import {
+    deleteActivitySaveArticle,
+    getActivitiesArticle,
+    postActivitySaveArticle,
+    postActivityUpdateArticle,
+} from 'api/activity'
+import { resetLinkPreview } from 'states/modules/linkPreview'
 
 function TimelinePost() {
     const dispatch = useDispatch()
@@ -107,20 +52,37 @@ function TimelinePost() {
         pagination,
         bookmarks,
     } = useSelector((state) => state.article)
-    const {
-        updateArticleActivity,
-        saveArticleActivity,
-        reactionArticleActivity,
-        replyCommentActivity,
-        commentActivity,
-    } = useSelector((state) => state.activity)
 
+    const {
+        activities,
+        isLoading: isLoadingActivities,
+        hasMore: hasMoreActivities,
+        skip: activitiesSkip,
+        limit: activitiesLimit,
+    } = useSelector((state) => state.activity)
     const { nextCursor, limit, hasMore } = pagination
 
     const [dataFilter, setDataFilter] = useState({
         cursor: 0,
         limit: limit,
     })
+
+    useEffect(() => {
+        dispatch(getActivitiesArticle({ skip: 0, limit: activitiesLimit }))
+    }, [dispatch, activitiesLimit])
+
+    const handleLoadMoreActivities = useCallback(() => {
+        if (!isLoadingActivities && hasMoreActivities) {
+            dispatch(
+                getActivitiesArticle({
+                    skip: activitiesSkip,
+                    limit: activitiesLimit,
+                })
+            )
+        }
+    }, [dispatch, activitiesSkip, activitiesLimit, isLoadingActivities, hasMoreActivities])
+
+    // End Activities
 
     useEffect(() => {
         if (feeds.length === 0 && hasMore === true) {
@@ -185,7 +147,7 @@ function TimelinePost() {
     useEffect(() => {
         if (onetimefeeds.length > 0) {
             // Lấy tất cả article IDs
-            const articleIds = onetimefeeds.filter((feed) => feed._id).map((feed) => feed._id)
+            const articleIds = onetimefeeds.filter((feed) => feed?._id).map((feed) => feed?._id)
 
             // Gọi API một lần với array của IDs
             if (articleIds.length > 0) {
@@ -202,6 +164,7 @@ function TimelinePost() {
 
     const handleOpenForm = useCallback(() => {
         dispatch(openCreateForm())
+        dispatch(resetLinkPreview())
     }, [dispatch])
 
     const handleCloseForm = useCallback(() => {
@@ -215,7 +178,6 @@ function TimelinePost() {
 
             //Gọi API để update server
             await dispatch(handleReactArticle({ articleId, data: formData }))
-            await dispatch(getReactionArticle())
         },
         [dispatch]
     )
@@ -231,6 +193,7 @@ function TimelinePost() {
             newFormData.append('audience', formData.audience)
             newFormData.append('status', formData.status)
             newFormData.append('project_id', formData.project_id)
+            newFormData.append('link_preview', formData.link_preview)
             dispatch(handleCreateArticle({ data: newFormData }))
         },
         [dispatch]
@@ -290,7 +253,7 @@ function TimelinePost() {
 
     useEffect(() => {
         if (onetimefeeds.length > 0) {
-            const articleIds = onetimefeeds.filter((r) => r._id).map((r) => r._id)
+            const articleIds = onetimefeeds.filter((r) => r?._id).map((r) => r?._id)
 
             if (articleIds.length > 0) {
                 dispatch(handleGetUserBookmarks(articleIds))
@@ -299,7 +262,7 @@ function TimelinePost() {
     }, [dispatch, onetimefeeds])
 
     const bookmarksMap = useMemo(() => {
-        return new Map(bookmarks.map((r) => [r.article_id.toString(), r.marked]))
+        return new Map(bookmarks.map((r) => [r.target_id.toString(), r.marked]))
     }, [bookmarks])
 
     const bookmarkArticle = useCallback(
@@ -311,21 +274,20 @@ function TimelinePost() {
             } else if (data.marked === 'no') {
                 await dispatch(deleteActivitySaveArticle(data.article_id))
             }
-            dispatch(getSaveArticle())
         },
         [dispatch]
     )
     //End Delete Article
     // loc danh sách bài viết của người dùng hiện tại
     const currentUserId = useSelector((state) => state.auth.authUser)
-
+    console.log('currentUserId', currentUserId)
     const userFeeds = useMemo(() => {
         if (!feeds || feeds.length === 0) return []
         return feeds.filter((feed) => feed.user_id === currentUserId._id)
     }, [feeds, currentUserId])
-
+    console.log('userFeeds', userFeeds)
     return (
-        <div className="flex w-full gap-8 pt-4 px-[16px]">
+        <div className="flex w-full gap-8 pt-4">
             <div className="w-full 2xl:w-full">
                 {isOpenUpdateForm ? (
                     <UpdateArticleForm
@@ -337,16 +299,16 @@ function TimelinePost() {
                 ) : null}
                 {isOpenComment ? (
                     <CommentList
-                        key={selectedArticle._id}
+                        key={selectedArticle?._id}
                         feed={selectedArticle}
                         onClose={handleCloseComment}
-                        reaction={reactionMap.get(selectedArticle._id)}
+                        reaction={reactionMap.get(selectedArticle?._id)}
                         onReaction={handleReaction}
                         isLoading={isLoadingReactArticle}
                     />
                 ) : null}
                 {isOpenCreateForm ? (
-                    <CreateAricleForm
+                    <CreateArticleForm
                         onSubmitForm={handleFormSubmit}
                         onCloseForm={handleCloseForm}
                         isLoadingCreateArticle={isLoadingCreateArticle}
@@ -359,37 +321,38 @@ function TimelinePost() {
                     if (index === userFeeds.length - 1) {
                         return (
                             <Article
-                                key={feed._id}
+                                key={feed?._id}
                                 ref={lastElementRef}
                                 feed={feed}
-                                reaction={reactionMap.get(feed._id)}
+                                reaction={reactionMap.get(feed?._id)}
                                 onReaction={handleReaction}
                                 isLoading={isLoadingReactArticle}
                                 onSelect={handleSelectArticle}
                                 onEdit={handleOpenUpdateForm}
                                 onDelete={handleDelete}
-                                bookmark={bookmarksMap.get(feed._id)}
+                                bookmark={bookmarksMap.get(feed?._id)}
                                 onBookmark={bookmarkArticle}
                             />
                         )
                     } else {
                         return (
                             <Article
-                                key={feed._id}
+                                key={feed?._id}
                                 feed={feed}
-                                reaction={reactionMap.get(feed._id)}
+                                reaction={reactionMap.get(feed?._id)}
                                 onReaction={handleReaction}
                                 isLoading={isLoadingReactArticle}
                                 onSelect={handleSelectArticle}
                                 onEdit={handleOpenUpdateForm}
                                 onDelete={handleDelete}
-                                bookmark={bookmarksMap.get(feed._id)}
+                                bookmark={bookmarksMap.get(feed?._id)}
                                 onBookmark={bookmarkArticle}
                             />
                         )
                     }
                 })}
             </div>
+
         </div>
     )
 }
