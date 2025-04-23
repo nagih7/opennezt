@@ -7,6 +7,8 @@ import avt_img from '../../../assets/images/background/avt.jpg'
 import { IconlyEditSquare, IconlyFace, IconlyShieldDone } from 'components/UI/Iconly'
 import logo_linkedin from '../../../assets/images/background/linkedin.png'
 import { RiArrowRightSFill } from 'react-icons/ri'
+import { IoMdArrowDropdown } from 'react-icons/io'
+import { FaCheck } from 'react-icons/fa6'
 import fb_img from 'assets/images/background/left-banner.webp'
 import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 
@@ -16,6 +18,20 @@ const ModalMatchingProjects = () => {
     const { projects, isOpenModalMatchingProjects } = useSelector((state) => state.artificialIntelligence)
     // ========== STATE ========== //
     const [projectSelected, setProjectSelected] = useState(null)
+    const [openSections, setOpenSections] = useState({
+        humanResources: false,
+        international: false,
+        lawAndLegal: false,
+        accountingAndFinance: false,
+    })
+    const [checkedItems, setCheckedItems] = useState({})
+
+    const toggleCheck = (itemName) => {
+        setCheckedItems((prev) => ({
+            ...prev,
+            [itemName]: !prev[itemName],
+        }))
+    }
 
     // ========== EFFECT ========== //
     useEffect(() => {
@@ -36,8 +52,8 @@ const ModalMatchingProjects = () => {
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
-                    <Dialog.Content className="bg-[#f4f5f6] max-h-full p-0 m-0 overflow-x-scroll scrollbar-hide">
-                        {/* <Dialog.Header>
+                    <Dialog.Content className="bg-[#f4f5f6] max-h-full p-0 m-0 overflow-x-scroll">
+                        <Dialog.Header>
                             <Dialog.Title width="full" className="flex items-center justify-between ">
                                 <h2 className="text-lg font-semibold text-black">{projectSelected?.project?.name}</h2>
                                 <div className="flex items-center gap-4 text-sm">
@@ -67,13 +83,13 @@ const ModalMatchingProjects = () => {
                                     </Button>
                                 </div>
                             </Dialog.Title>
-                        </Dialog.Header> */}
+                        </Dialog.Header>
                         <div className="flex w-full h-full">
                             <div className="w-10/12">
                                 <div className="pl-[16px] py-[16px]">
                                     <div className="bg-[#ffffff] rounded-md">
                                         <img
-                                            className="rounded-t-md object-cover"
+                                            className="rounded-t-md object-cover w-full"
                                             src="https://s3-alpha-sig.figma.com/img/c377/bd48/ed7377f44f86ace76c78d5c6a86f232c?Expires=1746403200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=m3O70Ksu0SsKqzXMs2D3wi1elOc3QHGVZE2spFLjuBDq47b5ua1eEeOiBh12KU4on3~rDUZBRRw00Gg2DCvcC5zjd2pvtWwxGSrICljy77Bi~jOLqmJYjccrn0Q6g50wh3zqqx81qDDKcX5QgAYJQ~8jB4fkD1kAJ2ECeMG7qFeOp2UfcDKjqiEfvD94cODVHNsReWUx3Wyc57SdErHGYbKovTeKdBHnI7H9c~e2p8d-d01iXBY6e11fSzcKXK~oCB1XMHFqLiZx5goB0qJgq0bLvg4oSZ-crM5WxxAlhrGP3rNO7tzhwMd2rGOfEDBEaVUlOtR~5HIF8FABTiiH1A__"
                                         />
                                         <div className="flex justify-between p-8">
@@ -171,29 +187,425 @@ const ModalMatchingProjects = () => {
                                             </div>
                                             <div className="p-8">
                                                 <ul className="pl-0 mb-0 space-y-4">
-                                                    <li className="flex items-center gap-2">
-                                                        <RiArrowRightSFill className="w-10 h-10 text-[#6f7f92]" />
-                                                        <span className="text-lg text-[#6f7f92] font-semibold">
-                                                            HUMAN RESOURCES
-                                                        </span>
+                                                    <li className="flex flex-col">
+                                                        <div
+                                                            onClick={() =>
+                                                                setOpenSections({
+                                                                    ...openSections,
+                                                                    humanResources: !openSections.humanResources,
+                                                                })
+                                                            }
+                                                            className="flex items-center gap-2 cursor-pointer"
+                                                        >
+                                                            <div
+                                                                className={`transition-transform duration-300 ${
+                                                                    openSections.humanResources
+                                                                        ? 'rotate-180'
+                                                                        : 'rotate-0'
+                                                                }`}
+                                                            >
+                                                                {openSections.humanResources ? (
+                                                                    <IoMdArrowDropdown className="w-10 h-10 text-[#6f7f92]" />
+                                                                ) : (
+                                                                    <RiArrowRightSFill className="w-10 h-10 text-[#6f7f92]" />
+                                                                )}
+                                                            </div>
+                                                            <span className="text-lg text-[#6f7f92] font-semibold">
+                                                                HUMAN RESOURCES
+                                                            </span>
+                                                        </div>
+                                                        <div
+                                                            className={`mt-3 bg-[#ffffff] p-0 m-0 overflow-y-scroll w-full overflow-hidden transition-all duration-500 ease-in-out ${
+                                                                openSections.humanResources
+                                                                    ? 'max-h-[200px]'
+                                                                    : 'max-h-0'
+                                                            }`}
+                                                        >
+                                                            <div className="px-[24px]">
+                                                                <div className="px-[24px]">
+                                                                    <ul className="flex cursor-pointer flex-col items-center pl-0 mb-0">
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('basic')}
+                                                                        >
+                                                                            Basic 
+                                                                            {checkedItems['basic'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('sector')}
+                                                                        >
+                                                                            Sector
+                                                                            {checkedItems['sector'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('revenue')}
+                                                                        >
+                                                                            Revenue
+                                                                            {checkedItems['revenue'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() =>
+                                                                                toggleCheck('fundingSources')
+                                                                            }
+                                                                        >
+                                                                            Funding Sources
+                                                                            {checkedItems['fundingSources'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('more')}
+                                                                        >
+                                                                            More
+                                                                            {checkedItems['more'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('logo')}
+                                                                        >
+                                                                            Logo
+                                                                            {checkedItems['logo'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px]"
+                                                                            onClick={() => toggleCheck('background')}
+                                                                        >
+                                                                            Background
+                                                                            {checkedItems['background'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </li>
-                                                    <li className="flex items-center gap-2">
-                                                        <RiArrowRightSFill className="w-10 h-10 text-[#6f7f92]" />
-                                                        <span className="text-lg text-[#6f7f92] font-semibold">
-                                                            INTERNATIONAL
-                                                        </span>
+                                                    <li
+                                                        className="flex flex-col"
+                                                    >
+                                                        <div  onClick={() =>
+                                                            setOpenSections({
+                                                                ...openSections,
+                                                                international: !openSections.international,
+                                                            })
+                                                        } className="flex items-center gap-2 cursor-pointer">
+                                                            <div
+                                                                className={`transition-transform duration-300 ${
+                                                                    openSections.international
+                                                                        ? 'rotate-180'
+                                                                        : 'rotate-0'
+                                                                }`}
+                                                            >
+                                                                {openSections.international ? (
+                                                                    <IoMdArrowDropdown className="w-10 h-10 text-[#6f7f92]" />
+                                                                ) : (
+                                                                    <RiArrowRightSFill className="w-10 h-10 text-[#6f7f92]" />
+                                                                )}
+                                                            </div>
+                                                            <span className="text-lg text-[#6f7f92] font-semibold">
+                                                                INTERNATIONAL
+                                                            </span>
+                                                        </div>
+                                                        <div
+                                                            className={`mt-3 bg-[#ffffff] p-0 m-0 overflow-y-scroll w-full overflow-hidden transition-all duration-500 ease-in-out ${
+                                                                openSections.international ? 'max-h-[200px]' : 'max-h-0'
+                                                            }`}
+                                                        >
+                                                            <div className="px-[24px]">
+                                                                <div className="px-[24px]">
+                                                                <ul className="flex cursor-pointer flex-col items-center pl-0 mb-0">
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('hihi')}
+                                                                        >
+                                                                            hihi 
+                                                                            {checkedItems['hihi'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('haha')}
+                                                                        >
+                                                                            haha
+                                                                            {checkedItems['haha'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('huhu')}
+                                                                        >
+                                                                            huhu
+                                                                            {checkedItems['huhu'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() =>
+                                                                                toggleCheck('haizzz')
+                                                                            }
+                                                                        >
+                                                                            haizzz
+                                                                            {checkedItems['haizzz'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('sad')}
+                                                                        >
+                                                                            sad
+                                                                            {checkedItems['sad'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('cry')}
+                                                                        >
+                                                                            cry
+                                                                            {checkedItems['cry'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px]"
+                                                                            onClick={() => toggleCheck('mybad')}
+                                                                        >
+                                                                            mybad
+                                                                            {checkedItems['mybad'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </li>
-                                                    <li className="flex items-center gap-2">
-                                                        <RiArrowRightSFill className="w-10 h-10 text-[#6f7f92]" />
-                                                        <span className="text-lg text-[#6f7f92] font-semibold">
-                                                            LAW AND LEGAL
-                                                        </span>
+                                                    <li
+                                                        className="flex flex-col"
+                                                    >
+                                                        <div onClick={() =>
+                                                            setOpenSections({
+                                                                ...openSections,
+                                                                lawAndLegal: !openSections.lawAndLegal,
+                                                            })
+                                                        } className="flex items-center gap-2 cursor-pointer">
+                                                            <div
+                                                                className={`transition-transform duration-300 ${
+                                                                    openSections.lawAndLegal ? 'rotate-180' : 'rotate-0'
+                                                                }`}
+                                                            >
+                                                                {openSections.lawAndLegal ? (
+                                                                    <IoMdArrowDropdown className="w-10 h-10 text-[#6f7f92]" />
+                                                                ) : (
+                                                                    <RiArrowRightSFill className="w-10 h-10 text-[#6f7f92]" />
+                                                                )}
+                                                            </div>
+                                                            <span className="text-lg text-[#6f7f92] font-semibold">
+                                                                LAW AND LEGAL
+                                                            </span>
+                                                        </div>
+                                                        <div
+                                                            className={`mt-3 bg-[#ffffff] p-0 m-0 overflow-y-scroll w-full overflow-hidden transition-all duration-500 ease-in-out ${
+                                                                openSections.lawAndLegal ? 'max-h-[200px]' : 'max-h-0'
+                                                            }`}
+                                                        >
+                                                            <div className="px-[24px]">
+                                                                <div className="px-[24px]">
+                                                                     <ul className="flex cursor-pointer flex-col items-center pl-0 mb-0">
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('l')}
+                                                                        >
+                                                                            l 
+                                                                            {checkedItems['l'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('tân')}
+                                                                        >
+                                                                            tân
+                                                                            {checkedItems['tân'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('duy')}
+                                                                        >
+                                                                            duy
+                                                                            {checkedItems['duy'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() =>
+                                                                                toggleCheck('cường')
+                                                                            }
+                                                                        >
+                                                                            cường
+                                                                            {checkedItems['cường'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('nghĩa')}
+                                                                        >
+                                                                            nghĩa
+                                                                            {checkedItems['nghĩa'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('hoàng')}
+                                                                        >
+                                                                            hoàng
+                                                                            {checkedItems['hoàng'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px]"
+                                                                            onClick={() => toggleCheck('duy34')}
+                                                                        >
+                                                                            duy34
+                                                                            {checkedItems['duy34'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </li>
-                                                    <li className="flex items-center gap-2">
-                                                        <RiArrowRightSFill className="w-10 h-10 text-[#6f7f92]" />
-                                                        <span className="text-lg text-[#6f7f92] font-semibold">
-                                                            ACCOUNTING AND FINANCE
-                                                        </span>
+                                                    <li
+                                                        className="flex flex-col"
+                                                    >
+                                                        <div onClick={() =>
+                                                            setOpenSections({
+                                                                ...openSections,
+                                                                accountingAndFinance:
+                                                                    !openSections.accountingAndFinance,
+                                                            })
+                                                        } className="flex items-center gap-2 cursor-pointer">
+                                                            <div
+                                                                className={`transition-transform duration-300 ${
+                                                                    openSections.accountingAndFinance
+                                                                        ? 'rotate-180'
+                                                                        : 'rotate-0'
+                                                                }`}
+                                                            >
+                                                                {openSections.accountingAndFinance ? (
+                                                                    <IoMdArrowDropdown className="w-10 h-10 text-[#6f7f92]" />
+                                                                ) : (
+                                                                    <RiArrowRightSFill className="w-10 h-10 text-[#6f7f92]" />
+                                                                )}
+                                                            </div>
+                                                            <span className="text-lg text-[#6f7f92] font-semibold">
+                                                                ACCOUNTING AND FINANCE
+                                                            </span>
+                                                        </div>
+                                                        <div
+                                                            className={`mt-3 bg-[#ffffff] p-0 m-0 overflow-y-scroll w-full overflow-hidden transition-all duration-500 ease-in-out ${
+                                                                openSections.accountingAndFinance
+                                                                    ? 'max-h-[200px]'
+                                                                    : 'max-h-0'
+                                                            }`}
+                                                        >
+                                                            <div className="px-[24px]">
+                                                                <div className="px-[24px]">
+                                                                <ul className="flex cursor-pointer flex-col items-center pl-0 mb-0">
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('lap')}
+                                                                        >
+                                                                            lap 
+                                                                            {checkedItems['lap'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('top')}
+                                                                        >
+                                                                            top
+                                                                            {checkedItems['top'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('tralaleroTralala')}
+                                                                        >
+                                                                            tralalero tralala
+                                                                            {checkedItems['tralaleroTralala'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() =>
+                                                                                toggleCheck('tungtungtungsahor')
+                                                                            }
+                                                                        >
+                                                                            tung tung tung sahor
+                                                                            {checkedItems['tungtungtungsahor'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('skibidi')}
+                                                                        >
+                                                                            skibidi
+                                                                            {checkedItems['skibidi'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                                            onClick={() => toggleCheck('shimpanzini')}
+                                                                        >
+                                                                            shimpanzini bnanananini
+                                                                            {checkedItems['shimpanzini'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                        <li
+                                                                            className="flex items-center justify-between w-full text-sm py-[21px]"
+                                                                            onClick={() => toggleCheck('uuia')}
+                                                                        >
+                                                                            uuia
+                                                                            {checkedItems['uuia'] && (
+                                                                                <FaCheck className="text-[#4374c0]" />
+                                                                            )}
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -316,7 +728,7 @@ const ModalMatchingProjects = () => {
                                                 alt="logo-opennezt"
                                                 className={`$styles.logo, absolute top-0 py-14 px-12 left-0`}
                                             />
-                                            <div className="absolute left-0 2xl:left-5 2xl:mt-8 2xl:px-10 flex flex-col text-center items-center gap-3 px-12 text-white top-32">
+                                            <div className="absolute left-0 xl:left-5 2xl:mt-8 xl:px-20 flex flex-col text-center items-center gap-3 px-12 text-white top-32">
                                                 Feel free to reach us anytime. we are avaliable 24 hours
                                                 <button className="bg-[#ffffff] px-3 py-3 text-black font-medium rounded-md">
                                                     CONTACT US
@@ -327,7 +739,7 @@ const ModalMatchingProjects = () => {
                                 </Dialog.Body>
                             </div>
                         </div>
-                        {/* <Dialog.Footer>
+                        <Dialog.Footer>
                             <Button
                                 className="border-[#F4F5F6] bg-[#2F65B9] text-white"
                                 onClick={() => dispatch(setOpenModalMatchingProjects(false))}
@@ -336,7 +748,7 @@ const ModalMatchingProjects = () => {
                             >
                                 OK
                             </Button>
-                        </Dialog.Footer> */}
+                        </Dialog.Footer>
                     </Dialog.Content>
                 </Dialog.Positioner>
             </Portal>

@@ -365,3 +365,66 @@ export const bookmarkTalent = async (requestBody, user) => {
         return newBookmark
     }
 }
+
+export const getUserBookmarksStatus = async (user, target_ids) => {
+    const user_id = user._id.toString()
+
+    const talentIdsArray = target_ids.split(',').map((id) => new ObjectId(id))
+
+    const bookmarks = await Bookmark.find({
+        user_id: user_id,
+        target_type: 'talent',
+        target_id: { $in: talentIdsArray },
+    })
+
+    return bookmarks
+}
+
+export const getUserTalentBookmarks = async (user, requestQuery) => {
+    const { limit = 6, page } = requestQuery
+    const user_id = user._id.toString()
+
+    const talentBookmarksLimit = parseInt(limit)
+
+    const skip = (page - 1) * talentBookmarksLimit
+
+    const bookmarks = await Bookmark.aggregate([
+        {
+            $match: {
+                user_id: new ObjectId(user_id),
+                target_type: 'talent',
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'target_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '$avatar',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $skip: skip,
+        },
+        {
+            $limit: talentBookmarksLimit,
+        },
+    ])
+
+    return bookmarks
+}
