@@ -272,9 +272,9 @@ function BookmarkArticle() {
             await dispatch(handleBookmarkArticle({ data }))
             dispatch(updateBookmarks(data))
             if (data.marked === 'yes') {
-                await dispatch(postActivitySaveArticle(data.article_id))
+                await dispatch(postActivitySaveArticle(data.target_id))
             } else if (data.marked === 'no') {
-                await dispatch(deleteActivitySaveArticle(data.article_id))
+                await dispatch(deleteActivitySaveArticle(data.target_id))
             }
         },
         [dispatch]

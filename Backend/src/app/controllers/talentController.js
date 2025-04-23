@@ -18,7 +18,20 @@ export async function accessToTalent(req, res) {
     res.jsonify(result)
 }
 
+// ========== GET [ Bookmark Talent] =========== //
 export async function bookmarkTalent(req, res) {
     const result = await talentService.bookmarkTalent(req.body, req.currentUser)
     res.status(200).jsonify(result)
+}
+
+// ========== GET [User Bookmark Status] =========== //
+export async function getUserBookmarkStatus(req, res) {
+    const result = await talentService.getUserBookmarksStatus(req.currentUser, req.params.target_ids)
+    res.jsonify(result)
+}
+
+// ========== GET [User Bookmark List] =========== //
+export async function getUserBookmarkList(req, res) {
+    const result = await talentService.getUserTalentBookmarks(req.currentUser, req.query)
+    res.jsonify(result)
 }
