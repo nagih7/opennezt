@@ -37,46 +37,41 @@ const BookmarkTalent = () => {
 
 
     return <>
-        {bookmarkedTalents.map((talent) => (
-            <div key={talent.user.id} className="relative group w-[280px] h-[23.5rem]">
-                <Avatar.Root
-                    onClick={() => handleViewTalentDetails(talent.user)}
-                    className="w-[280px] h-[280px] rounded-md overflow-hidden cursor-pointer"
-                    shape="square"
-                >
-                    <Avatar.Fallback name={talent.user.name} />
-                    <Avatar.Image src={talent.user.avatar} />
-                </Avatar.Root>
-
-                {/* Action Icons */}
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col gap-2">
-                    <button className="h-10 w-10 bg-white rounded-md flex justify-center items-center shadow">
-                        <IconlyShow size={20} color="#2f65b9" />
-                    </button>
-                    <button className="h-10 w-10 bg-white rounded-md flex justify-center items-center shadow">
-                        <IconlyHeart size={20} color="#2f65b9" />
-                    </button>
-                    <button
-                        onClick={() => handleBookmark(talent.user)}
-                        className="h-10 w-10 bg-white rounded-md flex justify-center items-center shadow"
-                    >
-                        <IconlyBookmark size={20} color={isBookmarked ? "#FFD700" : "#2f65b9"} />
-                    </button>
-                </div>
-
-                {/* Info + View Details */}
-                <div className="absolute bottom-[-40px] group-hover:bottom-[-21px] transition-all duration-700 ease-in-out w-[280px] p-4 bg-[#f6f4f4] flex flex-col items-center gap-3 rounded-b-md">
-                    <div className="font-semibold text-black">{talent.user.name}</div>
-
-                    <Button
+        {bookmarkedTalents.length > 0 ? (<>
+            {bookmarkedTalents.map((talent) => (
+                <div key={talent.user.id} className="relative group 2xl:w-[356px] h-[23.5rem] ">
+                    <Avatar.Root
                         onClick={() => handleViewTalentDetails(talent.user)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white font-semibold text-xs bg-[#2f65b9] px-6 py-3 rounded-md"
+                        className="w-[361px] h-[280px] rounded-md overflow-hidden cursor-pointer"
+                        shape="square"
                     >
-                        VIEW DETAILS
-                    </Button>
+                        <Avatar.Fallback name={talent.user.name} />
+                        <Avatar.Image src={talent.user.avatar} />
+                    </Avatar.Root>
+
+
+
+                    {/* Info + View Details */}
+                    <div className="absolute bottom-[-40px] group-hover:bottom-[-21px] transition-all duration-700 ease-in-out w-[360px] p-4  flex flex-col items-center gap-3 rounded-b-md">
+                        <div className="font-semibold text-black">{talent.user.name}</div>
+
+                        <Button
+                            onClick={() => handleViewTalentDetails(talent.user)}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white font-semibold text-xs bg-[#2f65b9] px-6 py-3 rounded-md"
+                        >
+                            VIEW DETAILS
+                        </Button>
+                    </div>
                 </div>
+            ))}
+        </>) : (<>
+            <div className="bg-[#E3F1F6] pl-4 py-3 border-l-2 border-[#0098CB] w-full absolute ">
+                <p className="relative top-[0.6rem] text-[#1599CC]">
+                    You have no saved talents.
+                </p>
             </div>
-        ))}
+        </>)}
+
 
     </>
 

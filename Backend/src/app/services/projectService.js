@@ -1950,3 +1950,71 @@ export const bookmarkProject = async (requestBody, user) => {
         return newBookmark
     }
 }
+
+export const getUserBookmarksStatus = async (user, target_ids) => {
+    const user_id = user._id
+    const projectIdsArray = target_ids.split(',').map((id) => new Object(id))
+
+    const bookMarks = await Bookmark.find({
+        user_id: user_id,
+        target_id: { $in: projectIdsArray },
+        target_type: 'project',
+    })
+
+    return bookMarks
+}
+
+export const getUserProjectBookmarks = async (user, requestQuery) => {
+    const { limit = 6, page } = requestQuery
+    const user_id = user._id
+
+    const bookmarkLimit = parseInt(limit)
+    const skip = (page - 1) * bookmarkLimit
+
+    const bookmarks = await Bookmark.aggregate([
+        {
+            $match: {
+                user_id: user_id,
+                target_type: 'project',
+            },
+        },
+        {
+            $lookup: {
+                from: 'projects',
+                localField: 'target_id',
+                foreignField: '_id',
+                as: 'project',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            logo: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
+                                    then: '$logo',
+                                    else: { $concat: [LINK_STATIC_URL, '$logo'] },
+                                },
+                            },
+                            background: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
+                                    then: '$background',
+                                    else: { $concat: [LINK_STATIC_URL, '$background'] },
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $skip: skip,
+        },
+        {
+            $limit: bookmarkLimit,
+        },
+    ])
+
+    return bookmarks
+}
