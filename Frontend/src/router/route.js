@@ -34,6 +34,7 @@ import Shop from 'components/pages/AccountSettings/components/Shop'
 import BlockList from 'components/pages/AccountSettings/components/BlockList'
 import ExportData from 'components/pages/AccountSettings/components/ExportData'
 import MessageSidebar from 'components/pages/Message/components/MessageSidebar'
+import Interview from 'components/common/ModalMatchingProjects/components/Interview'
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import('../components/pages/Auth/Login'))
@@ -600,6 +601,11 @@ const router = createBrowserRouter([
             </AppLayout>
         ),
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_MESSAGES_SIDEBAR_PAGE'),
+    },
+    {
+        path: '/interview',
+        element: <Interview />,
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_INTERVIEW_PAGE'),
     },
 ])
 
