@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { IconlyActivity, IconlyChart, IconlyUser, IconlyWallet } from 'components/UI/Iconly';
-import { useSelector } from 'react-redux';
-import { getTotalUsers } from 'api/manage';
-import store from 'states/configureStore';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { IconlyActivity, IconlyChart, IconlyUser, IconlyWallet } from 'components/UI/Iconly'
+import { useSelector } from 'react-redux'
+import { getTotalUsers } from 'api/manage'
+import store from 'states/configureStore'
+import { useNavigate } from 'react-router-dom'
 
 function Manage() {
-    const navigate = useNavigate();
-    const [totalUsersView, setTotalUsers] = useState(0);
-    const totalUsers = useSelector((state) => state.manage.totalUsers);
+    const navigate = useNavigate()
+    const [totalUsersView, setTotalUsers] = useState(0)
+    const totalUsers = useSelector((state) => state.manage.totalUsers)
 
     useEffect(() => {
-        store.dispatch(getTotalUsers());
-    }, []);
+        store.dispatch(getTotalUsers())
+    }, [])
 
     useEffect(() => {
         if (totalUsers !== 0) {
-            setTotalUsers(totalUsers);
+            setTotalUsers(totalUsers)
         }
-    }, [totalUsers]);
+    }, [totalUsers])
 
     const stats = [
         {
@@ -45,7 +45,7 @@ function Manage() {
             subtitle: 'last 6 days',
             icon: <IconlyWallet color={'#8b5cf6'} size={48} />,
         },
-    ];
+    ]
 
     const manageItems = [
         { label: 'User Manage', route: 'users' },
@@ -56,11 +56,11 @@ function Manage() {
         { label: 'Category Manage', route: 'categories' },
         { label: 'Skill Manage', route: 'skills' },
         { label: 'Organization Manage', route: 'organizations' },
-    ];
+        { label: 'Article Manage', route: 'articles' },
+    ]
 
     return (
         <div className="p-6 flex flex-col gap-10 w-full ">
-
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat, index) => (
                     <div
@@ -77,7 +77,6 @@ function Manage() {
                 ))}
             </div>
 
-
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {manageItems.map((item, index) => (
                     <div
@@ -90,7 +89,7 @@ function Manage() {
                 ))}
             </div>
         </div>
-    );
+    )
 }
 
-export default Manage;
+export default Manage

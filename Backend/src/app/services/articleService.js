@@ -25,6 +25,7 @@ import ActivityLog from '@/models/activityLog.js'
 import NotificationFeed from '@/models/notificationFeed.js'
 import Subscription from '@/models/subscription.js'
 import webpush from 'web-push'
+import Role from '@/models/role.js'
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa
@@ -198,6 +199,17 @@ export const deleteArticle = async (user, id) => {
         return "can't find article"
     }
 
+    const role = await Role.findById(user.role_id)
+    console.log('role', role.name)
+
+    // Kiểm tra role trước
+    if (role.name === 'Super Admin' || role.name === 'Admin') {
+        await Comment.deleteMany({ article_id: id })
+        await Article.findByIdAndDelete(id)
+        return 'Delete Article Success'
+    }
+
+    // Nếu không phải admin, kiểm tra quyền sở hữu
     if (validArticle.user_id.toString() === user._id.toString()) {
         await Comment.deleteMany({ article_id: id })
         await Article.findByIdAndDelete(id)
@@ -1379,3 +1391,88 @@ export const deleteActivityReactionArticle = async (user, activityOrArticleId) =
         console.error('Lỗi khi xóa bài viết:', error)
     }
 }
+
+//Api Get Article List for Manage
+export const getManageArticleList = async (user, requestQuery) => {
+    const { page, limit = 10 } = requestQuery
+    console.log('requestQuery', requestQuery)
+    const skip = (page - 1) * limit
+    const articleLimit = parseInt(limit)
+    const total = await Article.countDocuments()
+
+    const articleList = await Article.aggregate([
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '$avatar',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'projects',
+                localField: 'project_id',
+                foreignField: '_id',
+                as: 'project',
+            },
+        },
+        {
+            $sort: { created_at: -1 },
+        },
+        {
+            $addFields: {
+                'content.attachment': {
+                    $map: {
+                        input: '$content.attachment',
+                        as: 'attachment',
+                        in: {
+                            $cond: {
+                                if: { $eq: [{ $ifNull: ['$$attachment', ''] }, ''] },
+                                then: '$$attachment',
+                                else: { $concat: [LINK_STATIC_URL, '$$attachment'] },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        {
+            $skip: skip,
+        },
+        {
+            $limit: articleLimit,
+        },
+    ])
+
+    return {
+        articleList,
+        pagination: {
+            page: parseInt(page),
+            limit: articleLimit,
+            total: total,
+            hasMore: total > skip + articleLimit,
+        },
+    }
+}
+//

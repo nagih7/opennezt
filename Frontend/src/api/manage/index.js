@@ -1,4 +1,4 @@
-import callApi from '../callApi';
+import callApi from '../callApi'
 import {
     startRequestGetTotalUsers,
     startRequestGetTotalUsersSuccess,
@@ -74,22 +74,21 @@ import {
     requestDeleteOrganization,
     deleteOrganizationSuccess,
     deleteOrganizationFail,
-} from '../../states/modules/manage';
+    getManageListArticle,
+    getManageListArticleSuccess,
+    getManageListArticleFail,
+} from '../../states/modules/manage'
 
 export const getTotalUsers = () => async (dispatch, getState) => {
     return callApi({
         method: 'get',
         apiPath: `manage/total-users`,
-        actionTypes: [
-            startRequestGetTotalUsers,
-            startRequestGetTotalUsersSuccess,
-            startRequestGetTotalUsersFail,
-        ],
+        actionTypes: [startRequestGetTotalUsers, startRequestGetTotalUsersSuccess, startRequestGetTotalUsersFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ROLE
 export const getListRole =
@@ -100,18 +99,18 @@ export const getListRole =
         }
     ) =>
     async (dispatch, getState) => {
-        let path = `manage/roles?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
+        let path = `manage/roles?per_page=${dataFilter.perPage}&page=${dataFilter.page}`
 
         if (dataFilter.keySearch) {
-            path += `&q=${dataFilter.keySearch}`;
+            path += `&q=${dataFilter.keySearch}`
         }
 
         if (dataFilter.status && dataFilter.status.length > 0) {
-            path += `&status=${dataFilter.status}`;
+            path += `&status=${dataFilter.status}`
         }
 
         if (dataFilter.order && dataFilter.column) {
-            path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+            path += `&order=${dataFilter.order}&column=${dataFilter.column}`
         }
 
         return callApi({
@@ -121,12 +120,12 @@ export const getListRole =
             variables: {},
             dispatch,
             getState,
-        });
-    };
+        })
+    }
 export const createOrUpdateRole = (data, action, id) => async (dispatch, getState) => {
-    let path = `manage/roles`;
+    let path = `manage/roles`
     if (action === 'UPDATE') {
-        path += `/${id}`;
+        path += `/${id}`
     }
     return callApi({
         method: action === 'CREATE' ? 'post' : 'put',
@@ -135,8 +134,8 @@ export const createOrUpdateRole = (data, action, id) => async (dispatch, getStat
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const deleteRole = (id) => async (dispatch, getState) => {
     return callApi({
         method: 'delete',
@@ -145,8 +144,8 @@ export const deleteRole = (id) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ALL TYPES
 export const getAllTypes = () => async (dispatch, getState) => {
@@ -157,23 +156,23 @@ export const getAllTypes = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // TYPE
 export const getListType = (dataFilter) => async (dispatch, getState) => {
-    let path = `manage/types?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
+    let path = `manage/types?per_page=${dataFilter.perPage}&page=${dataFilter.page}`
 
     if (dataFilter.keySearch) {
-        path += `&q=${dataFilter.keySearch}`;
+        path += `&q=${dataFilter.keySearch}`
     }
 
     if (dataFilter.status && dataFilter.status.length > 0) {
-        path += `&status=${dataFilter.status}`;
+        path += `&status=${dataFilter.status}`
     }
 
     if (dataFilter.order && dataFilter.column) {
-        path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+        path += `&order=${dataFilter.order}&column=${dataFilter.column}`
     }
 
     return callApi({
@@ -183,12 +182,12 @@ export const getListType = (dataFilter) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const createOrUpdateType = (data, action, id) => async (dispatch, getState) => {
-    let path = `manage/types`;
+    let path = `manage/types`
     if (action === 'UPDATE') {
-        path += `/${id}`;
+        path += `/${id}`
     }
     return callApi({
         method: action === 'CREATE' ? 'post' : 'put',
@@ -197,8 +196,8 @@ export const createOrUpdateType = (data, action, id) => async (dispatch, getStat
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const deleteType = (id) => async (dispatch, getState) => {
     return callApi({
         method: 'delete',
@@ -207,23 +206,23 @@ export const deleteType = (id) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // INDUSTRY
 export const getListIndustry = (dataFilter) => async (dispatch, getState) => {
-    let path = `manage/industries?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
+    let path = `manage/industries?per_page=${dataFilter.perPage}&page=${dataFilter.page}`
 
     if (dataFilter.keySearch) {
-        path += `&q=${dataFilter.keySearch}`;
+        path += `&q=${dataFilter.keySearch}`
     }
 
     if (dataFilter.status && dataFilter.status.length > 0) {
-        path += `&status=${dataFilter.status}`;
+        path += `&status=${dataFilter.status}`
     }
 
     if (dataFilter.order && dataFilter.column) {
-        path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+        path += `&order=${dataFilter.order}&column=${dataFilter.column}`
     }
 
     return callApi({
@@ -233,26 +232,22 @@ export const getListIndustry = (dataFilter) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const createOrUpdateIndustry = (data, action, id) => async (dispatch, getState) => {
-    let path = `manage/industries`;
+    let path = `manage/industries`
     if (action === 'UPDATE') {
-        path += `/${id}`;
+        path += `/${id}`
     }
     return callApi({
         method: action === 'CREATE' ? 'post' : 'put',
         apiPath: path,
-        actionTypes: [
-            requestCreateOrUpdateIndustry,
-            createOrUpdateIndustrySuccess,
-            createOrUpdateIndustryFail,
-        ],
+        actionTypes: [requestCreateOrUpdateIndustry, createOrUpdateIndustrySuccess, createOrUpdateIndustryFail],
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const deleteIndustry = (id) => async (dispatch, getState) => {
     return callApi({
         method: 'delete',
@@ -261,42 +256,38 @@ export const deleteIndustry = (id) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // EXPERIENCE LEVELS
 export const getListExperienceLevel = (dataFilter) => async (dispatch, getState) => {
-    let path = `manage/experience-levels?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
+    let path = `manage/experience-levels?per_page=${dataFilter.perPage}&page=${dataFilter.page}`
 
     if (dataFilter.keySearch) {
-        path += `&q=${dataFilter.keySearch}`;
+        path += `&q=${dataFilter.keySearch}`
     }
 
     if (dataFilter.status && dataFilter.status.length > 0) {
-        path += `&status=${dataFilter.status}`;
+        path += `&status=${dataFilter.status}`
     }
 
     if (dataFilter.order && dataFilter.column) {
-        path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+        path += `&order=${dataFilter.order}&column=${dataFilter.column}`
     }
 
     return callApi({
         method: 'get',
         apiPath: path,
-        actionTypes: [
-            requestGetListExperienceLevel,
-            getListExperienceLevelSuccess,
-            getListExperienceLevelFail,
-        ],
+        actionTypes: [requestGetListExperienceLevel, getListExperienceLevelSuccess, getListExperienceLevelFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const createOrUpdateExperienceLevel = (data, action, id) => async (dispatch, getState) => {
-    let path = `manage/experience-levels`;
+    let path = `manage/experience-levels`
     if (action === 'UPDATE') {
-        path += `/${id}`;
+        path += `/${id}`
     }
     return callApi({
         method: action === 'CREATE' ? 'post' : 'put',
@@ -309,37 +300,33 @@ export const createOrUpdateExperienceLevel = (data, action, id) => async (dispat
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const deleteExperienceLevel = (id) => async (dispatch, getState) => {
     return callApi({
         method: 'delete',
         apiPath: `manage/experience-levels/${id}`,
-        actionTypes: [
-            requestDeleteExperienceLevel,
-            deleteExperienceLevelSuccess,
-            deleteExperienceLevelFail,
-        ],
+        actionTypes: [requestDeleteExperienceLevel, deleteExperienceLevelSuccess, deleteExperienceLevelFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // CATEGORIES
 export const getListCategory = (dataFilter) => async (dispatch, getState) => {
-    let path = `manage/categories?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
+    let path = `manage/categories?per_page=${dataFilter.perPage}&page=${dataFilter.page}`
 
     if (dataFilter.keySearch) {
-        path += `&q=${dataFilter.keySearch}`;
+        path += `&q=${dataFilter.keySearch}`
     }
 
     if (dataFilter.status && dataFilter.status.length > 0) {
-        path += `&status=${dataFilter.status}`;
+        path += `&status=${dataFilter.status}`
     }
 
     if (dataFilter.order && dataFilter.column) {
-        path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+        path += `&order=${dataFilter.order}&column=${dataFilter.column}`
     }
 
     return callApi({
@@ -349,26 +336,22 @@ export const getListCategory = (dataFilter) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const createOrUpdateCategory = (data, action, id) => async (dispatch, getState) => {
-    let path = `manage/categories`;
+    let path = `manage/categories`
     if (action === 'UPDATE') {
-        path += `/${id}`;
+        path += `/${id}`
     }
     return callApi({
         method: action === 'CREATE' ? 'post' : 'put',
         apiPath: path,
-        actionTypes: [
-            requestCreateOrUpdateCategory,
-            createOrUpdateCategorySuccess,
-            createOrUpdateCategoryFail,
-        ],
+        actionTypes: [requestCreateOrUpdateCategory, createOrUpdateCategorySuccess, createOrUpdateCategoryFail],
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const deleteCategory = (id) => async (dispatch, getState) => {
     return callApi({
         method: 'delete',
@@ -377,23 +360,23 @@ export const deleteCategory = (id) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // SKILLS
 export const getListSkill = (dataFilter) => async (dispatch, getState) => {
-    let path = `manage/skills?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
+    let path = `manage/skills?per_page=${dataFilter.perPage}&page=${dataFilter.page}`
 
     if (dataFilter.keySearch) {
-        path += `&q=${dataFilter.keySearch}`;
+        path += `&q=${dataFilter.keySearch}`
     }
 
     if (dataFilter.status && dataFilter.status.length > 0) {
-        path += `&status=${dataFilter.status}`;
+        path += `&status=${dataFilter.status}`
     }
 
     if (dataFilter.order && dataFilter.column) {
-        path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+        path += `&order=${dataFilter.order}&column=${dataFilter.column}`
     }
 
     return callApi({
@@ -403,26 +386,22 @@ export const getListSkill = (dataFilter) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const createOrUpdateSkill = (data, action, id) => async (dispatch, getState) => {
-    let path = `manage/skills`;
+    let path = `manage/skills`
     if (action === 'UPDATE') {
-        path += `/${id}`;
+        path += `/${id}`
     }
     return callApi({
         method: action === 'CREATE' ? 'post' : 'put',
         apiPath: path,
-        actionTypes: [
-            requestCreateOrUpdateSkill,
-            createOrUpdateSkillSuccess,
-            createOrUpdateSkillFail,
-        ],
+        actionTypes: [requestCreateOrUpdateSkill, createOrUpdateSkillSuccess, createOrUpdateSkillFail],
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const deleteSkill = (id) => async (dispatch, getState) => {
     return callApi({
         method: 'delete',
@@ -431,8 +410,8 @@ export const deleteSkill = (id) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 export const getSkillCategories = () => async (dispatch, getState) => {
     return callApi({
@@ -442,43 +421,39 @@ export const getSkillCategories = () => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 
 // ORGANIZATION
 
 export const getListOrganization = (dataFilter) => async (dispatch, getState) => {
-    let path = `manage/organizations?per_page=${dataFilter.perPage}&page=${dataFilter.page}`;
+    let path = `manage/organizations?per_page=${dataFilter.perPage}&page=${dataFilter.page}`
 
     if (dataFilter.keySearch) {
-        path += `&q=${dataFilter.keySearch}`;
+        path += `&q=${dataFilter.keySearch}`
     }
 
     if (dataFilter.status && dataFilter.status.length > 0) {
-        path += `&status=${dataFilter.status}`;
+        path += `&status=${dataFilter.status}`
     }
 
     if (dataFilter.order && dataFilter.column) {
-        path += `&order=${dataFilter.order}&column=${dataFilter.column}`;
+        path += `&order=${dataFilter.order}&column=${dataFilter.column}`
     }
 
     return callApi({
         method: 'get',
         apiPath: path,
-        actionTypes: [
-            requestGetListOrganization,
-            getListOrganizationSuccess,
-            getListOrganizationFail,
-        ],
+        actionTypes: [requestGetListOrganization, getListOrganizationSuccess, getListOrganizationFail],
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const createOrUpdateOrganization = (data, action, id) => async (dispatch, getState) => {
-    let path = `manage/organizations`;
+    let path = `manage/organizations`
     if (action === 'UPDATE') {
-        path += `/${id}`;
+        path += `/${id}`
     }
     return callApi({
         method: action === 'CREATE' ? 'post' : 'put',
@@ -491,8 +466,8 @@ export const createOrUpdateOrganization = (data, action, id) => async (dispatch,
         variables: data,
         dispatch,
         getState,
-    });
-};
+    })
+}
 export const deleteOrganization = (id) => async (dispatch, getState) => {
     return callApi({
         method: 'delete',
@@ -501,5 +476,19 @@ export const deleteOrganization = (id) => async (dispatch, getState) => {
         variables: {},
         dispatch,
         getState,
-    });
-};
+    })
+}
+
+//ARTICLES
+export const getManageArticleList = (dataFilter) => async (dispatch, getState) => {
+    let path = `article/manage-article-list?page=${dataFilter.page}&limit=${dataFilter.perPage}`
+
+    return callApi({
+        method: 'get',
+        apiPath: path,
+        actionTypes: [getManageListArticle, getManageListArticleSuccess, getManageListArticleFail],
+        variables: {},
+        dispatch,
+        getState,
+    })
+}

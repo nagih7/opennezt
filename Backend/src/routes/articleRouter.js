@@ -22,6 +22,8 @@ articleRouter.get('/list-comments', asyncHandler(articleController.getCommentLis
 
 articleRouter.get('/list-reply-comment', asyncHandler(articleController.getReplyCommentList))
 
+articleRouter.get('/manage-article-list', asyncHandler(articleController.getManageArticleList))
+
 articleRouter.post(
     '/create-comment',
     asyncHandler(articleMiddleware.decodeFormCommentData),
