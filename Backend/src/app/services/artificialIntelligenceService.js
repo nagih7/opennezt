@@ -13,6 +13,7 @@ import { getProfileDetail } from './profileService'
 import { getMatchingProjectDetails } from './projectService'
 import { getTypeOfBotMessage, getTypeOfInterviewConversation, getTypeOfUserMessage } from './typeService'
 import { FileUpload } from '@/utils/classes'
+import { getMemberRoleOfDirectConversation } from './roleService'
 
 // Tìm kiếm dự án phù hợp với người dùng
 export async function matchingProjects(user, linkedInUsername) {
@@ -41,28 +42,36 @@ export async function startInterview(user, projectId) {
 
     // Lấy type cuộc hội thoại interview
     const conversationType = await getTypeOfInterviewConversation()
+    // Lấy role member của cuộc hội thoại
+    const memberRole = await getMemberRoleOfDirectConversation()
 
     // Tạo cuộc hội thoại
     const conversation = new Conversation({
         project_id: projectId,
         type_id: conversationType._id,
-        members: [user._id],
-        data: { user_id: user._id, project_id: new ObjectId(projectId), interview_id: interviewData.conversation_id },
+        members: [
+            {
+                user_id: user._id,
+                role_id: memberRole._id,
+            },
+        ],
+        data: { project_id: new ObjectId(projectId), interview_id: interviewData.conversation_id },
     })
     await conversation.save()
 
     // Call API TEXT TO SPEECH để chuyển đổi văn bản thành giọng nói
     const audioUrl = await convertTextToSpeech(interviewData.answer)
 
-    // Lấy message type
-    const messageType = await getTypeOfBotMessage()
+    // Lấy BOT message type
+    const botMessageType = await getTypeOfBotMessage()
 
     // Lưu tin nhắn của AI
     const message = new Message({
         conversation_id: conversation._id,
         user_id: user._id,
         content: interviewData.answer,
-        type_id: messageType._id,
+        attachments: audioUrl,
+        type_id: botMessageType._id,
     })
     await message.save()
 
@@ -72,6 +81,7 @@ export async function startInterview(user, projectId) {
         message: {
             _id: message._id,
             content: interviewData.answer,
+            attachments: `${LINK_STATIC_URL}${message.attachments}`,
         },
         conversation_id: conversation._id,
     }
@@ -567,7 +577,14 @@ export async function convertTextToSpeech(content) {
 // Kết thúc cuộc phỏng vấn
 export async function closeInterview(userId, conversationId) {
     // Lấy thông tin cuộc hội thoại
-    const conversation = await Conversation.findById(conversationId).lean()
+    const conversation = await Conversation.findOne({
+        _id: new ObjectId(conversationId),
+        members: {
+            $elemMatch: {
+                user_id: userId,
+            },
+        },
+    }).lean()
     if (!conversation) {
         throw new Error('Conversation not found')
     }
