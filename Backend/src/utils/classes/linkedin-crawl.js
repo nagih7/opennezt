@@ -6,6 +6,86 @@ import puppeteer from 'puppeteer'
  * Functions to scrape skills from LinkedIn profiles
  */
 
+// Session management object with synchronized access methods
+const LinkedInSessionManager = {
+    // Private session state
+    _session: null,
+    _initializationPromise: null,
+
+    // Get current session if exists
+    getSession() {
+        return this._session
+    },
+
+    // Check if initialization is in progress
+    isInitializing() {
+        return this._initializationPromise !== null
+    },
+
+    // Get the current initialization promise
+    getInitPromise() {
+        return this._initializationPromise
+    },
+
+    // Start a new initialization process
+    startInitialization() {
+    // Only set if not already initializing
+        if (this._initializationPromise === null) {
+            this._initializationPromise = this._createSession()
+        }
+        return this._initializationPromise
+    },
+
+    // Set session to a new value
+    setSession(session) {
+        this._session = session
+    },
+
+    // Clear initialization promise
+    clearInitPromise() {
+        this._initializationPromise = null
+    },
+
+    // Reset the session
+    resetSession() {
+        this._session = null
+    },
+
+    // Create a new LinkedIn session
+    async _createSession() {
+        try {
+            console.log('Creating new LinkedIn session...')
+            const session = await initializeLinkedInSession(LINKEDIN_USERNAME, LINKEDIN_PASSWORD)
+            this._session = session
+            return session
+        } catch (error) {
+            this._session = null
+            throw error
+        } finally {
+            this._initializationPromise = null
+        }
+    },
+
+    // Cleanup session
+    async cleanup() {
+    // Wait for any ongoing initialization to complete before cleanup
+        if (this._initializationPromise) {
+            try {
+                await this._initializationPromise
+            } catch (error) {
+                console.error('Error during session initialization that was in progress during cleanup:', error)
+            }
+            this._initializationPromise = null
+        }
+
+        if (this._session && this._session.browser) {
+            console.log('Closing LinkedIn session...')
+            await closeSession(this._session.browser)
+            this._session = null
+        }
+    }
+}
+
 /**
  * Initialize a LinkedIn scraper session
  * @param {string} username - LinkedIn username/email
@@ -27,13 +107,38 @@ async function initializeLinkedInSession(username, password) {
         await page.type('#password', password)
         await page.click('.btn__primary--large.from__button--floating')
         await page.waitForNavigation()
-        console.log('Login successful')
+        console.log('LinkedIn session initialized successfully')
 
         return { browser, page }
     } catch (error) {
         await browser.close()
-        throw new Error(`Login failed: ${error.message}`)
+        throw new Error(`LinkedIn login failed: ${error.message}`)
     }
+}
+
+/**
+ * Get the LinkedIn session, creating a new one if it doesn't exist
+ * @returns {Promise<Object>} - Browser session object
+ */
+async function getLinkedInSession() {
+    // If there's already a valid session, return it immediately
+    const existingSession = LinkedInSessionManager.getSession()
+    if (existingSession) {
+        return existingSession
+    }
+
+    // If a session initialization is already in progress, wait for it to complete
+    if (LinkedInSessionManager.isInitializing()) {
+        try {
+            await LinkedInSessionManager.getInitPromise()
+            return LinkedInSessionManager.getSession() // Return the session created by another request
+        } catch (error) {
+            // If the other initialization failed, continue to create a new one
+        }
+    }
+
+    // Start a new initialization process
+    return await LinkedInSessionManager.startInitialization()
 }
 
 /**
@@ -95,72 +200,31 @@ async function closeSession(browser) {
     }
 }
 
-// /**
-//  * Example usage with interactive console mode
-//  * @param {string} username - LinkedIn username
-//  * @param {string} password - LinkedIn password
-//  */
-// async function runInteractiveMode(username, password) {
-//     const readline = require('readline').createInterface({
-//         input: process.stdin,
-//         output: process.stdout,
-//     })
-
-//     let session
-//     try {
-//         session = await initializeLinkedInSession(username, password)
-
-//         const askForID = async () => {
-//             readline.question("Enter LinkedIn profile ID (or 'exit' to quit): ", async (profileId) => {
-//                 if (profileId.toLowerCase() === 'exit') {
-//                     await closeSession(session.browser)
-//                     readline.close()
-//                     return
-//                 }
-
-//                 try {
-//                     const skills = await scrapeSkills(session.page, profileId)
-
-//                     console.log('\n=== SKILLS LIST ===')
-//                     skills.forEach((skill, index) => {
-//                         console.log(`Skill ${index + 1}: ${skill}`)
-//                     })
-//                     console.log(`\nTotal valid skills: ${skills.length}\n`)
-//                 } catch (error) {
-//                     console.error(`Error: ${error.message}`)
-//                 }
-
-//                 askForID() // Continue asking for new IDs
-//             })
-//         }
-
-//         askForID()
-//     } catch (error) {
-//         console.error(`Session error: ${error.message}`)
-//         if (session && session.browser) {
-//             await closeSession(session.browser)
-//         }
-//         readline.close()
-//     }
-// }
+/**
+ * Clean up LinkedIn session - should be called when app terminates
+ */
+export async function cleanupLinkedInSession() {
+    await LinkedInSessionManager.cleanup()
+}
 
 async function getSkillsForProfile(username) {
-    let session
-
     try {
-        // Initialize LinkedIn session
-        session = await initializeLinkedInSession(LINKEDIN_USERNAME, LINKEDIN_PASSWORD)
+        // Get or initialize LinkedIn session
+        const session = await getLinkedInSession()
 
-        // Scrape skills
+        // Scrape skills using existing session
         const skills = await scrapeSkills(session.page, username)
         return skills || [] // Return empty array if no skills found
     } catch (error) {
-        console.error('Error:', error.message)
-    } finally {
-        // Clean up
-        if (session && session.browser) {
-            await closeSession(session.browser)
+        console.error('LinkedIn scraper error:', error.message)
+        
+        // If there was a session error, reset the session so it will be recreated next time
+        if (error.message.includes('session') || error.message.includes('navigation')) {
+            console.log('Session appears to be invalid. Will create a new session on next request.')
+            await LinkedInSessionManager.cleanup()
+            return []
         }
+        return []
     }
 }
 
