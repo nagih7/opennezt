@@ -603,7 +603,7 @@ const router = createBrowserRouter([
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_MESSAGES_SIDEBAR_PAGE'),
     },
     {
-        path: '/interview',
+        path: '/interview/:projectId',
         element: <Interview />,
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_INTERVIEW_PAGE'),
     },

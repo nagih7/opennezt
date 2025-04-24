@@ -6,8 +6,13 @@ import { FaCheck } from 'react-icons/fa6'
 import { Avatar, Image } from '@chakra-ui/react'
 import { OPENNEZT_BG_BLACK } from 'utils/constants'
 import { toUpper } from 'lodash'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setOpenModalMatchingProjects } from 'states/modules/artificialIntelligence'
 
 const ProjectDetails = ({ project }) => {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     // ========== STATE ========== //
     const [checkedItems, setCheckedItems] = useState({})
     const [errorBG, setErrorBG] = useState(false)
@@ -18,6 +23,12 @@ const ProjectDetails = ({ project }) => {
             return acc
         }, {})
     )
+
+    // ========== HANDLER ========== //
+    const handleStartInterview = () => {
+        dispatch(setOpenModalMatchingProjects(false))
+        navigate(`/interview/${project?._id}`)
+    }
 
     // ========== RENDER ========== //
     return (
@@ -50,13 +61,16 @@ const ProjectDetails = ({ project }) => {
                         <div>
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-2xl font-semibold">{project.name}</span>
+                                    <span className="text-2xl font-semibold">{project?.name}</span>
                                     <IconlyShieldDone size={24} color="#3897f0" />
                                 </div>
-                                <span className="font-semibold text-start">{project.industries?.join(', ')}</span>
-                                <span className="text-[#6f7f92] font-semibold text-xs">{project.stage}</span>
+                                <span className="font-semibold text-start">{project?.industries?.join(', ')}</span>
+                                <span className="text-[#6f7f92] font-semibold text-xs">{project?.stage}</span>
                             </div>
-                            <button className="bg-[#4374c0] text-[#ffffff] text-sm font-medium mt-3 rounded-lg px-3 py-2 flex items-center gap-1">
+                            <button
+                                className="bg-[#4374c0] text-[#ffffff] text-sm font-medium mt-3 rounded-lg px-3 py-2 flex items-center gap-1"
+                                onClick={handleStartInterview}
+                            >
                                 <IconlyFace size={20} color={'#ffffff'} />
                                 Interview
                             </button>
