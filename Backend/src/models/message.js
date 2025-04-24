@@ -1,5 +1,5 @@
 // models/messenger.js
-import createModel, {ObjectId} from './base'
+import createModel, { ObjectId } from './base'
 
 const Message = createModel('Message', 'messages', {
     conversation_id: {
@@ -15,6 +15,11 @@ const Message = createModel('Message', 'messages', {
     content: {
         type: String,
         required: true,
+    },
+    attachments: {
+        type: String,
+        required: false,
+        default: null,
     },
     type_id: {
         type: ObjectId,

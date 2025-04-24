@@ -48,6 +48,13 @@ export const IMAGE_MESSAGE = 'image'
 export const VIDEO_MESSAGE = 'video'
 export const AUDIO_MESSAGE = 'audio'
 
+// INTERVIEW MESSAGE TYPE
+export const INTERVIEW_MESSAGE_TYPE = {
+    TYPE: 'interview_message',
+    USER: 'user',
+    BOT: 'bot',
+}
+
 // ACTIONS
 export const CONFIRM_ACTION = 'confirm'
 export const DELETE_ACTION = 'delete'

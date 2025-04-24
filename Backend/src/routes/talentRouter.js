@@ -25,4 +25,11 @@ talentRouter.post('/:id/access', asyncHandler(talentController.accessToTalent))
 
 // =========== POST [Bookmark Talent] =========== //
 talentRouter.post('/bookmark', asyncHandler(talentController.bookmarkTalent))
+
+// =========== GET [User Bookmark Status] =========== //
+talentRouter.get('/bookmarks-status/:target_ids', asyncHandler(talentController.getUserBookmarkStatus))
+
+// =========== GET [User Bookmark List] =========== //
+talentRouter.get('/bookmarks', asyncHandler(talentController.getUserBookmarkList))
+
 export default talentRouter

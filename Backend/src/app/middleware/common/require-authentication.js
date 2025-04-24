@@ -24,15 +24,25 @@ async function requireAuthentication(req, res, next) {
                 }
             }
         }
+
+        // Move the abort call inside the try block
+        abort(401, 'Please login to continue.')
     } catch (error) {
         if (!(error instanceof JsonWebTokenError)) {
-            throw error
+            // Pass the error to the error handler middleware
+            return next(error)
         }
         if (error instanceof TokenExpiredError) {
-            abort(401, 'Your session has expired. Please log in again!')
+            // Create a new error with status and message
+            const err = new Error('Your session has expired. Please log in again!')
+            err.status = 401
+            return next(err)
         }
+        // Default error for other JWT errors
+        const err = new Error('Authentication failed')
+        err.status = 401
+        return next(err)
     }
-    abort(401)
 }
 
 export default requireAuthentication

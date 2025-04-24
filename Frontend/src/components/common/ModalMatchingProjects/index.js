@@ -3,15 +3,16 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setOpenModalMatchingProjects } from 'states/modules/artificialIntelligence'
 import Statistical from './components/Statistical'
-import avt_img from '../../../assets/images/background/avt.jpg'
-import { IconlyEditSquare, IconlyFace, IconlyShieldDone } from 'components/UI/Iconly'
-import logo_linkedin from '../../../assets/images/background/linkedin.png'
-import { RiArrowRightSFill } from 'react-icons/ri'
-import { IoMdArrowDropdown } from 'react-icons/io'
-import { FaCheck } from 'react-icons/fa6'
 import fb_img from 'assets/images/background/left-banner.webp'
 import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import { useNavigate } from 'react-router-dom'
+import ProjectDetails from './components/ProjectDetails'
+import { IconlyEditSquare, IconlyFace, IconlyShieldDone } from 'components/UI/Iconly'
+import { IoMdArrowDropdown } from 'react-icons/io'
+import { RiArrowRightSFill } from 'react-icons/ri'
+import { FaCheck } from 'react-icons/fa6'
+import avt_img from '../../../assets/images/background/avt.jpg'
+import logo_linkedin from '../../../assets/images/background/linkedin.png'
 
 const ModalMatchingProjects = () => {
     const dispatch = useDispatch()
@@ -45,47 +46,17 @@ const ModalMatchingProjects = () => {
     // ========== RENDER ========== //
     return (
         <Dialog.Root
+            scrollBehavior="inside"
             size="full"
             motionPreset="slide-in-bottom"
             open={isOpenModalMatchingProjects}
             placement={'center'}
-            scrollBehavior="inside"
         >
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
-                    <Dialog.Content className="bg-[#f4f5f6] max-h-full p-0 m-0 overflow-x-scroll">
-                        <Dialog.Header>
-                            <Dialog.Title width="full" className="flex items-center justify-between ">
-                                <h2 className="text-lg font-semibold text-black">{projectSelected?.project?.name}</h2>
-                                <div className="flex items-center gap-4 text-sm">
-                                    <Button
-                                        className="border-[#F4F5F6] bg-[#2F65B9] text-white"
-                                        onClick={() =>
-                                            setProjectSelected(
-                                                projects[projects.indexOf(projectSelected) - 1] || projects[0]
-                                            )
-                                        }
-                                        borderRadius={4}
-                                        loading={false}
-                                    >
-                                        Previous
-                                    </Button>
-                                    <Button
-                                        className="border-[#F4F5F6] bg-[#2F65B9] text-white"
-                                        onClick={() =>
-                                            setProjectSelected(
-                                                projects[projects.indexOf(projectSelected) + 1] || projects[0]
-                                            )
-                                        }
-                                        borderRadius={4}
-                                        loading={false}
-                                    >
-                                        Next
-                                    </Button>
-                                </div>
-                            </Dialog.Title>
-                        </Dialog.Header>
+                    <Dialog.Content className="bg-[#f4f5f6] max-h-full p-0 m-0 ">
+                        <Dialog.Body className="px-[16px] pt-[16px]">
                         <div className="flex w-full h-full">
                             <div className="w-10/12">
                                 <div className="pl-[16px] py-[16px]">
@@ -720,8 +691,7 @@ const ModalMatchingProjects = () => {
                                 </div>
                             </div>
                             <div className="w-4/12">
-                                <Dialog.Body className="px-[16px] pt-[16px]">
-                                    <Stack className="w-full h-full bg-gray-100 ">
+                                    <Stack className="w-full bg-gray-100 ">
                                         <Statistical project={projectSelected} />
                                         <div className="relative w-full">
                                             <img
@@ -734,7 +704,7 @@ const ModalMatchingProjects = () => {
                                                 alt="logo-opennezt"
                                                 className={`$styles.logo, absolute top-0 py-14 px-12 left-0`}
                                             />
-                                            <div className="absolute left-0 xl:left-5 2xl:mt-8 xl:px-20 flex flex-col text-center items-center gap-3 px-12 text-white top-32">
+                                            <div className="absolute left-0 flex flex-col items-center gap-3 px-12 text-center text-white xl:left-5 2xl:mt-8 xl:px-20 top-32">
                                                 Feel free to reach us anytime. we are avaliable 24 hours
                                                 <button className="bg-[#ffffff] px-3 py-3 text-black font-medium rounded-md">
                                                     CONTACT US
@@ -742,10 +712,30 @@ const ModalMatchingProjects = () => {
                                             </div>
                                         </div>
                                     </Stack>
-                                </Dialog.Body>
+                                </div>
                             </div>
-                        </div>
+                        </Dialog.Body>
                         <Dialog.Footer>
+                            <Button
+                                className="border-[#F4F5F6] bg-[#2F65B9] text-white"
+                                onClick={() =>
+                                    setProjectSelected(projects[projects.indexOf(projectSelected) - 1] || projects[0])
+                                }
+                                borderRadius={4}
+                                loading={false}
+                            >
+                                Previous
+                            </Button>
+                            <Button
+                                className="border-[#F4F5F6] bg-[#2F65B9] text-white"
+                                onClick={() =>
+                                    setProjectSelected(projects[projects.indexOf(projectSelected) + 1] || projects[0])
+                                }
+                                borderRadius={4}
+                                loading={false}
+                            >
+                                Next
+                            </Button>
                             <Button
                                 className="border-[#F4F5F6] bg-[#2F65B9] text-white"
                                 onClick={() => dispatch(setOpenModalMatchingProjects(false))}

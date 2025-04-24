@@ -153,10 +153,7 @@ async function getSkillsForProfile(username) {
 
         // Scrape skills
         const skills = await scrapeSkills(session.page, username)
-
-        // Log results
-        console.log(`Skills for profile ${username}:`, skills)
-        return skills
+        return skills || [] // Return empty array if no skills found
     } catch (error) {
         console.error('Error:', error.message)
     } finally {
