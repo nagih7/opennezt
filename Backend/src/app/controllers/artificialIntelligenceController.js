@@ -14,3 +14,8 @@ export async function replyInterview(req, res) {
     const result = await aiService.replyInterview(req.currentUser, req.body)
     res.jsonify(result, 'Reply interview successfully')
 }
+
+export async function closeInterview(req, res) {
+    await aiService.closeInterview(req.currentUser, req.body.conversation_id)
+    res.jsonify('Close interview successfully')
+}
