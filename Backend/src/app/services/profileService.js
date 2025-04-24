@@ -183,7 +183,7 @@ export async function getProfileDetail(userId) {
             },
         },
     ])
-    return profile[0] || null
+    return profile[0] || {}
 }
 
 // ========== GET [Profile] ========== //
