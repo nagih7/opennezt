@@ -59,6 +59,7 @@ const SeekProjects = React.lazy(() => import('../components/pages/SeekProjects')
 const ProjectDetailsBySeek = React.lazy(() => import('../components/pages/ProjectDetailsBySeek'))
 const VerifyAuth = React.lazy(() => import('../components/pages/Auth/Verify'))
 const ResetPassword = React.lazy(() => import('../components/pages/Auth/ResetPassword'))
+const ArticleManage = React.lazy(() => import('../components/pages/Manage/components/ArticleManage'))
 // ========== EDIT PROFILE COMPONENTS ========== //
 const ProfessionalBackground = React.lazy(() =>
     import('../components/pages/EditProfile/components/ProfessionalBackground')
@@ -192,6 +193,14 @@ const router = createBrowserRouter([
         element: (
             <AppLayout>
                 <OrganizationManage />
+            </AppLayout>
+        ),
+    },
+    {
+        path: 'admin/manage/articles',
+        element: (
+            <AppLayout>
+                <ArticleManage />
             </AppLayout>
         ),
     },
