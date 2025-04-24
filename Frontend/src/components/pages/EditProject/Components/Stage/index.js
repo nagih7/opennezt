@@ -81,12 +81,10 @@ const EditStage = () => {
                 stage: formData.stage[0],
             })
         )
-        await dispatch(
-            postProjectDetailsActivitiesSector(id, {
-                industries: formData.industries,
-                stage: formData.stage[0],
-            })
-        )
+        await postProjectDetailsActivitiesSector(id, {
+            industries: formData.industries,
+            stage: formData.stage[0],
+        })
     }
     // ========== COMPONENT RENDER ========== //
     return (

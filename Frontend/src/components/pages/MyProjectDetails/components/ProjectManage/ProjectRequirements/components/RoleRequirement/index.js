@@ -22,13 +22,13 @@ const RoleRequirement = () => {
 
     // ========== EFFECTS  ========== //
     useEffect(() => {
-        if (myProjectDetails?.requirements?.team_role_ids.length > 0) {
+        if (myProjectDetails?.requirements?.team_role_ids?.length > 0) {
             setFormData((prev) => ({
                 ...prev,
                 teamRoles: myProjectDetails?.requirements?.team_role_ids,
             }))
         }
-        if (myProjectDetails?.requirements?.role_ids.length > 0) {
+        if (myProjectDetails?.requirements?.role_ids?.length > 0) {
             setFormData((prev) => ({
                 ...prev,
                 roles: myProjectDetails?.requirements?.role_ids,
@@ -49,9 +49,9 @@ const RoleRequirement = () => {
         }
     }
 
-    const handleSaveProjectRequirement = () => {
+    const handleSaveProjectRequirement = async () => {
         dispatch(updateRoleRequirement(myProjectDetails._id, formData))
-        dispatch(postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id))
+        await postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id)
     }
 
     // ========= RENDER  ========== //

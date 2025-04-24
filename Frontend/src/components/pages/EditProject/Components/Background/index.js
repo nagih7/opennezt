@@ -39,11 +39,11 @@ const Background = () => {
         setBgURL(URL.createObjectURL(background))
     }
 
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async () => {
         const formData = new FormData()
         formData.append('background', bgFile)
         dispatch(updateProjectBackground(id, formData))
-        dispatch(postProjectDetailsActivitiesBackground(id))
+        await postProjectDetailsActivitiesBackground(id)
     }
 
     return (

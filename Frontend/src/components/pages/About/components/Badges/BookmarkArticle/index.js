@@ -92,7 +92,7 @@ function BookmarkArticle() {
                 })
             )
         }
-    }, [dispatch, feeds.length, limit, hasMore])
+    }, [dispatch, feeds?.length, limit, hasMore])
 
     useEffect(() => {
         // Chỉ gọi API khi cursor thay đổi (không phải lần đầu load)
@@ -144,12 +144,12 @@ function BookmarkArticle() {
     //Reaction User's Status
     // Tải trạng thái reaction của người dùng hiện tại
     useEffect(() => {
-        if (onetimefeeds.length > 0) {
+        if (onetimefeeds?.length > 0) {
             // Lấy tất cả article IDs
             const articleIds = onetimefeeds.filter((feed) => feed?._id).map((feed) => feed?._id)
 
             // Gọi API một lần với array của IDs
-            if (articleIds.length > 0) {
+            if (articleIds?.length > 0) {
                 dispatch(getUserReactionsList(articleIds))
             }
         }
@@ -238,7 +238,7 @@ function BookmarkArticle() {
         newFormData.append('project_id', formData.project_id)
         await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }))
         await store.dispatch(updateUpdatedArticle(formData))
-        await store.dispatch(postActivityUpdateArticle(id))
+        await postActivityUpdateArticle(id)
     }, [])
     //End Update Article
     //Delete Article
@@ -251,10 +251,10 @@ function BookmarkArticle() {
     )
 
     useEffect(() => {
-        if (onetimefeeds.length > 0) {
+        if (onetimefeeds?.length > 0) {
             const articleIds = onetimefeeds.filter((r) => r?._id).map((r) => r?._id)
 
-            if (articleIds.length > 0) {
+            if (articleIds?.length > 0) {
                 dispatch(handleGetUserBookmarks(articleIds))
             }
         }
@@ -272,9 +272,9 @@ function BookmarkArticle() {
             await dispatch(handleBookmarkArticle({ data }))
             dispatch(updateBookmarks(data))
             if (data.marked === 'yes') {
-                await dispatch(postActivitySaveArticle(data.target_id))
+                await postActivitySaveArticle(data.target_id)
             } else if (data.marked === 'no') {
-                await dispatch(deleteActivitySaveArticle(data.target_id))
+                await deleteActivitySaveArticle(data.target_id)
             }
         },
         [dispatch]
@@ -305,7 +305,7 @@ function BookmarkArticle() {
                 {bookmarkedFeeds.length > 0 ? (
                     <>
                         {bookmarkedFeeds.map((feed, index) => {
-                            if (index === bookmarkedFeeds.length - 1) {
+                            if (index === bookmarkedFeeds?.length - 1) {
                                 return (
                                     <Article
                                         key={feed?._id}
@@ -339,17 +339,14 @@ function BookmarkArticle() {
                             }
                         })}
                     </>
-                ) : (<>
-                    <div className="bg-[#E3F1F6] pl-4 py-3 border-l-2 border-[#0098CB]">
-                        <p className="relative top-[0.6rem] text-[#1599CC]   ">
-                            You have no saved posts yet.
-                        </p>
-                    </div>
-                </>)
-                }
-
+                ) : (
+                    <>
+                        <div className="bg-[#E3F1F6] pl-4 py-3 border-l-2 border-[#0098CB]">
+                            <p className="relative top-[0.6rem] text-[#1599CC]   ">You have no saved posts yet.</p>
+                        </div>
+                    </>
+                )}
             </div>
-
         </div>
     )
 }

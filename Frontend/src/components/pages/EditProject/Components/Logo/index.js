@@ -43,7 +43,7 @@ const EditLogo = () => {
         const formData = new FormData()
         formData.append('logo', logoFile)
         await dispatch(updateProjectLogo(id, formData))
-        await dispatch(postProjectDetailsActivitiesLogo(id, formData))
+        await postProjectDetailsActivitiesLogo(id, formData)
     }
 
     return (

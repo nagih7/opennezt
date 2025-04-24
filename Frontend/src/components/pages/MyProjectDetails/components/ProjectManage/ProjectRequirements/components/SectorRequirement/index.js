@@ -20,13 +20,13 @@ const SectorRequirement = () => {
 
     // ========== EFFECTS  ========== //
     useEffect(() => {
-        if (myProjectDetails?.requirements?.industry_ids.length > 0) {
+        if (myProjectDetails?.requirements?.industry_ids?.length > 0) {
             setFormData((prev) => ({
                 ...prev,
                 industries: myProjectDetails?.requirements?.industry_ids,
             }))
         }
-        if (myProjectDetails?.requirements?.experience_level_ids.length > 0) {
+        if (myProjectDetails?.requirements?.experience_level_ids?.length > 0) {
             setFormData((prev) => ({
                 ...prev,
                 experienceLevels: myProjectDetails?.requirements?.experience_level_ids,
@@ -50,9 +50,9 @@ const SectorRequirement = () => {
         }
     }
 
-    const handleSaveProjectRequirement = () => {
+    const handleSaveProjectRequirement = async () => {
         dispatch(updateSectorRequirement(myProjectDetails._id, formData))
-        dispatch(postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id))
+        await postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id)
     }
 
     // ========= RENDER  ========== //

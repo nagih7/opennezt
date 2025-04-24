@@ -169,7 +169,7 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
         try {
             await onSubmit(feed?._id, formData)
             console.log('Update article success')
-            dispatch(postActivityUpdateArticle(feed?._id))
+            await postActivityUpdateArticle(feed?._id)
             console.log('Post activity update article success')
             setFileKey((prev) => prev + 1)
         } catch (error) {

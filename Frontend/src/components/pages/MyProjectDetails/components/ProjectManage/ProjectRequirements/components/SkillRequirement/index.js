@@ -92,12 +92,12 @@ const SkillRequirement = () => {
         setMySkills(newSkills)
     }
 
-    const handleSaveProjectRequirement = () => {
+    const handleSaveProjectRequirement = async () => {
         // Filter skills with unique _id
         const skills = mySkills.filter((skill, index, self) => index === self.findIndex((s) => s._id === skill._id))
 
         dispatch(updateSkillRequirement(myProjectDetails._id, { skills }))
-        dispatch(postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id))
+        await postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id)
     }
 
     // ========= RENDER  ========== //
