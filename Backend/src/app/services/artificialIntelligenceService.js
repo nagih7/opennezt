@@ -24,7 +24,7 @@ export async function matchingProjects(user, linkedInUsername) {
         const skills = await getSkillsForProfile(linkedInUsername)
 
         // Thêm kỹ năng vào thông tin cá nhân
-        profile.skills.push(...skills)
+        profile.skills ? profile.skills?.push(...skills) : (profile.skills = skills)
     }
 
     // Call API tới AI interview để lấy danh sách projects
