@@ -11,6 +11,7 @@ import { IoMdArrowDropdown } from 'react-icons/io'
 import { FaCheck } from 'react-icons/fa6'
 import fb_img from 'assets/images/background/left-banner.webp'
 import Logo from 'assets/images/logo/opennezt_full_black_old.png'
+import { useNavigate } from 'react-router-dom'
 
 const ModalMatchingProjects = () => {
     const dispatch = useDispatch()
@@ -25,6 +26,7 @@ const ModalMatchingProjects = () => {
         accountingAndFinance: false,
     })
     const [checkedItems, setCheckedItems] = useState({})
+    const navigate = useNavigate()
 
     const toggleCheck = (itemName) => {
         setCheckedItems((prev) => ({
@@ -112,7 +114,10 @@ const ModalMatchingProjects = () => {
                                                             Hanoi, VietNam
                                                         </span>
                                                     </div>
-                                                    <button className="bg-[#4374c0] text-[#ffffff] text-sm font-medium mt-3 rounded-lg px-3 py-2 flex items-center gap-1">
+                                                    <button
+                                                        onClick={() => navigate('/interview')}
+                                                        className="bg-[#4374c0] text-[#ffffff] text-sm font-medium mt-3 rounded-lg px-3 py-2 flex items-center gap-1"
+                                                    >
                                                         <IconlyFace size={20} color={'#ffffff'} />
                                                         Interview
                                                     </button>
@@ -228,7 +233,7 @@ const ModalMatchingProjects = () => {
                                                                             className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
                                                                             onClick={() => toggleCheck('basic')}
                                                                         >
-                                                                            Basic 
+                                                                            Basic
                                                                             {checkedItems['basic'] && (
                                                                                 <FaCheck className="text-[#4374c0]" />
                                                                             )}
@@ -294,15 +299,16 @@ const ModalMatchingProjects = () => {
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li
-                                                        className="flex flex-col"
-                                                    >
-                                                        <div  onClick={() =>
-                                                            setOpenSections({
-                                                                ...openSections,
-                                                                international: !openSections.international,
-                                                            })
-                                                        } className="flex items-center gap-2 cursor-pointer">
+                                                    <li className="flex flex-col">
+                                                        <div
+                                                            onClick={() =>
+                                                                setOpenSections({
+                                                                    ...openSections,
+                                                                    international: !openSections.international,
+                                                                })
+                                                            }
+                                                            className="flex items-center gap-2 cursor-pointer"
+                                                        >
                                                             <div
                                                                 className={`transition-transform duration-300 ${
                                                                     openSections.international
@@ -327,12 +333,12 @@ const ModalMatchingProjects = () => {
                                                         >
                                                             <div className="px-[24px]">
                                                                 <div className="px-[24px]">
-                                                                <ul className="flex cursor-pointer flex-col items-center pl-0 mb-0">
+                                                                    <ul className="flex cursor-pointer flex-col items-center pl-0 mb-0">
                                                                         <li
                                                                             className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
                                                                             onClick={() => toggleCheck('hihi')}
                                                                         >
-                                                                            hihi 
+                                                                            hihi
                                                                             {checkedItems['hihi'] && (
                                                                                 <FaCheck className="text-[#4374c0]" />
                                                                             )}
@@ -357,9 +363,7 @@ const ModalMatchingProjects = () => {
                                                                         </li>
                                                                         <li
                                                                             className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
-                                                                            onClick={() =>
-                                                                                toggleCheck('haizzz')
-                                                                            }
+                                                                            onClick={() => toggleCheck('haizzz')}
                                                                         >
                                                                             haizzz
                                                                             {checkedItems['haizzz'] && (
@@ -398,15 +402,16 @@ const ModalMatchingProjects = () => {
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li
-                                                        className="flex flex-col"
-                                                    >
-                                                        <div onClick={() =>
-                                                            setOpenSections({
-                                                                ...openSections,
-                                                                lawAndLegal: !openSections.lawAndLegal,
-                                                            })
-                                                        } className="flex items-center gap-2 cursor-pointer">
+                                                    <li className="flex flex-col">
+                                                        <div
+                                                            onClick={() =>
+                                                                setOpenSections({
+                                                                    ...openSections,
+                                                                    lawAndLegal: !openSections.lawAndLegal,
+                                                                })
+                                                            }
+                                                            className="flex items-center gap-2 cursor-pointer"
+                                                        >
                                                             <div
                                                                 className={`transition-transform duration-300 ${
                                                                     openSections.lawAndLegal ? 'rotate-180' : 'rotate-0'
@@ -429,12 +434,12 @@ const ModalMatchingProjects = () => {
                                                         >
                                                             <div className="px-[24px]">
                                                                 <div className="px-[24px]">
-                                                                     <ul className="flex cursor-pointer flex-col items-center pl-0 mb-0">
+                                                                    <ul className="flex cursor-pointer flex-col items-center pl-0 mb-0">
                                                                         <li
                                                                             className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
                                                                             onClick={() => toggleCheck('l')}
                                                                         >
-                                                                            l 
+                                                                            l
                                                                             {checkedItems['l'] && (
                                                                                 <FaCheck className="text-[#4374c0]" />
                                                                             )}
@@ -459,9 +464,7 @@ const ModalMatchingProjects = () => {
                                                                         </li>
                                                                         <li
                                                                             className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
-                                                                            onClick={() =>
-                                                                                toggleCheck('cường')
-                                                                            }
+                                                                            onClick={() => toggleCheck('cường')}
                                                                         >
                                                                             cường
                                                                             {checkedItems['cường'] && (
@@ -500,16 +503,17 @@ const ModalMatchingProjects = () => {
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li
-                                                        className="flex flex-col"
-                                                    >
-                                                        <div onClick={() =>
-                                                            setOpenSections({
-                                                                ...openSections,
-                                                                accountingAndFinance:
-                                                                    !openSections.accountingAndFinance,
-                                                            })
-                                                        } className="flex items-center gap-2 cursor-pointer">
+                                                    <li className="flex flex-col">
+                                                        <div
+                                                            onClick={() =>
+                                                                setOpenSections({
+                                                                    ...openSections,
+                                                                    accountingAndFinance:
+                                                                        !openSections.accountingAndFinance,
+                                                                })
+                                                            }
+                                                            className="flex items-center gap-2 cursor-pointer"
+                                                        >
                                                             <div
                                                                 className={`transition-transform duration-300 ${
                                                                     openSections.accountingAndFinance
@@ -536,12 +540,12 @@ const ModalMatchingProjects = () => {
                                                         >
                                                             <div className="px-[24px]">
                                                                 <div className="px-[24px]">
-                                                                <ul className="flex cursor-pointer flex-col items-center pl-0 mb-0">
+                                                                    <ul className="flex cursor-pointer flex-col items-center pl-0 mb-0">
                                                                         <li
                                                                             className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
                                                                             onClick={() => toggleCheck('lap')}
                                                                         >
-                                                                            lap 
+                                                                            lap
                                                                             {checkedItems['lap'] && (
                                                                                 <FaCheck className="text-[#4374c0]" />
                                                                             )}
@@ -557,7 +561,9 @@ const ModalMatchingProjects = () => {
                                                                         </li>
                                                                         <li
                                                                             className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
-                                                                            onClick={() => toggleCheck('tralaleroTralala')}
+                                                                            onClick={() =>
+                                                                                toggleCheck('tralaleroTralala')
+                                                                            }
                                                                         >
                                                                             tralalero tralala
                                                                             {checkedItems['tralaleroTralala'] && (
