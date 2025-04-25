@@ -12,8 +12,6 @@ const ChatConversation = () => {
     // STATE FROM REDUX STORE
     const { conversation, messages, hasJoined } = useSelector((state) => state.interview)
 
-    console.log('Messages:', messages)
-
     // Scroll to bottom when messages change
     useEffect(() => {
         if (messageContainerRef.current) {

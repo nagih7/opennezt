@@ -197,13 +197,4 @@ projectRouter.post(
     asyncHandler(projectController.updateNewMemberActivity)
 )
 
-// =========== POST [Project - Bookmark] =========== //
-projectRouter.post('/bookmark', asyncHandler(projectController.bookmarkProject))
-
-// =========== GET [Project - Bookmarks] =========== //
-projectRouter.get('/bookmarks-status/:target_ids', asyncHandler(projectController.getUserBookmarksStatus))
-
-// =========== GET [Project - Bookmarks List] =========== //
-projectRouter.get('/bookmarks', asyncHandler(projectController.getUserProjectBookmarks))
-
 export default projectRouter

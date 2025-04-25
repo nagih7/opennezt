@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { toaster } from 'components/UI/toaster'
 const talentSlice = createSlice({
     name: 'Talent',
     initialState: {
@@ -29,16 +28,6 @@ const talentSlice = createSlice({
         isLoadingSendFriendRequest: false,
         // REPLY FRIEND REQUEST
         isLoadingReplyFriendRequest: false,
-        // BOOKMARK TALENTS
-
-        bookmarks: [], // Danh sách các talent đã bookmark
-        isLoadingBookmarkTalent: false,
-        // BOOKMARK STATUS
-        bookmarkStatus: {},
-        isLoadingGetBookmarkStatus: false,
-        // GET TALENT BOOKMARKS
-        talentBookmarks: [],
-        isLoadingGetTalentBookmarks: false,
     },
     reducers: {
         // ========== RECRUIT TALENTS ========== //
@@ -135,77 +124,6 @@ const talentSlice = createSlice({
             ...state,
             isLoadingReplyFriendRequest: false,
         }),
-        // ========== HANDLE BOOKMARK TALENT ========== //
-        requestBookmarkTalent: (state) => ({
-            ...state,
-            isLoadingBookmarkTalent: true,
-        }),
-        bookmarkTalentSuccess: (state, action) => {
-            const { target_id, marked } = action.payload.data;
-            return {
-                ...state,
-                isLoadingBookmarkTalent: false,
-                bookmarks: marked === 'yes'
-                    ? [...state.bookmarks, { talent_id: target_id }]
-                    : state.bookmarks.filter(bookmark => bookmark.talent_id !== target_id)
-            };
-        },
-        bookmarkTalentFail: (state) => ({
-            ...state,
-            isLoadingBookmarkTalent: false,
-        }),
-
-        // ========== GET BOOKMARK STATUS ========== //
-        requestGetBookmarkStatus: (state) => ({
-            ...state,
-            isLoadingGetBookmarkStatus: true,
-        }),
-        getBookmarkStatusSuccess: (state, action) => ({
-            ...state,
-            isLoadingGetBookmarkStatus: false,
-            bookmarkStatus: {
-                ...state.bookmarkStatus,
-                [action.payload.data.target_id]: action.payload.data.marked
-            },
-        }),
-        getBookmarkStatusFail: (state) => ({
-            ...state,
-            isLoadingGetBookmarkStatus: false,
-        }),
-
-        // ========== GET TALENT BOOKMARKS ========== //
-        requestGetTalentBookmarks: (state) => ({
-            ...state,
-            isLoadingGetTalentBookmarks: true,
-        }),
-        getTalentBookmarksSuccess: (state, action) => ({
-            ...state,
-            isLoadingGetTalentBookmarks: false,
-            talentBookmarks: action.payload.data || [],
-        }),
-        getTalentBookmarksFail: (state) => ({
-            ...state,
-            isLoadingGetTalentBookmarks: false,
-            talentBookmarks: [],
-        }),
-
-        updateTalentBookmarks: (state, action) => {
-            if (action.payload.bookmarks) {
-                // Cập nhật toàn bộ danh sách bookmark
-                state.bookmarks = action.payload.bookmarks;
-            } else {
-                const { talent_id, marked } = action.payload;
-                if (marked === 'yes') {
-                    state.bookmarks.push({ talent_id });
-                } else {
-                    state.bookmarks = state.bookmarks.filter(
-                        (bookmark) => bookmark.talent_id !== talent_id
-                    );
-                }
-            }
-        },
-
-
     },
 })
 
@@ -227,20 +145,6 @@ export const {
     requestReplyFriendRequest,
     replyFriendRequestSuccess,
     replyFriendRequestFail,
-    // ========== HANDLE BOOKMARK TALENT ========== //
-    requestBookmarkTalent,
-    bookmarkTalentSuccess,
-    bookmarkTalentFail,
-    updateTalentBookmarks,
-    // ========== GET BOOKMARK STATUS ========== //
-    requestGetBookmarkStatus,
-    getBookmarkStatusSuccess,
-    getBookmarkStatusFail,
-    // ========== GET TALENT BOOKMARKS ========== //
-    requestGetTalentBookmarks,
-    getTalentBookmarksSuccess,
-    getTalentBookmarksFail,
-
 } = talentSlice.actions
 
 export default talentSlice.reducer
