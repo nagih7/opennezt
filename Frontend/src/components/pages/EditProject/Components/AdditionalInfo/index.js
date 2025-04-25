@@ -84,7 +84,7 @@ const EditAdditionalInfo = () => {
         setFormData(newForm)
     }
 
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async () => {
         dispatch(
             updateProjectAdditionalInfos(id, {
                 additional_infos: formData.map((item) => {
@@ -95,16 +95,14 @@ const EditAdditionalInfo = () => {
                 }),
             })
         )
-        dispatch(
-            postProjectDetailsActivitiesAdditionalInfo(id, {
-                additional_infos: formData.map((item) => {
-                    return {
-                        name: item.name[0],
-                        content: item.content,
-                    }
-                }),
-            })
-        )
+        await postProjectDetailsActivitiesAdditionalInfo(id, {
+            additional_infos: formData.map((item) => {
+                return {
+                    name: item.name[0],
+                    content: item.content,
+                }
+            }),
+        })
     }
     // ========== COMPONENT RENDER ========== //
     return (

@@ -56,7 +56,7 @@ const unifiedAction = (activity) => {
             case 'save':
                 return <span>You has saved {articleCaption}</span>
             case 'update':
-                return <span>has updated {articleCaption}</span>
+                return <span>You has updated {articleCaption}</span>
             case 'create':
                 return <span>has created {articleCaption}</span>
             case 'reply_comment':
@@ -281,7 +281,7 @@ function NewFeeds() {
         newFormData.append('project_id', formData.project_id)
         await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }))
         await store.dispatch(updateUpdatedArticle(formData))
-        await store.dispatch(postActivityUpdateArticle(id))
+        await postActivityUpdateArticle(id)
     }, [])
     //End Update Article
     //Delete Article
@@ -312,9 +312,9 @@ function NewFeeds() {
             await dispatch(handleBookmarkArticle({ data }))
             dispatch(updateBookmarks(data))
             if (data.marked === 'yes') {
-                await dispatch(postActivitySaveArticle(data.article_id))
+                await postActivitySaveArticle(data.article_id)
             } else if (data.marked === 'no') {
-                await dispatch(deleteActivitySaveArticle(data.article_id))
+                await deleteActivitySaveArticle(data.article_id)
             }
         },
         [dispatch]

@@ -84,7 +84,7 @@ const EditRevenue = () => {
         setFormData(newForm)
     }
 
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async () => {
         dispatch(
             updateProjectRevenue(id, {
                 revenues: formData.map((item) => ({
@@ -94,15 +94,13 @@ const EditRevenue = () => {
                 })),
             })
         )
-        dispatch(
-            postProjectDetailsActivitiesRevenue(id, {
-                revenues: formData.map((item) => ({
-                    date: item.date,
-                    amount: item.amount,
-                    currency: item.currency[0],
-                })),
-            })
-        )
+        await postProjectDetailsActivitiesRevenue(id, {
+            revenues: formData.map((item) => ({
+                date: item.date,
+                amount: item.amount,
+                currency: item.currency[0],
+            })),
+        })
     }
     // ========== COMPONENT RENDER ========== //
     return (

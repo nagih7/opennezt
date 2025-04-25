@@ -86,7 +86,7 @@ const EditFundingSources = () => {
         setFormData(newForm)
     }
 
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async () => {
         dispatch(
             updateProjectFundingSources(id, {
                 funding_sources: formData.map((item) => ({
@@ -96,15 +96,13 @@ const EditFundingSources = () => {
                 })),
             })
         )
-        dispatch(
-            postProjectDetailsActivitiesFundingSource(id, {
-                funding_sources: formData.map((item) => ({
-                    name: item.name[0],
-                    amount: item.amount,
-                    currency: item.currency[0],
-                })),
-            })
-        )
+        await postProjectDetailsActivitiesFundingSource(id, {
+            funding_sources: formData.map((item) => ({
+                name: item.name[0],
+                amount: item.amount,
+                currency: item.currency[0],
+            })),
+        })
     }
     // ========== COMPONENT RENDER ========== //
     return (

@@ -47,7 +47,7 @@ function NotificationProject() {
         await store.dispatch(replyNotification(notification_id, action))
         await store.dispatch(getConversations())
         if (action === 'confirm') {
-            await store.dispatch(postProjectDetailsActivitiesNewMember(notification_id, {}))
+            await postProjectDetailsActivitiesNewMember(notification_id, {})
         }
     }
     // ========== HANDLE MARK AS READ ========== //
