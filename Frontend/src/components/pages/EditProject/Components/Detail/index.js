@@ -52,14 +52,14 @@ const EditDetail = () => {
             [name]: value,
         }))
     }
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async () => {
         dispatch(
             updateProjectBasic(id, {
                 name: formData.name,
                 description: formData.description,
             })
         )
-        dispatch(postProjectDetailsActivitiesBasic(id, formData))
+        await postProjectDetailsActivitiesBasic(id, formData)
     }
     // ========== COMPONENT RENDER ========== //
     return (

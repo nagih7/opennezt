@@ -33,4 +33,11 @@ openAIRouter.post(
     asyncHandler(aiController.closeInterview)
 )
 
+// Speech to text
+openAIRouter.post(
+    '/interview/speech-to-text',
+    // asyncHandler(validate(aiRequest.speechToText)),
+    aiController.speechToText
+)
+
 export default openAIRouter

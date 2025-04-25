@@ -19,3 +19,8 @@ export async function closeInterview(req, res) {
     await aiService.closeInterview(req.currentUser, req.body.conversation_id)
     res.jsonify('Close interview successfully')
 }
+
+export async function speechToText(req, res) {
+    const result = await aiService.speechToText(req.body.audio)
+    res.jsonify(result, 'Speech to text successfully')
+}

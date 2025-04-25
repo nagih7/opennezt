@@ -22,7 +22,6 @@ import Bookmark from '@/models/bookmark.js'
 import Type from '@/models/type.js'
 import AccessLog from '@/models/accessLog.js'
 import ActivityLog from '@/models/activityLog.js'
-import NotificationFeed from '@/models/notificationFeed.js'
 import Subscription from '@/models/subscription.js'
 import webpush from 'web-push'
 import Role from '@/models/role.js'
@@ -406,7 +405,7 @@ export const reactArticle = async (id, user, requestBody) => {
 
                         if (subscription) {
                             // Lấy thông tin bài viết để hiển thị trong thông báo
-                            const article = await Article.findById(comment.article_id)
+                            // const article = await Article.findById(comment.article_id)
 
                             const payload = JSON.stringify({
                                 title: 'OpenNezt',

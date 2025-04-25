@@ -202,6 +202,10 @@ export const OPENAI_ANALYZE_PROMPT_FREQUENCY_PENALTY = 0
 export const OPENAI_ANALYZE_PROMPT_PRESENCE_PENALTY = 0
 export const OPENAI_ANALYZE_PROMPT_STOP = ['###']
 
+// Azure Speech Service
+export const AZURE_SPEECH_KEY = process.env.AZURE_SPEECH_KEY
+export const AZURE_SPEECH_REGION = process.env.AZURE_SPEECH_REGION || 'eastus'
+
 //ARTICLE CONST
 export const REACTIONS_ENUM = ['like', 'dislike', 'share']
 export const ARTICLE_STATUS_ENUM = ['draft', 'published', 'archived']
@@ -224,6 +228,7 @@ export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
 export const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
 export const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI
 export const GOOGLE_TOKEN_ENDPOINT = process.env.GOOGLE_TOKEN_ENDPOINT
+export const GOOGLE_CLOUD_CREDENTIALS = process.env.GOOGLE_CLOUD_CREDENTIALS
 
 // AI
 export const AI_API_URL = process.env.AI_API_URL

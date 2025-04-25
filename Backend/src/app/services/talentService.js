@@ -1,7 +1,7 @@
 // import {LINK_STATIC_URL} from '@/configs'
 
 import { ACCESS_TYPE, FRIEND_REQUEST_NOTIFICATION, LINK_STATIC_URL, NOTIFICATION_TYPE, PROFILE_ACCESS } from '@/configs'
-import { ActivityLog, Bookmark, Category, NotificationFeed, ObjectId, Profile, Type } from '@/models'
+import { ActivityLog, Category, NotificationFeed, ObjectId, Profile, Type } from '@/models'
 
 // =========== GET [Recruit Talents] =========== //
 export async function recruitTalents(
@@ -297,7 +297,6 @@ export async function getTalentDetails(user, { id }) {
 
     const talent = await Profile.aggregate([matchStage, ...lookupStages, ...unwindStages, projectStage])
 
-
     const requestType = await Type.findOne({ class: NOTIFICATION_TYPE, name: FRIEND_REQUEST_NOTIFICATION })
 
     const friendRequest = await NotificationFeed.findOne({
@@ -322,12 +321,10 @@ export async function accessToTalent(user, { id }) {
         type_id: accessType._id,
     })
     if (oldActivity) {
-
         oldActivity.timestamp = new Date()
         oldActivity.metadata = { ...oldActivity.metadata, count: (oldActivity.metadata.count || 0) + 1 }
         await oldActivity.save()
     } else {
-
         const activity = new ActivityLog({
             user_id: user._id,
             type_id: accessType._id,
@@ -338,133 +335,4 @@ export async function accessToTalent(user, { id }) {
         })
         await activity.save()
     }
-}
-
-export const bookmarkTalent = async (requestBody, user) => {
-    const { talent_id, marked } = requestBody
-    const user_id = user._id.toString()
-
-    const existingBookmark = await Bookmark.findOne({
-        target_id: talent_id,
-        target_type: 'talent',
-        user_id: user_id,
-    })
-
-    if (existingBookmark) {
-        existingBookmark.marked = marked
-        await existingBookmark.save()
-        return existingBookmark
-    } else {
-        const newBookmark = new Bookmark({
-            user_id: user_id,
-            target_id: talent_id,
-            target_type: 'talent',
-            marked: marked,
-        })
-        await newBookmark.save()
-        return newBookmark
-    }
-}
-
-export const getUserBookmarksStatus = async (user, target_ids) => {
-    const user_id = user._id.toString()
-
-    const talentIdsArray = target_ids.split(',').map((id) => new ObjectId(id))
-
-    const bookmarks = await Bookmark.find({
-        user_id: user_id,
-        target_type: 'talent',
-        target_id: { $in: talentIdsArray },
-    })
-
-    return bookmarks
-}
-
-export const getUserTalentBookmarks = async (user, requestQuery) => {
-    const { limit = 6, page = 1 } = requestQuery
-    const user_id = user._id.toString()
-
-    const talentBookmarksLimit = parseInt(limit)
-    const pageNumber = parseInt(page)
-    const skip = (pageNumber - 1) * talentBookmarksLimit
-
-
-
-    const bookmarks = await Bookmark.aggregate([
-
-        {
-            $match: {
-                user_id: new ObjectId(user_id),
-                target_type: 'talent',
-                marked: 'yes',
-            },
-        },
-
-        {
-            $lookup: {
-                from: 'profiles',
-                localField: 'target_id',
-                foreignField: '_id',
-                as: 'profileInfo'
-            }
-        },
-        {
-            $unwind: {
-                path: '$profileInfo',
-                preserveNullAndEmptyArrays: true
-            }
-        },
-
-        {
-            $lookup: {
-                from: 'users',
-                localField: 'profileInfo.user_id',
-                foreignField: '_id',
-                as: 'user',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 1, name: 1,
-                            avatar: {
-                                $cond: {
-                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
-                                    then: '$avatar',
-                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] }
-                                }
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            $unwind: {
-                path: '$user',
-                preserveNullAndEmptyArrays: true
-            }
-        },
-
-        {
-            $match: {
-                'user': { $exists: true, $ne: null }
-            }
-        },
-
-        { $skip: skip },
-        { $limit: talentBookmarksLimit },
-
-        {
-            $project: {
-                _id: '$profileInfo._id',
-                user: 1,
-                bookmark_id: '$_id',
-                marked: 1,
-                created_at: 1,
-                updated_at: 1
-            }
-        }
-    ])
-
-
-    return bookmarks
 }

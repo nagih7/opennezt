@@ -56,14 +56,6 @@ import {
     requestInviteMember,
     inviteMemberSuccess,
     inviteMemberFail,
-    // ========== BOOKMARK PROJECT ========== //
-    requestBookmarkProject,
-    bookmarkProjectSuccess,
-    bookmarkProjectFail,
-    // Thêm các action types cho việc lấy project bookmarks
-    requestGetUserProjectBookmarks,
-    getUserProjectBookmarksSuccess,
-    getUserProjectBookmarksFail,
 } from '../../states/modules/project'
 
 // ========== My projects ========== //
@@ -342,28 +334,3 @@ export const inviteMember = (projectId, formRequest) => async (dispatch, getStat
         getState,
     })
 }
-export const bookmarkProject = (data) => async (dispatch, getState) => {
-    return callApi({
-        method: 'post',
-        apiPath: `projects/bookmark`,
-        actionTypes: [requestBookmarkProject, bookmarkProjectSuccess, bookmarkProjectFail],
-        variables: data,
-        dispatch,
-        getState,
-    });
-};
-export const getUserProjectBookmarks = (data) => async (dispatch, getState) => {
-
-    return callApi({
-        method: 'get',
-        apiPath: `projects/bookmarks`,
-        actionTypes: [
-            requestGetUserProjectBookmarks,
-            getUserProjectBookmarksSuccess,
-            getUserProjectBookmarksFail
-        ],
-        variables: data,
-        dispatch,
-        getState,
-    });
-};

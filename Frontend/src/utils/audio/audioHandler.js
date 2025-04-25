@@ -31,18 +31,15 @@ export const createAudioPlayer = (src, options = {}) => {
 
     // Set up event listeners
     audio.addEventListener('ended', () => {
-        console.log('Audio ended')
         onEnd()
     })
 
     audio.addEventListener('playing', () => {
         hasStarted = true
-        console.log('Audio playing')
         onPlay()
     })
 
     audio.addEventListener('error', (e) => {
-        console.error('Audio error:', e)
         onError(e)
     })
 
@@ -174,10 +171,8 @@ export const createSyncedAudioVideo = (audioSrc, videoElement, options = {}) => 
     // Check if both audio and video have completed
     const checkSyncComplete = () => {
         if (isAudioEnded && isVideoEnded) {
-            console.log('Both audio and video playback completed')
             onSyncComplete()
         } else if (isAudioEnded) {
-            console.log('Audio ended before video - forcing video to end')
             // If audio ends first, force the video to end as well
             videoElement.currentTime = videoElement.duration
         }

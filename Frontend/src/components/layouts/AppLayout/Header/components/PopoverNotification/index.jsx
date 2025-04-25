@@ -43,7 +43,7 @@ function PopoverNotification() {
         await store.dispatch(replyNotification(notification_id, action))
         await store.dispatch(getConversations())
         if (action === 'confirm') {
-            await store.dispatch(postProjectDetailsActivitiesNewMember(notification_id, {}))
+            await postProjectDetailsActivitiesNewMember(notification_id, {})
         }
     }
     // ========== HANDLE MARK AS READ ========== //
@@ -61,7 +61,7 @@ function PopoverNotification() {
             </div>
             <div
                 className={`${
-                    notifications && notifications.length >= 3
+                    notifications && notifications?.length >= 3
                         ? 'flex flex-col items-center max-h-[350px] p-0 m-0 overflow-y-scroll scrollbar-thumb-gray-400 scrollbar-track-gray-200 w-full'
                         : ''
                 }`}
@@ -182,7 +182,7 @@ function PopoverNotification() {
                         </div>
                     )}
                     {/* READ */}
-                    {readNotifications.length > 0 && (
+                    {readNotifications?.length > 0 && (
                         <div>
                             <div className="mx-4 py-[8px] text-md font-semibold text-gray-600">Read</div>
                             <Stack spacing={2}>

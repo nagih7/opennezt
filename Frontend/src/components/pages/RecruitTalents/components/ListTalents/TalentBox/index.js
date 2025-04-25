@@ -1,72 +1,18 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { IconlyBookmark, IconlyHeart, IconlyShow } from 'components/UI/Iconly'
 import { Avatar, Button } from '@chakra-ui/react'
-import { useSelector, useDispatch } from "react-redux";
-import { bookmarkTalents, updateTalentBookmarks } from 'states/modules/talent';
-import { bookmarkTalent, getUserBookmarksStatus, } from 'api/talent';
+import { useDispatch } from 'react-redux'
 const TalentBox = ({ talent, handleViewTalentDetails }) => {
-    const dispatch = useDispatch();
-    const { bookmarks, bookmarkStatus } = useSelector((state) => state.talent);
-    const currentBookmarkStatus = bookmarkStatus[talent._id];
-    const isBookmarked = bookmarks.some(
-        (bookmark) => bookmark.talent_id === talent._id
-    );
-    useEffect(() => {
-        if (talent && talent._id) {
-            dispatch(getUserBookmarksStatus(talent._id))
-                .then(response => {
-
-                })
-                .catch(error => {
-                    console.error('Error fetching bookmark status:', error);
-                });
-        }
-    }, [talent, dispatch]);
-    // ========== STATE FROM REDUX STORE ========== //
-
-
-
-    const handleBookmark = () => {
-        const data = {
-            talent_id: talent._id,
-            marked: isBookmarked ? 'no' : 'yes',
-        };
-
-        dispatch(bookmarkTalent(data))
-            .then(response => {
-
-
-
-                const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedTalents')) || [];
-                if (isBookmarked) {
-
-                    const updatedBookmarks = storedBookmarks.filter((bookmark) => bookmark.talent_id !== talent._id);
-                    localStorage.setItem('bookmarkedTalents', JSON.stringify(updatedBookmarks));
-                } else {
-
-                    storedBookmarks.push({ talent_id: talent._id });
-                    localStorage.setItem('bookmarkedTalents', JSON.stringify(storedBookmarks));
-                }
-            })
-            .catch(error => {
-                console.error('Error bookmarking talent:', error);
-            });
-    };
-
-    useEffect(() => {
-        const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedTalents')) || [];
-        dispatch(updateTalentBookmarks({ bookmarks: storedBookmarks }));
-    }, [dispatch]);
     // ========== RENDER COMPONENT ========== //
     return (
         <>
             <div className="relative">
                 <div className="relative group">
-
-
-                    <Avatar.Root onClick={() => handleViewTalentDetails(talent.user)} className="w-[280px] h-[280px] rounded-md" shape="square">
-
-
+                    <Avatar.Root
+                        onClick={() => handleViewTalentDetails(talent.user)}
+                        className="w-[280px] h-[280px] rounded-md"
+                        shape="square"
+                    >
                         <Avatar.Fallback name={talent.user.name} />
                         <Avatar.Image src={talent.user.avatar} />
                     </Avatar.Root>
@@ -84,8 +30,8 @@ const TalentBox = ({ talent, handleViewTalentDetails }) => {
                             <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
                                 <IconlyHeart size={20} color={'#2f65b9'} />
                             </li>
-                            <li onClick={handleBookmark} className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
-                                <IconlyBookmark size={20} color={isBookmarked ? "#FFD700" : '#2f65b9'} />
+                            <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
+                                <IconlyBookmark size={20} color={'#2f65b9'} />
                             </li>
                         </ul>
                     </div>
@@ -101,7 +47,10 @@ const TalentBox = ({ talent, handleViewTalentDetails }) => {
                         transition: 'opacity 0.3s ease-in-out',
                     }}
                 >
-                    <Button onClick={() => handleViewTalentDetails(talent.user)} className="no-underline text-white font-semibold text-xs bg-[#2f65b9] px-[24px] py-[12px] rounded-md">
+                    <Button
+                        onClick={() => handleViewTalentDetails(talent.user)}
+                        className="no-underline text-white font-semibold text-xs bg-[#2f65b9] px-[24px] py-[12px] rounded-md"
+                    >
                         VIEW DETAILS
                     </Button>
                 </div>

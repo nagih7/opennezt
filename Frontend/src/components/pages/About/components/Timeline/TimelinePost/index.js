@@ -85,7 +85,7 @@ function TimelinePost() {
     // End Activities
 
     useEffect(() => {
-        if (feeds.length === 0 && hasMore === true) {
+        if (feeds?.length === 0 && hasMore === true) {
             dispatch(
                 getListFeeds({
                     cursor: new Date(),
@@ -93,7 +93,7 @@ function TimelinePost() {
                 })
             )
         }
-    }, [dispatch, feeds.length, limit, hasMore])
+    }, [dispatch, feeds?.length, limit, hasMore])
 
     useEffect(() => {
         // Chỉ gọi API khi cursor thay đổi (không phải lần đầu load)
@@ -239,7 +239,7 @@ function TimelinePost() {
         newFormData.append('project_id', formData.project_id)
         await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }))
         await store.dispatch(updateUpdatedArticle(formData))
-        await store.dispatch(postActivityUpdateArticle(id))
+        await postActivityUpdateArticle(id)
     }, [])
     //End Update Article
     //Delete Article
@@ -270,9 +270,9 @@ function TimelinePost() {
             await dispatch(handleBookmarkArticle({ data }))
             dispatch(updateBookmarks(data))
             if (data.marked === 'yes') {
-                await dispatch(postActivitySaveArticle(data.article_id))
+                await postActivitySaveArticle(data.article_id)
             } else if (data.marked === 'no') {
-                await dispatch(deleteActivitySaveArticle(data.article_id))
+                await deleteActivitySaveArticle(data.article_id)
             }
         },
         [dispatch]
@@ -352,7 +352,6 @@ function TimelinePost() {
                     }
                 })}
             </div>
-
         </div>
     )
 }

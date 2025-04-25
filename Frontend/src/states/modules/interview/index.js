@@ -7,7 +7,9 @@ const interviewSlice = createSlice({
         conversation: {},
         messages: [],
         hasJoined: false,
+        currentAction: 'speaking',
         isLoadingStartInterview: false,
+        isLoadingReplyInterview: false,
         isLoadingCloseInterview: false,
     },
     reducers: {
@@ -60,12 +62,40 @@ const interviewSlice = createSlice({
         }),
         replyInterviewSuccess: (state, action) => ({
             ...state,
-            messages: [...state.messages, action.payload.data.message],
+            messages: [
+                ...state.messages.map((msg) => {
+                    if (msg.key === action.payload.data.key) {
+                        return { ...msg, status: 'sent' }
+                    }
+                    return msg
+                }),
+
+                action.payload.data.message,
+            ],
             isLoadingReplyInterview: false,
         }),
         replyInterviewFail: (state) => ({
             ...state,
             isLoadingReplyInterview: false,
+        }),
+
+        setCurrentAction: (state, action) => ({
+            ...state,
+            currentAction: action.payload,
+        }),
+
+        startConvertSpeechToText: (state) => ({
+            ...state,
+            isLoadingConvertSpeechToText: true,
+        }),
+        convertSpeechToTextSuccess: (state, action) => ({
+            ...state,
+            isLoadingConvertSpeechToText: false,
+            speechToText: action.payload.data.transcription,
+        }),
+        convertSpeechToTextFail: (state) => ({
+            ...state,
+            isLoadingConvertSpeechToText: false,
         }),
     },
 })
@@ -82,6 +112,10 @@ export const {
     requestReplyInterview,
     replyInterviewSuccess,
     replyInterviewFail,
+    setCurrentAction,
+    startConvertSpeechToText,
+    convertSpeechToTextSuccess,
+    convertSpeechToTextFail,
 } = interviewSlice.actions
 
 export default interviewSlice.reducer
