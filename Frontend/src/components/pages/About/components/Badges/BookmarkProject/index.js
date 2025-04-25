@@ -8,6 +8,7 @@ import { accessToProject } from '../../../../../../api/activity';
 import { bookmarkProject, getUserProjectBookmarks } from 'api/project';
 import { updateBookmarks } from 'states/modules/project';
 import { IconlyBookmark } from '../../../../../UI/Iconly';
+import { Button } from 'antd';
 
 const BookmarkProject = () => {
     const dispatch = useDispatch()
@@ -55,8 +56,6 @@ const BookmarkProject = () => {
         );
     }, [projectsBySeek, bookmarks, projectBookmarks]);
 
-    // ========== STATE ========== //
-    const [imageError, setImageError] = useState(false);
 
     // ========== HANDLE FUNCTION ========== //
     const handleViewProjectDetails = useCallback(
@@ -78,71 +77,65 @@ const BookmarkProject = () => {
                 <div className="flex justify-center items-center h-40">
                     <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#2f65b9]"></div>
                 </div>
-            ) : (
-                <ul className='p-0'>
-                    {bookmarkedProjects.length > 0 ? (<>
-                        {bookmarkedProjects.map((project) => (
-                            <li
-                                key={project._id}
-                                onClick={() => handleViewProjectDetails(project)}
-                                className="overflow-hidden rounded-sm cursor-pointer group mt-4"
+            ) : bookmarkedProjects.length > 0 ? (
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {bookmarkedProjects.map((project) => (
+
+                        <div onClick={() => handleViewProjectDetails(project)} key={project._id} className="relative group 2xl:w-[356px] h-[23.5rem] bg-white rounded-md shadow-md overflow-hidden cursor-pointer">
+
+                            <div
+
+                                className="w-full h-[170px] overflow-hidden "
                             >
-                                <div className="bg-white flex items-center p-4 2xl:w-[70rem] w-full">
-                                    <div className="relative w-[16rem] h-[10rem] rounded-md overflow-hidden group">
-                                        {!imageError ? (
-                                            <Image
-                                                aspectRatio={16 / 9}
-                                                className="object-cover absolute w-[16rem] h-full !transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110"
-                                                src={project.background}
-                                                alt={project.name}
-                                                onError={() => setImageError(true)}
-                                            />
-                                        ) : (
-                                            <Image
-                                                aspectRatio={16 / 9}
-                                                src={OPENNEZT_BG_BLACK}
-                                                alt={project.name}
-                                            />
-                                        )}
+                                <Image
+                                    src={project.background || OPENNEZT_BG_BLACK}
+                                    alt={project.name}
+                                    className="w-full h-full object-cover transition-transform duration-500 transform origin-center ease-out group-hover:scale-110"
+                                    fallbackSrc={OPENNEZT_BG_BLACK}
+                                />
+                            </div>
+
+                            <div className="absolute bottom-0 left-0 right-0 p-4 bg-white transition-all duration-300 ease-in-out h-[calc(23.5rem-170px)] flex flex-col justify-between">
+                                <div>
+                                    <div className="flex items-center mb-1 justify-between">
+                                        <p className="bg-[#EAEFF8] p-1 rounded-sm text-[#737F92] text-xs md:text-[0.85rem] font-semibold">
+                                            {project.stage?.name || 'N/A'}
+                                        </p>
+                                        <p className="text-xs font-semibold md:text-sm">
+                                            By{' '}
+                                            <span className="font-semibold text-blue-600">
+                                                {project.user?.name || 'N/A'}
+                                            </span>
+                                        </p>
                                     </div>
+                                    <h5
 
-                                    <div className="flex flex-col justify-center ml-4">
-                                        <div className="flex">
-                                            <p className="bg-[#EAEFF8] p-1 rounded-sm text-[#737F92] text-xs md:text-[0.85rem] font-semibold mr-4">
-                                                {project.stage.name}
-                                            </p>
-                                            <p className="text-xs font-semibold md:text-sm">
-                                                By{' '}
-                                                <span className="font-semibold text-blue-600">
-                                                    {project.user.name}
-                                                </span>
-                                            </p>
-                                        </div>
-
-                                        <h5 className="text-base md:text-[0.95rem] font-semibold text-gray-900 mt-2 whitespace-normal break-words leading-[1.3rem]">
-                                            {project.name}
-                                        </h5>
-                                        <div className="flex items-center mt-3 text-xs text-gray-600 md:text-sm">
-                                            <p className="mr-4 text-xs text-nowrap">
-                                                📖 {project.articles?.length} Posts
-                                            </p>
-                                            <p className="text-xs text-nowrap">
-                                                👨‍🎓 {project.members.length} Members
-                                            </p>
-                                        </div>
+                                        className="text-sm font-semibold text-gray-900 mt-1 mb-2 leading-snug cursor-pointer hover:text-[#2f65b9] line-clamp-2"
+                                        title={project.name}
+                                    >
+                                        {project.name}
+                                    </h5>
+                                    <div className="flex items-center justify-between mt-3 text-xs text-gray-600 md:text-sm">
+                                        <p className="text-xs text-nowrap">
+                                            📖 {project.articles || 0} Posts
+                                        </p>
+                                        <p className="text-xs text-nowrap">
+                                            👨‍🎓 {project.members || 0} Members
+                                        </p>
                                     </div>
                                 </div>
-                            </li>
-                        ))}
-                    </>) : (<>
-                        <div className="bg-[#E3F1F6] pl-4 py-3 border-l-2 border-[#0098CB] w-full absolute ">
-                            <p className="relative top-[0.6rem] text-[#1599CC]">
-                                You have no saved projects.
-                            </p>
+                            </div>
                         </div>
-                    </>)}
+                    ))}
+                </div>
+            ) : (
 
-                </ul>
+                <div className="bg-[#E3F1F6] pl-4 py-3 border-l-2 border-[#0098CB] w-full absolute ">
+                    <p className="relative top-[0.6rem] text-[#1599CC]">
+                        You have no saved projects.
+                    </p>
+                </div>
             )}
         </>
     );
