@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { replyInterview } from 'api/interview'
+import formatMessage from 'utils/formatMessage'
+import { Spinner } from '@chakra-ui/react'
 
 const ChatConversation = () => {
     const [message, setMessage] = useState('')
@@ -9,6 +11,8 @@ const ChatConversation = () => {
 
     // STATE FROM REDUX STORE
     const { conversation, messages, hasJoined } = useSelector((state) => state.interview)
+
+    console.log('Messages:', messages)
 
     // Scroll to bottom when messages change
     useEffect(() => {
@@ -58,7 +62,8 @@ const ChatConversation = () => {
                                     : 'bg-blue-500 text-white'
                             }`}
                         >
-                            {msg.content}
+                            {formatMessage(msg.content)}
+                            {msg.status !== 'sent' && <Spinner size="sm" color="white.500" className="ml-2" />}
                         </div>
                     </div>
                 ))}

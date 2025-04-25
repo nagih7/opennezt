@@ -27,6 +27,7 @@ export const replyInterview = Joi.object({
                 })
         ),
     content: Joi.string().required().label('Answer'),
+    key: Joi.string().required().label('Key'),
 })
 
 export const closeInterview = Joi.object({

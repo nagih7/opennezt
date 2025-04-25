@@ -89,13 +89,15 @@ export async function startInterview(user, projectId) {
                 class: botMessageType.class,
                 name: botMessageType.name,
             },
+            status: 'sent',
         },
     }
 }
 
 // Trả lời câu hỏi phỏng vấn
 export async function replyInterview(user, requestBody) {
-    const { conversation_id, content } = requestBody
+    const { conversation_id, content, key } = requestBody
+    console.log('KEY', key)
 
     // Lấy thông tin cuộc hội thoại
     const conversation = await Conversation.findById(new ObjectId(conversation_id)).lean()
@@ -132,13 +134,18 @@ export async function replyInterview(user, requestBody) {
     await botMessage.save()
 
     return {
-        event: botResponse.event,
         message: {
             _id: botMessage._id,
             content: botMessage.content,
             attachments: `${LINK_STATIC_URL}${botMessage.attachments}`,
+            type: {
+                class: botMessageType.class,
+                name: botMessageType.name,
+            },
+            status: botMessage.status,
         },
         conversation_id: conversation._id,
+        key,
     }
 }
 
