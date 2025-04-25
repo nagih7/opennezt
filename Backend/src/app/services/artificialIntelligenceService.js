@@ -77,13 +77,19 @@ export async function startInterview(user, projectId) {
 
     // Trả về kết quả
     return {
-        event: interviewData.event,
+        conversation: {
+            _id: conversation._id,
+            data: conversation.data,
+        },
         message: {
             _id: message._id,
-            content: interviewData.answer,
+            content: message.content,
             attachments: `${LINK_STATIC_URL}${message.attachments}`,
+            type: {
+                class: botMessageType.class,
+                name: botMessageType.name,
+            },
         },
-        conversation_id: conversation._id,
     }
 }
 
