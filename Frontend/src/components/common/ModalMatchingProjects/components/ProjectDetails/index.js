@@ -9,6 +9,7 @@ import { toUpper } from 'lodash'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setOpenModalMatchingProjects } from 'states/modules/artificialIntelligence'
+import { setProjectInterview } from 'states/modules/interview'
 
 const ProjectDetails = ({ project }) => {
     const navigate = useNavigate()
@@ -27,6 +28,7 @@ const ProjectDetails = ({ project }) => {
     // ========== HANDLER ========== //
     const handleStartInterview = () => {
         dispatch(setOpenModalMatchingProjects(false))
+        dispatch(setProjectInterview(project))
         navigate(`/interview/${project?._id}`)
     }
 
