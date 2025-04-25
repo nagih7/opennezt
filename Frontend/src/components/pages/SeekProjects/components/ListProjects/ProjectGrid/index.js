@@ -27,8 +27,8 @@ const ProjectGrid = ({ project, handleViewProjectDetails }) => {
                             onError={() => setImageError(true)}
                         />
                     ) : (
-                        <div className="absolute flex items-center justify-center object-cover w-full px-8">
-                            <Image src={OPENNEZT_BG_BLACK} alt={project?.name} />
+                        <div className="absolute flex items-center justify-center object-cover w-full h-full">
+                            <Image src={OPENNEZT_BG_BLACK} alt={project?.name} className='w-full h-full object-cover' />
                         </div>
                     )}
                 </div>
