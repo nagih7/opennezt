@@ -297,7 +297,7 @@ export async function getTalentDetails(user, { id }) {
 
     const talent = await Profile.aggregate([matchStage, ...lookupStages, ...unwindStages, projectStage])
 
-    // Check if user has sent friend request
+
     const requestType = await Type.findOne({ class: NOTIFICATION_TYPE, name: FRIEND_REQUEST_NOTIFICATION })
 
     const friendRequest = await NotificationFeed.findOne({
@@ -322,12 +322,12 @@ export async function accessToTalent(user, { id }) {
         type_id: accessType._id,
     })
     if (oldActivity) {
-        // Update timestamp
+
         oldActivity.timestamp = new Date()
         oldActivity.metadata = { ...oldActivity.metadata, count: (oldActivity.metadata.count || 0) + 1 }
         await oldActivity.save()
     } else {
-        // Create new activity
+
         const activity = new ActivityLog({
             user_id: user._id,
             type_id: accessType._id,
@@ -381,50 +381,90 @@ export const getUserBookmarksStatus = async (user, target_ids) => {
 }
 
 export const getUserTalentBookmarks = async (user, requestQuery) => {
-    const { limit = 6, page } = requestQuery
+    const { limit = 6, page = 1 } = requestQuery
     const user_id = user._id.toString()
 
     const talentBookmarksLimit = parseInt(limit)
+    const pageNumber = parseInt(page)
+    const skip = (pageNumber - 1) * talentBookmarksLimit
 
-    const skip = (page - 1) * talentBookmarksLimit
+
 
     const bookmarks = await Bookmark.aggregate([
+
         {
             $match: {
                 user_id: new ObjectId(user_id),
                 target_type: 'talent',
+                marked: 'yes',
             },
         },
+
+        {
+            $lookup: {
+                from: 'profiles',
+                localField: 'target_id',
+                foreignField: '_id',
+                as: 'profileInfo'
+            }
+        },
+        {
+            $unwind: {
+                path: '$profileInfo',
+                preserveNullAndEmptyArrays: true
+            }
+        },
+
         {
             $lookup: {
                 from: 'users',
-                localField: 'target_id',
+                localField: 'profileInfo.user_id',
                 foreignField: '_id',
                 as: 'user',
                 pipeline: [
                     {
                         $project: {
-                            _id: 1,
-                            name: 1,
+                            _id: 1, name: 1,
                             avatar: {
                                 $cond: {
                                     if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
                                     then: '$avatar',
-                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
-                                },
-                            },
-                        },
-                    },
-                ],
-            },
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] }
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
         },
         {
-            $skip: skip,
+            $unwind: {
+                path: '$user',
+                preserveNullAndEmptyArrays: true
+            }
         },
+
         {
-            $limit: talentBookmarksLimit,
+            $match: {
+                'user': { $exists: true, $ne: null }
+            }
         },
+
+        { $skip: skip },
+        { $limit: talentBookmarksLimit },
+
+        {
+            $project: {
+                _id: '$profileInfo._id',
+                user: 1,
+                bookmark_id: '$_id',
+                marked: 1,
+                created_at: 1,
+                updated_at: 1
+            }
+        }
     ])
+
 
     return bookmarks
 }

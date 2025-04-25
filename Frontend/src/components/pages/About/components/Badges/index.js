@@ -2,8 +2,8 @@ import RightSidebar from "components/common/RightSidebar";
 import React from "react";
 import { Avatar, Tabs } from '@chakra-ui/react'
 import BookmarkedArticle from "./BookmarkArticle";
-import BookmarkProject from "./BookmarkProject";
 import BookmarkTalent from "./BookmarkTalent";
+import BookmarkProject from "./BookmarkProject";
 const Badges = () => {
 
 

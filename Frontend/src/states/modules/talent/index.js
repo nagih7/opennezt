@@ -33,6 +33,12 @@ const talentSlice = createSlice({
 
         bookmarks: [], // Danh sách các talent đã bookmark
         isLoadingBookmarkTalent: false,
+        // BOOKMARK STATUS
+        bookmarkStatus: {},
+        isLoadingGetBookmarkStatus: false,
+        // GET TALENT BOOKMARKS
+        talentBookmarks: [],
+        isLoadingGetTalentBookmarks: false,
     },
     reducers: {
         // ========== RECRUIT TALENTS ========== //
@@ -130,19 +136,59 @@ const talentSlice = createSlice({
             isLoadingReplyFriendRequest: false,
         }),
         // ========== HANDLE BOOKMARK TALENT ========== //
-        bookmarkTalent: (state) => ({
+        requestBookmarkTalent: (state) => ({
             ...state,
             isLoadingBookmarkTalent: true,
         }),
-        bookmarkTalentSuccess: (state, action) => ({
-            ...state,
-            isLoadingBookmarkTalent: false,
-            bookmarks: [...state.bookmarks, action.payload],
-        }),
+        bookmarkTalentSuccess: (state, action) => {
+            const { target_id, marked } = action.payload.data;
+            return {
+                ...state,
+                isLoadingBookmarkTalent: false,
+                bookmarks: marked === 'yes'
+                    ? [...state.bookmarks, { talent_id: target_id }]
+                    : state.bookmarks.filter(bookmark => bookmark.talent_id !== target_id)
+            };
+        },
         bookmarkTalentFail: (state) => ({
             ...state,
             isLoadingBookmarkTalent: false,
         }),
+
+        // ========== GET BOOKMARK STATUS ========== //
+        requestGetBookmarkStatus: (state) => ({
+            ...state,
+            isLoadingGetBookmarkStatus: true,
+        }),
+        getBookmarkStatusSuccess: (state, action) => ({
+            ...state,
+            isLoadingGetBookmarkStatus: false,
+            bookmarkStatus: {
+                ...state.bookmarkStatus,
+                [action.payload.data.target_id]: action.payload.data.marked
+            },
+        }),
+        getBookmarkStatusFail: (state) => ({
+            ...state,
+            isLoadingGetBookmarkStatus: false,
+        }),
+
+        // ========== GET TALENT BOOKMARKS ========== //
+        requestGetTalentBookmarks: (state) => ({
+            ...state,
+            isLoadingGetTalentBookmarks: true,
+        }),
+        getTalentBookmarksSuccess: (state, action) => ({
+            ...state,
+            isLoadingGetTalentBookmarks: false,
+            talentBookmarks: action.payload.data || [],
+        }),
+        getTalentBookmarksFail: (state) => ({
+            ...state,
+            isLoadingGetTalentBookmarks: false,
+            talentBookmarks: [],
+        }),
+
         updateTalentBookmarks: (state, action) => {
             if (action.payload.bookmarks) {
                 // Cập nhật toàn bộ danh sách bookmark
@@ -158,6 +204,7 @@ const talentSlice = createSlice({
                 }
             }
         },
+
 
     },
 })
@@ -181,10 +228,18 @@ export const {
     replyFriendRequestSuccess,
     replyFriendRequestFail,
     // ========== HANDLE BOOKMARK TALENT ========== //
-    bookmarkTalent,
+    requestBookmarkTalent,
     bookmarkTalentSuccess,
     bookmarkTalentFail,
     updateTalentBookmarks,
+    // ========== GET BOOKMARK STATUS ========== //
+    requestGetBookmarkStatus,
+    getBookmarkStatusSuccess,
+    getBookmarkStatusFail,
+    // ========== GET TALENT BOOKMARKS ========== //
+    requestGetTalentBookmarks,
+    getTalentBookmarksSuccess,
+    getTalentBookmarksFail,
 
 } = talentSlice.actions
 

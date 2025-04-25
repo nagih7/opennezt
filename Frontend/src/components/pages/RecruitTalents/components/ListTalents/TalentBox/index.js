@@ -1,16 +1,30 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { IconlyBookmark, IconlyHeart, IconlyShow } from 'components/UI/Iconly'
 import { Avatar, Button } from '@chakra-ui/react'
 import { useSelector, useDispatch } from "react-redux";
-import { bookmarkTalent, updateTalentBookmarks } from 'states/modules/talent';
-import { getTalentBookmarks } from 'api/talent';
+import { bookmarkTalents, updateTalentBookmarks } from 'states/modules/talent';
+import { bookmarkTalent, getUserBookmarksStatus, } from 'api/talent';
 const TalentBox = ({ talent, handleViewTalentDetails }) => {
-    // ========== STATE FROM REDUX STORE ========== //
-    const dispatch = useDispatch()
-    const { bookmarks } = useSelector((state) => state.talent)
+    const dispatch = useDispatch();
+    const { bookmarks, bookmarkStatus } = useSelector((state) => state.talent);
+    const currentBookmarkStatus = bookmarkStatus[talent._id];
     const isBookmarked = bookmarks.some(
         (bookmark) => bookmark.talent_id === talent._id
-    )
+    );
+    useEffect(() => {
+        if (talent && talent._id) {
+            dispatch(getUserBookmarksStatus(talent._id))
+                .then(response => {
+
+                })
+                .catch(error => {
+                    console.error('Error fetching bookmark status:', error);
+                });
+        }
+    }, [talent, dispatch]);
+    // ========== STATE FROM REDUX STORE ========== //
+
+
 
     const handleBookmark = () => {
         const data = {
@@ -18,22 +32,27 @@ const TalentBox = ({ talent, handleViewTalentDetails }) => {
             marked: isBookmarked ? 'no' : 'yes',
         };
 
-        // Cập nhật Redux store
-        dispatch(bookmarkTalent(data));
-        dispatch(updateTalentBookmarks(data));
+        dispatch(bookmarkTalent(data))
+            .then(response => {
 
-        // Lưu trạng thái bookmark vào localStorage
-        const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedTalents')) || [];
-        if (isBookmarked) {
-            // Xóa talent khỏi danh sách bookmark
-            const updatedBookmarks = storedBookmarks.filter((bookmark) => bookmark.talent_id !== talent._id);
-            localStorage.setItem('bookmarkedTalents', JSON.stringify(updatedBookmarks));
-        } else {
-            // Thêm talent vào danh sách bookmark
-            storedBookmarks.push({ talent_id: talent._id });
-            localStorage.setItem('bookmarkedTalents', JSON.stringify(storedBookmarks));
-        }
+
+
+                const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedTalents')) || [];
+                if (isBookmarked) {
+
+                    const updatedBookmarks = storedBookmarks.filter((bookmark) => bookmark.talent_id !== talent._id);
+                    localStorage.setItem('bookmarkedTalents', JSON.stringify(updatedBookmarks));
+                } else {
+
+                    storedBookmarks.push({ talent_id: talent._id });
+                    localStorage.setItem('bookmarkedTalents', JSON.stringify(storedBookmarks));
+                }
+            })
+            .catch(error => {
+                console.error('Error bookmarking talent:', error);
+            });
     };
+
     useEffect(() => {
         const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedTalents')) || [];
         dispatch(updateTalentBookmarks({ bookmarks: storedBookmarks }));
