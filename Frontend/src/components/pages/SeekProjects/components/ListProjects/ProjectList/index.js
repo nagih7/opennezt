@@ -22,7 +22,7 @@ const ProjectList = ({ project, handleViewProjectDetails }) => {
                             onError={() => setImageError(true)}
                         />
                     ) : (
-                        <Image aspectRatio={16 / 9} src={OPENNEZT_BG_BLACK} alt={project.name} className='w-full h-full object-cover' />
+                        <Image aspectRatio={16 / 9} src={OPENNEZT_BG_BLACK} alt={project.name} />
                     )}
                 </div>
 

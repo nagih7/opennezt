@@ -20,9 +20,11 @@ const BookmarkTalent = () => {
         setLoading(true);
         dispatch(getUserTalentBookmarks({}))
             .then(response => {
+                console.log('Talent Bookmarks Response:', response);
                 setLoading(false);
             })
             .catch(error => {
+                console.error('Error fetching talent bookmarks:', error);
                 setLoading(false);
             });
     }, [dispatch]);
@@ -56,7 +58,7 @@ const BookmarkTalent = () => {
 
         dispatch(bookmarkTalent(data))
             .then(response => {
-
+                console.log('Bookmark response:', response);
 
 
                 dispatch(updateTalentBookmarks(data));
@@ -77,7 +79,7 @@ const BookmarkTalent = () => {
                 dispatch(getUserTalentBookmarks({}));
             })
             .catch(error => {
-
+                console.error('Error bookmarking talent:', error);
             });
     };
 
