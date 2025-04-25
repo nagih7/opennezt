@@ -17,7 +17,7 @@ const interviewSlice = createSlice({
         startInterviewSuccess: (state, action) => ({
             ...state,
             conversation: action.payload.data.conversation,
-            messages: [...messages, action.payload.data.message],
+            messages: [action.payload.data.message],
             hasJoined: true,
             isLoadingStartInterview: false,
         }),
@@ -41,6 +41,12 @@ const interviewSlice = createSlice({
             ...state,
             isLoadingCloseInterview: false,
         }),
+
+        // Add new reducer for handling new message
+        addMessage: (state, action) => ({
+            ...state,
+            messages: [...state.messages, action.payload],
+        }),
     },
 })
 
@@ -51,6 +57,7 @@ export const {
     requestCloseInterview,
     closeInterviewSuccess,
     closeInterviewFail,
+    addMessage,
 } = interviewSlice.actions
 
 export default interviewSlice.reducer

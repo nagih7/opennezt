@@ -13,6 +13,18 @@ import {
     requestReplyFriendRequest,
     replyFriendRequestSuccess,
     replyFriendRequestFail,
+    // =========== BOOKMARK TALENT =========== //
+    requestBookmarkTalent,
+    bookmarkTalentSuccess,
+    bookmarkTalentFail,
+    // =========== GET BOOKMARK STATUS =========== //
+    requestGetBookmarkStatus,
+    getBookmarkStatusSuccess,
+    getBookmarkStatusFail,
+    // =========== GET TALENT BOOKMARKS =========== //
+    requestGetTalentBookmarks,
+    getTalentBookmarksSuccess,
+    getTalentBookmarksFail,
 } from '../../states/modules/talent'
 
 // ========== RECRUIT TALENTS ========== //
@@ -72,4 +84,39 @@ export const replyFriendRequest = (notificationId, action) => async (dispatch, g
         getState,
     })
 }
+// Gọi API để bookmark/unbookmark talent
+export const bookmarkTalent = (data) => async (dispatch, getState) => {
+    return callApi({
+        method: 'post',
+        apiPath: `talents/bookmark`,
+        actionTypes: [requestBookmarkTalent, bookmarkTalentSuccess, bookmarkTalentFail],
+        variables: data,
+        dispatch,
+        getState,
+    });
+};
 
+// Gọi API để lấy trạng thái bookmark của talent
+export const getUserBookmarksStatus = (target_ids) => async (dispatch, getState) => {
+    return callApi({
+        method: 'get',
+        apiPath: `talents/bookmarks-status/${target_ids}`,
+        actionTypes: [requestGetBookmarkStatus, getBookmarkStatusSuccess, getBookmarkStatusFail],
+        variables: {},
+        dispatch,
+        getState,
+    });
+};
+
+
+// Gọi API để lấy danh sách talent đã bookmark
+export const getUserTalentBookmarks = (data) => async (dispatch, getState) => {
+    return callApi({
+        method: 'get',
+        apiPath: `talents/bookmarks`,
+        actionTypes: [requestGetTalentBookmarks, getTalentBookmarksSuccess, getTalentBookmarksFail],
+        variables: data,
+        dispatch,
+        getState,
+    });
+};

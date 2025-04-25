@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { handleBookmarkProject, updateBookmarks } from 'states/modules/project';
+import { bookmarkProject } from 'api/project';
 const BannerActive = () => {
 	// ========== STATE FROM REDUX STORE ========== //
 	const dispatch = useDispatch();
@@ -16,28 +17,45 @@ const BannerActive = () => {
 	const isBookmarked = bookmarks.some(
 		(bookmark) => bookmark.project_id === projectDetails?._id
 	);
+
 	const handleBookmark = () => {
+
+		if (!projectDetails?._id) {
+			console.error("Project details or ID is missing.");
+			return;
+		}
+
 		const data = {
-			project_id: projectDetails?._id,
+			project_id: projectDetails._id,
 			marked: isBookmarked ? 'no' : 'yes',
 		};
 
-		// Cập nhật Redux store
-		dispatch(handleBookmarkProject(data));
-		dispatch(updateBookmarks(data));
 
-		// Lưu trạng thái bookmark vào localStorage
-		const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedProjects')) || [];
-		if (isBookmarked) {
-			// Xóa project khỏi danh sách bookmark
-			const updatedBookmarks = storedBookmarks.filter((bookmark) => bookmark.project_id !== projectDetails?._id);
-			localStorage.setItem('bookmarkedProjects', JSON.stringify(updatedBookmarks));
-		} else {
-			// Thêm project vào danh sách bookmark
-			storedBookmarks.push({ project_id: projectDetails?._id });
-			localStorage.setItem('bookmarkedProjects', JSON.stringify(storedBookmarks));
-		}
+		dispatch(bookmarkProject(data))
+			.then(response => {
+				console.log('Bookmark project response:', response);
+
+
+				dispatch(updateBookmarks(data));
+
+
+				const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedProjects')) || [];
+				if (isBookmarked) {
+
+					const updatedBookmarks = storedBookmarks.filter((bookmark) => bookmark.project_id !== projectDetails._id);
+					localStorage.setItem('bookmarkedProjects', JSON.stringify(updatedBookmarks));
+				} else {
+
+					storedBookmarks.push({ project_id: projectDetails._id });
+					localStorage.setItem('bookmarkedProjects', JSON.stringify(storedBookmarks));
+				}
+			})
+			.catch(error => {
+				console.error('Error bookmarking project:', error);
+
+			});
 	};
+
 	useEffect(() => {
 		const storedBookmarks = JSON.parse(localStorage.getItem('bookmarkedProjects')) || [];
 		dispatch(updateBookmarks({ bookmarks: storedBookmarks }));

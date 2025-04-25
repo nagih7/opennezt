@@ -1964,60 +1964,149 @@ export const getUserBookmarksStatus = async (user, target_ids) => {
     return bookMarks
 }
 
+
+
 export const getUserProjectBookmarks = async (user, requestQuery) => {
-    const { limit = 6, page } = requestQuery
+
+    const { limit = 6, page = 1 } = requestQuery
     const user_id = user._id
 
     const bookmarkLimit = parseInt(limit)
-    const skip = (page - 1) * bookmarkLimit
 
-    const bookmarks = await Bookmark.aggregate([
-        {
-            $match: {
-                user_id: user_id,
-                target_type: 'project',
+    const pageNumber = parseInt(page)
+
+    const skip = (pageNumber - 1) * bookmarkLimit
+
+
+    try {
+        const bookmarks = await Bookmark.aggregate([
+            {
+                $match: {
+                    user_id: user_id,
+                    target_type: 'project',
+                    marked: 'yes',
+                },
             },
-        },
-        {
-            $lookup: {
-                from: 'projects',
-                localField: 'target_id',
-                foreignField: '_id',
-                as: 'project',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 1,
-                            name: 1,
-                            logo: {
-                                $cond: {
-                                    if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
-                                    then: '$logo',
-                                    else: { $concat: [LINK_STATIC_URL, '$logo'] },
+            {
+                $lookup: {
+                    from: 'projects',
+                    localField: 'target_id',
+                    foreignField: '_id',
+                    as: 'projectInfo',
+                    pipeline: [
+
+                        {
+                            $lookup: {
+                                from: 'users',
+                                localField: 'user_id',
+                                foreignField: '_id',
+                                as: 'user',
+                                pipeline: [
+                                    { $project: { _id: 1, name: 1, avatar: 1 } }
+                                ]
+                            }
+                        },
+                        {
+                            $unwind: { path: '$user', preserveNullAndEmptyArrays: true }
+                        },
+
+                        {
+                            $lookup: {
+                                from: 'stages',
+                                localField: 'stage_id',
+                                foreignField: '_id',
+                                as: 'stage',
+                                pipeline: [
+                                    { $project: { _id: 1, name: 1 } }
+                                ]
+                            }
+                        },
+                        {
+                            $unwind: { path: '$stage', preserveNullAndEmptyArrays: true }
+                        },
+
+                        {
+                            $lookup: {
+                                from: 'articles',
+                                localField: '_id',
+                                foreignField: 'project_id',
+                                as: 'articles'
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: 'project_members',
+                                localField: '_id',
+                                foreignField: 'project_id',
+                                as: 'members'
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1,
+                                name: 1,
+                                user: 1,
+                                stage: 1,
+                                articles: { $size: '$articles' },
+                                members: { $size: '$members' },
+                                logo: {
+                                    $cond: {
+                                        if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
+                                        then: '$logo',
+                                        else: { $concat: [LINK_STATIC_URL, '$logo'] },
+                                    },
                                 },
-                            },
-                            background: {
-                                $cond: {
-                                    if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
-                                    then: '$background',
-                                    else: { $concat: [LINK_STATIC_URL, '$background'] },
+                                background: {
+                                    $cond: {
+                                        if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
+                                        then: '$background',
+                                        else: { $concat: [LINK_STATIC_URL, '$background'] },
+                                    },
                                 },
+
                             },
                         },
-                    },
-                ],
+                    ],
+                },
             },
-        },
-        {
-            $skip: skip,
-        },
-        {
-            $limit: bookmarkLimit,
-        },
-    ])
+            {
 
-    return bookmarks
+                $unwind: {
+                    path: '$projectInfo',
+                    preserveNullAndEmptyArrays: false
+                }
+            },
+
+            { $sort: { updated_at: -1 } },
+            { $skip: skip },
+            { $limit: bookmarkLimit },
+            {
+
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            '$projectInfo',
+                            { bookmark_id: '$_id', marked: '$marked', bookmarked_at: '$updated_at' }
+                        ]
+                    }
+                }
+            }
+
+        ])
+
+
+        console.log('User Project Bookmarks Result:', JSON.stringify(bookmarks, null, 2))
+        return bookmarks
+
+    } catch (error) {
+
+        console.error('Error fetching user project bookmarks:', error)
+
+        throw error
+    }
 }
+
+
 
 // LẤY CHI TIẾT THÔNG TIN DỰ ÁN BẰNG ID
 export async function getMatchingProjectDetails(projectId) {
@@ -2251,3 +2340,4 @@ export async function getMatchingProjectDetails(projectId) {
 
     return project[0] || null
 }
+

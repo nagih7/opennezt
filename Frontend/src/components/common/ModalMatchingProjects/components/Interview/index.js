@@ -7,6 +7,8 @@ import InterviewControls from './components/InterviewControls'
 import InterviewJoinSection from './components/InterviewJoinSection'
 import InterviewHeader from './components/InterviewHeader'
 import InterviewNavigation from './components/InterviewNavigation'
+import ChatConversation from './components/ChatConversation'
+import { useSelector } from 'react-redux'
 
 const Interview = () => {
     // STATE
@@ -33,6 +35,9 @@ const Interview = () => {
     const [selectedAudioInput, setSelectedAudioInput] = useState(null)
     const [selectedAudioOutput, setSelectedAudioOutput] = useState(null)
     const [selectedVideo, setSelectedVideo] = useState(null)
+
+    // Get interview state from Redux
+    const { hasJoined } = useSelector((state) => state.interview)
 
     // Check browser capabilities on mount
     useEffect(() => {
@@ -265,7 +270,7 @@ const Interview = () => {
     }
 
     return (
-        <div className="p-[16px] w-full h-screen bg-[#ffffff]">
+        <div className="p-[16px] w-full h-screen bg-[#ffffff] overflow-y-auto">
             <InterviewNavigation />
             <div className="mt-4 2xl:mt-10">
                 <div className="flex w-full h-full">
@@ -292,7 +297,8 @@ const Interview = () => {
                                 />
                             </div>
 
-                            <InterviewJoinSection handleTechnicalIssues={handleTechnicalIssues} />
+                            {!hasJoined && <InterviewJoinSection handleTechnicalIssues={handleTechnicalIssues} />}
+                            {hasJoined && <ChatConversation />}
                         </div>
                     </div>
                     <div className="w-1/12"></div>

@@ -64,7 +64,7 @@ const projectSlice = createSlice({
             totalRecord: 0,
         },
         projects: [],
-        bookmarks: [], // Danh sách các project đã bookmark
+        bookmarks: [], // Danh sách project đã bookmark
         isLoadingBookmarkProject: false,
         // ========== APPLY TO JOIN PROJECT ========== //
         isLoadingApplyToJoinProject: false,
@@ -457,44 +457,59 @@ const projectSlice = createSlice({
             isOpenModalInviteMember: action.payload,
         }),
         // ========== HANDLE BOOKMARK PROJECT ========== //
-        handleBookmarkProject: (state, action) => {
-            const { project_id, marked } = action.payload;
-
-            if (marked === 'yes') {
-                // Thêm dự án vào danh sách bookmark
-                state.bookmarks.push({ project_id });
-                toaster.create({
-                    title: 'Project bookmarked successfully',
-                    type: 'success',
-                });
-            } else {
-                // Xóa dự án khỏi danh sách bookmark
-                state.bookmarks = state.bookmarks.filter(
-                    (bookmark) => bookmark.project_id !== project_id
-                );
-                toaster.create({
-                    title: 'Project unbookmarked successfully',
-                    type: 'success',
-                });
-            }
+        requestBookmarkProject: (state) => ({
+            ...state,
+            isLoadingBookmarkProject: true,
+        }),
+        bookmarkProjectSuccess: (state, action) => {
+            // Có thể không cần làm gì ở đây nếu updateBookmarks xử lý
+            return {
+                ...state,
+                isLoadingBookmarkProject: false,
+            };
         },
+        bookmarkProjectFail: (state) => ({
+            ...state,
+            isLoadingBookmarkProject: false,
+        }),
 
-        // ========== UPDATE BOOKMARKS ========== //
+        // Cập nhật danh sách bookmarks (từ localStorage hoặc sau khi API call)
         updateBookmarks: (state, action) => {
             if (action.payload.bookmarks) {
-
+                // Cập nhật toàn bộ danh sách bookmark từ localStorage
                 state.bookmarks = action.payload.bookmarks;
             } else {
+                // Cập nhật một bookmark cụ thể sau khi API call
                 const { project_id, marked } = action.payload;
                 if (marked === 'yes') {
-                    state.bookmarks.push({ project_id });
+                    // Thêm nếu chưa có
+                    if (!state.bookmarks.some(b => b.project_id === project_id)) {
+                        state.bookmarks.push({ project_id });
+                    }
                 } else {
+                    // Xóa nếu có
                     state.bookmarks = state.bookmarks.filter(
                         (bookmark) => bookmark.project_id !== project_id
                     );
                 }
             }
         },
+        // ========== GET USER PROJECT BOOKMARKS ========== //
+        requestGetUserProjectBookmarks: (state) => ({
+            ...state,
+            isLoadingGetProjectBookmarks: true,
+        }),
+        getUserProjectBookmarksSuccess: (state, action) => ({
+            ...state,
+            isLoadingGetProjectBookmarks: false,
+            // Lưu dữ liệu project bookmarks từ API vào state
+            projectBookmarks: action.payload.data || [],
+        }),
+        getUserProjectBookmarksFail: (state) => ({
+            ...state,
+            isLoadingGetProjectBookmarks: false,
+            projectBookmarks: [], // Reset nếu lỗi
+        }),
     },
 })
 
@@ -562,8 +577,13 @@ export const {
     inviteMemberFail,
     setModalInviteMember,
     // ========== HANDLE BOOKMARK PROJECT ========== //
-    handleBookmarkProject,
+    requestBookmarkProject,
+    bookmarkProjectSuccess,
+    bookmarkProjectFail,
     updateBookmarks,
+    requestGetUserProjectBookmarks,
+    getUserProjectBookmarksSuccess,
+    getUserProjectBookmarksFail,
 } = projectSlice.actions
 
 export default projectSlice.reducer
