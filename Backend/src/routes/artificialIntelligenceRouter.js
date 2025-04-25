@@ -26,4 +26,11 @@ openAIRouter.post(
     asyncHandler(aiController.replyInterview)
 )
 
+// KẾT THÚC CUỘC PHỎNG VẤN
+openAIRouter.post(
+    '/interview/close',
+    asyncHandler(validate(aiRequest.closeInterview)),
+    asyncHandler(aiController.closeInterview)
+)
+
 export default openAIRouter

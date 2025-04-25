@@ -34,6 +34,7 @@ import Shop from 'components/pages/AccountSettings/components/Shop'
 import BlockList from 'components/pages/AccountSettings/components/BlockList'
 import ExportData from 'components/pages/AccountSettings/components/ExportData'
 import MessageSidebar from 'components/pages/Message/components/MessageSidebar'
+import Interview from 'components/common/ModalMatchingProjects/components/Interview'
 
 // const AuthPage = React.lazy(() => import("../components/pages/Auth"));
 const Login = React.lazy(() => import('../components/pages/Auth/Login'))
@@ -59,6 +60,7 @@ const SeekProjects = React.lazy(() => import('../components/pages/SeekProjects')
 const ProjectDetailsBySeek = React.lazy(() => import('../components/pages/ProjectDetailsBySeek'))
 const VerifyAuth = React.lazy(() => import('../components/pages/Auth/Verify'))
 const ResetPassword = React.lazy(() => import('../components/pages/Auth/ResetPassword'))
+const ArticleManage = React.lazy(() => import('../components/pages/Manage/components/ArticleManage'))
 // ========== EDIT PROFILE COMPONENTS ========== //
 const ProfessionalBackground = React.lazy(() =>
     import('../components/pages/EditProfile/components/ProfessionalBackground')
@@ -192,6 +194,14 @@ const router = createBrowserRouter([
         element: (
             <AppLayout>
                 <OrganizationManage />
+            </AppLayout>
+        ),
+    },
+    {
+        path: 'admin/manage/articles',
+        element: (
+            <AppLayout>
+                <ArticleManage />
             </AppLayout>
         ),
     },
@@ -600,6 +610,11 @@ const router = createBrowserRouter([
             </AppLayout>
         ),
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_MESSAGES_SIDEBAR_PAGE'),
+    },
+    {
+        path: '/interview/:projectId',
+        element: <Interview />,
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_INTERVIEW_PAGE'),
     },
 ])
 

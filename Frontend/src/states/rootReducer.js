@@ -13,6 +13,7 @@ import artificialIntelligenceReducer from './modules/artificialIntelligence'
 import articleReducer from './modules/article'
 import activityReducer from './modules/activity'
 import linkPreviewReducer from './modules/linkPreview'
+import interviewReducer from './modules/interview'
 
 const rootReducer = {
     app: appReducer,
@@ -30,6 +31,7 @@ const rootReducer = {
     artificialIntelligence: artificialIntelligenceReducer,
     activity: activityReducer,
     linkPreview: linkPreviewReducer,
+    interview: interviewReducer,
 }
 
 export default rootReducer

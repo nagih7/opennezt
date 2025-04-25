@@ -2106,3 +2106,238 @@ export const getUserProjectBookmarks = async (user, requestQuery) => {
     }
 }
 
+
+
+// LẤY CHI TIẾT THÔNG TIN DỰ ÁN BẰNG ID
+export async function getMatchingProjectDetails(projectId) {
+    const project = await Project.aggregate([
+        {
+            $match: {
+                _id: new ObjectId(projectId),
+            },
+        },
+        {
+            $lookup: {
+                from: 'industries',
+                localField: 'industry_ids',
+                foreignField: '_id',
+                as: 'industries',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                            email: 1,
+                            phone: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'stages',
+                localField: 'stage_id',
+                foreignField: '_id',
+                as: 'stage',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$stage',
+        },
+        {
+            $lookup: {
+                from: 'project_additional_infos',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'additional_infos',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                            content: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'project_requirements',
+                localField: '_id',
+                foreignField: 'project_id',
+                as: 'project_requirement',
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: 'roles',
+                            localField: 'team_role_ids',
+                            foreignField: '_id',
+                            as: 'team_roles',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        _id: 0,
+                                        name: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'roles',
+                            localField: 'role_ids',
+                            foreignField: '_id',
+                            as: 'roles',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        _id: 0,
+                                        name: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'industries',
+                            localField: 'industry_ids',
+                            foreignField: '_id',
+                            as: 'industries',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        _id: 0,
+                                        name: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'experience_levels',
+                            localField: 'experience_level_ids',
+                            foreignField: '_id',
+                            as: 'experience_levels',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        _id: 0,
+                                        name: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'skills',
+                            localField: 'skill_ids',
+                            foreignField: '_id',
+                            as: 'skills',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        _id: 0,
+                                        name: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $addFields: {
+                            team_roles: {
+                                $map: {
+                                    input: '$team_roles',
+                                    as: 'team_role',
+                                    in: '$$team_role.name',
+                                },
+                            },
+                            roles: {
+                                $map: {
+                                    input: '$roles',
+                                    as: 'role',
+                                    in: '$$role.name',
+                                },
+                            },
+                            industries: {
+                                $map: {
+                                    input: '$industries',
+                                    as: 'industry',
+                                    in: '$$industry.name',
+                                },
+                            },
+                            experience_levels: {
+                                $map: {
+                                    input: '$experience_levels',
+                                    as: 'experience_level',
+                                    in: '$$experience_level.name',
+                                },
+                            },
+                            skills: {
+                                $map: {
+                                    input: '$skills',
+                                    as: 'skill',
+                                    in: '$$skill.name',
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            project_id: 0,
+                            role_ids: 0,
+                            team_role_ids: 0,
+                            industry_ids: 0,
+                            experience_level_ids: 0,
+                            skill_ids: 0,
+                            created_at: 0,
+                            updated_at: 0,
+                        },
+                    },
+                ],
+            },
+        },
+
+        {
+            $addFields: {
+                industries: {
+                    $map: {
+                        input: '$industries',
+                        as: 'industry',
+                        in: '$$industry.name',
+                    },
+                },
+                stage: '$stage.name',
+            },
+        },
+        {
+            $project: {
+                user_id: 0,
+                industry_ids: 0,
+                stage_id: 0,
+                logo: 0,
+                background: 0,
+                created_at: 0,
+                updated_at: 0,
+            },
+        },
+    ])
+
+    return project[0] || null
+}
+

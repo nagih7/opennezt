@@ -146,3 +146,8 @@ export const deleteActivityReactionArticle = async (req, res) => {
     const result = await articleService.deleteActivityReactionArticle(req.currentUser, req.params.id)
     return res.json(result)
 }
+
+export const getManageArticleList = async (req, res) => {
+    const result = await articleService.getManageArticleList(req.currentUser, req.query)
+    return res.jsonify(result)
+}

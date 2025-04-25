@@ -10,6 +10,182 @@ import {
     Friend,
 } from '@/models'
 
+// LẤY CHI TIẾT THÔNG TIN CÁ NHÂN
+export async function getProfileDetail(userId) {
+    const profile = await Profile.aggregate([
+        {
+            $match: {
+                user_id: userId,
+            },
+        },
+        {
+            $lookup: {
+                from: 'industries',
+                localField: 'industry_ids',
+                foreignField: '_id',
+                as: 'industries',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'experience_levels',
+                localField: 'experience_level_id',
+                foreignField: '_id',
+                as: 'experience_level',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$experience_level',
+        },
+        {
+            $lookup: {
+                from: 'skills',
+                localField: 'skill_ids',
+                foreignField: '_id',
+                as: 'skills',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'profile_additional_infos',
+                localField: '_id',
+                foreignField: 'profile_id',
+                as: 'additional_infos',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                            content: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'educations',
+                localField: '_id',
+                foreignField: 'profile_id',
+                as: 'educations',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            school: 1,
+                            degree: 1,
+                            field_of_study: 1,
+                            start_date: 1,
+                            end_date: 1,
+                            grade: 1,
+                            activities: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: 'certifications',
+                localField: '_id',
+                foreignField: 'profile_id',
+                as: 'certifications',
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: 'organizations',
+                            localField: 'organization_id',
+                            foreignField: '_id',
+                            as: 'organization',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        _id: 0,
+                                        name: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $unwind: '$organization',
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            organization: '$organization.name',
+                            name: 1,
+                            description: 1,
+                            issue_date: 1,
+                            expiration_date: 1,
+                            is_lifetime: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                industries: {
+                    $map: {
+                        input: '$industries',
+                        as: 'industry',
+                        in: '$$industry.name',
+                    },
+                },
+                experience_level: '$experience_level.name',
+                skills: {
+                    $map: {
+                        input: '$skills',
+                        as: 'skill',
+                        in: '$$skill.name',
+                    },
+                },
+            },
+        },
+        {
+            $project: {
+                _id: 0,
+                user_id: 0,
+                name: 0,
+                industry_ids: 0,
+                experience_level_id: 0,
+                category_ids: 0,
+                skill_ids: 0,
+                education_ids: 0,
+                certification_ids: 0,
+                created_at: 0,
+                updated_at: 0,
+            },
+        },
+    ])
+    return profile[0] || {}
+}
+
 // ========== GET [Profile] ========== //
 export async function getProfile(user) {
     const accessType = await Type.findOne({ class: ACCESS_TYPE, name: PROFILE_ACCESS })
@@ -101,41 +277,6 @@ export async function getProfile(user) {
             localField: 'user_id',
             foreignField: 'user_id',
             as: 'articles',
-            pipeline: [
-                // {
-                //     $lookup: {
-                //         from: 'projects',
-                //         localField: 'project_id',
-                //         foreignField: '_id',
-                //         as: 'project',
-                //     },
-                // },
-                // {
-                //     $unwind: { path: '$project', preserveNullAndEmptyArrays: true },
-                // },
-                // {
-                //     $lookup: {
-                //         from: 'users',
-                //         localField: 'user_id',
-                //         foreignField: '_id',
-                //         as: 'user',
-                //     },
-                // },
-                // {
-                //     $unwind: { path: '$user', preserveNullAndEmptyArrays: true },
-                // },
-                // {
-                //     $addFields: {
-                //         'user.avatar': {
-                //             $cond: {
-                //                 if: { $eq: [{ $ifNull: ['$user.avatar', ''] }, ''] },
-                //                 then: '$user.avatar',
-                //                 else: { $concat: [LINK_STATIC_URL, '$user.avatar'] },
-                //             },
-                //         },
-                //     },
-                // },
-            ],
         },
     }
     const lookupActivity = {
