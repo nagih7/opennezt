@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { IconlyMoreCircle } from 'components/UI/Iconly'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createSyncedAudioVideo } from 'utils/audio/audioHandler'
 import { OPENNEZT_INTERVIEW_LISTEN, OPENNEZT_INTERVIEW_SPEAK } from 'utils/constants'
+import { setCurrentAction } from 'states/modules/interview'
 
 const VideoPreview = ({ videoRef }) => {
+    const dispatch = useDispatch()
     // STATE FROM REDUX STORE
     const { hasJoined, messages } = useSelector((state) => state.interview)
     const [isFirstMessageReceived, setIsFirstMessageReceived] = useState(false)
@@ -14,15 +16,15 @@ const VideoPreview = ({ videoRef }) => {
 
     const interviewVideoRef = useRef(null)
     const syncControllerRef = useRef(null)
-    const secondaryVideoRef = useRef(null)
+    // const secondaryVideoRef = useRef(null)
 
     // Handle switch to listening mode
     const switchToListenMode = useCallback(() => {
-        console.log('Switching to listen mode')
         // Start fade transition instead of direct swap
         setNextVideo(OPENNEZT_INTERVIEW_LISTEN)
+        dispatch(setCurrentAction('listening'))
         setFadeState('fading')
-    }, [])
+    }, [dispatch])
 
     // Handle fade transition
     useEffect(() => {
@@ -65,6 +67,7 @@ const VideoPreview = ({ videoRef }) => {
             if (messageToPlay && messageToPlay.attachments) {
                 // Set state to show speaking video and mark first message as received if needed
                 setCurrentVideo(OPENNEZT_INTERVIEW_SPEAK)
+                dispatch(setCurrentAction('speaking'))
 
                 if (!isFirstMessageReceived) {
                     setIsFirstMessageReceived(true)
@@ -99,7 +102,7 @@ const VideoPreview = ({ videoRef }) => {
                 }, 100) // Small delay to ensure video element is ready
             }
         }
-    }, [hasJoined, messages, isFirstMessageReceived, switchToListenMode, cleanupSyncController])
+    }, [hasJoined, messages, isFirstMessageReceived, switchToListenMode, cleanupSyncController, dispatch])
 
     // Handle video ended event
     const handleVideoEnded = () => {

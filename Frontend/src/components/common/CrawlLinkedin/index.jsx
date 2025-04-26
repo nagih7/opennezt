@@ -45,6 +45,11 @@ const CrawlLinkedin = ({ status, setStatus }) => {
         }
     }
 
+    const handleSkip = () => {
+        dispatch(matchingProjects())
+        setStatus(false)
+    }
+
     return (
         <Dialog.Root size="full" motionPreset="slide-in-bottom" lazyMount open={status}>
             <Portal>
@@ -112,15 +117,15 @@ const CrawlLinkedin = ({ status, setStatus }) => {
                                     {/* <button className="bg-[#2f65b9] text-white px-8 py-2 rounded-md font-semibold">
                                         Enter Your Profile Manually
                                     </button> */}
-                                    <button className="bg-[#2f65b9] text-white px-8 py-2 rounded-md font-semibold">
+                                    <button
+                                        className="bg-[#2f65b9] text-white px-8 py-2 rounded-md font-semibold"
+                                        onClick={handleSkip}
+                                    >
                                         Skip for Now
                                     </button>
                                 </div>
                             </div>
                         </Dialog.Body>
-                        {/* <Dialog.CloseTrigger asChild>
-                            <CloseButton size="sm" />
-                        </Dialog.CloseTrigger> */}
                     </Dialog.Content>
                 </Dialog.Positioner>
             </Portal>

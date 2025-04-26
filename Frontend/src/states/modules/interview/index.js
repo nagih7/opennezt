@@ -7,7 +7,9 @@ const interviewSlice = createSlice({
         conversation: {},
         messages: [],
         hasJoined: false,
+        currentAction: 'speaking',
         isLoadingStartInterview: false,
+        isLoadingReplyInterview: false,
         isLoadingCloseInterview: false,
     },
     reducers: {
@@ -76,6 +78,11 @@ const interviewSlice = createSlice({
             ...state,
             isLoadingReplyInterview: false,
         }),
+
+        setCurrentAction: (state, action) => ({
+            ...state,
+            currentAction: action.payload,
+        }),
     },
 })
 
@@ -91,6 +98,7 @@ export const {
     requestReplyInterview,
     replyInterviewSuccess,
     replyInterviewFail,
+    setCurrentAction,
 } = interviewSlice.actions
 
 export default interviewSlice.reducer
