@@ -7,6 +7,9 @@ import {
     requestReplyInterview,
     replyInterviewSuccess,
     replyInterviewFail,
+    startConvertSpeechToText,
+    convertSpeechToTextSuccess,
+    convertSpeechToTextFail,
 } from 'states/modules/interview'
 
 export const startInterview = (projectId) => async (dispatch, getState) => {
@@ -21,7 +24,6 @@ export const startInterview = (projectId) => async (dispatch, getState) => {
 }
 
 export const replyInterview = (requestData) => async (dispatch, getState) => {
-    console.log('requestData', requestData)
     const message = {
         ...requestData,
         key: `temp-${Date.now()}`,
@@ -54,6 +56,21 @@ export const replyInterview = (requestData) => async (dispatch, getState) => {
         apiPath: `ai/interview/reply`,
         actionTypes: [requestReplyInterview, replyInterviewSuccess, replyInterviewFail],
         variables: message,
+        dispatch,
+        getState,
+    })
+}
+
+export const convertSpeechToText = (audio) => async (dispatch, getState) => {
+    // Create a FormData object to send the audio file
+    const formData = new FormData()
+    formData.append('audio', audio)
+
+    return callApi({
+        method: 'post',
+        apiPath: `ai/interview/speech-to-text`,
+        actionTypes: [startConvertSpeechToText, convertSpeechToTextSuccess, convertSpeechToTextFail],
+        variables: formData,
         dispatch,
         getState,
     })

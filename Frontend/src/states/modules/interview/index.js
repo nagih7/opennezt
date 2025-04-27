@@ -83,6 +83,20 @@ const interviewSlice = createSlice({
             ...state,
             currentAction: action.payload,
         }),
+
+        startConvertSpeechToText: (state) => ({
+            ...state,
+            isLoadingConvertSpeechToText: true,
+        }),
+        convertSpeechToTextSuccess: (state, action) => ({
+            ...state,
+            isLoadingConvertSpeechToText: false,
+            speechToText: action.payload.data.transcription,
+        }),
+        convertSpeechToTextFail: (state) => ({
+            ...state,
+            isLoadingConvertSpeechToText: false,
+        }),
     },
 })
 
@@ -99,6 +113,9 @@ export const {
     replyInterviewSuccess,
     replyInterviewFail,
     setCurrentAction,
+    startConvertSpeechToText,
+    convertSpeechToTextSuccess,
+    convertSpeechToTextFail,
 } = interviewSlice.actions
 
 export default interviewSlice.reducer

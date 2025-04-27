@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 
 const InterviewHeader = () => {
     const { project } = useSelector((state) => state.interview)
-    console.log('Project:', project)
     return (
         <div className="flex flex-col gap-3">
             <div className="flex items-center gap-1 text-[#6f7f92] font-semibold">

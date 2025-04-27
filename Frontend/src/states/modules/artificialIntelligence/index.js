@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { message } from 'antd'
 import { toaster } from 'components/UI/toaster'
 
 const artificialIntelligenceSlice = createSlice({
@@ -14,6 +13,7 @@ const artificialIntelligenceSlice = createSlice({
         talents: [],
         openModalMatchingTalents: false,
         loadingMatchingTalents: false,
+        isLoadingConvertSpeechToText: false,
     },
     reducers: {
         setOpenModalMatchingProjects: (state, action) => ({
@@ -65,62 +65,10 @@ const artificialIntelligenceSlice = createSlice({
                 isLoadingMatchingProjects: false,
             }
         },
-        startRequestMatchingTalents: (state) => ({
-            ...state,
-            loadingMatchingTalents: true,
-        }),
-        startRequestMatchingTalentsSuccess: (state, action) => {
-            if (action.payload.data.length === 0) {
-                message.error({
-                    content: 'No matching talents found',
-                    duration: 10,
-                })
-                return {
-                    ...state,
-                    talents: [],
-                    loadingMatchingTalents: false,
-                }
-            } else {
-                message.success({
-                    content: 'Matching talents with AI successfully',
-                    duration: 10,
-                })
-                return {
-                    ...state,
-                    talents: action.payload.data,
-                    loadingMatchingTalents: false,
-                    openModalMatchingTalents: true,
-                }
-            }
-        },
-        startRequestMatchingTalentsFail: (state) => {
-            message.destroy('matchingTalents')
-            message.error({
-                content: 'Matching talents with AI failed',
-                duration: 5,
-            })
-            return {
-                ...state,
-                talents: [],
-                loadingMatchingTalents: false,
-            }
-        },
-        setOpenModalMatchingTalents: (state, action) => ({
-            ...state,
-            openModalMatchingTalents: action.payload,
-        }),
     },
 })
 
-export const {
-    requestMatchingProjects,
-    matchingProjectsSuccess,
-    matchingProjectsFail,
-    setOpenModalMatchingProjects,
-    startRequestMatchingTalents,
-    startRequestMatchingTalentsSuccess,
-    startRequestMatchingTalentsFail,
-    setOpenModalMatchingTalents,
-} = artificialIntelligenceSlice.actions
+export const { requestMatchingProjects, matchingProjectsSuccess, matchingProjectsFail, setOpenModalMatchingProjects } =
+    artificialIntelligenceSlice.actions
 
 export default artificialIntelligenceSlice.reducer

@@ -6,14 +6,17 @@ import {
     AI_INTERVIEW_TOKEN,
     AI_TEXT_TO_SPEECH_TOKEN,
     LINK_STATIC_URL,
+    PUBLIC_DIR,
 } from '@/configs/constants'
 import axios from 'axios'
+import path from 'path'
 import getSkillsForProfile from '@/utils/classes/linkedin-crawl'
 import { getProfileDetail } from './profileService'
 import { getMatchingProjectDetails } from './projectService'
 import { getTypeOfBotMessage, getTypeOfInterviewConversation, getTypeOfUserMessage } from './typeService'
 import { FileUpload } from '@/utils/classes'
 import { getMemberRoleOfDirectConversation } from './roleService'
+import { convertSpeechToText } from '../api/googleCloudApi'
 
 // Tìm kiếm dự án phù hợp với người dùng
 export async function matchingProjects(user, linkedInUsername) {
@@ -624,5 +627,18 @@ export async function closeInterview(userId, conversationId) {
                 )
             }
         }
+    }
+}
+
+// Speech to Text using Google Cloud
+export async function speechToText(audio) {
+    if (audio instanceof FileUpload) {
+        // lưu file tạm thời
+        const tempWavFile = audio.save('audio_interview')
+
+        // Use the local file path for file system operations
+        const audioFile = path.join(PUBLIC_DIR, tempWavFile)
+        const content = await convertSpeechToText(audioFile)
+        return content
     }
 }

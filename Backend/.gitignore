@@ -28,3 +28,5 @@ package-lock.json
 
 # huỷ bỏ folder uploads
 /public/uploads
+
+speech-to-text-service.json
