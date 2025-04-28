@@ -121,7 +121,7 @@ const VideoPreview = ({ videoRef }) => {
 
     // CSS classes for fade transition
     const getVideoClassName = () => {
-        const baseClass = 'object-cover rounded-md 2xl:h-[500px] h-[400px] transition-opacity duration-500'
+        const baseClass = ' rounded-md w-full h-full transition-opacity duration-500 ease-in-out '
 
         if (fadeState === 'fading') {
             return `${baseClass} opacity-0`
@@ -133,7 +133,7 @@ const VideoPreview = ({ videoRef }) => {
     }
 
     return (
-        <div className="relative bg-[#000000] 2xl:w-[850px] 2xl:h-[500px] w-[100%] md:w-[700px] h-[400px] rounded-md overflow-hidden">
+        <div className="relative bg-[#000000]  w-full h-full  rounded-md overflow-hidden">
             {!hasJoined ? (
                 <>
                     <div className="bg-[#ffffff] rounded-full absolute bottom-[15px] left-[20px] z-10">
@@ -146,7 +146,6 @@ const VideoPreview = ({ videoRef }) => {
                         autoPlay
                         playsInline
                         muted
-                        className="object-cover rounded-md 2xl:h-[500px] h-[400px]"
                         style={{ outline: 'none' }}
                     />
                 </>

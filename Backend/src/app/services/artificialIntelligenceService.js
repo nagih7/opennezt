@@ -639,6 +639,9 @@ export async function speechToText(audio) {
         // Use the local file path for file system operations
         const audioFile = path.join(PUBLIC_DIR, tempWavFile)
         const content = await convertSpeechToText(audioFile)
+
+        // Xóa file tạm thời
+        FileUpload.remove(tempWavFile)
         return content
     }
 }
