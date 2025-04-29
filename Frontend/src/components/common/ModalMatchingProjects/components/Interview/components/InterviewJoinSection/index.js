@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { startInterview } from 'api/interview'
 import { useParams } from 'react-router-dom'
 
-const InterviewJoinSection = ({ handleTechnicalIssues, setIsOpenDialogInterview }) => {
+const InterviewJoinSection = ({ handleTechnicalIssues }) => {
     const dispatch = useDispatch()
     const params = useParams()
     const { projectId } = params
@@ -14,7 +14,6 @@ const InterviewJoinSection = ({ handleTechnicalIssues, setIsOpenDialogInterview 
 
     // HANDLERS
     const handleStartInterview = () => {
-        setIsOpenDialogInterview(true)
         dispatch(startInterview(projectId))
     }
 

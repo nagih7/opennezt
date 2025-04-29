@@ -1,4 +1,4 @@
-import { Button, CloseButton, Dialog, Portal } from '@chakra-ui/react'
+import { Dialog, Portal } from '@chakra-ui/react'
 import React from 'react'
 import img from '../../../../../../../assets/images/background/auth.jpg'
 import { IconlyCall, IconlyDanger2, IconlySetting, IconlyVoice } from 'components/UI/Iconly'
@@ -6,16 +6,16 @@ import VideoPreview from '../VideoPreview'
 import { useSelector } from 'react-redux'
 import useSpeechToText from 'utils/audio/useSpeechToText'
 
-const DiaLogInterview = ({ open, setOpen, videoRef }) => {
+const DiaLogInterview = ({ videoRef }) => {
     // STATE
-    const { conversationId } = useSelector((state) => state.interview || { conversationId: null })
+    const { isOpenModalInterview } = useSelector((state) => state.interview)
 
     // Use our custom hook for speech-to-text functionality
     const { isRecording, recordingTime, isProcessing, error, toggleRecording, formatTime } = useSpeechToText()
 
     // RENDERING
     return (
-        <Dialog.Root size="full" motionPreset="slide-in-bottom" open={open}>
+        <Dialog.Root size="full" motionPreset="slide-in-bottom" open={isOpenModalInterview}>
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
@@ -78,9 +78,6 @@ const DiaLogInterview = ({ open, setOpen, videoRef }) => {
                                 </div>
                             </div>
                         </Dialog.Footer>
-                        <Dialog.CloseTrigger asChild>
-                            <CloseButton size="sm" />
-                        </Dialog.CloseTrigger>
                     </Dialog.Content>
                 </Dialog.Positioner>
             </Portal>

@@ -17,7 +17,6 @@ const Interview = () => {
     const [audioOutputDevices, setAudioOutputDevices] = useState([])
     const [videoDevices, setVideoDevices] = useState([])
     const [error, setError] = useState(null)
-    const [isOpenDialogInterview, setIsOpenDialogInterview] = useState(false)
     const [permissionStatus, setPermissionStatus] = useState({
         camera: 'prompt',
         microphone: 'prompt',
@@ -299,19 +298,14 @@ const Interview = () => {
                                 />
                             </div>
 
-                            {!hasJoined && (
-                                <InterviewJoinSection
-                                    handleTechnicalIssues={handleTechnicalIssues}
-                                    setIsOpenDialogInterview={setIsOpenDialogInterview}
-                                />
-                            )}
+                            {!hasJoined && <InterviewJoinSection handleTechnicalIssues={handleTechnicalIssues} />}
                             {hasJoined && <ChatConversation />}
                         </div>
                     </div>
                     <div className="w-1/12"></div>
                 </div>
             </div>
-            <DiaLogInterview open={isOpenDialogInterview} setOpen={setIsOpenDialogInterview} videoRef={videoRef} />
+            <DiaLogInterview videoRef={videoRef} />
         </div>
     )
 }

@@ -13,6 +13,7 @@ const VideoPreview = ({ videoRef }) => {
     const [currentVideo, setCurrentVideo] = useState(OPENNEZT_INTERVIEW_SPEAK)
     const [fadeState, setFadeState] = useState('') // '', 'fading', 'faded'
     const [nextVideo, setNextVideo] = useState(null)
+    const [hasAudio, setHasAudio] = useState(false)
 
     const interviewVideoRef = useRef(null)
     const syncControllerRef = useRef(null)
@@ -68,6 +69,7 @@ const VideoPreview = ({ videoRef }) => {
                 // Set state to show speaking video and mark first message as received if needed
                 setCurrentVideo(OPENNEZT_INTERVIEW_SPEAK)
                 dispatch(setCurrentAction('speaking'))
+                setHasAudio(true)
 
                 if (!isFirstMessageReceived) {
                     setIsFirstMessageReceived(true)
@@ -88,6 +90,7 @@ const VideoPreview = ({ videoRef }) => {
                                     console.log('Audio playback ended')
                                     // Audio ended, switch to listen mode
                                     switchToListenMode()
+                                    setHasAudio(false)
                                 },
                                 onVideoEnd: () => {
                                     console.log('Video playback ended')
@@ -95,6 +98,7 @@ const VideoPreview = ({ videoRef }) => {
                                 onSyncComplete: () => {
                                     console.log('Audio and video sync complete')
                                     switchToListenMode()
+                                    setHasAudio(false)
                                 },
                             }
                         )
@@ -111,6 +115,39 @@ const VideoPreview = ({ videoRef }) => {
             switchToListenMode()
         }
     }
+
+    // Create silent audio for video elements
+    useEffect(() => {
+        // This adds a silent audio track to prevent browsers from pausing video to save power
+        const addSilentAudio = (videoElement) => {
+            if (videoElement && !videoElement.captureStream) {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+                const oscillator = audioCtx.createOscillator()
+                const dst = oscillator.connect(audioCtx.createMediaStreamDestination())
+                oscillator.start()
+
+                const audioTrack = dst.stream.getAudioTracks()[0]
+                audioTrack.enabled = true
+
+                if (videoElement.srcObject) {
+                    const videoStream = videoElement.srcObject
+                    videoStream.addTrack(audioTrack)
+                } else {
+                    const stream = new MediaStream([audioTrack])
+                    videoElement.srcObject = stream
+                }
+            }
+        }
+
+        // Apply to both video references
+        if (videoRef && videoRef.current && !hasAudio) {
+            addSilentAudio(videoRef.current)
+        }
+
+        if (interviewVideoRef.current && !hasAudio && currentVideo === OPENNEZT_INTERVIEW_LISTEN) {
+            addSilentAudio(interviewVideoRef.current)
+        }
+    }, [videoRef, hasAudio, currentVideo])
 
     // Clean up on unmount
     useEffect(() => {
@@ -145,8 +182,9 @@ const VideoPreview = ({ videoRef }) => {
                         height="100%"
                         autoPlay
                         playsInline
-                        muted
+                        muted={!hasAudio}
                         style={{ outline: 'none' }}
+                        disablePictureInPicture
                     />
                 </>
             ) : (
@@ -156,14 +194,18 @@ const VideoPreview = ({ videoRef }) => {
                     height="100%"
                     loop={currentVideo === OPENNEZT_INTERVIEW_LISTEN}
                     autoPlay
-                    muted
+                    muted={!hasAudio}
                     className={getVideoClassName()}
                     playsInline
                     style={{ outline: 'none' }}
                     src={currentVideo}
-                    onLoadedMetadata={(e) => e.target.play()}
+                    onLoadedMetadata={(e) => {
+                        if (e.target.paused)
+                            e.target.play().catch((error) => console.warn('Video autoplay failed:', error))
+                    }}
                     onEnded={handleVideoEnded}
                     controlsList="nodownload nofullscreen noremoteplayback"
+                    disablePictureInPicture
                 />
             )}
         </div>

@@ -11,6 +11,7 @@ const interviewSlice = createSlice({
         isLoadingStartInterview: false,
         isLoadingReplyInterview: false,
         isLoadingCloseInterview: false,
+        isOpenModalInterview: false,
     },
     reducers: {
         requestStartInterview: (state) => ({
@@ -22,6 +23,7 @@ const interviewSlice = createSlice({
             conversation: action.payload.data.conversation,
             messages: [action.payload.data.message],
             hasJoined: true,
+            isOpenModalInterview: true,
             isLoadingStartInterview: false,
         }),
         startInterviewFail: (state) => ({
@@ -38,6 +40,7 @@ const interviewSlice = createSlice({
             conversation: {},
             messages: [],
             hasJoined: false,
+            isOpenModalInterview: false,
             isLoadingCloseInterview: false,
         }),
         closeInterviewFail: (state) => ({
