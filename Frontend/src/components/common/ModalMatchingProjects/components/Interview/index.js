@@ -297,9 +297,9 @@ const Interview = () => {
                                     handleDeviceSelect={handleDeviceSelect}
                                 />
                             </div>
-
-                            {!hasJoined && <InterviewJoinSection handleTechnicalIssues={handleTechnicalIssues} />}
-                            {hasJoined && <ChatConversation />}
+                            <InterviewJoinSection handleTechnicalIssues={handleTechnicalIssues} />
+                            {/* {!hasJoined && <InterviewJoinSection handleTechnicalIssues={handleTechnicalIssues} />}
+                            {hasJoined && <ChatConversation />} */}
                         </div>
                     </div>
                     <div className="w-1/12"></div>

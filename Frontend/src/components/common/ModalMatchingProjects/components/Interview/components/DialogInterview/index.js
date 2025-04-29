@@ -1,180 +1,237 @@
-import { Dialog, Portal } from '@chakra-ui/react'
+import { Button, Checkbox, CloseButton, Dialog, Portal, Stack } from '@chakra-ui/react'
 import React, { useState, useEffect, useRef } from 'react'
 import { IconlyCall, IconlyDanger2, IconlySetting, IconlyVoice } from 'components/UI/Iconly'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import AIFrame from './components/AIFrame'
 import UserFrame from './components/UserFrame'
+import { createVoiceDetector } from 'utils/audio/voiceDetection'
+import { closeInterview, replyInterview } from 'api/interview'
 
 const DiaLogInterview = ({ videoRef }) => {
+    const dispatch = useDispatch()
     // STATE
-    const { isOpenModalInterview, currentAction, messages } = useSelector((state) => state.interview)
+    const { isOpenModalInterview, currentAction, messages, conversation, isLoadingReplyInterview } = useSelector(
+        (state) => state.interview
+    )
     const [isListening, setIsListening] = useState(false)
     const [isSpeaking, setIsSpeaking] = useState(false)
     const [error, setError] = useState(null)
-    const [volume, setVolume] = useState(0)
+    const [interviewDuration, setInterviewDuration] = useState(0)
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [audioBlob, setAudioBlob] = useState(null)
+    const [isOpenModalCloseInterview, setIsOpenModalCloseInterview] = useState(false)
+    const [confirmSendData, setConfirmSendData] = useState(false)
 
     // REFS
-    const audioContextRef = useRef(null)
-    const analyserRef = useRef(null)
-    const microphoneStreamRef = useRef(null)
-    const speechTimeoutRef = useRef(null)
-    const animationFrameRef = useRef(null)
+    const voiceDetectorRef = useRef(null)
+    const audioPlayerRef = useRef(null)
+    const timerRef = useRef(null)
+
+    // Start timer for interview duration
+    useEffect(() => {
+        if (isOpenModalInterview) {
+            timerRef.current = setInterval(() => {
+                setInterviewDuration((prev) => prev + 1)
+            }, 1000)
+        }
+        return () => {
+            if (timerRef.current) {
+                clearInterval(timerRef.current)
+            }
+        }
+    }, [isOpenModalInterview])
+
+    // Format time for display (mm:ss)
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60)
+        const secs = seconds % 60
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`
+    }
 
     // VOICE DETECTION SETUP
     const setupVoiceDetection = async () => {
         try {
-            // Reset any existing audio context
-            if (audioContextRef.current) {
-                await cleanupAudioContext()
+            // Don't start voice detection if we're currently loading a reply
+            if (isLoadingReplyInterview) {
+                setError('Waiting for AI response...')
+                setIsListening(false)
+                return false
             }
 
-            // Create audio context
-            const AudioContext = window.AudioContext || window.webkitAudioContext
-            audioContextRef.current = new AudioContext()
+            // Clean up any existing detector
+            if (voiceDetectorRef.current) {
+                await voiceDetectorRef.current.stop()
+            }
 
-            // Get microphone access
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-            microphoneStreamRef.current = stream
+            // Create voice detector with callbacks
+            voiceDetectorRef.current = createVoiceDetector({
+                threshold: 10,
+                silenceDelay: 3000,
+                sampleRate: 44100,
+                onSpeechStart: () => {
+                    setIsSpeaking(true)
+                },
+                onSpeechEnd: () => {
+                    setIsSpeaking(false)
+                    // The audio blob is automatically created by the voice detector
+                },
+                onAudioReady: (blob) => {
+                    // This callback receives the audio blob when speech ends
+                    setAudioBlob(blob)
+                    // Send the audio to be processed
+                    sendAudioMessage(blob)
+                },
+                onError: (err) => {
+                    setError('Microphone access denied')
+                    setIsListening(false)
+                },
+                onListeningStart: () => {
+                    setIsListening(true)
+                    setError(null)
+                },
+                onListeningEnd: () => {
+                    setIsListening(false)
+                    setIsSpeaking(false)
+                },
+            })
 
-            // Create analyzer
-            const analyser = audioContextRef.current.createAnalyser()
-            analyser.fftSize = 1024
-            analyser.smoothingTimeConstant = 0.8
-            analyserRef.current = analyser
-
-            // Connect microphone to analyzer
-            const source = audioContextRef.current.createMediaStreamSource(stream)
-            source.connect(analyser)
-
-            // Start monitoring
-            setIsListening(true)
-            monitorSound()
-            console.log('Voice detection started')
+            // Start the voice detector
+            const success = await voiceDetectorRef.current.start()
+            if (!success) {
+                setError('Failed to start voice detection')
+                return false
+            }
+            return true
         } catch (err) {
-            console.error('Error accessing microphone:', err)
-            setError('Microphone access denied')
+            setError('Voice detection error')
             setIsListening(false)
+            return false
         }
     }
 
     // CLEANUP FUNCTION
-    const cleanupAudioContext = async () => {
-        if (animationFrameRef.current) {
-            cancelAnimationFrame(animationFrameRef.current)
-            animationFrameRef.current = null
-        }
-
-        if (speechTimeoutRef.current) {
-            clearTimeout(speechTimeoutRef.current)
-            speechTimeoutRef.current = null
-        }
-
-        if (microphoneStreamRef.current) {
-            const tracks = microphoneStreamRef.current.getTracks()
-            tracks.forEach((track) => track.stop())
-            microphoneStreamRef.current = null
-        }
-
-        if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-            await audioContextRef.current.close()
-            audioContextRef.current = null
-        }
-
-        analyserRef.current = null
-        setIsListening(false)
-        setIsSpeaking(false)
-        setVolume(0)
-        console.log('Voice detection stopped')
-    }
-
-    // MONITOR SOUND LEVELS
-    const monitorSound = () => {
-        if (!analyserRef.current || !isListening) return
-
-        const dataArray = new Uint8Array(analyserRef.current.fftSize)
-        analyserRef.current.getByteTimeDomainData(dataArray)
-
-        // Calculate volume level
-        let sum = 0
-        for (let i = 0; i < dataArray.length; i++) {
-            sum += Math.abs(dataArray[i] - 128)
-        }
-        const averageVolume = sum / dataArray.length
-        console.log('Volume level:', averageVolume)
-        setVolume(averageVolume)
-
-        // Threshold for speech detection (adjust as needed)
-        const threshold = 10
-
-        if (averageVolume > threshold) {
-            // User is speaking
-            if (!isSpeaking) {
-                setIsSpeaking(true)
-                console.log('User is speaking')
-            }
-
-            // Reset timeout to detect end of speech
-            if (speechTimeoutRef.current) {
-                clearTimeout(speechTimeoutRef.current)
-            }
-
-            speechTimeoutRef.current = setTimeout(() => {
-                setIsSpeaking(false)
-                console.log('User stopped speaking')
-            }, 1000) // Silence for 1 second means speaking ended
-        }
-
-        // Continue monitoring if still listening
-        if (isListening) {
-            animationFrameRef.current = requestAnimationFrame(monitorSound)
+    const cleanupVoiceDetection = async () => {
+        if (voiceDetectorRef.current) {
+            await voiceDetectorRef.current.stop()
+            voiceDetectorRef.current = null
         }
     }
 
     // Toggle voice detection on/off
     const toggleVoiceDetection = () => {
         if (isListening) {
-            cleanupAudioContext()
+            cleanupVoiceDetection()
         } else {
             setupVoiceDetection()
         }
     }
 
-    // Cleanup on unmount
+    // Send audio message to the server for speech-to-text conversion
+    const sendAudioMessage = async (blob) => {
+        if (!blob) return
+
+        try {
+            // Create a FormData object to send the audio file
+            const audioFile = new File([blob], `voice_message_${Date.now()}.wav`, {
+                type: 'audio/wav',
+            })
+
+            const payload = {
+                audio: audioFile,
+                interview: conversation,
+            }
+            dispatch(replyInterview(payload))
+        } catch (error) {
+            console.error('Error sending audio message:', error)
+            setError('Failed to send audio message')
+        }
+    }
+
+    // AUDIO PLAYBACK FUNCTION
+    // const playAIResponse = async (audioUrl) => {
+    //     // Clean up previous audio player if exists
+    //     if (audioPlayerRef.current) {
+    //         audioPlayerRef.current.cleanup()
+    //     }
+
+    //     // Create a new audio player for AI response
+    //     audioPlayerRef.current = createAudioPlayer(audioUrl, {
+    //         autoPlay: true,
+    //         onPlay: () => {
+    //             setIsPlaying(true)
+    //             // Pause voice detection while AI is speaking
+    //             if (voiceDetectorRef.current && voiceDetectorRef.current.isActive()) {
+    //                 voiceDetectorRef.current.stop()
+    //                 setIsListening(false)
+    //             }
+    //         },
+    //         onEnd: () => {
+    //             setIsPlaying(false)
+    //             // Auto resume voice detection after AI finishes speaking
+    //             if (!isListening) {
+    //                 setupVoiceDetection()
+    //             }
+    //         },
+    //         onError: (error) => {
+    //             console.error('Error playing AI audio:', error)
+    //             setError('Failed to play AI response')
+    //             setIsPlaying(false)
+    //         },
+    //     })
+    // }
+
+    // Cleanup function for audio player
+    const cleanupAudioPlayer = () => {
+        if (audioPlayerRef.current) {
+            audioPlayerRef.current.cleanup()
+            audioPlayerRef.current = null
+        }
+    }
+
+    // Enhanced cleanup on unmount to include audio player
     useEffect(() => {
         return () => {
-            cleanupAudioContext()
+            cleanupVoiceDetection()
+            cleanupAudioPlayer()
+            if (timerRef.current) {
+                clearInterval(timerRef.current)
+            }
         }
     }, [])
 
-    // Render voice meter
-    const renderVoiceMeter = () => {
-        if (!isListening) return null
+    // Stop voice detection when loading reply
+    useEffect(() => {
+        if (isLoadingReplyInterview && voiceDetectorRef.current && voiceDetectorRef.current.isActive()) {
+            // Stop listening while processing the previous message
+            voiceDetectorRef.current.stop()
+            setIsListening(false)
+            // setError('Processing your message...')
+        } else if (!isLoadingReplyInterview && !isListening && !isPlaying && isOpenModalInterview) {
+            // Auto-resume listening when loading is complete and we're not playing audio
+            setupVoiceDetection()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLoadingReplyInterview, isPlaying, isOpenModalInterview, isListening, voiceDetectorRef])
 
-        // Scale the volume for better visualization
-        const scaledVolume = Math.min(volume * 3, 100)
+    const handleCloseInterview = () => {
+        setIsOpenModalCloseInterview(true)
+    }
 
-        return (
-            <div className="absolute w-2/3 max-w-md transform -translate-x-1/2 left-1/2 bottom-24">
-                <div className="p-2 bg-gray-800 rounded-lg shadow-lg">
-                    <div className="mb-1 text-xs text-center text-gray-300">
-                        {isSpeaking ? 'Speaking Detected' : 'Voice Level'}
-                    </div>
-                    <div className="h-3 overflow-hidden bg-gray-700 rounded">
-                        <div
-                            className={`h-full transition-all duration-100 ${
-                                isSpeaking ? 'bg-orange-500' : 'bg-blue-500'
-                            }`}
-                            style={{ width: `${scaledVolume}%` }}
-                        />
-                    </div>
-                    <div className="flex justify-between text-[10px] text-gray-400 mt-1">
-                        <span>Low</span>
-                        <span className="w-1 h-2 mx-2 bg-red-500" style={{ marginLeft: '10%' }}></span>
-                        <span>High</span>
-                    </div>
-                </div>
-            </div>
-        )
+    const onChangeConfirmSendData = (event) => {
+        setConfirmSendData(event.target.checked)
+    }
+
+    const handleConfirmCloseInterview = () => {
+        cleanupVoiceDetection()
+        cleanupAudioPlayer()
+
+        const payload = {
+            interview: conversation,
+            storage: confirmSendData,
+        }
+        if (confirmSendData) dispatch(closeInterview({ ...payload, messages }))
+        else dispatch(closeInterview(payload))
+        setIsOpenModalCloseInterview(false)
     }
 
     // RENDERING
@@ -189,6 +246,13 @@ const DiaLogInterview = ({ videoRef }) => {
                                 <div className="relative w-full h-full">
                                     <AIFrame videoRef={videoRef} />
                                     <UserFrame videoRef={videoRef} />
+
+                                    {isLoadingReplyInterview && (
+                                        <div className="absolute z-10 flex items-center gap-2 px-3 py-1 text-white bg-yellow-600 rounded-full top-4 right-4">
+                                            <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                                            <span>Processing your message...</span>
+                                        </div>
+                                    )}
 
                                     {currentAction === 'speaking' && (
                                         <div className="absolute z-10 flex items-center gap-2 px-3 py-1 text-white bg-blue-600 rounded-full top-4 right-4">
@@ -244,16 +308,13 @@ const DiaLogInterview = ({ videoRef }) => {
                                             </div>
                                         </div>
                                     )}
-
-                                    {/* Voice meter */}
-                                    {renderVoiceMeter()}
                                 </div>
                             </div>
                             <div className="flex w-full px-8 pt-4">
                                 <div className="w-full">
                                     <div className="flex items-center justify-between font-medium text-[#ffffff]">
                                         <div className="flex gap-2">
-                                            <span>1:29</span>
+                                            <span>{formatTime(interviewDuration)}</span>
                                             <span>|</span>
                                             <span>Virtual interview</span>
                                         </div>
@@ -268,13 +329,78 @@ const DiaLogInterview = ({ videoRef }) => {
                                     </div>
                                 </div>
                             </div>
+                            <Dialog.Root
+                                size={'lg'}
+                                open={isOpenModalCloseInterview}
+                                placement={'center'}
+                                motionPreset="slide-in-bottom"
+                            >
+                                <Portal>
+                                    <Dialog.Backdrop />
+                                    <Dialog.Positioner>
+                                        <Dialog.Content>
+                                            <Dialog.Header className="p-4">
+                                                {/* <Text className="mb-0 text-xl font-medium">Invite to project</Text> */}
+                                            </Dialog.Header>
+                                            <Dialog.Body>
+                                                <Stack>
+                                                    Are you sure you want to end the interview?
+                                                    <Checkbox.Root
+                                                        value={confirmSendData}
+                                                        defaultChecked={false}
+                                                        onChange={(e) => onChangeConfirmSendData(e)}
+                                                    >
+                                                        <Checkbox.HiddenInput />
+                                                        <Checkbox.Control />
+                                                        <Checkbox.Label>
+                                                            Do you want to send the interview data to the founder?
+                                                        </Checkbox.Label>
+                                                    </Checkbox.Root>
+                                                    This action will prohibit you from interviewing until you receive a
+                                                    response from the founder
+                                                </Stack>
+                                            </Dialog.Body>
+                                            <Dialog.Footer>
+                                                <Dialog.ActionTrigger asChild>
+                                                    <Button
+                                                        variant="outline"
+                                                        className="bg-[#f6f5f5] rounded-md"
+                                                        onClick={() => setIsOpenModalCloseInterview(false)}
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                </Dialog.ActionTrigger>
+                                                <Button
+                                                    onClick={handleConfirmCloseInterview}
+                                                    borderRadius={4}
+                                                    // loading={isLoadingInviteMember}
+                                                    className="bg-[#2f65b9] text-white text-sm rounded-md font-medium"
+                                                    loadingText="Loading..."
+                                                    spinnerPlacement="start"
+                                                >
+                                                    FINISH
+                                                </Button>
+                                            </Dialog.Footer>
+                                            <Dialog.CloseTrigger asChild>
+                                                <CloseButton
+                                                    onClick={() => setIsOpenModalCloseInterview(false)}
+                                                    size="sm"
+                                                />
+                                            </Dialog.CloseTrigger>
+                                        </Dialog.Content>
+                                    </Dialog.Positioner>
+                                </Portal>
+                            </Dialog.Root>
                         </Dialog.Body>
                         <Dialog.Footer className="w-full h-[100px] bg-[#201f24] flex items-center justify-center gap-4">
                             <div className="flex items-center justify-center gap-3">
                                 <div className="flex justify-center items-center bg-[#42474a] p-3 rounded-full cursor-pointer">
                                     <IconlySetting size={25} color={'#ffffff'} />
                                 </div>
-                                <div className="flex items-center justify-center bg-[#ff2c20] p-3 rounded-full cursor-pointer">
+                                <div
+                                    className="flex items-center justify-center bg-[#ff2c20] p-3 rounded-full cursor-pointer"
+                                    onClick={handleCloseInterview}
+                                >
                                     <IconlyCall size={25} color={'#ffffff'} />
                                 </div>
                                 <div

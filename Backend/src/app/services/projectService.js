@@ -1925,7 +1925,7 @@ export async function updateNewMemberActivity(user, { invitationId }) {
 }
 
 // LẤY CHI TIẾT THÔNG TIN DỰ ÁN BẰNG ID
-export async function getMatchingProjectDetails(projectId) {
+export async function getProjectDetailsToMatching(projectId) {
     const project = await Project.aggregate([
         {
             $match: {

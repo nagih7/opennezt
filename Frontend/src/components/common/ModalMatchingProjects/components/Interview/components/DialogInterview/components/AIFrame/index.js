@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createSyncedAudioVideo } from 'utils/audio/audioHandler'
 import { OPENNEZT_INTERVIEW_LISTEN, OPENNEZT_INTERVIEW_SPEAK } from 'utils/constants'
 import { setCurrentAction } from 'states/modules/interview'
+import { clearAIAudio } from 'api/interview'
 
 const AIFrame = () => {
     const dispatch = useDispatch()
@@ -12,7 +13,8 @@ const AIFrame = () => {
     const [currentVideo, setCurrentVideo] = useState(OPENNEZT_INTERVIEW_SPEAK)
     const [fadeState, setFadeState] = useState('') // '', 'fading', 'faded'
     const [nextVideo, setNextVideo] = useState(null)
-    const [hasAudio, setHasAudio] = useState(false)
+    const [isCleanedAudio, setIsCleanedAudio] = useState(false)
+    // const [hasAudio, setHasAudio] = useState(false)
     const interviewVideoRef = useRef(null)
     const syncControllerRef = useRef(null)
 
@@ -66,7 +68,8 @@ const AIFrame = () => {
                 // Set state to show speaking video and mark first message as received if needed
                 setCurrentVideo(OPENNEZT_INTERVIEW_SPEAK)
                 dispatch(setCurrentAction('speaking'))
-                setHasAudio(true)
+
+                // setHasAudio(true)
 
                 if (!isFirstMessageReceived) {
                     setIsFirstMessageReceived(true)
@@ -84,16 +87,17 @@ const AIFrame = () => {
                             interviewVideoRef.current,
                             {
                                 onAudioEnd: () => {
+                                    clearAIAudio(messages[messages.length - 1])
                                     switchToListenMode()
-                                    setHasAudio(false)
+                                    // setHasAudio(false)
                                 },
                                 onVideoEnd: () => {
                                     // console.log('Video playback ended')
                                 },
                                 onSyncComplete: () => {
-                                    console.log('Audio and video sync complete')
+                                    clearAIAudio(messages[messages.length - 1])
                                     switchToListenMode()
-                                    setHasAudio(false)
+                                    // setHasAudio(false)
                                 },
                             }
                         )

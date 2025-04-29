@@ -1,14 +1,5 @@
-import { CONVERSATION_TYPE, DIRECT_CONVERSATION, INTERVIEW_CONVERSATION, INTERVIEW_MESSAGE_TYPE } from '@/configs'
+import { CONVERSATION_TYPE, DIRECT_CONVERSATION, INTERVIEW_MESSAGE_TYPE } from '@/configs'
 import { Type } from '@/models'
-
-// Lấy type cuộc hội thoại interview
-export async function getTypeOfInterviewConversation() {
-    const conversationType = await Type.findOne({
-        class: CONVERSATION_TYPE,
-        name: INTERVIEW_CONVERSATION,
-    }).lean()
-    return conversationType
-}
 
 // Lấy type message của BOT
 export async function getTypeOfBotMessage() {
