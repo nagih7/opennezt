@@ -15,12 +15,12 @@ const FooterPopoverNotification = () => {
 
     return (
         <Text
-            className="flex justify-center items-center cursor-pointer text-center mx-[24px] mb-[24px]"
+            className="flex justify-center items-center cursor-pointer text-center mx-[24px] mb-[5px]"
             onClick={() => handleNavigateToNotification()}
         >
-            <span className="p-3 text-[#2f65b9] font-bold uppercase text-xs">
+            {/* <span className="p-3 text-[#2f65b9] font-bold uppercase text-xs">
                 {NOTIFICATIONS.VIEW_ALL_NOTIFICATIONS[language]}
-            </span>
+            </span> */}
         </Text>
     )
 }
