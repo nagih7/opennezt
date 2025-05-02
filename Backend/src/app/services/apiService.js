@@ -59,6 +59,7 @@ export async function convertTextToSpeech(content) {
             originalname: `audio_${Date.now()}.mp3`,
             mimetype: 'audio/mpeg',
             buffer: response.data, // Use the binary data directly
+            expiryTime: 60 * 1000 * 5, // Set to auto-delete after 5 minutes
         })
 
         // Save the file to the uploads/audio directory
