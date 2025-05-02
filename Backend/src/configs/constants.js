@@ -203,8 +203,8 @@ export const OPENAI_ANALYZE_PROMPT_PRESENCE_PENALTY = 0
 export const OPENAI_ANALYZE_PROMPT_STOP = ['###']
 
 // Azure Speech Service
-export const AZURE_SPEECH_KEY = process.env.AZURE_SPEECH_KEY
-export const AZURE_SPEECH_REGION = process.env.AZURE_SPEECH_REGION || 'eastus'
+// export const AZURE_SPEECH_KEY = process.env.AZURE_SPEECH_KEY
+// export const AZURE_SPEECH_REGION = process.env.AZURE_SPEECH_REGION || 'eastus'
 
 //ARTICLE CONST
 export const REACTIONS_ENUM = ['like', 'dislike', 'share']

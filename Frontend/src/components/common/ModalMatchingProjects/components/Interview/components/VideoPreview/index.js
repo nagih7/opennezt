@@ -1,31 +1,20 @@
-import React, { useRef } from 'react'
-import { IconlyMoreCircle } from 'components/UI/Iconly'
-import { OPENNEZT_INTERVIEW_LISTEN } from 'utils/constants'
+import React from 'react'
 
-const VideoPreview = () => {
-    // STATE FROM REDUX STORE
-    const interviewVideoRef = useRef(null)
-
+const VideoPreview = ({ videoRef }) => {
     return (
-        <div className="relative bg-[#000000]  w-full h-full  rounded-md overflow-hidden">
+        <div className="relative w-full aspect-video max-w-[640px] bg-gray-900 rounded-lg overflow-hidden">
             <video
-                ref={interviewVideoRef}
+                ref={videoRef}
                 width="100%"
                 height="100%"
-                loop
                 autoPlay
-                muted
                 playsInline
-                style={{ outline: 'none' }}
-                src={OPENNEZT_INTERVIEW_LISTEN}
-                onLoadedMetadata={(e) => {
-                    if (e.target.paused) e.target.play().catch((error) => console.warn('Video autoplay failed:', error))
-                }}
-                controlsList="nodownload nofullscreen noremoteplayback"
-                disablePictureInPicture
+                muted
+                className="object-cover w-full h-full"
+                style={{ transform: 'scaleX(-1)' }} // Mirror effect
             />
-            <div className="bg-[#ffffff] rounded-full absolute bottom-[15px] left-[20px] z-10">
-                <IconlyMoreCircle size={20} color={'#4374c0'} />
+            <div className="absolute px-2 py-1 text-sm text-white bg-black bg-opacity-50 rounded bottom-4 right-4">
+                Preview
             </div>
         </div>
     )

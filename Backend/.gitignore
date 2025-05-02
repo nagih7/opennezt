@@ -20,13 +20,17 @@ package-lock.json
 /private/cache/*
 /private/logs/*
 
+/public/private/cache/*
+/public/private/logs/*
+/public/private/file_metadata.json
+
+# huỷ bỏ folder uploads
+/public/uploads
+
 !**/.gitkeep
 
 # IDE config
 /.vscode
 /.idea
-
-# huỷ bỏ folder uploads
-/public/uploads
 
 speech-to-text-service.json

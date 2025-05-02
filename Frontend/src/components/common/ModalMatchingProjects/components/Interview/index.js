@@ -7,8 +7,7 @@ import InterviewControls from './components/InterviewControls'
 import InterviewJoinSection from './components/InterviewJoinSection'
 import InterviewHeader from './components/InterviewHeader'
 import InterviewNavigation from './components/InterviewNavigation'
-import ChatConversation from './components/ChatConversation'
-import { useSelector } from 'react-redux'
+// import ChatConversation from './components/ChatConversation'
 import DiaLogInterview from './components/DialogInterview'
 
 const Interview = () => {
@@ -36,9 +35,6 @@ const Interview = () => {
     const [selectedAudioInput, setSelectedAudioInput] = useState(null)
     const [selectedAudioOutput, setSelectedAudioOutput] = useState(null)
     const [selectedVideo, setSelectedVideo] = useState(null)
-
-    // Get interview state from Redux
-    const { hasJoined } = useSelector((state) => state.interview)
 
     // Kiểm tra khả năng của trình duyệt khi gắn kết
     useEffect(() => {
@@ -165,6 +161,33 @@ const Interview = () => {
             navigator.mediaDevices?.removeEventListener('devicechange', handleDeviceChange)
         }
     }, [])
+
+    // Add this new useEffect for handling video stream
+    useEffect(() => {
+        if (selectedVideo && videoRef.current) {
+            // Stop any existing stream
+            if (streamRef.current) {
+                streamRef.current.getTracks().forEach((track) => track.stop())
+            }
+
+            // Start new video stream with selected device
+            navigator.mediaDevices
+                .getUserMedia({
+                    video: { deviceId: selectedVideo.deviceId },
+                })
+                .then((stream) => {
+                    streamRef.current = stream
+                    videoRef.current.srcObject = stream
+                })
+                .catch((error) => {
+                    setError(`Failed to start video: ${error.message}`)
+                    toaster.create({
+                        type: 'error',
+                        title: 'Failed to start camera. Please check your permissions.',
+                    })
+                })
+        }
+    }, [selectedVideo])
 
     // Hàm yêu cầu quyền truy cập camera và microphone
     const requestMediaPermissions = async () => {
@@ -298,8 +321,6 @@ const Interview = () => {
                                 />
                             </div>
                             <InterviewJoinSection handleTechnicalIssues={handleTechnicalIssues} />
-                            {/* {!hasJoined && <InterviewJoinSection handleTechnicalIssues={handleTechnicalIssues} />}
-                            {hasJoined && <ChatConversation />} */}
                         </div>
                     </div>
                     <div className="w-1/12"></div>
