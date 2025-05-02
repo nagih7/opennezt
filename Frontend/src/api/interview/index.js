@@ -1,21 +1,20 @@
-import callApi from 'api/callApi'
+import callApi, { callApiSimple } from 'api/callApi'
 import {
     requestStartInterview,
     startInterviewSuccess,
     startInterviewFail,
-    addMessage,
     requestReplyInterview,
     replyInterviewSuccess,
     replyInterviewFail,
-    startConvertSpeechToText,
-    convertSpeechToTextSuccess,
-    convertSpeechToTextFail,
+    requestCloseInterview,
+    closeInterviewSuccess,
+    closeInterviewFail,
 } from 'states/modules/interview'
 
 export const startInterview = (projectId) => async (dispatch, getState) => {
     return callApi({
         method: 'post',
-        apiPath: `ai/interview/start`,
+        apiPath: `interview/start`,
         actionTypes: [requestStartInterview, startInterviewSuccess, startInterviewFail],
         variables: { project_id: projectId },
         dispatch,
@@ -23,54 +22,55 @@ export const startInterview = (projectId) => async (dispatch, getState) => {
     })
 }
 
-export const replyInterview = (requestData) => async (dispatch, getState) => {
-    const message = {
-        ...requestData,
-        key: `temp-${Date.now()}`,
-    }
-    dispatch(addMessage(message))
+// export const replyInterviewByMessage = (requestData) => async (dispatch, getState) => {
+//     const message = {
+//         ...requestData,
+//         key: `temp-${Date.now()}`,
+//     }
+//     dispatch(addMessage(message))
 
-    // // Handle audio file upload
-    // if (requestData.audio && requestData.messageType === 'audio') {
-    //     const formData = new FormData()
-    //     formData.append('conversation_id', requestData.conversation_id)
-    //     formData.append('audio', requestData.audio)
-    //     formData.append('messageType', 'audio')
+//     // Regular text message
+//     return callApi({
+//         method: 'post',
+//         apiPath: `interview/reply-message`,
+//         actionTypes: [requestReplyInterview, replyInterviewSuccess, replyInterviewFail],
+//         variables: message,
+//         dispatch,
+//         getState,
+//     })
+// }
 
-    //     return callApi({
-    //         method: 'post',
-    //         apiPath: `ai/interview/reply-audio`,
-    //         actionTypes: [requestReplyInterview, replyInterviewSuccess, replyInterviewFail],
-    //         variables: formData,
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data',
-    //         },
-    //         dispatch,
-    //         getState,
-    //     })
-    // }
+export const replyInterview = (payload) => async (dispatch, getState) => {
+    const { audio, interview } = payload
+    // Create a FormData object to send the audio file
+    const formData = new FormData()
+    formData.append('audio', audio)
+    formData.append('interview', JSON.stringify(interview))
 
-    // Regular text message
     return callApi({
         method: 'post',
-        apiPath: `ai/interview/reply`,
+        apiPath: `interview/reply`,
         actionTypes: [requestReplyInterview, replyInterviewSuccess, replyInterviewFail],
-        variables: message,
+        variables: formData,
         dispatch,
         getState,
     })
 }
 
-export const convertSpeechToText = (audio) => async (dispatch, getState) => {
-    // Create a FormData object to send the audio file
-    const formData = new FormData()
-    formData.append('audio', audio)
+export const clearAIAudio = async (payload) => {
+    return callApiSimple({
+        method: 'delete',
+        apiPath: `interview/audio`,
+        variables: payload,
+    })
+}
 
+export const closeInterview = (payload) => async (dispatch, getState) => {
     return callApi({
         method: 'post',
-        apiPath: `ai/interview/speech-to-text`,
-        actionTypes: [startConvertSpeechToText, convertSpeechToTextSuccess, convertSpeechToTextFail],
-        variables: formData,
+        apiPath: `interview/close`,
+        actionTypes: [requestCloseInterview, closeInterviewSuccess, closeInterviewFail],
+        variables: payload,
         dispatch,
         getState,
     })

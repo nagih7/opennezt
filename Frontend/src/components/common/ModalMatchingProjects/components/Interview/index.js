@@ -7,8 +7,7 @@ import InterviewControls from './components/InterviewControls'
 import InterviewJoinSection from './components/InterviewJoinSection'
 import InterviewHeader from './components/InterviewHeader'
 import InterviewNavigation from './components/InterviewNavigation'
-import ChatConversation from './components/ChatConversation'
-import { useSelector } from 'react-redux'
+// import ChatConversation from './components/ChatConversation'
 import DiaLogInterview from './components/DialogInterview'
 
 const Interview = () => {
@@ -17,7 +16,6 @@ const Interview = () => {
     const [audioOutputDevices, setAudioOutputDevices] = useState([])
     const [videoDevices, setVideoDevices] = useState([])
     const [error, setError] = useState(null)
-    const [isOpenDialogInterview, setIsOpenDialogInterview] = useState(false)
     const [permissionStatus, setPermissionStatus] = useState({
         camera: 'prompt',
         microphone: 'prompt',
@@ -33,15 +31,12 @@ const Interview = () => {
     const videoRef = useRef(null)
     const streamRef = useRef(null)
 
-    // State for selected devices
+    // Trạng thái các thiết bị
     const [selectedAudioInput, setSelectedAudioInput] = useState(null)
     const [selectedAudioOutput, setSelectedAudioOutput] = useState(null)
     const [selectedVideo, setSelectedVideo] = useState(null)
 
-    // Get interview state from Redux
-    const { hasJoined } = useSelector((state) => state.interview)
-
-    // Check browser capabilities on mount
+    // Kiểm tra khả năng của trình duyệt khi gắn kết
     useEffect(() => {
         // Set debug information about browser capabilities
         setDebugging({
@@ -62,7 +57,7 @@ const Interview = () => {
         }
     }, [])
 
-    // Fetch available devices on component mount
+    // Lấy các thiết bị có sẵn trên giá đỡ thành phần
     useEffect(() => {
         async function getAvailableDevices() {
             // ...existing code...
@@ -167,7 +162,34 @@ const Interview = () => {
         }
     }, [])
 
-    // Function to manually request permissions again
+    // Add this new useEffect for handling video stream
+    useEffect(() => {
+        if (selectedVideo && videoRef.current) {
+            // Stop any existing stream
+            if (streamRef.current) {
+                streamRef.current.getTracks().forEach((track) => track.stop())
+            }
+
+            // Start new video stream with selected device
+            navigator.mediaDevices
+                .getUserMedia({
+                    video: { deviceId: selectedVideo.deviceId },
+                })
+                .then((stream) => {
+                    streamRef.current = stream
+                    videoRef.current.srcObject = stream
+                })
+                .catch((error) => {
+                    setError(`Failed to start video: ${error.message}`)
+                    toaster.create({
+                        type: 'error',
+                        title: 'Failed to start camera. Please check your permissions.',
+                    })
+                })
+        }
+    }, [selectedVideo])
+
+    // Hàm yêu cầu quyền truy cập camera và microphone
     const requestMediaPermissions = async () => {
         try {
             // Request both audio and video permissions at once
@@ -228,7 +250,7 @@ const Interview = () => {
         }
     }
 
-    // Handle device selection
+    // Xử lý sự kiện chọn thiết bị
     const handleDeviceSelect = (type, device) => {
         switch (type) {
             case 'audio-input':
@@ -250,7 +272,7 @@ const Interview = () => {
         }
     }
 
-    // Handle technical issues
+    // Xử lý sự cố kỹ thuật
     const handleTechnicalIssues = () => {
         // Show debugging information in the console
         console.log('Device Detection Debug Info:', {
@@ -287,7 +309,7 @@ const Interview = () => {
                         <div className="flex flex-col md:flex-row items-center gap-[30px] md:gap-[60px] 2xl:gap-[100px] 2xl:ml-[100px]">
                             <div className="flex flex-col w-full gap-3 md:w-auto">
                                 <InterviewHeader />
-                                <VideoPreview videoRef={videoRef} />
+                                <VideoPreview />
                                 <InterviewControls
                                     selectedAudioInput={selectedAudioInput}
                                     selectedAudioOutput={selectedAudioOutput}
@@ -298,20 +320,13 @@ const Interview = () => {
                                     handleDeviceSelect={handleDeviceSelect}
                                 />
                             </div>
-
-                            {!hasJoined && (
-                                <InterviewJoinSection
-                                    handleTechnicalIssues={handleTechnicalIssues}
-                                    setIsOpenDialogInterview={setIsOpenDialogInterview}
-                                />
-                            )}
-                            {hasJoined && <ChatConversation />}
+                            <InterviewJoinSection handleTechnicalIssues={handleTechnicalIssues} />
                         </div>
                     </div>
                     <div className="w-1/12"></div>
                 </div>
             </div>
-            <DiaLogInterview open={isOpenDialogInterview} setOpen={setIsOpenDialogInterview} videoRef={videoRef} />
+            <DiaLogInterview videoRef={videoRef} />
         </div>
     )
 }

@@ -100,10 +100,6 @@ const notificationSlice = createSlice({
         }),
         markAsReadSuccess: (state, action) => {
             const newNotification = action.payload.data
-            toaster.create({
-                title: `Mark as read successfully.`,
-                type: 'success',
-            })
             return {
                 ...state,
                 notifications: state.notifications.map((notification) => {
@@ -119,10 +115,6 @@ const notificationSlice = createSlice({
             }
         },
         markAsReadFail: (state) => {
-            toaster.create({
-                title: `Mark as read failed.`,
-                type: 'error',
-            })
             return {
                 ...state,
                 loadingMarkAsRead: false,
