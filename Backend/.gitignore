@@ -1,0 +1,36 @@
+# OS X
+**/.svn
+**/.hg
+**/CVS
+**/Thumbs.db
+**/.DS_Store
+
+# dependencies
+/node_modules
+package-lock.json
+
+# production
+/build
+
+# misc
+*.pem
+/.env**
+!/.env.example
+
+/private/cache/*
+/private/logs/*
+
+/public/private/cache/*
+/public/private/logs/*
+/public/private/file_metadata.json
+
+# huỷ bỏ folder uploads
+/public/uploads
+
+!**/.gitkeep
+
+# IDE config
+/.vscode
+/.idea
+
+speech-to-text-service.json

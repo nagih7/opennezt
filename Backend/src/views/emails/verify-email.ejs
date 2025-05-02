@@ -1,0 +1,36 @@
+<div style="font-family: Arial, sans-serif; align-items: center">
+  <!-- Add this line -->
+  <div style="max-width: 50rem; background-color: azure; padding: 20px; margin: auto; border-radius: 6px">
+    <%- include('./partials/header') %>
+    <p style="font-size: 20px; color: #333; font-weight: 700">Hey <%= name %>,</p>
+    <p style="font-size: 16px; color: #666; line-height: 1.5">
+      thanks for registering with OpenNezt. We are excited to welcome you to our community!<br /><br />
+      To finalize your registration and start enjoying all the great features our platform has to offer,
+      please confirm your email address by clicking the link below:
+    </p>
+    <div style="margin: 30px auto; text-align: center">
+      <a
+        href="<%= linkVerifyEmail %>"
+        style="
+          background-color: #1890ff;
+          color: white;
+          padding: 12px 24px;
+          text-decoration: none;
+          border-radius: 4px;
+          font-size: 18px;
+          display: inline-block;
+          margin: 0 auto;
+        "
+      >
+        Active Now
+      </a>
+    </div>
+    <p style="font-size: 16px; color: #666; line-height: 1.5">
+      Please note, for security reasons, <u>this link will expire in 15 minutes</u>. If you are unable to
+      confirm within this time frame, please request a new link by registering again on our platform.<br /><br />
+      If you did not register with OpenNezt, please ignore this email.<br /><br />
+      We are looking forward to see you on OpenNezt!<br /><br />
+      <%- include('./partials/footer') %>
+    </p>
+  </div>
+</div>

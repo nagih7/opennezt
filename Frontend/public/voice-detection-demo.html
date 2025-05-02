@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Voice Detection Demo</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f5f5f5;
+            }
+            h1 {
+                color: #333;
+                text-align: center;
+            }
+            .container {
+                background-color: white;
+                border-radius: 8px;
+                padding: 20px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+            .status {
+                padding: 15px;
+                margin: 20px 0;
+                text-align: center;
+                border-radius: 5px;
+                font-size: 18px;
+                font-weight: bold;
+                background-color: #f0f0f0;
+                transition: background-color 0.3s ease;
+            }
+            .controls {
+                display: flex;
+                gap: 10px;
+                margin: 20px 0;
+                justify-content: center;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 16px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .start-btn {
+                background-color: #4caf50;
+                color: white;
+            }
+            .stop-btn {
+                background-color: #f44336;
+                color: white;
+            }
+            .start-btn:hover {
+                background-color: #3e8e41;
+            }
+            .stop-btn:hover {
+                background-color: #d32f2f;
+            }
+            button:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            .settings {
+                display: flex;
+                flex-direction: column;
+                margin: 20px 0;
+            }
+            .settings label {
+                margin-bottom: 10px;
+            }
+            .meter-container {
+                margin: 20px 0;
+            }
+            .meter {
+                height: 20px;
+                background-color: #e0e0e0;
+                border-radius: 10px;
+                overflow: hidden;
+                position: relative;
+            }
+            .meter-bar {
+                height: 100%;
+                width: 0%;
+                background-color: #2196f3;
+                transition: width 0.1s ease;
+            }
+            .threshold-marker {
+                position: absolute;
+                height: 100%;
+                width: 2px;
+                background-color: red;
+                top: 0;
+            }
+            .log {
+                margin-top: 20px;
+                border: 1px solid #ddd;
+                padding: 10px;
+                height: 200px;
+                overflow-y: auto;
+                background-color: #f9f9f9;
+                font-family: monospace;
+            }
+            .speaking-animation {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 20px 0;
+                height: 60px;
+            }
+            .bar {
+                background-color: #4caf50;
+                width: 10px;
+                margin: 0 5px;
+                border-radius: 5px;
+                animation: sound 0ms -800ms linear infinite alternate;
+            }
+
+            @keyframes sound {
+                0% {
+                    height: 10px;
+                }
+                100% {
+                    height: 50px;
+                }
+            }
+
+            .bar:nth-child(1) {
+                animation-duration: 474ms;
+            }
+            .bar:nth-child(2) {
+                animation-duration: 433ms;
+            }
+            .bar:nth-child(3) {
+                animation-duration: 407ms;
+            }
+            .bar:nth-child(4) {
+                animation-duration: 458ms;
+            }
+            .bar:nth-child(5) {
+                animation-duration: 400ms;
+            }
+
+            .hidden {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Voice Detection Demo</h1>
+            <p>This demo shows how to detect when a user is speaking using the Web Audio API.</p>
+
+            <div class="status" id="status">Ready to detect voice</div>
+
+            <div class="hidden speaking-animation" id="speaking-animation">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+
+            <div class="meter-container">
+                <h3>Voice Level</h3>
+                <div class="meter">
+                    <div class="meter-bar" id="meter-bar"></div>
+                    <div class="threshold-marker" id="threshold-marker"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 5px">
+                    <span>Low</span>
+                    <span>High</span>
+                </div>
+            </div>
+
+            <div class="settings">
+                <label for="threshold">
+                    Sensitivity Threshold: <span id="threshold-value">10</span>
+                    <input type="range" id="threshold" min="1" max="30" value="10" style="width: 100%" />
+                </label>
+            </div>
+
+            <div class="controls">
+                <button id="start-btn" class="start-btn">Start Detection</button>
+                <button id="stop-btn" class="stop-btn" disabled>Stop Detection</button>
+            </div>
+
+            <h3>Activity Log</h3>
+            <div class="log" id="log"></div>
+        </div>
+
+        <script>
+            class VoiceDetector {
+                constructor(options = {}) {
+                    this.options = {
+                        threshold: 10,
+                        silenceDelay: 1000,
+                        ...options,
+                    }
+
+                    this.audioContext = null
+                    this.analyser = null
+                    this.microphoneStream = null
+                    this.isListening = false
+                    this.isSpeaking = false
+                    this.speechTimeout = null
+                    this.animationFrame = null
+                }
+
+                async start() {
+                    try {
+                        await this.stop()
+
+                        const AudioContext = window.AudioContext || window.webkitAudioContext
+                        this.audioContext = new AudioContext()
+
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+                        this.microphoneStream = stream
+
+                        const analyser = this.audioContext.createAnalyser()
+                        analyser.fftSize = 1024
+                        analyser.smoothingTimeConstant = 0.8
+                        this.analyser = analyser
+
+                        const source = this.audioContext.createMediaStreamSource(stream)
+                        source.connect(analyser)
+
+                        this.isListening = true
+                        if (this.options.onListeningStart) this.options.onListeningStart()
+                        this.monitorSound()
+
+                        return true
+                    } catch (err) {
+                        if (this.options.onError) this.options.onError(err)
+                        this.isListening = false
+                        return false
+                    }
+                }
+
+                async stop() {
+                    if (this.animationFrame) {
+                        cancelAnimationFrame(this.animationFrame)
+                        this.animationFrame = null
+                    }
+
+                    if (this.speechTimeout) {
+                        clearTimeout(this.speechTimeout)
+                        this.speechTimeout = null
+                    }
+
+                    if (this.microphoneStream) {
+                        const tracks = this.microphoneStream.getTracks()
+                        tracks.forEach((track) => track.stop())
+                        this.microphoneStream = null
+                    }
+
+                    if (this.audioContext && this.audioContext.state !== 'closed') {
+                        await this.audioContext.close()
+                        this.audioContext = null
+                    }
+
+                    this.analyser = null
+
+                    if (this.isListening) {
+                        this.isListening = false
+                        this.isSpeaking = false
+                        if (this.options.onListeningEnd) this.options.onListeningEnd()
+                    }
+                }
+
+                monitorSound() {
+                    if (!this.analyser || !this.isListening) return
+
+                    const dataArray = new Uint8Array(this.analyser.fftSize)
+                    this.analyser.getByteTimeDomainData(dataArray)
+
+                    let sum = 0
+                    for (let i = 0; i < dataArray.length; i++) {
+                        sum += Math.abs(dataArray[i] - 128)
+                    }
+                    const averageVolume = sum / dataArray.length
+
+                    if (this.options.onVolumeChange) {
+                        this.options.onVolumeChange(averageVolume)
+                    }
+
+                    if (averageVolume > this.options.threshold) {
+                        if (!this.isSpeaking) {
+                            this.isSpeaking = true
+                            if (this.options.onSpeechStart) this.options.onSpeechStart()
+                        }
+
+                        if (this.speechTimeout) {
+                            clearTimeout(this.speechTimeout)
+                        }
+
+                        this.speechTimeout = setTimeout(() => {
+                            this.isSpeaking = false
+                            if (this.options.onSpeechEnd) this.options.onSpeechEnd()
+                        }, this.options.silenceDelay)
+                    }
+
+                    if (this.isListening) {
+                        this.animationFrame = requestAnimationFrame(this.monitorSound.bind(this))
+                    }
+                }
+
+                setThreshold(threshold) {
+                    this.options.threshold = threshold
+                }
+
+                isActive() {
+                    return this.isListening
+                }
+
+                isSpeechDetected() {
+                    return this.isSpeaking
+                }
+            }
+
+            // UI elements
+            const statusElement = document.getElementById('status')
+            const startButton = document.getElementById('start-btn')
+            const stopButton = document.getElementById('stop-btn')
+            const thresholdInput = document.getElementById('threshold')
+            const thresholdValue = document.getElementById('threshold-value')
+            const logElement = document.getElementById('log')
+            const meterBar = document.getElementById('meter-bar')
+            const thresholdMarker = document.getElementById('threshold-marker')
+            const speakingAnimation = document.getElementById('speaking-animation')
+
+            // Initialize threshold marker position
+            thresholdMarker.style.left = `${(parseInt(thresholdInput.value) / parseInt(thresholdInput.max)) * 100}%`
+
+            // Log function
+            function log(message) {
+                const timestamp = new Date().toLocaleTimeString()
+                const logEntry = document.createElement('div')
+                logEntry.textContent = `${timestamp}: ${message}`
+                logElement.appendChild(logEntry)
+                logElement.scrollTop = logElement.scrollHeight
+            }
+
+            // Create voice detector
+            const detector = new VoiceDetector({
+                onSpeechStart: () => {
+                    log('User is speaking')
+                    statusElement.textContent = 'Speaking detected!'
+                    statusElement.style.backgroundColor = '#ff9800'
+                    speakingAnimation.classList.remove('hidden')
+                    console.log('User is speaking')
+                },
+                onSpeechEnd: () => {
+                    log('User stopped speaking')
+                    statusElement.textContent = 'Listening for voice...'
+                    statusElement.style.backgroundColor = '#4CAF50'
+                    speakingAnimation.classList.add('hidden')
+                    console.log('User stopped speaking')
+                },
+                onListeningStart: () => {
+                    log('Voice detection started')
+                    statusElement.textContent = 'Listening for voice...'
+                    statusElement.style.backgroundColor = '#4CAF50'
+                    speakingAnimation.classList.add('hidden')
+                },
+                onListeningEnd: () => {
+                    log('Voice detection stopped')
+                    statusElement.textContent = 'Voice detection inactive'
+                    statusElement.style.backgroundColor = '#f0f0f0'
+                    speakingAnimation.classList.add('hidden')
+                    meterBar.style.width = '0%'
+                },
+                onError: (err) => {
+                    log(`Error: ${err.message}`)
+                    statusElement.textContent = 'Error accessing microphone'
+                    statusElement.style.backgroundColor = '#f44336'
+                    startButton.disabled = false
+                    stopButton.disabled = true
+                    speakingAnimation.classList.add('hidden')
+                },
+                onVolumeChange: (volume) => {
+                    // Scale the volume for better visualization (0-100%)
+                    const scaledVolume = Math.min(volume * 3, 100)
+                    meterBar.style.width = `${scaledVolume}%`
+
+                    // Change color based on threshold
+                    if (volume > detector.options.threshold) {
+                        meterBar.style.backgroundColor = '#ff9800'
+                    } else {
+                        meterBar.style.backgroundColor = '#2196F3'
+                    }
+                },
+                threshold: parseInt(thresholdInput.value),
+            })
+
+            // Add event listeners for buttons
+            startButton.addEventListener('click', async () => {
+                startButton.disabled = true
+                statusElement.textContent = 'Requesting microphone access...'
+
+                const success = await detector.start()
+
+                if (success) {
+                    stopButton.disabled = false
+                } else {
+                    startButton.disabled = false
+                }
+            })
+
+            stopButton.addEventListener('click', async () => {
+                stopButton.disabled = true
+                await detector.stop()
+                startButton.disabled = false
+            })
+
+            // Threshold adjustment
+            thresholdInput.addEventListener('input', () => {
+                const threshold = parseInt(thresholdInput.value)
+                thresholdValue.textContent = threshold
+                detector.setThreshold(threshold)
+                thresholdMarker.style.left = `${(threshold / parseInt(thresholdInput.max)) * 100}%`
+                log(`Sensitivity threshold set to ${threshold}`)
+            })
+
+            // Initial log
+            log('Voice detection demo initialized')
+        </script>
+    </body>
+</html>

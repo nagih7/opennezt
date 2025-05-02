@@ -1,0 +1,44 @@
+// ACTIVITY ACCESS
+export const ACCESS_TYPE = 'access'
+export const PROJECT_ACCESS = 'project'
+export const PROFILE_ACCESS = 'profile'
+
+// NOTIFICATION
+export const NOTIFICATION_TYPE = 'notification'
+export const PROJECT_INVITATION_NOTIFICATION = 'project_invitation'
+export const PROJECT_APPLICATION_NOTIFICATION = 'project_application'
+export const FRIEND_REQUEST_NOTIFICATION = 'friend_request'
+export const CONFIRM_FRIEND_REQUEST_NOTIFICATION = 'confirm_friend_request'
+export const CONFIRM_PROJECT_INVITATION_NOTIFICATION = 'confirm_project_invitation'
+
+// STATUS
+export const STATUS_TYPE = 'status'
+export const WAITING_STATUS = 'waiting'
+export const CONFIRM_STATUS = 'confirm'
+export const DELETE_STATUS = 'delete'
+
+// ACTIONS
+export const CONFIRM_ACTION = 'confirm'
+export const DELETE_ACTION = 'delete'
+export const SEND_ACTION = 'send'
+export const CANCEL_ACTION = 'cancel'
+
+// CONVERSATION TYPE
+export const CONVERSATION_TYPE = 'conversation'
+export const DIRECT_CONVERSATION = 'direct'
+export const GROUP_CONVERSATION = 'group'
+
+// MESSAGE TYPE
+export const MESSAGE_TYPE = 'message'
+export const TEXT_MESSAGE = 'text'
+export const IMAGE_MESSAGE = 'image'
+export const VIDEO_MESSAGE = 'video'
+export const AUDIO_MESSAGE = 'audio'
+export const FILE_MESSAGE = 'file'
+export const LINK_MESSAGE = 'link'
+export const LOCATION_MESSAGE = 'location'
+export const REACTION_MESSAGE = 'reaction'
+export const POLL_MESSAGE = 'poll'
+export const STICKER_MESSAGE = 'sticker'
+export const GIF_MESSAGE = 'gif'
+export const VOICE_MESSAGE = 'voice'

@@ -1,0 +1,231 @@
+import Joi from 'joi'
+import {tryValidateOrDefault} from '@/utils/helpers'
+import {Category, ExperienceLevel, Industry, ObjectId, Role, Skill, Type} from '@/models'
+import {AsyncValidate} from '@/utils/classes'
+import {MAX_STRING_SIZE} from '@/configs'
+
+export const readRoot = Joi.object({
+    q: tryValidateOrDefault(Joi.string().trim(), ''),
+    page: tryValidateOrDefault(Joi.number().integer().min(1), 1),
+    per_page: tryValidateOrDefault(Joi.number().integer().min(1).max(100), 20),
+    field: tryValidateOrDefault(Joi.valid('created_at', 'name', 'email', 'phone', 'active'), 'created_at'),
+    order: tryValidateOrDefault(Joi.valid('1', '-1'), '-1'),
+})
+
+// ROLE
+export const createRole = Joi.object({
+    type_id: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Type ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const type = await Type.findById(new ObjectId(value))
+                    return type ? value : helpers.error('any.empty')
+                })
+        ),
+    name: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Name')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function (req) {
+                    const role = await Role.findOne({name: value, type_id: new ObjectId(req.body.type_id)})
+                    return !role ? value : helpers.error('any.exists')
+                })
+        ),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+export const updateRole = Joi.object({
+    type_id: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Type ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async () => {
+                    const type = await Type.findById(new ObjectId(value))
+                    return type ? value : helpers.error('any.empty')
+                })
+        ),
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+// TYPE
+export const createType = Joi.object({
+    class: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Class'),
+    name: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Name')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function (req) {
+                    const type = await Type.findOne({name: value, class: req.body.class})
+                    return !type ? value : helpers.error('any.exists')
+                })
+        ),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+export const updateType = Joi.object({
+    class: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Class'),
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+// INDUSTRY
+export const createIndustry = Joi.object({
+    name: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Name')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const industry = await Industry.findOne({name: value})
+                    return !industry ? value : helpers.error('any.exists')
+                })
+        ),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+export const updateIndustry = Joi.object({
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+// EXPERIENCE_LEVELS
+export const createExperienceLevel = Joi.object({
+    name: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Name')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const experienceLevel = await ExperienceLevel.findOne({name: value})
+                    return !experienceLevel ? value : helpers.error('any.exists')
+                })
+        ),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+export const updateExperienceLevel = Joi.object({
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+// CATEGORIES
+export const createCategory = Joi.object({
+    name: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Name')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const category = await Category.findOne({name: value})
+                    return !category ? value : helpers.error('any.exists')
+                })
+        ),
+    parent_id: Joi.string()
+        .trim()
+        .allow(null, '')
+        .label('Category ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const category = await Category.findById(new ObjectId(value))
+                    return category ? value : helpers.error('any.invalid')
+                })
+        ),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+export const updateCategory = Joi.object({
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+})
+
+// SKILLS
+export const createSkill = Joi.object({
+    category_id: Joi.string()
+        .trim()
+        .required()
+        .label('Category ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const category = await Category.findById(new ObjectId(value))
+                    return category ? value : helpers.error('any.invalid')
+                })
+        ),
+    name: Joi.string()
+        .trim()
+        .max(MAX_STRING_SIZE)
+        .required()
+        .label('Name')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const skill = await Skill.findOne({name: value})
+                    return !skill ? value : helpers.error('any.exists')
+                })
+        ),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+    metadata: Joi.object().label('Metadata'),
+})
+export const updateSkill = Joi.object({
+    category_id: Joi.string()
+        .trim()
+        .required()
+        .label('Category ID')
+        .custom(
+            (value, helpers) =>
+                new AsyncValidate(value, async function () {
+                    const category = await Category.findById(value)
+                    return category ? value : helpers.error('any.invalid')
+                })
+        ),
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Description'),
+    metadata: Joi.object().label('Metadata'),
+})
+
+// ORGANIZATIONS
+export const createOrganization = Joi.object({
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    website: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Website'),
+    contact_email: Joi.string()
+        .trim()
+        .email()
+        .allow(null, '')
+        .label('Contact email')
+        .custom((value, helpers) => {
+            if (!value) {
+                return value
+            }
+            const email = value.split('@')
+            if (email.length !== 2) {
+                return helpers.error('any.invalid')
+            }
+            return value
+        }),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).allow(null, '').label('Description'),
+})
+export const updateOrganization = Joi.object({
+    name: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Name'),
+    website: Joi.string().trim().max(MAX_STRING_SIZE).required().label('Website'),
+    contact_email: Joi.string().trim().email().allow(null, '').label('Contact email'),
+    description: Joi.string().trim().max(MAX_STRING_SIZE).allow(null, '').label('Description'),
+})

@@ -1,0 +1,20 @@
+.tableWrap {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+
+	.table {
+		margin-bottom: 17px;
+	}
+
+	.paginationWrap {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 5px;
+		.textPagination {
+			font-size: 15px;
+		}
+	}
+}

@@ -1,0 +1,87 @@
+import { createSlice } from '@reduxjs/toolkit'
+
+const appSlice = createSlice({
+    name: 'app',
+    initialState: {
+        isShowSideBar: true,
+        isThemeLight: false,
+        title: 'Dashboard',
+        language: 'EN',
+        location: {
+            pathName: '',
+            payload: {},
+            prevPathName: '',
+        },
+        // ========== WEB PUSH ========== //
+        isLoadingWebPush: false,
+        isSubscribed: false,
+        subscription: null,
+        registration: null,
+        stats: null,
+        error: null,
+    },
+    reducers: {
+        startRequest: (state) => ({
+            ...state,
+            list: null,
+        }),
+        requestSuccess: (state, action) => ({
+            ...state,
+            list: action.payload,
+        }),
+        requestError: (state) => ({
+            ...state,
+            list: '',
+        }),
+        handleSetIsShowSideBar: (state, action) => ({
+            ...state,
+            isShowSideBar: action.payload,
+        }),
+        setTitlePage: (state, action) => ({
+            ...state,
+            title: action.payload,
+        }),
+        setLocation: (state, action) => ({
+            ...state,
+            location: {
+                pathName: action.payload.pathName,
+                payload: action.payload.payload || {},
+                prevPathName: action.payload.prevPathName || null,
+            },
+        }),
+        setLanguage: (state, action) => ({
+            ...state,
+            language: action.payload,
+        }),
+
+        // ========== WEB PUSH ========== //
+        requestWebPush: (state) => ({
+            ...state,
+            isLoadingWebPush: true,
+        }),
+        webPushSuccess: (state) => ({
+            ...state,
+            isLoadingWebPush: false,
+        }),
+        webPushFail: (state) => ({
+            ...state,
+            isLoadingWebPush: false,
+        }),
+    },
+})
+
+export const {
+    handleSetIsShowSideBar,
+    setTitlePage,
+    setLocation,
+    startRequest,
+    requestSuccess,
+    requestError,
+    setLanguage,
+    // ========= WEB PUSH ========== //
+    requestWebPush,
+    webPushSuccess,
+    webPushFail,
+} = appSlice.actions
+
+export default appSlice.reducer

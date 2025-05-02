@@ -1,0 +1,81 @@
+@import "../../../../src/assets/scss/variables";
+
+.layoutAuthWrap {
+	min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	height: 100%;
+	width: 100%;
+	background-color: $backgroundMain;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+
+	.mainWrap {
+		background: $colorWhite;
+		display: flex;
+		height: auto;
+		width: auto;
+		min-height: 10rem;
+		border-radius: 10px;
+		backdrop-filter: blur(5px);
+		box-shadow: $boxShadowDark;
+		overflow: hidden;
+		transition: all 0.3s;
+
+		.bannerWrap {
+			width: 35rem;
+			display: flex;
+			flex-direction: column;
+			// align-items: center;
+			background-color: $backgroundMain;
+			transition: all 0.5s ease;
+
+			.banner {
+				width: 100%;
+				height: auto;
+
+				img {
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+				}
+			}
+			.bannerContent {
+				display: flex;
+				flex-grow: 1;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+
+				.authSlogan {
+					font-size: 2rem;
+					font-weight: 700;
+					margin: 2rem 1rem;
+					text-align: center;
+				}
+
+				.authDescription {
+					font-size: 1rem;
+					text-align: center;
+					margin: 0 1rem;
+				}
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: 512px) {
+	.layoutAuthWrap {
+		padding: 10px;
+		.mainWrap {
+			width: 100%;
+			.form {
+				width: 100%;
+				transition: all 0.3s;
+			}
+		}
+	}
+}
