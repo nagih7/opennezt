@@ -55,7 +55,7 @@ const ProfessionalProfile = () => {
     }, [])
 
     return (
-        <div className="flex gap-8">
+        <div className="flex gap-3">
             <div className="lg:w-10/12 w-full">
                 <div className="bg-[#ffffff] rounded-md">
                     <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">

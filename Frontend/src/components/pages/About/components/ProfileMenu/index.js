@@ -135,7 +135,7 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
                         </span>
                     </li>
                 </Link>
-                <li
+                {/* <li
                     onClick={() => setChangeTab('Badges')}
                     className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]"
                 >
@@ -154,8 +154,8 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
                     >
                         Badges
                     </span>
-                </li>
-                <li
+                </li> */}
+                {/* <li
                     onClick={() => setChangeTab('Courses')}
                     className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]"
                 >
@@ -174,7 +174,7 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
                     >
                         Courses
                     </span>
-                </li>
+                </li> */}
             </ul>
         </div>
     )

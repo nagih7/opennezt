@@ -6,7 +6,7 @@ import Friends from './components/Friends'
 import { Image } from '@chakra-ui/react'
 import Timeline from './components/Timeline'
 import Groups from './components/Groups'
-import Badges from './components/Badges'
+// import Badges from './components/Badges'
 import ProfileOverview from './components/ProfileOverview'
 import { OPENNEZT_BG_BLACK } from 'utils/constants'
 
@@ -46,7 +46,7 @@ const About = () => {
                 {changeTab == 'Friends' && <Friends />}
                 {changeTab == 'Timeline' && <Timeline />}
                 {changeTab == 'Groups' && <Groups />}
-                {changeTab == 'Badges' && <Badges />}
+                {/* {changeTab == 'Badges' && <Badges />} */}
             </div>
         </div>
     )

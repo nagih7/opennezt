@@ -29,7 +29,7 @@ const Groups = () => {
     }, [dispatch])
 
     return (
-        <div className="flex gap-8">
+        <div className="flex gap-3">
             <div className="lg:w-10/12 w-full">
                 <Tabs.Root className="h-4" defaultValue="Memberships">
                     <div className="w-full 2xl:w-full">

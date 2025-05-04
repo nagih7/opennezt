@@ -1,22 +1,19 @@
-import RightSidebar from "components/common/RightSidebar";
-import React from "react";
+import RightSidebar from 'components/common/RightSidebar'
+import React from 'react'
 import { Avatar, Tabs } from '@chakra-ui/react'
-import BookmarkedArticle from "./BookmarkArticle";
-import BookmarkTalent from "./BookmarkTalent";
-import BookmarkProject from "./BookmarkProject";
+import BookmarkedArticle from './BookmarkArticle'
+import BookmarkTalent from './BookmarkTalent'
+import BookmarkProject from './BookmarkProject'
 const Badges = () => {
-
-
     return (
         <>
-            <div className="flex gap-8">
-
+            <div className="flex gap-3">
                 <div className="w-10/12">
-                    <Tabs.Root defaultValue="Articles" >
-                        <div className=" rounded-lg">
-                            <Tabs.List >
-                                <div className="flex justify-between bg-white p-4 font-bold w-full">
-                                    <div className='flex'>
+                    <Tabs.Root defaultValue="Articles">
+                        <div className="rounded-lg ">
+                            <Tabs.List>
+                                <div className="flex justify-between w-full p-4 font-bold bg-white">
+                                    <div className="flex">
                                         <Tabs.Trigger className="text-lg font-semibold" value="Articles">
                                             Articles
                                         </Tabs.Trigger>
@@ -26,12 +23,11 @@ const Badges = () => {
                                         <Tabs.Trigger value="Talent" className="text-lg font-semibold">
                                             Talent
                                         </Tabs.Trigger>
-
                                     </div>
                                 </div>
                             </Tabs.List>
 
-                            <Tabs.Content value="Articles" >
+                            <Tabs.Content value="Articles">
                                 <BookmarkedArticle />
                             </Tabs.Content>
 
@@ -48,7 +44,7 @@ const Badges = () => {
                 <RightSidebar />
             </div>
         </>
-    );
-};
+    )
+}
 
-export default Badges;
+export default Badges

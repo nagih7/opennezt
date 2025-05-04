@@ -36,7 +36,7 @@ import ExportData from 'components/pages/AccountSettings/components/ExportData'
 import MessageSidebar from 'components/pages/Message/components/MessageSidebar'
 import Interview from 'components/common/ModalMatchingProjects/components/Interview'
 
-// const AuthPage = React.lazy(() => import("../components/pages/Auth"));
+const Home = React.lazy(() => import('../components/pages/Home'))
 const Login = React.lazy(() => import('../components/pages/Auth/Login'))
 const Register = React.lazy(() => import('../components/pages/Auth/Register'))
 const ForgotPassword = React.lazy(() => import('../components/pages/Auth/ForgotPassword'))
@@ -52,7 +52,7 @@ const SkillManage = React.lazy(() => import('../components/pages/Manage/componen
 const OrganizationManage = React.lazy(() => import('../components/pages/Manage/components/OrganizationManage'))
 const About = React.lazy(() => import('../components/pages/About'))
 const Message = React.lazy(() => import('../components/pages/Message'))
-const Newfeeds = React.lazy(() => import('../components/pages/Newfeeds'))
+// const Newfeeds = React.lazy(() => import('../components/pages/Newfeeds'))
 const Project = React.lazy(() => import('../components/pages/Project'))
 const RecruitTalents = React.lazy(() => import('../components/pages/RecruitTalents'))
 const TalentDetails = React.lazy(() => import('../components/pages/TalentDetails'))
@@ -209,7 +209,7 @@ const router = createBrowserRouter([
         path: '/',
         element: (
             <AppLayout>
-                <Newfeeds />
+                <Home />
             </AppLayout>
         ),
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_HOME_PAGE'),
@@ -230,15 +230,15 @@ const router = createBrowserRouter([
             },
         ],
     },
-    {
-        path: '/activity',
-        element: (
-            <AppLayout>
-                <Newfeeds />
-            </AppLayout>
-        ),
-        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_NEWFEED_PAGE'),
-    },
+    // {
+    //     path: '/activity',
+    //     element: (
+    //         <AppLayout>
+    //             <Newfeeds />
+    //         </AppLayout>
+    //     ),
+    //     loader: ({ request }) => rootLoader({ request }, true, 'LOAD_NEWFEED_PAGE'),
+    // },
 
     {
         path: '/projects',
