@@ -186,21 +186,15 @@ export const VALIDATE_FULL_NAME_REGEX = /^[a-zA-ZÀ-ỹ ]+$/
 // OpenAI API
 export const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 assert(!_.isEmpty(OPENAI_API_KEY), assert('OPENAI_API_KEY'))
-export const OPENAI_ENDPOINT = process.env.OPENAI_ENDPOINT
-assert(!_.isEmpty(OPENAI_ENDPOINT), assertMsg('OPENAI_ENDPOINT'))
-export const OPENAI_MODEL = process.env.OPENAI_MODEL
-assert(!_.isEmpty(OPENAI_MODEL), assertMsg('OPENAI_MODEL'))
-export const OPENAI_API_VERSION = process.env.OPENAI_API_VERSION
-assert(!_.isEmpty(OPENAI_API_VERSION), assertMsg('OPENAI_API_VERSION'))
-export const MODEL = process.env.MODEL
-assert(!_.isEmpty(MODEL), assertMsg('MODEL'))
+export const OPENAI_API_SPEECH_URL = process.env.OPENAI_API_SPEECH_URL
+assert(!_.isEmpty(OPENAI_API_SPEECH_URL), assert('OPENAI_API_SPEECH_URL'))
 
-export const OPENAI_ANALYZE_PROMPT_MAX_TOKENS = 200
-export const OPENAI_ANALYZE_PROMPT_TEMPERATURE = 0.7
-export const OPENAI_ANALYZE_PROMPT_TOP_P = 0.9
-export const OPENAI_ANALYZE_PROMPT_FREQUENCY_PENALTY = 0
-export const OPENAI_ANALYZE_PROMPT_PRESENCE_PENALTY = 0
-export const OPENAI_ANALYZE_PROMPT_STOP = ['###']
+// export const OPENAI_ANALYZE_PROMPT_MAX_TOKENS = 200
+// export const OPENAI_ANALYZE_PROMPT_TEMPERATURE = 0.7
+// export const OPENAI_ANALYZE_PROMPT_TOP_P = 0.9
+// export const OPENAI_ANALYZE_PROMPT_FREQUENCY_PENALTY = 0
+// export const OPENAI_ANALYZE_PROMPT_PRESENCE_PENALTY = 0
+// export const OPENAI_ANALYZE_PROMPT_STOP = ['###']
 
 // Azure Speech Service
 // export const AZURE_SPEECH_KEY = process.env.AZURE_SPEECH_KEY

@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import styles from './styles.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import _, { set } from 'lodash'
+import _ from 'lodash'
 import TableManage from '../TableManage'
 import { getManageArticleList } from 'api/manage'
 import store from 'states/configureStore'
 import AvatarDefault from '../../../../../assets/images/default/AvatarDefault.png'
 import ArticlePreview from './ArticlePreview'
-import { openDeleteModal, setVisibleModalDeleteArticle } from 'states/modules/manage'
+import { setVisibleModalDeleteArticle } from 'states/modules/manage'
 import { handleDeleteArticle } from 'api/newfeeds'
 import ModalConfirm from 'components/UI/Modal/ModalConfirm'
 
@@ -50,11 +49,11 @@ function ArticleManage() {
             key: 'user',
             render: (user) => (
                 <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-full overflow-hidden">
+                    <div className="w-10 h-10 overflow-hidden rounded-full">
                         <img
                             src={user?.[0]?.avatar || AvatarDefault}
                             alt={user?.[0]?.name}
-                            className="w-full h-full object-cover"
+                            className="object-cover w-full h-full"
                             onError={(e) => {
                                 e.target.onerror = null
                                 e.target.src = AvatarDefault
@@ -113,7 +112,7 @@ function ArticleManage() {
 
     return (
         <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">Article Management</h1>
+            <h1 className="mb-6 text-2xl font-bold">Article Management</h1>
             <TableManage
                 columns={columns}
                 dataSource={articles || []}
@@ -147,7 +146,7 @@ function ArticleManage() {
                     >
                         <button
                             onClick={handleClosePreview}
-                            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                            className="absolute text-gray-500 top-4 right-4 hover:text-gray-700"
                         >
                             ×
                         </button>

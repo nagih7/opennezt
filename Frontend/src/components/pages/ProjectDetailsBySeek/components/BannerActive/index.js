@@ -55,8 +55,8 @@ const BannerActive = () => {
                         <div className="w-3/5 h-full bg-blue-600 rounded-full"></div>
                     </p>
                 </div>
-                <button onClick={handleBookmark} className="ml-5 mb-[0.5rem]">
-                    <IconlyBookmark size={24} color={isBookmarked ? '#FFD700' : '#FFF'} />
+                <button className="ml-5 mb-[0.5rem]">
+                    <IconlyBookmark size={24} color="#FFF" />
                 </button>
             </div>
         </div>
