@@ -1,90 +1,90 @@
-import React, { useEffect, useState } from 'react';
-import styles from './styles.module.scss';
-import './styles.scss';
-import InputMASQ from '../../../../components/UI/Input';
-import _ from 'lodash';
-import ButtonMASQ from '../../../../components/UI/Button';
-import { useNavigate } from 'react-router-dom';
-import { isValidate } from '../../../../utils/validate';
-import { handleCheckValidateConfirm } from '../../../../utils/helper';
-import { useSelector, useDispatch } from 'react-redux';
-import store from 'states/configureStore';
-import { Checkbox } from 'antd';
-import Social from './components/Social';
-import { login } from '../../../../api/auth';
-import Logo from '../../../../assets/images/logo/opennezt_black.png';
-import { resetForgotPassword } from '../../../../states/modules/auth';
+import React, { useEffect, useState } from 'react'
+import styles from './styles.module.scss'
+import './styles.scss'
+import InputMASQ from '../../../../components/UI/Input'
+import _ from 'lodash'
+import ButtonMASQ from '../../../../components/UI/Button'
+import { useNavigate } from 'react-router-dom'
+import { isValidate } from '../../../../utils/validate'
+import { handleCheckValidateConfirm } from '../../../../utils/helper'
+import { useSelector, useDispatch } from 'react-redux'
+import store from 'states/configureStore'
+import { Checkbox } from 'antd'
+import Social from './components/Social'
+import { login } from '../../../../api/auth'
+import Logo from '../../../../assets/images/logo/opennezt_black.png'
+import { resetForgotPassword } from '../../../../states/modules/auth'
 
 const Login = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const [dataLogin, setDataLogin] = useState({
         email: '',
         password: '',
-    });
+    })
     const [errorDataLogin, setErrorDataLogin] = useState({
         email: '',
         password: '',
-    });
-    const [checkRemember, setCheckRemember] = useState(false);
-    const isLoadingBtnLogin = useSelector((state) => state.auth.isLoadingBtnLogin);
-    const { isAuthSuccess, authRole } = useSelector((state) => state.auth);
+    })
+    const [checkRemember, setCheckRemember] = useState(false)
+    const isLoadingBtnLogin = useSelector((state) => state.auth.isLoadingBtnLogin)
+    const { isAuthSuccess, authRole } = useSelector((state) => state.auth)
 
     useEffect(() => {
-        dispatch(resetForgotPassword());
-    }, [dispatch]);
+        dispatch(resetForgotPassword())
+    }, [dispatch])
 
     useEffect(() => {
-        handleResetError();
-    }, [dataLogin]);
+        handleResetError()
+    }, [dataLogin])
 
     useEffect(() => {
         if (isAuthSuccess) {
             if (authRole === 'Super Admin') {
-                navigate('/activity');
+                navigate('/')
             } else if (authRole === 'User') {
-                navigate('/activity');
+                navigate('/')
             }
         }
-    }, [isAuthSuccess, authRole, navigate]);
+    }, [isAuthSuccess, authRole, navigate])
 
     const handleResetError = () => {
         setErrorDataLogin({
             email: '',
             password: '',
-        });
-    };
+        })
+    }
 
     const handleChangeInput = (valueInput, type) => {
-        let value = valueInput.target.value;
-        let data = _.cloneDeep(dataLogin);
-        data[type] = value;
-        setDataLogin(data);
-    };
+        let value = valueInput.target.value
+        let data = _.cloneDeep(dataLogin)
+        data[type] = value
+        setDataLogin(data)
+    }
 
     const validateBlur = (type) => {
-        let validate = isValidate(dataLogin, type, errorDataLogin);
-        setErrorDataLogin(validate.error);
-        return validate.isError;
-    };
+        let validate = isValidate(dataLogin, type, errorDataLogin)
+        setErrorDataLogin(validate.error)
+        return validate.isError
+    }
 
     const handleConfirmLogin = async () => {
-        let validate = handleCheckValidateConfirm(dataLogin, errorDataLogin);
-        setErrorDataLogin(validate.dataError);
+        let validate = handleCheckValidateConfirm(dataLogin, errorDataLogin)
+        setErrorDataLogin(validate.dataError)
         if (!validate.isError) {
-            await store.dispatch(login(dataLogin));
+            await store.dispatch(login(dataLogin))
         }
-    };
+    }
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-            handleConfirmLogin();
+            handleConfirmLogin()
         }
-    };
+    }
 
     const handleClickCheckBox = (e) => {
-        setCheckRemember(e.target.checked);
-    };
+        setCheckRemember(e.target.checked)
+    }
 
     return (
         <div className={styles.loginWrap}>
@@ -131,10 +131,7 @@ const Login = () => {
                         </Checkbox>
                     </div>
 
-                    <div
-                        onClick={() => navigate('/forgot-password')}
-                        className={styles.btnForgetPassword}
-                    >
+                    <div onClick={() => navigate('/forgot-password')} className={styles.btnForgetPassword}>
                         Forgot password
                     </div>
                 </div>
@@ -165,7 +162,7 @@ const Login = () => {
                 <Social />
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default Login;
+export default Login

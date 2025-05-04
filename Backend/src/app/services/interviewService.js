@@ -32,11 +32,11 @@ export const createNewInterview = async (payload) => {
 }
 
 export const addInterviewMessage = (payload) => {
-    const { content, type_id, attachments } = payload
+    const { content, type, attachments } = payload
     // Thêm tin nhắn vào cuộc phỏng vấn
     // const interview = await Interview.findById(interview_id).lean()
     // if (!interview) return
-    const message = { content, type_id, attachments }
+    const message = { content, type, attachments }
     // interview.messages.push(message)
     // await Interview.updateOne({ _id: interview_id }, { $set: { messages: interview.messages } })
     return {
@@ -71,7 +71,7 @@ export async function startInterview(currentUser, projectId) {
     const botMessage = addInterviewMessage({
         interview_id: interview._id,
         content: interviewAI.answer,
-        type_id: botMessageType._id,
+        type: botMessageType,
         attachments: audioUrl,
     })
 
@@ -112,7 +112,7 @@ export async function replyInterview(currentUser, requestBody) {
         const userMessage = addInterviewMessage({
             interview_id: interview._id,
             content: content,
-            type_id: userMessageType._id,
+            type: userMessageType,
             attachments: null,
         })
 
@@ -121,7 +121,7 @@ export async function replyInterview(currentUser, requestBody) {
         const botMessage = addInterviewMessage({
             interview_id: interview._id,
             content: botResponse.answer,
-            type_id: botMessageType._id,
+            type: botMessageType,
             attachments: audioUrl,
         })
 

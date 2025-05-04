@@ -12,7 +12,7 @@ const InterviewControls = ({
     handleDeviceSelect,
 }) => {
     return (
-        <div className="flex flex-wrap items-center gap-2 justify">
+        <div className="flex flex-wrap items-center w-full gap-2 justify">
             <DeviceSelector
                 icon={<IconlyVoice size={20} color={'#000000'} />}
                 selectedDevice={selectedAudioInput}

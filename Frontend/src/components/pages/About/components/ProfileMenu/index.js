@@ -1,7 +1,7 @@
 import {
-    IconlyBookmark,
-    IconlyCalendar,
-    IconlyDocument,
+    // IconlyBookmark,
+    // IconlyCalendar,
+    // IconlyDocument,
     IconlyMessage,
     // IconlyNotification,
     IconlyProfile,
@@ -13,7 +13,7 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
     return (
         <div className="px-4 bg-[#ffffff] rounded-md my-8">
             <ul className="flex items-center max-w-full p-0 m-0 overflow-x-scroll scrollbar-hide">
-                <li
+                {/* <li
                     onClick={() => setChangeTab('Timeline')}
                     className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]"
                 >
@@ -32,7 +32,7 @@ const ProfileMenu = ({ changeTab, setChangeTab }) => {
                     >
                         Timeline
                     </span>
-                </li>
+                </li> */}
                 <li
                     onClick={() => setChangeTab('About')}
                     className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]"

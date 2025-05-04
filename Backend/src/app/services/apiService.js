@@ -4,6 +4,8 @@ import {
     AI_INTERVIEW_TOKEN,
     AI_TEXT_TO_SPEECH_TOKEN,
     GOOGLE_CLOUD_CREDENTIALS,
+    OPENAI_API_KEY,
+    OPENAI_API_SPEECH_URL,
 } from '@/configs'
 
 import fs from 'fs'
@@ -37,6 +39,55 @@ export async function callAPIInterview(userId, content, conversationId) {
 
 // Call API TEXT TO SPEECH để chuyển đổi văn bản thành giọng nói
 export async function convertTextToSpeech(content) {
+    // Format the content before sending to text-to-speech service
+    const formattedContent = formatContentForSpeech(content)
+    const audioUrl = await textToSpeechGoogleCloud(formattedContent)
+    return audioUrl
+}
+
+export async function convertSpeechToText(audioFile) {
+    const transcription = await speechToTextGoogleCloud(audioFile)
+    return transcription
+}
+
+export async function textToSpeechGoogleCloud(content) {
+    try {
+        const textToSpeech = require('@google-cloud/text-to-speech')
+        const client = new textToSpeech.TextToSpeechClient({
+            keyFilename: GOOGLE_CLOUD_CREDENTIALS,
+        })
+
+        const request = {
+            input: { text: content },
+            voice: {
+                languageCode: 'vi-VN',
+                name: 'vi-VN-Wavenet-A',
+                voiceClone: {},
+            },
+            audioConfig: {
+                audioEncoding: 'LINEAR16',
+            },
+        }
+
+        const [response] = await client.synthesizeSpeech(request)
+
+        const audioFile = new FileUpload({
+            originalname: `audio_${Date.now()}.wav`,
+            mimetype: 'audio/wav',
+            buffer: response.audioContent,
+            expiryTime: 60 * 1000 * 5, // Set to auto-delete after 5 minutes
+        })
+
+        // Save the file to the uploads/audio directory
+        const audioUrl = audioFile.save('audio_interview')
+        return audioUrl
+    } catch (error) {
+        console.error('Error calling Text-to-Speech API:', error)
+        return
+    }
+}
+
+export async function textToSpeechViettelAI(content) {
     const requestData = {
         text: content,
         voice: 'hn-quynhanh',
@@ -74,7 +125,7 @@ export async function convertTextToSpeech(content) {
     }
 }
 
-export async function convertSpeechToText(audioFile) {
+export async function speechToTextGoogleCloud(audioFile) {
     try {
         const speech = require('@google-cloud/speech')
         const client = new speech.SpeechClient({
@@ -113,4 +164,59 @@ export async function convertSpeechToText(audioFile) {
         console.error('Error in speech to text conversion:', error.message)
         return
     }
+}
+
+export async function speechToTextOpenAI(audioFile) {
+    try {
+        const formData = new FormData()
+        formData.append('file', fs.createReadStream(audioFile))
+        formData.append('model', 'whisper-1')
+        formData.append('language', 'vi')
+
+        const response = await axios.post(OPENAI_API_SPEECH_URL, formData, {
+            headers: {
+                'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                Authorization: `Bearer ${OPENAI_API_KEY}`,
+            },
+        })
+        console.log('Response from OpenAI:', response)
+        const transcription = response.text
+        return transcription
+    } catch (error) {
+        console.error('Error in speech to text conversion:', error.message)
+        return
+    }
+}
+
+/**
+ * Formats text content to improve text-to-speech quality
+ * @param {string} content - The text content to be formatted
+ * @returns {string} - The formatted content ready for text-to-speech conversion
+ */
+export function formatContentForSpeech(content) {
+    if (!content || typeof content !== 'string') {
+        return ''
+    }
+
+    let formattedContent = content
+
+    // Replace common abbreviations
+    formattedContent = formattedContent.replace(/(\b)Dr\.(\s)/g, '$1Doctor$2')
+    formattedContent = formattedContent.replace(/(\b)Mr\.(\s)/g, '$1Mister$2')
+    formattedContent = formattedContent.replace(/(\b)Mrs\.(\s)/g, '$1Misses$2')
+    formattedContent = formattedContent.replace(/(\b)Ms\.(\s)/g, '$1Miss$2')
+
+    // Add pauses (using commas) around certain punctuation to improve pacing
+    formattedContent = formattedContent.replace(/(\w)([.!?])(\s+\w)/g, '$1$2,$3')
+
+    // Normalize spacing
+    formattedContent = formattedContent.replace(/\s+/g, ' ').trim()
+
+    // Convert numbers to words when appropriate (for Vietnamese, we might keep numbers as is)
+    // For advanced number formatting specific to Vietnamese, additional logic would be needed
+
+    // Handle special Vietnamese characters and diacritics properly
+    // (Vietnamese-specific handling if needed)
+
+    return formattedContent
 }

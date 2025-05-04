@@ -11,9 +11,8 @@ const messageSchema = new Schema(
             type: String,
             default: null,
         },
-        type_id: {
-            type: ObjectId,
-            ref: 'Type',
+        type: {
+            type: String,
             required: true,
         },
     },

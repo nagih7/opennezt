@@ -4,7 +4,7 @@ import ProfileMenu from './components/ProfileMenu'
 import ProfessionalProfile from './components/ProfessionalProfile'
 import Friends from './components/Friends'
 import { Image } from '@chakra-ui/react'
-import Timeline from './components/Timeline'
+// import Timeline from './components/Timeline'
 import Groups from './components/Groups'
 // import Badges from './components/Badges'
 import ProfileOverview from './components/ProfileOverview'
@@ -44,7 +44,7 @@ const About = () => {
                 <ProfileMenu changeTab={changeTab} setChangeTab={setChangeTab} />
                 {changeTab == 'About' && <ProfessionalProfile />}
                 {changeTab == 'Friends' && <Friends />}
-                {changeTab == 'Timeline' && <Timeline />}
+                {/* {changeTab == 'Timeline' && <Timeline />} */}
                 {changeTab == 'Groups' && <Groups />}
                 {/* {changeTab == 'Badges' && <Badges />} */}
             </div>

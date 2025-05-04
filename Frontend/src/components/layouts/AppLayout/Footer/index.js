@@ -80,14 +80,14 @@ function Footer() {
                                             Activity
                                         </a>
                                     </li> */}
-                                    <li>
+                                    {/* <li>
                                         <a
                                             href="#"
                                             className="text-sm font-medium text-[#6f7f92] py-[10px] no-underline"
                                         >
                                             Timeline
                                         </a>
-                                    </li>
+                                    </li> */}
                                     <li>
                                         <a
                                             href="#"
