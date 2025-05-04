@@ -17,13 +17,14 @@ import {
     IconlySearch,
     IconlyShieldDone,
 } from 'components/UI/Iconly'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsOpenAvatarPreview } from 'states/modules/profile'
 import Loading from './components/Loading'
 import { matchingProjects } from 'api/artificialIntelligence'
 import { setOpenModalMatchingProjects } from 'states/modules/artificialIntelligence'
 import CrawlLinkedin from 'components/common/CrawlLinkedin'
+import { getHideLinkedinNotification } from 'utils/localStorage'
 
 const ProfileOverview = () => {
     // ========== DISPATCH ========== //
@@ -61,8 +62,15 @@ const ProfileOverview = () => {
     }
 
     const handleMatchingProjects = () => {
-        // dispatch(matchingProjects())
-        setIsOpenModalCrawlLinkedin(true)
+        // Check if user has opted to hide the notification
+        const hideNotification = getHideLinkedinNotification()
+        if (hideNotification) {
+            // If user chose to hide, just call the matching projects directly
+            dispatch(matchingProjects())
+        } else {
+            // Otherwise show the LinkedIn crawl modal
+            setIsOpenModalCrawlLinkedin(true)
+        }
         setIsOpenModalConfirmMatchingProjects(false)
     }
 

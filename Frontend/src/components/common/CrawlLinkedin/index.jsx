@@ -1,15 +1,30 @@
 import { Dialog, Portal } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import logo_opennezt_img from '../../../assets/images/logo/opennezt_full_black_old.png'
 import { toaster } from 'components/UI/toaster'
 import { useDispatch } from 'react-redux'
 import { matchingProjects } from 'api/artificialIntelligence'
+import { setHideLinkedinNotification, getHideLinkedinNotification } from 'utils/localStorage'
 
 const CrawlLinkedin = ({ status, setStatus }) => {
     const dispatch = useDispatch()
     // =========== STATE =========== //
     const [linkedinUsername, setLinkedinUsername] = useState('')
     const [isConfirmed, setIsConfirmed] = useState(false)
+    const [hideNotification, setHideNotification] = useState(false)
+
+    // Check localStorage on component mount
+    useEffect(() => {
+        if (status) {
+            // Only check if the component is being shown
+            const savedPreference = getHideLinkedinNotification()
+            if (savedPreference) {
+                // If user previously chose to hide, automatically skip
+                handleSkip()
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [status, dispatch])
 
     const handleUsernameChange = (e) => {
         setLinkedinUsername(e.target.value)
@@ -17,6 +32,10 @@ const CrawlLinkedin = ({ status, setStatus }) => {
 
     const handleConfirmationChange = (e) => {
         setIsConfirmed(e.target.checked)
+    }
+
+    const handleHideNotificationChange = (e) => {
+        setHideNotification(e.target.checked)
     }
 
     const verifyAndSubmit = () => {
@@ -40,12 +59,20 @@ const CrawlLinkedin = ({ status, setStatus }) => {
 
     const handleSubmit = () => {
         if (verifyAndSubmit()) {
+            // Save user preference if they checked the box
+            if (hideNotification) {
+                setHideLinkedinNotification(true)
+            }
             dispatch(matchingProjects(linkedinUsername))
             setStatus(false)
         }
     }
 
     const handleSkip = () => {
+        // Save user preference if they checked the box
+        if (hideNotification) {
+            setHideLinkedinNotification(true)
+        }
         dispatch(matchingProjects())
         setStatus(false)
     }
@@ -113,17 +140,28 @@ const CrawlLinkedin = ({ status, setStatus }) => {
                                     <span className="mt-[-22px] text-lg font-medium text-gray-300">or</span>
                                     <div className="w-[200px] border-t-2 border-gray-200 pb-3" />
                                 </div>
-                                <div>
-                                    {/* <button className="bg-[#2f65b9] text-white px-8 py-2 rounded-md font-semibold">
+                                <div className="flex items-center gap-2 font-medium text-md">
+                                    <input
+                                        type="checkbox"
+                                        name="hideNotification"
+                                        className="w-4 h-4 cursor-pointer"
+                                        checked={hideNotification}
+                                        onChange={handleHideNotificationChange}
+                                    />
+                                    <label htmlFor="hideNotification" className="text-gray-500 user-select-none">
+                                        {`Don't show this notification again`}
+                                    </label>
+                                </div>
+
+                                {/* <button className="bg-[#2f65b9] text-white px-8 py-2 rounded-md font-semibold">
                                         Enter Your Profile Manually
                                     </button> */}
-                                    <button
-                                        className="bg-[#2f65b9] text-white px-8 py-2 rounded-md font-semibold"
-                                        onClick={handleSkip}
-                                    >
-                                        Skip for Now
-                                    </button>
-                                </div>
+                                <button
+                                    className="bg-[#2f65b9] text-white px-8 py-2 rounded-md font-semibold"
+                                    onClick={handleSkip}
+                                >
+                                    Skip for Now
+                                </button>
                             </div>
                         </Dialog.Body>
                     </Dialog.Content>
