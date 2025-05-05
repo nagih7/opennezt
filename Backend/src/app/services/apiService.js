@@ -46,7 +46,8 @@ export async function convertTextToSpeech(content) {
 }
 
 export async function convertSpeechToText(audioFile) {
-    const transcription = await speechToTextGoogleCloud(audioFile)
+    // const transcription = await speechToTextGoogleCloud(audioFile)
+    const transcription = await speechToTextOpenAI(audioFile)
     return transcription
 }
 

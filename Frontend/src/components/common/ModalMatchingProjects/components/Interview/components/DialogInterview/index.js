@@ -66,7 +66,7 @@ const DiaLogInterview = ({ videoRef }) => {
             // Create voice detector with callbacks
             voiceDetectorRef.current = createVoiceDetector({
                 threshold: 10,
-                silenceDelay: 3000,
+                silenceDelay: 2000,
                 sampleRate: 44100,
                 onSpeechStart: () => {
                     setIsSpeaking(true)
