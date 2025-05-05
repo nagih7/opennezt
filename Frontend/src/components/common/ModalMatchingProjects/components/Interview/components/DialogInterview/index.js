@@ -66,7 +66,7 @@ const DiaLogInterview = ({ videoRef }) => {
             // Create voice detector with callbacks
             voiceDetectorRef.current = createVoiceDetector({
                 threshold: 10,
-                silenceDelay: 3000,
+                silenceDelay: 2000,
                 sampleRate: 44100,
                 onSpeechStart: () => {
                     setIsSpeaking(true)
@@ -244,7 +244,7 @@ const DiaLogInterview = ({ videoRef }) => {
                         <Dialog.Body className="w-full flex-1 bg-[#201f24] p-0 flex flex-col overflow-hidden">
                             <div className="flex-1 px-8 pt-8 overflow-hidden">
                                 <div className="relative w-full h-full">
-                                    <AIFrame videoRef={videoRef} />
+                                    <AIFrame />
                                     <UserFrame videoRef={videoRef} />
 
                                     {isLoadingReplyInterview && (

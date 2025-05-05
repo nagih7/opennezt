@@ -20,8 +20,3 @@ export async function closeInterview(req, res) {
     await interviewService.closeInterview(req.body)
     res.jsonify('Close interview successfully')
 }
-
-export function clearAIAudio(req, res) {
-    interviewService.clearAIAudio(req.body)
-    res.jsonify('Clear AI audio successfully')
-}
