@@ -1,4 +1,4 @@
-import callApi, { callApiSimple } from 'api/callApi'
+import callApi from 'api/callApi'
 import {
     requestStartInterview,
     startInterviewSuccess,
@@ -22,24 +22,6 @@ export const startInterview = (projectId) => async (dispatch, getState) => {
     })
 }
 
-// export const replyInterviewByMessage = (requestData) => async (dispatch, getState) => {
-//     const message = {
-//         ...requestData,
-//         key: `temp-${Date.now()}`,
-//     }
-//     dispatch(addMessage(message))
-
-//     // Regular text message
-//     return callApi({
-//         method: 'post',
-//         apiPath: `interview/reply-message`,
-//         actionTypes: [requestReplyInterview, replyInterviewSuccess, replyInterviewFail],
-//         variables: message,
-//         dispatch,
-//         getState,
-//     })
-// }
-
 export const replyInterview = (payload) => async (dispatch, getState) => {
     const { audio, interview } = payload
     // Create a FormData object to send the audio file
@@ -54,14 +36,6 @@ export const replyInterview = (payload) => async (dispatch, getState) => {
         variables: formData,
         dispatch,
         getState,
-    })
-}
-
-export const clearAIAudio = async (payload) => {
-    return callApiSimple({
-        method: 'delete',
-        apiPath: `interview/audio`,
-        variables: payload,
     })
 }
 

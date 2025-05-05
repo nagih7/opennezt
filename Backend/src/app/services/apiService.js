@@ -1,4 +1,5 @@
 import {
+    AI_API_TOKEN,
     AI_API_URL,
     AI_INTERVIEW_API_URL,
     AI_INTERVIEW_TOKEN,
@@ -11,6 +12,7 @@ import {
 import fs from 'fs'
 import { FileUpload } from '@/utils/classes'
 import axios from 'axios'
+import formatContentForSpeech from '@/utils/classes/format-content'
 
 // Call API BOT phỏng vấn
 export async function callAPIInterview(userId, content, conversationId) {
@@ -45,9 +47,9 @@ export async function convertTextToSpeech(content) {
     return audioUrl
 }
 
-export async function convertSpeechToText(audioFile) {
-    // const transcription = await speechToTextGoogleCloud(audioFile)
-    const transcription = await speechToTextOpenAI(audioFile)
+export async function convertSpeechToText(audioPath) {
+    // const transcription = await speechToTextGoogleCloud(audioPath)
+    const transcription = await speechToTextOpenAI(audioPath)
     return transcription
 }
 
@@ -72,15 +74,15 @@ export async function textToSpeechGoogleCloud(content) {
 
         const [response] = await client.synthesizeSpeech(request)
 
-        const audioFile = new FileUpload({
+        const audioPath = new FileUpload({
             originalname: `audio_${Date.now()}.wav`,
             mimetype: 'audio/wav',
             buffer: response.audioContent,
-            expiryTime: 60 * 1000 * 5, // Set to auto-delete after 5 minutes
+            expiryTime: 60 * 1000 * 3, // Set to auto-delete after 3 minutes
         })
 
         // Save the file to the uploads/audio directory
-        const audioUrl = audioFile.save('audio_interview')
+        const audioUrl = audioPath.save('audio_interview')
         return audioUrl
     } catch (error) {
         console.error('Error calling Text-to-Speech API:', error)
@@ -107,15 +109,15 @@ export async function textToSpeechViettelAI(content) {
         })
 
         // Create a FileUpload instance using the binary audio data directly
-        const audioFile = new FileUpload({
+        const audioPath = new FileUpload({
             originalname: `audio_${Date.now()}.mp3`,
             mimetype: 'audio/mpeg',
             buffer: response.data, // Use the binary data directly
-            expiryTime: 60 * 1000 * 5, // Set to auto-delete after 5 minutes
+            expiryTime: 60 * 1000 * 3, // Set to auto-delete after 3 minutes
         })
 
         // Save the file to the uploads/audio directory
-        const audioUrl = audioFile.save('audio_interview')
+        const audioUrl = audioPath.save('audio_interview')
 
         // Return the URL to access the audio file
         // const audioUrl = `${LINK_STATIC_URL}${filePath}`
@@ -126,14 +128,14 @@ export async function textToSpeechViettelAI(content) {
     }
 }
 
-export async function speechToTextGoogleCloud(audioFile) {
+export async function speechToTextGoogleCloud(audioPath) {
     try {
         const speech = require('@google-cloud/speech')
         const client = new speech.SpeechClient({
             keyFilename: GOOGLE_CLOUD_CREDENTIALS,
         })
 
-        const file = fs.readFileSync(audioFile)
+        const file = fs.readFileSync(audioPath)
 
         // Cấu hình và gửi yêu cầu như code gốc
         const config = {
@@ -158,7 +160,6 @@ export async function speechToTextGoogleCloud(audioFile) {
             const transcription = response.results.map((result) => result.alternatives[0].transcript).join('\n')
             return transcription
         } else {
-            console.log('No transcription results found.')
             return
         }
     } catch (error) {
@@ -167,57 +168,61 @@ export async function speechToTextGoogleCloud(audioFile) {
     }
 }
 
-export async function speechToTextOpenAI(audioFile) {
+export async function speechToTextOpenAI(audioPath) {
     try {
+        // Create a proper FormData object
+        const FormData = require('form-data')
         const formData = new FormData()
-        formData.append('file', fs.createReadStream(audioFile))
+
+        // Read the file as a Buffer and append to FormData with the correct filename
+        const fileBuffer = fs.readFileSync(audioPath)
+        const fileName = audioPath.split('/').pop()
+
+        // Append the file buffer with filename and content type
+        formData.append('file', fileBuffer, {
+            filename: fileName,
+            contentType: 'audio/wav',
+        })
+
         formData.append('model', 'whisper-1')
         formData.append('language', 'vi')
 
         const response = await axios.post(OPENAI_API_SPEECH_URL, formData, {
             headers: {
-                'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                ...formData.getHeaders(),
                 Authorization: `Bearer ${OPENAI_API_KEY}`,
             },
         })
-        console.log('Response from OpenAI:', response)
-        const transcription = response.text
+
+        const transcription = response.data.text
         return transcription
     } catch (error) {
-        console.error('Error in speech to text conversion:', error.message)
+        console.error('Error in speech to text conversion:', error.response?.data?.error?.message || error.message)
         return
     }
 }
 
-/**
- * Formats text content to improve text-to-speech quality
- * @param {string} content - The text content to be formatted
- * @returns {string} - The formatted content ready for text-to-speech conversion
- */
-export function formatContentForSpeech(content) {
-    if (!content || typeof content !== 'string') {
-        return ''
+export async function getProjectMatchingInterview(userId, profile) {
+    try {
+        const requestData = {
+            inputs: profile,
+            query: JSON.stringify(profile),
+            response_mode: 'blocking',
+            user: userId.toString(),
+        }
+
+        const response = await axios.post(`${AI_API_URL}chat-messages`, requestData, {
+            headers: {
+                Authorization: `Bearer ${AI_API_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+        })
+
+        const matches = JSON.parse(response.data?.answer)?.matches
+
+        return matches
+    } catch (error) {
+        console.error('Error calling Dify API:', error.response?.data || error.message)
+        throw error
     }
-
-    let formattedContent = content
-
-    // Replace common abbreviations
-    formattedContent = formattedContent.replace(/(\b)Dr\.(\s)/g, '$1Doctor$2')
-    formattedContent = formattedContent.replace(/(\b)Mr\.(\s)/g, '$1Mister$2')
-    formattedContent = formattedContent.replace(/(\b)Mrs\.(\s)/g, '$1Misses$2')
-    formattedContent = formattedContent.replace(/(\b)Ms\.(\s)/g, '$1Miss$2')
-
-    // Add pauses (using commas) around certain punctuation to improve pacing
-    formattedContent = formattedContent.replace(/(\w)([.!?])(\s+\w)/g, '$1$2,$3')
-
-    // Normalize spacing
-    formattedContent = formattedContent.replace(/\s+/g, ' ').trim()
-
-    // Convert numbers to words when appropriate (for Vietnamese, we might keep numbers as is)
-    // For advanced number formatting specific to Vietnamese, additional logic would be needed
-
-    // Handle special Vietnamese characters and diacritics properly
-    // (Vietnamese-specific handling if needed)
-
-    return formattedContent
 }

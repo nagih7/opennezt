@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createSyncedAudioVideo } from 'utils/audio/audioHandler'
 import { OPENNEZT_INTERVIEW_LISTEN, OPENNEZT_INTERVIEW_SPEAK } from 'utils/constants'
 import { setCurrentAction } from 'states/modules/interview'
-import { clearAIAudio } from 'api/interview'
 
 const AIFrame = () => {
     const dispatch = useDispatch()
@@ -87,7 +86,6 @@ const AIFrame = () => {
                             interviewVideoRef.current,
                             {
                                 onAudioEnd: () => {
-                                    clearAIAudio(messages[messages.length - 1])
                                     switchToListenMode()
                                     // setHasAudio(false)
                                 },
@@ -95,7 +93,6 @@ const AIFrame = () => {
                                     // console.log('Video playback ended')
                                 },
                                 onSyncComplete: () => {
-                                    clearAIAudio(messages[messages.length - 1])
                                     switchToListenMode()
                                     // setHasAudio(false)
                                 },
