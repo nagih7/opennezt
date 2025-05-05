@@ -23,8 +23,6 @@ interviewRouter.post(
     interviewController.replyInterview
 )
 
-interviewRouter.delete('/audio', interviewController.clearAIAudio)
-
 // KẾT THÚC CUỘC PHỎNG VẤN
 interviewRouter.post(
     '/close',
