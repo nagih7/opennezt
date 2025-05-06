@@ -18,6 +18,7 @@ import {
     PROJECT_ACTIVITY_ADDITIONAL,
     PROJECT_ACTIVITY_REQUIREMENT,
     PROJECT_ACTIVITY_NEW_MEMBER,
+    PROJECT_INVITATION_NOTIFICATION_CANCEL,
 } from '@/configs'
 import {
     Project,
@@ -2500,4 +2501,210 @@ export async function getProjectByMatching(projectId) {
     ])
 
     return project[0] || null
+}
+// ========== GET [My Projects - List Invite To Project] ========== //
+export async function getListInviteToProject(user, projectId) {
+    const matchStage = {
+        $match: {
+            _id: new ObjectId(projectId),
+            user_id: user._id,
+        },
+    }
+
+    // Lookup friends và project members trong một pipeline
+    const friendInviteList = {
+        $lookup: {
+            from: 'friends',
+            localField: 'user_id',
+            foreignField: 'user_id',
+            as: 'friendsList',
+            pipeline: [
+                // Lookup user info
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'friend_id',
+                        foreignField: '_id',
+                        as: 'userData',
+                    },
+                },
+                { $unwind: '$userData' },
+
+                // Lookup project members để kiểm tra xem bạn bè đã là thành viên chưa
+                {
+                    $lookup: {
+                        from: 'project_members',
+                        let: { friendId: '$friend_id', projectId: new ObjectId(projectId) },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ['$user_id', '$$friendId'] },
+                                            { $eq: ['$project_id', '$$projectId'] },
+                                        ],
+                                    },
+                                },
+                            },
+                        ],
+                        as: 'memberCheck',
+                    },
+                },
+
+                // Chỉ giữ lại những người chưa là thành viên
+                {
+                    $match: {
+                        memberCheck: { $size: 0 },
+                    },
+                },
+
+                // Project dữ liệu người dùng
+                {
+                    $project: {
+                        id: '$friend_id',
+                        name: '$userData.name',
+                        avatar: {
+                            $cond: {
+                                if: { $eq: [{ $ifNull: ['$userData.avatar', ''] }, ''] },
+                                then: null,
+                                else: { $concat: [LINK_STATIC_URL, '$userData.avatar'] },
+                            },
+                        },
+                        status: 'friend',
+                    },
+                },
+            ],
+        },
+    }
+
+    // Lấy thông tin người đã gửi lời mời
+    const alreadyInvited = {
+        $lookup: {
+            from: 'notifications_feed',
+            let: { projectId: '$_id' },
+            pipeline: [
+                {
+                    $match: {
+                        $expr: {
+                            $and: [{ $eq: ['$data.project_id', '$$projectId'] }, { $eq: ['$source_id', user._id] }],
+                        },
+                        type_id: {
+                            $eq: await Type.findOne({
+                                class: NOTIFICATION_TYPE,
+                                name: PROJECT_INVITATION_NOTIFICATION,
+                            }).then((type) => type._id),
+                        },
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user_id',
+                        foreignField: '_id',
+                        as: 'userData',
+                    },
+                },
+                { $unwind: '$userData' },
+                {
+                    $lookup: {
+                        from: 'roles',
+                        localField: 'data.team_role_id',
+                        foreignField: '_id',
+                        as: 'teamRole',
+                    },
+                },
+                {
+                    $unwind: {
+                        path: '$teamRole',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'roles',
+                        localField: 'data.role_id',
+                        foreignField: '_id',
+                        as: 'role',
+                    },
+                },
+                {
+                    $unwind: {
+                        path: '$role',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $project: {
+                        id: '$user_id',
+                        name: '$userData.name',
+                        avatar: {
+                            $cond: {
+                                if: { $eq: [{ $ifNull: ['$userData.avatar', ''] }, ''] },
+                                then: null,
+                                else: { $concat: [LINK_STATIC_URL, '$userData.avatar'] },
+                            },
+                        },
+                        status: 'invited',
+                        invitedAt: '$created_at',
+                        teamRole: '$teamRole.name',
+                        role: '$role.name',
+                    },
+                },
+            ],
+            as: 'invitedList',
+        },
+    }
+
+    // Đổi tên từ friendsList sang userInviteList để tương thích với client
+    const projectStage = {
+        $project: {
+            _id: 0,
+            userInviteList: '$friendsList',
+            invitedList: 1,
+        },
+    }
+
+    const project = await Project.aggregate([matchStage, friendInviteList, alreadyInvited, projectStage])
+
+    return project[0] || { userInviteList: [], invitedList: [] }
+}
+
+// ========== CANCEL [Project invitation] ========== //
+export async function cancelProjectInvitation(user, projectId, requestBody) {
+    const { userId } = requestBody
+
+    if (!userId) {
+        throw new Error('User ID is required')
+    }
+
+    // Kiểm tra project có tồn tại và user có quyền không
+    const project = await Project.findOne({
+        _id: new ObjectId(projectId),
+        user_id: user._id,
+    })
+
+    if (!project) {
+        throw new Error('Project not found or you do not have permission')
+    }
+
+    // Lấy loại thông báo mời dự án
+    const typeNotification = await Type.findOne({
+        class: NOTIFICATION_TYPE,
+        name: PROJECT_INVITATION_NOTIFICATION,
+    })
+
+    if (!typeNotification) {
+        throw new Error('Notification type not found')
+    }
+
+    // Xóa lời mời - Sửa cách truy vấn
+    const result = await NotificationFeed.deleteOne({
+        'data.project_id': new ObjectId(projectId),
+        user_id: new ObjectId(userId),
+        type_id: typeNotification._id,
+    })
+
+    if (result.deletedCount === 0) {
+        throw new Error('Invitation not found or already cancelled')
+    }
 }

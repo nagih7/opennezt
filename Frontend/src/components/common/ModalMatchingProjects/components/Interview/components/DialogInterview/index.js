@@ -244,7 +244,7 @@ const DiaLogInterview = ({ videoRef }) => {
                         <Dialog.Body className="w-full flex-1 bg-[#201f24] p-0 flex flex-col overflow-hidden">
                             <div className="flex-1 px-8 pt-8 overflow-hidden">
                                 <div className="relative w-full h-full">
-                                    <AIFrame videoRef={videoRef} />
+                                    <AIFrame />
                                     <UserFrame videoRef={videoRef} />
 
                                     {isLoadingReplyInterview && (
@@ -282,7 +282,7 @@ const DiaLogInterview = ({ videoRef }) => {
                                     )}
 
                                     {/* Voice visualization */}
-                                    {isSpeaking && (
+                                    {/* {isSpeaking && (
                                         <div className="absolute z-10 flex items-center justify-center gap-2 transform -translate-x-1/2 top-16 left-1/2">
                                             <div className="flex items-end h-10 gap-1">
                                                 <div
@@ -307,7 +307,7 @@ const DiaLogInterview = ({ videoRef }) => {
                                                 ></div>
                                             </div>
                                         </div>
-                                    )}
+                                    )} */}
                                 </div>
                             </div>
                             <div className="flex w-full px-8 pt-4">

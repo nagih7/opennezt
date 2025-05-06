@@ -190,3 +190,14 @@ export async function updateNewMemberActivity(req, res) {
     const result = await projectService.updateNewMemberActivity(req.currentUser, req.params, req.body)
     res.status(200).jsonify(result, 'Update activity new member successfully.')
 }
+// ========== GET [My Projects -List Invite To Project] ========== //
+export async function getListInviteToProject(req, res) {
+    const result = await projectService.getListInviteToProject(req.currentUser, req.params.id)
+    res.jsonify(result)
+}
+
+// ========== CANCEL [Project invitation] ========== //
+export async function cancelProjectInvitation(req, res) {
+    await projectService.cancelProjectInvitation(req.currentUser, req.params.id, req.body)
+    res.status(200).jsonify('Cancel project invitation successfully.')
+}
