@@ -45,7 +45,7 @@ const ProfileOverview = ({ user, friendRequest }) => {
 
     return (
         <div className="p-8 bg-[#ffffff] rounded-md">
-            <div className="flex lg:flex-row flex-col items-center w-full">
+            <div className="flex flex-col items-center w-full lg:flex-row">
                 <div className="w-4/12"></div>
                 <div className="flex flex-col items-center w-4/12">
                     <div className="relative flex flex-col items-center bg-[#ffffff] mb-10 p-1 rounded-md">

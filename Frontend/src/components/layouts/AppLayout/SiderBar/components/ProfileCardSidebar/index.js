@@ -1,6 +1,5 @@
 import React from 'react'
 import { CheckCircleFilled } from '@ant-design/icons'
-import AvatarDefault from '../../../../../../assets/images/default/AvatarDefault.png'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Avatar } from '@chakra-ui/react'
@@ -24,7 +23,7 @@ const ProfileCardSidebar = () => {
                     <span className="font-semibold truncate w-36">{authUser?.name}</span>
                     <CheckCircleFilled className="text-blue-500" />
                 </div>
-                <div className="text-xs text-gray-500 truncate w-40">@{authUser?.email}</div>
+                <div className="w-40 text-xs text-gray-500 truncate">@{authUser?.email}</div>
             </div>
         </div>
     )

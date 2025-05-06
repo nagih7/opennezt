@@ -9,9 +9,6 @@ import { useNavigate } from 'react-router-dom'
 function RightSidebar({ activities, action }) {
     const navigate = useNavigate()
     const [displayedActivities, setDisplayedActivities] = useState([])
-    // const [page, setPage] = useState(1)
-    // const [loading, setLoading] = useState(false)
-    // const [hasMore, setHasMore] = useState(true)
     const activitiesContainerRef = useRef(null)
 
     // ========== HANDLE FUNCTION ========== //
@@ -25,44 +22,6 @@ function RightSidebar({ activities, action }) {
             // setHasMore(activities.length >= 10)
         }
     }, [activities])
-
-    // const loadMoreActivities = useCallback(async () => {
-    //     if (loading || !hasMore) return
-
-    //     setLoading(true)
-
-    //     try {
-    //         const nextPage = page + 1
-    //         const newActivities = await fetchMoreActivities(nextPage)
-
-    //         if (newActivities && newActivities.length > 0) {
-    //             setDisplayedActivities((prev) => [...prev, ...newActivities])
-    //             setPage(nextPage)
-    //             setHasMore(newActivities.length >= 10)
-    //         } else {
-    //             setHasMore(false)
-    //         }
-    //     } catch (error) {
-    //         console.error('Lỗi khi tải thêm activities:', error)
-    //     } finally {
-    //         setLoading(false)
-    //     }
-    // }, [loading, hasMore, page, fetchMoreActivities])
-
-    // useEffect(() => {
-    //     const container = activitiesContainerRef.current
-    //     if (!container) return
-
-    //     const handleScroll = () => {
-    //         const { scrollTop, scrollHeight, clientHeight } = container
-    //         if (scrollHeight - scrollTop - clientHeight < 50 && !loading && hasMore) {
-    //             loadMoreActivities()
-    //         }
-    //     }
-
-    //     container.addEventListener('scroll', handleScroll)
-    //     return () => container.removeEventListener('scroll', handleScroll)
-    // }, [loading, hasMore, loadMoreActivities])
 
     // ========== RENDER COMPONENT ========== //
     return (
@@ -99,22 +58,16 @@ function RightSidebar({ activities, action }) {
                             </div>
                         </div>
                     ))}
-                    {/* {loading && (
-                        <div className="flex justify-center py-2">
-                            <Spinner size="sm" color="blue.500" />
-                        </div>
-                    )}
-                    {!hasMore && displayedActivities.length > 0 && (
-                        <div className="py-2 text-sm text-center text-gray-500">All activities shown</div>
-                    )} */}
                 </div>
             </div>
-            <div className="relative w-full">
-                <img src={fb_img} alt="logo-fb_img" className="w-full h-[450px] rounded-md mt-4" />
-                <img src={Logo} alt="logo-opennezt" className={`$styles.logo, absolute top-0 py-14 px-12 left-0`} />
-                <div className="absolute left-0 flex flex-col items-center gap-3 px-12 text-center text-white 2xl:left-5 2xl:mt-8 2xl:px-10 top-32">
-                    Feel free to reach us anytime. we are avaliable 24 hours
-                    <button className="bg-[#ffffff] px-3 py-3 text-black font-medium rounded-md">CONTACT US</button>
+            <div className="relative w-full ">
+                <img src={fb_img} alt="logo-fb_img" className="w-full rounded-md" />
+                <div className="absolute top-0 h-3/4 flex flex-col items-center justify-center bg-gradient-to-b from-[#000000] to-[#00000000] rounded-md px-20 gap-4">
+                    <img src={Logo} alt="logo-opennezt" />
+                    <div className="items-center text-center text-white">
+                        Feel free to reach us anytime. we are avaliable 24 hours
+                    </div>
+                    <button className="bg-[#ffffff] px-4 py-2.5 text-black font-medium rounded-md">CONTACT US</button>
                 </div>
             </div>
         </div>
