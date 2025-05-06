@@ -17,6 +17,7 @@ const Friends = () => {
     const [orderBy, setOrderBy] = useState('Last Active')
     const [isActive, setIsActive] = useState('friends')
 
+
     // ========== STATE FROM REDUX ========== //
     const friends = useSelector((state) => state.profile.myFriends)
     const notis = useSelector((state) => state.notification.notifications)
@@ -25,6 +26,7 @@ const Friends = () => {
         notification.type?.name === FRIEND_REQUEST_NOTIFICATION, notification.metadata?.status === WAITING_STATUS
     })
     // ========== STATE ========== //
+
 
     const sortList = (list) => {
         return [...list].sort((a, b) => {
@@ -57,7 +59,7 @@ const Friends = () => {
     }
 
     return (
-        <div className="flex gap-3">
+        <div className="flex gap-8">
             <div className="lg:w-10/12 w-full">
                 <Tabs.Root defaultValue={isActive} className="flex flex-col w-full h-full">
                     <Tabs.List className="flex justify-between items-center pb-2 bg-white h-[5.25rem]  px-8">

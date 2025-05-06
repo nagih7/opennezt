@@ -1,11 +1,11 @@
-import React from 'react'
-import logo from 'assets/images/logo/opennezt_full_black.png'
+import React from 'react';
+import logo from 'assets/images/logo/opennezt_full_black.png';
 
 function Footer() {
     return (
         <footer className="w-full pt-8">
             <div className="bg-[#ffffff] px-[16px] py-[80px] ">
-                <div className="flex w-full gap-8">
+                <div className="flex gap-8 w-full">
                     <div className="w-4/12">
                         <img src={logo} className="pb-8" />
                         <div>
@@ -28,7 +28,7 @@ function Footer() {
                                 <span className="text-sm font-semibold">COMPANY</span>
                             </h5>
                             <div>
-                                <ul className="flex flex-col gap-3 pl-0 mb-0">
+                                <ul className="flex flex-col gap-3 mb-0 pl-0">
                                     <li>
                                         <a
                                             href="#"
@@ -71,23 +71,23 @@ function Footer() {
                                 <span className="text-sm font-semibold">COMMUNITY</span>
                             </h5>
                             <div>
-                                <ul className="flex flex-col gap-3 pl-0 mb-0">
-                                    {/* <li>
+                                <ul className="flex flex-col gap-3 mb-0 pl-0">
+                                    <li>
                                         <a
                                             href="#"
                                             className="text-sm font-medium text-[#6f7f92] py-[10px] no-underline"
                                         >
                                             Activity
                                         </a>
-                                    </li> */}
-                                    {/* <li>
+                                    </li>
+                                    <li>
                                         <a
                                             href="#"
                                             className="text-sm font-medium text-[#6f7f92] py-[10px] no-underline"
                                         >
                                             Timeline
                                         </a>
-                                    </li> */}
+                                    </li>
                                     <li>
                                         <a
                                             href="#"
@@ -114,7 +114,7 @@ function Footer() {
                                 <span className="text-sm font-semibold">HELP</span>
                             </h5>
                             <div>
-                                <ul className="flex flex-col gap-3 pl-0 mb-0">
+                                <ul className="flex flex-col gap-3 mb-0 pl-0">
                                     <li>
                                         <a
                                             href="#"
@@ -149,7 +149,7 @@ function Footer() {
                                 <span className="text-sm font-semibold">FOLLOW US</span>
                             </h5>
                             <div>
-                                <ul className="flex flex-col gap-3 pl-0 mb-0">
+                                <ul className="flex flex-col gap-3 mb-0 pl-0">
                                     <li>
                                         <a
                                             href="#"
@@ -188,7 +188,7 @@ function Footer() {
                 </div>
             </div>
         </footer>
-    )
+    );
 }
 
-export default Footer
+export default Footer;

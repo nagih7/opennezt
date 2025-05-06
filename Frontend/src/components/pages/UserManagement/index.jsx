@@ -1,32 +1,38 @@
-import React, { useEffect, useState } from 'react'
-import styles from './styles.module.scss'
-import TableCustom from '../../../components/UI/Table'
-import ButtonMASQ from '../../../components/UI/Button'
-import SwitchMASQ from '../../../components/UI/Switch'
-import CreateOrUpdate from './components/CreateOrUpdate'
-import ModalConfirm from '../../../components/UI/Modal/ModalConfirm'
-import { useDispatch, useSelector } from 'react-redux'
-import { getListEmployee, handleDeleteEmployee } from '../../../api/employee'
-import { setVisibleModalCreateOrUpdateEmployee, setVisibleModalDeleteEmployee } from '../../../states/modules/employee'
-import _ from 'lodash'
-import Filter from './components/Filter'
-import BtnFilter from '../../UI/ButtonFilter'
-import AvatarDefault from '../../../assets/images/default/AvatarDefault.png'
-import { IconlyDelete, IconlyEdit } from 'components/UI/Iconly'
+import React, { useEffect, useState } from 'react';
+import styles from './styles.module.scss';
+import TableCustom from '../../../components/UI/Table';
+import InputMASQ from '../../../components/UI/Input';
+import ButtonMASQ from '../../../components/UI/Button';
+import IconDeleteTable from '../../../assets/images/icon/table/delete_14x14.svg';
+import IconEditTable from '../../../assets/images/icon/table/edit_12x12.svg';
+import SwitchMASQ from '../../../components/UI/Switch';
+import CreateOrUpdate from './components/CreateOrUpdate';
+import ModalConfirm from '../../../components/UI/Modal/ModalConfirm';
+import { useDispatch, useSelector } from 'react-redux';
+import { getListEmployee, handleDeleteEmployee } from '../../../api/employee';
+import {
+    setVisibleModalCreateOrUpdateEmployee,
+    setVisibleModalDeleteEmployee,
+} from '../../../states/modules/employee';
+import _ from 'lodash';
+import Filter from './components/Filter';
+import BtnFilter from '../../UI/ButtonFilter';
+import AvatarDefault from '../../../assets/images/default/AvatarDefault.png';
+import { IconlyDelete, IconlyEdit } from 'components/UI/Iconly';
 
 function UserManagement() {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
-    const authUser = useSelector((state) => state.auth.authUser)
+    const authUser = useSelector((state) => state.auth.authUser);
     const { users, isLoadingGetListUser, paginationListUser, visibleModalDeleteUser } = useSelector(
         (state) => state.employee
-    )
+    );
 
-    const [employee, setEmployee] = useState({})
+    const [employee, setEmployee] = useState({});
     const [configModal, setConfigModal] = useState({
         title: 'Create user',
         type: 'CREATE',
-    })
+    });
     const [dataFilter, setDataFilter] = useState({
         keySearch: '',
         status: '',
@@ -34,47 +40,47 @@ function UserManagement() {
         page: 1,
         order: null,
         column: null,
-    })
+    });
 
     useEffect(() => {
-        dispatch(getListEmployee(dataFilter))
-    }, [dataFilter, dispatch])
+        dispatch(getListEmployee(dataFilter));
+    }, [dataFilter, dispatch]);
 
     const handleCreate = () => {
-        dispatch(setVisibleModalCreateOrUpdateEmployee(true))
+        dispatch(setVisibleModalCreateOrUpdateEmployee(true));
         setConfigModal({
             title: 'Create user',
             type: 'CREATE',
-        })
-    }
+        });
+    };
 
     const handleEdit = (employee) => {
-        let employeeSelect = _.cloneDeep(employee)
-        setEmployee(employeeSelect)
-        dispatch(setVisibleModalCreateOrUpdateEmployee(true))
+        let employeeSelect = _.cloneDeep(employee);
+        setEmployee(employeeSelect);
+        dispatch(setVisibleModalCreateOrUpdateEmployee(true));
         setConfigModal({
             title: 'Update user',
             type: 'UPDATE',
-        })
-    }
+        });
+    };
 
     const handleShowConfirmDelete = (employee) => {
-        let employeeSelect = _.cloneDeep(employee)
-        setEmployee(employeeSelect)
-        dispatch(setVisibleModalDeleteEmployee(true))
-    }
+        let employeeSelect = _.cloneDeep(employee);
+        setEmployee(employeeSelect);
+        dispatch(setVisibleModalDeleteEmployee(true));
+    };
 
     const handleConfirmDeleteEmployee = () => {
-        dispatch(handleDeleteEmployee(employee.id))
-    }
+        dispatch(handleDeleteEmployee(employee.id));
+    };
 
     const changeCurrentPage = (page) => {
-        setDataFilter({ ...dataFilter, page: page })
-    }
+        setDataFilter({ ...dataFilter, page: page });
+    };
 
     const handleSearch = (e) => {
-        setDataFilter({ ...dataFilter, keySearch: e.target.value })
-    }
+        setDataFilter({ ...dataFilter, keySearch: e.target.value });
+    };
 
     const onChange = (pagination, filters, sorter) => {
         if (sorter.order && sorter.field) {
@@ -82,15 +88,15 @@ function UserManagement() {
                 ...dataFilter,
                 order: sorter.order === 'descend' ? -1 : 1,
                 column: sorter.field,
-            })
+            });
         } else {
-            setDataFilter({ ...dataFilter, order: null, column: null })
+            setDataFilter({ ...dataFilter, order: null, column: null });
         }
-    }
+    };
 
     const handleChangeStatus = (value) => {
-        setDataFilter({ ...dataFilter, status: value.toString() })
-    }
+        setDataFilter({ ...dataFilter, status: value.toString() });
+    };
 
     // Columns for table
     const columns = [
@@ -105,8 +111,8 @@ function UserManagement() {
                             src={record.avatar || AvatarDefault}
                             alt={record.name}
                             onError={(e) => {
-                                e.target.onerror = null
-                                e.target.src = AvatarDefault
+                                e.target.onerror = null;
+                                e.target.src = AvatarDefault;
                             }}
                         />
                     </div>
@@ -154,7 +160,10 @@ function UserManagement() {
                                 <IconlyEdit color={'#000000'} size={25} />
                             </div>
                             {authUser._id !== record._id ? (
-                                <div onClick={() => handleShowConfirmDelete(record)} className="cursor-pointer">
+                                <div
+                                    onClick={() => handleShowConfirmDelete(record)}
+                                    className="cursor-pointer"
+                                >
                                     <IconlyDelete color={'#000000'} size={25} />
                                 </div>
                             ) : (
@@ -170,13 +179,15 @@ function UserManagement() {
                 </>
             ),
         },
-    ]
+    ];
 
     return (
         <div>
             <div className="bg-[#ffffff] rounded-md my-8">
                 <div className="flex items-center justify-between p-8 border-b border-gray-200">
-                    <span className="text-2xl font-medium ">Total records ({paginationListUser.totalRecord})</span>
+                    <span className="text-2xl font-medium ">
+                        Total records ({paginationListUser.totalRecord})
+                    </span>
                     <div className={styles.btnWrap}>
                         <ButtonMASQ
                             onClick={() => handleCreate()}
@@ -196,7 +207,7 @@ function UserManagement() {
                 <div className="flex justify-between gap-4 px-8 pt-8">
                     <div className="flex items-center justify-between w-full border rounded-md ">
                         <input
-                            className="w-full px-3 bg-white rounded-md outline-none"
+                            className="w-full px-3 rounded-md outline-none bg-white"
                             placeholder="Search by name, email or phone"
                             value={dataFilter.keySearch}
                             onChange={(e) => handleSearch(e)}
@@ -223,7 +234,12 @@ function UserManagement() {
                         </svg>
                     </div>
                     <BtnFilter
-                        content={<Filter statusUser={dataFilter.status} onChangeStatus={handleChangeStatus} />}
+                        content={
+                            <Filter
+                                statusUser={dataFilter.status}
+                                onChangeStatus={handleChangeStatus}
+                            />
+                        }
                     />
                 </div>
                 <TableCustom
@@ -247,7 +263,7 @@ function UserManagement() {
                 onConfirm={() => handleConfirmDeleteEmployee()}
             />
         </div>
-    )
+    );
 }
 
-export default UserManagement
+export default UserManagement;

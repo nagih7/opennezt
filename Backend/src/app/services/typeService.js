@@ -3,21 +3,19 @@ import { Type } from '@/models'
 
 // Lấy type message của BOT
 export async function getTypeOfBotMessage() {
-    const messageType = await INTERVIEW_MESSAGE_TYPE.BOT
-    // const messageType = await Type.findOne({
-    //     class: INTERVIEW_MESSAGE_TYPE.TYPE,
-    //     name: INTERVIEW_MESSAGE_TYPE.BOT,
-    // }).lean()
+    const messageType = await Type.findOne({
+        class: INTERVIEW_MESSAGE_TYPE.TYPE,
+        name: INTERVIEW_MESSAGE_TYPE.BOT,
+    }).lean()
     return messageType
 }
 
 // Lấy type message của USER
 export async function getTypeOfUserMessage() {
-    const messageType = await INTERVIEW_MESSAGE_TYPE.USER
-    // const messageType = await Type.findOne({
-    //     class: INTERVIEW_MESSAGE_TYPE.TYPE,
-    //     name: INTERVIEW_MESSAGE_TYPE.USER,
-    // }).lean()
+    const messageType = await Type.findOne({
+        class: INTERVIEW_MESSAGE_TYPE.TYPE,
+        name: INTERVIEW_MESSAGE_TYPE.USER,
+    }).lean()
     return messageType
 }
 

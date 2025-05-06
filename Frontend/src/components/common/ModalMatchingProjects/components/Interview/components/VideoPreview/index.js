@@ -2,7 +2,7 @@ import React from 'react'
 
 const VideoPreview = ({ videoRef }) => {
     return (
-        <div className="relative w-full overflow-hidden bg-gray-900 rounded-lg aspect-video">
+        <div className="relative w-full aspect-video max-w-[640px] bg-gray-900 rounded-lg overflow-hidden">
             <video
                 ref={videoRef}
                 width="100%"

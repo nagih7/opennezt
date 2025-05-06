@@ -1,22 +1,24 @@
 import React from 'react'
 import { NAVBAR_LABEL } from 'utils/constants'
-import { IconlyAddUser, IconlyChat, IconlyFolder, IconlyHome, IconlyProfile, IconlyWork } from 'components/UI/Iconly'
+import {
+    IconlyActivity,
+    IconlyAddUser,
+    IconlyChat,
+    IconlyFolder,
+    // IconlyGraph,
+    // IconlyNotification,
+    IconlyProfile,
+    IconlyWork,
+} from 'components/UI/Iconly'
 
 const appRouteMap = [
     {
-        label: NAVBAR_LABEL.HOME,
-        icon: <IconlyHome size={24} />,
-        path: '/',
-        routeActive: ['/'],
-        permissions: ['home_page'],
+        label: NAVBAR_LABEL.ACTIVITY,
+        icon: <IconlyActivity size={24} />,
+        path: '/activity',
+        routeActive: ['/activity'],
+        permissions: ['activity_page'],
     },
-    // {
-    //     label: NAVBAR_LABEL.ACTIVITY,
-    //     icon: <IconlyActivity size={24} />,
-    //     path: '/activity',
-    //     routeActive: ['/activity'],
-    //     permissions: ['activity_page'],
-    // },
     {
         label: NAVBAR_LABEL.ABOUT_ME,
         icon: <IconlyProfile size={24} />,
