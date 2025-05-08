@@ -466,7 +466,7 @@ const projectSlice = createSlice({
             return {
                 ...state,
                 isLoadingBookmarkProject: false,
-            };
+            }
         },
         bookmarkProjectFail: (state) => ({
             ...state,
@@ -477,20 +477,18 @@ const projectSlice = createSlice({
         updateBookmarks: (state, action) => {
             if (action.payload.bookmarks) {
                 // Cập nhật toàn bộ danh sách bookmark từ localStorage
-                state.bookmarks = action.payload.bookmarks;
+                state.bookmarks = action.payload.bookmarks
             } else {
                 // Cập nhật một bookmark cụ thể sau khi API call
-                const { project_id, marked } = action.payload;
+                const { project_id, marked } = action.payload
                 if (marked === 'yes') {
                     // Thêm nếu chưa có
-                    if (!state.bookmarks.some(b => b.project_id === project_id)) {
-                        state.bookmarks.push({ project_id });
+                    if (!state.bookmarks.some((b) => b.project_id === project_id)) {
+                        state.bookmarks.push({ project_id })
                     }
                 } else {
                     // Xóa nếu có
-                    state.bookmarks = state.bookmarks.filter(
-                        (bookmark) => bookmark.project_id !== project_id
-                    );
+                    state.bookmarks = state.bookmarks.filter((bookmark) => bookmark.project_id !== project_id)
                 }
             }
         },

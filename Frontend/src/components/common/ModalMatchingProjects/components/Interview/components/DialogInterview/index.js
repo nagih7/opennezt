@@ -373,7 +373,6 @@ const DiaLogInterview = ({ videoRef }) => {
                                                 <Button
                                                     onClick={handleConfirmCloseInterview}
                                                     borderRadius={4}
-                                                    // loading={isLoadingInviteMember}
                                                     className="bg-[#2f65b9] text-white text-sm rounded-md font-medium"
                                                     loadingText="Loading..."
                                                     spinnerPlacement="start"
