@@ -7,43 +7,18 @@ import { setCurrentAction } from 'states/modules/interview'
 const AIFrame = () => {
     const dispatch = useDispatch()
     // STATE FROM REDUX STORE
-    const { hasJoined, messages } = useSelector((state) => state.interview)
+    const { hasJoined, messages, currentAction } = useSelector((state) => state.interview)
     const [isFirstMessageReceived, setIsFirstMessageReceived] = useState(false)
     const [currentVideo, setCurrentVideo] = useState(OPENNEZT_INTERVIEW_SPEAK)
-    const [fadeState, setFadeState] = useState('') // '', 'fading', 'faded'
-    const [nextVideo, setNextVideo] = useState(null)
-    const [isCleanedAudio, setIsCleanedAudio] = useState(false)
     // const [hasAudio, setHasAudio] = useState(false)
     const interviewVideoRef = useRef(null)
     const syncControllerRef = useRef(null)
 
-    // Handle switch to listening mode
+    // Handle switch to listening mode - now with immediate transition
     const switchToListenMode = useCallback(() => {
-        // Start fade transition instead of direct swap
-        setNextVideo(OPENNEZT_INTERVIEW_LISTEN)
+        setCurrentVideo(OPENNEZT_INTERVIEW_LISTEN)
         dispatch(setCurrentAction('listening'))
-        setFadeState('fading')
     }, [dispatch])
-
-    // Handle fade transition
-    useEffect(() => {
-        if (fadeState === 'fading') {
-            // After fade out completes, update current video and fade back in
-            const timer = setTimeout(() => {
-                setCurrentVideo(nextVideo)
-                setFadeState('faded')
-            }, 500) // Match this duration with CSS transition duration
-
-            return () => clearTimeout(timer)
-        } else if (fadeState === 'faded') {
-            // Reset fade state after fade in completes
-            const timer = setTimeout(() => {
-                setFadeState('')
-            }, 500) // Match this duration with CSS transition duration
-
-            return () => clearTimeout(timer)
-        }
-    }, [fadeState, nextVideo])
 
     // Cleanup function for audio-video sync controller
     const cleanupSyncController = useCallback(() => {
@@ -119,32 +94,39 @@ const AIFrame = () => {
         }
     }, [cleanupSyncController])
 
-    // CSS classes for fade transition
-    const getVideoClassName = () => {
-        const baseClass = ' rounded-md w-full h-full transition-opacity duration-500 ease-in-out '
-
-        if (fadeState === 'fading') {
-            return `${baseClass} opacity-0`
-        } else if (fadeState === 'faded') {
-            return `${baseClass} opacity-100`
-        }
-
-        return `${baseClass} opacity-100`
-    }
-
     return (
-        <div className="relative bg-[#000000]  w-full h-full  rounded-md overflow-hidden">
+        <div className="relative bg-[#000000] w-full h-full rounded-md overflow-hidden">
             <video
                 ref={interviewVideoRef}
                 width="100%"
                 height="100%"
-                loop={currentVideo === OPENNEZT_INTERVIEW_LISTEN}
+                loop
                 autoPlay
                 muted
-                className={getVideoClassName()}
+                className="absolute w-full h-full rounded-md"
                 playsInline
                 style={{ outline: 'none' }}
-                src={currentVideo}
+                src={OPENNEZT_INTERVIEW_SPEAK}
+                onLoadedMetadata={(e) => {
+                    if (e.target.paused) e.target.play().catch((error) => console.warn('Video autoplay failed:', error))
+                }}
+                onEnded={handleVideoEnded}
+                controlsList="nodownload nofullscreen noremoteplayback"
+                disablePictureInPicture
+            />
+            <video
+                ref={interviewVideoRef}
+                width="100%"
+                height="100%"
+                loop
+                autoPlay
+                muted
+                className={`absolute w-full h-full rounded-md ${
+                    currentVideo === OPENNEZT_INTERVIEW_LISTEN ? 'opacity-100' : 'opacity-0'
+                }`}
+                playsInline
+                style={{ outline: 'none' }}
+                src={OPENNEZT_INTERVIEW_LISTEN}
                 onLoadedMetadata={(e) => {
                     if (e.target.paused) e.target.play().catch((error) => console.warn('Video autoplay failed:', error))
                 }}
