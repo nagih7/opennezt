@@ -168,7 +168,6 @@ const Sendinvite = () => {
 
             handleCloseCancelModal()
         } catch (error) {
-            console.error('Lỗi khi hủy lời mời:', error)
             alert('Có lỗi xảy ra khi hủy lời mời')
         }
     }
