@@ -1,11 +1,12 @@
 import { getAccessToMyProfile } from 'api/activity'
 import RightSidebar from 'components/common/RightSidebar'
-import { IconlyEditSquare } from 'components/UI/Iconly'
+import { IconlyEditSquare, IconlyStar } from 'components/UI/Iconly'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { DataList } from '@chakra-ui/react'
 import { getProfile } from 'api/profile'
+import img_logo from '../../../../../assets/images/logo/opennezt_full_black_old.png'
 
 const action = () => {
     return <div>has accessed your profile.</div>
@@ -98,38 +99,33 @@ const ProfessionalProfile = () => {
                             <IconlyEditSquare size={20} color={'#ffffff'} />
                         </span>
                     </div>
-                    <div className="flex flex-col gap-4 p-4">
+                    <div className="p-8">
                         {profile?.educations?.length > 0 ? (
                             profile.educations.map((education, index) => (
-                                <DataList.Root orientation="horizontal" key={index}>
-                                    <div className="p-3  mt-2 mr-1 shadow rounded-[0.6rem]">
-                                        <h4 className="font-semibold">{education.school || 'N/A'}</h4>
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <DataList.ItemLabel>Degree</DataList.ItemLabel>
-                                            <DataList.ItemValue className="mb-0">
-                                                {education.degree || 'N/A'}
-                                            </DataList.ItemValue>
-                                        </div>
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <DataList.ItemLabel>Field of Study </DataList.ItemLabel>
-                                            <DataList.ItemValue className="mb-0">
-                                                {education.field_of_study || 'N/A'}
-                                            </DataList.ItemValue>
-                                        </div>
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <DataList.ItemLabel>Years</DataList.ItemLabel>
-                                            <DataList.ItemValue className="mb-0">
-                                                {formatDate(education.start_date)} - {formatDate(education.end_date)}
-                                            </DataList.ItemValue>
-                                        </div>
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <DataList.ItemLabel>Grade </DataList.ItemLabel>
-                                            <DataList.ItemValue className="mb-0">
-                                                {education.grade || 'N/A'}
-                                            </DataList.ItemValue>
-                                        </div>
+                                <div
+                                    key={index}
+                                    className={`${index > 0 ? 'pt-4' : ''} ${
+                                        index < profile.educations.length - 1 ? 'border-b' : ''
+                                    } flex gap-3 pb-4`}
+                                >
+                                    <img className="w-[70px] h-[70px] object-contain" src="/opennezt.png" />
+                                    <div className="flex flex-col gap-1 ">
+                                        <span className="text-xl font-semibold">{education.school || 'N/A'}</span>
+                                       
+                                        <span className="text-gray-600 font-medium">
+                                        {education.degree || 'N/A'} - {education.field_of_study || 'N/A'}
+                                        </span>
+                                        <span className="text-gray-600 font-medium">
+                                            Grade: {education.grade || 'N/A'}
+                                        </span>
+                                        <span className="text-gray-600 font-medium">
+                                            {formatDate(education.start_date)} - {formatDate(education.end_date)}
+                                        </span>
+                                        <span className="text-gray-600 font-medium">
+                                        {education.activities || 'N/A'}
+                                        </span>
                                     </div>
-                                </DataList.Root>
+                                </div>
                             ))
                         ) : (
                             <p className="text-gray-500">No education information available.</p>
@@ -146,23 +142,49 @@ const ProfessionalProfile = () => {
                             <IconlyEditSquare size={20} color={'#ffffff'} />
                         </span>
                     </div>
-                    <div className="flex flex-col gap-4 p-4">
+                    <div className="p-8">
                         {profile?.certifications?.length > 0 ? (
                             profile.certifications.map((certification, index) => (
-                                <DataList.Root orientation="horizontal" key={index}>
-                                    <div key={index} className="p-3    mt-2 mr-1 shadow rounded-[0.6rem]">
-                                        <h4 className="font-semibold">{certification.name || 'N/A'}</h4>
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <DataList.ItemLabel>Certificate Expiration </DataList.ItemLabel>
-                                            <DataList.ItemValue className="mb-0">
+                                <div
+                                    key={index}
+                                    className={`${index > 0 ? 'pt-4' : ''} ${
+                                        index < profile.certifications.length - 1 ? 'border-b' : ''
+                                    } relative flex w-full justify-between items-center pb-4`}
+                                >
+                                    <div className='flex gap-3'>
+                                        <img className="w-[70px] h-[70px] object-contain" src="/opennezt.png" />
+                                        <div className="flex flex-col gap-1">
+                                            <span className="text-base font-semibold">
+                                                {certification.name || 'N/A'}
+                                            </span>
+                                            <span className="text-gray-600 font-medium text-sm">
+                                                {certification.organization_name || 'N/A'}
+                                            </span>
+                                            <span className="text-gray-600 font-medium text-sm">
+                                                {formatDate(certification.issue_date)} -{' '}
                                                 {formatDate(certification.expiration_date)}
-                                            </DataList.ItemValue>
+                                            </span>
                                         </div>
                                     </div>
-                                </DataList.Root>
+                                    <span className="mt-2 font-medium">
+                                        {certification.verification_url ? (
+                                            <a
+                                                href={certification.verification_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-1 bg-[#4374c0] w-36 justify-center py-2 text-xs rounded-md text-[#ffffff] no-underline"
+                                            >
+                                                <IconlyStar size={16} color={'#ffffff'} />
+                                                verification
+                                            </a>
+                                        ) : (
+                                            'N/A'
+                                        )}
+                                    </span>
+                                </div>
                             ))
                         ) : (
-                            <p className="text-gray-500">No education information available.</p>
+                            <p className="text-gray-500">No certification information available.</p>
                         )}
                     </div>
                 </div>
