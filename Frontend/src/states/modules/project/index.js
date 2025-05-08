@@ -81,6 +81,9 @@ const projectSlice = createSlice({
         // ========= INVITE MEMBER ========== //
         isLoadingInviteMember: false,
         isOpenModalInviteMember: false,
+        // ========== GET LIST FRIEND INVITE ========== //
+        listFriendsInvite: [],
+        isLoadingGetListFriends: false,
     },
     reducers: {
         setTitle: (state) => ({
@@ -466,7 +469,7 @@ const projectSlice = createSlice({
             return {
                 ...state,
                 isLoadingBookmarkProject: false,
-            };
+            }
         },
         bookmarkProjectFail: (state) => ({
             ...state,
@@ -477,20 +480,18 @@ const projectSlice = createSlice({
         updateBookmarks: (state, action) => {
             if (action.payload.bookmarks) {
                 // Cập nhật toàn bộ danh sách bookmark từ localStorage
-                state.bookmarks = action.payload.bookmarks;
+                state.bookmarks = action.payload.bookmarks
             } else {
                 // Cập nhật một bookmark cụ thể sau khi API call
-                const { project_id, marked } = action.payload;
+                const { project_id, marked } = action.payload
                 if (marked === 'yes') {
                     // Thêm nếu chưa có
-                    if (!state.bookmarks.some(b => b.project_id === project_id)) {
-                        state.bookmarks.push({ project_id });
+                    if (!state.bookmarks.some((b) => b.project_id === project_id)) {
+                        state.bookmarks.push({ project_id })
                     }
                 } else {
                     // Xóa nếu có
-                    state.bookmarks = state.bookmarks.filter(
-                        (bookmark) => bookmark.project_id !== project_id
-                    );
+                    state.bookmarks = state.bookmarks.filter((bookmark) => bookmark.project_id !== project_id)
                 }
             }
         },
@@ -509,6 +510,20 @@ const projectSlice = createSlice({
             ...state,
             isLoadingGetProjectBookmarks: false,
             projectBookmarks: [], // Reset nếu lỗi
+        }),
+        // ========== GET LIST FRIEND INVITE ========== //
+        requestGetListFriends: (state) => ({
+            ...state,
+            isLoadingGetListFriends: true,
+        }),
+        getListFriendsSuccess: (state, action) => ({
+            ...state,
+            listFriendsInvite: action.payload.data,
+            isLoadingGetListFriends: false,
+        }),
+        getListFriendsFail: (state) => ({
+            ...state,
+            isLoadingGetListFriends: false,
         }),
     },
 })
@@ -584,6 +599,10 @@ export const {
     requestGetUserProjectBookmarks,
     getUserProjectBookmarksSuccess,
     getUserProjectBookmarksFail,
+    // ========== GET LIST FRIEND INVITE ========== //
+    requestGetListFriends,
+    getListFriendsSuccess,
+    getListFriendsFail,
 } = projectSlice.actions
 
 export default projectSlice.reducer

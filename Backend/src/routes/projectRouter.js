@@ -196,5 +196,10 @@ projectRouter.post(
     asyncHandler(projectMiddleware.decodeNewMemberActivity),
     asyncHandler(projectController.updateNewMemberActivity)
 )
+// ========== GET [My Projects -List Invite To Project] ========== //
+projectRouter.get('/me/:id/invitation', asyncHandler(projectController.getListInviteToProject))
+
+// ========== Cancel Invitation ========== //
+projectRouter.post('/me/:id/invitation/cancel', asyncHandler(projectController.cancelProjectInvitation))
 
 export default projectRouter

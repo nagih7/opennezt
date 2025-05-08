@@ -1,4 +1,4 @@
-import callApi from 'api/callApi'
+import callApi, { callApiSimple } from 'api/callApi'
 import {
     // ========== MY PROJECTS ========== //
     requestGetListMyProjects,
@@ -56,6 +56,10 @@ import {
     requestInviteMember,
     inviteMemberSuccess,
     inviteMemberFail,
+    // ========== GET LIST FRIEND INVITE ========== //
+    requestGetListFriends,
+    getListFriendsSuccess,
+    getListFriendsFail,
 } from '../../states/modules/project'
 
 // ========== My projects ========== //
@@ -332,5 +336,25 @@ export const inviteMember = (projectId, formRequest) => async (dispatch, getStat
         variables: formRequest,
         dispatch,
         getState,
+    })
+}
+
+// ========== GET LIST FRIEND INVITE ========== //
+export const getListFriendInvite = (projectId) => async (dispatch, getState) => {
+    return callApi({
+        method: 'get',
+        apiPath: `projects/me/${projectId}/invitation`,
+        actionTypes: [requestGetListFriends, getListFriendsSuccess, getListFriendsFail],
+        variables: {},
+        dispatch,
+        getState,
+    })
+}
+// ========== Cancel Invitation ========== //
+export const cancelInvitation = async (projectId, userId) => {
+    return callApiSimple({
+        method: 'post',
+        apiPath: `projects/me/${projectId}/invitation/cancel`,
+        variables: { userId },
     })
 }
