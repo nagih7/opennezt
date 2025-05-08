@@ -179,6 +179,7 @@ export async function getListMyProjects(user, { q, page, per_page, field, order 
                 },
             },
             members: 1,
+            description: 1,
             articles: 1,
         },
     }

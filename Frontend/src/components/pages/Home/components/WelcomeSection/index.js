@@ -1,7 +1,18 @@
 import React from 'react'
 import { IconlyFace, IconlyFolder } from 'components/UI/Iconly'
+import { useNavigate } from 'react-router-dom'
 
 export const WelcomeSection = ({ user }) => {
+    const navigate = useNavigate()
+
+    const handleNavigateToCreateProject = () => {
+        navigate('/project/details')
+    }
+
+    const handleNavigateToCreateInterview = () => {
+        navigate('/about')
+    }
+
     return (
         <div className="flex flex-col">
             <span className="text-2xl font-bold">Welcome back, {user?.name}</span>
@@ -16,7 +27,10 @@ export const WelcomeSection = ({ user }) => {
                         Prepare for your next opportunity with 100+ live interviews ready for you.
                     </span>
                     <div className="flex justify-end">
-                        <button className="bg-[#2f65b9] text-white rounded-lg px-4 py-2 text-sm font-semibold mt-4">
+                        <button
+                            className="bg-[#2f65b9] text-white rounded-lg px-4 py-2 text-sm font-semibold mt-4"
+                            onClick={handleNavigateToCreateInterview}
+                        >
                             Start now
                         </button>
                     </div>
@@ -30,7 +44,7 @@ export const WelcomeSection = ({ user }) => {
                         Start building your dream team by adding a project and matching with the right co-founders and
                         talent.
                     </span>
-                    <div className="flex justify-end">
+                    <div className="flex justify-end" onClick={handleNavigateToCreateProject}>
                         <button className="bg-[#2f65b9] text-white rounded-lg px-4 py-2 text-sm font-semibold mt-4">
                             Complete now
                         </button>
