@@ -3,7 +3,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import { IconlyStar } from 'components/UI/Iconly'
 import moment from 'moment'
 import React from 'react'
-import { renderContent } from 'utils/formatMessage'
+import formatMessage from 'utils/formatMessage'
 
 const MyMessage = ({ message, haveAvatar }) => {
     return (
@@ -30,6 +30,14 @@ const MyMessage = ({ message, haveAvatar }) => {
                                 </span>
                             </div>
                         </div>
+                        {/* <span className="ml-[5px] hidden items-center group-hover:flex transition-opacity duration-300 ease-in-out">
+                            <span className="mx-[5px] cursor-pointer">
+                                <MoreOutlined className="w-[15px] h-[15px] text-black" />
+                            </span>
+                            <span className="mx-[5px] cursor-pointer">
+                                <IconlyStar size={15} color={'#000000'} />
+                            </span>
+                        </span> */}
                     </div>
                 </div>
             </div>

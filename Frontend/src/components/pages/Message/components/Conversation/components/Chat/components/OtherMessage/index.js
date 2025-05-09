@@ -3,7 +3,7 @@ import { Avatar } from '@chakra-ui/react'
 // import { IconlyStar } from 'components/UI/Iconly'
 import moment from 'moment'
 import React from 'react'
-import { renderContent } from 'utils/formatMessage'
+import formatMessage from 'utils/formatMessage'
 
 const OtherMessage = ({ message, newUser }) => {
     return (
