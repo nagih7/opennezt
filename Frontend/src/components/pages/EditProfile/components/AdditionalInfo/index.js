@@ -1,101 +1,178 @@
-import { Button, createListCollection, Dialog, Portal, Stack, Table } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import { Button, Table } from '@chakra-ui/react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ProfileCard from '../ProfileCard'
 import ProfileEditMenu from '../ProfileEditMenu'
 import ActionBar from '../ActionBar'
-import { IconlyDelete, IconlyEdit } from 'components/UI/Iconly'
+import { IconlyDocument, IconlyEdit } from 'components/UI/Iconly'
 import {
     createProfileAdditionalInfo,
     updateProfileAdditionalInfo,
     deleteProfileAdditionalInfo,
     getProfile,
 } from 'api/profile'
-import { setIsOpenModalCreateOrUpdateProfileAdditionalInfo } from 'states/modules/profile'
-import { PROFILE_ADDITIONAL } from 'utils/constants'
-import SelectCustom from 'components/UI/SelectCustom'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
-
-const AdditionalInfoFramework = createListCollection({
-    items: PROFILE_ADDITIONAL['EN'].map((item) => ({
-        label: item.label,
-        value: item.value,
-    })),
-})
 
 const AdditionalInfo = () => {
     const dispatch = useDispatch()
     // // ========== STATE FROM REDUX STORE ========== //
     const { profile } = useSelector((state) => state.profile)
-    const { additional_infos } = profile || []
-    const { isOpenModalCreateOrUpdateProfileAdditionalInfo, isLoadingCreateOrUpdateProfileAdditionalInfo } =
-        useSelector((state) => state.profile)
+    const { additional_infos = [] } = profile || {}
+
+    const infoFields = useMemo(
+        () => [
+            {
+                id: 'professionalSummary',
+                name: 'Professional Summary',
+                placeholder: 'Write about your professional background and expertise.',
+                backgroundColor: 'bg-white',
+            },
+            {
+                id: 'careerGoals',
+                name: 'My Career Goals',
+                placeholder: 'Describe your career aspirations and goals.',
+                backgroundColor: 'bg-white',
+            },
+            {
+                id: 'canOffer',
+                name: 'What I Can Offer',
+                placeholder: 'Describe what you can offer to projects or employers.',
+                backgroundColor: 'bg-white',
+            },
+            {
+                id: 'workExpectations',
+                name: 'My Work Expectations',
+                placeholder: 'Describe your work style expectations and preferences.',
+                backgroundColor: 'bg-white',
+            },
+            // To add a new field, add a new object here:
+            // {
+            //    id: 'newFieldId',
+            //    name: 'New Field Display Name',
+            //    placeholder: 'Placeholder text for the field',
+            //    backgroundColor: 'bg-gray-50' // or 'bg-white' to alternate colors
+            // }
+        ],
+        []
+    )
+
     // ========== STATE MANAGEMENT ========== //
-    const [action, setAction] = useState('')
     const [formData, setFormData] = useState({})
-    const [targetDelete, setTargetDelete] = useState(null)
-    const [isOpenModalDeleteAdditionalInfo, setIsOpenModalDeleteAdditionalInfo] = useState(false)
+    const [existingData, setExistingData] = useState({})
+    const [isSaving, setIsSaving] = useState(false)
+    const [isEditing, setIsEditing] = useState(false)
+
+    // Initialize form state based on fields
+    useEffect(() => {
+        const initialFormData = {}
+        const initialExistingData = {}
+
+        infoFields.forEach((field) => {
+            initialFormData[field.id] = ''
+            initialExistingData[field.id] = null
+        })
+
+        setFormData(initialFormData)
+        setExistingData(initialExistingData)
+    }, [infoFields])
+
     // ========== USE EFFECT ========== //
     useEffect(() => {
         if (!profile) dispatch(getProfile())
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch])
+
+    useEffect(() => {
+        if (additional_infos && additional_infos.length > 0) {
+            setFormData((prevFormData) => {
+                const newFormData = { ...prevFormData }
+
+                infoFields.forEach((field) => {
+                    const info = additional_infos.find((info) => info.name === field.name)
+                    if (info) {
+                        newFormData[field.id] = info.content || ''
+                    }
+                })
+
+                return newFormData
+            })
+
+            setExistingData((prevExistingData) => {
+                const newExistingData = { ...prevExistingData }
+
+                infoFields.forEach((field) => {
+                    const info = additional_infos.find((info) => info.name === field.name)
+                    if (info) {
+                        newExistingData[field.id] = info
+                    }
+                })
+
+                return newExistingData
+            })
+        }
+    }, [additional_infos, infoFields])
+
     // ========== HANDLE CHANGE FUNCTION ========== //
-    const handleChangeSelect = (event, nameSelect) => {
-        setFormData({
-            ...formData,
-            [nameSelect]: event.value[0],
-        })
-    }
     const handleChange = (e) => {
+        if (!isEditing) return
+
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
         })
     }
 
-    const handleAddProfileAdditionInfo = () => {
-        dispatch(setIsOpenModalCreateOrUpdateProfileAdditionalInfo(true))
-        setAction('create')
-        setFormData({
-            name: '',
-            content: '',
+    const toggleEdit = () => {
+        setIsEditing(!isEditing)
+    }
+
+    const handleSaveAll = () => {
+        setIsSaving(true)
+
+        // Get all field IDs from infoFields array
+        const fieldIds = infoFields.map((field) => field.id)
+
+        // Process each field
+        const promises = fieldIds.map((fieldId) => {
+            const fieldInfo = infoFields.find((f) => f.id === fieldId)
+            const fieldName = fieldInfo.name
+            const content = formData[fieldId]
+
+            // Nếu trường rỗng và có dữ liệu hiện tại - xóa
+            if (!content && existingData[fieldId]) {
+                return dispatch(deleteProfileAdditionalInfo(existingData[fieldId]._id)).then(() => {
+                    setExistingData((prev) => ({
+                        ...prev,
+                        [fieldId]: null,
+                    }))
+                })
+            }
+            // Nếu có dữ liệu - cập nhật hoặc tạo mới
+            else if (content) {
+                const submitData = {
+                    name: fieldName,
+                    content: content,
+                }
+
+                if (existingData[fieldId]) {
+                    submitData._id = existingData[fieldId]._id
+                    return dispatch(updateProfileAdditionalInfo(submitData))
+                } else {
+                    return dispatch(createProfileAdditionalInfo(submitData, 'create'))
+                }
+            }
+
+            return Promise.resolve() // Không có thay đổi
         })
-    }
 
-    const handleUpdateProfileAdditionalInfo = (info) => {
-        dispatch(setIsOpenModalCreateOrUpdateProfileAdditionalInfo(true))
-        setAction('update')
-        setFormData({
-            ...info,
-        })
-    }
-
-    const handleOpenModalDelete = (info) => {
-        setIsOpenModalDeleteAdditionalInfo(true)
-        setTargetDelete(info)
-    }
-
-    const handleDeleteCertification = () => {
-        dispatch(deleteProfileAdditionalInfo(targetDelete._id))
-        setIsOpenModalDeleteAdditionalInfo(false)
-    }
-
-    const handleSaveChanges = () => {
-        switch (action) {
-            case 'create':
-                dispatch(createProfileAdditionalInfo(formData, action))
-                break
-            case 'update':
-                dispatch(updateProfileAdditionalInfo(formData))
-                break
-            default:
-                break
-        }
-    }
-
-    const handleClose = () => {
-        dispatch(setIsOpenModalCreateOrUpdateProfileAdditionalInfo(false))
+        Promise.all(promises)
+            .then(() => {
+                setIsSaving(false)
+                setIsEditing(false)
+            })
+            .catch(() => {
+                setIsSaving(false)
+            })
     }
 
     // ========== COMPONENT RENDER ========== //
@@ -110,165 +187,78 @@ const AdditionalInfo = () => {
                     <ActionBar />
                 </div>
                 <div className="bg-[#ffffff] p-8 rounded-md md:mt-8">
-                    <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200 flex justify-between">
-                        <div>
-                            <h4 className="">More</h4>
-                        </div>
-                        <Button
-                            disabled={isLoadingCreateOrUpdateProfileAdditionalInfo}
-                            onClick={handleAddProfileAdditionInfo}
-                            height={50}
-                            className="mt-[14px]  text-sm px-[18px] py-2 sm:text-base sm:px-[28px] sm:py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-                            borderRadius={4}
-                            loading={false}
-                            loadingText="Loading..."
-                            spinnerPlacement="start"
-                        >
-                            Add Additional Info
-                        </Button>
-                    </div>
-                    <div>
-                        <div className='px-[16px] text-nowrap max-w-full p-0 m-0 overflow-x-scroll scrollbar-hide'>
-
-
-                            <Table.Root size="lg" striped  >
-                                <Table.Header>
-                                    <Table.Row>
-                                        <Table.ColumnHeader>Name</Table.ColumnHeader>
-                                        <Table.ColumnHeader>Content</Table.ColumnHeader>
-                                        <Table.ColumnHeader >Action</Table.ColumnHeader>
-                                    </Table.Row>
-                                </Table.Header>
-                                <Table.Body>
-                                    {additional_infos?.map((info, index) => (
-                                        <Table.Row key={index}>
-                                            <Table.Cell>{info.name}</Table.Cell>
-                                            <Table.Cell>{info.content}</Table.Cell>
-                                            <Table.Cell textAlign="end" className='flex ' >
-                                                <span className='cursor-pointer' onClick={() => handleUpdateProfileAdditionalInfo(info)}><IconlyEdit size={24} color={"#000"} /></span>
-                                                <span className="cursor-pointer"
-                                                    onClick={() => handleOpenModalDelete(info)}><IconlyDelete size={24} color={"#000"} /></span></Table.Cell>
-                                        </Table.Row>
-                                    ))}
-                                </Table.Body>
-                            </Table.Root>
-
-
+                    <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h4 className="text-xl font-semibold">More</h4>
+                                <p className="text-gray-600 text-sm mt-1">
+                                    Add more details about your professional background and career aspirations <br />
+                                    <strong className="font-bold">Note: max 500 characters for each field</strong>
+                                </p>
+                            </div>
                         </div>
                     </div>
+
+                    {/* Direct input fields instead of a modal */}
+                    <div className="border rounded-md overflow-hidden">
+                        <table className="w-full">
+                            <tbody>
+                                {/* Render fields dynamically from infoFields array */}
+                                {infoFields.map((field, index) => (
+                                    <tr key={field.id}>
+                                        <td
+                                            className={`p-4 ${
+                                                index < infoFields.length - 1 ? 'border-b border-gray-200' : ''
+                                            } ${field.backgroundColor}`}
+                                        >
+                                            <div className="flex justify-between items-center mb-2">
+                                                <label htmlFor={field.id} className="font-medium text-gray-700">
+                                                    {field.name}
+                                                </label>
+                                                {!isEditing && index === 0 && (
+                                                    <Button
+                                                        onClick={toggleEdit}
+                                                        className="bg-[#2f65b9] text-white px-3 py-1 rounded-md"
+                                                        size="sm"
+                                                    >
+                                                        <IconlyEdit size={18} color="#ffffff" />
+                                                    </Button>
+                                                )}
+                                            </div>
+                                            <TextAreaCustom
+                                                id={field.id}
+                                                resize="none"
+                                                placeholder={field.placeholder}
+                                                name={field.id}
+                                                onChange={handleChange}
+                                                value={formData[field.id] || ''}
+                                                rows={4}
+                                                disabled={!isEditing}
+                                                nomax={true}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {isEditing && (
+                        <div className="flex justify-end mt-4 space-x-3">
+                            <Button onClick={toggleEdit} className="bg-gray-400 text-white px-6 py-2 rounded-md">
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleSaveAll}
+                                isLoading={isSaving}
+                                className="bg-[#2f65b9] text-white px-6 py-2 rounded-md"
+                            >
+                                <IconlyDocument size={18} color="#ffffff" className="mr-2" /> Save
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </div>
-
-            {/* CREATE/UPDATE */}
-            <Dialog.Root
-                size={'lg'}
-                open={isOpenModalCreateOrUpdateProfileAdditionalInfo}
-                key={formData.profile_id}
-                placement={'center'}
-                motionPreset="slide-in-bottom"
-            >
-                <Portal>
-                    <Dialog.Backdrop />
-                    <Dialog.Positioner>
-                        <Dialog.Content className="bg-white">
-                            <Dialog.Header>
-                                <Dialog.Title>
-                                    {action === 'create' ? 'Add additional info' : 'Update additional info'}
-                                </Dialog.Title>
-                            </Dialog.Header>
-                            <Dialog.Body>
-                                <Stack direction="row" h="20">
-                                    <SelectCustom
-                                        height="40px"
-                                        required
-                                        label="Name"
-                                        placeholder="Ex: Ex: What I can offer"
-                                        collection={AdditionalInfoFramework}
-                                        onChange={(e) => handleChangeSelect(e, 'name')}
-                                        value={formData.name}
-                                        name="name"
-                                    />
-                                </Stack>
-                                <Stack direction="row">
-                                    <TextAreaCustom
-                                        resize="none"
-                                        required
-                                        label="Content"
-                                        placeholder="Ex: I can offer you a lot of things"
-                                        name="content"
-                                        onChange={handleChange}
-                                        value={formData.content}
-                                    />
-                                </Stack>
-                            </Dialog.Body>
-                            <Dialog.Footer>
-                                <Button
-                                    className="border-[#F4F5F6] bg-[#2F65B9] text-white"
-                                    onClick={handleSaveChanges}
-                                    borderRadius={4}
-                                    loading={isLoadingCreateOrUpdateProfileAdditionalInfo}
-                                    loadingText="Loading..."
-                                    spinnerPlacement="start"
-                                >
-                                    SAVE CHANGES
-                                </Button>
-                                <Dialog.ActionTrigger asChild>
-                                    <Button
-                                        className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]"
-                                        variant="outline"
-                                        onClick={handleClose}
-                                    >
-                                        Cancel
-                                    </Button>
-                                </Dialog.ActionTrigger>
-                            </Dialog.Footer>
-                        </Dialog.Content>
-                    </Dialog.Positioner>
-                </Portal>
-            </Dialog.Root>
-            {/* DELETE */}
-            <Dialog.Root
-                size={'md'}
-                open={isOpenModalDeleteAdditionalInfo}
-                key={formData.profile_id}
-                placement={'center'}
-                motionPreset="slide-in-bottom"
-            >
-                <Portal>
-                    <Dialog.Backdrop />
-                    <Dialog.Positioner>
-                        <Dialog.Content className="bg-white">
-                            <Dialog.Header>
-                                <Dialog.Title>
-                                    {action === 'create' ? 'Add additional info' : 'Update additional info'}
-                                </Dialog.Title>
-                            </Dialog.Header>
-                            <Dialog.Body>
-                                Do you want to delete this additional info? This action cannot be undone.
-                            </Dialog.Body>
-                            <Dialog.Footer>
-                                <Button
-                                    className="border-[#F4F5F6] bg-[#2F65B9] text-white"
-                                    onClick={handleDeleteCertification}
-                                    borderRadius={4}
-                                    loading={isLoadingCreateOrUpdateProfileAdditionalInfo}
-                                >
-                                    CONFIRM
-                                </Button>
-                                <Dialog.ActionTrigger asChild>
-                                    <Button
-                                        className="border-[#F4F5F6] text-black hover:bg-[#F4F5F6]"
-                                        variant="outline"
-                                        onClick={() => setIsOpenModalDeleteAdditionalInfo(false)}
-                                    >
-                                        Cancel
-                                    </Button>
-                                </Dialog.ActionTrigger>
-                            </Dialog.Footer>
-                        </Dialog.Content>
-                    </Dialog.Positioner>
-                </Portal>
-            </Dialog.Root>
         </div>
     )
 }
