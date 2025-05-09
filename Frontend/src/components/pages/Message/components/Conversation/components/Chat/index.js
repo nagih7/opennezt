@@ -1,5 +1,5 @@
 import moment from 'moment'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { LinkOutlined, MoreOutlined, RollbackOutlined } from '@ant-design/icons'
 import { IconlySend, IconlyStar } from 'components/UI/Iconly'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,7 +11,6 @@ import { Spinner, Text, VStack } from '@chakra-ui/react'
 import { useSocket } from 'context/SocketContext'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
 import validateMessage from 'utils/validateMessage'
-import { toaster } from 'components/UI/toaster'
 
 const Chat = () => {
     const dispatch = useDispatch()
@@ -73,9 +72,25 @@ const Chat = () => {
         if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
             e.preventDefault() // Ngăn xuống dòng nếu chỉ Enter
             handleSendMessage()
+            e.target.style.height = '45px'
         }
     }
 
+    //resize text area
+    const handleResize = useCallback((e) => {
+        const textArea = e.target
+
+        // Đặt về auto để tính toán lại scrollHeight chính xác
+        textArea.style.height = '45px'
+
+        // Giới hạn chiều cao từ 45px đến 200px
+        const newHeight = Math.min(Math.max(textArea.scrollHeight, 45), 100)
+
+        // Chỉ cập nhật height nếu có thay đổi
+        if (textArea.style.height !== `${newHeight}px`) {
+            textArea.style.height = `${newHeight}px`
+        }
+    }, [])
     // ========== RENDER ========== //
     return (
         <div className="flex flex-1 flex-col text-[#6f7f92] items-center w-full overflow-hidden">
@@ -142,9 +157,22 @@ const Chat = () => {
                     <TextAreaCustom
                         nomax
                         height="45px"
-                        onKeyDown={handleKeyDown}
+                        onKeyDown={(e) => {
+                            handleKeyDown(e)
+                        }}
+                        style={{
+                            height: 'auto',
+                            minHeight: '45px',
+                            maxHeight: '200px',
+                            resize: 'none',
+                            overflow: 'hidden',
+                            transition: 'height 0.15s ease', // Giảm thời gian transition
+                        }}
                         value={message}
-                        onChange={handleChangeMessage}
+                        onChange={(e) => {
+                            handleChangeMessage(e)
+                            handleResize(e)
+                        }}
                         type="text"
                         placeholder="Write your message"
                         className="w-full bg-white outline-none  py-[8px] scrollbar-hide"
