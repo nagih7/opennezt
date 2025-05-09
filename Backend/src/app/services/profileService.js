@@ -20,6 +20,28 @@ export async function getProfileDetail(userId) {
         },
         {
             $lookup: {
+                from: 'users',
+                localField: 'user_id',
+                foreignField: '_id',
+                as: 'user',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: { path: '$user', preserveNullAndEmptyArrays: true },
+        },
+        {
+            $unwind: { path: '$categories', preserveNullAndEmptyArrays: true },
+        },
+        {
+            $lookup: {
                 from: 'industries',
                 localField: 'industry_ids',
                 foreignField: '_id',
@@ -150,6 +172,7 @@ export async function getProfileDetail(userId) {
         },
         {
             $addFields: {
+                username: '$user.name',
                 industries: {
                     $map: {
                         input: '$industries',
@@ -170,8 +193,8 @@ export async function getProfileDetail(userId) {
         {
             $project: {
                 _id: 0,
+                user: 0,
                 user_id: 0,
-                name: 0,
                 industry_ids: 0,
                 experience_level_id: 0,
                 category_ids: 0,

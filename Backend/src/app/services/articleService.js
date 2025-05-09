@@ -15,7 +15,6 @@ import {
     COMMENT_REPLY_NOTIFICATION,
     LINK_STATIC_URL,
 } from '@/configs'
-import { ObjectId } from 'mongodb'
 import delay from '@/utils/classes/delay.js'
 import Project from '@/models/project.js'
 import Bookmark from '@/models/bookmark.js'
@@ -25,6 +24,7 @@ import ActivityLog from '@/models/activityLog.js'
 import Subscription from '@/models/subscription.js'
 import webpush from 'web-push'
 import Role from '@/models/role.js'
+import { ObjectId } from '@/models'
 
 //Create Article
 //Lấy project_id ra khỏi requestBody => requestBody không còn project_id nữa
