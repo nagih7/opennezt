@@ -62,7 +62,7 @@ const FilterHeader = ({ action, setAction }) => {
 
     // ========== RENDER ========== //
     return (
-        <div className="flex flex-col items-center justify-between gap-4 p-4 ml-0 bg-white border rounded-lg shadow-sm md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 p-4 ml-0 bg-white rounded-lg shadow-sm md:flex-row">
             <div className="flex flex-1 text-lg text-gray-600">
                 {/* <div className="flex">All Projects</div> */}
                 <Popover.Root>
