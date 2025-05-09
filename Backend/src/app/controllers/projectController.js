@@ -201,3 +201,9 @@ export async function cancelProjectInvitation(req, res) {
     await projectService.cancelProjectInvitation(req.currentUser, req.params.id, req.body)
     res.status(200).jsonify('Cancel project invitation successfully.')
 }
+
+// ========== GET [LIST PROJECT PRACTIVE INTERVIEW] ========== //
+export async function getListProjectPracticeInterview(req, res) {
+    const result = await projectService.getListPracticeInterviewProjects(req.currentUser, req.query)
+    res.jsonify(result)
+}

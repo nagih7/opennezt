@@ -583,25 +583,4 @@ function optimizeElements(elements) {
     return <>{optimized}</>
 }
 
-export const renderContent = (content) => {
-    if (!content) return ''
-
-    // Decode HTML entities
-    const decodedContent = content
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .replace(/&#x2F;/g, '/')
-
-    // Split by line breaks and create elements
-    return decodedContent.split('\n').map((line, index, array) => (
-        <React.Fragment key={index}>
-            {line}
-            {index < array.length - 1 && <br />}
-        </React.Fragment>
-    ))
-}
-
 export default formatMessage

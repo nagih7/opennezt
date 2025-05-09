@@ -1,67 +1,79 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { WelcomeSection } from './components/WelcomeSection'
 import { InterviewCard } from './components/InterviewCard'
-import { getListMyProjects } from 'api/project'
+import { getListProjectPracticeInterview } from 'api/project'
 import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
     const { authUser } = useSelector((state) => state.auth)
-    const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { myProjects, paginationListMyProjects, isLoadingGetListMyProjects } = useSelector((state) => state.project)
     const [latestProjects, setLatestProjects] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
-        const params = {
-            ...paginationListMyProjects,
-            perPage: 10, // Lấy nhiều dự án hơn để đảm bảo có đủ dữ liệu
-            column: 'created_at', // Sắp xếp theo thời gian tạo
-            order: '-1', // Sắp xếp giảm dần (-1)
-        }
-        dispatch(getListMyProjects(params))
-        // eslint-disable-next-line
-    }, [dispatch])
-
-    useEffect(() => {
-        if (myProjects && myProjects.length > 0) {
-            // Lọc để loại bỏ các dự án trùng lặp theo ID
-            const uniqueProjects = Array.from(new Map(myProjects.map((project) => [project._id, project])).values())
-
-            // Sắp xếp dự án theo thời gian tạo mới nhất
-            const sortedProjects = [...uniqueProjects].sort((a, b) => {
-                // Hàm lấy timestamp hợp lệ cho mỗi dự án
-                function getValidTimestamp(project) {
-                    // Kiểm tra các trường thời gian
-                    const dateFields = ['created_at', 'createdAt', 'updatedAt']
-                    for (const field of dateFields) {
-                        if (project[field] && !isNaN(new Date(project[field]).getTime())) {
-                            return new Date(project[field]).getTime()
-                        }
-                    }
-
-                    if (project._id) {
-                        try {
-                            const timestamp = parseInt(project._id.substring(0, 8), 16) * 1000
-                            if (!isNaN(timestamp)) return timestamp
-                        } catch (e) {
-                            return 0
-                        }
-                    }
-                    return 0
+        const fetchPracticeInterviewProjects = async () => {
+            setIsLoading(true)
+            try {
+                const params = {
+                    page: 1,
+                    per_page: 10,
+                    field: 'created_at',
+                    order: '-1',
                 }
 
-                // Lấy timestamp và sắp xếp giảm dần (mới nhất trước)
-                return getValidTimestamp(b) - getValidTimestamp(a)
-            })
+                const response = await getListProjectPracticeInterview(params)
 
-            setLatestProjects(sortedProjects.slice(0, 3))
+                if (response && response.data) {
+                    // Check different possible locations for the projects array
+                    let projectsArray = null
+
+                    if (response.data.projects && Array.isArray(response.data.projects)) {
+                        projectsArray = response.data.projects
+                    } else if (response.data.data && response.data.data.projects) {
+                        projectsArray = response.data.data.projects
+                    } else if (Array.isArray(response.data)) {
+                        projectsArray = response.data
+                    } else {
+                        // Try to find any array that might contain projects
+                        for (const key in response.data) {
+                            if (Array.isArray(response.data[key])) {
+                                projectsArray = response.data[key]
+                                break
+                            }
+                        }
+                    }
+
+                    if (projectsArray && projectsArray.length > 0) {
+                        // Sort by created_at in descending order (newest first)
+                        const sortedProjects = [...projectsArray].sort((a, b) => {
+                            const dateA = new Date(a.created_at || a.createdAt || 0)
+                            const dateB = new Date(b.created_at || b.createdAt || 0)
+                            return dateB - dateA // Descending order
+                        })
+
+                        const newestThreeProjects = sortedProjects.slice(0, 3)
+
+                        setLatestProjects(newestThreeProjects)
+                    } else {
+                        console.error('No projects found in the response')
+                    }
+                } else {
+                    console.error('Invalid response structure')
+                }
+            } catch (error) {
+                console.error('Error fetching practice interview projects:', error)
+            } finally {
+                setIsLoading(false)
+            }
         }
-    }, [myProjects])
+
+        fetchPracticeInterviewProjects()
+    }, [])
 
     // Hàm xử lý khi người dùng nhấp vào dự án
     const handleProjectClick = (projectId) => {
-        navigate(`/projects/me/${projectId}/details`)
+        navigate(`/projects/${projectId}/details`)
     }
 
     // Mảng các màu sắc để luân phiên cho các dự án
@@ -75,14 +87,17 @@ const Home = () => {
                 <span className="text-[#6f7f92]">Practice real interview questions and pave your startup journey</span>
                 <div className="grid grid-cols-3 2xl:gap-10 gap-8 mt-4 pb-8">
                     {latestProjects && latestProjects.length > 0 ? (
-                        // Sử dụng state latestProjects đã được sắp xếp
                         latestProjects.map((project, index) => (
-                            <div key={project._id} onClick={() => handleProjectClick(project._id)}>
+                            <div
+                                key={project._id}
+                                onClick={() => handleProjectClick(project._id)}
+                                className="cursor-pointer"
+                            >
                                 <InterviewCard
                                     title={project.name}
                                     description={
                                         project.description && project.description.length > 50
-                                            ? `${project.description.substring(0, 50)}...`
+                                            ? `${project.description.substring(0, 150)}...`
                                             : project.description || 'Xem chi tiết dự án này'
                                     }
                                     time="30m"
@@ -92,7 +107,7 @@ const Home = () => {
                                 />
                             </div>
                         ))
-                    ) : isLoadingGetListMyProjects ? (
+                    ) : isLoading ? (
                         // Hiển thị trạng thái đang tải
                         Array(3)
                             .fill(0)
@@ -112,15 +127,7 @@ const Home = () => {
                     ) : (
                         // Hiển thị thông báo khi không có dự án nào
                         <div className="col-span-3 text-center py-10">
-                            <p className="text-gray-500 text-lg">
-                                Bạn chưa có dự án nào. Hãy tạo dự án đầu tiên của bạn!
-                            </p>
-                            <button
-                                onClick={() => navigate('/project/details')}
-                                className="mt-4 bg-[#2f65b9] text-white rounded-lg px-6 py-2 font-semibold"
-                            >
-                                Tạo dự án mới
-                            </button>
+                            <p className="text-gray-500 text-lg">We will notify you when there is a new project!</p>
                         </div>
                     )}
                 </div>

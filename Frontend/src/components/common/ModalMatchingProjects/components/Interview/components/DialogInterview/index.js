@@ -130,12 +130,6 @@ const DiaLogInterview = ({ videoRef }) => {
     const sendAudioMessage = async (blob) => {
         if (!blob) return
 
-        console.log('currentAction', currentAction)
-
-        if (currentAction === 'speaking' || isLoadingReplyInterview) {
-            return
-        }
-
         try {
             // Create a FormData object to send the audio file
             const audioFile = new File([blob], `voice_message_${Date.now()}.wav`, {
@@ -205,24 +199,19 @@ const DiaLogInterview = ({ videoRef }) => {
         }
     }, [])
 
-    // Stop voice detection when AI is speaking
+    // Stop voice detection when loading reply
     useEffect(() => {
-        if (currentAction === 'speaking' && voiceDetectorRef.current && voiceDetectorRef.current.isActive()) {
-            // Stop listening while AI is speaking
+        if (isLoadingReplyInterview && voiceDetectorRef.current && voiceDetectorRef.current.isActive()) {
+            // Stop listening while processing the previous message
             voiceDetectorRef.current.stop()
             setIsListening(false)
-        } else if (
-            currentAction === 'listening' &&
-            !isListening &&
-            !isPlaying &&
-            isOpenModalInterview &&
-            !isLoadingReplyInterview
-        ) {
-            // Auto-resume listening when AI stops speaking
+            // setError('Processing your message...')
+        } else if (!isLoadingReplyInterview && !isListening && !isPlaying && isOpenModalInterview) {
+            // Auto-resume listening when loading is complete and we're not playing audio
             setupVoiceDetection()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentAction, isPlaying, isOpenModalInterview, isListening, isLoadingReplyInterview])
+    }, [isLoadingReplyInterview, isPlaying, isOpenModalInterview, isListening, voiceDetectorRef])
 
     const handleCloseInterview = () => {
         setIsOpenModalCloseInterview(true)
@@ -279,19 +268,44 @@ const DiaLogInterview = ({ videoRef }) => {
                                         </div>
                                     )}
 
-                                    {isListening &&
-                                        !isSpeaking &&
-                                        currentAction === 'listening' &&
-                                        !isLoadingReplyInterview && (
-                                            <div className="absolute z-10 flex items-center gap-2 px-3 py-1 text-white bg-green-600 rounded-full top-4 right-4">
-                                                <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-                                                <span>Listening for your voice...</span>
-                                            </div>
-                                        )}
+                                    {isListening && !isSpeaking && currentAction === 'listening' && (
+                                        <div className="absolute z-10 flex items-center gap-2 px-3 py-1 text-white bg-green-600 rounded-full top-4 right-4">
+                                            <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                                            <span>Listening for your voice...</span>
+                                        </div>
+                                    )}
 
                                     {error && (
                                         <div className="absolute z-10 px-3 py-1 text-white bg-red-500 rounded-full top-4 right-4">
                                             {error}
+                                        </div>
+                                    )}
+
+                                    {/* Voice visualization */}
+                                    {isSpeaking && (
+                                        <div className="absolute z-10 flex items-center justify-center gap-2 transform -translate-x-1/2 top-16 left-1/2">
+                                            <div className="flex items-end h-10 gap-1">
+                                                <div
+                                                    className="w-1 bg-green-400 rounded-t animate-bounce"
+                                                    style={{ height: '40%', animationDelay: '0ms' }}
+                                                ></div>
+                                                <div
+                                                    className="w-1 bg-green-400 rounded-t animate-bounce"
+                                                    style={{ height: '80%', animationDelay: '100ms' }}
+                                                ></div>
+                                                <div
+                                                    className="w-1 bg-green-400 rounded-t animate-bounce"
+                                                    style={{ height: '60%', animationDelay: '200ms' }}
+                                                ></div>
+                                                <div
+                                                    className="w-1 bg-green-400 rounded-t animate-bounce"
+                                                    style={{ height: '90%', animationDelay: '300ms' }}
+                                                ></div>
+                                                <div
+                                                    className="w-1 bg-green-400 rounded-t animate-bounce"
+                                                    style={{ height: '40%', animationDelay: '400ms' }}
+                                                ></div>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
