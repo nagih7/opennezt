@@ -202,4 +202,7 @@ projectRouter.get('/me/:id/invitation', asyncHandler(projectController.getListIn
 // ========== Cancel Invitation ========== //
 projectRouter.post('/me/:id/invitation/cancel', asyncHandler(projectController.cancelProjectInvitation))
 
+// ========== GET [LIST PROJECT PRACTIVE INTERVIEW] ========== //
+projectRouter.get('/me/:id/interview', asyncHandler(projectController.getListProjectPracticeInterview))
+
 export default projectRouter

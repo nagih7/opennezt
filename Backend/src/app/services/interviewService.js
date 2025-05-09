@@ -100,6 +100,7 @@ export async function replyInterview(currentUser, requestBody) {
 
         // Call API để chuyển đổi giọng nói thành văn bản
         const content = await convertSpeechToText(audioPath)
+        console.log('Content:', content)
         // Xóa file tạm thời
         FileUpload.remove(tempWavFile)
         if (!content || content === '') {
