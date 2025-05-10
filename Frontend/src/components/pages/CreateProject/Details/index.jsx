@@ -6,7 +6,7 @@ import { onChangeFormCreateProject } from "states/modules/project";
 import TextAreaCustom from "components/UI/TextAreaCustom";
 import { useDispatch, useSelector } from "react-redux";
 import { toaster } from "components/UI/toaster";
-
+import { Button, ButtonGroup } from "@chakra-ui/react";
 const Details = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -18,7 +18,7 @@ const Details = () => {
 		name: "",
 		description: "",
 	});
-
+	const [currentStep, setCurrentStep] = useState(0);
 	// ========== USEEFFECT ========== //
 	useEffect(() => {
 		setFormData({
@@ -45,13 +45,20 @@ const Details = () => {
 		navigate("/project/stage");
 	};
 
+
+	const handleNext = () => {
+		if (currentStep < 8) {
+			handleNextStep();
+			setCurrentStep((prev) => prev + 1);
+		}
+	};
 	// ========== COMPONENT RENDER ========== //
 	return (
 		<div className="w-full h-full">
 			<div className="px-[16px] ">
 				<div>
 					<div className="mt-8 bg-[#ffffff] rounded-md">
-						<StepHeader />
+						<StepHeader currentStep={0} />
 					</div>
 					<div className="mt-8 bg-[#ffffff] rounded-md p-8">
 						<div className="flex flex-col w-full gap-6">
@@ -73,12 +80,16 @@ const Details = () => {
 							/>
 
 							<div className="flex justify-end">
-								<button
-									onClick={handleNextStep}
-									height={50}
-									className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold">
-									CREATE PROJECT AND CONTINUE
-								</button>
+								<ButtonGroup size="sm" variant="outline">
+
+									<Button
+										onClick={handleNext}
+										height={50}
+										className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+									>
+										CREATE PROJECT AND CONTINUE
+									</Button>
+								</ButtonGroup>
 							</div>
 						</div>
 					</div>

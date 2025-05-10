@@ -10,7 +10,7 @@ import { PROJECT_ADDITIONAL_INFO } from 'utils/constants'
 import SelectCustom from 'components/UI/SelectCustom'
 import { toaster } from 'components/UI/toaster'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
-
+import { Button, ButtonGroup } from "@chakra-ui/react";
 const projectAdditionalInfoFramework = createListCollection({
     items: PROJECT_ADDITIONAL_INFO['EN'],
 })
@@ -23,6 +23,7 @@ const AdditionalInfo = () => {
 
     // ========== STATE ========== //
     const [formData, setFormData] = useState([{ name: '', content: '' }])
+    const [currentStep, setCurrentStep] = useState(4);
     // ========== USEEFFECT ========== //
     useEffect(() => {
         if (formCreateProject.name === '') {
@@ -83,14 +84,27 @@ const AdditionalInfo = () => {
         const newForm = formData.filter((_, i) => i !== index)
         setFormData(newForm)
     }
+    const handlePrevStep = () => {
 
+        if (currentStep > 0) {
+            setCurrentStep((prev) => prev - 1);
+            handlePreviousStep()
+        }
+    };
+
+    const handleNext = () => {
+        if (currentStep < 8) {
+            handleNextStep();
+            setCurrentStep((prev) => prev + 1);
+        }
+    };
     // ========== COMPONENT RENDER ========== //
     return (
         <div className="w-full h-full">
             <div className="px-[16px] ">
                 <div>
                     <div className="mt-8 bg-[#ffffff] rounded-md">
-                        <StepHeader />
+                        <StepHeader currentStep={4} />
                     </div>
                     <div className="mt-8 bg-[#ffffff] rounded-md p-8">
                         <div className="flex flex-col w-full">
@@ -139,20 +153,25 @@ const AdditionalInfo = () => {
                                 </div>
                             ))}
                             <div className="flex justify-end gap-6">
-                                <button
-                                    onClick={handlePreviousStep}
-                                    height={50}
-                                    className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold "
-                                >
-                                    BACK TO PREVIOUS STEP
-                                </button>
-                                <button
-                                    onClick={handleNextStep}
-                                    height={50}
-                                    className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-                                >
-                                    NEXT STEP
-                                </button>
+
+                                <ButtonGroup size="sm" variant="outline">
+                                    <Button
+                                        onClick={handlePrevStep}
+                                        height={50}
+                                        isDisabled={currentStep === 0}
+                                        className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold "
+                                    >
+                                        BACK TO PREVIOUS STEP
+                                    </Button>
+                                    <Button
+                                        onClick={handleNext}
+                                        height={50}
+                                        isDisabled={currentStep === 6}
+                                        className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                                    >
+                                        NEXT STEP
+                                    </Button>
+                                </ButtonGroup>
                             </div>
                         </div>
                     </div>

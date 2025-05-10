@@ -57,7 +57,7 @@ const ProjectMoreInfo = () => {
 
     // ========== RENDER ========== //
     return (
-        <div className="bg-white relative h-fit top-[-14.75rem] 2xl:w-4/12 2xl:mr-[250px]">
+        <div className="bg-white relative left-[-5.5rem] top-[-14.75rem] h-[41.5rem] 2xl:w-[24rem]">
             {!imageError ? (
                 <Image
                     src={projectDetails?.background}
@@ -77,7 +77,7 @@ const ProjectMoreInfo = () => {
                         Applied
                     </p>
                 ) : (
-                    <p className="bg-[#ffffff] flex relative top-[1.75rem] p-6 mx-[24px] border-l-[3px] border-[#ffe41b] text-[#ffe41b] items-center gap-1">
+                    <p className="bg-[#ffffff] flex relative top-[1.75rem] p-6 w-[21rem] right-[-1.5rem] border-l-[3px] border-[#ffe41b] text-[#ffe41b] items-center gap-1">
                         <IconlyInfoSquare size={20} color={'#ffe41b'} />
                         Not Applied
                     </p>
