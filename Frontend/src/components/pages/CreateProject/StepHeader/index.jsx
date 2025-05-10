@@ -1,53 +1,59 @@
-import React, { useState } from "react";
-import { Stack, Steps } from "@chakra-ui/react";
+import React from 'react'
 
-const steps = [
-    { title: "Basic" },
-    { title: "Stage" },
-    { title: "Revenue" },
-    { title: "Funding Sources" },
-    { title: "More" },
-    { title: "Logo" },
-    { title: "Background" },
-];
-
-const StepHeader = ({ currentStep }) => {
+const StepHeader = () => {
     return (
-        <div className="px-8 py-7">
-            <Stack gap="16">
-                <Steps.Root count={steps.length} step={currentStep}>
-                    <Steps.List>
-                        {steps.map((step, index) => (
-                            <Steps.Item
-                                key={index}
-                                index={index}
-                                title={step.title}
-                                status={
-                                    index < currentStep
-                                        ? "complete"
-                                        : index === currentStep
-                                            ? "active"
-                                            : "pending"
-                                }
-                            >
-                                <Steps.Indicator style={{
-
-                                    backgroundColor: index < currentStep ? "#2F65B9" : "",
-
-                                }} />
-                                <Steps.Title style={{
-                                    color: index < currentStep ? "#2F65B9" : "black",
-                                }}>{step.title}</Steps.Title>
-                                <Steps.Separator style={{
-                                    backgroundColor: index < currentStep ? "#2F65B9" : "gray",
-                                }} />
-                            </Steps.Item>
-                        ))}
-                    </Steps.List>
-                </Steps.Root>
-            </Stack>
+        <div className="px-8">
+            <div>
+                <ul className="flex items-center w-full pl-0 mb-0">
+                    <li className="py-[26px] mr-12">
+                        <a href="" className="font-medium text-black no-underline">
+                            Basic
+                        </a>
+                    </li>
+                    {/* <li className="py-[26px] mr-12">
+            <a href="" className="font-medium text-black no-underline">
+            Industry
+            </a>
+          </li> */}
+                    <li className="py-[26px] mr-12">
+                        <a href="" className="font-medium text-black no-underline">
+                            Stage
+                        </a>
+                    </li>
+                    <li className="py-[26px] mr-12">
+                        <a href="" className="font-medium text-black no-underline">
+                            Revenue
+                        </a>
+                    </li>
+                    <li className="py-[26px] mr-12">
+                        <a href="" className="font-medium text-black no-underline">
+                            Funding Sources
+                        </a>
+                    </li>
+                    <li className="py-[26px] mr-12">
+                        <a href="" className="font-medium text-black no-underline">
+                            More
+                        </a>
+                    </li>
+                    <li className="py-[26px] mr-12">
+                        <a href="" className="font-medium text-black no-underline">
+                            Logo
+                        </a>
+                    </li>
+                    <li className="py-[26px] mr-12">
+                        <a href="" className="font-medium text-black no-underline">
+                            Background
+                        </a>
+                    </li>
+                    {/* <li className="py-[26px] mr-12">
+            <a href="" className="font-medium text-black no-underline">
+                Invites
+            </a>
+          </li> */}
+                </ul>
+            </div>
         </div>
-    );
-};
+    )
+}
 
-export default StepHeader;
+export default StepHeader

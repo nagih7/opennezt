@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { onChangeFormCreateProject } from 'states/modules/project'
 import { useNavigate } from 'react-router-dom'
 import resizeLogo from 'utils/files/resizeLogo'
-import { Button, ButtonGroup } from "@chakra-ui/react";
+
 const Logo = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -13,7 +13,6 @@ const Logo = () => {
     // ========== STATE ========== //
     const [logoURL, setLogoURL] = useState('')
     const [logoFile, setLogoFile] = useState(null)
-    const [currentStep, setCurrentStep] = useState(5);
     // ========== USEEFFECT ========== //
     useEffect(() => {
         if (formCreateProject.name === '') {
@@ -40,31 +39,16 @@ const Logo = () => {
         setLogoURL(URL.createObjectURL(logo))
         dispatch(onChangeFormCreateProject({ logo: logo }))
     }
-    const handlePreviousStep = () => {
-        navigate('/project/additional-info')
-    }
+
     const handleNextStep = () => {
         navigate('/project/background')
     }
-    const handlePrevStep = () => {
 
-        if (currentStep > 0) {
-            setCurrentStep((prev) => prev - 1);
-            handlePreviousStep()
-        }
-    };
-
-    const handleNext = () => {
-        if (currentStep < 6) {
-            handleNextStep();
-            setCurrentStep((prev) => prev + 1);
-        }
-    };
     return (
         <div className="w-full h-full px-[16px]">
             <div>
                 <div className="mt-8 bg-[#ffffff] rounded-md">
-                    <StepHeader currentStep={5} />
+                    <StepHeader />
                 </div>
                 <div className="mt-8 bg-[#ffffff] rounded-md p-8">
                     <div className="flex flex-col w-full">
@@ -139,25 +123,20 @@ const Logo = () => {
                             </div>
                         </div>
                         <div className="flex justify-end gap-6">
-
-                            <ButtonGroup size="sm" variant="outline">
-                                <Button
-                                    onClick={handlePrevStep}
-                                    height={50}
-                                    isDisabled={currentStep === 0}
-                                    className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold "
-                                >
-                                    BACK TO PREVIOUS STEP
-                                </Button>
-                                <Button
-                                    onClick={handleNext}
-                                    height={50}
-                                    isDisabled={currentStep === 6}
-                                    className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-                                >
-                                    NEXT STEP
-                                </Button>
-                            </ButtonGroup>
+                            <button
+                                onClick={() => navigate('/project/additional-info')}
+                                height={50}
+                                className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold "
+                            >
+                                BACK TO PREVIOUS STEP
+                            </button>
+                            <button
+                                onClick={handleNextStep}
+                                height={50}
+                                className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                            >
+                                NEXT STEP
+                            </button>
                         </div>
                     </div>
                 </div>

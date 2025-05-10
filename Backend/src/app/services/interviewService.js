@@ -48,9 +48,8 @@ export const addInterviewMessage = (payload) => {
 export async function startInterview(currentUser, projectId) {
     // Lấy chi tiết thông tin dự án
     const project = await getProjectDetailsToMatching(projectId)
-    project.user_name = currentUser.name
     // Call API tới AI interview bắt đầu cuộc phỏng vấn
-    const interviewAI = await callAPIInterview(currentUser, project)
+    const interviewAI = await callAPIInterview(currentUser._id, project)
     if (!interviewAI) {
         return { error: 'Error getting response from AI start interview' }
     }
@@ -100,6 +99,7 @@ export async function replyInterview(currentUser, requestBody) {
 
         // Call API để chuyển đổi giọng nói thành văn bản
         const content = await convertSpeechToText(audioPath)
+        console.log('Content:', content)
         // Xóa file tạm thời
         FileUpload.remove(tempWavFile)
         if (!content || content === '') {

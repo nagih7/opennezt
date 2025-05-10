@@ -2130,12 +2130,7 @@ export async function getProjectDetailsToMatching(projectId) {
                 ],
             },
         },
-        {
-            $unwind: {
-                path: '$project_requirement',
-                preserveNullAndEmptyArrays: true,
-            },
-        },
+
         {
             $addFields: {
                 industries: {
@@ -2150,7 +2145,6 @@ export async function getProjectDetailsToMatching(projectId) {
         },
         {
             $project: {
-                _id: 0,
                 user_id: 0,
                 industry_ids: 0,
                 stage_id: 0,

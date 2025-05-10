@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { onChangeFormCreateProject } from 'states/modules/project'
 import { createNewProject } from 'api/project'
+import { Button } from '@chakra-ui/react'
 import resizeBackground from 'utils/files/resizeBackground'
-import { Button, ButtonGroup } from "@chakra-ui/react";
+
 const CoverImage = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -21,7 +22,7 @@ const CoverImage = () => {
         }
         // ========== CLEANUP FUNCTION ========== //
     }, [navigate, formCreateProject.name])
-    const [currentStep, setCurrentStep] = useState(6);
+
     useEffect(() => {
         if (formCreateProject.background) {
             setBgFile(formCreateProject.background)
@@ -134,21 +135,13 @@ const CoverImage = () => {
 
         dispatch(createNewProject(formData))
     }
-    const handlePrevStep = () => {
-        navigate('/project/logo')
-        if (currentStep > 0) {
-            setCurrentStep((prev) => prev - 1);
-
-        }
-    };
-
 
     return (
         <div className="w-full h-full">
             <div className="px-[16px] ">
                 <div>
                     <div className="mt-8 bg-[#ffffff] rounded-md">
-                        <StepHeader currentStep={6} />
+                        <StepHeader />
                     </div>
                     <div className="mt-8 bg-[#ffffff] rounded-md p-8">
                         <div className="flex flex-col w-full">
@@ -210,27 +203,22 @@ const CoverImage = () => {
                                 </div>
                             </div>
                             <div className="flex justify-end gap-6">
-                                <ButtonGroup size="sm" variant="outline">
-                                    <Button
-                                        onClick={handlePrevStep}
-                                        height={50}
-                                        isDisabled={currentStep === 0}
-                                        className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold "
-                                    >
-                                        BACK TO PREVIOUS STEP
-                                    </Button>
-                                    <Button
-
-                                        loading={isLoadingCreateNewProject}
-                                        loadingText="Creating..."
-                                        onClick={handleConfirmCreateProject}
-                                        height={50}
-                                        className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-
-                                    >
-                                        CREATE PROJECT
-                                    </Button>
-                                </ButtonGroup>
+                                <button
+                                    onClick={() => navigate('/project/logo')}
+                                    height={50}
+                                    className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold "
+                                >
+                                    BACK TO PREVIOUS STEP
+                                </button>
+                                <Button
+                                    loading={isLoadingCreateNewProject}
+                                    loadingText="Creating..."
+                                    onClick={handleConfirmCreateProject}
+                                    height={50}
+                                    className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                                >
+                                    CREATE PROJECT
+                                </Button>
                             </div>
                         </div>
                     </div>

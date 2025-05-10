@@ -15,14 +15,13 @@ import axios from 'axios'
 import formatContentForSpeech from '@/utils/classes/format-content'
 
 // Call API BOT phỏng vấn
-export async function callAPIInterview(user, content, conversationId) {
-    console.log('callAPIInterview', JSON.stringify(content))
+export async function callAPIInterview(userId, content, conversationId) {
     const requestData = {
         inputs: {},
         query: JSON.stringify(content),
         response_mode: 'blocking',
         conversation_id: conversationId ? conversationId : '',
-        user: user._id.toString(),
+        user: userId.toString(),
     }
 
     try {
