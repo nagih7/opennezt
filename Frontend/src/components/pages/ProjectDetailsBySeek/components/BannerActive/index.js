@@ -8,7 +8,7 @@ const BannerActive = () => {
     const { projectDetails } = useSelector((state) => state.project)
 
     return (
-        <div className=" bg-[#07142e] w-[78.75rem] h-[18.75rem] relative top-[0rem] 2xl:w-[102rem]">
+        <div className=" bg-[#07142e] w-full h-[18.75rem] relative top-[0rem]">
             <div className="text-white font-bold relative top-[5rem]  border-b border-[#142039] pb-4 2xl:ml-[5.5rem]">
                 <ol className="flex mb-0">
                     <li>

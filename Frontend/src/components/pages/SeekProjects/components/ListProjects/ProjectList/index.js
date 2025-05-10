@@ -11,7 +11,7 @@ const ProjectList = ({ project, handleViewProjectDetails }) => {
             onClick={() => handleViewProjectDetails(project)}
             className="overflow-hidden rounded-sm cursor-pointer group"
         >
-            <div className="bg-white flex items-center p-4 2xl:w-[68rem]pt-3 w-full">
+            <div className="bg-white flex items-center p-4 pt-3 w-full">
                 <div className="relative w-[16rem] h-[10rem] rounded-md overflow-hidden group">
                     {!imageError ? (
                         <Image

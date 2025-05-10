@@ -16,9 +16,9 @@ const ProjectDetailsBySeek = () => {
 
 	return (
 		<>
-			<div className="">
+			<div className="w-full">
 				<BannerActive />
-				<div className="grid grid-cols-3 gap-6 mt-[3.5rem]">
+				<div className="flex w-full gap-6 mt-8">
 					<ProjectOverview />
 					<ProjectMoreInfo />
 				</div>
