@@ -10,9 +10,8 @@ import { closeInterview, replyInterview } from 'api/interview'
 const DiaLogInterview = ({ videoRef }) => {
     const dispatch = useDispatch()
     // STATE
-    const { isOpenModalInterview, currentAction, messages, conversation, isLoadingReplyInterview } = useSelector(
-        (state) => state.interview
-    )
+    const { isOpenModalInterview, currentAction, messages, conversation, isLoadingReplyInterview, hasJoined } =
+        useSelector((state) => state.interview)
     const [isListening, setIsListening] = useState(false)
     const [isSpeaking, setIsSpeaking] = useState(false)
     const [error, setError] = useState(null)
@@ -130,9 +129,7 @@ const DiaLogInterview = ({ videoRef }) => {
     const sendAudioMessage = async (blob) => {
         if (!blob) return
 
-        console.log('currentAction', currentAction)
-
-        if (currentAction === 'speaking' || isLoadingReplyInterview) {
+        if (currentAction === 'speaking' || isLoadingReplyInterview || !hasJoined) {
             return
         }
 

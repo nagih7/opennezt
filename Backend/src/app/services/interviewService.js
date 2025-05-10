@@ -48,8 +48,9 @@ export const addInterviewMessage = (payload) => {
 export async function startInterview(currentUser, projectId) {
     // Lấy chi tiết thông tin dự án
     const project = await getProjectDetailsToMatching(projectId)
+    project.user_name = currentUser.name
     // Call API tới AI interview bắt đầu cuộc phỏng vấn
-    const interviewAI = await callAPIInterview(currentUser._id, project)
+    const interviewAI = await callAPIInterview(currentUser, project)
     if (!interviewAI) {
         return { error: 'Error getting response from AI start interview' }
     }
