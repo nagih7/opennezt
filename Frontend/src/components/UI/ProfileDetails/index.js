@@ -29,10 +29,10 @@ const ProfileDetails = ({ profile }) => {
             return acc
         }, {}) || {}
 
-    const result = Object.values(groupedSkills)
+    const result = Object.values(groupedSkills) || []
 
     return (
-        <div className="lg:w-10/12 w-full">
+        <div className="w-full lg:w-10/12">
             <div className="bg-[#ffffff] rounded-md">
                 <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                     <h5 className="mb-0">Professional Background</h5>
@@ -87,14 +87,14 @@ const ProfileDetails = ({ profile }) => {
                                 <div className="flex flex-col gap-1 ">
                                     <span className="text-xl font-semibold">{education.school || 'N/A'}</span>
 
-                                    <span className="text-gray-600 font-medium">
+                                    <span className="font-medium text-gray-600">
                                         {education.degree || 'N/A'} - {education.field_of_study || 'N/A'}
                                     </span>
-                                    <span className="text-gray-600 font-medium">Grade: {education.grade || 'N/A'}</span>
-                                    <span className="text-gray-600 font-medium">
+                                    <span className="font-medium text-gray-600">Grade: {education.grade || 'N/A'}</span>
+                                    <span className="font-medium text-gray-600">
                                         {formatDate(education.start_date)} - {formatDate(education.end_date)}
                                     </span>
-                                    <span className="text-gray-600 font-medium">{education.activities || 'N/A'}</span>
+                                    <span className="font-medium text-gray-600">{education.activities || 'N/A'}</span>
                                 </div>
                             </div>
                         ))
@@ -126,10 +126,10 @@ const ProfileDetails = ({ profile }) => {
                                     <img className="w-[70px] h-[70px] object-contain" src="/opennezt.png" />
                                     <div className="flex flex-col gap-1">
                                         <span className="text-base font-semibold">{certification.name || 'N/A'}</span>
-                                        <span className="text-gray-600 font-medium text-sm">
+                                        <span className="text-sm font-medium text-gray-600">
                                             {certification.organization_name || 'N/A'}
                                         </span>
-                                        <span className="text-gray-600 font-medium text-sm">
+                                        <span className="text-sm font-medium text-gray-600">
                                             {formatDate(certification.issue_date)} -{' '}
                                             {formatDate(certification.expiration_date)}
                                         </span>
