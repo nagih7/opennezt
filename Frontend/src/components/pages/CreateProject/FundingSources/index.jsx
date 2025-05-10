@@ -10,7 +10,8 @@ import { createListCollection } from '@chakra-ui/react'
 import { FUNDING_SOURCES, CURRENCY } from 'utils/constants'
 import SelectCustom from 'components/UI/SelectCustom'
 import { toaster } from 'components/UI/toaster'
-
+import { Button, ButtonGroup } from "@chakra-ui/react";
+import { current } from '@reduxjs/toolkit'
 const currencyFramework = createListCollection({
     items: CURRENCY['EN'],
 })
@@ -26,6 +27,7 @@ const FundingSources = () => {
 
     // ========== STATE ========== //
     const [formData, setFormData] = useState([{ name: '', amount: '', currency: '' }])
+    const [currentStep, setCurrentStep] = useState(3);
     // ========== USEEFFECT ========== //
     useEffect(() => {
         if (formCreateProject.name === '') {
@@ -86,14 +88,27 @@ const FundingSources = () => {
         const newForm = formData.filter((_, i) => i !== index)
         setFormData(newForm)
     }
+    const handlePrevStep = () => {
 
+        if (currentStep > 0) {
+            setCurrentStep((prev) => prev - 1);
+            handlePreviousStep()
+        }
+    };
+
+    const handleNext = () => {
+        if (currentStep < 8) {
+            handleNextStep();
+            setCurrentStep((prev) => prev + 1);
+        }
+    };
     // ========== COMPONENT RENDER ========== //
     return (
         <div className="w-full h-full">
             <div className="px-[16px] ">
                 <div>
                     <div className="mt-8 bg-[#ffffff] rounded-md">
-                        <StepHeader />
+                        <StepHeader currentStep={3} />
                     </div>
                     <div className="mt-8 bg-[#ffffff] rounded-md p-8">
                         <div className="flex flex-col w-full">
@@ -151,20 +166,24 @@ const FundingSources = () => {
                                 </div>
                             ))}
                             <div className="flex justify-end gap-6">
-                                <button
-                                    onClick={handlePreviousStep}
-                                    height={50}
-                                    className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold "
-                                >
-                                    BACK TO PREVIOUS STEP
-                                </button>
-                                <button
-                                    onClick={handleNextStep}
-                                    height={50}
-                                    className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-                                >
-                                    NEXT STEP
-                                </button>
+                                <ButtonGroup size="sm" variant="outline">
+                                    <Button
+                                        onClick={handlePrevStep}
+                                        height={50}
+                                        isDisabled={currentStep === 0}
+                                        className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold "
+                                    >
+                                        BACK TO PREVIOUS STEP
+                                    </Button>
+                                    <Button
+                                        onClick={handleNext}
+                                        height={50}
+
+                                        className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                                    >
+                                        NEXT STEP
+                                    </Button>
+                                </ButtonGroup>
                             </div>
                         </div>
                     </div>
