@@ -11,23 +11,26 @@ import os from 'os'
 ffmpeg.setFfmpegPath(ffmpegInstaller.path)
 
 /**
+ * Helper function to clean up temporary files
+ * @param {Object} files - Object containing paths to temp files
+ */
+function cleanupTempFiles(files) {
+    try {
+        Object.values(files).forEach((file) => {
+            if (fs.existsSync(file)) fs.unlinkSync(file)
+        })
+    } catch (err) {
+        console.error('Error cleaning up temp files:', err)
+    }
+}
+
+/**
  * Verifies if audio file contains human voice by analyzing amplitude, frequency patterns,
  * and spectral characteristics to distinguish from other sounds like clapping
  * @param {string} audioFilePath - Path to audio file
  * @returns {Promise<boolean>} - True if human voice is detected, false otherwise
  */
 const verifyVoice = (audioFilePath) => {
-    // Helper function to clean up temporary files - moved to function body root
-    function cleanupTempFiles(files) {
-        try {
-            Object.values(files).forEach((file) => {
-                if (fs.existsSync(file)) fs.unlinkSync(file)
-            })
-        } catch (err) {
-            console.error('Error cleaning up temp files:', err)
-        }
-    }
-
     return new Promise((resolve) => {
         try {
             // Check if file exists and is accessible

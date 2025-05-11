@@ -1681,198 +1681,98 @@ export async function getAllActivities(user, projectId) {
 
     return activities
 }
+
+/**
+ * Generic function to update or create project activity
+ * @param {Object} user - Current user
+ * @param {string} projectId - Project ID
+ * @param {string} activityType - Activity type name
+ * @param {Object} additionalData - Additional data to store
+ * @returns {Promise<Object>} - Created or updated activity
+ */
+async function updateProjectActivity(user, projectId, activityType, additionalData = {}) {
+    const project = await Project.findOne(new ObjectId(projectId))
+    if (!project) {
+        throw new Error('Project not found')
+    }
+
+    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: activityType })
+    if (!typeNotification) {
+        throw new Error(`Activity type ${activityType} not found`)
+    }
+
+    // Base data all activities need
+    const activityData = {
+        project_id: project._id,
+        ...additionalData,
+    }
+
+    // Check if activity already exists
+    const oldActivity = await ActivityLog.findOne({
+        user_id: user._id,
+        'data.project_id': project._id,
+        type_id: typeNotification._id,
+    })
+
+    if (oldActivity) {
+        // Update timestamp for existing activity
+        oldActivity.timestamp = new Date()
+        await oldActivity.save()
+        return oldActivity
+    } else {
+        // Create new activity
+        const activity = new ActivityLog({
+            user_id: user._id,
+            type_id: typeNotification._id,
+            data: activityData,
+            metadata: {},
+        })
+        await activity.save()
+        return activity
+    }
+}
+
+// Replace the original activity functions with these optimized versions
 // ========== POST [Project - Activity Basic] ========== //
 export async function updateBasicActivity(user, projectId) {
-    const project = await Project.findOne(new ObjectId(projectId))
-    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_BASIC })
-    const oldActivity = await ActivityLog.findOne({
-        user_id: user._id,
-        'data.project_id': project._id,
-        type_id: typeNotification._id,
-    })
-    if (oldActivity) {
-        // Update timestamp
-        oldActivity.timestamp = new Date()
-        await oldActivity.save()
-    } else {
-        // Create new activity
-        const activity = new ActivityLog({
-            user_id: user._id,
-            type_id: typeNotification._id,
-            data: { project_id: project._id },
-            metadata: {},
-        })
-        await activity.save()
-    }
+    return await updateProjectActivity(user, projectId, PROJECT_ACTIVITY_BASIC)
 }
+
 // ========== POST [Project - Activity Sector] ========== //
 export async function updateSectorActivity(user, projectId) {
-    const project = await Project.findOne(new ObjectId(projectId))
-    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_SECTOR })
-    const oldActivity = await ActivityLog.findOne({
-        user_id: user._id,
-        'data.project_id': project._id,
-        type_id: typeNotification._id,
-    })
-    if (oldActivity) {
-        // Update timestamp
-        oldActivity.timestamp = new Date()
-        await oldActivity.save()
-    } else {
-        // Create new activity
-        const activity = new ActivityLog({
-            user_id: user._id,
-            type_id: typeNotification._id,
-            data: { project_id: project._id },
-            metadata: {},
-        })
-        await activity.save()
-    }
+    return await updateProjectActivity(user, projectId, PROJECT_ACTIVITY_SECTOR)
 }
+
 // ========== POST [Project - Activity Revenue] ========== //
 export async function updateRevenueActivity(user, projectId) {
-    const project = await Project.findOne(new ObjectId(projectId))
-    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_REVENUE })
-    const oldActivity = await ActivityLog.findOne({
-        user_id: user._id,
-        'data.project_id': project._id,
-        type_id: typeNotification._id,
-    })
-    if (oldActivity) {
-        // Update timestamp
-        oldActivity.timestamp = new Date()
-        await oldActivity.save()
-    } else {
-        // Create new activity
-        const activity = new ActivityLog({
-            user_id: user._id,
-            type_id: typeNotification._id,
-            data: { project_id: project._id },
-            metadata: {},
-        })
-        await activity.save()
-    }
+    return await updateProjectActivity(user, projectId, PROJECT_ACTIVITY_REVENUE)
 }
+
 // ========== POST [Project - Activity FundingSource] ========== //
 export async function updateFundingSourceActivity(user, projectId) {
-    const project = await Project.findOne(new ObjectId(projectId))
-    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_FUNDING })
-    const oldActivity = await ActivityLog.findOne({
-        user_id: user._id,
-        'data.project_id': project._id,
-        type_id: typeNotification._id,
-    })
-    if (oldActivity) {
-        // Update timestamp
-        oldActivity.timestamp = new Date()
-        await oldActivity.save()
-    } else {
-        // Create new activity
-        const activity = new ActivityLog({
-            user_id: user._id,
-            type_id: typeNotification._id,
-            data: { project_id: project._id },
-            metadata: {},
-        })
-        await activity.save()
-    }
+    return await updateProjectActivity(user, projectId, PROJECT_ACTIVITY_FUNDING)
 }
+
 // ========== POST [Project - Activity AdditionalInfo] ========== //
 export async function updateAdditionalInfoActivity(user, projectId) {
-    const project = await Project.findOne(new ObjectId(projectId))
-    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_ADDITIONAL })
-    const oldActivity = await ActivityLog.findOne({
-        user_id: user._id,
-        'data.project_id': project._id,
-        type_id: typeNotification._id,
-    })
-    if (oldActivity) {
-        // Update timestamp
-        oldActivity.timestamp = new Date()
-        await oldActivity.save()
-    } else {
-        // Create new activity
-        const activity = new ActivityLog({
-            user_id: user._id,
-            type_id: typeNotification._id,
-            data: { project_id: project._id },
-            metadata: {},
-        })
-        await activity.save()
-    }
+    return await updateProjectActivity(user, projectId, PROJECT_ACTIVITY_ADDITIONAL)
 }
+
 // ========== POST [Project - Activity Logo] ========== //
 export async function updateLogoActivity(user, projectId) {
-    const project = await Project.findOne(new ObjectId(projectId))
-    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_LOGO })
-    const oldActivity = await ActivityLog.findOne({
-        user_id: user._id,
-        'data.project_id': project._id,
-        type_id: typeNotification._id,
-    })
-    if (oldActivity) {
-        // Update timestamp
-        oldActivity.timestamp = new Date()
-        await oldActivity.save()
-    } else {
-        // Create new activity
-        const activity = new ActivityLog({
-            user_id: user._id,
-            type_id: typeNotification._id,
-            data: { project_id: project._id },
-            metadata: {},
-        })
-        await activity.save()
-    }
+    return await updateProjectActivity(user, projectId, PROJECT_ACTIVITY_LOGO)
 }
+
 // ========== POST [Project - Activity Background] ========== //
 export async function updateBackgroundActivity(user, projectId) {
-    const project = await Project.findOne(new ObjectId(projectId))
-    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_BACKGROUND })
-    const oldActivity = await ActivityLog.findOne({
-        user_id: user._id,
-        'data.project_id': project._id,
-        type_id: typeNotification._id,
-    })
-    if (oldActivity) {
-        // Update timestamp
-        oldActivity.timestamp = new Date()
-        await oldActivity.save()
-    } else {
-        // Create new activity
-        const activity = new ActivityLog({
-            user_id: user._id,
-            type_id: typeNotification._id,
-            data: { project_id: project._id },
-            metadata: {},
-        })
-        await activity.save()
-    }
+    return await updateProjectActivity(user, projectId, PROJECT_ACTIVITY_BACKGROUND)
 }
+
 // ========== POST [Project - Activity ProjectRequirement] ========== //
 export async function updateProjectRequirementActivity(user, projectId) {
-    const project = await Project.findOne(new ObjectId(projectId))
-    const typeNotification = await Type.findOne({ class: PROJECT_ACTIVITY, name: PROJECT_ACTIVITY_REQUIREMENT })
-    const oldActivity = await ActivityLog.findOne({
-        user_id: user._id,
-        'data.project_id': project._id,
-        type_id: typeNotification._id,
-    })
-    if (oldActivity) {
-        // Update timestamp
-        oldActivity.timestamp = new Date()
-        await oldActivity.save()
-    } else {
-        // Create new activity
-        const activity = new ActivityLog({
-            user_id: user._id,
-            type_id: typeNotification._id,
-            data: { project_id: project._id },
-            metadata: {},
-        })
-        await activity.save()
-    }
+    return await updateProjectActivity(user, projectId, PROJECT_ACTIVITY_REQUIREMENT)
 }
+
 // ========== POST [Project - Activity New member] ========== //
 export async function updateNewMemberActivity(user, { invitationId }) {
     const invitation = await NotificationFeed.findOne({
