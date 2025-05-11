@@ -4,6 +4,43 @@ import * as chatService from '../services/chatService.js'
 import * as chatEncryptionService from '../services/chatEncryptionService.js'
 import { ObjectId } from '@/models/base.js'
 
+// ========== GET [CONVERSATIONS] ========== //
+export async function getConversations(req, res) {
+    const conversations = await chatService.getConversations(req.currentUser)
+    res.status(200).jsonify(conversations)
+}
+
+// ========== GET [CONVERSATION] ========== //
+export async function getConversation(req, res) {
+    const conversation = await chatService.getConversation(req.currentUser, req.params)
+    if (!conversation) res.status(404).jsonify('Conversation not found')
+    res.status(200).jsonify(conversation)
+}
+
+// ========== GET [MESSAGES] ========== //
+export async function getMessages(req, res) {
+    const messages = await chatService.getMessages(req.currentUser, req.params)
+    res.status(200).jsonify(messages)
+}
+
+// ========== SEND [MESSAGE] ========== //
+export async function sendMessage(req, res) {
+    const message = await chatService.sendMessage(req.currentUser, req.params, req.body)
+    res.status(200).jsonify(message)
+}
+
+// ========== TOGGLE [ENCRYPTION] ========== //
+export async function toggleEncryption(req, res) {
+    const { enabled } = req.body
+    const { conversationId } = req.params
+
+    const success = await chatEncryptionService.toggleConversationEncryption(conversationId, enabled)
+
+    if (!success)
+        return res.status(400).jsonify(`Failed to ${enabled ? 'enable' : 'disable'} encryption for conversation`)
+    res.status(200).jsonify(`Encryption ${enabled ? 'enabled' : 'disabled'} for conversation`)
+}
+
 // Helper for consistent error responses
 const handleError = (res, error, message = 'An error occurred') => {
     return res.status(500).json({
@@ -11,74 +48,6 @@ const handleError = (res, error, message = 'An error occurred') => {
         message,
         error: error.message,
     })
-}
-
-// ========== GET [CONVERSATIONS] ========== //
-export async function getConversations(req, res) {
-    try {
-        const conversations = await chatService.getConversations(req.currentUser)
-        res.status(200).jsonify(conversations)
-    } catch (error) {
-        handleError(res, error, 'Failed to get conversations')
-    }
-}
-
-// ========== GET [CONVERSATION] ========== //
-export async function getConversation(req, res) {
-    try {
-        const conversation = await chatService.getConversation(req.currentUser, req.params)
-        if (!conversation) {
-            return res.status(404).json({
-                success: false,
-                message: 'Conversation not found',
-            })
-        }
-        res.status(200).jsonify(conversation)
-    } catch (error) {
-        handleError(res, error, 'Failed to get conversation')
-    }
-}
-
-// ========== GET [MESSAGES] ========== //
-export async function getMessages(req, res) {
-    try {
-        const messages = await chatService.getMessages(req.currentUser, req.params)
-        res.status(200).jsonify(messages)
-    } catch (error) {
-        handleError(res, error, 'Failed to get messages')
-    }
-}
-
-// ========== SEND [MESSAGE] ========== //
-export async function sendMessage(req, res) {
-    try {
-        const message = await chatService.sendMessage(req.currentUser, req.params, req.body)
-        res.status(200).jsonify(message)
-    } catch (error) {
-        handleError(res, error, 'Failed to send message')
-    }
-}
-
-// ========== ENABLE [ENCRYPTION] ========== //
-export async function enableEncryption(req, res) {
-    try {
-        const { conversationId } = req.params
-        const success = await chatEncryptionService.setupConversationEncryption(conversationId)
-
-        if (success) {
-            res.status(200).json({
-                success: true,
-                message: 'Encryption enabled for conversation',
-            })
-        } else {
-            res.status(400).json({
-                success: false,
-                message: 'Failed to enable encryption for conversation',
-            })
-        }
-    } catch (error) {
-        handleError(res, error, 'Error enabling encryption')
-    }
 }
 
 // ========== CHECK [ENCRYPTION STATUS] ========== //

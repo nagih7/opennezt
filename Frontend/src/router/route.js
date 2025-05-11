@@ -68,7 +68,7 @@ const ProfessionalBackground = React.lazy(() =>
 const Educations = React.lazy(() => import('../components/pages/EditProfile/components/Educations'))
 const Skills = React.lazy(() => import('../components/pages/EditProfile/components/Skills'))
 const AdditionalInfo = React.lazy(() => import('../components/pages/EditProfile/components/AdditionalInfo'))
-// const NotificationManagement = React.lazy(() => import('../components/pages/NotificationManagement'))
+const ConversationWithEncryption = React.lazy(() => import('../components/chat/ConversationWithEncryption'))
 const router = createBrowserRouter([
     {
         path: '/login',
@@ -546,6 +546,15 @@ const router = createBrowserRouter([
             </AppLayout>
         ),
         loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CONVERSATION_PAGE'),
+    },
+    {
+        path: '/conversation/:conversationId/encryption',
+        element: (
+            <AppLayout>
+                <ConversationWithEncryption />
+            </AppLayout>
+        ),
+        loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CONVERSATION_ENCRYPTION_PAGE'),
     },
     {
         path: '/account-settings',

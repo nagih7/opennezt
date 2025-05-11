@@ -1,4 +1,3 @@
-import signalService from '@/services/SignalService'
 import { callApi } from '@/api/callApi'
 
 // Constants

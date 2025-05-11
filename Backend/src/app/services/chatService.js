@@ -276,6 +276,7 @@ export async function getMessages(user, { conversationId }) {
 
 // ========== SEND [MESSAGE -- NO SOCKET] ========== //
 export async function sendMessage(user, { conversationId }, { content, isEncrypted, encryptionMetadata }) {
+    console.log('Sending message:', content, isEncrypted, encryptionMetadata)
     // Using findOne to get all necessary data in one query
     const [conversation, typeMessage] = await Promise.all([
         Conversation.findOne({

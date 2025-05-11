@@ -8,34 +8,22 @@ const signalRouter = Router()
 
 signalRouter.use(asyncHandler(requireAuthentication))
 
-// Initialize Signal Protocol keys for the current user
+// Khởi tạo Signal Protocol keys cho currentUser
 signalRouter.post('/keys', asyncHandler(signalController.initializeSignalKeys))
 
 // Get a user's public Signal Protocol keys
 signalRouter.get('/keys/:userId', asyncHandler(signalController.getPublicKeys))
 
 // Mark a oneTimePreKey as used
-signalRouter.post(
-    '/keys/:userId/use-prekey',
-
-    asyncHandler(signalController.useOneTimePreKey)
-)
+signalRouter.post('/keys/:userId/use-prekey', asyncHandler(signalController.useOneTimePreKey))
 
 // Rotate a user's signedPreKey
-signalRouter.post(
-    '/keys/rotate-signed-prekey',
-
-    asyncHandler(signalController.rotateSignedPreKeyHandler)
-)
+signalRouter.post('/keys/rotate-signed-prekey', asyncHandler(signalController.rotateSignedPreKeyHandler))
 
 // Manually rotate one-time prekeys
-signalRouter.post(
-    '/keys/rotate-one-time-prekeys',
+signalRouter.post('/keys/rotate-one-time-prekeys', asyncHandler(signalController.rotateOneTimePreKeysHandler))
 
-    asyncHandler(signalController.rotateOneTimePreKeysHandler)
-)
-
-// Create a session between two users
+// Thiết lập session với một người dùng bằng userId
 signalRouter.post('/session', asyncHandler(sessionController.createSession))
 
 // Get session info for a specific user

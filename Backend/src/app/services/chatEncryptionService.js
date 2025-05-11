@@ -92,10 +92,6 @@ export async function setupConversationEncryption(conversationId) {
     try {
         // Get the conversation
         const conversation = await Conversation.findById(conversationId)
-        if (!conversation) {
-            throw new Error('Conversation not found')
-        }
-
         // Check if conversation is between exactly two users
         if (conversation.members.length !== 2) {
             throw new Error('Encryption is only supported for one-on-one conversations')
@@ -108,22 +104,15 @@ export async function setupConversationEncryption(conversationId) {
         // Get users in parallel
         const [user1, user2] = await Promise.all([User.findById(userId1), User.findById(userId2)])
 
-        // Generate keys in parallel if needed
+        // Tạo khóa Signal Protocol cho người dùng nếu chưa có
         const keysPromises = []
 
-        if (!user1.signal_keys?.identityKey) {
-            keysPromises.push(generateUserSignalKeys(user1))
-        }
+        if (!user1.signal_keys?.identityKey) keysPromises.push(generateUserSignalKeys(user1))
+        if (!user2.signal_keys?.identityKey) keysPromises.push(generateUserSignalKeys(user2))
 
-        if (!user2.signal_keys?.identityKey) {
-            keysPromises.push(generateUserSignalKeys(user2))
-        }
+        if (keysPromises.length > 0) await Promise.all(keysPromises)
 
-        if (keysPromises.length > 0) {
-            await Promise.all(keysPromises)
-        }
-
-        // Mark conversation as encryption enabled
+        // Enable encryption in the conversation
         conversation.encryption_enabled = true
         await conversation.save()
 
@@ -137,6 +126,61 @@ export async function setupConversationEncryption(conversationId) {
         return true
     } catch (error) {
         console.error('Error setting up conversation encryption:', error)
+        return false
+    }
+}
+
+/**
+ * Toggle encryption for a conversation
+ * @param {String} conversationId - Conversation ID
+ * @param {Boolean} enabled - Whether to enable or disable encryption
+ * @returns {Promise<Boolean>} Success status
+ */
+export async function toggleConversationEncryption(conversationId, enabled) {
+    try {
+        // Get the conversation
+        const conversation = await Conversation.findById(conversationId)
+        if (!conversation) {
+            throw new Error('Conversation not found')
+        }
+
+        // If enabling encryption, make sure it's a 1-on-1 conversation and generate keys if needed
+        if (enabled) {
+            // Check if conversation is between exactly two users
+            if (conversation.members.length !== 2) {
+                throw new Error('Encryption is only supported for one-on-one conversations')
+            }
+
+            // Get user IDs
+            const userId1 = conversation.members[0].user_id
+            const userId2 = conversation.members[1].user_id
+
+            // Get users in parallel
+            const [user1, user2] = await Promise.all([User.findById(userId1), User.findById(userId2)])
+
+            // Generate Signal Protocol keys for users if they don't have them
+            const keysPromises = []
+
+            if (!user1.signal_keys?.identityKey) keysPromises.push(generateUserSignalKeys(user1))
+            if (!user2.signal_keys?.identityKey) keysPromises.push(generateUserSignalKeys(user2))
+
+            if (keysPromises.length > 0) await Promise.all(keysPromises)
+
+            // Update cache to indicate encryption is possible
+            const cacheKey = [userId1.toString(), userId2.toString()].sort().join('-')
+            encryptionCapabilityCache.set(cacheKey, {
+                value: true,
+                timestamp: Date.now(),
+            })
+        }
+
+        // Update the encryption status based on the enabled parameter
+        conversation.encryption_enabled = enabled
+        await conversation.save()
+
+        return true
+    } catch (error) {
+        console.error(`Error ${enabled ? 'enabling' : 'disabling'} conversation encryption:`, error)
         return false
     }
 }

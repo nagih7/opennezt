@@ -25,26 +25,23 @@ export async function initializeSignalKeys(req, res) {
     try {
         const user = req.currentUser
 
-        // Skip generation if user already has keys
+        // Bỏ qua nếu người dùng đã có khóa Signal Protocol
         if (user.signal_keys?.identityKey) {
-            return res.status(200).json({
-                success: true,
-                message: 'User already has Signal Protocol keys',
-                data: {
-                    identityKey: user.signal_keys.identityKey.public,
-                    signedPreKey: {
-                        keyId: user.signal_keys.signedPreKey.keyId,
-                        public: user.signal_keys.signedPreKey.public,
-                        signature: user.signal_keys.signedPreKey.signature,
-                    },
-                    registrationId: user.signal_keys.registrationId,
+            const payload = {
+                identityKey: user.signal_keys.identityKey.public,
+                signedPreKey: {
+                    keyId: user.signal_keys.signedPreKey.keyId,
+                    public: user.signal_keys.signedPreKey.public,
+                    signature: user.signal_keys.signedPreKey.signature,
                 },
-            })
+                registrationId: user.signal_keys.registrationId,
+            }
+            return res.status(200).jsonify(payload, 'User already has Signal Protocol keys')
         }
 
         const updatedUser = await generateUserSignalKeys(user)
 
-        // Only return the public part of the keys
+        // Chỉ trả về các khóa công khai
         res.status(200).json({
             success: true,
             data: {

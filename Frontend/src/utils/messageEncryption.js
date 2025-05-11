@@ -1,4 +1,4 @@
-import signalService from '@/services/SignalService'
+import signalService from '@/services/SignalServiceBrowser'
 
 /**
  * Encrypt a message for a specific conversation if encryption is enabled

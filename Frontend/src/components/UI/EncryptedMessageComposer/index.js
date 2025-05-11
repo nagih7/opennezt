@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { callApi } from '@/api/callApi'
-import signalService from '@/services/SignalService'
 import { encryptMessage } from '@/utils/messageEncryption'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLock, faLockOpen, faPaperPlane } from '@fortawesome/free-solid-svg-icons'

@@ -7,7 +7,7 @@ const publicKeyCache = new Map()
 const CACHE_TTL = 2 * 60 * 1000 // 2 minutes in milliseconds
 
 /**
- * Generate Signal Protocol keys for a user
+ * Generate Signal Protocol keys cho user
  * @param {Object} user - User object
  * @returns {Object} Updated user with Signal Protocol keys
  */
@@ -73,12 +73,12 @@ export async function getUserPublicKeys(userId) {
             signature: user.signal_keys.signedPreKey.signature,
         },
         oneTimePreKey:
-            user.signal_keys.oneTimePreKeys.length > 0
-                ? {
-                    keyId: user.signal_keys.oneTimePreKeys[0].keyId,
-                    public: user.signal_keys.oneTimePreKeys[0].public,
-                }
-                : null,
+         user.signal_keys.oneTimePreKeys.length > 0
+             ? {
+                 keyId: user.signal_keys.oneTimePreKeys[0].keyId,
+                 public: user.signal_keys.oneTimePreKeys[0].public,
+             }
+             : null,
         registrationId: user.signal_keys.registrationId,
     }
 
@@ -165,24 +165,46 @@ export async function rotateSignedPreKey(userId) {
         throw new Error('User has no Signal Protocol keys')
     }
 
-    // We need to convert back to the format libsignal expects
-    const identityKeyPair = {
-        pubKey: SignalProtocol.base64ToArrayBuffer(user.signal_keys.identityKey.public),
-        privKey: SignalProtocol.base64ToArrayBuffer(user.signal_keys.identityKey.private),
-    }
+    let newSignedPreKey // Check if KeyHelper is available
+    if (libsignal.keyhelper && libsignal.keyhelper.generateSignedPreKey) {
+        // We need to convert back to the format libsignal expects
+        const identityKeyPair = {
+            pubKey: SignalProtocol.base64ToArrayBuffer(user.signal_keys.identityKey.public),
+            privKey: SignalProtocol.base64ToArrayBuffer(user.signal_keys.identityKey.private),
+        }
 
-    // Generate a new signed prekey
-    const signedPreKeyId = Math.floor(Math.random() * 1000)
-    const signedPreKey = libsignal.KeyHelper.generateSignedPreKey(identityKeyPair, signedPreKeyId)
+        // Generate a new signed prekey
+        const signedPreKeyId = Math.floor(Math.random() * 1000)
+        const signedPreKey = libsignal.keyhelper.generateSignedPreKey(identityKeyPair, signedPreKeyId)
+
+        // Update the user's signed prekey
+        newSignedPreKey = {
+            keyId: signedPreKey.keyId,
+            public: SignalProtocol.arrayBufferToBase64(signedPreKey.keyPair.pubKey),
+            private: SignalProtocol.arrayBufferToBase64(signedPreKey.keyPair.privKey),
+            signature: SignalProtocol.arrayBufferToBase64(signedPreKey.signature),
+        }
+    } else {
+        // Use our custom implementation
+        const signedPreKeyId = Math.floor(Math.random() * 1000)
+        const keyPair = SignalProtocol._generateKeyPair()
+
+        // Create a signature
+        const signature = SignalProtocol._signKey(
+            keyPair.public,
+            Buffer.from(user.signal_keys.identityKey.private, 'base64')
+        )
+
+        newSignedPreKey = {
+            keyId: signedPreKeyId,
+            public: keyPair.public,
+            private: keyPair.private,
+            signature: signature,
+        }
+    }
 
     // Update the user's signed prekey
-    user.signal_keys.signedPreKey = {
-        keyId: signedPreKey.keyId,
-        public: SignalProtocol.arrayBufferToBase64(signedPreKey.keyPair.pubKey),
-        private: SignalProtocol.arrayBufferToBase64(signedPreKey.keyPair.privKey),
-        signature: SignalProtocol.arrayBufferToBase64(signedPreKey.signature),
-    }
-
+    user.signal_keys.signedPreKey = newSignedPreKey
     await user.save()
 
     // Clear cached keys since they've changed

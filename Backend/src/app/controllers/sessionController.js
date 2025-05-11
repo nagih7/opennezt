@@ -12,7 +12,7 @@ const handleError = (res, error, message, status = 500) => {
 }
 
 /**
- * Create a session between two users
+ * Thiết lập session với một người dùng bằng userId
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  */
@@ -21,17 +21,13 @@ export async function createSession(req, res) {
         const currentUser = req.currentUser
         const { targetUserId } = req.body
 
-        if (!targetUserId) {
-            return handleError(res, new Error('Target user ID is required'), 'Missing required field', 400)
-        }
-
         // Verify target user exists
         const targetUser = await User.findById(targetUserId).select('_id signal_keys.identityKey')
         if (!targetUser) {
             return handleError(res, new Error('Target user not found'), 'Target user not found', 404)
         }
 
-        // Generate keys in parallel if needed
+        // Generate keys song song nếu cần thiết
         const keysPromises = []
 
         if (!currentUser.signal_keys?.identityKey) {

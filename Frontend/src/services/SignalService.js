@@ -1,5 +1,5 @@
+import callApi from 'api/callApi'
 import libsignal from 'libsignal'
-import { callApi } from '@/api/callApi'
 
 /**
  * Signal Protocol service for secure end-to-end encrypted messaging
@@ -141,32 +141,14 @@ class SignalService {
      * @returns {Promise<Object>} Encrypted message
      */
     async encryptMessage(message, userId) {
-        // If no userId provided, use the current session cipher
-        if (!userId && !this.sessionCipher) {
-            throw new Error('Session not established')
-        }
-
         try {
-            let cipher
-
-            if (userId) {
-                // Create a session cipher for this specific user
-                if (!this.hasSession(userId)) {
-                    await this.establishSession(userId)
-                }
-
-                const address = new libsignal.SignalProtocolAddress(userId, 1)
-                cipher = new libsignal.SessionCipher(this.store, address)
-            } else {
-                cipher = this.sessionCipher
+            if (!this.sessionCipher || !this.activeSessions.has(userId)) {
+                throw new Error('No active session with the user')
             }
 
-            const ciphertext = await cipher.encrypt(this._stringToArrayBuffer(message))
+            const ciphertext = await this.sessionCipher.encrypt(this._stringToArrayBuffer(message))
 
-            return {
-                type: ciphertext.type,
-                body: this._arrayBufferToBase64(ciphertext.body),
-            }
+            return ciphertext
         } catch (error) {
             console.error('Error encrypting message:', error)
             throw error
@@ -174,47 +156,18 @@ class SignalService {
     }
 
     /**
-     * Decrypt a message
-     * @param {Object} encryptedMessage - Encrypted message
-     * @param {String} userId - User ID who sent the message (optional, only if different from current session)
+     * Decrypt a message from a specific user
+     * @param {Object} encryptedMessage - Encrypted message object
+     * @param {String} userId - User ID who sent the message
      * @returns {Promise<String>} Decrypted message
      */
     async decryptMessage(encryptedMessage, userId) {
         try {
-            let cipher
-
-            if (userId) {
-                // Create a session cipher for this specific user
-                if (!this.hasSession(userId)) {
-                    await this.establishSession(userId)
-                }
-
-                const address = new libsignal.SignalProtocolAddress(userId, 1)
-                cipher = new libsignal.SessionCipher(this.store, address)
-            } else if (this.sessionCipher) {
-                cipher = this.sessionCipher
-            } else {
-                throw new Error('Session not established')
+            if (!this.sessionCipher || !this.activeSessions.has(userId)) {
+                throw new Error('No active session with the user')
             }
 
-            let plaintext
-
-            // Decrypt based on message type
-            if (encryptedMessage.type === 3) {
-                // PreKeyWhisperMessage
-                plaintext = await cipher.decryptPreKeyWhisperMessage(
-                    this._base64ToArrayBuffer(encryptedMessage.body),
-                    'binary'
-                )
-            } else if (encryptedMessage.type === 1) {
-                // WhisperMessage
-                plaintext = await cipher.decryptWhisperMessage(
-                    this._base64ToArrayBuffer(encryptedMessage.body),
-                    'binary'
-                )
-            } else {
-                throw new Error('Unknown message type')
-            }
+            const plaintext = await this.sessionCipher.decryptPreKeyWhisperMessage(encryptedMessage.body, 'binary')
 
             return this._arrayBufferToString(plaintext)
         } catch (error) {
