@@ -10,107 +10,118 @@ const formatContentForSpeech = (content) => {
 
     let formattedContent = content
 
-    // Remove markdown formatting (bold, italic, etc.)
-    formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold (**text**)
-    formattedContent = formattedContent.replace(/\*(.*?)\*/g, '$1') // Remove italic (*text*)
-    formattedContent = formattedContent.replace(/__(.*?)__/g, '$1') // Remove underline (__text__)
-    formattedContent = formattedContent.replace(/~~(.*?)~~/g, '$1') // Remove strikethrough (~~text~~)
-    formattedContent = formattedContent.replace(/`(.*?)`/g, '$1') // Remove code formatting (`text`)
+    // Define replacement patterns in a more structured way
+    const replacements = [
+        // Markdown formatting
+        { pattern: /\*\*(.*?)\*\*/g, replacement: '$1' }, // Remove bold (**text**)
+        { pattern: /\*(.*?)\*/g, replacement: '$1' }, // Remove italic (*text*)
+        { pattern: /__(.*?)__/g, replacement: '$1' }, // Remove underline (__text__)
+        { pattern: /~~(.*?)~~/g, replacement: '$1' }, // Remove strikethrough (~~text~~)
+        { pattern: /`(.*?)`/g, replacement: '$1' }, // Remove code formatting (`text`)
 
-    // Strip HTML tags while preserving content
-    formattedContent = formattedContent.replace(/<[^>]*>/g, ' ')
+        // Strip HTML tags
+        { pattern: /<[^>]*>/g, replacement: ' ' },
 
-    // Vietnamese-specific abbreviations and terms
-    formattedContent = formattedContent.replace(/(\b)TS\.(\s)/g, '$1Tiến sĩ$2')
-    formattedContent = formattedContent.replace(/(\b)ThS\.(\s)/g, '$1Thạc sĩ$2')
-    formattedContent = formattedContent.replace(/(\b)GS\.(\s)/g, '$1Giáo sư$2')
-    formattedContent = formattedContent.replace(/(\b)PGS\.(\s)/g, '$1Phó giáo sư$2')
-    formattedContent = formattedContent.replace(/(\b)Ths\.(\s)/g, '$1Thạc sĩ$2')
-    formattedContent = formattedContent.replace(/(\b)BS\.(\s)/g, '$1Bác sĩ$2')
-    formattedContent = formattedContent.replace(/(\b)KS\.(\s)/g, '$1Kỹ sư$2')
-    formattedContent = formattedContent.replace(/(\b)CN\.(\s)/g, '$1Cử nhân$2')
-    formattedContent = formattedContent.replace(/(\b)TNTH(\s|\.)/g, '$1Tốt nghiệp trung học$2')
-    formattedContent = formattedContent.replace(/(\b)THPT(\s|\.)/g, '$1Trung học phổ thông$2')
-    formattedContent = formattedContent.replace(/(\b)THCS(\s|\.)/g, '$1Trung học cơ sở$2')
-    formattedContent = formattedContent.replace(/(\b)ĐH(\s|\.)/g, '$1Đại học$2')
-    formattedContent = formattedContent.replace(/(\b)CĐ(\s|\.)/g, '$1Cao đẳng$2')
+        // Vietnamese-specific abbreviations
+        { pattern: /(\b)TS\.(\s)/g, replacement: '$1Tiến sĩ$2' },
+        { pattern: /(\b)ThS\.(\s)/g, replacement: '$1Thạc sĩ$2' },
+        { pattern: /(\b)GS\.(\s)/g, replacement: '$1Giáo sư$2' },
+        { pattern: /(\b)PGS\.(\s)/g, replacement: '$1Phó giáo sư$2' },
+        { pattern: /(\b)Ths\.(\s)/g, replacement: '$1Thạc sĩ$2' },
+        { pattern: /(\b)BS\.(\s)/g, replacement: '$1Bác sĩ$2' },
+        { pattern: /(\b)KS\.(\s)/g, replacement: '$1Kỹ sư$2' },
+        { pattern: /(\b)CN\.(\s)/g, replacement: '$1Cử nhân$2' },
+        { pattern: /(\b)TNTH(\s|\.)/g, replacement: '$1Tốt nghiệp trung học$2' },
+        { pattern: /(\b)THPT(\s|\.)/g, replacement: '$1Trung học phổ thông$2' },
+        { pattern: /(\b)THCS(\s|\.)/g, replacement: '$1Trung học cơ sở$2' },
+        { pattern: /(\b)ĐH(\s|\.)/g, replacement: '$1Đại học$2' },
+        { pattern: /(\b)CĐ(\s|\.)/g, replacement: '$1Cao đẳng$2' },
 
-    // Common Vietnamese organizations and locations
-    formattedContent = formattedContent.replace(/(\b)TP\.(\s)HCM/g, '$1Thành phố Hồ Chí Minh')
-    formattedContent = formattedContent.replace(/(\b)Tp\.(\s)HCM/g, '$1Thành phố Hồ Chí Minh')
-    formattedContent = formattedContent.replace(/(\b)HN(\b)/g, 'Hà Nội')
-    formattedContent = formattedContent.replace(/(\b)TPHCM(\b)/g, 'Thành phố Hồ Chí Minh')
-    formattedContent = formattedContent.replace(/(\b)TP(\.)(\s)(\w+)/g, '$1Thành phố$3$4')
+        // Common Vietnamese organizations and locations
+        { pattern: /(\b)TP\.(\s)HCM/g, replacement: '$1Thành phố Hồ Chí Minh' },
+        { pattern: /(\b)Tp\.(\s)HCM/g, replacement: '$1Thành phố Hồ Chí Minh' },
+        { pattern: /(\b)HN(\b)/g, replacement: 'Hà Nội' },
+        { pattern: /(\b)TPHCM(\b)/g, replacement: 'Thành phố Hồ Chí Minh' },
+        { pattern: /(\b)TP(\.)(\s)(\w+)/g, replacement: '$1Thành phố$3$4' },
 
-    // International abbreviations in Vietnamese context
-    formattedContent = formattedContent.replace(/(\b)Dr\.(\s)/g, '$1Tiến sĩ$2')
-    formattedContent = formattedContent.replace(/(\b)Mr\.(\s)/g, '$1Ông$2')
-    formattedContent = formattedContent.replace(/(\b)Mrs\.(\s)/g, '$1Bà$2')
-    formattedContent = formattedContent.replace(/(\b)Ms\.(\s)/g, '$1Cô$2')
-    formattedContent = formattedContent.replace(/(\b)Prof\.(\s)/g, '$1Giáo sư$2')
-    formattedContent = formattedContent.replace(/(\b)No\.(\s)/g, '$1Số$2')
+        // International abbreviations in Vietnamese context
+        { pattern: /(\b)Dr\.(\s)/g, replacement: '$1Tiến sĩ$2' },
+        { pattern: /(\b)Mr\.(\s)/g, replacement: '$1Ông$2' },
+        { pattern: /(\b)Mrs\.(\s)/g, replacement: '$1Bà$2' },
+        { pattern: /(\b)Ms\.(\s)/g, replacement: '$1Cô$2' },
+        { pattern: /(\b)Prof\.(\s)/g, replacement: '$1Giáo sư$2' },
+        { pattern: /(\b)No\.(\s)/g, replacement: '$1Số$2' },
 
-    // Vietnamese measurement units
-    formattedContent = formattedContent.replace(/(\d+)(\s*)(VNĐ|đ)/gi, '$1 đồng')
-    formattedContent = formattedContent.replace(/(\d+)(\s*)(tr)(\s|$)/gi, '$1 triệu$4')
-    formattedContent = formattedContent.replace(/(\d+)(\s*)(tỷ)(\s|$)/gi, '$1 tỷ$4')
-    formattedContent = formattedContent.replace(/(\d+)(\s*)(k)(\s|$)/gi, '$1 nghìn$4')
-    formattedContent = formattedContent.replace(/(\d+)(\s*)(m2|m²)(\s|$)/gi, '$1 mét vuông$4')
-    formattedContent = formattedContent.replace(/(\d+)(\s*)(km)(\s|$)/gi, '$1 ki lô mét$4')
-    formattedContent = formattedContent.replace(/(\d+)(\s*)(cm)(\s|$)/gi, '$1 xen ti mét$4')
+        // Vietnamese measurement units
+        { pattern: /(\d+)(\s*)(VNĐ|đ)/gi, replacement: '$1 đồng' },
+        { pattern: /(\d+)(\s*)(tr)(\s|$)/gi, replacement: '$1 triệu$4' },
+        { pattern: /(\d+)(\s*)(tỷ)(\s|$)/gi, replacement: '$1 tỷ$4' },
+        { pattern: /(\d+)(\s*)(k)(\s|$)/gi, replacement: '$1 nghìn$4' },
+        { pattern: /(\d+)(\s*)(m2|m²)(\s|$)/gi, replacement: '$1 mét vuông$4' },
+        { pattern: /(\d+)(\s*)(km)(\s|$)/gi, replacement: '$1 ki lô mét$4' },
+        { pattern: /(\d+)(\s*)(cm)(\s|$)/gi, replacement: '$1 xen ti mét$4' },
 
-    // Vietnamese date formats (all variations)
-    formattedContent = formattedContent.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/g, 'ngày $1 tháng $2 năm $3')
-    formattedContent = formattedContent.replace(/(\d{1,2})-(\d{1,2})-(\d{4})/g, 'ngày $1 tháng $2 năm $3')
-    formattedContent = formattedContent.replace(/(\d{1,2})\.(\d{1,2})\.(\d{4})/g, 'ngày $1 tháng $2 năm $3')
+        // Vietnamese date formats (all variations)
+        { pattern: /(\d{1,2})\/(\d{1,2})\/(\d{4})/g, replacement: 'ngày $1 tháng $2 năm $3' },
+        { pattern: /(\d{1,2})-(\d{1,2})-(\d{4})/g, replacement: 'ngày $1 tháng $2 năm $3' },
+        { pattern: /(\d{1,2})\.(\d{1,2})\.(\d{4})/g, replacement: 'ngày $1 tháng $2 năm $3' },
 
-    // Vietnamese time formats
-    formattedContent = formattedContent.replace(/(\d{1,2}):(\d{2})(\s*)(SA|AM)/gi, '$1 giờ $2 phút sáng')
-    formattedContent = formattedContent.replace(/(\d{1,2}):(\d{2})(\s*)(CH|PM)/gi, '$1 giờ $2 phút chiều')
-    formattedContent = formattedContent.replace(/(\d{1,2})h(\d{2})?/gi, (match, hours, minutes) => {
-        return minutes ? `${hours} giờ ${minutes} phút` : `${hours} giờ`
+        // Vietnamese time formats
+        { pattern: /(\d{1,2}):(\d{2})(\s*)(SA|AM)/gi, replacement: '$1 giờ $2 phút sáng' },
+        { pattern: /(\d{1,2}):(\d{2})(\s*)(CH|PM)/gi, replacement: '$1 giờ $2 phút chiều' },
+        {
+            pattern: /(\d{1,2})h(\d{2})?/gi,
+            replacement: (match, hours, minutes) => {
+                return minutes ? `${hours} giờ ${minutes} phút` : `${hours} giờ`
+            },
+        },
+
+        // Vietnamese special characters and punctuation
+        { pattern: /&/g, replacement: ' và ' },
+        { pattern: /%/g, replacement: ' phần trăm ' },
+        { pattern: /\$/g, replacement: ' đô la ' },
+        { pattern: /€/g, replacement: ' ơ rô ' },
+        { pattern: /\+/g, replacement: ' cộng ' },
+        { pattern: /=/g, replacement: ' bằng ' },
+        { pattern: /#/g, replacement: ' thẻ ' },
+        { pattern: /@/g, replacement: ' a còng ' },
+
+        // Handle fractions in Vietnamese
+        { pattern: /(\d+)\/(\d+)/g, replacement: '$1 phần $2' },
+
+        // Phone number formatting for better reading
+        { pattern: /(\d{3})(\d{3})(\d{4})/g, replacement: '$1 $2 $3' },
+        { pattern: /(\d{4})(\d{3})(\d{3})/g, replacement: '$1 $2 $3' },
+
+        // Improve URL and email readability in Vietnamese context
+        { pattern: /(https?:\/\/[^\s]+)/g, replacement: 'đường dẫn' },
+        { pattern: /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g, replacement: 'địa chỉ email' },
+
+        // Add pauses (using commas) around certain punctuation to improve pacing
+        { pattern: /(\w)([.!?])(\s+\w)/g, replacement: '$1$2,$3' },
+        { pattern: /(\w)([:;])(\s+\w)/g, replacement: '$1$2,$3' },
+
+        // Add pause after list markers for better rhythm
+        { pattern: /(\d+\.)(\s+\w)/g, replacement: '$1,$2' },
+        { pattern: /(\s[-•*])(\s+\w)/g, replacement: '$1,$2' },
+
+        // Handle parenthetical phrases in Vietnamese
+        { pattern: /\(([^)]+)\)/g, replacement: ', $1, ' },
+
+        // Normalize spacing
+        { pattern: /\s+/g, replacement: ' ' },
+
+        // Handle ellipses by replacing with pause
+        { pattern: /\.{3,}/g, replacement: ', ' },
+
+        // Replace repeated punctuation with single instance
+        { pattern: /([!?]){2,}/g, replacement: '$1' },
+    ]
+
+    // Apply all replacements
+    replacements.forEach(({ pattern, replacement }) => {
+        formattedContent = formattedContent.replace(pattern, replacement)
     })
-
-    // Vietnamese special characters and punctuation
-    formattedContent = formattedContent.replace(/&/g, ' và ')
-    formattedContent = formattedContent.replace(/%/g, ' phần trăm ')
-    formattedContent = formattedContent.replace(/\$/g, ' đô la ')
-    formattedContent = formattedContent.replace(/€/g, ' ơ rô ')
-    formattedContent = formattedContent.replace(/\+/g, ' cộng ')
-    formattedContent = formattedContent.replace(/=/g, ' bằng ')
-    formattedContent = formattedContent.replace(/#/g, ' thẻ ')
-    formattedContent = formattedContent.replace(/@/g, ' a còng ')
-
-    // Handle fractions in Vietnamese
-    formattedContent = formattedContent.replace(/(\d+)\/(\d+)/g, '$1 phần $2')
-
-    // Phone number formatting for better reading
-    formattedContent = formattedContent.replace(/(\d{3})(\d{3})(\d{4})/g, '$1 $2 $3')
-    formattedContent = formattedContent.replace(/(\d{4})(\d{3})(\d{3})/g, '$1 $2 $3')
-
-    // Improve URL and email readability in Vietnamese context
-    formattedContent = formattedContent.replace(/(https?:\/\/[^\s]+)/g, 'đường dẫn')
-    formattedContent = formattedContent.replace(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g, 'địa chỉ email')
-
-    // Add pauses (using commas) around certain punctuation to improve pacing
-    formattedContent = formattedContent.replace(/(\w)([.!?])(\s+\w)/g, '$1$2,$3')
-    formattedContent = formattedContent.replace(/(\w)([:;])(\s+\w)/g, '$1$2,$3')
-
-    // Add pause after list markers for better rhythm
-    formattedContent = formattedContent.replace(/(\d+\.)(\s+\w)/g, '$1,$2')
-    formattedContent = formattedContent.replace(/(\s[-•*])(\s+\w)/g, '$1,$2')
-
-    // Handle parenthetical phrases in Vietnamese
-    formattedContent = formattedContent.replace(/\(([^)]+)\)/g, ', $1, ')
-
-    // Normalize spacing
-    formattedContent = formattedContent.replace(/\s+/g, ' ').trim()
-
-    // Handle ellipses by replacing with pause
-    formattedContent = formattedContent.replace(/\.{3,}/g, ', ')
-
-    // Replace repeated punctuation with single instance
-    formattedContent = formattedContent.replace(/([!?]){2,}/g, '$1')
 
     // Handle English/Vietnamese code switching (common in technical contexts)
     // We keep these terms as is because TTS systems typically handle them well in context

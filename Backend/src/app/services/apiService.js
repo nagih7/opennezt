@@ -16,7 +16,6 @@ import formatContentForSpeech from '@/utils/classes/format-content'
 
 // Call API BOT phỏng vấn
 export async function callAPIInterview(user, content, conversationId) {
-    console.log('callAPIInterview', JSON.stringify(content))
     const requestData = {
         inputs: {},
         query: JSON.stringify(content),
