@@ -65,7 +65,7 @@ const DiaLogInterview = ({ videoRef }) => {
             // Create voice detector with callbacks
             voiceDetectorRef.current = createVoiceDetector({
                 threshold: 10,
-                silenceDelay: 2000,
+                silenceDelay: 3000,
                 sampleRate: 44100,
                 onSpeechStart: () => {
                     setIsSpeaking(true)
@@ -123,17 +123,21 @@ const DiaLogInterview = ({ videoRef }) => {
         } else {
             setupVoiceDetection()
         }
-    }
-
-    // Send audio message to the server for speech-to-text conversion
+    } // Send audio message to the server for speech-to-text conversion
     const sendAudioMessage = async (blob) => {
         if (!blob) return
 
-        if (currentAction === 'speaking' || isLoadingReplyInterview || !hasJoined) {
+        if (currentAction === 'speaking' || isLoadingReplyInterview === true || !hasJoined) {
             return
         }
 
         try {
+            // Stop voice detection immediately before sending the message
+            if (voiceDetectorRef.current && voiceDetectorRef.current.isActive()) {
+                await voiceDetectorRef.current.stop()
+                setIsListening(false)
+            }
+
             // Create a FormData object to send the audio file
             const audioFile = new File([blob], `voice_message_${Date.now()}.wav`, {
                 type: 'audio/wav',
@@ -145,7 +149,6 @@ const DiaLogInterview = ({ videoRef }) => {
             }
             dispatch(replyInterview(payload))
         } catch (error) {
-            console.error('Error sending audio message:', error)
             setError('Failed to send audio message')
         }
     }
@@ -200,9 +203,7 @@ const DiaLogInterview = ({ videoRef }) => {
                 clearInterval(timerRef.current)
             }
         }
-    }, [])
-
-    // Stop voice detection when AI is speaking
+    }, []) // Stop voice detection when AI is speaking
     useEffect(() => {
         if (currentAction === 'speaking' && voiceDetectorRef.current && voiceDetectorRef.current.isActive()) {
             // Stop listening while AI is speaking
@@ -220,6 +221,15 @@ const DiaLogInterview = ({ videoRef }) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAction, isPlaying, isOpenModalInterview, isListening, isLoadingReplyInterview])
+
+    // Stop voice detection when API replyInterview is called (isLoadingReplyInterview becomes true)
+    useEffect(() => {
+        if (isLoadingReplyInterview && voiceDetectorRef.current && voiceDetectorRef.current.isActive()) {
+            voiceDetectorRef.current.stop()
+            setIsListening(false)
+            setError('Waiting for AI response...')
+        }
+    }, [isLoadingReplyInterview])
 
     const handleCloseInterview = () => {
         setIsOpenModalCloseInterview(true)
@@ -269,7 +279,7 @@ const DiaLogInterview = ({ videoRef }) => {
                                         </div>
                                     )}
 
-                                    {isSpeaking && currentAction === 'listening' && (
+                                    {isSpeaking && currentAction === 'listening' && !isLoadingReplyInterview && (
                                         <div className="absolute z-10 flex items-center gap-2 px-3 py-1 text-white bg-red-600 rounded-full top-4 right-4">
                                             <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
                                             <span>Recording voice...</span>
