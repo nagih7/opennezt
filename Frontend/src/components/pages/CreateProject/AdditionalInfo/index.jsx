@@ -1,165 +1,177 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { PlusOutlined } from '@ant-design/icons'
 import StepHeader from '../StepHeader'
-import { IconlyDelete } from 'components/UI/Iconly'
 import { useDispatch, useSelector } from 'react-redux'
 import { onChangeFormCreateProject } from 'states/modules/project'
-import { createListCollection } from '@chakra-ui/react'
-import { PROJECT_ADDITIONAL_INFO } from 'utils/constants'
-import SelectCustom from 'components/UI/SelectCustom'
-import { toaster } from 'components/UI/toaster'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
-import { Button, ButtonGroup } from "@chakra-ui/react";
-const projectAdditionalInfoFramework = createListCollection({
-    items: PROJECT_ADDITIONAL_INFO['EN'],
-})
+import { Button, ButtonGroup } from '@chakra-ui/react'
+import { PROJECT_ADDITIONAL_INFO_FIELDS } from 'utils/constants/additionalInfor'
 
 const AdditionalInfo = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     // ========== STATE FROM REDUX ========== //
     const { formCreateProject } = useSelector((state) => state.project)
+    // Lấy ngôn ngữ từ state Redux (cần điều chỉnh theo cấu trúc thực tế của app)
+    const { language } = useSelector((state) => state.app) || { language: 'EN' }
+
+    // Chọn danh sách trường dựa trên ngôn ngữ
+    const fields = PROJECT_ADDITIONAL_INFO_FIELDS[language] || PROJECT_ADDITIONAL_INFO_FIELDS.EN
 
     // ========== STATE ========== //
     const [formData, setFormData] = useState([{ name: '', content: '' }])
-    const [currentStep, setCurrentStep] = useState(4);
+    const [currentStep, setCurrentStep] = useState(4)
+    const [projectFormData, setProjectFormData] = useState({})
+
     // ========== USEEFFECT ========== //
     useEffect(() => {
         if (formCreateProject.name === '') {
             navigate('/project/details')
         }
-        // ========== CLEANUP FUNCTION ========== //
-    }, [navigate, formCreateProject.name])
+        // Initialize form data with default structure if empty
+        const initialData = {}
+        fields.forEach((field) => {
+            initialData[field.id] = ''
+        })
+        setProjectFormData(initialData)
+    }, [navigate, formCreateProject.name, fields])
 
     useEffect(() => {
-        setFormData(formCreateProject.additional_infos)
-    }, [formCreateProject])
+        if (formCreateProject.additional_infos?.length > 0) {
+            setFormData(formCreateProject.additional_infos)
 
-    // ========== ONCHANGE FUNCTION ========== //
-    const handleChange = (e, index, nameSelect) => {
-        if (nameSelect) {
-            const newForm = formData.map((item, i) => {
-                if (i === index) {
-                    return { ...item, [nameSelect]: e.value }
+            // Map existing data to the form fields
+            const mappedData = {}
+            formCreateProject.additional_infos.forEach((item) => {
+                const matchingField = fields.find((field) => field.name === item.name)
+                if (matchingField) {
+                    mappedData[matchingField.id] = item.content
                 }
-                return item
             })
-            setFormData(newForm)
-        } else {
-            const { name, value } = e.target
-            const newForm = formData.map((item, i) => {
-                if (i === index) {
-                    return { ...item, [name]: value }
-                }
-                return item
-            })
-            setFormData(newForm)
+            setProjectFormData((prev) => ({ ...prev, ...mappedData }))
         }
-    }
+    }, [formCreateProject, fields])
 
+    // Sửa các hàm khác để sử dụng fields thay vì PROJECT_ADDITIONAL_INFO_FIELDS
     const handlePreviousStep = () => {
-        dispatch(onChangeFormCreateProject({ additional_infos: formData }))
+        // Prepare data from fields
+        const fieldData = []
+        fields.forEach((field) => {
+            console.log('Field ID:', field)
+            if (projectFormData[field.id]) {
+                fieldData.push({
+                    name: field.name,
+                    content: projectFormData[field.id],
+                })
+            }
+        })
+
+        dispatch(onChangeFormCreateProject({ additional_infos: fieldData }))
         navigate('/project/funding-sources')
     }
 
     const handleNextStep = async () => {
-        dispatch(onChangeFormCreateProject({ additional_infos: formData }))
+        // Prepare data from fields
+        const fieldData = []
+        fields.forEach((field) => {
+            console.log('Field ID:', field)
+            if (projectFormData[field.id]) {
+                fieldData.push({
+                    name: field.name,
+                    content: projectFormData[field.id],
+                })
+            }
+        })
+
+        dispatch(onChangeFormCreateProject({ additional_infos: fieldData }))
         navigate('/project/logo')
     }
 
-    const handleAddProjectAdditionalInfo = () => {
-        // VERIFY
-        if (formData.some((item) => !item.name || !item.amount || !item.currency)) {
-            toaster.create({
-                title: `Please fill all fields.`,
-                type: 'error',
-            })
-            return
-        }
-        setFormData([...formData, { name: '', content: '' }])
-    }
-
-    const handleRemoveForm = (index) => {
-        const newForm = formData.filter((_, i) => i !== index)
-        setFormData(newForm)
-    }
     const handlePrevStep = () => {
-
         if (currentStep > 0) {
-            setCurrentStep((prev) => prev - 1);
+            setCurrentStep((prev) => prev - 1)
             handlePreviousStep()
         }
-    };
+    }
 
     const handleNext = () => {
         if (currentStep < 8) {
-            handleNextStep();
-            setCurrentStep((prev) => prev + 1);
+            handleNextStep()
+            setCurrentStep((prev) => prev + 1)
         }
-    };
+    }
+
+    const handleChangeField = (e) => {
+        const { name, value } = e.target
+        setProjectFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }))
+    }
+
     // ========== COMPONENT RENDER ========== //
     return (
         <div className="w-full h-full">
-            <div className="px-[16px] ">
+            <div className="px-[16px]">
                 <div>
                     <div className="mt-8 bg-[#ffffff] rounded-md">
                         <StepHeader currentStep={4} />
                     </div>
                     <div className="mt-8 bg-[#ffffff] rounded-md p-8">
                         <div className="flex flex-col w-full">
-                            <div className="flex justify-end">
-                                <div
-                                    className="flex items-center gap-1 cursor-pointer bg-[#2f65b9] rounded-md text-[#ffffff] px-[20px] py-2 mb-[14px]"
-                                    onClick={handleAddProjectAdditionalInfo}
-                                >
-                                    <PlusOutlined className="text-[#ffffff]" />
-                                    <button
-                                        height={50}
-                                        className="text-xs bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-                                    >
-                                        ADD ADDITIONAL INFO
-                                    </button>
+                            <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <h4 className="text-xl font-semibold">Additional Information</h4>
+                                        <p className="text-gray-600 text-sm mt-1">
+                                            <strong className="font-medium">
+                                                Note: max 500 characters for each field
+                                            </strong>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                            {formData?.map((_, index) => (
-                                <div key={index} className="relative flex flex-col gap-6 mb-12 rounded-md ">
-                                    <div className="flex flex-col gap-12">
-                                        <SelectCustom
-                                            onChange={(e) => handleChange(e, index, 'name')}
-                                            value={formData[index].name}
-                                            name="name"
-                                            required
-                                            label="Title"
-                                            placeholder="Ex: Project summary"
-                                            collection={projectAdditionalInfoFramework}
-                                        />
-                                        <TextAreaCustom
-                                            onChange={(e) => handleChange(e, index)}
-                                            value={formData[index].content}
-                                            name="content"
-                                            required
-                                            label="Content"
-                                            placeholder="Ex: Project summary"
-                                        />
-                                    </div>
-                                    {formData.length > 1 && (
-                                        <div className="flex justify-end">
-                                            <span onClick={() => handleRemoveForm(index)} className="cursor-pointer">
-                                                <IconlyDelete size={24} color={'#000'} />
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                            <div className="flex justify-end gap-6">
 
+                            {/* Structured form fields */}
+                            <div className="border rounded-md overflow-hidden mb-6">
+                                <table className="w-full">
+                                    <tbody>
+                                        {fields.map((field, index) => (
+                                            <tr key={field.id}>
+                                                <td
+                                                    className={`p-4 ${
+                                                        index < fields.length - 1 ? 'border-b border-gray-200' : ''
+                                                    } ${field.backgroundColor}`}
+                                                >
+                                                    <div className="mb-2">
+                                                        <label htmlFor={field.id} className="font-medium text-gray-700">
+                                                            {field.name}
+                                                        </label>
+                                                    </div>
+                                                    <TextAreaCustom
+                                                        id={field.id}
+                                                        resize="none"
+                                                        placeholder={field.placeholder}
+                                                        name={field.id}
+                                                        onChange={handleChangeField}
+                                                        value={projectFormData[field.id] || ''}
+                                                        rows={4}
+                                                        nomax={true}
+                                                    />
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div className="flex justify-end gap-6 mt-8">
                                 <ButtonGroup size="sm" variant="outline">
                                     <Button
                                         onClick={handlePrevStep}
                                         height={50}
                                         isDisabled={currentStep === 0}
-                                        className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold "
+                                        className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
                                     >
                                         BACK TO PREVIOUS STEP
                                     </Button>

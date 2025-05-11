@@ -1,5 +1,5 @@
-import { Button, Table } from '@chakra-ui/react'
-import React, { useEffect, useState, useMemo } from 'react'
+import { Button } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ProfileCard from '../ProfileCard'
 import ProfileEditMenu from '../ProfileEditMenu'
@@ -12,49 +12,17 @@ import {
     getProfile,
 } from 'api/profile'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
+import { PROFILE_ADDITIONAL_INFO_FIELDS } from 'utils/constants/additionalInfor'
 
 const AdditionalInfo = () => {
     const dispatch = useDispatch()
-    // // ========== STATE FROM REDUX STORE ========== //
+    // ========== STATE FROM REDUX STORE ========== //
     const { profile } = useSelector((state) => state.profile)
     const { additional_infos = [] } = profile || {}
+    const { language } = useSelector((state) => state.app) || { language: 'EN' }
 
-    const infoFields = useMemo(
-        () => [
-            {
-                id: 'professionalSummary',
-                name: 'Professional Summary',
-                placeholder: 'Write about your professional background and expertise.',
-                backgroundColor: 'bg-white',
-            },
-            {
-                id: 'careerGoals',
-                name: 'My Career Goals',
-                placeholder: 'Describe your career aspirations and goals.',
-                backgroundColor: 'bg-white',
-            },
-            {
-                id: 'canOffer',
-                name: 'What I Can Offer',
-                placeholder: 'Describe what you can offer to projects or employers.',
-                backgroundColor: 'bg-white',
-            },
-            {
-                id: 'workExpectations',
-                name: 'My Work Expectations',
-                placeholder: 'Describe your work style expectations and preferences.',
-                backgroundColor: 'bg-white',
-            },
-            // To add a new field, add a new object here:
-            // {
-            //    id: 'newFieldId',
-            //    name: 'New Field Display Name',
-            //    placeholder: 'Placeholder text for the field',
-            //    backgroundColor: 'bg-gray-50' // or 'bg-white' to alternate colors
-            // }
-        ],
-        []
-    )
+    // Sử dụng fields từ constant thay vì useMemo
+    const fields = PROFILE_ADDITIONAL_INFO_FIELDS[language] || PROFILE_ADDITIONAL_INFO_FIELDS.EN
 
     // ========== STATE MANAGEMENT ========== //
     const [formData, setFormData] = useState({})
@@ -67,14 +35,14 @@ const AdditionalInfo = () => {
         const initialFormData = {}
         const initialExistingData = {}
 
-        infoFields.forEach((field) => {
+        fields.forEach((field) => {
             initialFormData[field.id] = ''
             initialExistingData[field.id] = null
         })
 
         setFormData(initialFormData)
         setExistingData(initialExistingData)
-    }, [infoFields])
+    }, [fields])
 
     // ========== USE EFFECT ========== //
     useEffect(() => {
@@ -87,7 +55,7 @@ const AdditionalInfo = () => {
             setFormData((prevFormData) => {
                 const newFormData = { ...prevFormData }
 
-                infoFields.forEach((field) => {
+                fields.forEach((field) => {
                     const info = additional_infos.find((info) => info.name === field.name)
                     if (info) {
                         newFormData[field.id] = info.content || ''
@@ -100,7 +68,7 @@ const AdditionalInfo = () => {
             setExistingData((prevExistingData) => {
                 const newExistingData = { ...prevExistingData }
 
-                infoFields.forEach((field) => {
+                fields.forEach((field) => {
                     const info = additional_infos.find((info) => info.name === field.name)
                     if (info) {
                         newExistingData[field.id] = info
@@ -110,7 +78,7 @@ const AdditionalInfo = () => {
                 return newExistingData
             })
         }
-    }, [additional_infos, infoFields])
+    }, [additional_infos, fields])
 
     // ========== HANDLE CHANGE FUNCTION ========== //
     const handleChange = (e) => {
@@ -129,12 +97,12 @@ const AdditionalInfo = () => {
     const handleSaveAll = () => {
         setIsSaving(true)
 
-        // Get all field IDs from infoFields array
-        const fieldIds = infoFields.map((field) => field.id)
+        // Get all field IDs from fields array
+        const fieldIds = fields.map((field) => field.id)
 
         // Process each field
         const promises = fieldIds.map((fieldId) => {
-            const fieldInfo = infoFields.find((f) => f.id === fieldId)
+            const fieldInfo = fields.find((f) => f.id === fieldId)
             const fieldName = fieldInfo.name
             const content = formData[fieldId]
 
@@ -190,7 +158,7 @@ const AdditionalInfo = () => {
                     <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h4 className="text-xl font-semibold">More</h4>
+                                <h4 className="text-xl font-semibold">Additional Information</h4>
                                 <p className="text-gray-600 text-sm mt-1">
                                     Add more details about your professional background and career aspirations <br />
                                     <strong className="font-bold">Note: max 500 characters for each field</strong>
@@ -203,12 +171,12 @@ const AdditionalInfo = () => {
                     <div className="border rounded-md overflow-hidden">
                         <table className="w-full">
                             <tbody>
-                                {/* Render fields dynamically from infoFields array */}
-                                {infoFields.map((field, index) => (
+                                {/* Render fields dynamically from fields array */}
+                                {fields.map((field, index) => (
                                     <tr key={field.id}>
                                         <td
                                             className={`p-4 ${
-                                                index < infoFields.length - 1 ? 'border-b border-gray-200' : ''
+                                                index < fields.length - 1 ? 'border-b border-gray-200' : ''
                                             } ${field.backgroundColor}`}
                                         >
                                             <div className="flex justify-between items-center mb-2">

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { onChangeFormCreateProject } from 'states/modules/project'
 import { createNewProject } from 'api/project'
 import resizeBackground from 'utils/files/resizeBackground'
-import { Button, ButtonGroup } from "@chakra-ui/react";
+import { Button, ButtonGroup } from '@chakra-ui/react'
 const CoverImage = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -21,7 +21,7 @@ const CoverImage = () => {
         }
         // ========== CLEANUP FUNCTION ========== //
     }, [navigate, formCreateProject.name])
-    const [currentStep, setCurrentStep] = useState(6);
+    const [currentStep, setCurrentStep] = useState(6)
     useEffect(() => {
         if (formCreateProject.background) {
             setBgFile(formCreateProject.background)
@@ -121,7 +121,7 @@ const CoverImage = () => {
                         if (valid) {
                             return {
                                 ...info,
-                                name: info.name[0],
+                                name: info.name,
                             }
                         }
                         return null
@@ -137,11 +137,9 @@ const CoverImage = () => {
     const handlePrevStep = () => {
         navigate('/project/logo')
         if (currentStep > 0) {
-            setCurrentStep((prev) => prev - 1);
-
+            setCurrentStep((prev) => prev - 1)
         }
-    };
-
+    }
 
     return (
         <div className="w-full h-full">
@@ -220,13 +218,11 @@ const CoverImage = () => {
                                         BACK TO PREVIOUS STEP
                                     </Button>
                                     <Button
-
                                         loading={isLoadingCreateNewProject}
                                         loadingText="Creating..."
                                         onClick={handleConfirmCreateProject}
                                         height={50}
                                         className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-
                                     >
                                         CREATE PROJECT
                                     </Button>
