@@ -85,16 +85,16 @@ const ProfileDetails = ({ profile }) => {
                             >
                                 <img className="w-[70px] h-[70px] object-contain" src="/opennezt.png" />
                                 <div className="flex flex-col gap-1 ">
-                                    <span className="text-xl font-semibold">{education.school || 'N/A'}</span>
+                                    <span className="text-base font-semibold">{education.school || 'N/A'}</span>
 
-                                    <span className="font-medium text-gray-600">
+                                    <span className="font-medium text-gray-600 text-sm">
                                         {education.degree || 'N/A'} - {education.field_of_study || 'N/A'}
                                     </span>
-                                    <span className="font-medium text-gray-600">Grade: {education.grade || 'N/A'}</span>
-                                    <span className="font-medium text-gray-600">
+                                    <span className="font-medium text-gray-600 text-sm">Grade: {education.grade || 'N/A'}</span>
+                                    <span className="font-medium text-gray-600 text-sm">
                                         {formatDate(education.start_date)} - {formatDate(education.end_date)}
                                     </span>
-                                    <span className="font-medium text-gray-600">{education.activities || 'N/A'}</span>
+                                    <span className="font-medium text-gray-600 text-sm">{education.activities || 'N/A'}</span>
                                 </div>
                             </div>
                         ))
@@ -125,7 +125,7 @@ const ProfileDetails = ({ profile }) => {
                                 <div className="flex gap-3">
                                     <img className="w-[70px] h-[70px] object-contain" src="/opennezt.png" />
                                     <div className="flex flex-col gap-1">
-                                        <span className="text-base font-semibold">{certification.name || 'N/A'}</span>
+                                        <span className="text-sm font-semibold">{certification.name || 'N/A'}</span>
                                         <span className="text-sm font-medium text-gray-600">
                                             {certification.organization_name || 'N/A'}
                                         </span>
