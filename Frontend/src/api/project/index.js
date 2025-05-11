@@ -351,3 +351,12 @@ export const cancelInvitation = async (projectId, userId) => {
         variables: { userId },
     })
 }
+
+// ========== GET [LIST PROJECT PRACTIVE INTERVIEW] ========== //
+export const getListProjectPracticeInterview = async (projectId) => {
+    return callApiSimple({
+        method: 'get',
+        apiPath: `projects/me/${projectId}/interview`,
+        variables: {},
+    })
+}

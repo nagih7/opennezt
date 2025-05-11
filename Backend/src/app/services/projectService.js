@@ -2715,3 +2715,145 @@ export async function cancelProjectInvitation(user, projectId, requestBody) {
         throw new Error('Invitation not found or already cancelled')
     }
 }
+
+// ========== GET [LIST PROJECT PRACTIVE INTERVIEW] ========== //
+export async function getListPracticeInterviewProjects(user, { page, per_page, field, order }) {
+    page = parseInt(page) || 1
+    per_page = parseInt(per_page) || 10
+    field = field || 'created_at'
+    order = order === '-1' ? -1 : 1
+
+    const matchStage = {
+        $match: {
+            user_id: { $ne: user._id },
+        },
+    }
+
+    const lookupMemberStage = {
+        $lookup: {
+            from: 'project_members',
+            localField: '_id',
+            foreignField: 'project_id',
+            as: 'members',
+            pipeline: [
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user_id',
+                        foreignField: '_id',
+                        as: 'user',
+                        pipeline: [
+                            {
+                                $project: {
+                                    _id: 0,
+                                    name: 1,
+                                    avatar: {
+                                        $cond: {
+                                            if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                            then: '$avatar',
+                                            else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+                { $unwind: '$user' },
+                { $project: { _id: 0, user: 1 } },
+            ],
+        },
+    }
+
+    const lookupOwnerStage = {
+        $lookup: {
+            from: 'users',
+            localField: 'user_id',
+            foreignField: '_id',
+            as: 'owner',
+            pipeline: [
+                {
+                    $project: {
+                        _id: 1,
+                        name: 1,
+                        avatar: {
+                            $cond: {
+                                if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                then: '$avatar',
+                                else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                            },
+                        },
+                    },
+                },
+            ],
+        },
+    }
+
+    const lookupArticleStage = {
+        $lookup: {
+            from: 'articles',
+            localField: '_id',
+            foreignField: 'project_id',
+            as: 'articles',
+        },
+    }
+
+    const sortStage = {
+        $sort: { [field]: order },
+    }
+
+    const skipStage = {
+        $skip: (page - 1) * per_page,
+    }
+
+    const limitStage = {
+        $limit: per_page,
+    }
+
+    const projectStage = {
+        $project: {
+            _id: 1,
+            name: 1,
+            description: 1,
+            logo: {
+                $cond: {
+                    if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
+                    then: '$logo',
+                    else: { $concat: [LINK_STATIC_URL, '$logo'] },
+                },
+            },
+            background: {
+                $cond: {
+                    if: { $eq: [{ $ifNull: ['$background', ''] }, ''] },
+                    then: '$background',
+                    else: { $concat: [LINK_STATIC_URL, '$background'] },
+                },
+            },
+            owner: { $arrayElemAt: ['$owner', 0] },
+            members: 1,
+            articles: 1,
+            created_at: 1,
+        },
+    }
+
+    const projects = await Project.aggregate([
+        matchStage,
+        lookupOwnerStage,
+        lookupMemberStage,
+        lookupArticleStage,
+        sortStage,
+        skipStage,
+        limitStage,
+        projectStage,
+    ])
+
+    const filter = {
+        user_id: { $ne: user._id },
+        type: 'practice_interview',
+    }
+
+    const total = await Project.countDocuments(filter)
+    const last_page = Math.ceil(total / per_page)
+
+    return { total, page, per_page, last_page, projects }
+}
