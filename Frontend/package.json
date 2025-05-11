@@ -18,6 +18,7 @@
         "bootstrap": "^5.3.3",
         "date-fns": "^4.1.0",
         "framer-motion": "^12.4.10",
+        "libsignal": "^2.0.1",
         "lodash": "^4.17.21",
         "moment": "^2.29.4",
         "next-themes": "^0.4.4",

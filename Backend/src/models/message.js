@@ -19,6 +19,14 @@ const Message = createModel(
             type: String,
             required: true,
         },
+        is_encrypted: {
+            type: Boolean,
+            default: false,
+        },
+        encryption_metadata: {
+            type: Object,
+            default: null,
+        },
         attachments: {
             type: String,
             required: false,

@@ -56,18 +56,6 @@ export const getMessages = (conversation_id) => async (dispatch, getState) => {
 }
 
 // ========== SEND MESSAGE ========== //
-// export const sendMessage = (conversation_id, content) => async (dispatch, getState) => {
-//     return callApi({
-//         method: 'post',
-//         apiPath: `chat/conversations/${conversation_id}/messages`,
-//         actionTypes: [requestSendMessage, sendMessageSuccess, sendMessageFail],
-//         variables: { content },
-//         dispatch,
-//         getState,
-//     });
-// };
-
-// ========== SEND MESSAGE ========== //
 export const sendMessage = (conversation_id, content, socket) => async (dispatch, getState) => {
     return callSocket({
         event: 'message',

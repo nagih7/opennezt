@@ -39,6 +39,7 @@
         "helmet": "^7.1.0",
         "joi": "^17.13.3",
         "jsonwebtoken": "^9.0.2",
+        "libsignal": "^2.0.1",
         "lodash": "^4.17.21",
         "mime-types": "^2.1.35",
         "moment": "^2.30.1",

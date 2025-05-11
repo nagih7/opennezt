@@ -13,6 +13,7 @@ import profileRouter from './profileRouter'
 import talentRouter from './talentRouter'
 import linkPreviewRouter from './linkPreviewRouter'
 import interviewRouter from './interviewRouter'
+import signalRouter from './signalRouter'
 
 export const userSockets = {}
 
@@ -37,6 +38,7 @@ function route(app, io) {
     app.use('/talents', talentRouter)
     app.use('/link-preview', linkPreviewRouter)
     app.use('/interview', interviewRouter)
+    app.use('/signal', signalRouter)
 
     app.get('/', (req, res) => {
         res.json({

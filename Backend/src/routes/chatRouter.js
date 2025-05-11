@@ -19,4 +19,9 @@ chatRouter.get('/conversations/:conversationId', asyncHandler(chatController.get
 // ========== GET [CONVERSATIONS] ========== //
 chatRouter.get('/conversations', asyncHandler(chatController.getConversations))
 
+// ========== ENCRYPTION ENDPOINTS ========== //
+chatRouter.post('/conversations/:conversationId/encryption', asyncHandler(chatController.enableEncryption))
+chatRouter.get('/conversations/:conversationId/encryption', asyncHandler(chatController.checkEncryptionStatus))
+chatRouter.get('/conversations/:conversationId/encryption/keys', asyncHandler(chatController.getEncryptionKeys))
+
 export default chatRouter

@@ -1,299 +1,229 @@
 import { LINK_STATIC_URL, MESSAGE_TYPE, TEXT_MESSAGE } from '@/configs'
 import { Message, ObjectId, Conversation, Type, User } from '@/models'
 
-// ========== GET [CONVERSATIONS] ========== //
-export async function getConversations(user) {
-    const matchStage = {
-        $match: {
-            members: { $elemMatch: { user_id: user._id } },
-        },
-    }
-    const lookupUserStage = {
-        $lookup: {
-            from: 'users',
-            localField: 'members.user_id',
-            foreignField: '_id',
-            as: 'members',
-            pipeline: [
-                {
-                    $match: {
-                        _id: { $ne: user._id },
-                    },
-                },
-                {
-                    $project: {
-                        _id: 1,
-                        name: 1,
-                        avatar: {
-                            $cond: {
-                                if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
-                                then: '$avatar',
-                                else: { $concat: [LINK_STATIC_URL, '$avatar'] },
-                            },
+// Create reusable pipeline stages
+const createCommonPipelineStages = (user) => {
+    return {
+        lookupUserStage: {
+            $lookup: {
+                from: 'users',
+                localField: 'members.user_id',
+                foreignField: '_id',
+                as: 'members',
+                pipeline: [
+                    {
+                        $match: {
+                            _id: { $ne: user._id },
                         },
                     },
-                },
-            ],
-        },
-    }
-    const lookupTypeStage = {
-        $lookup: {
-            from: 'types',
-            localField: 'type_id',
-            foreignField: '_id',
-            as: 'type',
-            pipeline: [
-                {
-                    $project: {
-                        _id: 0,
-                        class: 1,
-                        name: 1,
-                    },
-                },
-            ],
-        },
-    }
-    const unwindTypeStage = {
-        $unwind: '$type',
-    }
-    const lookupMessageStage = {
-        $lookup: {
-            from: 'messages',
-            localField: 'last_message_id',
-            foreignField: '_id',
-            as: 'last_message',
-            pipeline: [
-                {
-                    $lookup: {
-                        from: 'users',
-                        localField: 'user_id',
-                        foreignField: '_id',
-                        as: 'user',
-                        pipeline: [
-                            {
-                                $project: {
-                                    name: 1,
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '$avatar',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
                                 },
                             },
-                        ],
+                        },
                     },
-                },
-                {
-                    $unwind: '$user',
-                },
-                {
-                    $project: {
-                        _id: 0,
-                        user: 1,
-                        content: 1,
-                        timestamp: 1,
+                ],
+            },
+        },
+        lookupTypeStage: {
+            $lookup: {
+                from: 'types',
+                localField: 'type_id',
+                foreignField: '_id',
+                as: 'type',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 0,
+                            class: 1,
+                            name: 1,
+                        },
                     },
-                },
-            ],
+                ],
+            },
         },
-    }
-    const unwindLastMessageStage = {
-        $unwind: {
-            path: '$last_message',
-            preserveNullAndEmptyArrays: true,
+        unwindTypeStage: {
+            $unwind: '$type',
         },
-    }
-    const lookupProjectStage = {
-        $lookup: {
-            from: 'projects',
-            localField: 'data.project_id',
-            foreignField: '_id',
-            as: 'data.project',
-            pipeline: [
-                {
-                    $project: {
-                        _id: 1,
-                        name: 1,
-                        logo: {
-                            $cond: {
-                                if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
-                                then: '$logo',
-                                else: { $concat: [LINK_STATIC_URL, '$logo'] },
+        lookupProjectStage: {
+            $lookup: {
+                from: 'projects',
+                localField: 'data.project_id',
+                foreignField: '_id',
+                as: 'data.project',
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            logo: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
+                                    then: '$logo',
+                                    else: { $concat: [LINK_STATIC_URL, '$logo'] },
+                                },
                             },
                         },
                     },
+                ],
+            },
+        },
+        unwindProjectStage: {
+            $unwind: {
+                path: '$data.project',
+                preserveNullAndEmptyArrays: true,
+            },
+        },
+    }
+}
+
+// ========== GET [CONVERSATIONS] ========== //
+export async function getConversations(user) {
+    const stages = createCommonPipelineStages(user)
+
+    const pipeline = [
+        {
+            $match: {
+                members: { $elemMatch: { user_id: user._id } },
+            },
+        },
+        stages.lookupUserStage,
+        stages.lookupTypeStage,
+        stages.unwindTypeStage,
+        {
+            $lookup: {
+                from: 'messages',
+                localField: 'last_message_id',
+                foreignField: '_id',
+                as: 'last_message',
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'user_id',
+                            foreignField: '_id',
+                            as: 'user',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        name: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $unwind: '$user',
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            user: 1,
+                            content: 1,
+                            timestamp: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: {
+                path: '$last_message',
+                preserveNullAndEmptyArrays: true,
+            },
+        },
+        stages.lookupProjectStage,
+        stages.unwindProjectStage,
+        {
+            $sort: {
+                updated_at: -1,
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+                members: 1,
+                data: {
+                    project: 1,
                 },
-            ],
-        },
-    }
-    const unwindProjectStage = {
-        $unwind: {
-            path: '$data.project',
-            preserveNullAndEmptyArrays: true,
-        },
-    }
-    const sortStage = {
-        $sort: {
-            updated_at: -1,
-        },
-    }
-    const projectStage = {
-        $project: {
-            _id: 1,
-            members: 1,
-            data: {
-                project: 1,
-            },
-            metadata: {
+                metadata: {
+                    type: 1,
+                    data: 1,
+                },
                 type: 1,
-                data: 1,
+                last_message: 1,
+                updated_at: 1,
+                encryption_enabled: 1,
             },
-            type: 1,
-            last_message: 1,
-            updated_at: 1,
         },
-    }
+    ]
 
-    const conversations = await Conversation.aggregate([
-        matchStage,
-        lookupUserStage,
-        lookupTypeStage,
-        unwindTypeStage,
-        lookupMessageStage,
-        unwindLastMessageStage,
-        lookupProjectStage,
-        unwindProjectStage,
-        sortStage,
-        projectStage,
-    ])
-
-    return conversations
+    return await Conversation.aggregate(pipeline)
 }
 
 // ========== GET [CONVERSATION] ========== //
 export async function getConversation(user, { conversationId }) {
-    const matchStage = {
-        $match: {
-            _id: new ObjectId(conversationId),
-            members: { $elemMatch: { user_id: user._id } },
+    const stages = createCommonPipelineStages(user)
+
+    const pipeline = [
+        {
+            $match: {
+                _id: new ObjectId(conversationId),
+                members: { $elemMatch: { user_id: user._id } },
+            },
         },
-    }
-    const lookupUserStage = {
-        $lookup: {
-            from: 'users',
-            localField: 'members.user_id',
-            foreignField: '_id',
-            as: 'members',
-            pipeline: [
-                {
-                    $match: {
-                        _id: { $ne: user._id },
-                    },
+        stages.lookupUserStage,
+        stages.lookupTypeStage,
+        stages.unwindTypeStage,
+        stages.lookupProjectStage,
+        stages.unwindProjectStage,
+        {
+            $project: {
+                _id: 1,
+                members: 1,
+                metadata: {
+                    type: 1,
+                    data: 1,
                 },
-                {
-                    $project: {
-                        _id: 1,
-                        name: 1,
-                        avatar: {
-                            $cond: {
-                                if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
-                                then: '$avatar',
-                                else: { $concat: [LINK_STATIC_URL, '$avatar'] },
-                            },
-                        },
-                    },
-                },
-            ],
-        },
-    }
-    const lookupTypeStage = {
-        $lookup: {
-            from: 'types',
-            localField: 'type_id',
-            foreignField: '_id',
-            as: 'type',
-            pipeline: [
-                {
-                    $project: {
-                        _id: 0,
-                        class: 1,
-                        name: 1,
-                    },
-                },
-            ],
-        },
-    }
-    const unwindTypeStage = {
-        $unwind: '$type',
-    }
-    const lookupProjectStage = {
-        $lookup: {
-            from: 'projects',
-            localField: 'data.project_id',
-            foreignField: '_id',
-            as: 'data.project',
-            pipeline: [
-                {
-                    $project: {
-                        _id: 1,
-                        name: 1,
-                        logo: {
-                            $cond: {
-                                if: { $eq: [{ $ifNull: ['$logo', ''] }, ''] },
-                                then: '$logo',
-                                else: { $concat: [LINK_STATIC_URL, '$logo'] },
-                            },
-                        },
-                    },
-                },
-            ],
-        },
-    }
-    const unwindProjectStage = {
-        $unwind: {
-            path: '$data.project',
-            preserveNullAndEmptyArrays: true,
-        },
-    }
-    const projectStage = {
-        $project: {
-            _id: 1,
-            members: 1,
-            metadata: {
                 type: 1,
-                data: 1,
+                last_message: 1,
+                data: {
+                    project: 1,
+                },
+                created_at: 1,
+                updated_at: 1,
+                encryption_enabled: 1,
             },
-            type: 1,
-            last_message: 1,
-            data: {
-                project: 1,
-            },
-            created_at: 1,
-            updated_at: 1,
         },
-    }
+    ]
 
-    const conversation = await Conversation.aggregate([
-        matchStage,
-        lookupUserStage,
-        lookupTypeStage,
-        unwindTypeStage,
-        lookupProjectStage,
-        unwindProjectStage,
-        projectStage,
-    ])
-
+    const conversation = await Conversation.aggregate(pipeline)
     return conversation[0]
 }
 
 // ========== GET [MESSAGES] ========== //
 export async function getMessages(user, { conversationId }) {
-    const conversation = await Conversation.findOne({
+    // Check conversation access first to avoid expensive aggregation if not needed
+    const conversationExists = await Conversation.exists({
         _id: conversationId,
         members: { $elemMatch: { user_id: user._id } },
     })
-    if (!conversation) {
+
+    if (!conversationExists) {
         return []
     }
-    const messages = await Message.aggregate([
+
+    return await Message.aggregate([
         {
             $match: {
-                conversation_id: conversation._id,
+                conversation_id: new ObjectId(conversationId),
             },
         },
         {
@@ -332,6 +262,8 @@ export async function getMessages(user, { conversationId }) {
                 pinned: 1,
                 status: 1,
                 timestamp: 1,
+                is_encrypted: 1,
+                encryption_metadata: 1,
             },
         },
         {
@@ -340,63 +272,68 @@ export async function getMessages(user, { conversationId }) {
             },
         },
     ])
-    return messages
 }
 
 // ========== SEND [MESSAGE -- NO SOCKET] ========== //
-export async function sendMessage(user, { conversationId }, { content }) {
-    const conversation = await Conversation.findOne({
-        _id: conversationId,
-        members: { $elemMatch: { user_id: user._id } },
-    })
-    const typeMessage = await Type.findOne({ class: MESSAGE_TYPE, name: TEXT_MESSAGE })
+export async function sendMessage(user, { conversationId }, { content, isEncrypted, encryptionMetadata }) {
+    // Using findOne to get all necessary data in one query
+    const [conversation, typeMessage] = await Promise.all([
+        Conversation.findOne({
+            _id: conversationId,
+            members: { $elemMatch: { user_id: user._id } },
+        }),
+        Type.findOne({ class: MESSAGE_TYPE, name: TEXT_MESSAGE }),
+    ])
+
     if (!conversation || !typeMessage) {
-        throw new Error('Conversation not found')
+        throw new Error('Conversation not found or message type invalid')
     }
 
-    const message = new Message({
+    // Check if this is an encrypted message in an encryption-enabled conversation
+    if (isEncrypted && !conversation.encryption_enabled) {
+        throw new Error('Cannot send encrypted message in a non-encrypted conversation')
+    }
+
+    // Create and save message in one operation
+    const message = await Message.create({
         conversation_id: conversation._id,
         user_id: user._id,
         content,
         type_id: typeMessage._id,
-        read_by: [],
+        read_by: [user._id], // Mark as read by sender
+        is_encrypted: isEncrypted || false,
+        encryption_metadata: encryptionMetadata || null,
         status: 'sent',
     })
-    await message.save()
-    conversation.updated_at = new Date()
-    conversation.save()
 
-    const user_message = await User.aggregate([
+    // Update conversation in background without waiting
+    Conversation.updateOne(
+        { _id: conversation._id },
         {
-            $match: {
-                _id: message.user_id,
+            $set: {
+                updated_at: new Date(),
+                last_message_id: message._id,
             },
-        },
-        {
-            $project: {
-                _id: 1,
-                name: 1,
-                avatar: {
-                    $cond: {
-                        if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
-                        then: '$avatar',
-                        else: { $concat: [LINK_STATIC_URL, '$avatar'] },
-                    },
-                },
-            },
-        },
-    ])
+        }
+    ).exec()
 
-    message.user = user_message[0]
+    // Get user info for response
+    const userInfo = await User.findById(user._id).select('_id name avatar').lean()
+
+    // Format avatar URL if needed
+    if (userInfo.avatar) {
+        userInfo.avatar = LINK_STATIC_URL + userInfo.avatar
+    }
 
     return {
         _id: message._id,
-        user: user_message[0],
+        user: userInfo,
         conversation_id: message.conversation_id,
         content: message.content,
         read_by: message.read_by,
         pinned: message.pinned,
         status: message.status,
         timestamp: message.timestamp,
+        is_encrypted: message.is_encrypted,
     }
 }

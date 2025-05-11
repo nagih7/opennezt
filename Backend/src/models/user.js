@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import createModel, {ObjectId} from './base'
+import createModel, { ObjectId } from './base'
 
 const User = createModel(
     'User',
@@ -71,13 +71,29 @@ const User = createModel(
             default: false,
             enum: [true, false],
         },
+        // Signal Protocol encryption fields
+        signal_keys: {
+            type: Object,
+            default: {},
+            // Structure:
+            // {
+            //   identityKey: { public: String, private: String },
+            //   signedPreKey: { keyId: Number, public: String, private: String, signature: String },
+            //   oneTimePreKeys: [{ keyId: Number, public: String, private: String }],
+            //   registrationId: Number
+            // }
+        },
+        metadata: {
+            type: Object,
+            default: {},
+        },
     },
     {
         toJSON: {
             virtuals: false,
             transform(doc, ret) {
                 // eslint-disable-next-line no-unused-vars
-                const {password, is_active, updated_at, ...result} = ret
+                const { password, is_active, updated_at, ...result } = ret
                 return result
             },
         },

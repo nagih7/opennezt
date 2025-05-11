@@ -1,5 +1,5 @@
-import {Schema} from 'mongoose'
-import createModel, {ObjectId} from './base'
+import { Schema } from 'mongoose'
+import createModel, { ObjectId } from './base'
 
 const MemberSchema = new Schema(
     {
@@ -46,6 +46,11 @@ const Conversation = createModel('Conversation', 'conversations', {
         type: ObjectId,
         ref: 'Message',
         required: false,
+    },
+    encryption_enabled: {
+        type: Boolean,
+        required: true,
+        default: false,
     },
     data: {
         type: Object,
