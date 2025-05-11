@@ -1,26 +1,26 @@
-import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import img_logo_project from '../../../assets/images/background/1656677876-bpthumb.jpg';
-import { IconlyEditSquare } from 'components/UI/Iconly';
-import { useDispatch, useSelector } from 'react-redux';
-import { getMyProjectDetails } from 'api/project';
-import { HStack, Image, Tag } from '@chakra-ui/react';
-import ProjectMenu from './components/ProjectMenu';
-import RightProject from './components/RightProject';
+import React, { useEffect } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import img_logo_project from '../../../assets/images/background/1656677876-bpthumb.jpg'
+import { IconlyEditSquare } from 'components/UI/Iconly'
+import { useDispatch, useSelector } from 'react-redux'
+import { getMyProjectDetails } from 'api/project'
+import { HStack, Image, Tag } from '@chakra-ui/react'
+import ProjectMenu from './components/ProjectMenu'
+import RightProject from './components/RightProject'
 
 const ProjectDetails = () => {
-    const { id } = useParams();
-    const dispatch = useDispatch();
+    const { id } = useParams()
+    const dispatch = useDispatch()
     // ========== STATE FROM REDUX ========== //
-    const project = useSelector((state) => state.project.myProjectDetails);
+    const project = useSelector((state) => state.project.myProjectDetails)
 
     useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+        window.scrollTo(0, 0)
+    }, [])
 
     useEffect(() => {
-        dispatch(getMyProjectDetails(id));
-    }, [id, dispatch]);
+        dispatch(getMyProjectDetails(id))
+    }, [id, dispatch])
 
     return (
         <div className="w-full h-full">
@@ -36,7 +36,7 @@ const ProjectDetails = () => {
                     objectFit="cover"
                     onError={(e) => {
                         e.target.src =
-                            'https://wordpress.iqonic.design/product/wp/socialv/wp-content/themes/socialv-themes/assets/images/redux/default-cover.jpg';
+                            'https://wordpress.iqonic.design/product/wp/socialv/wp-content/themes/socialv-themes/assets/images/redux/default-cover.jpg'
                     }}
                 />
             </div>
@@ -59,7 +59,7 @@ const ProjectDetails = () => {
                                                         width="100%"
                                                         objectFit="cover"
                                                         onError={(e) => {
-                                                            e.target.src = img_logo_project;
+                                                            e.target.src = img_logo_project
                                                         }}
                                                     />
                                                 </a>
@@ -116,18 +116,14 @@ const ProjectDetails = () => {
                             <div className="p-8">
                                 <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
                                     <li className="px-[16px] mb-10">
-                                        <div className="mb-2 text-sm font-medium uppercase">
-                                            INDUSYTIES
-                                        </div>
+                                        <div className="mb-2 text-sm font-medium uppercase">INDUSYTIES</div>
                                         <div>
                                             <p className="mb-2 text-base font-medium text-black">
                                                 {project?.industries?.length > 0
                                                     ? project.industries.map((industry) => (
                                                           <HStack key={industry.id} spacing={2}>
                                                               <Tag.Root size={'lg'} mt={2}>
-                                                                  <Tag.Label>
-                                                                      {industry.name}
-                                                                  </Tag.Label>
+                                                                  <Tag.Label>{industry.name}</Tag.Label>
                                                               </Tag.Root>
                                                           </HStack>
                                                       ))
@@ -136,9 +132,7 @@ const ProjectDetails = () => {
                                         </div>
                                     </li>
                                     <li className="px-[16px] mb-10">
-                                        <div className="mb-2 text-sm font-medium uppercase">
-                                            STAGE
-                                        </div>
+                                        <div className="mb-2 text-sm font-medium uppercase">STAGE</div>
                                         <div>
                                             <p className="mb-2 text-base font-medium text-black">
                                                 {project?.stage?.name || 'N/A'}
@@ -161,15 +155,12 @@ const ProjectDetails = () => {
                             <div className="p-8">
                                 <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
                                     <li className="px-[16px] mb-10">
-                                        <div className="mb-2 text-sm font-medium uppercase">
-                                            MONTH / YEAR
-                                        </div>
+                                        <div className="mb-2 text-sm font-medium uppercase">MONTH / YEAR</div>
                                         <div>
                                             {project?.revenues?.length > 0 ? (
                                                 project.revenues.map((revenue, index) => {
-                                                    const isLastItem =
-                                                        index === project.revenues.length - 1; // Kiểm tra phần tử cuối cùng
-                                                    const date = new Date(revenue.date);
+                                                    const isLastItem = index === project.revenues.length - 1 // Kiểm tra phần tử cuối cùng
+                                                    const date = new Date(revenue.date)
 
                                                     return (
                                                         <p
@@ -179,24 +170,19 @@ const ProjectDetails = () => {
                                                         >
                                                             {date.toLocaleDateString('en-CA')}
                                                         </p>
-                                                    );
+                                                    )
                                                 })
                                             ) : (
-                                                <p className="mb-2 text-base font-medium text-black">
-                                                    N/A
-                                                </p>
+                                                <p className="mb-2 text-base font-medium text-black">N/A</p>
                                             )}
                                         </div>
                                     </li>
                                     <li className="px-[16px] mb-10">
-                                        <div className="mb-2 text-sm font-medium uppercase">
-                                            AMOUNT
-                                        </div>
+                                        <div className="mb-2 text-sm font-medium uppercase">AMOUNT</div>
                                         <div>
                                             {project?.revenues?.length > 0 ? (
                                                 project.revenues.map((revenue, id) => {
-                                                    const isLastItem =
-                                                        id === project.revenues.length - 1; // Kiểm tra nếu đây là phần tử cuối cùng
+                                                    const isLastItem = id === project.revenues.length - 1 // Kiểm tra nếu đây là phần tử cuối cùng
 
                                                     return (
                                                         <p
@@ -209,12 +195,10 @@ const ProjectDetails = () => {
                                                         >
                                                             {revenue.amount} ({revenue.currency})
                                                         </p>
-                                                    );
+                                                    )
                                                 })
                                             ) : (
-                                                <p className="mb-2 text-base font-medium text-black">
-                                                    N/A
-                                                </p>
+                                                <p className="mb-2 text-base font-medium text-black">N/A</p>
                                             )}
                                         </div>
                                     </li>
@@ -270,67 +254,50 @@ const ProjectDetails = () => {
                             <div className="p-8">
                                 <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
                                     <li className="px-[16px] mb-10">
-                                        <div className="mb-2 text-sm font-medium uppercase">
-                                            NAME
-                                        </div>
+                                        <div className="mb-2 text-sm font-medium uppercase">NAME</div>
                                         <div>
                                             {project?.funding_sources?.length > 0 ? (
-                                                project.funding_sources.map(
-                                                    (funding_sources, index) => {
-                                                        const isLastItem =
-                                                            index ===
-                                                            project.funding_sources.length - 1; // Kiểm tra phần tử cuối cùng
-                                                        return (
-                                                            <p
-                                                                key={index}
-                                                                className={`mb-2 text-base font-medium text-black ${
-                                                                    !isLastItem
-                                                                        ? 'border-b-[1px] border-[#f4f5f6] pb-2'
-                                                                        : ''
-                                                                }`}
-                                                            >
-                                                                {funding_sources.name}
-                                                            </p>
-                                                        );
-                                                    }
-                                                )
+                                                project.funding_sources.map((funding_sources, index) => {
+                                                    const isLastItem = index === project.funding_sources.length - 1 // Kiểm tra phần tử cuối cùng
+                                                    return (
+                                                        <p
+                                                            key={index}
+                                                            className={`mb-2 text-base font-medium text-black ${
+                                                                !isLastItem
+                                                                    ? 'border-b-[1px] border-[#f4f5f6] pb-2'
+                                                                    : ''
+                                                            }`}
+                                                        >
+                                                            {funding_sources.name}
+                                                        </p>
+                                                    )
+                                                })
                                             ) : (
-                                                <p className="mb-2 text-base font-medium text-black">
-                                                    N/A
-                                                </p>
+                                                <p className="mb-2 text-base font-medium text-black">N/A</p>
                                             )}
                                         </div>
                                     </li>
                                     <li className="px-[16px] mb-10">
-                                        <div className="mb-2 text-sm font-medium uppercase">
-                                            AMOUNT
-                                        </div>
+                                        <div className="mb-2 text-sm font-medium uppercase">AMOUNT</div>
                                         <div>
                                             {project?.funding_sources?.length > 0 ? (
-                                                project.funding_sources.map(
-                                                    (funding_sources, index) => {
-                                                        const isLastItem =
-                                                            index ===
-                                                            project.funding_sources.length - 1; // Kiểm tra phần tử cuối cùng
-                                                        return (
-                                                            <p
-                                                                key={index}
-                                                                className={`mb-2 text-base font-medium text-black ${
-                                                                    !isLastItem
-                                                                        ? 'border-b-[1px] border-[#f4f5f6] pb-2'
-                                                                        : ''
-                                                                }`}
-                                                            >
-                                                                {funding_sources.amount} (
-                                                                {funding_sources.currency})
-                                                            </p>
-                                                        );
-                                                    }
-                                                )
+                                                project.funding_sources.map((funding_sources, index) => {
+                                                    const isLastItem = index === project.funding_sources.length - 1 // Kiểm tra phần tử cuối cùng
+                                                    return (
+                                                        <p
+                                                            key={index}
+                                                            className={`mb-2 text-base font-medium text-black ${
+                                                                !isLastItem
+                                                                    ? 'border-b-[1px] border-[#f4f5f6] pb-2'
+                                                                    : ''
+                                                            }`}
+                                                        >
+                                                            {funding_sources.amount} ({funding_sources.currency})
+                                                        </p>
+                                                    )
+                                                })
                                             ) : (
-                                                <p className="mb-2 text-base font-medium text-black">
-                                                    N/A
-                                                </p>
+                                                <p className="mb-2 text-base font-medium text-black">N/A</p>
                                             )}
                                         </div>
                                     </li>
@@ -358,9 +325,7 @@ const ProjectDetails = () => {
                                         <div>
                                             <p className="mb-2 text-base font-medium text-black">
                                                 {project?.additional_infos
-                                                    ?.map(
-                                                        (additional_info) => additional_info.content
-                                                    )
+                                                    ?.map((additional_info) => additional_info.content)
                                                     .join(', ') || 'N/A'}
                                             </p>
                                         </div>
@@ -376,7 +341,7 @@ const ProjectDetails = () => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ProjectDetails;
+export default ProjectDetails

@@ -194,21 +194,31 @@ const ProjectOverview = ({ project }) => {
                             </Link>
                         </div>
                         <div className="p-8">
-                            <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
-                                <li className="px-[16px] mb-10">
-                                    <div className="mb-2 text-sm font-medium uppercase">
-                                        {project?.additional_infos
-                                            ?.map((additional_info) => additional_info.name)
-                                            .join(', ') || 'N/A'}
-                                    </div>
-                                    <div>
-                                        <p className="mb-2 text-base font-medium text-black">
-                                            {project?.additional_infos
-                                                ?.map((additional_info) => additional_info.content)
-                                                .join(', ') || 'N/A'}
-                                        </p>
-                                    </div>
-                                </li>
+                            <ul className="grid grid-cols-1 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
+                                {project?.additional_infos?.length > 0 ? (
+                                    project.additional_infos.map((additional_info, index) => (
+                                        <li key={index} className="px-[16px] mb-6">
+                                            <div className="mb-2 text-sm font-medium uppercase">
+                                                {additional_info.name || 'N/A'}
+                                            </div>
+                                            <div>
+                                                <p className="mb-2 text-base font-medium text-black">
+                                                    {additional_info.content || 'N/A'}
+                                                </p>
+                                            </div>
+                                            {index < project.additional_infos.length - 1 && (
+                                                <hr className="my-4 border-[#f4f5f6]" />
+                                            )}
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li className="px-[16px] mb-10">
+                                        <div className="mb-2 text-sm font-medium uppercase">Additional Information</div>
+                                        <div>
+                                            <p className="mb-2 text-base font-medium text-black">N/A</p>
+                                        </div>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     </div>
