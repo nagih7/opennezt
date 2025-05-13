@@ -1,5 +1,8 @@
+import { FaCheck } from 'react-icons/fa6'
 import { IconlyEditSquare, IconlyStar } from '../Iconly'
-import React from 'react'
+import React, { useState } from 'react'
+import { IoMdArrowDropdown } from 'react-icons/io'
+import { RiArrowRightSFill } from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom'
 
 const ProfileDetails = ({ profile }) => {
@@ -30,6 +33,9 @@ const ProfileDetails = ({ profile }) => {
         }, {}) || {}
 
     const result = Object.values(groupedSkills) || []
+
+    const [openExpertiseRequest, setOpenExpertiseRequest] = useState({})
+    const toUpper = (text) => text?.toUpperCase()
 
     return (
         <div className="w-full lg:w-10/12">
@@ -90,11 +96,15 @@ const ProfileDetails = ({ profile }) => {
                                     <span className="font-medium text-gray-600 text-sm">
                                         {education.degree || 'N/A'} - {education.field_of_study || 'N/A'}
                                     </span>
-                                    <span className="font-medium text-gray-600 text-sm">Grade: {education.grade || 'N/A'}</span>
+                                    <span className="font-medium text-gray-600 text-sm">
+                                        Grade: {education.grade || 'N/A'}
+                                    </span>
                                     <span className="font-medium text-gray-600 text-sm">
                                         {formatDate(education.start_date)} - {formatDate(education.end_date)}
                                     </span>
-                                    <span className="font-medium text-gray-600 text-sm">{education.activities || 'N/A'}</span>
+                                    <span className="font-medium text-gray-600 text-sm">
+                                        {education.activities || 'N/A'}
+                                    </span>
                                 </div>
                             </div>
                         ))
@@ -167,7 +177,7 @@ const ProfileDetails = ({ profile }) => {
                         <IconlyEditSquare size={20} color={'#ffffff'} />
                     </span>
                 </div>
-                <div className="p-8">
+                {/* <div className="p-8">
                     {result?.length > 0 ? (
                         <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
                             {result?.map((re, idx) => (
@@ -183,6 +193,64 @@ const ProfileDetails = ({ profile }) => {
                         </ul>
                     ) : (
                         <div className="p-8 text-[#6f7f92]">No expertise added yet</div>
+                    )}
+                </div> */}
+                <div className="p-8">
+                    {result?.length > 0 ? (
+                        <ul className="pl-0 mb-0 space-y-4">
+                            {result.map((item, index) => (
+                                <li key={index} className="flex flex-col">
+                                    <div
+                                        onClick={() =>
+                                            setOpenExpertiseRequest(
+                                                openExpertiseRequest[item.category.name]
+                                                    ? { ...openExpertiseRequest, [item.category.name]: false }
+                                                    : { ...openExpertiseRequest, [item.category.name]: true }
+                                            )
+                                        }
+                                        className="flex items-center gap-2 cursor-pointer"
+                                    >
+                                        <div
+                                            className={`transition-transform duration-300 ${
+                                                openExpertiseRequest[item.category.name] ? 'rotate-180' : 'rotate-0'
+                                            }`}
+                                        >
+                                            {openExpertiseRequest[item.category.name] ? (
+                                                <IoMdArrowDropdown className="w-10 h-10 text-[#6f7f92]" />
+                                            ) : (
+                                                <RiArrowRightSFill className="w-10 h-10 text-[#6f7f92]" />
+                                            )}
+                                        </div>
+                                        <span className="text-lg text-[#6f7f92] font-semibold">
+                                            {item.category.name.toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <div
+                                        className={`mt-3 bg-[#ffffff] p-0 m-0 overflow-y-scroll w-full overflow-hidden transition-all duration-500 ease-in-out ${
+                                            openExpertiseRequest[item.category.name] ? 'max-h-[200px]' : 'max-h-0'
+                                        }`}
+                                    >
+                                        <div className="px-[24px]">
+                                            <div className="px-[24px]">
+                                                <ul className="flex flex-col items-center pl-0 mb-0 cursor-pointer">
+                                                    {item.skills.map((skill, subIndex) => (
+                                                        <li
+                                                            key={skill._id}
+                                                            className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
+                                                        >
+                                                            {skill.name}
+                                                            <FaCheck className="text-[#4374c0]" />
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <div className="text-[#6f7f92]">No expertise added yet</div>
                     )}
                 </div>
             </div>
