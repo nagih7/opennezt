@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Pagination } from 'antd'
 import styles from './styles.module.scss'
-import { IconlyDelete, IconlyEdit } from '../Iconly'
 
 TableCustom.propTypes = {
     columns: PropTypes.array.isRequired,
@@ -21,15 +20,23 @@ TableCustom.defaultProps = {
     dataSource: [],
     loading: false,
     rowKey: 'id',
-    onChangeCurrentPage: () => {},
+    onChangeCurrentPage: () => {
+        /* noop */
+    },
     pagination: {
         currentPage: 1,
         perPage: 10,
         totalRecord: 0,
     },
-    handleUpdate: () => {},
-    handleShowConfirmDelete: () => {},
-    onRow: () => {},
+    handleUpdate: () => {
+        /* noop */
+    },
+    handleShowConfirmDelete: () => {
+        /* noop */
+    },
+    onRow: () => {
+        /* noop */
+    },
 }
 
 function TableCustom({
@@ -63,7 +70,7 @@ function TableCustom({
                     {dataSource.map((item, index) => (
                         <tr
                             key={item[rowKey]}
-                            className="border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
+                            className="border-b border-gray-200 cursor-pointer hover:bg-gray-50"
                             onClick={() => onRow(item)} // Direct call to onRow
                         >
                             {columns.map((col, i) => (
@@ -86,7 +93,7 @@ function TableCustom({
             </table>
 
             {/* Giữ nguyên phân trang Ant Design */}
-            <div className="flex justify-between items-center mt-8">
+            <div className="flex items-center justify-between mt-8">
                 <span className={styles.textPagination}>
                     <span>Showing {pagination.perPage * (pagination.currentPage - 1) + 1} to </span>
                     <span>{Math.min(pagination.totalRecord, pagination.perPage * pagination.currentPage)}</span>

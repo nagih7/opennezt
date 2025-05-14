@@ -1,5 +1,6 @@
 import React from 'react'
 import './index.scss'
+import PropTypes from 'prop-types'
 
 const Loading = () => {
     return (
@@ -22,6 +23,10 @@ const Loading = () => {
             </div>
         </div>
     )
+}
+
+Loading.propTypes = {
+    // This component doesn't currently accept props
 }
 
 export default Loading

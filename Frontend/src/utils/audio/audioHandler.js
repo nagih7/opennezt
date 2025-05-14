@@ -16,10 +16,16 @@
  */
 export const createAudioPlayer = (src, options = {}) => {
     const {
-        onEnd = () => {},
-        onPlay = () => {},
+        onEnd = () => {
+            /* noop */
+        },
+        onPlay = () => {
+            /* noop */
+        },
         onError = (error) => console.error('Audio playback error:', error),
-        onTimeUpdate = () => {},
+        onTimeUpdate = () => {
+            /* noop */
+        },
         autoPlay = true,
     } = options
 
@@ -140,7 +146,18 @@ export const checkAudioValidity = (url) => {
  * @returns {Object} Controller for the synchronized playback
  */
 export const createSyncedAudioVideo = (audioSrc, videoElement, options = {}) => {
-    const { onAudioEnd = () => {}, onVideoEnd = () => {}, onSyncComplete = () => {}, autoStart = true } = options
+    const {
+        onAudioEnd = () => {
+            /* noop */
+        },
+        onVideoEnd = () => {
+            /* noop */
+        },
+        onSyncComplete = () => {
+            /* noop */
+        },
+        autoStart = true,
+    } = options
 
     let isAudioEnded = false
     let isVideoEnded = false

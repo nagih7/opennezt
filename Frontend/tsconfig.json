@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target": "es6", // Mục tiêu là ES6
+        "lib": ["dom", "dom.iterable", "esnext"], // Thư viện sử dụng
+        "allowJs": true, // Cho phép sử dụng file JS
+        "skipLibCheck": true, // Bỏ qua kiểm tra kiểu trong thư viện
+        "esModuleInterop": true, // Cho phép sử dụng ES module
+        "allowSyntheticDefaultImports": true, // Cho phép sử dụng import mặc định
+        "strict": true, // Bật chế độ kiểm tra nghiêm ngặt
+        "forceConsistentCasingInFileNames": true, // Bắt buộc sử dụng chữ hoa chữ thường nhất quán trong tên file
+        "noFallthroughCasesInSwitch": true, // Không cho phép rơi vào trường hợp không mong muốn trong switch
+        "module": "esnext", // Sử dụng module ESNext
+        "moduleResolution": "node", // Sử dụng cách giải quyết module của Node.js
+        "resolveJsonModule": true, // Cho phép sử dụng module JSON
+        "isolatedModules": true, // Sử dụng các module độc lập
+        "noEmit": true, // Không phát hành file đầu ra
+        "jsx": "react-jsx", // Sử dụng JSX cho React
+        "baseUrl": "src" // Đường dẫn cơ sở cho các module
+    },
+    // "include": ["src"]
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"]
+}

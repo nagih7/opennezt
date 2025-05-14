@@ -1,24 +1,41 @@
-import React, { useEffect, useState, useCallback, useMemo, createContext } from 'react'
+import React, { useEffect, useState, useCallback, useMemo, createContext, ReactNode, useContext } from 'react'
 import { useDispatch } from 'react-redux'
 import { subscribe } from 'api/app'
-import { subscribeWrapped } from 'utils/appActions'
 import urlBase64ToUint8Array from 'utils/webpush/urlBase64ToUint8Array'
 import { PUBLIC_VALID_KEY } from 'utils/constants'
+import { AppDispatch } from 'states/configureStore'
+import { AnyAction } from 'redux'
 
-export const WebPushContext = createContext()
+// Define types for the context value
+interface WebPushContextValue {
+    isSubscribed: boolean
+    subscription: PushSubscription | null
+    error: string
+    stats: any | null
+    subscribeToNotifications: () => Promise<boolean>
+    unsubscribeFromNotifications: () => Promise<boolean>
+}
 
-export const WebPushProvider = ({ children }) => {
-    const dispatch = useDispatch()
+// Props for the WebPushProvider component
+interface WebPushProviderProps {
+    children: ReactNode
+}
+
+// Create the context with a default value
+export const WebPushContext = createContext<WebPushContextValue | undefined>(undefined)
+
+export const WebPushProvider: React.FC<WebPushProviderProps> = ({ children }) => {
+    const dispatch = useDispatch<AppDispatch>()
 
     // State management
-    const [isSubscribed, setIsSubscribed] = useState(false)
-    const [subscription, setSubscription] = useState(null)
-    const [registration, setRegistration] = useState(null)
-    const [error, setError] = useState('')
-    const [stats, setStats] = useState(null)
+    const [isSubscribed, setIsSubscribed] = useState<boolean>(false)
+    const [subscription, setSubscription] = useState<PushSubscription | null>(null)
+    const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null)
+    const [error, setError] = useState<string>('')
+    const [stats, setStats] = useState<any | null>(null)
 
     // Register Service Worker
-    const registerServiceWorker = useCallback(async () => {
+    const registerServiceWorker = useCallback(async (): Promise<void> => {
         try {
             const reg = await navigator.serviceWorker.register('/service-worker.js')
             setRegistration(reg)
@@ -31,25 +48,27 @@ export const WebPushProvider = ({ children }) => {
                 setIsSubscribed(true)
             }
         } catch (error) {
-            setError(`Unable to register service worker: ${error.message}`)
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+            setError(`Unable to register service worker: ${errorMessage}`)
         }
     }, [])
 
     // Subscribe to notifications
-    const subscribeToNotifications = useCallback(async () => {
+    const subscribeToNotifications = useCallback(async (): Promise<boolean> => {
         // Check if the user has granted permission for notifications
         if (Notification.permission === 'denied') {
             setError('Notifications are blocked. Please enable them in your browser settings.')
-            return
+            return false
         }
 
         if (Notification.permission !== 'granted') {
             const permission = await Notification.requestPermission()
             if (permission !== 'granted') {
                 setError('Notifications permission denied.')
-                return
+                return false
             }
         }
+
         try {
             if (!registration) {
                 setError('Service worker not registered.')
@@ -79,7 +98,7 @@ export const WebPushProvider = ({ children }) => {
             setSubscription(newSubscription)
             setIsSubscribed(true)
             // Send subscription info to server only for new subscriptions
-            dispatch(subscribeWrapped(newSubscription))
+            dispatch(subscribe(newSubscription) as unknown as AnyAction)
             return true
         } catch (error) {
             setError('Unable to subscribe to notifications. Please check browser permissions.')
@@ -88,7 +107,7 @@ export const WebPushProvider = ({ children }) => {
     }, [registration, dispatch])
 
     // Unsubscribe from notifications
-    const unsubscribeFromNotifications = useCallback(async () => {
+    const unsubscribeFromNotifications = useCallback(async (): Promise<boolean> => {
         try {
             if (!subscription) {
                 return false
@@ -110,17 +129,15 @@ export const WebPushProvider = ({ children }) => {
         if ('serviceWorker' in navigator && 'PushManager' in window) {
             registerServiceWorker()
             // dispatch(fetchStats()).then((result) => {
-            //     if (result?.payload) {
-            //         setStats(result.payload)
-            //     }
-            // })
+            //   if (result?.payload) {
+            //     setStats(result.payload);
+            //   }
+            // });
         } else {
             setError('Your browser does not support web push notifications.')
         }
 
-        return () => {
-            /* noop */
-        }
+        return () => {}
     }, [registerServiceWorker])
 
     // Modify the second useEffect to wait for registration
@@ -151,8 +168,8 @@ export const WebPushProvider = ({ children }) => {
 }
 
 // Custom hook for easier context consumption
-export const useWebPush = () => {
-    const context = React.useContext(WebPushContext)
+export const useWebPush = (): WebPushContextValue => {
+    const context = useContext(WebPushContext)
     if (context === undefined) {
         throw new Error('useWebPush must be used within a WebPushProvider')
     }

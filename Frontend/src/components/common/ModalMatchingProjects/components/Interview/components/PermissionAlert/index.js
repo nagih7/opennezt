@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const PermissionAlert = ({ error, permissionStatus, requestMediaPermissions }) => {
     if (error) {
@@ -36,6 +37,15 @@ const PermissionAlert = ({ error, permissionStatus, requestMediaPermissions }) =
     }
 
     return null
+}
+
+PermissionAlert.propTypes = {
+    error: PropTypes.string,
+    permissionStatus: PropTypes.shape({
+        camera: PropTypes.string,
+        microphone: PropTypes.string,
+    }).isRequired,
+    requestMediaPermissions: PropTypes.func.isRequired,
 }
 
 export default PermissionAlert
