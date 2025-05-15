@@ -31,7 +31,7 @@ const ProjectBox: React.FC<ProjectBoxProps> = ({ project }) => {
    const [errorBG, setErrorBG] = useState<boolean>(false)
 
    const handleNavigateToProjectDetails = (project: Project) => {
-      navigate(`/projects/me/${project._id}/details`)
+      navigate(`/projects/${project._id}/details`)
    }
 
    return (
@@ -65,21 +65,21 @@ const ProjectBox: React.FC<ProjectBoxProps> = ({ project }) => {
                      </Avatar.Root>
                   </div>
                   <h5>
-                     <a href="#" className="text-black text-sm sm:text-lg no-underline">
+                     <a href="#" className="text-black no-underline">
                         {project.name}
                      </a>
                   </h5>
                </div>
 
                <ul className="flex items-center gap-1 mb-0 pl-0 pb-[24px]">
-                  <li className="mr-2 text-[#6f7f92] text-xs sm:text-sm font-medium flex items-center gap-1">
+                  <li className="mr-2 text-[#6f7f92] text-sm font-medium flex items-center gap-1">
                      <span>
                         <IconlyDocument size={20} color={'#6f7f92'} />
                      </span>
                      <span>{project.articles?.length || 0}</span>
                      <span>Posts</span>
                   </li>
-                  <li className="mr-2 text-[#6f7f92] text-xs sm:text-sm font-medium flex items-center gap-1">
+                  <li className="mr-2 text-[#6f7f92] text-sm font-medium flex items-center gap-1">
                      <span>
                         <IconlyUser size={20} color={'#6f7f92'} />
                      </span>
@@ -101,7 +101,7 @@ const ProjectBox: React.FC<ProjectBoxProps> = ({ project }) => {
                <div className="mt-7 mx-[-16px] w-full h-[47px] flex justify-center items-center">
                   <Button
                      onClick={() => handleNavigateToProjectDetails(project)}
-                     className="bg-[#eaeff8] text-[#2f65b9] hover:bg-[#2f65b9] hover:text-[#ffffff] transition duration- sm:text-sm rounded-md font-semibold sm:px-[28px] px-[20px] text-xs py-[15px] mx-[14px] no-underline"
+                     className="bg-[#eaeff8] text-[#2f65b9] hover:bg-[#2f65b9] hover:text-[#ffffff] transition duration- text-sm rounded-md font-semibold px-[28px] py-[15px] mx-[14px] no-underline"
                   >
                      MANAGE PROJECT
                   </Button>
