@@ -9,11 +9,11 @@ const sagaMiddleware = createSagaMiddleware()
 
 // Configure the Redux store with TypeScript support
 const store = configureStore({
-    reducer: rootReducer,
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({
-            serializableCheck: false,
-        }).concat(sagaMiddleware),
+   reducer: rootReducer,
+   middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+         serializableCheck: false,
+      }).concat(sagaMiddleware),
 })
 
 // Start the root saga
