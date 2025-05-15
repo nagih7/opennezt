@@ -29,8 +29,21 @@ export interface ArticleState {
    comment_pagination: CommentPaginationState
    isLoadingReactComment: boolean
    isLoadingCreateComment: boolean
-   articleDetails: any | null
-   isLoadingGetArticleDetails: boolean
-   attachments: any[]
+   isLoadingUpdateArticle: boolean
+   isOpenUpdateForm: boolean
+   isLoadingDeleteArticle: boolean
+   replyComments: any[]
+   isLoadingGetReplyComments: boolean
+   reply_comments_pagination: CommentPaginationState
+   projectsToTag: any[]
+   isLoadingMyProjectToTag: boolean
+   isLoadingReplyComment: boolean
+   repliedComment: any
+   reply_comment_reactions: any[]
+   isLoadingGetReplyCommentReactions: boolean
+   isLoadingBookmarkArticle: boolean
+   bookmarks: any[]
+   isLoadingGetBookmarks: boolean
+   // Add any other properties you need
    [key: string]: any
 }

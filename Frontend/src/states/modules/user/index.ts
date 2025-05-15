@@ -28,20 +28,19 @@ const initialState: UserState = {
       items: [],
    }),
    isLoadingGetSkillFramework: false,
-   // USER PROFILES
-   userProfiles: [],
-   isLoadingGetUserProfiles: false,
-   // USER PROFILE
-   userProfile: null,
-   isLoadingGetuserProfile: false,
-   // SUGGESTED USERS
-   suggestedUsers: [],
-   isLoadingGetSuggestedUsers: false,
-   // CONTACT US
-   isLoadingPostContactUs: false,
-   // SUBSCRIPTION
-   subscription: null,
-   isLoadingSubscription: false,
+   // STAGES
+   stageFramework: createListCollection({
+      items: [],
+   }),
+   isLoadingGetStageFramework: false,
+   // PROJECT ROLE
+   projectRoleFramework: createListCollection({
+      items: [],
+   }),
+   projectTeamRoleFramework: createListCollection({
+      items: [],
+   }),
+   isLoadingGetProjectRoleFramework: false,
 }
 
 const userSlice = createSlice({
@@ -49,11 +48,11 @@ const userSlice = createSlice({
    initialState,
    reducers: {
       // INDUSTRIES
-      requestgetIndustryFramework: (state: UserState) => ({
+      requestgetIndustryFramework: (state) => ({
          ...state,
          isLoadingGetIndustryFramwork: true,
       }),
-      getIndustryFrameworkSuccess: (state: UserState, action: PayloadAction<any>) => ({
+      getIndustryFrameworkSuccess: (state, action) => ({
          ...state,
          isLoadingGetIndustryFramwork: false,
          industryFramework: createListCollection({
@@ -63,16 +62,16 @@ const userSlice = createSlice({
             })),
          }),
       }),
-      getIndustryFrameworkFail: (state: UserState) => ({
+      getIndustryFrameworkFail: (state) => ({
          ...state,
          isLoadingGetIndustryFramwork: false,
       }),
       // EXPERIENCE_LEVELS
-      requestgetExperienceLevelFramwork: (state: UserState) => ({
+      requestgetExperienceLevelFramwork: (state) => ({
          ...state,
          isLoadingGetExperienceLevelFramwork: true,
       }),
-      getExperienceLevelFramworkSuccess: (state: UserState, action: PayloadAction<any>) => ({
+      getExperienceLevelFramworkSuccess: (state, action) => ({
          ...state,
          isLoadingGetExperienceLevelFramwork: false,
          experienceLevelFramework: createListCollection({
@@ -82,18 +81,18 @@ const userSlice = createSlice({
             })),
          }),
       }),
-      getExperienceLevelFramworkFail: (state: UserState) => ({
+      getExperienceLevelFramworkFail: (state) => ({
          ...state,
          isLoadingGetExperienceLevelFramwork: false,
       }),
       // CATEGORIES
-      requestGetCategoryFramework: (state: UserState) => ({
+      requestGetCategoryFramework: (state) => ({
          ...state,
-         isLoadingGetCategoryFramework: true,
+         isLoadingGetAllCategory: true,
       }),
-      getCategoryFrameworkSuccess: (state: UserState, action: PayloadAction<any>) => ({
+      getCategoryFrameworkSuccess: (state, action) => ({
          ...state,
-         isLoadingGetCategoryFramework: false,
+         isLoadingGetAllCategory: false,
          categoryFramework: createListCollection({
             items: action.payload.data.map((category: any) => ({
                label: category.name,
@@ -101,15 +100,15 @@ const userSlice = createSlice({
             })),
          }),
       }),
-      getCategoryFrameworkFail: (state: UserState) => ({
+      getCategoryFrameworkFail: (state) => ({
          ...state,
-         isLoadingGetCategoryFramework: false,
+         isLoadingGetAllCategory: false,
       }),
-      requestGetSubCategoryFramework: (state: UserState) => ({
+      requestGetSubCategoryFramework: (state) => ({
          ...state,
          isLoadingGetSubCategoryFramework: true,
       }),
-      getSubCategoryFrameworkSuccess: (state: UserState, action: PayloadAction<any>) => ({
+      getSubCategoryFrameworkSuccess: (state, action) => ({
          ...state,
          isLoadingGetSubCategoryFramework: false,
          subCategoryFramework: createListCollection({
@@ -119,16 +118,16 @@ const userSlice = createSlice({
             })),
          }),
       }),
-      getSubCategoryFrameworkFail: (state: UserState) => ({
+      getSubCategoryFrameworkFail: (state) => ({
          ...state,
          isLoadingGetSubCategoryFramework: false,
       }),
       // SKILLS
-      requestGetSkillFramework: (state: UserState) => ({
+      requestGetSkillFramework: (state) => ({
          ...state,
          isLoadingGetSkillFramework: true,
       }),
-      getSkillFrameworkSuccess: (state: UserState, action: PayloadAction<any>) => ({
+      getSkillFrameworkSuccess: (state, action) => ({
          ...state,
          isLoadingGetSkillFramework: false,
          skillFramework: createListCollection({
@@ -138,78 +137,53 @@ const userSlice = createSlice({
             })),
          }),
       }),
-      getSkillFrameworkFail: (state: UserState) => ({
+      getSkillFrameworkFail: (state) => ({
          ...state,
          isLoadingGetSkillFramework: false,
       }),
-      // USER PROFILES
-      requestGetUserProfiles: (state: UserState) => ({
+      // STAGES
+      requestGetStageFramework: (state) => ({
          ...state,
-         isLoadingGetUserProfiles: true,
+         isLoadingGetStageFramework: true,
       }),
-      getUserProfilesSuccess: (state: UserState, action: PayloadAction<any>) => ({
+      getStageFrameworkSuccess: (state, action) => ({
          ...state,
-         userProfiles: action.payload.data,
-         isLoadingGetUserProfiles: false,
+         isLoadingGetStageFramework: false,
+         stageFramework: createListCollection({
+            items: action.payload.data.map((stage: any) => ({
+               label: stage.name,
+               value: stage._id,
+            })),
+         }),
       }),
-      getUserProfilesFail: (state: UserState) => ({
+      getStageFrameworkFail: (state) => ({
          ...state,
-         isLoadingGetUserProfiles: false,
+         isLoadingGetStageFramework: false,
       }),
-      // USER PROFILE
-      requestGetUserProfile: (state: UserState) => ({
+      // PROJECT ROLE
+      requestGetProjectRoleFramework: (state) => ({
          ...state,
-         isLoadingGetuserProfile: true,
+         isLoadingGetProjectRoleFramework: true,
       }),
-      getUserProfileSuccess: (state: UserState, action: PayloadAction<any>) => ({
+      getProjectRoleFrameworkSuccess: (state, action) => ({
          ...state,
-         userProfile: action.payload.data,
-         isLoadingGetuserProfile: false,
+         isLoadingGetProjectRoleFramework: false,
+         projectRoleFramework: createListCollection({
+            items: action.payload.data.roles.map((role: any) => ({
+               label: role.name,
+               value: role._id,
+            })),
+         }),
+         projectTeamRoleFramework: createListCollection({
+            items: action.payload.data.teamRoles.map((role: any) => ({
+               label: role.name,
+               value: role._id,
+            })),
+         }),
       }),
-      getUserProfileFail: (state: UserState) => ({
+      getProjectRoleFrameworkFail: (state) => ({
          ...state,
-         isLoadingGetuserProfile: false,
-      }),
-      // SUGGESTED USERS
-      requestGetSuggestedUsers: (state: UserState) => ({
-         ...state,
-         isLoadingGetSuggestedUsers: true,
-      }),
-      getSuggestedUsersSuccess: (state: UserState, action: PayloadAction<any>) => ({
-         ...state,
-         suggestedUsers: action.payload.data,
-         isLoadingGetSuggestedUsers: false,
-      }),
-      getSuggestedUsersFail: (state: UserState) => ({
-         ...state,
-         isLoadingGetSuggestedUsers: false,
-      }),
-      // CONTACT US
-      requestPostContactUs: (state: UserState) => ({
-         ...state,
-         isLoadingPostContactUs: true,
-      }),
-      postContactUsSuccess: (state: UserState) => ({
-         ...state,
-         isLoadingPostContactUs: false,
-      }),
-      postContactUsFail: (state: UserState) => ({
-         ...state,
-         isLoadingPostContactUs: false,
-      }),
-      // SUBSCRIPTION
-      requestGetSubscription: (state: UserState) => ({
-         ...state,
-         isLoadingSubscription: true,
-      }),
-      getSubscriptionSuccess: (state: UserState, action: PayloadAction<any>) => ({
-         ...state,
-         subscription: action.payload.data,
-         isLoadingSubscription: false,
-      }),
-      getSubscriptionFail: (state: UserState) => ({
-         ...state,
-         isLoadingSubscription: false,
+         isLoadingGetProjectRoleFramework: false,
       }),
    },
 })
@@ -234,26 +208,14 @@ export const {
    requestGetSkillFramework,
    getSkillFrameworkSuccess,
    getSkillFrameworkFail,
-   // USER PROFILES
-   requestGetUserProfiles,
-   getUserProfilesSuccess,
-   getUserProfilesFail,
-   // USER PROFILE
-   requestGetUserProfile,
-   getUserProfileSuccess,
-   getUserProfileFail,
-   // SUGGESTED USERS
-   requestGetSuggestedUsers,
-   getSuggestedUsersSuccess,
-   getSuggestedUsersFail,
-   // CONTACT US
-   requestPostContactUs,
-   postContactUsSuccess,
-   postContactUsFail,
-   // SUBSCRIPTION
-   requestGetSubscription,
-   getSubscriptionSuccess,
-   getSubscriptionFail,
+   // STAGES
+   requestGetStageFramework,
+   getStageFrameworkSuccess,
+   getStageFrameworkFail,
+   // PROJECT ROLE
+   requestGetProjectRoleFramework,
+   getProjectRoleFrameworkSuccess,
+   getProjectRoleFrameworkFail,
 } = userSlice.actions
 
 export default userSlice.reducer

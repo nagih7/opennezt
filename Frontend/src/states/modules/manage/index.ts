@@ -56,163 +56,595 @@ const initialState: ManageState = {
       totalPage: 1,
       totalRecord: 0,
    },
-   paginationListSkillCategory: {
-      currentPage: 1,
-      perPage: 10,
-      totalPage: 1,
-      totalRecord: 0,
-   },
    paginationListOrganization: {
       currentPage: 1,
       perPage: 10,
       totalPage: 1,
       totalRecord: 0,
    },
-   isLoadingGetAllUsers: false,
-   isLoadingGetAllArticles: false,
-   isLoadingGetAllRoles: false,
-   isLoadingGetAllTypes: false,
-   isLoadingGetAllIndustries: false,
-   isLoadingGetAllExperienceLevels: false,
-   isLoadingGetAllCategories: false,
-   isLoadingGetAllSkills: false,
-   isLoadingGetAllSkillCategories: false,
-   isLoadingGetAllOrganizations: false,
-   isLoadingCreateNewRole: false,
-   isLoadingCreateNewType: false,
-   isLoadingCreateNewIndustry: false,
-   isLoadingCreateNewExperienceLevel: false,
-   isLoadingCreateNewCategory: false,
-   isLoadingCreateNewSkill: false,
-   isLoadingCreateNewSkillCategory: false,
-   isLoadingCreateNewOrganization: false,
+   // ROLES
+   isLoadingGetListRole: false,
+   visibleModalCreateOrUpdateRole: false,
+   isLoadingBtnCreateOrUpdateRole: false,
+   visibleModalDeleteRole: false,
    isLoadingDeleteRole: false,
+   // TYPES
+   isLoadingGetListType: false,
+   visibleModalCreateOrUpdateType: false,
+   isLoadingBtnCreateOrUpdateType: false,
+   visibleModalDeleteType: false,
    isLoadingDeleteType: false,
+   // INDUSTRIES
+   isLoadingGetListIndustry: false,
+   visibleModalCreateOrUpdateIndustry: false,
+   isLoadingBtnCreateOrUpdateIndustry: false,
+   visibleModalDeleteIndustry: false,
    isLoadingDeleteIndustry: false,
+   // EXPERIENCE LEVELS
+   isLoadingGetListExperienceLevel: false,
+   visibleModalCreateOrUpdateExperienceLevel: false,
+   isLoadingBtnCreateOrUpdateExperienceLevel: false,
+   visibleModalDeleteExperienceLevel: false,
    isLoadingDeleteExperienceLevel: false,
+   // CATEGORIES
+   isLoadingGetListCategory: false,
+   visibleModalCreateOrUpdateCategory: false,
+   isLoadingBtnCreateOrUpdateCategory: false,
+   visibleModalDeleteCategory: false,
    isLoadingDeleteCategory: false,
+   // SKILLS
+   isLoadingGetListSkill: false,
+   visibleModalCreateOrUpdateSkill: false,
+   isLoadingBtnCreateOrUpdateSkill: false,
+   visibleModalDeleteSkill: false,
    isLoadingDeleteSkill: false,
-   isLoadingDeleteSkillCategory: false,
-   isLoadingDeleteOrganization: false,
-   isLoadingUpdateRole: false,
-   isLoadingUpdateType: false,
-   isLoadingUpdateIndustry: false,
-   isLoadingUpdateExperienceLevel: false,
-   isLoadingUpdateCategory: false,
-   isLoadingUpdateSkill: false,
-   isLoadingUpdateSkillCategory: false,
-   isLoadingUpdateOrganization: false,
+   isLoadingGetSkillCategories: false,
+   // Organizations
+   isLoadingGetListOrganization: false,
+   visibleModalCreateOrUpdateOrganization: false,
+   isLoadingBtnCreateOrUpdateOrganization: false,
+   visibleModalDeleteOrganization: false,
+   isLoadingDeteleOrganization: false,
+   // Articles
+   isLoadingGetListArticle: false,
+   visibleModalDeleteArticle: false,
 }
 
 const manageSlice = createSlice({
    name: 'manage',
    initialState,
    reducers: {
-      // GET TOTAL USERS
-      requestGetTotalUsers: (state: ManageState) => ({
+      startRequestGetTotalUsers: (state) => ({
          ...state,
-         isLoadingGetAllUsers: true,
       }),
-      getTotalUsersSuccess: (state: ManageState, action: PayloadAction<any>) => ({
+      startRequestGetTotalUsersSuccess: (state, action) => ({
          ...state,
-         totalUsers: action.payload.data.total,
-         isLoadingGetAllUsers: false,
+         totalUsers: action.payload.data,
       }),
-      getTotalUsersFail: (state: ManageState) => ({
+      startRequestGetTotalUsersFail: (state) => ({
          ...state,
-         isLoadingGetAllUsers: false,
       }),
 
-      // GET ALL ROLES
-      requestGetAllRoles: (state: ManageState) => ({
+      // ROLES
+      requestGetListRole: (state) => ({
          ...state,
-         isLoadingGetAllRoles: true,
+         isLoadingGetListRole: true,
       }),
-      getAllRolesSuccess: (state: ManageState, action: PayloadAction<any>) => ({
+      getListRoleSuccess: (state, action) => ({
          ...state,
+         isLoadingGetListRole: false,
          roles: action.payload.data.roles,
          paginationListRole: {
             currentPage: action.payload.data.page,
             perPage: action.payload.data.per_page,
-            totalPage: action.payload.data.total_page,
+            totalPage: action.payload.data.last_page,
             totalRecord: action.payload.data.total,
          },
-         isLoadingGetAllRoles: false,
       }),
-      getAllRolesFail: (state: ManageState) => ({
+      getListRoleFail: (state) => ({
          ...state,
-         isLoadingGetAllRoles: false,
+         isLoadingGetListRole: false,
       }),
-
-      // CREATE NEW ROLE
-      requestCreateNewRole: (state: ManageState) => ({
+      setVisibleModalCreateOrUpdateRole: (state, action) => ({
          ...state,
-         isLoadingCreateNewRole: true,
+         visibleModalCreateOrUpdateRole: action.payload,
       }),
-      createNewRoleSuccess: (state: ManageState) => ({
+      setVisibleModalDeleteRole: (state, action) => ({
          ...state,
-         isLoadingCreateNewRole: false,
+         visibleModalDeleteRole: action.payload,
       }),
-      createNewRoleFail: (state: ManageState) => ({
+      requestCreateOrUpdateRole: (state) => ({
          ...state,
-         isLoadingCreateNewRole: false,
+         isLoadingBtnCreateOrUpdateRole: true,
       }),
-
-      // DELETE ROLE
-      requestDeleteRole: (state: ManageState) => ({
+      createOrUpdateRoleSuccess: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateRole: false,
+         visibleModalCreateOrUpdateRole: false,
+      }),
+      createOrUpdateRoleFail: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateRole: false,
+      }),
+      requestDeleteRole: (state) => ({
          ...state,
          isLoadingDeleteRole: true,
       }),
-      deleteRoleSuccess: (state: ManageState) => ({
+      deleteRoleSuccess: (state) => ({
          ...state,
          isLoadingDeleteRole: false,
+         visibleModalDeleteRole: false,
       }),
-      deleteRoleFail: (state: ManageState) => ({
+      deleteRoleFail: (state) => ({
          ...state,
          isLoadingDeleteRole: false,
       }),
 
-      // UPDATE ROLE
-      requestUpdateRole: (state: ManageState) => ({
+      // TYPES
+      requestGetListType: (state) => ({
          ...state,
-         isLoadingUpdateRole: true,
+         isLoadingGetListType: true,
       }),
-      updateRoleSuccess: (state: ManageState) => ({
+      getListTypeSuccess: (state, action) => ({
          ...state,
-         isLoadingUpdateRole: false,
+         isLoadingGetListType: false,
+         types: action.payload.data.types,
+         paginationListType: {
+            currentPage: action.payload.data.page,
+            perPage: action.payload.data.per_page,
+            totalPage: action.payload.data.last_page,
+            totalRecord: action.payload.data.total,
+         },
       }),
-      updateRoleFail: (state: ManageState) => ({
+      getListTypeFail: (state) => ({
          ...state,
-         isLoadingUpdateRole: false,
+         isLoadingGetListType: false,
+      }),
+      setVisibleModalCreateOrUpdateType: (state, action) => ({
+         ...state,
+         visibleModalCreateOrUpdateType: action.payload,
+      }),
+      setVisibleModalDeleteType: (state, action) => ({
+         ...state,
+         visibleModalDeleteType: action.payload,
+      }),
+      requestCreateOrUpdateType: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateType: true,
+      }),
+      createOrUpdateTypeSuccess: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateType: false,
+         visibleModalCreateOrUpdateType: false,
+      }),
+      createOrUpdateTypeFail: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateType: false,
+      }),
+      requestDeleteType: (state) => ({
+         ...state,
+         isLoadingDeleteType: true,
+      }),
+      deleteTypeSuccess: (state) => ({
+         ...state,
+         isLoadingDeleteType: false,
+         visibleModalDeleteType: false,
+      }),
+      deleteTypeFail: (state) => ({
+         ...state,
+         isLoadingDeleteType: false,
       }),
 
-      // Similar patterns for other entities like Types, Industries, ExperienceLevels, etc.
-      // Each with their request/success/fail actions for CRUD operations
+      // INDUSTRIES
+      requestGetListIndustry: (state) => ({
+         ...state,
+         isLoadingGetListIndustry: true,
+      }),
+      getListIndustrySuccess: (state, action) => ({
+         ...state,
+         isLoadingGetListIndustry: false,
+         industries: action.payload.data.industries,
+         paginationListIndustry: {
+            currentPage: action.payload.data.page,
+            perPage: action.payload.data.per_page,
+            totalPage: action.payload.data.last_page,
+            totalRecord: action.payload.data.total,
+         },
+      }),
+      getListIndustryFail: (state) => ({
+         ...state,
+         isLoadingGetListIndustry: false,
+      }),
+      setVisibleModalCreateOrUpdateIndustry: (state, action) => ({
+         ...state,
+         visibleModalCreateOrUpdateIndustry: action.payload,
+      }),
+      setVisibleModalDeleteIndustry: (state, action) => ({
+         ...state,
+         visibleModalDeleteIndustry: action.payload,
+      }),
+      requestCreateOrUpdateIndustry: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateIndustry: true,
+      }),
+      createOrUpdateIndustrySuccess: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateIndustry: false,
+         visibleModalCreateOrUpdateIndustry: false,
+      }),
+      createOrUpdateIndustryFail: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateIndustry: false,
+      }),
+      requestDeleteIndustry: (state) => ({
+         ...state,
+         isLoadingDeleteIndustry: true,
+      }),
+      deleteIndustrySuccess: (state) => ({
+         ...state,
+         isLoadingDeleteIndustry: false,
+         visibleModalDeleteIndustry: false,
+      }),
+      deleteIndustryFail: (state) => ({
+         ...state,
+         isLoadingDeleteIndustry: false,
+      }),
+
+      // EXPERIENCE LEVELS
+      requestGetListExperienceLevel: (state) => ({
+         ...state,
+         isLoadingGetListExperienceLevel: true,
+      }),
+      getListExperienceLevelSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetListExperienceLevel: false,
+         experienceLevels: action.payload.data.experienceLevels,
+         paginationListExperienceLevel: {
+            currentPage: action.payload.data.page,
+            perPage: action.payload.data.per_page,
+            totalPage: action.payload.data.last_page,
+            totalRecord: action.payload.data.total,
+         },
+      }),
+      getListExperienceLevelFail: (state) => ({
+         ...state,
+         isLoadingGetListExperienceLevel: false,
+      }),
+      setVisibleModalCreateOrUpdateExperienceLevel: (state, action) => ({
+         ...state,
+         visibleModalCreateOrUpdateExperienceLevel: action.payload,
+      }),
+      setVisibleModalDeleteExperienceLevel: (state, action) => ({
+         ...state,
+         visibleModalDeleteExperienceLevel: action.payload,
+      }),
+      requestCreateOrUpdateExperienceLevel: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateExperienceLevel: true,
+      }),
+      createOrUpdateExperienceLevelSuccess: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateExperienceLevel: false,
+         visibleModalCreateOrUpdateExperienceLevel: false,
+      }),
+      createOrUpdateExperienceLevelFail: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateExperienceLevel: false,
+      }),
+      requestDeleteExperienceLevel: (state) => ({
+         ...state,
+         isLoadingDeleteExperienceLevel: true,
+      }),
+      deleteExperienceLevelSuccess: (state) => ({
+         ...state,
+         isLoadingDeleteExperienceLevel: false,
+         visibleModalDeleteExperienceLevel: false,
+      }),
+      deleteExperienceLevelFail: (state) => ({
+         ...state,
+         isLoadingDeleteExperienceLevel: false,
+      }),
+
+      // CATEGORIES
+      requestGetListCategory: (state) => ({
+         ...state,
+         isLoadingGetListCategory: true,
+      }),
+      getListCategorySuccess: (state, action) => ({
+         ...state,
+         isLoadingGetListCategory: false,
+         categories: action.payload.data.categories,
+         paginationListCategory: {
+            currentPage: action.payload.data.page,
+            perPage: action.payload.data.per_page,
+            totalPage: action.payload.data.last_page,
+            totalRecord: action.payload.data.total,
+         },
+      }),
+      getListCategoryFail: (state) => ({
+         ...state,
+         isLoadingGetListCategory: false,
+      }),
+      setVisibleModalCreateOrUpdateCategory: (state, action) => ({
+         ...state,
+         visibleModalCreateOrUpdateCategory: action.payload,
+      }),
+      setVisibleModalDeleteCategory: (state, action) => ({
+         ...state,
+         visibleModalDeleteCategory: action.payload,
+      }),
+      requestCreateOrUpdateCategory: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateCategory: true,
+      }),
+      createOrUpdateCategorySuccess: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateCategory: false,
+         visibleModalCreateOrUpdateCategory: false,
+      }),
+      createOrUpdateCategoryFail: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateCategory: false,
+      }),
+      requestDeleteCategory: (state) => ({
+         ...state,
+         isLoadingDeleteCategory: true,
+      }),
+      deleteCategorySuccess: (state) => ({
+         ...state,
+         isLoadingDeleteCategory: false,
+         visibleModalDeleteCategory: false,
+      }),
+      deleteCategoryFail: (state) => ({
+         ...state,
+         isLoadingDeleteCategory: false,
+      }),
+
+      // SKILLS
+      requestGetListSkill: (state) => ({
+         ...state,
+         isLoadingGetListSkill: true,
+      }),
+      getListSkillSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetListSkill: false,
+         skills: action.payload.data.skills,
+         paginationListSkill: {
+            currentPage: action.payload.data.page,
+            perPage: action.payload.data.per_page,
+            totalPage: action.payload.data.last_page,
+            totalRecord: action.payload.data.total,
+         },
+      }),
+      getListSkillFail: (state) => ({
+         ...state,
+         isLoadingGetListSkill: false,
+      }),
+      setVisibleModalCreateOrUpdateSkill: (state, action) => ({
+         ...state,
+         visibleModalCreateOrUpdateSkill: action.payload,
+      }),
+      setVisibleModalDeleteSkill: (state, action) => ({
+         ...state,
+         visibleModalDeleteSkill: action.payload,
+      }),
+      requestCreateOrUpdateSkill: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateSkill: true,
+      }),
+      createOrUpdateSkillSuccess: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateSkill: false,
+         visibleModalCreateOrUpdateSkill: false,
+      }),
+      createOrUpdateSkillFail: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateSkill: false,
+      }),
+      requestDeleteSkill: (state) => ({
+         ...state,
+         isLoadingDeleteSkill: true,
+      }),
+      deleteSkillSuccess: (state) => ({
+         ...state,
+         isLoadingDeleteSkill: false,
+         visibleModalDeleteSkill: false,
+      }),
+      deleteSkillFail: (state) => ({
+         ...state,
+         isLoadingDeleteSkill: false,
+      }),
+      requestGetSkillCategories: (state) => ({
+         ...state,
+         isLoadingGetSkillCategories: true,
+      }),
+      getSkillCategoriesSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetSkillCategories: false,
+         skillCategories: action.payload.data,
+      }),
+      getSkillCategoriesFail: (state) => ({
+         ...state,
+         isLoadingGetSkillCategories: false,
+      }),
+      // Organizations
+      requestGetListOrganization: (state) => ({
+         ...state,
+         isLoadingGetListOrganization: true,
+      }),
+      getListOrganizationSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetListOrganization: false,
+         organizations: action.payload.data.organizations,
+         paginationListOrganization: {
+            currentPage: action.payload.data.page,
+            perPage: action.payload.data.per_page,
+            totalPage: action.payload.data.last_page,
+            totalRecord: action.payload.data.total,
+         },
+      }),
+      getListOrganizationFail: (state) => ({
+         ...state,
+         isLoadingGetListOrganization: false,
+      }),
+      setVisibleModalCreateOrUpdateOrganization: (state, action) => ({
+         ...state,
+         visibleModalCreateOrUpdateOrganization: action.payload,
+      }),
+      setVisibleModalDeleteOrganization: (state, action) => ({
+         ...state,
+         visibleModalDeleteOrganization: action.payload,
+      }),
+      requestCreateOrUpdateOrganization: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateOrganization: true,
+      }),
+      createOrUpdateOrganizationSuccess: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateOrganization: false,
+         visibleModalCreateOrUpdateOrganization: false,
+      }),
+      createOrUpdateOrganizationFail: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateOrganization: false,
+      }),
+      requestDeleteOrganization: (state) => ({
+         ...state,
+         isLoadingDeteleOrganization: true,
+      }),
+      deleteOrganizationSuccess: (state) => ({
+         ...state,
+         isLoadingDeteleOrganization: false,
+         visibleModalDeleteOrganization: false,
+      }),
+      deleteOrganizationFail: (state) => ({
+         ...state,
+         isLoadingDeteleOrganization: false,
+      }),
+      getManageListArticle: (state) => ({
+         ...state,
+         isLoadingGetListArticle: true,
+      }),
+      getManageListArticleSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetListArticle: false,
+         articles: action.payload.data.articleList,
+         paginationListArticle: {
+            currentPage: action.payload.data.pagination.page,
+            perPage: action.payload.data.pagination.limit,
+            totalPage: action.payload.data.pagination.last_page,
+            totalRecord: action.payload.data.pagination.total,
+         },
+      }),
+      getManageListArticleFail: (state) => ({
+         ...state,
+         isLoadingGetListArticle: false,
+         articles: [],
+      }),
+      setVisibleModalDeleteArticle: (state, action) => ({
+         ...state,
+         visibleModalDeleteArticle: action.payload,
+      }),
    },
 })
 
 export const {
-   // GET TOTAL USERS
-   requestGetTotalUsers,
-   getTotalUsersSuccess,
-   getTotalUsersFail,
-   // GET ALL ROLES
-   requestGetAllRoles,
-   getAllRolesSuccess,
-   getAllRolesFail,
-   // CREATE NEW ROLE
-   requestCreateNewRole,
-   createNewRoleSuccess,
-   createNewRoleFail,
-   // DELETE ROLE
+   // USERS
+   startRequestGetTotalUsers,
+   startRequestGetTotalUsersSuccess,
+   startRequestGetTotalUsersFail,
+   // ROLES
+   requestGetListRole,
+   getListRoleSuccess,
+   getListRoleFail,
+   setVisibleModalCreateOrUpdateRole,
+   setVisibleModalDeleteRole,
+   requestCreateOrUpdateRole,
+   createOrUpdateRoleSuccess,
+   createOrUpdateRoleFail,
    requestDeleteRole,
    deleteRoleSuccess,
    deleteRoleFail,
-   // UPDATE ROLE
-   requestUpdateRole,
-   updateRoleSuccess,
-   updateRoleFail,
-   // Add exports for other action creators as needed
+   // TYPES
+   requestGetListType,
+   getListTypeSuccess,
+   getListTypeFail,
+   setVisibleModalCreateOrUpdateType,
+   setVisibleModalDeleteType,
+   requestCreateOrUpdateType,
+   createOrUpdateTypeSuccess,
+   createOrUpdateTypeFail,
+   requestDeleteType,
+   deleteTypeSuccess,
+   deleteTypeFail,
+   // INDUSTRIES
+   requestGetListIndustry,
+   getListIndustrySuccess,
+   getListIndustryFail,
+   setVisibleModalCreateOrUpdateIndustry,
+   setVisibleModalDeleteIndustry,
+   requestCreateOrUpdateIndustry,
+   createOrUpdateIndustrySuccess,
+   createOrUpdateIndustryFail,
+   requestDeleteIndustry,
+   deleteIndustrySuccess,
+   deleteIndustryFail,
+   // EXPERIENCE LEVELS
+   requestGetListExperienceLevel,
+   getListExperienceLevelSuccess,
+   getListExperienceLevelFail,
+   setVisibleModalCreateOrUpdateExperienceLevel,
+   setVisibleModalDeleteExperienceLevel,
+   requestCreateOrUpdateExperienceLevel,
+   createOrUpdateExperienceLevelSuccess,
+   createOrUpdateExperienceLevelFail,
+   requestDeleteExperienceLevel,
+   deleteExperienceLevelSuccess,
+   deleteExperienceLevelFail,
+   // CATEGORIES
+   requestGetListCategory,
+   getListCategorySuccess,
+   getListCategoryFail,
+   setVisibleModalCreateOrUpdateCategory,
+   setVisibleModalDeleteCategory,
+   requestCreateOrUpdateCategory,
+   createOrUpdateCategorySuccess,
+   createOrUpdateCategoryFail,
+   requestDeleteCategory,
+   deleteCategorySuccess,
+   deleteCategoryFail,
+   // SKILLS
+   requestGetListSkill,
+   getListSkillSuccess,
+   getListSkillFail,
+   setVisibleModalCreateOrUpdateSkill,
+   setVisibleModalDeleteSkill,
+   requestCreateOrUpdateSkill,
+   createOrUpdateSkillSuccess,
+   createOrUpdateSkillFail,
+   requestDeleteSkill,
+   deleteSkillSuccess,
+   deleteSkillFail,
+   requestGetSkillCategories,
+   getSkillCategoriesSuccess,
+   getSkillCategoriesFail,
+   // Organizations
+   requestGetListOrganization,
+   getListOrganizationSuccess,
+   getListOrganizationFail,
+   setVisibleModalCreateOrUpdateOrganization,
+   setVisibleModalDeleteOrganization,
+   requestCreateOrUpdateOrganization,
+   createOrUpdateOrganizationSuccess,
+   createOrUpdateOrganizationFail,
+   requestDeleteOrganization,
+   deleteOrganizationSuccess,
+   deleteOrganizationFail,
+   //Articles
+   getManageListArticle,
+   getManageListArticleSuccess,
+   getManageListArticleFail,
+   setVisibleModalDeleteArticle,
 } = manageSlice.actions
 
 export default manageSlice.reducer

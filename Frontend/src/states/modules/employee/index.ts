@@ -29,90 +29,78 @@ const employeeSlice = createSlice({
    name: 'employee',
    initialState,
    reducers: {
-      setErrorCreateOrUpdateEmployee: (state: EmployeeState, action: PayloadAction<EmployeeErrorState>) => ({
+      setErrorCreateOrUpdateEmployee: (state, action) => ({
          ...state,
          errorCreateOrUpdateEmployee: action.payload,
       }),
-      setVisibleModalCreateOrUpdateEmployee: (state: EmployeeState, action: PayloadAction<boolean>) => ({
+      setVisibleModalCreateOrUpdateEmployee: (state, action) => ({
          ...state,
          visibleModalCreateOrUpdateEmployee: action.payload,
-         errorCreateOrUpdateEmployee: {
-            name: '',
-            email: '',
-            phone: '',
-            password: '',
-            confirmPassword: '',
-         },
       }),
-      requestGetListUser: (state: EmployeeState) => ({
+      setVisibleModalDeleteEmployee: (state, action) => ({
          ...state,
+         visibleModalDeleteEmployee: action.payload,
+      }),
+      getList: (state) => ({
+         ...state,
+         users: [],
          isLoadingGetListUser: true,
       }),
-      getListUserSuccess: (state: EmployeeState, action: PayloadAction<any>) => ({
+      getListSuccess: (state, action) => ({
          ...state,
+         isLoadingGetListUser: false,
          users: action.payload.data.users,
          paginationListUser: {
             currentPage: action.payload.data.page,
             perPage: action.payload.data.per_page,
-            totalPage: action.payload.data.total_page,
+            totalPage: action.payload.data.last_page,
             totalRecord: action.payload.data.total,
          },
+      }),
+      getListFail: (state) => ({
+         ...state,
+         users: [],
          isLoadingGetListUser: false,
       }),
-      getListUserFail: (state: EmployeeState) => ({
-         ...state,
-         isLoadingGetListUser: false,
-      }),
-      requestGetAllRoleForEmployee: (state: EmployeeState) => ({
-         ...state,
-      }),
-      getAllRoleForEmployeeSuccess: (state: EmployeeState, action: PayloadAction<any>) => ({
+      getAllRole: (state) => ({ ...state }),
+      getAllRoleSuccess: (state, action) => ({
          ...state,
          allRole: action.payload.data,
       }),
-      getAllRoleForEmployeeFail: (state: EmployeeState) => ({
-         ...state,
-      }),
-      requestCreateEmployee: (state: EmployeeState) => ({
+      getAllRoleFail: (state) => ({ ...state }),
+      createEmployee: (state) => ({
          ...state,
          isLoadingBtnCreateOrUpdateEmployee: true,
       }),
-      createEmployeeSuccess: (state: EmployeeState) => ({
-         ...state,
-         isLoadingBtnCreateOrUpdateEmployee: false,
-         visibleModalCreateOrUpdateEmployee: false,
-      }),
-      createEmployeeFail: (state: EmployeeState) => ({
+      createEmployeeSuccess: (state) => ({
          ...state,
          isLoadingBtnCreateOrUpdateEmployee: false,
       }),
-      requestUpdateEmployee: (state: EmployeeState) => ({
+      createEmployeeFail: (state) => ({
+         ...state,
+         isLoadingBtnCreateOrUpdateEmployee: false,
+      }),
+      updateEmployee: (state) => ({
          ...state,
          isLoadingBtnCreateOrUpdateEmployee: true,
       }),
-      updateEmployeeSuccess: (state: EmployeeState) => ({
-         ...state,
-         isLoadingBtnCreateOrUpdateEmployee: false,
-         visibleModalCreateOrUpdateEmployee: false,
-      }),
-      updateEmployeeFail: (state: EmployeeState) => ({
+      updateEmployeeSuccess: (state) => ({
          ...state,
          isLoadingBtnCreateOrUpdateEmployee: false,
       }),
-      setVisibleModalDeleteEmployee: (state: EmployeeState, action: PayloadAction<boolean>) => ({
+      updateEmployeeFail: (state) => ({
          ...state,
-         visibleModalDeleteEmployee: action.payload,
+         isLoadingBtnCreateOrUpdateEmployee: false,
       }),
-      requestDeleteEmployee: (state: EmployeeState) => ({
+      deleteEmployee: (state) => ({
          ...state,
          isLoadingBtnDeleteEmployee: true,
       }),
-      deleteEmployeeSuccess: (state: EmployeeState) => ({
+      deleteEmployeeSuccess: (state) => ({
          ...state,
-         visibleModalDeleteEmployee: false,
          isLoadingBtnDeleteEmployee: false,
       }),
-      deleteEmployeeFail: (state: EmployeeState) => ({
+      deleteEmployeeFail: (state) => ({
          ...state,
          isLoadingBtnDeleteEmployee: false,
       }),
@@ -121,21 +109,21 @@ const employeeSlice = createSlice({
 
 export const {
    setErrorCreateOrUpdateEmployee,
+   setVisibleModalDeleteEmployee,
    setVisibleModalCreateOrUpdateEmployee,
-   requestGetListUser,
-   getListUserSuccess,
-   getListUserFail,
-   requestGetAllRoleForEmployee,
-   getAllRoleForEmployeeSuccess,
-   getAllRoleForEmployeeFail,
-   requestCreateEmployee,
+   getList,
+   getListSuccess,
+   getListFail,
+   getAllRole,
+   getAllRoleSuccess,
+   getAllRoleFail,
+   createEmployee,
    createEmployeeSuccess,
    createEmployeeFail,
-   requestUpdateEmployee,
+   updateEmployee,
    updateEmployeeSuccess,
    updateEmployeeFail,
-   setVisibleModalDeleteEmployee,
-   requestDeleteEmployee,
+   deleteEmployee,
    deleteEmployeeSuccess,
    deleteEmployeeFail,
 } = employeeSlice.actions

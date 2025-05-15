@@ -26,46 +26,43 @@ const notificationSlice = createSlice({
    name: 'notification',
    initialState,
    reducers: {
-      startRequestReadRoot: (state: NotificationState) => ({
+      startRequestReadRoot: (state) => ({
          ...state,
       }),
-      startRequestReadRootSuccess: (state: NotificationState, action: PayloadAction<any>) => ({
+      startRequestReadRootSuccess: (state, action) => ({
          ...state,
          notifications: action.payload.data.notifications,
          loadingGetNotifications: false,
          paginationListNotification: {
             currentPage: action.payload.data.page,
             perPage: action.payload.data.per_page,
-            totalPage: action.payload.data.total_page,
+            totalPage: action.payload.data.last_page,
             totalRecord: action.payload.data.total,
          },
       }),
-      startRequestReadRootFail: (state: NotificationState) => ({
+      startRequestReadRootFail: (state) => ({
          ...state,
          loadingGetNotifications: false,
       }),
-
-      // =========== GET NOTIFICATIONS =========== //
-      requestGetNotifications: (state: NotificationState) => ({
+      // =========== Get Notification =========== //
+      requestGetNotifications: (state) => ({
          ...state,
-         loadingGetNotifications: true,
+         isLoadingGetNotifications: true,
       }),
-      getNotificationsSuccess: (state: NotificationState, action: PayloadAction<any>) => ({
+      getNotificationsSuccess: (state, action) => ({
          ...state,
          notifications: action.payload.data,
          isLoadingGetNotifications: false,
       }),
-      getNotificationsFail: (state: NotificationState) => ({
+      getNotificationsFail: (state) => ({
          ...state,
-         loadingGetNotifications: false,
+         isLoadingGetNotifications: false,
       }),
-
-      // =========== REPLY NOTIFICATION =========== //
-      requestReplyNotification: (state: NotificationState) => ({
+      requestReplyNotification: (state) => ({
          ...state,
          isLoadingReplyNotification: true,
       }),
-      replyNotificationSuccess: (state: NotificationState, action: PayloadAction<any>) => {
+      replyNotificationSuccess: (state, action) => {
          const newNotification = action.payload.data
          toaster.create({
             title: `Reply notification successfully.`,
@@ -85,17 +82,27 @@ const notificationSlice = createSlice({
             isLoadingReplyNotification: false,
          }
       },
-      replyNotificationFail: (state: NotificationState) => ({
+      replyNotificationFail: (state) => {
+         toaster.create({
+            title: `Reply notification failed.`,
+            type: 'error',
+         })
+         return {
+            ...state,
+            isLoadingReplyNotification: false,
+         }
+      },
+      // =========== Set Notification =========== //
+      setNotifications: (state, action) => ({
          ...state,
-         isLoadingReplyNotification: false,
+         notifications: [action.payload, ...state.notifications],
       }),
-
-      // =========== MARK AS READ =========== //
-      requestMarkAsRead: (state: NotificationState) => ({
+      // ========== Mask as read ========== //
+      loadingMarkAsRead: (state) => ({
          ...state,
          loadingMarkAsRead: true,
       }),
-      markAsReadSuccess: (state: NotificationState, action: PayloadAction<any>) => {
+      markAsReadSuccess: (state, action) => {
          const newNotification = action.payload.data
          return {
             ...state,
@@ -111,10 +118,12 @@ const notificationSlice = createSlice({
             loadingMarkAsRead: false,
          }
       },
-      markAsReadFail: (state: NotificationState) => ({
-         ...state,
-         loadingMarkAsRead: false,
-      }),
+      markAsReadFail: (state) => {
+         return {
+            ...state,
+            loadingMarkAsRead: false,
+         }
+      },
    },
 })
 
@@ -122,16 +131,18 @@ export const {
    startRequestReadRoot,
    startRequestReadRootSuccess,
    startRequestReadRootFail,
-   // =========== GET NOTIFICATIONS =========== //
+   // =========== Get Notification =========== //
    requestGetNotifications,
    getNotificationsSuccess,
    getNotificationsFail,
-   // =========== REPLY NOTIFICATION =========== //
+   // =========== Reply Notification =========== //
    requestReplyNotification,
    replyNotificationSuccess,
    replyNotificationFail,
-   // =========== MARK AS READ =========== //
-   requestMarkAsRead,
+   // ========== Set Notification =========== //
+   setNotifications,
+   // ========== Mask as read ========== //
+   loadingMarkAsRead,
    markAsReadSuccess,
    markAsReadFail,
 } = notificationSlice.actions

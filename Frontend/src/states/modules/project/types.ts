@@ -16,7 +16,6 @@ export interface AdditionalInfo {
 }
 
 export interface ProjectState {
-   title: string
    // ========== My projects ========== //
    myProjects: any[]
    myProjectDetails: any
