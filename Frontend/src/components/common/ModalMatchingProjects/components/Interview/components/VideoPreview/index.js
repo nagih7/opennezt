@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const VideoPreview = ({ videoRef }) => {
     return (
@@ -18,6 +19,10 @@ const VideoPreview = ({ videoRef }) => {
             </div>
         </div>
     )
+}
+
+VideoPreview.propTypes = {
+    videoRef: PropTypes.object.isRequired,
 }
 
 export default VideoPreview

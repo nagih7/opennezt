@@ -12,7 +12,7 @@ import { IconlyLogout, IconlySetting, IconlyUser } from 'components/UI/Iconly'
 import ProfileCardSidebar from './components/ProfileCardSidebar'
 import appRouteMap from 'router/appRouteMap'
 
-SideBar.prototype = {
+SideBar.propTypes = {
     isShowSideBar: PropTypes.bool.isRequired,
     handleToggleIsShowSideBar: PropTypes.func,
 }

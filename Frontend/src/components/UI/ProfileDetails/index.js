@@ -6,7 +6,6 @@ import { RiArrowRightSFill } from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom'
 
 const ProfileDetails = ({ profile }) => {
-    console.log('profile', profile)
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A'
         const date = new Date(dateString)
@@ -93,16 +92,16 @@ const ProfileDetails = ({ profile }) => {
                                 <div className="flex flex-col gap-1 ">
                                     <span className="text-base font-semibold">{education.school || 'N/A'}</span>
 
-                                    <span className="font-medium text-gray-600 text-sm">
+                                    <span className="text-sm font-medium text-gray-600">
                                         {education.degree || 'N/A'} - {education.field_of_study || 'N/A'}
                                     </span>
-                                    <span className="font-medium text-gray-600 text-sm">
+                                    <span className="text-sm font-medium text-gray-600">
                                         Grade: {education.grade || 'N/A'}
                                     </span>
-                                    <span className="font-medium text-gray-600 text-sm">
+                                    <span className="text-sm font-medium text-gray-600">
                                         {formatDate(education.start_date)} - {formatDate(education.end_date)}
                                     </span>
-                                    <span className="font-medium text-gray-600 text-sm">
+                                    <span className="text-sm font-medium text-gray-600">
                                         {education.activities || 'N/A'}
                                     </span>
                                 </div>

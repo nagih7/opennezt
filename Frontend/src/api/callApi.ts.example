@@ -1,0 +1,89 @@
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { isFunction } from 'lodash';
+import { getAuthToken } from '../utils/localStorage';
+import { AnyAction, Dispatch } from 'redux';
+
+interface CallApiProps {
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch';
+  apiPath: string;
+  actionTypes: [() => AnyAction, (data: any) => AnyAction, (error: any) => AnyAction];
+  variables?: any;
+  dispatch: Dispatch;
+  getState: () => any;
+  headers?: Record<string, string>;
+}
+
+export default async function callApi({
+  method,
+  apiPath,
+  actionTypes: [requestType, successType, failureType],
+  variables,
+  dispatch,
+  getState,
+  headers,
+}: CallApiProps): Promise<any> {
+  if (!isFunction(dispatch) || !isFunction(getState)) {
+    throw new Error('callGraphQLApi requires dispatch and getState functions');
+  }
+
+  const baseUrlApi = process.env.REACT_APP_API_URL;
+  const token = getAuthToken();
+  const header: Record<string, string> = {
+    'Content-Type': 'application/json',
+    Authorization: token ? `Bearer ${token}` : '',
+  };
+
+  dispatch(requestType());
+
+  return axios({
+    baseURL: baseUrlApi,
+    headers: headers ? { ...headers, ...header } : header,
+    method: method,
+    url: apiPath,
+    data: variables,
+    params: method === 'get' ? variables : undefined,
+    withCredentials: true,
+  } as AxiosRequestConfig)
+    .then(function (response: AxiosResponse) {
+      dispatch(successType(response.data));
+      return response.data;
+    })
+    .catch((error) => {
+      let response = error.response ? error.response : error;
+      dispatch(failureType(error.response));
+      return response;
+    });
+}
+
+// =============== CALL API DON'T USE STATE ========== //
+interface CallApiSimpleProps {
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch';
+  apiPath: string;
+  variables?: any;
+  headers?: Record<string, string>;
+}
+
+export async function callApiSimple({ 
+  method, 
+  apiPath, 
+  variables, 
+  headers 
+}: CallApiSimpleProps): Promise<any> {
+  const baseUrlApi = process.env.REACT_APP_API_URL;
+  const token = getAuthToken();
+  const header: Record<string, string> = {
+    'Content-Type': 'application/json',
+    Authorization: token ? `Bearer ${token}` : '',
+  };
+  
+  // Complete the rest of the function based on the original JS implementation
+  return axios({
+    baseURL: baseUrlApi,
+    headers: headers ? { ...headers, ...header } : header,
+    method: method,
+    url: apiPath,
+    data: variables,
+    params: method === 'get' ? variables : undefined,
+    withCredentials: true,
+  } as AxiosRequestConfig);
+}
