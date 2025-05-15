@@ -29,199 +29,501 @@ const initialState: ProfileState = {
    // ========== Certification ========== //
    isOpenModalCreateOrUpdateCertification: false,
    isLoadingCreateOrUpdateCertification: false,
-   //  ========= Skill ========== //
+   // ========== Skills ========== //
    isLoadingUpdateSkills: false,
-   // Initialize other properties as needed
-   currentEducation: null,
-   currentCertification: null,
-   currentExperience: null,
-   isOpenModalCreateOrUpdateExperience: false,
-   isLoadingCreateOrUpdateExperience: false,
+   // ========== Organization ========== //
+   organizationFramework: createListCollection({
+      items: [],
+   }),
+   isLoadingGetAllOrganizationFramework: false,
+   // ========== Additional Info ========== //
+   isOpenModalCreateOrUpdateProfileAdditionalInfo: false,
+   isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+   // ========= FRIENDS ========= //
+   myFriends: [],
+   isLoadingGetMyFriends: false,
 }
 
 const profileSlice = createSlice({
    name: 'profile',
    initialState,
    reducers: {
-      // ========== UPDATE INFO USER ========== //
-      requestUpdateInfoUser: (state: ProfileState) => ({
+      setErrorInfoUser: (state, action) => ({
+         ...state,
+         errorInfoUser: action.payload,
+      }),
+      setErrorChangePassword: (state, action) => ({
+         ...state,
+         errorChangePassword: action.payload,
+      }),
+      updateInfoUser: (state) => ({
          ...state,
          loadingBtnUpdateInfoUser: true,
       }),
-      updateInfoUserSuccess: (state: ProfileState) => ({
-         ...state,
-         loadingBtnUpdateInfoUser: false,
-         errorInfoUser: {
-            name: '',
-            email: '',
-            phone: '',
-         },
-      }),
-      updateInfoUserFailed: (state: ProfileState, action: PayloadAction<any>) => ({
-         ...state,
-         loadingBtnUpdateInfoUser: false,
-         errorInfoUser: action.payload,
-      }),
-      // ========== CHANGE PASSWORD ========== //
-      requestChangePassword: (state: ProfileState) => ({
+      updateInfoUserSuccess: (state, action) => {
+         toaster.create({
+            title: `Update info user successfully.`,
+            type: 'success',
+         })
+         return {
+            ...state,
+            loadingBtnUpdateInfoUser: false,
+         }
+      },
+      updateInfoUserFail: (state, action) => {
+         toaster.create({
+            title: `${Object.values(action.payload.data.detail)[0]}`,
+            type: 'error',
+         })
+         return {
+            ...state,
+            loadingBtnUpdateInfoUser: false,
+         }
+      },
+      changePassword: (state) => ({
          ...state,
          loadingBtnChangePassword: true,
       }),
-      changePasswordSuccess: (state: ProfileState) => ({
+      changePasswordSuccess: (state) => ({
          ...state,
          loadingBtnChangePassword: false,
-         errorChangePassword: {
-            currentPassword: '',
-            password: '',
-            confirmPassword: '',
-         },
       }),
-      changePasswordFailed: (state: ProfileState, action: PayloadAction<any>) => ({
+      changePasswordFail: (state) => ({
          ...state,
          loadingBtnChangePassword: false,
-         errorChangePassword: action.payload,
       }),
-      // ========== CHANGE AVATAR ========== //
-      requestChangeAvatar: (state: ProfileState) => ({
+      changeAvatarUser: (state) => ({
          ...state,
          isLoadingBtnChangeAvatar: true,
       }),
-      changeAvatarSuccess: (state: ProfileState, action: PayloadAction<any>) => ({
+      changeAvatarUserSuccess: (state) => {
+         return {
+            ...state,
+            isLoadingBtnChangeAvatar: false,
+            isOpenAvatarPreview: false,
+         }
+      },
+      changeAvatarUserFail: (state) => ({
          ...state,
          isLoadingBtnChangeAvatar: false,
-         profile: {
-            ...state.profile,
-            avatar: action.payload,
-         },
-         isOpenAvatarPreview: false,
       }),
-      changeAvatarFailed: (state: ProfileState) => ({
+      changeBackgroundUser: (state) => ({
          ...state,
-         isLoadingBtnChangeAvatar: false,
       }),
-      setOpenAvatarPreview: (state: ProfileState, action: PayloadAction<boolean>) => ({
+      changeBackgroundUserSuccess: (state) => ({
          ...state,
-         isOpenAvatarPreview: action.payload,
       }),
-      // ========== PROFILE ========== //
-      requestGetProfile: (state: ProfileState) => ({
+      changeBackgroundUserFail: (state) => ({
+         ...state,
+      }),
+
+      // ========== Profile ========== //
+      requestGetProfile: (state) => ({
          ...state,
          isLoadingGetProfile: true,
       }),
-      getProfileSuccess: (state: ProfileState, action: PayloadAction<any>) => ({
-         ...state,
-         profile: action.payload.data,
-         isLoadingGetProfile: false,
-      }),
-      getProfileFailed: (state: ProfileState) => ({
-         ...state,
-         isLoadingGetProfile: false,
-      }),
-      updateProfileRequest: (state: ProfileState) => ({
+      requestGetProfileSuccess: (state, action) => {
+         return {
+            ...state,
+            profile: action.payload.data,
+            isLoadingGetProfile: false,
+         }
+      },
+      requestGetProfileFail: (state) => {
+         return {
+            ...state,
+            isLoadingGetProfile: false,
+         }
+      },
+      requestUpdateProfessionalProfile: (state) => ({
          ...state,
          isLoadingUpdateProfile: true,
       }),
-      updateProfileSuccess: (state: ProfileState, action: PayloadAction<any>) => ({
+      UpdateProfessionalProfileSuccess: (state) => {
+         toaster.create({
+            title: `Update professional profile successfully.`,
+            type: 'success',
+         })
+         return {
+            ...state,
+            isLoadingUpdateProfile: false,
+         }
+      },
+      UpdateProfessionalProfileFail: (state) => {
+         toaster.create({
+            title: `Update professional profile fail.`,
+            type: 'error',
+         })
+         return {
+            ...state,
+            isLoadingUpdateProfile: false,
+         }
+      },
+      setIsOpenAvatarPreview: (state, action) => ({
          ...state,
-         profile: action.payload.data,
-         isLoadingUpdateProfile: false,
+         isOpenAvatarPreview: action.payload,
       }),
-      updateProfileFailed: (state: ProfileState) => ({
-         ...state,
-         isLoadingUpdateProfile: false,
-      }),
-      // ========== EDUCATION ========== //
-      setOpenModalCreateOrUpdateEducation: (state: ProfileState, action: PayloadAction<boolean>) => ({
-         ...state,
-         isOpenModalCreateOrUpdateEducation: action.payload,
-      }),
-      setCurrentEducation: (state: ProfileState, action: PayloadAction<any>) => ({
-         ...state,
-         currentEducation: action.payload,
-         isOpenModalCreateOrUpdateEducation: true,
-      }),
-      requestCreateOrUpdateEducation: (state: ProfileState) => ({
+
+      // ========== Education ========== //
+      requestCreateOrUpdateEducation: (state) => ({
          ...state,
          isLoadingCreateOrUpdateEducation: true,
       }),
-      createOrUpdateEducationSuccess: (state: ProfileState, action: PayloadAction<any>) => ({
+      createEducationSuccess: (state, action) => {
+         toaster.create({
+            title: `${action.payload.message}`,
+            type: 'success',
+         })
+         return {
+            ...state,
+            profile: {
+               ...state.profile,
+               educations: [...state.profile.educations, action.payload.data],
+            },
+            isLoadingCreateOrUpdateEducation: false,
+            isOpenModalCreateOrUpdateEducation: false,
+         }
+      },
+      updateEducationSuccess: (state, action) => {
+         toaster.create({
+            title: `${action.payload.message}`,
+            type: 'success',
+         })
+         return {
+            ...state,
+            profile: {
+               ...state.profile,
+               educations: state.profile.educations.map((item: any) =>
+                  item._id === action.payload.data._id ? action.payload.data : item
+               ),
+            },
+            isLoadingCreateOrUpdateEducation: false,
+            isOpenModalCreateOrUpdateEducation: false,
+         }
+      },
+      createOrUpdateEducationFail: (state, action) => {
+         toaster.create({
+            title: `${Object.values(action.payload.data.detail)[0]}`,
+            type: 'error',
+         })
+         return {
+            ...state,
+            isLoadingCreateOrUpdateEducation: false,
+         }
+      },
+      requestDeleleEducation: (state) => ({
          ...state,
-         profile: {
-            ...state.profile,
-            educations: action.payload.data,
-         },
-         isLoadingCreateOrUpdateEducation: false,
-         isOpenModalCreateOrUpdateEducation: false,
-         currentEducation: null,
+         isLoadingCreateOrUpdateEducation: true,
       }),
-      createOrUpdateEducationFailed: (state: ProfileState) => ({
+      deleteEducationSuccess: (state, action) => {
+         toaster.create({
+            title: `${action.payload.message}`,
+            type: 'success',
+         })
+         return {
+            ...state,
+            profile: {
+               ...state.profile,
+               educations: state.profile.educations.filter((item: any) => item._id !== action.payload.data),
+            },
+            isLoadingCreateOrUpdateEducation: false,
+         }
+      },
+      deleteEducationFail: (state, action) => {
+         toaster.create({
+            title: `${Object.values(action.payload.data.detail)[0]}`,
+            type: 'error',
+         })
+         return {
+            ...state,
+            isLoadingCreateOrUpdateEducation: false,
+         }
+      },
+      setIsOpenModalCreateOrUpdateEducation: (state, action) => ({
          ...state,
-         isLoadingCreateOrUpdateEducation: false,
+         isOpenModalCreateOrUpdateEducation: action.payload,
       }),
-      // ========== CERTIFICATION ========== //
-      setOpenModalCreateOrUpdateCertification: (state: ProfileState, action: PayloadAction<boolean>) => ({
-         ...state,
-         isOpenModalCreateOrUpdateCertification: action.payload,
-      }),
-      setCurrentCertification: (state: ProfileState, action: PayloadAction<any>) => ({
-         ...state,
-         currentCertification: action.payload,
-         isOpenModalCreateOrUpdateCertification: true,
-      }),
-      requestCreateOrUpdateCertification: (state: ProfileState) => ({
+
+      // ========== Certification ========== //
+      requestCreateOrUpdateCertification: (state) => ({
          ...state,
          isLoadingCreateOrUpdateCertification: true,
       }),
-      createOrUpdateCertificationSuccess: (state: ProfileState, action: PayloadAction<any>) => ({
+      createCertificationSuccess: (state, action) => {
+         toaster.create({
+            title: `${action.payload.message}`,
+            type: 'success',
+         })
+         return {
+            ...state,
+            profile: {
+               ...state.profile,
+               certifications: [...state.profile.certifications, action.payload.data],
+            },
+            isLoadingCreateOrUpdateCertification: false,
+            isOpenModalCreateOrUpdateCertification: false,
+         }
+      },
+      updateCertificationSuccess: (state, action) => {
+         toaster.create({
+            title: `${action.payload.message}`,
+            type: 'success',
+         })
+         return {
+            ...state,
+            profile: {
+               ...state.profile,
+               certifications: state.profile.certifications.map((item: any) =>
+                  item._id === action.payload.data._id ? action.payload.data : item
+               ),
+            },
+            isLoadingCreateOrUpdateCertification: false,
+            isOpenModalCreateOrUpdateCertification: false,
+         }
+      },
+      createOrUpdateCertificationFail: (state, action) => {
+         toaster.create({
+            title: `${Object.values(action.payload.data.detail)[0]}`,
+            type: 'error',
+         })
+         return {
+            ...state,
+            isLoadingCreateOrUpdateCertification: false,
+         }
+      },
+      setIsOpenModalCreateOrUpdateCertification: (state, action) => ({
          ...state,
-         profile: {
-            ...state.profile,
-            certifications: action.payload.data,
-         },
-         isLoadingCreateOrUpdateCertification: false,
-         isOpenModalCreateOrUpdateCertification: false,
-         currentCertification: null,
+         isOpenModalCreateOrUpdateCertification: action.payload,
       }),
-      createOrUpdateCertificationFailed: (state: ProfileState) => ({
+      requestDeleleCertification: (state) => ({
          ...state,
-         isLoadingCreateOrUpdateCertification: false,
+         isLoadingCreateOrUpdateCertification: true,
+      }),
+      deleteCertificationSuccess: (state, action) => {
+         toaster.create({
+            title: `${action.payload.message}`,
+            type: 'success',
+         })
+         return {
+            ...state,
+            profile: {
+               ...state.profile,
+               certifications: state.profile.certifications.filter((item: any) => item._id !== action.payload.data),
+            },
+            isLoadingCreateOrUpdateCertification: false,
+         }
+      },
+      deleteCertificationFail: (state, action) => {
+         toaster.create({
+            title: `${Object.values(action.payload.data.detail)[0]}`,
+            type: 'error',
+         })
+         return {
+            ...state,
+            isLoadingCreateOrUpdateCertification: false,
+         }
+      },
+      // ========== Skills ========== //
+      requestUpdateSkills: (state) => ({
+         ...state,
+         isLoadingUpdateSkills: true,
+      }),
+      updateSkillsSuccess: (state, action) => {
+         toaster.create({
+            title: `${action.payload.message}`,
+            type: 'success',
+         })
+         return {
+            ...state,
+            isLoadingUpdateSkills: false,
+         }
+      },
+      updateSkillsFail: (state) => ({
+         ...state,
+         isLoadingUpdateSkills: false,
+      }),
+
+      // ========== Organization ========== //
+      requestgetOrganizationFramework: (state) => ({
+         ...state,
+         isLoadingGetAllOrganizationFramework: true,
+      }),
+      requestgetOrganizationFrameworkSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetAllOrganizationFramework: false,
+         organizationFramework: createListCollection({
+            items: action.payload.data.map((organization: any) => ({
+               label: organization.name,
+               value: organization._id,
+            })),
+         }),
+      }),
+      requestgetOrganizationFrameworkFail: (state) => ({
+         ...state,
+         isLoadingGetAllOrganizationFramework: false,
+      }),
+      // ========== Additional Info ========== //
+      requestCreateOrUpdateProfileAdditionalInfo: (state) => ({
+         ...state,
+         isLoadingCreateOrUpdateProfileAdditionalInfo: true,
+      }),
+      createProfileAdditionalInfoSuccess: (state, action) => {
+         toaster.create({
+            title: `${action.payload.message}`,
+            type: 'success',
+         })
+         return {
+            ...state,
+            profile: {
+               ...state.profile,
+               additional_infos: [...state.profile.additional_infos, action.payload.data],
+            },
+            isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+            isOpenModalCreateOrUpdateProfileAdditionalInfo: false,
+         }
+      },
+      updateProfileAdditionalInfoSuccess: (state, action) => {
+         toaster.create({
+            title: `${action.payload.message}`,
+            type: 'success',
+         })
+         return {
+            ...state,
+            profile: {
+               ...state.profile,
+               additional_infos: state.profile.additional_infos.map((item: any) =>
+                  item._id === action.payload.data._id ? action.payload.data : item
+               ),
+            },
+            isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+            isOpenModalCreateOrUpdateProfileAdditionalInfo: false,
+         }
+      },
+      createOrUpdateProfileAdditionalInfoFail: (state, action) => {
+         toaster.create({
+            title: `${Object.values(action.payload.data.detail)[0]}`,
+            type: 'error',
+         })
+         return {
+            ...state,
+            isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+         }
+      },
+      setIsOpenModalCreateOrUpdateProfileAdditionalInfo: (state, action) => ({
+         ...state,
+         isOpenModalCreateOrUpdateProfileAdditionalInfo: action.payload,
+      }),
+      // ========== Additional Info - Delete ========== //
+      requestDeleleProfileAdditionalInfo: (state) => ({
+         ...state,
+         isLoadingCreateOrUpdateProfileAdditionalInfo: true,
+      }),
+      deleteProfileAdditionalInfoSuccess: (state, action) => {
+         toaster.create({
+            title: `${action.payload.message}`,
+            type: 'success',
+         })
+         return {
+            ...state,
+            profile: {
+               ...state.profile,
+               additional_infos: state.profile.additional_infos.filter((item: any) => item._id !== action.payload.data),
+            },
+            isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+         }
+      },
+      deleteProfileAdditionalInfoFail: (state, action) => {
+         toaster.create({
+            title: `${Object.values(action.payload.data.detail)[0]}`,
+            type: 'error',
+         })
+         return {
+            ...state,
+            isLoadingCreateOrUpdateProfileAdditionalInfo: false,
+         }
+      },
+      // ========== FRIENDS ========= //
+      requestGetMyFriends: (state) => ({
+         ...state,
+         isLoadingGetMyFriends: true,
+      }),
+      getMyFriendsSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetMyFriends: false,
+         myFriends: action.payload.data,
+      }),
+      getMyFriendsFail: (state) => ({
+         ...state,
+         isLoadingGetMyFriends: false,
       }),
    },
 })
 
 export const {
-   // ========== UPDATE INFO USER ========== //
-   requestUpdateInfoUser,
+   setErrorInfoUser,
+   setErrorChangePassword,
+   updateInfoUser,
    updateInfoUserSuccess,
-   updateInfoUserFailed,
-   // ========== CHANGE PASSWORD ========== //
-   requestChangePassword,
+   updateInfoUserFail,
+   changePassword,
    changePasswordSuccess,
-   changePasswordFailed,
-   // ========== CHANGE AVATAR ========== //
-   requestChangeAvatar,
-   changeAvatarSuccess,
-   changeAvatarFailed,
-   setOpenAvatarPreview,
-   // ========== PROFILE ========== //
+   changePasswordFail,
+   changeAvatarUser,
+   changeAvatarUserSuccess,
+   changeAvatarUserFail,
+   changeBackgroundUser,
+   changeBackgroundUserSuccess,
+   changeBackgroundUserFail,
+   // ========== Profile ========== //
    requestGetProfile,
-   getProfileSuccess,
-   getProfileFailed,
-   updateProfileRequest,
-   updateProfileSuccess,
-   updateProfileFailed,
-   // ========== EDUCATION ========== //
-   setOpenModalCreateOrUpdateEducation,
-   setCurrentEducation,
+   requestGetProfileSuccess,
+   requestGetProfileFail,
+   requestUpdateProfessionalProfile,
+   UpdateProfessionalProfileSuccess,
+   UpdateProfessionalProfileFail,
+   setIsOpenAvatarPreview,
+   // ========== Education ========== //
    requestCreateOrUpdateEducation,
-   createOrUpdateEducationSuccess,
-   createOrUpdateEducationFailed,
-   // ========== CERTIFICATION ========== //
-   setOpenModalCreateOrUpdateCertification,
-   setCurrentCertification,
+   createEducationSuccess,
+   updateEducationSuccess,
+   createOrUpdateEducationFail,
+   setIsOpenModalCreateOrUpdateEducation,
+   // ========== Education - Delete ========== //
+   requestDeleleEducation,
+   deleteEducationSuccess,
+   deleteEducationFail,
+   // ========== Certification ========== //
    requestCreateOrUpdateCertification,
-   createOrUpdateCertificationSuccess,
-   createOrUpdateCertificationFailed,
+   createCertificationSuccess,
+   updateCertificationSuccess,
+   createOrUpdateCertificationFail,
+   setIsOpenModalCreateOrUpdateCertification,
+   // ========== Certification - Delete ========== //
+   requestDeleleCertification,
+   deleteCertificationSuccess,
+   deleteCertificationFail,
+   // ========== Skills ========== //
+   requestUpdateSkills,
+   updateSkillsSuccess,
+   updateSkillsFail,
+   // ========== Organization ========== //
+   requestgetOrganizationFramework,
+   requestgetOrganizationFrameworkSuccess,
+   requestgetOrganizationFrameworkFail,
+   // ========== Additional Info ========== //
+   requestCreateOrUpdateProfileAdditionalInfo,
+   createProfileAdditionalInfoSuccess,
+   updateProfileAdditionalInfoSuccess,
+   createOrUpdateProfileAdditionalInfoFail,
+   setIsOpenModalCreateOrUpdateProfileAdditionalInfo,
+   // ========== Additional Info - Delete ========== //
+   requestDeleleProfileAdditionalInfo,
+   deleteProfileAdditionalInfoSuccess,
+   deleteProfileAdditionalInfoFail,
+   // ========== FRIENDS ========= //
+   requestGetMyFriends,
+   getMyFriendsSuccess,
+   getMyFriendsFail,
 } = profileSlice.actions
 
 export default profileSlice.reducer

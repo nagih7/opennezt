@@ -18,11 +18,11 @@ const interviewSlice = createSlice({
    name: 'interview',
    initialState,
    reducers: {
-      requestStartInterview: (state: InterviewState) => ({
+      requestStartInterview: (state) => ({
          ...state,
          isLoadingStartInterview: true,
       }),
-      startInterviewSuccess: (state: InterviewState, action: PayloadAction<any>) => ({
+      startInterviewSuccess: (state, action) => ({
          ...state,
          conversation: action.payload.data.interview,
          messages: [action.payload.data.message],
@@ -30,15 +30,15 @@ const interviewSlice = createSlice({
          isOpenModalInterview: true,
          isLoadingStartInterview: false,
       }),
-      startInterviewFail: (state: InterviewState) => ({
+      startInterviewFail: (state) => ({
          ...state,
          isLoadingStartInterview: false,
       }),
-      requestCloseInterview: (state: InterviewState) => ({
+      requestCloseInterview: (state) => ({
          ...state,
          isLoadingCloseInterview: true,
       }),
-      closeInterviewSuccess: (state: InterviewState) => ({
+      closeInterviewSuccess: (state) => ({
          ...state,
          conversation: {},
          messages: [],
@@ -46,38 +46,38 @@ const interviewSlice = createSlice({
          isOpenModalInterview: false,
          isLoadingCloseInterview: false,
       }),
-      closeInterviewFail: (state: InterviewState) => ({
+      closeInterviewFail: (state) => ({
          ...state,
          isLoadingCloseInterview: false,
       }),
-      requestReplyInterview: (state: InterviewState) => ({
+
+      setOpenModalInterview: (state, action) => ({
          ...state,
-         isLoadingReplyInterview: true,
+         isOpenModalInterview: action.payload,
       }),
-      replyInterviewSuccess: (state: InterviewState, action: PayloadAction<any>) => ({
-         ...state,
-         messages: [...state.messages, action.payload.data.message],
-         isLoadingReplyInterview: false,
-      }),
-      replyInterviewFail: (state: InterviewState) => ({
-         ...state,
-         isLoadingReplyInterview: false,
-      }),
-      setProject: (state: InterviewState, action: PayloadAction<any>) => ({
+
+      setProjectInterview: (state, action) => ({
          ...state,
          project: action.payload,
       }),
-      receiveMessage: (state: InterviewState, action: PayloadAction<any>) => ({
+
+      requestReplyInterview: (state) => ({
          ...state,
-         messages: [...state.messages, action.payload],
+         isLoadingReplyInterview: true,
       }),
-      setCurrentAction: (state: InterviewState, action: PayloadAction<string>) => ({
+      replyInterviewSuccess: (state, action) => ({
+         ...state,
+         messages: [...state.messages, ...action.payload.data.messages],
+         isLoadingReplyInterview: false,
+      }),
+      replyInterviewFail: (state) => ({
+         ...state,
+         isLoadingReplyInterview: false,
+      }),
+
+      setCurrentAction: (state, action) => ({
          ...state,
          currentAction: action.payload,
-      }),
-      setOpenModalInterview: (state: InterviewState, action: PayloadAction<boolean>) => ({
-         ...state,
-         isOpenModalInterview: action.payload,
       }),
    },
 })
@@ -89,11 +89,10 @@ export const {
    requestCloseInterview,
    closeInterviewSuccess,
    closeInterviewFail,
+   setProjectInterview,
    requestReplyInterview,
    replyInterviewSuccess,
    replyInterviewFail,
-   setProject,
-   receiveMessage,
    setCurrentAction,
    setOpenModalInterview,
 } = interviewSlice.actions

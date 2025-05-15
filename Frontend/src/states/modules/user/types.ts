@@ -16,18 +16,11 @@ export interface UserState {
    // SKILLS
    skillFramework: Collection<any>
    isLoadingGetSkillFramework: boolean
-   // USER PROFILES
-   userProfiles: any[]
-   isLoadingGetUserProfiles: boolean
-   // USER PROFILE
-   userProfile: any
-   isLoadingGetuserProfile: boolean
-   // SUGGESTED USERS
-   suggestedUsers: any[]
-   isLoadingGetSuggestedUsers: boolean
-   // CONTACT US
-   isLoadingPostContactUs: boolean
-   // SUBSCRIPTION
-   subscription: any
-   isLoadingSubscription: boolean
+   // STAGES
+   stageFramework: Collection<any>
+   isLoadingGetStageFramework: boolean
+   // PROJECT ROLE
+   projectRoleFramework: Collection<any>
+   projectTeamRoleFramework: Collection<any>
+   isLoadingGetProjectRoleFramework: boolean
 }

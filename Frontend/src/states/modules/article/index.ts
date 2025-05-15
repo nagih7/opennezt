@@ -29,167 +29,478 @@ const initialState: ArticleState = {
    },
    isLoadingReactComment: false,
    isLoadingCreateComment: false,
-   articleDetails: null,
-   isLoadingGetArticleDetails: false,
-   attachments: [],
+   isLoadingUpdateArticle: false,
+   isOpenUpdateForm: false,
+   isLoadingDeleteArticle: false,
+   replyComments: [],
+   isLoadingGetReplyComments: false,
+   reply_comments_pagination: {
+      page: 1,
+      limit: 10,
+      hasMore: true,
+   },
+   projectsToTag: [],
+   isLoadingMyProjectToTag: false,
+   isLoadingReplyComment: false,
+   repliedComment: {},
+   reply_comment_reactions: [],
+   isLoadingGetReplyCommentReactions: false,
+   isLoadingBookmarkArticle: false,
+   bookmarks: [],
+   isLoadingGetBookmarks: false,
 }
 
 const articleSlice = createSlice({
    name: 'article',
    initialState,
    reducers: {
-      // ========== GET FEEDS ========== //
-      requestGetFeeds: (state: ArticleState) => ({
+      getList: (state) => ({
          ...state,
          isLoadingGetFeeds: true,
+         onetimefeeds: [],
       }),
-      getFeedsSuccess: (state: ArticleState, action: PayloadAction<any>) => {
-         const { data, nextCursor } = action.payload.data
+      getListSuccess: (state, action) => {
          return {
             ...state,
-            feeds: state.pagination.nextCursor === new Date() ? data : [...state.feeds, ...data],
+            feeds: [...state.feeds, ...action.payload.data.articleList],
+            onetimefeeds: [...action.payload.data.articleList],
+            isLoadingGetFeeds: false,
             pagination: {
-               ...state.pagination,
-               nextCursor: nextCursor || state.pagination.nextCursor,
-               hasMore: !!nextCursor,
+               nextCursor: action.payload.data.next_cursor,
+               limit: 5,
+               hasMore: action.payload.data.has_more,
             },
-            isLoadingGetFeeds: false,
          }
       },
-      getFeedsFail: (state: ArticleState) => ({
+      getListFail: (state) => ({
          ...state,
          isLoadingGetFeeds: false,
+         feeds: [],
+         onetimefeeds: [],
       }),
-
-      // ========== GET ONE TIME FEEDS ========== //
-      requestGetOneTimeFeeds: (state: ArticleState) => ({
-         ...state,
-         isLoadingGetFeeds: true,
-      }),
-      getOneTimeFeedsSuccess: (state: ArticleState, action: PayloadAction<any>) => {
-         return {
-            ...state,
-            onetimefeeds: action.payload.data,
-            isLoadingGetFeeds: false,
-         }
-      },
-      getOneTimeFeedsFail: (state: ArticleState) => ({
-         ...state,
-         isLoadingGetFeeds: false,
-      }),
-
-      // ========== GET USER REACTIONS ========== //
-      requestGetUserReactions: (state: ArticleState) => ({
+      getUserReactions: (state) => ({
          ...state,
          isLoadingGetUserReactions: true,
       }),
-      getUserReactionsSuccess: (state: ArticleState, action: PayloadAction<any>) => ({
-         ...state,
-         reactions: action.payload.data.likes,
-         isLoadingGetUserReactions: false,
-      }),
-      getUserReactionsFail: (state: ArticleState) => ({
+      getUserReactionsSuccess: (state, action) => ({
          ...state,
          isLoadingGetUserReactions: false,
+         reactions: [...state.reactions, ...action.payload.data],
       }),
-
-      // ========== REACT ARTICLE ========== //
-      requestReactArticle: (state: ArticleState) => ({
+      getUserReactionsFail: (state) => ({
+         ...state,
+         isLoadingGetUserReactions: false,
+         reactions: [],
+      }),
+      reactArticle: (state) => ({
          ...state,
          isLoadingReactArticle: true,
       }),
-      reactArticleSuccess: (state: ArticleState, action: PayloadAction<any>) => {
-         const { article_id, like_status, count } = action.payload.data
-         return {
-            ...state,
-            feeds: state.feeds.map((feed) => {
-               if (feed._id === article_id) {
-                  return {
-                     ...feed,
-                     likes: count,
-                  }
-               }
-               return feed
-            }),
-            reactions: like_status
-               ? [...state.reactions, article_id]
-               : state.reactions.filter((id) => id !== article_id),
-            isLoadingReactArticle: false,
-         }
-      },
-      reactArticleFail: (state: ArticleState) => ({
+      reactArticleSuccess: (state) => ({
          ...state,
          isLoadingReactArticle: false,
       }),
+      reactArticleFail: (state) => ({
+         ...state,
+         isLoadingReactArticle: false,
+      }),
+      updateReaction: (state, action) => {
+         const { articleId, reactionType } = action.payload
 
-      // ========== GET ARTICLE DETAILS ========== //
-      requestGetArticleDetails: (state: ArticleState) => ({
+         //Bài viết cần chỉnh sửa reaction count
+         const articleIndex = state.feeds.findIndex((feed) => feed._id.toString() === articleId)
+
+         const existingReactionIndex = state.reactions.findIndex((r) => r.target_id.toString() === articleId)
+         //nếu không tìm thấy trả về -1
+         //tìm thấy thì thay đổi kiểu reaction
+         if (existingReactionIndex !== -1) {
+            if (state.reactions[existingReactionIndex].type === reactionType) {
+               state.reactions.splice(existingReactionIndex, 1)
+               if (articleIndex !== -1) {
+                  state.feeds[articleIndex].reaction_count -= 1
+               }
+            } else {
+               state.reactions[existingReactionIndex].type = reactionType
+            }
+         } else {
+            state.reactions.push({
+               target_id: articleId,
+               type: reactionType,
+            })
+            if (articleIndex !== -1) {
+               state.feeds[articleIndex].reaction_count += 1
+            }
+         }
+      },
+      openCreateForm: (state) => ({
          ...state,
-         isLoadingGetArticleDetails: true,
+         isOpenCreateForm: true,
       }),
-      getArticleDetailsSuccess: (state: ArticleState, action: PayloadAction<any>) => ({
+      closeCreateForm: (state) => ({
          ...state,
-         articleDetails: action.payload.data,
-         isLoadingGetArticleDetails: false,
+         isOpenCreateForm: false,
       }),
-      getArticleDetailsFail: (state: ArticleState) => ({
+      createArticle: (state) => ({
          ...state,
-         isLoadingGetArticleDetails: false,
+         isLoadingCreateArticle: true,
+      }),
+      createArticleSuccess: (state) => ({
+         ...state,
+         isLoadingCreateArticle: false,
+         isOpenCreateForm: false,
+         pagination: {
+            nextCursor: new Date(),
+            limit: 5,
+            hasMore: true,
+         },
+         feeds: [],
+         reactions: [],
+      }),
+      createArticleFail: (state) => ({
+         ...state,
+         isLoadingCreateArticle: false,
+         isOpenCreateForm: false,
       }),
 
-      // ========== GET COMMENTS ========== //
-      requestGetComments: (state: ArticleState) => ({
+      //===================Comment===================
+      resetComment: (state) => ({
+         ...state,
+         comment: [],
+         comment_pagination: {
+            limit: 10,
+            page: 1,
+            hasMore: true,
+         },
+      }),
+      getListComment: (state) => ({
          ...state,
          isLoadingGetComments: true,
       }),
-      getCommentsSuccess: (state: ArticleState, action: PayloadAction<any>) => {
-         const { data, pagination } = action.payload.data
-         return {
-            ...state,
-            comment: state.comment_pagination.page === 1 ? data : [...state.comment, ...data],
-            comment_pagination: {
-               ...state.comment_pagination,
-               page: pagination.currentPage,
-               hasMore: pagination.currentPage < pagination.totalPage,
-            },
-            isLoadingGetComments: false,
-         }
-      },
-      getCommentsFail: (state: ArticleState) => ({
+      getListCommentSuccess: (state, action) => ({
+         ...state,
+         comment: [...state.comment, ...action.payload.data.commentList],
+         onetimecomments: [...action.payload.data.commentList],
+         isLoadingGetComments: false,
+         comment_pagination: {
+            page: action.payload.data.pagination.currentPage + 1,
+            limit: 10,
+            hasMore: action.payload.data.pagination.hasMore,
+         },
+      }),
+      getListCommentFail: (state) => ({
          ...state,
          isLoadingGetComments: false,
+         comment: [],
       }),
+      getUserCommentReactions: (state) => ({
+         ...state,
+         isLoadingGetUserCommentReactions: true,
+      }),
+      getUserCommentReactionsSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetUserCommentReactions: false,
+         comment_reactions: [...state.comment_reactions, ...action.payload.data],
+      }),
+      getUserCommentReactionsFail: (state) => ({
+         ...state,
+         isLoadingGetUserCommentReactions: false,
+         comment_reactions: [],
+      }),
+      updateCommentReaction: (state, action) => {
+         const { commentId, reactionType } = action.payload
+
+         //Bài viết cần chỉnh sửa reaction count
+         const commentIndex = state.comment.findIndex((cmt) => cmt._id.toString() === commentId)
+
+         const existingReactionIndex = state.comment_reactions.findIndex((r) => r.target_id.toString() === commentId)
+         //nếu không tìm thấy trả về -1
+         //tìm thấy thì thay đổi kiểu reaction
+         if (existingReactionIndex !== -1) {
+            if (state.comment_reactions[existingReactionIndex].type === reactionType) {
+               state.comment_reactions.splice(existingReactionIndex, 1)
+               if (commentIndex !== -1) {
+                  state.comment[commentIndex].reaction_count -= 1
+               }
+            } else {
+               state.comment[existingReactionIndex].type = reactionType
+            }
+         } else {
+            state.comment_reactions.push({
+               target_id: commentId,
+               type: reactionType,
+            })
+            if (commentIndex !== -1) {
+               state.comment[commentIndex].reaction_count += 1
+            }
+         }
+      },
+      reactComment: (state) => ({
+         ...state,
+         isLoadingReactComment: true,
+      }),
+      reactCommentSuccess: (state) => ({
+         ...state,
+         isLoadingReactComment: false,
+      }),
+      reactCommentFail: (state) => ({
+         ...state,
+         isLoadingReactComment: false,
+      }),
+      updateCreatedComment: (state, action) => {
+         const { createdComment, authUser } = action.payload
+         if (createdComment) {
+            const commentWithUser = {
+               ...createdComment,
+               user: [authUser],
+            }
+            state.comment.unshift(commentWithUser)
+         }
+         state.createdComment = null
+      },
+      createComment: (state) => ({
+         ...state,
+         isLoadingCreateComment: true,
+      }),
+      createCommentSuccess: (state, action) => ({
+         ...state,
+         isLoadingCreateComment: false,
+         createdComment: action.payload.data,
+      }),
+      createCommentFail: (state) => ({
+         ...state,
+         isLoadingCreateComment: true,
+         createdComment: {},
+      }),
+      updateUpdatedArticle: (state, action) => ({
+         ...state,
+         feeds: state.feeds.map((article) => (article._id === action.payload._id ? action.payload : article)),
+      }),
+      openUpdateForm: (state) => ({
+         ...state,
+         isOpenUpdateForm: true,
+      }),
+      closeUpdateForm: (state) => ({
+         ...state,
+         isOpenUpdateForm: false,
+      }),
+      updateArticle: (state) => ({
+         ...state,
+         isLoadingUpdateArticle: true,
+      }),
+      updateArticleSuccess: (state) => ({
+         ...state,
+         isLoadingUpdateArticle: false,
+         isOpenUpdateForm: false,
+      }),
+      updateArticleFail: (state) => ({
+         ...state,
+         isLoadingUpdateArticle: false,
+         isOpenUpdateForm: false,
+      }),
+      updateDeletedArticle: (state, action) => ({
+         ...state,
+         feeds: state.feeds.filter((article) => article._id !== action.payload),
+      }),
+      deleteArticle: (state) => ({
+         ...state,
+         isLoadingDeleteArticle: true,
+      }),
+      deleteArticleSuccess: (state) => ({
+         ...state,
+         isLoadingDeleteArticle: false,
+      }),
+      deleteArticleFail: (state) => ({
+         ...state,
+         isLoadingDeleteArticle: false,
+      }),
+      resetReply: (state) => ({
+         ...state,
+         isLoadingGetReplyComments: false,
+         replyComments: [],
+         reply_comments_pagination: {
+            page: 1,
+            limit: 3,
+            hasMore: true,
+         },
+      }),
+
+      getListReplyComment: (state) => ({
+         ...state,
+         replyComments: [],
+         isLoadingGetReplyComments: true,
+      }),
+      getListReplyCommentSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetReplyComments: false,
+         replyComments: [...action.payload.data.commentList],
+         reply_comments_pagination: {
+            page: action.payload.data.pagination.currentPage + 1,
+            limit: 3,
+            hasMore: action.payload.data.pagination.hasMore,
+         },
+      }),
+      getListReplyCommentFail: (state) => ({
+         ...state,
+         isLoadingGetReplyComments: false,
+      }),
+      // Project tag to new article
+      requestGetProjectsToTag: (state) => ({
+         ...state,
+         isLoadingMyProjectToTag: true,
+      }),
+      getProjectsToTagSuccess: (state, action) => ({
+         ...state,
+         projectsToTag: action.payload.data,
+         isLoadingMyProjectToTag: false,
+      }),
+      getProjectsToTagFail: (state) => ({
+         ...state,
+         projectsToTag: [],
+         isLoadingMyProjectToTag: false,
+      }),
+      replyComment: (state) => ({
+         ...state,
+         isLoadingReplyComment: true,
+         repliedComment: {},
+      }),
+      replyCommentSuccess: (state, action) => ({
+         ...state,
+         repliedComment: action.payload.data,
+         isLoadingReplyComment: false,
+      }),
+      replyCommentFail: (state) => ({
+         ...state,
+         repliedComment: {},
+         isLoadingReplyComment: false,
+      }),
+      resetReplyReaction: (state) => ({
+         ...state,
+         reply_comment_reactions: [],
+         isLoadingGetReplyCommentReactions: false,
+      }),
+      getUserReplyCommentReactions: (state) => ({
+         ...state,
+         reply_comment_reactions: [],
+         isLoadingGetReplyCommentReactions: true,
+      }),
+      getUserReplyCommentReactionsSuccess: (state, action) => ({
+         ...state,
+         reply_comment_reactions: [...action.payload.data],
+         isLoadingGetReplyCommentReactions: false,
+      }),
+      getUserReplyCommentReactionsFail: (state) => ({
+         ...state,
+         reply_comment_reactions: [],
+         isLoadingGetReplyCommentReactions: false,
+      }),
+      bookmarkArticle: (state) => ({
+         ...state,
+         isLoadingBookmarkArticle: true,
+      }),
+      bookmarkArticleSuccess: (state) => ({
+         ...state,
+         isLoadingBookmarkArticle: false,
+      }),
+      bookmarkArticleFail: (state) => ({
+         ...state,
+         isLoadingBookmarkArticle: false,
+      }),
+      getUserBookmarks: (state) => ({
+         ...state,
+         isLoadingGetBookmarks: true,
+      }),
+      getUserBookmarksSuccess: (state, action) => ({
+         ...state,
+         isLoadingGetBookmarks: false,
+         bookmarks: [...state.bookmarks, ...action.payload.data],
+      }),
+      getUserBookmarksFail: (state) => ({
+         ...state,
+         isLoadingGetBookmarks: false,
+      }),
+      updateBookmarks: (state, action) => {
+         const { article_id, marked } = action.payload
+
+         const existingBookmarkIndex = state.bookmarks.findIndex(
+            (bm) => bm.target_id.toString() === article_id.toString()
+         )
+
+         if (existingBookmarkIndex !== -1) {
+            state.bookmarks[existingBookmarkIndex].marked = marked
+         } else {
+            state.bookmarks.push({
+               target_id: article_id,
+               marked: marked,
+            })
+         }
+      },
 
       // Add other reducers as needed based on the full state
    },
 })
 
 export const {
-   // ========== GET FEEDS ========== //
-   requestGetFeeds,
-   getFeedsSuccess,
-   getFeedsFail,
-   // ========== GET ONE TIME FEEDS ========== //
-   requestGetOneTimeFeeds,
-   getOneTimeFeedsSuccess,
-   getOneTimeFeedsFail,
-   // ========== GET USER REACTIONS ========== //
-   requestGetUserReactions,
+   getList,
+   getListSuccess,
+   getListFail,
+   getUserReactions,
    getUserReactionsSuccess,
    getUserReactionsFail,
-   // ========== REACT ARTICLE ========== //
-   requestReactArticle,
+   updateReaction,
+   reactArticle,
    reactArticleSuccess,
    reactArticleFail,
-   // ========== GET ARTICLE DETAILS ========== //
-   requestGetArticleDetails,
-   getArticleDetailsSuccess,
-   getArticleDetailsFail,
-   // ========== GET COMMENTS ========== //
-   requestGetComments,
-   getCommentsSuccess,
-   getCommentsFail,
-   // Add exports for other action creators as needed
+   openCreateForm,
+   closeCreateForm,
+   createArticle,
+   createArticleSuccess,
+   createArticleFail,
+   resetComment,
+   getListComment,
+   getListCommentSuccess,
+   getListCommentFail,
+   getUserCommentReactions,
+   getUserCommentReactionsSuccess,
+   getUserCommentReactionsFail,
+   updateCommentReaction,
+   reactComment,
+   reactCommentSuccess,
+   reactCommentFail,
+   updateCreatedComment,
+   createComment,
+   createCommentSuccess,
+   createCommentFail,
+   updateUpdatedArticle,
+   openUpdateForm,
+   closeUpdateForm,
+   updateArticle,
+   updateArticleSuccess,
+   updateArticleFail,
+   updateDeletedArticle,
+   deleteArticle,
+   deleteArticleSuccess,
+   deleteArticleFail,
+   resetReply,
+   getListReplyComment,
+   getListReplyCommentSuccess,
+   getListReplyCommentFail,
+   requestGetProjectsToTag,
+   getProjectsToTagSuccess,
+   getProjectsToTagFail,
+   replyComment,
+   replyCommentSuccess,
+   replyCommentFail,
+   resetReplyReaction,
+   getUserReplyCommentReactions,
+   getUserReplyCommentReactionsSuccess,
+   getUserReplyCommentReactionsFail,
+   bookmarkArticle,
+   bookmarkArticleSuccess,
+   bookmarkArticleFail,
+   getUserBookmarks,
+   getUserBookmarksSuccess,
+   getUserBookmarksFail,
+   updateBookmarks,
 } = articleSlice.actions
 
 export default articleSlice.reducer

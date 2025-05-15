@@ -24,41 +24,44 @@ export interface ManageState {
    paginationListExperienceLevel: PaginationState
    paginationListCategory: PaginationState
    paginationListSkill: PaginationState
-   paginationListSkillCategory: PaginationState
    paginationListOrganization: PaginationState
-   isLoadingGetAllUsers: boolean
-   isLoadingGetAllArticles: boolean
-   isLoadingGetAllRoles: boolean
-   isLoadingGetAllTypes: boolean
-   isLoadingGetAllIndustries: boolean
-   isLoadingGetAllExperienceLevels: boolean
-   isLoadingGetAllCategories: boolean
-   isLoadingGetAllSkills: boolean
-   isLoadingGetAllSkillCategories: boolean
-   isLoadingGetAllOrganizations: boolean
-   isLoadingCreateNewRole: boolean
-   isLoadingCreateNewType: boolean
-   isLoadingCreateNewIndustry: boolean
-   isLoadingCreateNewExperienceLevel: boolean
-   isLoadingCreateNewCategory: boolean
-   isLoadingCreateNewSkill: boolean
-   isLoadingCreateNewSkillCategory: boolean
-   isLoadingCreateNewOrganization: boolean
+   isLoadingGetListRole: boolean
+   visibleModalCreateOrUpdateRole: boolean
+   isLoadingBtnCreateOrUpdateRole: boolean
+   visibleModalDeleteRole: boolean
    isLoadingDeleteRole: boolean
+   isLoadingGetListType: boolean
+   visibleModalCreateOrUpdateType: boolean
+   isLoadingBtnCreateOrUpdateType: boolean
+   visibleModalDeleteType: boolean
    isLoadingDeleteType: boolean
+   isLoadingGetListIndustry: boolean
+   visibleModalCreateOrUpdateIndustry: boolean
+   isLoadingBtnCreateOrUpdateIndustry: boolean
+   visibleModalDeleteIndustry: boolean
    isLoadingDeleteIndustry: boolean
+   isLoadingGetListExperienceLevel: boolean
+   visibleModalCreateOrUpdateExperienceLevel: boolean
+   isLoadingBtnCreateOrUpdateExperienceLevel: boolean
+   visibleModalDeleteExperienceLevel: boolean
    isLoadingDeleteExperienceLevel: boolean
+   isLoadingGetListCategory: boolean
+   visibleModalCreateOrUpdateCategory: boolean
+   isLoadingBtnCreateOrUpdateCategory: boolean
+   visibleModalDeleteCategory: boolean
    isLoadingDeleteCategory: boolean
+   isLoadingGetListSkill: boolean
+   visibleModalCreateOrUpdateSkill: boolean
+   isLoadingBtnCreateOrUpdateSkill: boolean
+   visibleModalDeleteSkill: boolean
    isLoadingDeleteSkill: boolean
-   isLoadingDeleteSkillCategory: boolean
-   isLoadingDeleteOrganization: boolean
-   isLoadingUpdateRole: boolean
-   isLoadingUpdateType: boolean
-   isLoadingUpdateIndustry: boolean
-   isLoadingUpdateExperienceLevel: boolean
-   isLoadingUpdateCategory: boolean
-   isLoadingUpdateSkill: boolean
-   isLoadingUpdateSkillCategory: boolean
-   isLoadingUpdateOrganization: boolean
+   isLoadingGetSkillCategories: boolean
+   isLoadingGetListOrganization: boolean
+   visibleModalCreateOrUpdateOrganization: boolean
+   isLoadingBtnCreateOrUpdateOrganization: boolean
+   visibleModalDeleteOrganization: boolean
+   isLoadingDeteleOrganization: boolean
+   isLoadingGetListArticle: boolean
+   visibleModalDeleteArticle: boolean
    [key: string]: any
 }
