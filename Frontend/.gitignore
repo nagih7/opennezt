@@ -1,16 +1,25 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# TypeScript
+*.d.ts
+*.tsbuildinfo
 
-# dependencies
+# Vite
+/dist
+/.vite
+
+# Dependencies
 /node_modules
 /.pnp
 .pnp.js
-# testing
+package-lock.json
+
+# Testing
 /coverage
 
-# production
+# Production
 /build
 
-# misc
+
+# Misc
 .DS_Store
 .env.local
 .env.development.local
@@ -24,4 +33,3 @@ yarn-error.log*
 
 .idea/
 
-package-lock.json

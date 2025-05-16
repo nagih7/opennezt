@@ -16,6 +16,8 @@ package-lock.json
 *.pem
 /.env**
 !/.env.example
+!/.env.development
+!/.env.production
 
 /private/cache/*
 /private/logs/*
