@@ -33,7 +33,7 @@ const ProjectBox = ({ project }) => {
                         objectFit="cover"
                         src={OPENNEZT_BG_BLACK}
                         alt="OpenNezt"
-                        className="px-10"
+                        className="bg-contain"
                     />
                 )}
                 <div className="flex flex-col items-center p-8">
@@ -68,7 +68,7 @@ const ProjectBox = ({ project }) => {
                         </li>
                     </ul>
 
-                    <ul className="mb-0 pl-0 border-t-[1px] w-full pt-[24px] relative flex items-center justify-center">
+                    <ul className="mb-0 pl-0 border-t-[1px] w-full h-[50px] pt-[24px] relative flex items-center justify-center">
                         {project.members?.map((member, index) => (
                             <li key={index} className="ml-[-15px]">
                                 <Avatar.Root size={'sm'} className="h-9 w-9 rounded-full border-2 border-[#ffffff]">

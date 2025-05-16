@@ -1,12 +1,13 @@
 import React from "react";
+import background_image from "../../../../../assets/images/logo/OpenNezt_Background.png"
 
 const ActiveBanner = () => {
 	return (
 		<div
-			className="h-[300px] text-[#ffffff] pl-8 py-32 rounded-md bg-local bg-center "
+			className="h-[300px] text-[#ffffff] pl-8 py-32 rounded-md bg-local bg-center"
 			style={{
 				backgroundImage:
-					"url(https://wordpress.iqonic.design/product/wp/socialv/wp-content/uploads/buddypress/groups/14/cover-image/62be922d671b9-bp-cover-image.jpg)",
+					`url(${background_image})`,
 				objectFit: "cover",
 			}}>
 			<span className="text-4xl font-medium">Project Directory</span>

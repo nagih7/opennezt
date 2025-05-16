@@ -1,13 +1,14 @@
 import { IconlyArrowRight2 } from "components/UI/Iconly";
 import React from "react";
+import backgroung_image from "../../../../../assets/images/logo/OpenNezt_Background.png"
 
 const RecruitTalentActiveBanner = () => {
 	return (
 		<div
-			className="h-[300px] text-[#ffffff] pl-8 py-32 bg-local bg-center "
+			className="h-[300px] text-[#ffffff] py-32 bg-local bg-center "
 			style={{
 				backgroundImage:
-					"url(https://wordpress.iqonic.design/product/wp/socialv/wp-content/uploads/buddypress/groups/14/cover-image/62be922d671b9-bp-cover-image.jpg)",
+					`url(${backgroung_image})`,
 				objectFit: "cover",
 			}}>
 			<div className="flex flex-col items-center justify-center">

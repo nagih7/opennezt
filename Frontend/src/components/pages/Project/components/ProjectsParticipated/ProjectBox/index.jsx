@@ -68,7 +68,7 @@ const ProjectBox = ({ project }) => {
                         </li>
                     </ul>
 
-                    <ul className="mb-0 pl-0 border-t-[1px] w-full pt-[24px] relative flex items-center justify-center">
+                    <ul className="mb-0 pl-0 border-t-[1px] w-full pt-[24px] h-[50px] relative flex items-center justify-center">
                         {project.members?.map((member, index) => (
                             <li key={index} className="ml-[-15px]">
                                 <Avatar.Root size={'sm'} className="h-9 w-9 rounded-full border-2 border-[#ffffff]">
