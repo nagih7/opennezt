@@ -1,16 +1,16 @@
 import callApi from 'api/callApi'
-import { getLinkPreview, getLinkPreviewFail, getLinkPreviewSuccess } from 'states/modules/linkPreview'
+import { getLinkPreview, getLinkPreviewFail, getLinkPreviewSuccess } from 'store/modules/linkPreview'
 
 export const handleGetLinkPreview =
-    ({ data }) =>
-    async (dispatch, getState) => {
-        const path = `link-preview/link-preview`
-        return callApi({
-            method: 'post',
-            apiPath: path,
-            actionTypes: [getLinkPreview, getLinkPreviewSuccess, getLinkPreviewFail],
-            variables: data,
-            dispatch,
-            getState,
-        })
-    }
+   ({ data }) =>
+   async (dispatch, getState) => {
+      const path = `link-preview/link-preview`
+      return callApi({
+         method: 'post',
+         apiPath: path,
+         actionTypes: [getLinkPreview, getLinkPreviewSuccess, getLinkPreviewFail],
+         variables: data,
+         dispatch,
+         getState,
+      })
+   }

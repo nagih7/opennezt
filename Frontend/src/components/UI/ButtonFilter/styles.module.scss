@@ -1,27 +1,27 @@
-@import "src/assets/scss/variables";
+@use '../../../assets/scss/variables' as *;
 
 .btnFilter {
-  button {
-    min-width: 100%;
-    border-radius: 3px;
-    font-size: 14px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    &:hover {
-      color: $colorTextButton !important;
-    }
+   button {
+      min-width: 100%;
+      border-radius: 3px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &:hover {
+         color: $colorTextButton !important;
+      }
 
-    svg {
-      margin-right: 5px;
-    }
-  }
+      svg {
+         margin-right: 5px;
+      }
+   }
 
-  .btn {
-    background-color: $colorBackgroundButton;
-    color: $colorTextButton;
-  }
+   .btn {
+      background-color: $colorBackgroundButton;
+      color: $colorTextButton;
+   }
 }

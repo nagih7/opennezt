@@ -1,8 +1,8 @@
-@import "styles.module";
+@use 'styles.module' as *;
 
 .menuSubNav {
-	.menuSubNavItem {
-		// background-color: $mainColorDark;
-		color: (--cui-sidebar-nav-link-icon-color);
-	}
+   .menuSubNavItem {
+      // background-color: $mainColorDark;
+      color: (--cui-sidebar-nav-link-icon-color);
+   }
 }

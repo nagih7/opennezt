@@ -1,90 +1,90 @@
-@import "../../../../assets/scss/variables";
+@use '../../../../assets/scss/variables' as *;
 
 .loginWrap {
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding: 2rem;
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   padding: 2rem;
 
-	.loginHeaderWrap {
-		width: 100%;
-		background-position: center;
-		background-repeat: no-repeat;
-		background-size: cover;
-		position: relative;
+   .loginHeaderWrap {
+      width: 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: relative;
 
-		.logo {
-			height: 2.5rem;
+      .logo {
+         height: 2.5rem;
 
-			img {
-				height: 100%;
-			}
-		}
+         img {
+            height: 100%;
+         }
+      }
 
-		.title {
-			font-size: 3rem !important;
-			margin-top: 6rem;
-			text-align: center;
-		}
-	}
+      .title {
+         font-size: 3rem !important;
+         margin-top: 6rem;
+         text-align: center;
+      }
+   }
 
-	.loginContent {
-		width: 100%;
+   .loginContent {
+      width: 100%;
 
-		.inputWrapper {
-			margin-bottom: 1rem;
-			width: 370px;
+      .inputWrapper {
+         margin-bottom: 1rem;
+         width: 370px;
 
-			.label {
-				display: block;
-				font-weight: 500;
-				font-size: 14px;
-				line-height: 20px;
-				color: $colorBlack;
-				margin-bottom: 4px;
-			}
+         .label {
+            display: block;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: $colorBlack;
+            margin-bottom: 4px;
+         }
 
-			.error {
-				display: block;
-				color: $colorError;
-				font-weight: 500;
-			}
-		}
+         .error {
+            display: block;
+            color: $colorError;
+            font-weight: 500;
+         }
+      }
 
-		.btnUtilitiesWrap {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			margin-bottom: 10px;
-			.remember {
-				.checkBox {
-					display: flex;
-					align-items: center;
-					font-size: 16px;
-				}
-			}
+      .btnUtilitiesWrap {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         margin-bottom: 10px;
+         .remember {
+            .checkBox {
+               display: flex;
+               align-items: center;
+               font-size: 16px;
+            }
+         }
 
-			.btnForgetPassword {
-				cursor: pointer;
-				text-decoration: underline;
-			}
-		}
+         .btnForgetPassword {
+            cursor: pointer;
+            text-decoration: underline;
+         }
+      }
 
-		.btnWrap {
-			margin-bottom: 15px;
-		}
+      .btnWrap {
+         margin-bottom: 15px;
+      }
 
-		.btnSwitchWrap {
-			display: flex;
-			justify-content: center;
-			.btnRegister {
-				text-align: center;
-				.textRegister {
-					cursor: pointer;
-					text-decoration: underline;
-				}
-			}
-		}
-	}
+      .btnSwitchWrap {
+         display: flex;
+         justify-content: center;
+         .btnRegister {
+            text-align: center;
+            .textRegister {
+               cursor: pointer;
+               text-decoration: underline;
+            }
+         }
+      }
+   }
 }

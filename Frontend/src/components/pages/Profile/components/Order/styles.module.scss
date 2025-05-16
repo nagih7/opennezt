@@ -1,6 +1,6 @@
-@import "src/assets/scss/variables";
+@use '../../../../../assets/scss/variables' as *;
 
 .orderWrap {
-  border-radius: 4px;
-  margin-bottom: 20px;
+   border-radius: 4px;
+   margin-bottom: 20px;
 }

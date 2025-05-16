@@ -8,127 +8,119 @@ import { Popover, Portal, Stack } from '@chakra-ui/react'
 import { Tooltip } from 'components/UI/tooltip'
 import ConversationHeader from './components/ConversationHeader'
 import InviteMemberModal from './components/InviteMemberModal'
-import { setModalInviteMember } from 'states/modules/project'
+import { setModalInviteMember } from 'store/modules/project'
 import NoChat from './components/NoChat'
 import Chat from './components/Chat'
 
 const Conversation = () => {
-    const dispatch = useDispatch()
-    const params = useParams()
-    const { id } = params
+   const dispatch = useDispatch()
+   const params = useParams()
+   const { id } = params
 
-    // ========== STATE FROM REDUX ========== //
+   // ========== STATE FROM REDUX ========== //
 
-    const { conversation } = useSelector((state) => state.chat)
+   const { conversation } = useSelector((state) => state.chat)
 
-    // ========== STATE ========== //
+   // ========== STATE ========== //
 
-    const [isOpenMoreActions, setIsOpenMoreActions] = useState(false)
+   const [isOpenMoreActions, setIsOpenMoreActions] = useState(false)
 
-    // ========== HANDLE FUNCTION MODAL ========== //
-    const handleOpenModal = () => {
-        dispatch(setModalInviteMember(true))
-        setIsOpenMoreActions(false)
-    }
+   // ========== HANDLE FUNCTION MODAL ========== //
+   const handleOpenModal = () => {
+      dispatch(setModalInviteMember(true))
+      setIsOpenMoreActions(false)
+   }
 
-    // ========== HANDLE FUNCTION POPPER ========== //
-    const onOpenChange = (open) => {
-        setIsOpenMoreActions(open.open)
-    }
+   // ========== HANDLE FUNCTION POPPER ========== //
+   const onOpenChange = (open) => {
+      setIsOpenMoreActions(open.open)
+   }
 
-    if (id) {
-        return (
-            <>
-                <div className="flex justify-between p-[10px] mb-[18px] bg-[#ffffff] rounded-md">
-                    <div className="flex items-center">
-                        <Link to={'/conversation'} className="hidden md:flex justify-center items-center w-[50px] h-11">
-                            <IconlyArrowLeft2 size={18} color={'#6f7f92'} />
-                        </Link>
+   if (id) {
+      return (
+         <>
+            <div className="flex justify-between p-[10px] mb-[18px] bg-[#ffffff] rounded-md">
+               <div className="flex items-center">
+                  <Link to={'/conversation'} className="hidden md:flex justify-center items-center w-[50px] h-11">
+                     <IconlyArrowLeft2 size={18} color={'#6f7f92'} />
+                  </Link>
 
-                        <Link
-                            to={'/messages-sidebar'}
-                            className="flex md:hidden justify-center items-center w-[50px] h-11 "
+                  <Link to={'/messages-sidebar'} className="flex md:hidden justify-center items-center w-[50px] h-11 ">
+                     <IconlyArrowLeft2 size={18} color={'#6f7f92'} />
+                  </Link>
+                  {(() => {
+                     switch (conversation?.type?.name) {
+                        case DIRECT_CONVERSATION:
+                           return (
+                              <ConversationHeader
+                                 name={conversation?.members[0]?.name}
+                                 logo={conversation?.members[0]?.avatar}
+                              />
+                           )
+                        case GROUP_CONVERSATION:
+                           return (
+                              <ConversationHeader
+                                 name={conversation?.data?.project?.name}
+                                 logo={conversation?.data?.project?.logo}
+                              />
+                           )
+                        default:
+                           return null
+                     }
+                  })()}
+               </div>
+               <div className="flex items-center">
+                  <span className="flex items-center justify-center text-[#6f7f92] w-[50px] h-11">
+                     <ArrowsAltOutlined />
+                  </span>
+
+                  <Popover.Root
+                     positioning={{ placement: 'bottom-end' }}
+                     open={isOpenMoreActions}
+                     onOpenChange={(open) => onOpenChange(open)}
+                  >
+                     <Popover.Trigger asChild>
+                        <span
+                           className="flex items-center justify-center text-[#6f7f92] w-[50px] h-11 cursor-pointer"
+                           onClick={() => setIsOpenMoreActions(!isOpenMoreActions)}
                         >
-                            <IconlyArrowLeft2 size={18} color={'#6f7f92'} />
-                        </Link>
-                        {(() => {
-                            switch (conversation?.type?.name) {
-                                case DIRECT_CONVERSATION:
-                                    return (
-                                        <ConversationHeader
-                                            name={conversation?.members[0]?.name}
-                                            logo={conversation?.members[0]?.avatar}
-                                        />
-                                    )
-                                case GROUP_CONVERSATION:
-                                    return (
-                                        <ConversationHeader
-                                            name={conversation?.data?.project?.name}
-                                            logo={conversation?.data?.project?.logo}
-                                        />
-                                    )
-                                default:
-                                    return null
-                            }
-                        })()}
-                    </div>
-                    <div className="flex items-center">
-                        <span className="flex items-center justify-center text-[#6f7f92] w-[50px] h-11">
-                            <ArrowsAltOutlined />
+                           <Tooltip content="More" openDelay={0} closeDelay={100} positioning={{ placement: 'top' }}>
+                              <MoreOutlined />
+                           </Tooltip>
                         </span>
-
-                        <Popover.Root
-                            positioning={{ placement: 'bottom-end' }}
-                            open={isOpenMoreActions}
-                            onOpenChange={(open) => onOpenChange(open)}
-                        >
-                            <Popover.Trigger asChild>
-                                <span
-                                    className="flex items-center justify-center text-[#6f7f92] w-[50px] h-11 cursor-pointer"
-                                    onClick={() => setIsOpenMoreActions(!isOpenMoreActions)}
-                                >
-                                    <Tooltip
-                                        content="More"
-                                        openDelay={0}
-                                        closeDelay={100}
-                                        positioning={{ placement: 'top' }}
+                     </Popover.Trigger>
+                     <Portal>
+                        <Popover.Positioner>
+                           <Popover.Content>
+                              <Popover.Arrow />
+                              <Popover.Body className="p-[15px]">
+                                 <Stack spacing={4}>
+                                    <Stack
+                                       spacing={4}
+                                       direction={'row'}
+                                       align={'center'}
+                                       cursor={'pointer'}
+                                       onClick={handleOpenModal}
+                                       className="hover:bg-[#f5f5f5] rounded-md p-2 m-2"
                                     >
-                                        <MoreOutlined />
-                                    </Tooltip>
-                                </span>
-                            </Popover.Trigger>
-                            <Portal>
-                                <Popover.Positioner>
-                                    <Popover.Content>
-                                        <Popover.Arrow />
-                                        <Popover.Body className="p-[15px]">
-                                            <Stack spacing={4}>
-                                                <Stack
-                                                    spacing={4}
-                                                    direction={'row'}
-                                                    align={'center'}
-                                                    cursor={'pointer'}
-                                                    onClick={handleOpenModal}
-                                                    className="hover:bg-[#f5f5f5] rounded-md p-2 m-2"
-                                                >
-                                                    <IconlyAddUser size={24} color="#6f7f92" />
-                                                    Invite to project
-                                                </Stack>
-                                            </Stack>
-                                        </Popover.Body>
-                                    </Popover.Content>
-                                </Popover.Positioner>
-                            </Portal>
-                        </Popover.Root>
-                        <InviteMemberModal conversation={conversation} />
-                    </div>
-                </div>
-                <Chat />
-            </>
-        )
-    } else {
-        return <NoChat />
-    }
+                                       <IconlyAddUser size={24} color="#6f7f92" />
+                                       Invite to project
+                                    </Stack>
+                                 </Stack>
+                              </Popover.Body>
+                           </Popover.Content>
+                        </Popover.Positioner>
+                     </Portal>
+                  </Popover.Root>
+                  <InviteMemberModal conversation={conversation} />
+               </div>
+            </div>
+            <Chat />
+         </>
+      )
+   } else {
+      return <NoChat />
+   }
 }
 
 export default Conversation
