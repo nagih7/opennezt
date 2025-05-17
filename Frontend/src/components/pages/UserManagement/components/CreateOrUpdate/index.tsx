@@ -6,7 +6,6 @@ import _ from 'lodash'
 import { isValidate } from '../../../../../utils/validate'
 import { handleCheckValidateConfirm } from '../../../../../utils/helper'
 import ModalGeneral from '../../../../../components/UI/Modal/ModalGeneral'
-import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import {
    setErrorCreateOrUpdateEmployee,
@@ -14,34 +13,50 @@ import {
 } from '../../../../../store/modules/employee'
 import { handleCreateEmployee, handleUpdateEmployee } from '../../../../../api/employee'
 
-CreateOrUpdate.propTypes = {
-   isModalOpen: PropTypes.bool,
-   configModal: PropTypes.object,
-   onClose: PropTypes.func,
-   onConfirm: PropTypes.func,
+interface Employee {
+   id: string;
+   name: string;
+   email: string;
+   phone: string;
 }
 
-CreateOrUpdate.defaultProps = {
-   isModalOpen: false,
-   textBtnConfirm: 'OK',
-   configModal: {
-      title: 'Title',
-      type: 'CREATE',
-   },
+interface ConfigModal {
+   title: string;
+   type: 'CREATE' | 'UPDATE';
 }
 
-function CreateOrUpdate(props) {
-   let { employee, configModal } = props
-   const [dataCreateOrUpdate, setDataCreateOrUpdate] = useState({
+interface CreateOrUpdateProps {
+   employee: Employee;
+   configModal: ConfigModal;
+}
+
+interface DataCreateOrUpdate {
+   name: string;
+   email: string;
+   phone: string;
+   password: string;
+   confirmPassword: string;
+}
+
+interface ErrorCreateOrUpdate {
+   name: string;
+   email: string;
+   phone: string;
+   password: string;
+   confirmPassword: string;
+}
+
+const CreateOrUpdate: React.FC<CreateOrUpdateProps> = ({ employee, configModal }) => {
+   const [dataCreateOrUpdate, setDataCreateOrUpdate] = useState<DataCreateOrUpdate>({
       name: '',
       email: '',
       phone: '',
       password: '',
       confirmPassword: '',
    })
-   const visibleModalCreateOrUpdateEmployee = useSelector((state) => state.employee.visibleModalCreateOrUpdateEmployee)
-   const isLoadingBtnCreateOrUpdateEmployee = useSelector((state) => state.employee.isLoadingBtnCreateOrUpdateEmployee)
-   const errorCreateOrUpdateEmployee = useSelector((state) => state.employee.errorCreateOrUpdateEmployee)
+   const visibleModalCreateOrUpdateEmployee = useSelector((state: any) => state.employee.visibleModalCreateOrUpdateEmployee)
+   const isLoadingBtnCreateOrUpdateEmployee = useSelector((state: any) => state.employee.isLoadingBtnCreateOrUpdateEmployee)
+   const errorCreateOrUpdateEmployee = useSelector((state: any) => state.employee.errorCreateOrUpdateEmployee)
    const dispatch = useDispatch()
 
    useEffect(() => {
@@ -68,7 +83,7 @@ function CreateOrUpdate(props) {
       })
    }, [employee])
 
-   const handleReloadData = () => {
+   const handleReloadData = (): void => {
       setDataCreateOrUpdate({
          name: '',
          email: '',
@@ -78,26 +93,26 @@ function CreateOrUpdate(props) {
       })
    }
 
-   const handleChangeInput = (valueInput, type) => {
+   const handleChangeInput = (valueInput: React.ChangeEvent<HTMLInputElement>, type: keyof DataCreateOrUpdate): void => {
       let value = valueInput.target.value
       let data = _.cloneDeep(dataCreateOrUpdate)
       data[type] = value
       setDataCreateOrUpdate(data)
    }
 
-   const validateBlur = (type) => {
+   const validateBlur = (type: keyof ErrorCreateOrUpdate): boolean => {
       let validate = isValidate(dataCreateOrUpdate, type, errorCreateOrUpdateEmployee)
       dispatch(setErrorCreateOrUpdateEmployee(validate.error))
       return validate.isError
    }
 
-   const handleConfirmCreateOrUpdateUser = () => {
+   const handleConfirmCreateOrUpdateUser = (): void => {
       let dataValidate = dataCreateOrUpdate
       let data = new FormData()
       data.append(`name`, dataCreateOrUpdate.name)
       data.append(`email`, dataCreateOrUpdate.email)
       data.append(`phone`, dataCreateOrUpdate.phone)
-      data.append(`status`, 1)
+      data.append(`status`, '1')
       if (configModal.type !== 'CREATE') {
          dataValidate = {
             name: dataCreateOrUpdate.name,

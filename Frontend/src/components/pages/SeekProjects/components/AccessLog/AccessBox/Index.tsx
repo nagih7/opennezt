@@ -1,21 +1,25 @@
 import { Image } from '@chakra-ui/react'
-import { getMyProjectAccess } from 'api/activity'
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import moment from 'moment'
+import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import moment from 'moment'
 import { OPENNEZT_LOGO } from 'utils/constants'
+import { AccessLog } from 'types'
 
-const AccessBox = ({ access }) => {
+interface AccessBoxProps {
+    access: AccessLog;
+}
+
+const AccessBox: FC<AccessBoxProps> = ({ access }) => {
     const navigate = useNavigate()
 
     // ========== STATE ========== //
-    const [imageError, setImageError] = React.useState(false)
+    const [imageError, setImageError] = useState<boolean>(false)
+    
     // ========== HANDLE FUNCTION ========== //
-
-    const handleViewProjectDetails = (project) => {
+    const handleViewProjectDetails = (project: AccessLog['project']) => {
         navigate(`/projects/${project._id}/details`)
     }
+
     return (
         <div onClick={() => handleViewProjectDetails(access.project)} className="relative flex gap-3 cursor-pointer">
             {!imageError ? (

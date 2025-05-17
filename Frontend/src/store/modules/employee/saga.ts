@@ -95,6 +95,7 @@ function* handleActions(): Generator<Effect, void, any> {
 
    yield takeLatest(deleteEmployeeFail.type, function* (): Generator<Effect, void, any> {
       yield call(getNotification, 'error', 'Failed to delete employee.')
+      yield put(setVisibleModalDeleteEmployee(false))
    })
 }
 

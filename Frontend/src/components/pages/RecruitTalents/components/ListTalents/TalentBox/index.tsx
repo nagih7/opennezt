@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { IconlyBookmark, IconlyHeart, IconlyShow } from 'components/UI/Iconly'
 import { Avatar, Button } from '@chakra-ui/react'
-import { useDispatch } from 'react-redux'
-const TalentBox = ({ talent, handleViewTalentDetails }) => {
-    // ========== RENDER COMPONENT ========== //
+import { TalentBoxProps } from '../../../types'
+
+const TalentBox: React.FC<TalentBoxProps> = ({ talent, handleViewTalentDetails }) => {
     return (
         <>
             <div className="relative">
@@ -19,19 +19,19 @@ const TalentBox = ({ talent, handleViewTalentDetails }) => {
                     <div
                         className="absolute top-[15px] right-[15px] fade-element"
                         style={{
-                            opacity: 0, // Mặc định opacity là 0
+                            opacity: 0,
                             transition: 'opacity 0.7s ease-in-out',
                         }}
                     >
                         <ul className="flex flex-col gap-2 pl-0 m-0">
                             <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
-                                <IconlyShow size={20} color={'#2f65b9'} />
+                                <IconlyShow size={20} color={'#2f65b9'}/>
                             </li>
                             <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
-                                <IconlyHeart size={20} color={'#2f65b9'} />
+                                <IconlyHeart size={20} color={'#2f65b9'} backgroundColor={'transparent'} />
                             </li>
                             <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
-                                <IconlyBookmark size={20} color={'#2f65b9'} />
+                                <IconlyBookmark size={20} color={'#2f65b9'} backgroundColor={'transparent'} />
                             </li>
                         </ul>
                     </div>
@@ -43,7 +43,7 @@ const TalentBox = ({ talent, handleViewTalentDetails }) => {
                 <div
                     className="mt-[16px] fade-element"
                     style={{
-                        opacity: 0, // Mặc định opacity là 0
+                        opacity: 0,
                         transition: 'opacity 0.3s ease-in-out',
                     }}
                 >
@@ -59,4 +59,4 @@ const TalentBox = ({ talent, handleViewTalentDetails }) => {
     )
 }
 
-export default TalentBox
+export default TalentBox 

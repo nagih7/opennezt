@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import AccessLog from './components/AccessLog';
 import FilterHeader from './components/FilterHeader';
 import ListProjects from './components/ListProjects';
 
+type ViewAction = 'grid' | 'list';
+
 const SeekProjects = () => {
     // ========== STATE  ========== //
-    const [action, setAction] = useState('grid');
+    const [action, setAction] = useState<ViewAction>('grid');
 
     return (
         <div className="pt-[35px] px-[16px] flex gap-8 2xl:ml-5">
