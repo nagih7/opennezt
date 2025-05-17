@@ -4,7 +4,7 @@ import FilterSidebar from "./components/FilterSidebar";
 import RecruitTalentsHeader from "./components/Header";
 import ListTalents from "./components/ListTalents";
 
-function RecruitTalents() {
+const RecruitTalents: React.FC = () => {
 	return (
 		<div className="w-full">
 			<RecruitTalentActiveBanner />
@@ -21,4 +21,4 @@ function RecruitTalents() {
 	);
 }
 
-export default RecruitTalents;
+export default RecruitTalents; 

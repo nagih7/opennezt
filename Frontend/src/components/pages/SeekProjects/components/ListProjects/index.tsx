@@ -1,21 +1,32 @@
 import { accessToProject } from 'api/activity'
 import { seekProjects } from 'api/project'
 import PaginationCustom from 'components/UI/PaginationCustom'
-import React, { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Project } from 'types'
+import { useAppDispatch, useAppSelector } from 'store/hooks'
 import ProjectGrid from './ProjectGrid'
 import ProjectList from './ProjectList'
 
-const ListProjects = ({ action }) => {
-    const dispatch = useDispatch()
+interface ListProjectsProps {
+    action: 'grid' | 'list';
+}
+
+interface PageData {
+    page: number;
+    pageSize: number;
+}
+
+const ListProjects = ({ action }: ListProjectsProps) => {
+    const dispatch = useAppDispatch()
     const navigate = useNavigate()
+    
     // ========== STATE FROM REDUX ========== //
-    const projects = useSelector((state) => state.project.projectsBySeek)
-    const { paginationSeekProjects, filterSeekProjects } = useSelector((state) => state.project)
+    const projects = useAppSelector((state) => state.project.projectsBySeek)
+    const { paginationSeekProjects, filterSeekProjects } = useAppSelector((state) => state.project)
 
     // ========== HANDLE FUNCTION ========== //
-    const onPageChange = (pageData) => {
+    const onPageChange = (pageData: PageData) => {
         dispatch(
             seekProjects({
                 ...filterSeekProjects,
@@ -26,7 +37,7 @@ const ListProjects = ({ action }) => {
     }
 
     const handleViewProjectDetails = useCallback(
-        (project) => {
+        (project: Project) => {
             dispatch(accessToProject(project._id))
             navigate(`/projects/${project._id}/details`)
         },
@@ -41,10 +52,10 @@ const ListProjects = ({ action }) => {
                     case 'grid':
                         return (
                             <ul className="grid w-full grid-cols-1 gap-10 pl-0 mt-4 md:grid-cols-2 lg:grid-cols-3">
-                                {projects.map((project, index) => (
+                                {projects.map((project: Project) => (
                                     <ProjectGrid
                                         project={project}
-                                        key={index}
+                                        key={project._id}
                                         handleViewProjectDetails={handleViewProjectDetails}
                                     />
                                 ))}
@@ -53,10 +64,10 @@ const ListProjects = ({ action }) => {
                     case 'list':
                         return (
                             <ul className="flex flex-col w-full gap-6 pl-0 mt-4">
-                                {projects.map((project, index) => (
+                                {projects.map((project: Project) => (
                                     <ProjectList
                                         project={project}
-                                        key={index}
+                                        key={project._id}
                                         handleViewProjectDetails={handleViewProjectDetails}
                                     />
                                 ))}

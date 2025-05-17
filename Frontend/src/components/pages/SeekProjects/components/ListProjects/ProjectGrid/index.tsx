@@ -1,10 +1,16 @@
 import { Image } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { Project } from 'types'
 import { OPENNEZT_BG_BLACK } from 'utils/constants'
 
-const ProjectGrid = ({ project, handleViewProjectDetails }) => {
+interface ProjectGridProps {
+    project: Project;
+    handleViewProjectDetails: (project: Project) => void;
+}
+
+const ProjectGrid = ({ project, handleViewProjectDetails }: ProjectGridProps) => {
     // ========== STATE ========== //
-    const [imageError, setImageError] = useState(false)
+    const [imageError, setImageError] = useState<boolean>(false)
 
     // ========== RENDER ========== //
     return (
@@ -16,12 +22,8 @@ const ProjectGrid = ({ project, handleViewProjectDetails }) => {
                 <div className="relative flex items-center justify-center w-full h-48 overflow-hidden mx-autorounded-md group">
                     {!imageError ? (
                         <Image
-                            overflow-hidden
-                            rounded-sm
-                            cursor-pointer
-                            group
+                            className="object-cover absolute w-full h-auto transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110 overflow-hidden rounded-sm cursor-pointer"
                             aspectRatio={16 / 9}
-                            className="object-cover absolute w-full h-auto transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110"
                             src={project?.background}
                             alt={project?.name}
                             onError={() => setImageError(true)}

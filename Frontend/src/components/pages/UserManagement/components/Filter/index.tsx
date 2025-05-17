@@ -2,26 +2,15 @@ import React from 'react'
 import styles from './styles.module.scss'
 import { Col, Row } from 'antd'
 import SelectCustom from '../../../../../components/UI/Select/index'
-import PropTypes from 'prop-types'
-import { STATUS_USER } from '../../../../../utils/constants'
+import { STATUS_USER } from '../../../../../utils/constants/app'
 
-Filter.propTypes = {
-    onClose: PropTypes.func,
-    onChangeStatus: PropTypes.func,
+interface FilterProps {
+    onClose?: () => void;
+    onChangeStatus?: (value: string) => void;
+    statusUser?: string;
 }
 
-Filter.defaultProps = {
-    onChangeStatus: () => {
-        /* noop */
-    },
-    onClose: () => {
-        /* noop */
-    },
-}
-
-function Filter(props) {
-    const { onChangeStatus } = props
-
+const Filter: React.FC<FilterProps> = ({ onChangeStatus = () => {}, statusUser = '' }) => {
     return (
         <div>
             <div className={styles.filterWrap}>
@@ -30,7 +19,7 @@ function Filter(props) {
                         <div className={styles.inputWrap}>
                             <div className={styles.label}>Filter by user status</div>
                             <SelectCustom
-                                value={''}
+                                value={statusUser}
                                 onChange={onChangeStatus}
                                 options={[
                                     {
@@ -38,11 +27,11 @@ function Filter(props) {
                                         label: 'All',
                                     },
                                     {
-                                        value: STATUS_USER['ACTIVATE'],
+                                        value: STATUS_USER.ACTIVATE.toString(),
                                         label: 'Active',
                                     },
                                     {
-                                        value: STATUS_USER['INACTIVATE'],
+                                        value: STATUS_USER.INACTIVATE.toString(),
                                         label: 'Inactive',
                                     },
                                 ]}

@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import ProfessionalProfile from './components/ProfessionalProfile'
 import { Image } from '@chakra-ui/react'
 import ProfileOverview from './components/ProfileOverview'
 import { useParams } from 'react-router-dom'
 import { getTalentDetails } from 'api/talent'
 import { OPENNEZT_BG_BLACK } from 'utils/constants'
+import { useAppDispatch, useAppSelector } from 'store/hooks'
 
-const TalentDetails = () => {
+const TalentDetails: React.FC = () => {
     const params = useParams()
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const { id } = params
 
     // ========== STATE FROM REDUX  ========== //
-    const { talentDetails } = useSelector((state) => state.talent)
+    const { talentDetails } = useAppSelector((state) => state.talent)
 
     // ========== STATE  ========== //
-    const [imageError, setImageError] = useState(false)
+    const [imageError, setImageError] = useState<boolean>(false)
 
     // ========== USE EFFECT  ========== //
     useEffect(() => {
-        dispatch(getTalentDetails(id))
+        if (id) {
+            dispatch(getTalentDetails(id))
+        }
     }, [dispatch, id])
 
     // ========== AUTO SCROLL TO TOP  ========== //
@@ -49,7 +51,10 @@ const TalentDetails = () => {
                 />
             )}
             <div className="absolute w-full top-[275px] px-[16px]">
-                <ProfileOverview user={talentDetails?.user} friendRequest={talentDetails?.friend_request} />
+                <ProfileOverview 
+                    user={talentDetails?.user} 
+                    friendRequest={talentDetails?.friend_request} 
+                />
                 <ProfessionalProfile profile={talentDetails} />
             </div>
         </div>

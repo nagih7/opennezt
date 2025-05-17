@@ -1,20 +1,12 @@
 import React from 'react';
 import { Button, Popover } from "antd";
-import PropTypes from "prop-types";
 import styles from "./styles.module.scss";
 
-BtnFilter.prototype = {
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
+interface BtnFilterProps {
+  content: React.ReactNode;
 }
 
-BtnFilter.defaultProps = {
-  //
-}
-
-function BtnFilter(props) {
-  let { content } = props
-
+const BtnFilter: React.FC<BtnFilterProps> = ({ content }) => {
   return (
     <div className={styles.btnFilter}>
       <Popover
@@ -32,4 +24,4 @@ function BtnFilter(props) {
   );
 }
 
-export default BtnFilter
+export default BtnFilter; 

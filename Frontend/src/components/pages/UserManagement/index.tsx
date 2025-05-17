@@ -13,21 +13,47 @@ import Filter from './components/Filter'
 import BtnFilter from '../../UI/ButtonFilter'
 import AvatarDefault from '../../../assets/images/default/AvatarDefault.png'
 import { IconlyDelete, IconlyEdit } from 'components/UI/Iconly'
+import type { Dispatch } from '@reduxjs/toolkit'
+
+interface Employee {
+  id: string;
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  avatar?: string;
+  is_active: boolean;
+  status: boolean;
+}
+
+interface DataFilter {
+  keySearch: string;
+  status: string;
+  perPage: number;
+  page: number;
+  order: number | null;
+  column: string | null;
+}
+
+interface ConfigModal {
+  title: string;
+  type: 'CREATE' | 'UPDATE';
+}
 
 function UserManagement() {
-   const dispatch = useDispatch()
+   const dispatch = useDispatch<Dispatch<any>>()
 
-   const authUser = useSelector((state) => state.auth.authUser)
-   const { users, isLoadingGetListUser, paginationListUser, visibleModalDeleteUser } = useSelector(
-      (state) => state.employee
+   const authUser = useSelector((state: any) => state.auth.authUser)
+   const { users, isLoadingGetListUser, paginationListUser, visibleModalDeleteUser, isLoadingBtnDeleteEmployee } = useSelector(
+      (state: any) => state.employee
    )
 
-   const [employee, setEmployee] = useState({})
-   const [configModal, setConfigModal] = useState({
+   const [employee, setEmployee] = useState<Employee>({} as Employee)
+   const [configModal, setConfigModal] = useState<ConfigModal>({
       title: 'Create user',
       type: 'CREATE',
    })
-   const [dataFilter, setDataFilter] = useState({
+   const [dataFilter, setDataFilter] = useState<DataFilter>({
       keySearch: '',
       status: '',
       perPage: 10,
@@ -40,7 +66,7 @@ function UserManagement() {
       dispatch(getListEmployee(dataFilter))
    }, [dataFilter, dispatch])
 
-   const handleCreate = () => {
+   const handleCreate = (): void => {
       dispatch(setVisibleModalCreateOrUpdateEmployee(true))
       setConfigModal({
          title: 'Create user',
@@ -48,7 +74,7 @@ function UserManagement() {
       })
    }
 
-   const handleEdit = (employee) => {
+   const handleEdit = (employee: Employee): void => {
       let employeeSelect = _.cloneDeep(employee)
       setEmployee(employeeSelect)
       dispatch(setVisibleModalCreateOrUpdateEmployee(true))
@@ -58,25 +84,32 @@ function UserManagement() {
       })
    }
 
-   const handleShowConfirmDelete = (employee) => {
+   const handleShowConfirmDelete = (employee: Employee): void => {
       let employeeSelect = _.cloneDeep(employee)
       setEmployee(employeeSelect)
       dispatch(setVisibleModalDeleteEmployee(true))
    }
 
-   const handleConfirmDeleteEmployee = () => {
-      dispatch(handleDeleteEmployee(employee.id))
+   const handleConfirmDeleteEmployee = (): void => {
+      if (employee?._id) {
+         dispatch(handleDeleteEmployee(employee._id))
+      }
    }
 
-   const changeCurrentPage = (page) => {
+   const handleCloseDeleteModal = (): void => {
+      dispatch(setVisibleModalDeleteEmployee(false))
+      setEmployee({} as Employee)
+   }
+
+   const changeCurrentPage = (page: number): void => {
       setDataFilter({ ...dataFilter, page: page })
    }
 
-   const handleSearch = (e) => {
+   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>): void => {
       setDataFilter({ ...dataFilter, keySearch: e.target.value })
    }
 
-   const onChange = (pagination, filters, sorter) => {
+   const onChange = (_pagination: any, _filters: any, sorter: any): void => {
       if (sorter.order && sorter.field) {
          setDataFilter({
             ...dataFilter,
@@ -88,7 +121,7 @@ function UserManagement() {
       }
    }
 
-   const handleChangeStatus = (value) => {
+   const handleChangeStatus = (value: string): void => {
       setDataFilter({ ...dataFilter, status: value.toString() })
    }
 
@@ -98,15 +131,15 @@ function UserManagement() {
          title: 'Name',
          dataIndex: 'name',
          key: 'name',
-         render: (text, record) => (
+         render: (_text: string, record: Employee) => (
             <div className={styles.nameWrap}>
                <div className={styles.imgWrap}>
                   <img
                      src={record.avatar || AvatarDefault}
                      alt={record.name}
-                     onError={(e) => {
-                        e.target.onerror = null
-                        e.target.src = AvatarDefault
+                     onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                        e.currentTarget.onerror = null
+                        e.currentTarget.src = AvatarDefault
                      }}
                   />
                </div>
@@ -114,31 +147,31 @@ function UserManagement() {
             </div>
          ),
          defaultSortOrder: '',
-         sorter: (a, b) => a.age - b.age,
+         sorter: (a: Employee, b: Employee) => a.name.localeCompare(b.name),
       },
       {
          title: 'Email',
          dataIndex: 'email',
          key: 'email',
-         render: (text, record) => <span>{record.email}</span>,
+         render: (_text: string, record: Employee) => <span>{record.email}</span>,
          defaultSortOrder: '',
-         sorter: (a, b) => a.age - b.age,
+         sorter: (a: Employee, b: Employee) => a.email.localeCompare(b.email),
       },
       {
          title: 'Phone',
          dataIndex: 'phone',
          key: 'phone',
-         render: (text, record) => <span>{record.phone}</span>,
+         render: (_text: string, record: Employee) => <span>{record.phone}</span>,
          defaultSortOrder: '',
-         sorter: (a, b) => a.age - b.age,
+         sorter: (a: Employee, b: Employee) => a.phone.localeCompare(b.phone),
       },
       {
          title: 'Active',
          dataIndex: 'active',
          key: 'active',
-         render: (text, record) => <span>{record.is_active ? 'Active' : 'Inactive'}</span>,
+         render: (_text: string, record: Employee) => <span>{record.is_active ? 'Active' : 'Inactive'}</span>,
          defaultSortOrder: '',
-         sorter: (a, b) => a.age - b.age,
+         sorter: (a: Employee, b: Employee) => Number(a.is_active) - Number(b.is_active),
       },
       {
          title: 'Actions',
@@ -146,20 +179,23 @@ function UserManagement() {
          fixed: 'right',
          align: 'center',
          width: '10rem',
-         render: (text, record) => (
+         render: (_text: string, record: Employee) => (
             <>
                {authUser._id !== record._id ? (
                   <div className="flex justify-center gap-4 p-3">
                      <div onClick={() => handleEdit(record)} className="cursor-pointer">
-                        <IconlyEdit color={'#000000'} size={25} />
+                        <IconlyEdit color={'#000000'} size={25} backgroundColor={'#000000'} />
                      </div>
-                     {authUser._id !== record._id ? (
-                        <div onClick={() => handleShowConfirmDelete(record)} className="cursor-pointer">
-                           <IconlyDelete color={'#000000'} size={25} />
-                        </div>
-                     ) : (
-                        ''
-                     )}
+                     <div 
+                        onClick={(e) => {
+                           e.preventDefault();
+                           e.stopPropagation();
+                           handleShowConfirmDelete(record);
+                        }} 
+                        className="cursor-pointer"
+                     >
+                        <IconlyDelete color={'#000000'} size={25} />
+                     </div>
                      <div className={`switch-table-style-custom ${styles.btnWrap}`}>
                         <SwitchMASQ disabled={true} status={record.status} />
                      </div>
@@ -239,10 +275,14 @@ function UserManagement() {
 
          <ModalConfirm
             isModalOpen={visibleModalDeleteUser}
-            title={`Delete ${employee.name}?`}
-            description={`Are you sure you want to delete ${employee.name}? Your action can not be undone.`}
-            onClose={() => dispatch(setVisibleModalDeleteEmployee(true))}
-            onConfirm={() => handleConfirmDeleteEmployee()}
+            title={`Delete ${employee?.name || ''}?`}
+            description={`Are you sure you want to delete ${employee?.name || ''}? Your action can not be undone.`}
+            onClose={handleCloseDeleteModal}
+            onConfirm={handleConfirmDeleteEmployee}
+            textBtnConfirm="Delete"
+            textBtnCancel="Cancel"
+            loadingBtnConfirm={isLoadingBtnDeleteEmployee}
+            type="DEFAULT"
          />
       </div>
    )
