@@ -6,13 +6,13 @@
       "ecmaVersion": 2020,
       "sourceType": "module",
       "ecmaFeatures": {
-         "jsx": true
-      }
+         "jsx": true,
+      },
    },
    "settings": {
       "react": {
-         "version": "detect"
-      }
+         "version": "detect",
+      },
    },
    "rules": {
       "react-hooks/rules-of-hooks": "error",
@@ -21,7 +21,7 @@
       "no-unused-vars": "off",
       "no-undef": "off",
       "react/prop-types": "warn",
-      "react/display-name": "warn"
+      "react/display-name": "warn",
    },
    "overrides": [
       {
@@ -31,17 +31,17 @@
                "warn",
                {
                   "allowExpressions": true,
-                  "allowTypedFunctionExpressions": true
-               }
+                  "allowTypedFunctionExpressions": true,
+               },
             ],
-            "@typescript-eslint/no-explicit-any": "warn"
-         }
+            "@typescript-eslint/no-explicit-any": "warn",
+         },
       },
       {
          "files": ["*.js", "*.jsx"],
          "rules": {
-            "@typescript-eslint/no-unused-vars": "off"
-         }
-      }
-   ]
+            "@typescript-eslint/no-unused-vars": "off",
+         },
+      },
+   ],
 }
