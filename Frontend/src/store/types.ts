@@ -4,39 +4,37 @@ import { ThunkAction } from 'redux-thunk'
 // Import state types for each reducer
 import { AuthState } from 'store/modules/auth/types'
 import { AppState } from 'store/modules/app/types'
-// import { ProfileState } from 'store/modules/profile/types'
-// import { HomeState } from 'store/modules/home/types'
-// import { EmployeeState } from 'store/modules/employee/types'
-// import { ManageState } from 'store/modules/manage/types'
-// import { TalentState } from 'store/modules/talent/types'
+import { ProfileState } from 'store/modules/profile/types'
+import { HomeState } from 'store/modules/home/types'
+import { EmployeeState } from 'store/modules/employee/types'
+import { ManageState } from 'store/modules/manage/types'
+import { TalentState } from 'store/modules/talent/types'
 import { ProjectState } from 'store/modules/project/types'
-// import { ChatState } from 'store/modules/chat/types'
-// import { NotificationState } from 'store/modules/notification/types'
-// import { AIState } from 'store/modules/artificialIntelligence/types'
-// import { ArticleState } from 'store/modules/article/types'
+import { ChatState } from 'store/modules/chat/types'
+import { NotificationState } from 'store/modules/notification/types'
+import { ArticleState } from 'store/modules/article/types'
 import { ActivityState } from 'store/modules/activity/types'
-// import { LinkPreviewState } from 'store/modules/linkPreview/types'
-// import { InterviewState } from 'store/modules/interview/types'
+import { LinkPreviewState } from 'store/modules/linkPreview/types'
+import { InterviewState } from 'store/modules/interview/types'
 import { UserState } from 'store/modules/user/types'
 
 // Define the root state type
 export interface RootState {
    app: AppState
    auth: AuthState
-   // article: ArticleState
-   user: UserState
-   // manage: ManageState
-   // profile: ProfileState
-   // home: HomeState
-   // employee: EmployeeState
-   // talent: TalentState
+   profile: ProfileState
+   home: HomeState
+   article: ArticleState
+   manage: ManageState
+   employee: EmployeeState
+   talent: TalentState
    project: ProjectState
-   // chat: ChatState
-   // notification: NotificationState
-   // artificialIntelligence: AIState
+   chat: ChatState
+   notification: NotificationState
    activity: ActivityState
-   // linkPreview: LinkPreviewState
-   // interview: InterviewState
+   linkPreview: LinkPreviewState
+   interview: InterviewState
+   user: UserState
 }
 
 // Define common Redux types

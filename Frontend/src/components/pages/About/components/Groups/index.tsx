@@ -6,18 +6,63 @@ import { getListProjectsParticipated } from 'api/project'
 // import ProjectBox from './components/ProjectBox'
 import { PROJECT_INVITATION_NOTIFICATION, WAITING_STATUS } from 'utils/constants'
 import InviteBox from './components/InviteBox'
-const Groups = () => {
-   const dispatch = useDispatch()
+import { AppDispatch } from 'store/configureStore'
+
+interface Project {
+   _id: string
+   name: string
+   background: string
+   logo: string
+   articles?: any[]
+   members?: any[]
+}
+
+interface Notification {
+   _id: string
+   type?: {
+      name: string
+   }
+   metadata?: {
+      status: string
+   }
+   user: {
+      name: string
+      avatar: string
+   }
+   data?: {
+      project?: {
+         name: string
+      }
+   }
+}
+
+interface Pagination {
+   page: number
+   limit: number
+   total: number
+}
+
+interface RootState {
+   project: {
+      projectsParticipated: Project[]
+      paginationProjectsParticipated: Pagination
+   }
+   notification: {
+      notifications: Notification[]
+   }
+}
+
+const Groups: React.FC = () => {
+   const dispatch = useDispatch<AppDispatch>()
    // ========== STATE FROM REDUX ========== //
-   const { projectsParticipated, paginationProjectsParticipated } = useSelector((state) => state.project)
-   const { notifications } = useSelector((state) => state.notification)
+   const { projectsParticipated, paginationProjectsParticipated } = useSelector((state: RootState) => state.project)
+   const { notifications } = useSelector((state: RootState) => state.notification)
 
    const projects = projectsParticipated || []
-   const invitations = notifications.filter((notification) => {
-      return (
-         notification.type?.name === PROJECT_INVITATION_NOTIFICATION, notification.metadata?.status === WAITING_STATUS
-      )
-   })
+   const invitations = notifications.filter(
+      (notification) =>
+         notification.type?.name === PROJECT_INVITATION_NOTIFICATION && notification.metadata?.status === WAITING_STATUS
+   )
 
    // ========== USE EFFECT ========== //
    useEffect(() => {
@@ -29,7 +74,7 @@ const Groups = () => {
 
    return (
       <div className="flex gap-3">
-         <div className="lg:w-10/12 w-full">
+         <div className="w-full lg:w-10/12">
             <Tabs.Root className="h-4" defaultValue="Memberships">
                <div className="w-full 2xl:w-full">
                   <Tabs.List>
@@ -59,9 +104,11 @@ const Groups = () => {
                            <h4 className="mb-4 text-lg font-semibold">Groups({projects?.length})</h4>
                            <hr className="mb-4" />
                            <div className="grid grid-cols-3 gap-8">
-                              {projects.map((project) => ({
-                                 /* <ProjectBox project={project} key={project._id} /> */
-                              }))}
+                              {projects.map(
+                                 (project) =>
+                                    /* <ProjectBox project={project} key={project._id} /> */
+                                    null
+                              )}
                            </div>
                         </div>
                      </Tabs.Content>
@@ -86,7 +133,7 @@ const Groups = () => {
                </div>
             </Tabs.Root>
          </div>
-         <RightSidebar />
+         <RightSidebar activities={[]} action={() => ''} />
       </div>
    )
 }

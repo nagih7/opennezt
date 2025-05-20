@@ -1,6 +1,6 @@
 import { IconlyAddUser, IconlyArrowLeft2 } from 'components/UI/Iconly'
 import { ArrowsAltOutlined, MoreOutlined } from '@ant-design/icons'
-import React, { useState } from 'react'
+import React, { FC, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants'
@@ -12,18 +12,43 @@ import { setModalInviteMember } from 'store/modules/project'
 import NoChat from './components/NoChat'
 import Chat from './components/Chat'
 
-const Conversation = () => {
+interface ParamTypes {
+   id?: string
+   [key: string]: string | undefined
+}
+
+interface ConversationState {
+   chat: {
+      conversation: {
+         _id: string
+         type: {
+            name: string
+         }
+         members: Array<{
+            _id: string
+            name: string
+            avatar: string
+         }>
+         data?: {
+            project?: {
+               name: string
+               logo: string
+            }
+         }
+      }
+   }
+}
+
+const Conversation: FC = () => {
    const dispatch = useDispatch()
-   const params = useParams()
+   const params = useParams<ParamTypes>()
    const { id } = params
 
    // ========== STATE FROM REDUX ========== //
-
-   const { conversation } = useSelector((state) => state.chat)
+   const { conversation } = useSelector((state: ConversationState) => state.chat)
 
    // ========== STATE ========== //
-
-   const [isOpenMoreActions, setIsOpenMoreActions] = useState(false)
+   const [isOpenMoreActions, setIsOpenMoreActions] = useState<boolean>(false)
 
    // ========== HANDLE FUNCTION MODAL ========== //
    const handleOpenModal = () => {
@@ -32,7 +57,7 @@ const Conversation = () => {
    }
 
    // ========== HANDLE FUNCTION POPPER ========== //
-   const onOpenChange = (open) => {
+   const onOpenChange = (open: { open: boolean }) => {
       setIsOpenMoreActions(open.open)
    }
 
@@ -60,8 +85,8 @@ const Conversation = () => {
                         case GROUP_CONVERSATION:
                            return (
                               <ConversationHeader
-                                 name={conversation?.data?.project?.name}
-                                 logo={conversation?.data?.project?.logo}
+                                 name={conversation?.data?.project?.name || ''}
+                                 logo={conversation?.data?.project?.logo || ''}
                               />
                            )
                         default:
@@ -85,7 +110,9 @@ const Conversation = () => {
                            onClick={() => setIsOpenMoreActions(!isOpenMoreActions)}
                         >
                            <Tooltip content="More" openDelay={0} closeDelay={100} positioning={{ placement: 'top' }}>
-                              <MoreOutlined />
+                              <span>
+                                 <MoreOutlined />
+                              </span>
                            </Tooltip>
                         </span>
                      </Popover.Trigger>
@@ -94,17 +121,13 @@ const Conversation = () => {
                            <Popover.Content>
                               <Popover.Arrow />
                               <Popover.Body className="p-[15px]">
-                                 <Stack spacing={4}>
+                                 <Stack className="space-y-4">
                                     <Stack
-                                       spacing={4}
-                                       direction={'row'}
-                                       align={'center'}
-                                       cursor={'pointer'}
+                                       className="flex flex-row items-center cursor-pointer hover:bg-[#f5f5f5] rounded-md p-2 m-2 space-x-4"
                                        onClick={handleOpenModal}
-                                       className="hover:bg-[#f5f5f5] rounded-md p-2 m-2"
                                     >
                                        <IconlyAddUser size={24} color="#6f7f92" />
-                                       Invite to project
+                                       <span>Invite to project</span>
                                     </Stack>
                                  </Stack>
                               </Popover.Body>
@@ -112,7 +135,7 @@ const Conversation = () => {
                         </Popover.Positioner>
                      </Portal>
                   </Popover.Root>
-                  <InviteMemberModal conversation={conversation} />
+                  <InviteMemberModal />
                </div>
             </div>
             <Chat />

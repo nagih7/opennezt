@@ -35,10 +35,46 @@ import {
    postActivityUpdateArticle,
 } from 'api/activity'
 import { resetLinkPreview } from 'store/modules/linkPreview'
+import { AppDispatch } from 'store/configureStore'
+import { RootState } from 'store/types'
 
-function TimelinePost() {
-   const dispatch = useDispatch()
+// Interfaces for type safety
+interface Feed {
+   _id?: string
+   user_id: string
+   content?: {
+      caption?: string
+      attachment?: File[]
+      hashtags?: string[]
+   }
+   project_id?: string
+   link_preview?: string
+   audience?: string
+   status?: string
+}
 
+interface Reaction {
+   target_id: string
+   type: string
+}
+
+interface Bookmark {
+   target_id: string
+   marked: string
+}
+
+interface DataFilter {
+   limit: number
+}
+
+interface AuthUser {
+   _id: string
+}
+
+const TimelinePost: React.FC = () => {
+   const dispatch = useDispatch<AppDispatch>()
+
+   // Typed selectors
    const {
       feeds,
       onetimefeeds,
@@ -51,19 +87,18 @@ function TimelinePost() {
       isOpenUpdateForm,
       pagination,
       bookmarks,
-   } = useSelector((state) => state.article)
+   } = useSelector((state: RootState) => state.article)
 
    const {
       activities,
-      isLoading: isLoadingActivities,
-      hasMore: hasMoreActivities,
       skip: activitiesSkip,
       limit: activitiesLimit,
-   } = useSelector((state) => state.activity)
+      hasMore: hasMoreActivities,
+   } = useSelector((state: RootState) => state.activity)
+
    const { nextCursor, limit, hasMore } = pagination
 
-   const [dataFilter, setDataFilter] = useState({
-      cursor: 0,
+   const [dataFilter, setDataFilter] = useState<DataFilter>({
       limit: limit,
    })
 
@@ -72,7 +107,7 @@ function TimelinePost() {
    }, [dispatch, activitiesLimit])
 
    const handleLoadMoreActivities = useCallback(() => {
-      if (!isLoadingActivities && hasMoreActivities) {
+      if (hasMoreActivities) {
          dispatch(
             getActivitiesArticle({
                skip: activitiesSkip,
@@ -80,15 +115,12 @@ function TimelinePost() {
             })
          )
       }
-   }, [dispatch, activitiesSkip, activitiesLimit, isLoadingActivities, hasMoreActivities])
-
-   // End Activities
+   }, [dispatch, activitiesSkip, activitiesLimit, hasMoreActivities])
 
    useEffect(() => {
       if (feeds?.length === 0 && hasMore === true) {
          dispatch(
             getListFeeds({
-               cursor: new Date(),
                limit: limit,
             })
          )
@@ -96,40 +128,37 @@ function TimelinePost() {
    }, [dispatch, feeds?.length, limit, hasMore])
 
    useEffect(() => {
-      // Chỉ gọi API khi cursor thay đổi (không phải lần đầu load)
-      if (dataFilter.cursor !== 0) {
-         dispatch(getListFeeds(dataFilter))
+      if (dataFilter.limit !== limit) {
+         dispatch(getListFeeds({ limit: dataFilter.limit }))
       }
-   }, [dispatch, dataFilter])
-   //Xử lí bất đồng bộ
-   const isLoadingRef = useRef(isLoadingGetFeeds) // Tạo một ref để lưu trạng thái
+   }, [dispatch, dataFilter, limit])
+
+   const isLoadingRef = useRef(isLoadingGetFeeds)
    const cursorRef = useRef(nextCursor)
+
    useEffect(() => {
-      isLoadingRef.current = isLoadingGetFeeds // Cập nhật giá trị ref mỗi khi trạng thái thay đổi
+      isLoadingRef.current = isLoadingGetFeeds
    }, [isLoadingGetFeeds])
+
    useEffect(() => {
       cursorRef.current = nextCursor
    }, [nextCursor])
-   //End
-   //Lướt xuống bài viết cuối thì load tiếp
-   const observerRef = useRef(null)
+
+   const observerRef = useRef<IntersectionObserver | null>(null)
 
    const lastElementRef = useCallback(
-      (node) => {
-         // Ngắt kết nối observer cũ
+      (node: HTMLElement | null) => {
          if (observerRef.current) {
             observerRef.current.disconnect()
             observerRef.current = null
          }
 
-         // Tạo observer mới nếu có node và hasMore
          if (node && hasMore) {
             observerRef.current = new IntersectionObserver(
                (entries) => {
                   const first = entries[0]
                   if (first.isIntersecting && hasMore && !isLoadingRef.current) {
                      setDataFilter({
-                        cursor: cursorRef.current,
                         limit: limit,
                      })
                   }
@@ -142,14 +171,11 @@ function TimelinePost() {
       },
       [hasMore, limit]
    )
-   //Reaction User's Status
-   // Tải trạng thái reaction của người dùng hiện tại
+
    useEffect(() => {
       if (onetimefeeds.length > 0) {
-         // Lấy tất cả article IDs
-         const articleIds = onetimefeeds.filter((feed) => feed?._id).map((feed) => feed?._id)
+         const articleIds = onetimefeeds.filter((feed: Feed) => feed?._id).map((feed: Feed) => feed?._id)
 
-         // Gọi API một lần với array của IDs
          if (articleIds.length > 0) {
             dispatch(getUserReactionsList(articleIds))
          }
@@ -157,10 +183,8 @@ function TimelinePost() {
    }, [onetimefeeds, dispatch])
 
    const reactionMap = useMemo(() => {
-      return new Map(reactions.map((r) => [r.target_id.toString(), r.type]))
+      return new Map(reactions.map((r: Reaction) => [r.target_id.toString(), r.type]))
    }, [reactions])
-   //End Reaction User's Status
-   //Form Create Article
 
    const handleOpenForm = useCallback(() => {
       dispatch(openCreateForm())
@@ -172,21 +196,29 @@ function TimelinePost() {
    }, [dispatch])
 
    const handleReaction = useCallback(
-      async (articleId, formData) => {
+      async (articleId: string, formData: FormData) => {
          const reactionType = formData.get('type')
          await dispatch(updateReaction({ articleId, reactionType }))
-
-         //Gọi API để update server
          await dispatch(handleReactArticle({ articleId, data: formData }))
       },
       [dispatch]
    )
 
    const handleFormSubmit = useCallback(
-      async (formData) => {
+      async (formData: {
+         content: {
+            caption: string
+            attachment: File[]
+            hashtags: string[]
+         }
+         audience: string
+         status: string
+         project_id: string
+         link_preview: string
+      }) => {
          const newFormData = new FormData()
          newFormData.append('caption', formData.content.caption)
-         formData.content.attachment.forEach((file) => {
+         formData.content.attachment.forEach((file: File) => {
             newFormData.append('attachment', file)
          })
          newFormData.append('hashtags', JSON.stringify(formData.content.hashtags))
@@ -198,53 +230,65 @@ function TimelinePost() {
       },
       [dispatch]
    )
-   //End Form Create Article
 
-   //Comment Article
-   const [selectedArticle, setSelectedArticle] = useState({})
+   const [selectedArticle, setSelectedArticle] = useState<Feed>({} as Feed)
    const [isOpenComment, setIsOpenComment] = useState(false)
-   const handleSelectArticle = useCallback(async (feed) => {
+
+   const handleSelectArticle = useCallback(async (feed: Feed) => {
       setSelectedArticle(feed)
       setIsOpenComment(true)
    }, [])
 
    const handleCloseComment = useCallback(() => {
       setIsOpenComment(false)
-      setSelectedArticle({})
+      setSelectedArticle({} as Feed)
    }, [])
 
-   //End Comment Article
-
-   //Update Article
    const handleOpenUpdateForm = useCallback(
-      async (feed) => {
+      async (feed: Feed) => {
          setSelectedArticle(feed)
          dispatch(openUpdateForm())
       },
       [dispatch]
    )
+
    const handleCloseUpdateForm = useCallback(async () => {
-      setSelectedArticle({})
+      setSelectedArticle({} as Feed)
       dispatch(closeUpdateForm())
    }, [dispatch])
-   const handleUpdateFormSubmit = useCallback(async (id, formData) => {
-      const newFormData = new FormData()
-      newFormData.append('caption', formData.content.caption)
-      formData.content.attachment.forEach((file) => {
-         newFormData.append('attachment', file)
-      })
-      newFormData.append('hashtags', JSON.stringify(formData.content.hashtags))
-      newFormData.append('audience', formData.audience)
-      newFormData.append('status', formData.status)
-      newFormData.append('project_id', formData.project_id)
-      await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }))
-      await store.dispatch(updateUpdatedArticle(formData))
-      await postActivityUpdateArticle(id)
-   }, [])
-   //End Update Article
-   //Delete Article
+
+   const handleUpdateFormSubmit = useCallback(
+      async (
+         id: string,
+         formData: {
+            content: {
+               caption: string
+               attachment: File[]
+               hashtags: string[]
+            }
+            audience: string
+            status: string
+            project_id: string
+         }
+      ) => {
+         const newFormData = new FormData()
+         newFormData.append('caption', formData.content.caption)
+         formData.content.attachment.forEach((file: File) => {
+            newFormData.append('attachment', file)
+         })
+         newFormData.append('hashtags', JSON.stringify(formData.content.hashtags))
+         newFormData.append('audience', formData.audience)
+         newFormData.append('status', formData.status)
+         newFormData.append('project_id', formData.project_id)
+         await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }))
+         await store.dispatch(updateUpdatedArticle(formData))
+         await postActivityUpdateArticle(id)
+      },
+      []
+   )
+
    const handleDelete = useCallback(
-      (id) => {
+      (id: string) => {
          dispatch(updateDeletedArticle(id))
          dispatch(handleDeleteArticle({ id }))
       },
@@ -253,7 +297,7 @@ function TimelinePost() {
 
    useEffect(() => {
       if (onetimefeeds.length > 0) {
-         const articleIds = onetimefeeds.filter((r) => r?._id).map((r) => r?._id)
+         const articleIds = onetimefeeds.filter((r: Feed) => r?._id).map((r: Feed) => r?._id)
 
          if (articleIds.length > 0) {
             dispatch(handleGetUserBookmarks(articleIds))
@@ -262,11 +306,11 @@ function TimelinePost() {
    }, [dispatch, onetimefeeds])
 
    const bookmarksMap = useMemo(() => {
-      return new Map(bookmarks.map((r) => [r.target_id.toString(), r.marked]))
+      return new Map(bookmarks.map((r: Bookmark) => [r.target_id.toString(), r.marked]))
    }, [bookmarks])
 
    const bookmarkArticle = useCallback(
-      async (data) => {
+      async (data: { article_id: string; marked: string }) => {
          await dispatch(handleBookmarkArticle({ data }))
          dispatch(updateBookmarks(data))
          if (data.marked === 'yes') {
@@ -277,76 +321,87 @@ function TimelinePost() {
       },
       [dispatch]
    )
-   //End Delete Article
-   // loc danh sách bài viết của người dùng hiện tại
-   const currentUserId = useSelector((state) => state.auth.authUser)
-   console.log('currentUserId', currentUserId)
+
+   const currentUserId = useSelector((state: RootState) => state.auth.authUser) as AuthUser
+
    const userFeeds = useMemo(() => {
       if (!feeds || feeds.length === 0) return []
-      return feeds.filter((feed) => feed.user_id === currentUserId._id)
+      return feeds.filter((feed: Feed) => feed.user_id === currentUserId._id)
    }, [feeds, currentUserId])
-   console.log('userFeeds', userFeeds)
+
    return (
       <div className="flex w-full gap-8 pt-4">
          <div className="w-full 2xl:w-full">
-            {isOpenUpdateForm ? (
+            {isOpenUpdateForm && (
                <UpdateArticleForm
-                  feed={selectedArticle}
-                  onClose={handleCloseUpdateForm}
-                  onSubmit={handleUpdateFormSubmit}
-                  isLoadingUpdateArticle={isLoadingUpdateArticle}
+                  {...({
+                     feed: selectedArticle,
+                     onClose: handleCloseUpdateForm,
+                     onSubmit: handleUpdateFormSubmit,
+                     isLoadingUpdateArticle: isLoadingUpdateArticle,
+                  } as any)}
                />
-            ) : null}
-            {isOpenComment ? (
+            )}
+
+            {isOpenComment && (
                <CommentList
                   key={selectedArticle?._id}
                   feed={selectedArticle}
                   onClose={handleCloseComment}
-                  reaction={reactionMap.get(selectedArticle?._id)}
+                  reaction={reactionMap.get(selectedArticle?._id || '')}
                   onReaction={handleReaction}
                   isLoading={isLoadingReactArticle}
                />
-            ) : null}
-            {isOpenCreateForm ? (
+            )}
+
+            {isOpenCreateForm && (
                <CreateArticleForm
-                  onSubmitForm={handleFormSubmit}
-                  onCloseForm={handleCloseForm}
-                  isLoadingCreateArticle={isLoadingCreateArticle}
+                  {...({
+                     onSubmitForm: handleFormSubmit,
+                     onCloseForm: handleCloseForm,
+                     isLoadingCreateArticle: isLoadingCreateArticle,
+                  } as any)}
                />
-            ) : null}
+            )}
+
             <div>
                <NewArticle onOpenForm={handleOpenForm} />
             </div>
-            {userFeeds.map((feed, index) => {
+
+            {userFeeds.map((feed: Feed, index: number) => {
                if (index === userFeeds.length - 1) {
                   return (
                      <Article
-                        key={feed?._id}
-                        ref={lastElementRef}
-                        feed={feed}
-                        reaction={reactionMap.get(feed?._id)}
-                        onReaction={handleReaction}
-                        isLoading={isLoadingReactArticle}
-                        onSelect={handleSelectArticle}
-                        onEdit={handleOpenUpdateForm}
-                        onDelete={handleDelete}
-                        bookmark={bookmarksMap.get(feed?._id)}
-                        onBookmark={bookmarkArticle}
+                        {...({
+                           key: feed?._id,
+                           ref: lastElementRef,
+                           feed: feed,
+                           reaction: reactionMap.get(feed?._id || ''),
+                           onReaction: handleReaction,
+                           isLoading: isLoadingReactArticle,
+                           onSelect: handleSelectArticle,
+                           onEdit: handleOpenUpdateForm,
+                           onDelete: handleDelete,
+                           bookmark: bookmarksMap.get(feed?._id || ''),
+                           onBookmark: bookmarkArticle,
+                        } as any)}
                      />
                   )
                } else {
                   return (
                      <Article
-                        key={feed?._id}
-                        feed={feed}
-                        reaction={reactionMap.get(feed?._id)}
-                        onReaction={handleReaction}
-                        isLoading={isLoadingReactArticle}
-                        onSelect={handleSelectArticle}
-                        onEdit={handleOpenUpdateForm}
-                        onDelete={handleDelete}
-                        bookmark={bookmarksMap.get(feed?._id)}
-                        onBookmark={bookmarkArticle}
+                        {...({
+                           key: feed?._id,
+                           feed: feed,
+                           reaction: reactionMap.get(feed?._id || ''),
+                           onReaction: handleReaction,
+                           isLoading: isLoadingReactArticle,
+                           onSelect: handleSelectArticle,
+                           onEdit: handleOpenUpdateForm,
+                           onDelete: handleDelete,
+                           bookmark: bookmarksMap.get(feed?._id || ''),
+                           onBookmark: bookmarkArticle,
+                        } as any)}
                      />
                   )
                }
