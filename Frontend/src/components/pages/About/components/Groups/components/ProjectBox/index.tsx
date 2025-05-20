@@ -3,9 +3,31 @@ import React, { useState } from 'react'
 import { FaRegFileAlt, FaUsers } from 'react-icons/fa'
 import { OPENNEZT_BG_BLACK } from 'utils/constants'
 
-const ProjectBox = ({ project }) => {
+interface User {
+   name?: string
+   avatar?: string
+}
+
+interface Member {
+   user?: User
+}
+
+interface Project {
+   _id?: string
+   name: string
+   background: string
+   logo: string
+   articles?: any[]
+   members?: Member[]
+}
+
+interface ProjectBoxProps {
+   project: Project
+}
+
+const ProjectBox: React.FC<ProjectBoxProps> = ({ project }) => {
    // ========== STATE ========== //
-   const [errorBG, setErrorBG] = useState(false)
+   const [errorBG, setErrorBG] = useState<boolean>(false)
 
    // ========== RENDER ========== //
    return (
@@ -39,7 +61,7 @@ const ProjectBox = ({ project }) => {
                shape="square"
             >
                <Avatar.Image src={project.logo} />
-               <Avatar.Fallback alt={project.name} />
+               <Avatar.Fallback>{project.name}</Avatar.Fallback>
             </Avatar.Root>
          </div>
 
@@ -63,7 +85,7 @@ const ProjectBox = ({ project }) => {
                      key={idx}
                   >
                      <Avatar.Image src={member.user?.avatar} />
-                     <Avatar.Fallback alt={member.user?.name} />
+                     <Avatar.Fallback>{member.user?.name}</Avatar.Fallback>
                   </Avatar.Root>
                ))}
                <div className="w-10 h-10 pt-1 mt-6 text-white transition-transform duration-300 ease-in-out bg-blue-600 border border-white rounded-full cursor-pointer hover:scale-125 hover:z-10 hover:shadow-lg">

@@ -6,24 +6,32 @@ import MailIcon from '@mui/icons-material/Mail'
 import { useNavigate } from 'react-router-dom'
 import { Button } from 'antd'
 
-const Verify = () => {
+interface RootState {
+   auth: {
+      authRegister: {
+         email: string
+      } | null
+   }
+}
+
+const Verify: React.FC = () => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
 
-   const { authRegister } = useSelector((state) => state.auth)
+   const { authRegister } = useSelector((state: RootState) => state.auth)
 
    useEffect(() => {
-      dispatch(resetRegister)
+      dispatch(resetRegister())
       // eslint-disable-next-line
    }, [])
 
    useEffect(() => {
-      if (authRegister && !authRegister.email) {
+      if (!authRegister || !authRegister.email) {
          navigate('/login')
       }
    }, [authRegister, navigate])
 
-   const handleNavigateToLogin = () => {
+   const handleNavigateToLogin = (): void => {
       dispatch(resetAuthRegister())
       navigate('/login')
    }
@@ -39,7 +47,7 @@ const Verify = () => {
                <span>
                   We have sent an email to{' '}
                   <a href="https://gmail.com" target="_blank" rel="noopener noreferrer">
-                     {authRegister.email}
+                     {authRegister?.email}
                   </a>
                </span>
                <span className={styles.verifyText}>Please check your email to verify your account.</span>

@@ -15,20 +15,38 @@ import { login } from '../../../../api/auth'
 import Logo from '../../../../assets/images/logo/opennezt_black.png'
 import { resetForgotPassword } from '../../../../store/modules/auth'
 
-const Login = () => {
+interface LoginData {
+   email: string
+   password: string
+}
+
+interface ErrorData {
+   email: string
+   password: string
+}
+
+interface RootState {
+   auth: {
+      isLoadingBtnLogin: boolean
+      isAuthSuccess: boolean
+      authRole: string
+   }
+}
+
+const Login: React.FC = () => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
-   const [dataLogin, setDataLogin] = useState({
+   const [dataLogin, setDataLogin] = useState<LoginData>({
       email: '',
       password: '',
    })
-   const [errorDataLogin, setErrorDataLogin] = useState({
+   const [errorDataLogin, setErrorDataLogin] = useState<ErrorData>({
       email: '',
       password: '',
    })
-   const [checkRemember, setCheckRemember] = useState(false)
-   const isLoadingBtnLogin = useSelector((state) => state.auth.isLoadingBtnLogin)
-   const { isAuthSuccess, authRole } = useSelector((state) => state.auth)
+   const [checkRemember, setCheckRemember] = useState<boolean>(false)
+   const isLoadingBtnLogin = useSelector((state: RootState) => state.auth.isLoadingBtnLogin)
+   const { isAuthSuccess, authRole } = useSelector((state: RootState) => state.auth)
 
    useEffect(() => {
       dispatch(resetForgotPassword())
@@ -48,27 +66,27 @@ const Login = () => {
       }
    }, [isAuthSuccess, authRole, navigate])
 
-   const handleResetError = () => {
+   const handleResetError = (): void => {
       setErrorDataLogin({
          email: '',
          password: '',
       })
    }
 
-   const handleChangeInput = (valueInput, type) => {
+   const handleChangeInput = (valueInput: React.ChangeEvent<HTMLInputElement>, type: keyof LoginData): void => {
       let value = valueInput.target.value
       let data = _.cloneDeep(dataLogin)
       data[type] = value
       setDataLogin(data)
    }
 
-   const validateBlur = (type) => {
+   const validateBlur = (type: keyof LoginData): boolean => {
       let validate = isValidate(dataLogin, type, errorDataLogin)
       setErrorDataLogin(validate.error)
       return validate.isError
    }
 
-   const handleConfirmLogin = async () => {
+   const handleConfirmLogin = async (): Promise<void> => {
       let validate = handleCheckValidateConfirm(dataLogin, errorDataLogin)
       setErrorDataLogin(validate.dataError)
       if (!validate.isError) {
@@ -76,13 +94,13 @@ const Login = () => {
       }
    }
 
-   const handleKeyDown = (event) => {
+   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
       if (event.key === 'Enter') {
          handleConfirmLogin()
       }
    }
 
-   const handleClickCheckBox = (e) => {
+   const handleClickCheckBox = (e: any): void => {
       setCheckRemember(e.target.checked)
    }
 

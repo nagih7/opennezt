@@ -5,6 +5,7 @@ import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import moment from 'moment'
 import { Avatar } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
+import { AnyAction } from 'redux'
 
 interface User {
    _id: string
@@ -27,8 +28,8 @@ interface Activity {
 }
 
 interface RightSidebarProps {
-   activities: Activity[]
-   action: (activityOrProjectName: Project | Activity) => string
+   activities: any[]
+   action: any
 }
 
 const RightSidebar: React.FC<RightSidebarProps> = ({ activities, action }) => {

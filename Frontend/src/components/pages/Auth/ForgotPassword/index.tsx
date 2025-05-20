@@ -9,17 +9,31 @@ import store from 'store/configureStore'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
-function ForgotPassword() {
+interface ForgotPasswordData {
+   email: string
+}
+
+interface ErrorData {
+   email: string
+}
+
+interface RootState {
+   auth: {
+      isSuccessForgotPassword: boolean
+   }
+}
+
+const ForgotPassword: React.FC = () => {
    const dispatch = useDispatch()
-   const [dataForgotPassword, setDataForgotPassword] = useState({ email: '' })
-   const [errorDataForgotPassword, setErrorDataForgotPassword] = useState({
+   const [dataForgotPassword, setDataForgotPassword] = useState<ForgotPasswordData>({ email: '' })
+   const [errorDataForgotPassword, setErrorDataForgotPassword] = useState<ErrorData>({
       email: '',
    })
-   const [loading, setLoading] = useState(false)
+   const [loading, setLoading] = useState<boolean>(false)
 
    const navigate = useNavigate()
 
-   const { isSuccessForgotPassword } = useSelector((state) => state.auth)
+   const { isSuccessForgotPassword } = useSelector((state: RootState) => state.auth)
 
    useEffect(() => {
       if (isSuccessForgotPassword) {
@@ -31,24 +45,27 @@ function ForgotPassword() {
       handleResetError()
    }, [dataForgotPassword])
 
-   const handleResetError = () => {
+   const handleResetError = (): void => {
       setErrorDataForgotPassword({ email: '' })
    }
 
-   const handleChangeInput = (valueInput, type) => {
+   const handleChangeInput = (
+      valueInput: React.ChangeEvent<HTMLInputElement>,
+      type: keyof ForgotPasswordData
+   ): void => {
       let value = valueInput.target.value
       let data = _.cloneDeep(dataForgotPassword)
       data[type] = value
       setDataForgotPassword(data)
    }
 
-   const validateBlur = (type) => {
+   const validateBlur = (type: keyof ForgotPasswordData): boolean => {
       let validate = isValidate(dataForgotPassword, type, errorDataForgotPassword)
       setErrorDataForgotPassword(validate.error)
       return validate.isError
    }
 
-   const handleForgotPassword = async () => {
+   const handleForgotPassword = async (): Promise<void> => {
       const { email } = dataForgotPassword
       await store.dispatch(forgotPassword(email))
    }
@@ -60,7 +77,7 @@ function ForgotPassword() {
             <InputMASQ
                type={'text'}
                placeholder={'Enter email...'}
-               onChange={(e) => handleChangeInput(e, 'email')}
+               onChange={(e: any) => handleChangeInput(e, 'email')}
                onBlur={() => validateBlur('email')}
                value={dataForgotPassword.email}
                error={errorDataForgotPassword.email}
