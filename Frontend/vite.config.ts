@@ -29,6 +29,6 @@ export default defineConfig({
    },
    server: {
       port: 3000, // Cổng mặc định của Vite
-      open: true, // Mở trình duyệt khi chạy dev server
+      open: false, // Mở trình duyệt khi chạy dev server
    },
 })

@@ -4,6 +4,7 @@ import { handleCheckRoute } from '../../../../../../utils/helper'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { NAVBAR } from '../../../../../../utils/constants'
+import { RootState } from '~/store'
 
 interface RouteItem {
    path: string
@@ -16,13 +17,6 @@ interface RouteItem {
 interface NavItemProps {
    route: RouteItem
    isShowMenu?: boolean
-}
-
-interface RootState {
-   app: {
-      isShowSideBar: boolean
-      language: string
-   }
 }
 
 // Define type for NAVBAR structure

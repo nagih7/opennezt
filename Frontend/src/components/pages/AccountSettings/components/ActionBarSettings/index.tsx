@@ -2,17 +2,12 @@ import React from 'react'
 import { Avatar } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import { CheckCircleFilled } from '@ant-design/icons'
+import { RootState } from '~/store'
 
 interface AuthUser {
    name: string
    avatar?: string
    created_at?: string
-}
-
-interface RootState {
-   auth: {
-      authUser: AuthUser
-   }
 }
 
 const ActionBarSettings = (): React.ReactElement => {

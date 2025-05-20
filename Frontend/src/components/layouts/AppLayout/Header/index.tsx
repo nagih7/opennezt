@@ -31,9 +31,10 @@ import manageRouteMap from 'routes/manageRouteMap'
 import { handleCheckRoute } from 'utils/helper'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { logout } from 'api/auth'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
 import styles from './styles.module.scss'
 import { NAVBAR, SEARCH } from 'utils/constants/app'
+import { RootState } from '~/store'
 
 // Define types for state
 interface RecentSearch {
@@ -61,22 +62,6 @@ interface NotificationMetadata {
 interface Notification {
    metadata?: NotificationMetadata
    id: string
-}
-
-interface RootState {
-   auth: {
-      authUser: {
-         name: string
-         avatar: string
-      }
-      authRole: string
-   }
-   app: {
-      language: string
-   }
-   notification: {
-      notifications: Notification[]
-   }
 }
 
 const Header: React.FC = () => {

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { setLocation } from '../../../store/modules/app'
 import LazyLoading from 'components/UI/LazyLoading'
 import banner from '../../../assets/images/background/banner_auth_layout.jpg'
+import { RootState } from '~/store'
 
 interface AuthLayoutProps {
    title?: string
@@ -16,12 +17,6 @@ interface LocationState {
    pathName: string
    prevPathName: string
    payload?: any
-}
-
-interface RootState {
-   app: {
-      location: LocationState
-   }
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title = '', path }) => {

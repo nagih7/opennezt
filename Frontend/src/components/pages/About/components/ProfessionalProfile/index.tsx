@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProfile } from 'api/profile'
 import ProfileDetails from 'components/UI/ProfileDetails'
-import { AppDispatch } from '~/store/configureStore'
+import { AppDispatch } from '~/~/store'
 import { RootState } from '~/store/store.types'
 
 const action = () => {

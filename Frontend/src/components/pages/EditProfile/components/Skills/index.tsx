@@ -10,6 +10,7 @@ import SelectCustom from 'components/UI/SelectCustom'
 import { toaster } from 'components/UI/toaster'
 import { Tag } from 'antd'
 import { AppDispatch } from '~/store/store.types'
+import { RootState } from '~/store'
 
 interface Skill {
    _id: string
@@ -32,18 +33,6 @@ interface FormData {
 interface SelectEvent {
    value: string[]
    items?: { value: string; label: string }[]
-}
-
-interface RootState {
-   user: {
-      categoryFramework: any
-      subCategoryFramework: any
-      skillFramework: any
-   }
-   profile: {
-      profile: Profile | null
-      isLoadingUpdateSkills: boolean
-   }
 }
 
 const Skills = (): React.ReactElement => {
@@ -154,7 +143,7 @@ const Skills = (): React.ReactElement => {
    return (
       <div className="flex gap-8 flex-col md:flex-row w-full py-8 px-[16px]">
          <ProfileEditMenu />
-         <div className="md:w-8/12 w-full">
+         <div className="w-full md:w-8/12">
             <div className="bg-[#ffffff] p-8 hidden md:block rounded-md">
                {/* =========== Profile Card ========== */}
                <ProfileCard />

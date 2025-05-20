@@ -9,7 +9,7 @@ import ProjectManage from './components/ProjectManage'
 import Members from './components/Members'
 import Sendinvite from './components/Sendinvite'
 import { RootState } from 'store/types'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
 
 // Define Project interface based on actual usage in the components
 interface Project {

@@ -9,6 +9,7 @@ import ActionBar from '../ActionBar'
 import SelectCustom from 'components/UI/SelectCustom'
 import { toaster } from 'components/UI/toaster'
 import { AppDispatch } from '~/store/store.types'
+import { RootState } from '~/store'
 
 // Định nghĩa các interface
 interface Industry {
@@ -37,17 +38,6 @@ interface FormData {
 interface SelectEvent {
    value: string[]
    items?: { value: string; label: string }[]
-}
-
-interface RootState {
-   profile: {
-      profile: Profile | null
-      isLoadingUpdateProfile: boolean
-   }
-   user: {
-      industryFramework: any
-      experienceLevelFramework: any
-   }
 }
 
 const ProfessionalBackground: React.FC = () => {
@@ -121,7 +111,7 @@ const ProfessionalBackground: React.FC = () => {
    return (
       <div className="flex flex-col md:flex-row gap-8 w-full py-8 px-[16px]">
          <ProfileEditMenu />
-         <div className="md:w-8/12 w-full">
+         <div className="w-full md:w-8/12">
             <div className="bg-[#ffffff] hidden md:block p-8 rounded-md">
                {/* =========== Profile Card ========== */}
                <ProfileCard />

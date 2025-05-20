@@ -7,7 +7,7 @@ import { Tag } from 'antd'
 import { updateSkillRequirement } from 'api/project'
 import { postProjectDetailsActivitiesProjectRequirement } from 'api/activity'
 import { RootState } from 'store/types'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
 import { toaster } from 'components/UI/toaster'
 
 interface FormData {

@@ -1,5 +1,3 @@
-import { combineReducers } from '@reduxjs/toolkit'
-
 // Import all reducers
 import appReducer from './modules/app'
 import authReducer from './modules/auth'
@@ -20,22 +18,22 @@ import interviewReducer from './modules/interview'
 
 // Define the root reducer with TypeScript typing
 const rootReducer = {
-    app: appReducer,
-    auth: authReducer,
-    article: articleReducer,
-    user: userReducer,
-    manage: manageReducer,
-    profile: profileReducer,
-    home: homeReducer,
-    employee: employeeReducer,
-    talent: talentReducer,
-    project: projectReducer,
-    chat: chatReducer,
-    notification: notificationReducer,
-    artificialIntelligence: artificialIntelligenceReducer,
-    activity: activityReducer,
-    linkPreview: linkPreviewReducer,
-    interview: interviewReducer,
+   app: appReducer,
+   auth: authReducer,
+   article: articleReducer,
+   user: userReducer,
+   manage: manageReducer,
+   profile: profileReducer,
+   home: homeReducer,
+   employee: employeeReducer,
+   talent: talentReducer,
+   project: projectReducer,
+   chat: chatReducer,
+   notification: notificationReducer,
+   artificialIntelligence: artificialIntelligenceReducer,
+   activity: activityReducer,
+   linkPreview: linkPreviewReducer,
+   interview: interviewReducer,
 }
 
 export default rootReducer

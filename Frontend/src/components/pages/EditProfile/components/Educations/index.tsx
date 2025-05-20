@@ -10,6 +10,7 @@ import { IconlyEdit, IconlyDelete } from 'components/UI/Iconly'
 import { createEducation, updateEducation, deleteEducation, getProfile } from 'api/profile'
 import { DataList } from '@chakra-ui/react'
 import { setIsOpenModalCreateOrUpdateEducation } from '~/store/modules/profile'
+import { RootState } from '~/store'
 
 // Định nghĩa các interfaces
 interface Education {
@@ -38,17 +39,6 @@ interface FormData {
    organization_id?: string | string[]
    expiration_date?: string | null
    [key: string]: any
-}
-
-interface RootState {
-   profile: {
-      profile: {
-         educations?: Education[]
-         [key: string]: any
-      } | null
-      isOpenModalCreateOrUpdateEducation: boolean
-      isLoadingCreateOrUpdateEducation: boolean
-   }
 }
 
 type AppDispatch = any // Tạm thời dùng any, nên thay bằng kiểu từ Redux store thực tế
@@ -181,7 +171,7 @@ const Educations: React.FC = () => {
    return (
       <div className="flex gap-8 flex-col md:flex-row w-full py-8 px-[16px]">
          <ProfileEditMenu />
-         <div className="md:w-8/12 w-full">
+         <div className="w-full md:w-8/12">
             <div className="bg-[#ffffff] md:block hidden p-8 rounded-md">
                {/* =========== Profile Card ========== */}
                <ProfileCard />

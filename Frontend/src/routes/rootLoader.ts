@@ -1,9 +1,9 @@
 import { redirect } from 'react-router-dom'
-import store from '../store/configureStore'
-import { initialSaga } from '../store/modules/routing'
-import { hasPermission } from '../utils/helper'
+import store from '~/store'
+import { initialSaga } from '~/store/modules/routing'
+import { hasPermission } from '~/utils/helper'
 import { getMe } from 'api/auth'
-import { getAuthToken } from '../utils/localStorage'
+import { getAuthToken } from '~/utils/localStorage'
 
 // Define a more flexible interface that works with both loaders
 interface LoaderArgs {
@@ -58,11 +58,11 @@ export const rootLoader = async (
 
 // rootLoader.js
 // import { redirect } from 'react-router-dom'
-// import store from '../store/configureStore'
-// import { initialSaga } from '../store/modules/routing'
-// import { hasPermission } from '../utils/helper'
+// import store from '~/store'
+// import { initialSaga } from '~/store/modules/routing'
+// import { hasPermission } from '~/utils/helper'
 // import { getMe } from 'api/auth'
-// import { getAuthToken } from '../utils/localStorage'
+// import { getAuthToken } from '~/utils/localStorage'
 
 // /**
 //  * Root loader function for handling route transitions

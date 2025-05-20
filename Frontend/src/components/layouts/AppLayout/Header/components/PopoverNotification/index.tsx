@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import moment from 'moment'
-import store from 'store/configureStore'
+import store from '~/store'
 import { markAsRead, replyNotification } from 'api/notification'
 import {
    CONFIRM_FRIEND_REQUEST_NOTIFICATION,

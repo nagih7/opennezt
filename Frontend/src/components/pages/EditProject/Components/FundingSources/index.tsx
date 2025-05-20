@@ -13,7 +13,8 @@ import { CURRENCY, FUNDING_SOURCES } from 'utils/constants'
 import { updateProjectFundingSources } from 'api/project'
 import { postProjectDetailsActivitiesFundingSource } from 'api/activity'
 import { toaster } from 'components/UI/toaster'
-import { AppDispatch } from '~/store/configureStore'
+import { AppDispatch } from '~/~/store'
+import { RootState } from '~/store'
 
 // Define types for the component
 interface FundingSource {
@@ -31,13 +32,6 @@ interface FormFundingSource {
    name: string[]
    amount: string | number
    currency: string[]
-}
-
-interface RootState {
-   project: {
-      myProjectDetails: Project
-      isLoadingUpdateMyProject: boolean
-   }
 }
 
 interface SelectEvent {

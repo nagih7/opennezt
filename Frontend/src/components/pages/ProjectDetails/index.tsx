@@ -7,52 +7,7 @@ import { getMyProjectDetails } from 'api/project'
 import { HStack, Image, Tag } from '@chakra-ui/react'
 import ProjectMenu from './components/ProjectMenu'
 import RightProject from './components/RightProject'
-
-// Define types for the project data
-interface Industry {
-   id: string
-   name: string
-}
-
-interface Stage {
-   name: string
-}
-
-interface Revenue {
-   date: string
-   amount: number | string
-   currency: string
-}
-
-interface FundingSource {
-   name: string
-   amount: number | string
-   currency: string
-}
-
-interface AdditionalInfo {
-   name: string
-   content: string
-}
-
-interface Project {
-   _id: string
-   name: string
-   description?: string
-   background?: string
-   logo?: string
-   industries?: Industry[]
-   stage?: Stage
-   revenues?: Revenue[]
-   funding_sources?: FundingSource[]
-   additional_infos?: AdditionalInfo[]
-}
-
-interface RootState {
-   project: {
-      myProjectDetails: Project
-   }
-}
+import { RootState } from '~/store'
 
 const ProjectDetails: React.FC = () => {
    const { id } = useParams<{ id: string }>()
@@ -148,7 +103,7 @@ const ProjectDetails: React.FC = () => {
          </div>
          <div className="px-[16px]">
             <div className="flex w-full gap-8">
-               <div className="lg:w-10/12 w-full">
+               <div className="w-full lg:w-10/12">
                   <div className="bg-[#ffffff] rounded-md">
                      <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                         <h5 className="mb-0">Secter</h5>

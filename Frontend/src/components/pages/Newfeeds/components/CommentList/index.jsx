@@ -21,7 +21,7 @@ import { differenceInDays, differenceInHours, differenceInMinutes, differenceInS
 import Comment from '../Comment'
 import NewCommentForm from '../NewCommentForm'
 import { resetReply } from 'store/modules/article'
-import store from 'store/configureStore'
+import store from '~/store'
 import { useNavigate } from 'react-router-dom'
 import { handleGetLinkPreview } from 'api/linkPreview'
 

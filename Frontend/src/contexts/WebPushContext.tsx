@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { subscribe } from 'api/app'
 import urlBase64ToUint8Array from 'utils/webpush/urlBase64ToUint8Array'
 import { PUBLIC_VALID_KEY } from 'utils/constants'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
 import { AnyAction } from 'redux'
 
 // Define types for the context value

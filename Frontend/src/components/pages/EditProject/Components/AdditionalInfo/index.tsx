@@ -11,7 +11,8 @@ import { toaster } from 'components/UI/toaster'
 import { updateProjectAdditionalInfos } from 'api/project'
 import { postProjectDetailsActivitiesAdditionalInfo } from 'api/activity'
 import { PROJECT_ADDITIONAL_INFO_FIELDS } from 'utils/constants/additionalInfor'
-import { AppDispatch } from '~/store/configureStore'
+import { AppDispatch } from '~/~/store'
+import { RootState } from '~/store'
 
 // Define types for the component
 interface Field {
@@ -34,16 +35,6 @@ interface Project {
    additional_infos?: AdditionalInfo[]
    created_at?: string
    logo?: string
-}
-
-interface RootState {
-   project: {
-      myProjectDetails: Project
-      isLoadingUpdateMyProject: boolean
-   }
-   app: {
-      language: string
-   }
 }
 
 const EditAdditionalInfo: React.FC = () => {
@@ -174,10 +165,10 @@ const EditAdditionalInfo: React.FC = () => {
             </div>
             <div className="bg-[#ffffff] p-8 rounded-md mt-8">
                <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between">
                      <div>
                         <h4 className="text-xl font-semibold">Additional Information</h4>
-                        <p className="text-gray-600 text-sm mt-1">
+                        <p className="mt-1 text-sm text-gray-600">
                            <strong className="font-medium">Note: max 500 characters for each field</strong>
                         </p>
                      </div>
@@ -185,7 +176,7 @@ const EditAdditionalInfo: React.FC = () => {
                </div>
 
                {/* Structured form fields */}
-               <div className="border rounded-md overflow-hidden mb-6">
+               <div className="mb-6 overflow-hidden border rounded-md">
                   <table className="w-full">
                      <tbody>
                         {fields.map((field, index) => (
@@ -195,7 +186,7 @@ const EditAdditionalInfo: React.FC = () => {
                                     index < fields.length - 1 ? 'border-b border-gray-200' : ''
                                  } ${field.backgroundColor}`}
                               >
-                                 <div className="flex justify-between items-center mb-2">
+                                 <div className="flex items-center justify-between mb-2">
                                     <label htmlFor={field.id} className="font-medium text-gray-700">
                                        {field.name}
                                     </label>
@@ -229,7 +220,7 @@ const EditAdditionalInfo: React.FC = () => {
 
                {isEditing && (
                   <div className="flex justify-end mt-4 space-x-3">
-                     <Button onClick={toggleEdit} className="bg-gray-400 text-white px-6 py-2 rounded-md">
+                     <Button onClick={toggleEdit} className="px-6 py-2 text-white bg-gray-400 rounded-md">
                         Cancel
                      </Button>
                      <Button

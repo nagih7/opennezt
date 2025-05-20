@@ -12,26 +12,14 @@ import {
 import { recruitTalents } from 'api/talent'
 import { setFormRecruitTalents } from 'store/modules/talent'
 import InputCustom from 'components/UI/InputCustom'
-import { FormRecruitTalents, Framework, SelectEvent } from '../../types'
-
-interface RootState {
-    user: {
-        industryFramework: Framework;
-        experienceLevelFramework: Framework;
-        categoryFramework: Framework;
-        subCategoryFramework: Framework;
-        skillFramework: Framework;
-    };
-    talent: {
-        formRecruitTalents: FormRecruitTalents;
-    };
-}
+import { FormRecruitTalents, SelectEvent } from '../../types'
+import { RootState } from '~/store'
 
 interface DataFilter extends FormRecruitTalents {}
 
 const FilterSidebar: React.FC = () => {
    const dispatch = useAppDispatch()
-   
+
    const { industryFramework, experienceLevelFramework, categoryFramework, subCategoryFramework, skillFramework } =
       useSelector((state: RootState) => state.user)
    const { formRecruitTalents } = useSelector((state: RootState) => state.talent)
@@ -49,11 +37,13 @@ const FilterSidebar: React.FC = () => {
    })
 
    useEffect(() => {
-      dispatch(recruitTalents({
-         ...formRecruitTalents,
-         page: 1,
-         perPage: 6
-      }))
+      dispatch(
+         recruitTalents({
+            ...formRecruitTalents,
+            page: 1,
+            perPage: 6,
+         })
+      )
       setDataFilter(formRecruitTalents)
    }, [dispatch, formRecruitTalents])
 
@@ -92,7 +82,7 @@ const FilterSidebar: React.FC = () => {
                ...formRecruitTalents,
                keySearch: newValue,
                page: 1,
-               perPage: 6
+               perPage: 6,
             }
             dispatch(setFormRecruitTalents({ event }))
             dispatch(recruitTalents(updatedForm))
@@ -103,7 +93,7 @@ const FilterSidebar: React.FC = () => {
    const handleChangeSelect = async (event: SelectEvent, nameSelect: keyof FormRecruitTalents) => {
       setDataFilter({ ...dataFilter, [nameSelect]: event.value[0] })
       dispatch(setFormRecruitTalents({ event, nameSelect }))
-      
+
       switch (nameSelect) {
          case 'category':
             dispatch(getSubCategoryFramework(event.value[0]))
@@ -114,12 +104,14 @@ const FilterSidebar: React.FC = () => {
          default:
             break
       }
-      dispatch(recruitTalents({ 
-         ...formRecruitTalents, 
-         [nameSelect]: event.value[0],
-         page: 1,
-         perPage: 6
-      }))
+      dispatch(
+         recruitTalents({
+            ...formRecruitTalents,
+            [nameSelect]: event.value[0],
+            page: 1,
+            perPage: 6,
+         })
+      )
    }
 
    return (
@@ -198,4 +190,4 @@ const FilterSidebar: React.FC = () => {
    )
 }
 
-export default FilterSidebar 
+export default FilterSidebar

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getListMyProjects } from 'api/project'
 import ProjectBox from './ProjectBox'
 import { RootState } from 'store/types'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
 
 interface MyProjectsProps {
    isBottom: boolean

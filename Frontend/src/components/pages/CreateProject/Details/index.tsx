@@ -7,16 +7,11 @@ import TextAreaCustom from 'components/UI/TextAreaCustom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toaster } from 'components/UI/toaster'
 import { Button, ButtonGroup } from '@chakra-ui/react'
+import { RootState } from '~/store'
 
 interface FormData {
    name: string
    description: string
-}
-
-interface RootState {
-   project: {
-      formCreateProject: FormData
-   }
 }
 
 const Details: React.FC = () => {

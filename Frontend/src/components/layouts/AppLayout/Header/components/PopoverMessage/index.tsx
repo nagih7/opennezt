@@ -7,16 +7,7 @@ import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { MoreOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-
-// Define Redux state types
-interface RootState {
-   chat: {
-      conversations: Conversation[]
-   }
-   app: {
-      language: string
-   }
-}
+import { RootState } from '~/store'
 
 // Define conversation types
 interface Member {

@@ -10,6 +10,7 @@ import { getMyProjectDetails, updateProjectSector } from 'api/project'
 import { getIndustryFramework, getStageFramework } from 'api/user'
 import { toaster } from 'components/UI/toaster'
 import { postProjectDetailsActivitiesSector } from 'api/activity'
+import { RootState } from '~/store'
 
 // Define types for the component
 interface Industry {
@@ -36,17 +37,6 @@ interface FormData {
 
 interface SelectEvent {
    value: string[]
-}
-
-interface RootState {
-   project: {
-      myProjectDetails: Project
-      isLoadingUpdateMyProject: boolean
-   }
-   user: {
-      industryFramework: any[]
-      stageFramework: any[]
-   }
 }
 
 const EditStage: React.FC = () => {

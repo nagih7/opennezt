@@ -5,14 +5,7 @@ import { resetRegister, resetAuthRegister } from 'store/modules/auth'
 import MailIcon from '@mui/icons-material/Mail'
 import { useNavigate } from 'react-router-dom'
 import { Button } from 'antd'
-
-interface RootState {
-   auth: {
-      authRegister: {
-         email: string
-      } | null
-   }
-}
+import { RootState } from '~/store'
 
 const Verify: React.FC = () => {
    const dispatch = useDispatch()

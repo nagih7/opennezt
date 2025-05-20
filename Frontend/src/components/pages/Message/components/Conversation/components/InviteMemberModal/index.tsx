@@ -6,7 +6,7 @@ import SelectCustom from 'components/UI/SelectCustom'
 import { debounce } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import store from 'store/configureStore'
+import store from '~/store'
 import { setModalInviteMember } from 'store/modules/project'
 
 const InviteMemberModal = () => {

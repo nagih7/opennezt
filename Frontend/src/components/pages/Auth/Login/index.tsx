@@ -8,12 +8,13 @@ import { useNavigate } from 'react-router-dom'
 import { isValidate } from '../../../../utils/validate'
 import { handleCheckValidateConfirm } from '../../../../utils/helper'
 import { useSelector, useDispatch } from 'react-redux'
-import store from 'store/configureStore'
+import store from '~/store'
 import { Checkbox } from 'antd'
 import Social from './components/Social'
 import { login } from '../../../../api/auth'
 import Logo from '../../../../assets/images/logo/opennezt_black.png'
 import { resetForgotPassword } from '../../../../store/modules/auth'
+import { RootState } from '~/store'
 
 interface LoginData {
    email: string
@@ -23,14 +24,6 @@ interface LoginData {
 interface ErrorData {
    email: string
    password: string
-}
-
-interface RootState {
-   auth: {
-      isLoadingBtnLogin: boolean
-      isAuthSuccess: boolean
-      authRole: string
-   }
 }
 
 const Login: React.FC = () => {

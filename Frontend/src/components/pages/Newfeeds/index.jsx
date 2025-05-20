@@ -27,7 +27,7 @@ import {
 import CreateArticleForm from './components/CreateAricleForm'
 import CommentList from './components/CommentList'
 import UpdateArticleForm from './components/UpdateArticleForm'
-import store from 'store/configureStore'
+import store from '~/store'
 import {
    deleteActivitySaveArticle,
    getActivitiesArticle,

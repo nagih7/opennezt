@@ -1,42 +1,37 @@
 import { LINKEDIN_PASSWORD, LINKEDIN_USERNAME } from '@/configs'
 import puppeteer from 'puppeteer'
 
-/**
- * LinkedIn Skills Scraper Module
- * Functions to scrape skills from LinkedIn profiles
- */
-
-// Session management object with synchronized access methods
+// Đối tượng quản lý phiên
 const LinkedInSessionManager = {
-    // Private session state
+    // Trạng thái phiên session
     _session: null,
     _initializationPromise: null,
 
-    // Get current session if exists
+    // Lấy phiên hiện tại nếu tồn tại
     getSession() {
         return this._session
     },
 
-    // Check if initialization is in progress
+    // Kiểm tra xem quá trình initialization có đang diễn ra không
     isInitializing() {
         return this._initializationPromise !== null
     },
 
-    // Get the current initialization promise
+    // Lấy promise initialization hiện tại
     getInitPromise() {
         return this._initializationPromise
     },
 
-    // Start a new initialization process
+    // Bắt đầu quá trình initialization
     startInitialization() {
-    // Only set if not already initializing
+        // Chỉ set nếu không có quá trình initialization
         if (this._initializationPromise === null) {
             this._initializationPromise = this._createSession()
         }
         return this._initializationPromise
     },
 
-    // Set session to a new value
+    // Set session thành giá trị mới
     setSession(session) {
         this._session = session
     },
@@ -68,7 +63,7 @@ const LinkedInSessionManager = {
 
     // Cleanup session
     async cleanup() {
-    // Wait for any ongoing initialization to complete before cleanup
+        // Chờ bất kỳ quá trình initialization nào đang diễn ra trước khi cleanup
         if (this._initializationPromise) {
             try {
                 await this._initializationPromise
@@ -83,24 +78,24 @@ const LinkedInSessionManager = {
             await closeSession(this._session.browser)
             this._session = null
         }
-    }
+    },
 }
 
 /**
- * Initialize a LinkedIn scraper session
+ * Khởi tạo phiên scrape LinkedIn
  * @param {string} username - LinkedIn username/email
  * @param {string} password - LinkedIn password
  * @returns {Promise<Object>} - Browser session object
  */
 async function initializeLinkedInSession(username, password) {
     const browser = await puppeteer.launch({
-        headless: false,
-        args: ['--disable-notifications'],
+        headless: false, // false để hiển thị trình duyệt
+        args: ['--disable-notifications'], // tắt thông báo
     })
     const page = await browser.newPage()
 
     try {
-        // Login to LinkedIn
+        // Đăng nhập vào LinkedIn
         await page.goto('https://www.linkedin.com/login')
         await page.waitForSelector('#username')
         await page.type('#username', username)
@@ -117,27 +112,27 @@ async function initializeLinkedInSession(username, password) {
 }
 
 /**
- * Get the LinkedIn session, creating a new one if it doesn't exist
+ * Lấy phiên LinkedIn, tạo mới nếu không tồn tại
  * @returns {Promise<Object>} - Browser session object
  */
 async function getLinkedInSession() {
-    // If there's already a valid session, return it immediately
+    // Nếu đã có phiên hợp lệ, trả về ngay lập tức
     const existingSession = LinkedInSessionManager.getSession()
     if (existingSession) {
         return existingSession
     }
 
-    // If a session initialization is already in progress, wait for it to complete
+    // Nếu quá trình initialization đã được bắt đầu, chờ nó hoàn tất
     if (LinkedInSessionManager.isInitializing()) {
         try {
             await LinkedInSessionManager.getInitPromise()
-            return LinkedInSessionManager.getSession() // Return the session created by another request
+            return LinkedInSessionManager.getSession() // Trả về phiên được tạo bởi yêu cầu khác
         } catch (error) {
-            // If the other initialization failed, continue to create a new one
+            // Nếu quá trình initialization khác thất bại, tiếp tục tạo mới
         }
     }
 
-    // Start a new initialization process
+    // Bắt đầu quá trình initialization mới
     return await LinkedInSessionManager.startInitialization()
 }
 
@@ -158,7 +153,7 @@ async function scrapeSkills(page, profileId) {
 
         const skills = await page.evaluate(() => {
             const spans = Array.from(
-                // eslint-disable-next-line no-undef
+            // eslint-disable-next-line no-undef
                 document.querySelectorAll("span[aria-hidden='true']:not(.notification-badge__count)")
             )
 
@@ -209,18 +204,18 @@ export async function cleanupLinkedInSession() {
 
 async function getSkillsForProfile(username) {
     try {
-        // Get or initialize LinkedIn session
+        // Lấy hoặc khởi tạo phiên LinkedIn
         const session = await getLinkedInSession()
 
         // Scrape skills using existing session
         const skills = await scrapeSkills(session.page, username)
-        return skills || [] // Return empty array if no skills found
+        return skills || [] // Trả về mảng rỗng nếu không tìm thấy kỹ năng
     } catch (error) {
         console.error('LinkedIn scraper error:', error.message)
-        
-        // If there was a session error, reset the session so it will be recreated next time
+
+        // Nếu có lỗi phiên, đặt lại phiên để nó sẽ được tạo lại lần sau
         if (error.message.includes('session') || error.message.includes('navigation')) {
-            console.log('Session appears to be invalid. Will create a new session on next request.')
+            console.log('Phiên hợp lệ không hợp lệ. Sẽ tạo phiên mới lần sau.')
             await LinkedInSessionManager.cleanup()
             return []
         }

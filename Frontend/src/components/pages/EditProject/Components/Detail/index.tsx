@@ -9,25 +9,12 @@ import TextAreaCustom from 'components/UI/TextAreaCustom'
 import { getMyProjectDetails, updateProjectBasic } from 'api/project'
 import { useParams } from 'react-router-dom'
 import { postProjectDetailsActivitiesBasic } from 'api/activity'
-import { AppDispatch } from '~/store/configureStore'
-
-// Define types for the component
-interface Project {
-   _id: string
-   name: string
-   description?: string
-}
+import { AppDispatch } from '~/~/store'
+import { RootState } from '~/store'
 
 interface FormData {
    name: string
    description: string
-}
-
-interface RootState {
-   project: {
-      myProjectDetails: Project
-      isLoadingUpdateMyProject: boolean
-   }
 }
 
 const EditDetail: React.FC = () => {

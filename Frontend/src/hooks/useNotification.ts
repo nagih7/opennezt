@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useCallback } from 'react'
 import { RootState, Notification } from 'types'
-import store from 'store/configureStore'
+import store from '~/store'
 import { markAsRead, replyNotification } from 'api/notification'
 
 /**

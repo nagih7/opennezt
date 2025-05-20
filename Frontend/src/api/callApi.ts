@@ -73,38 +73,32 @@ export default async function callApi({
       })
 }
 
-/**
- * Simple API call without Redux integration
- * Returns a standardized response object with success/error information
- */
-export async function callApiSimple({ method, apiPath, variables, headers }: CallApiSimpleProps): Promise<ApiResponse> {
-   const baseUrlApi = import.meta.env.VITE_API_URL
-   const token = getAuthToken()
-   const header: Record<string, string> = {
-      'Content-Type': 'application/json',
-      Authorization: token ? `Bearer ${token}` : '',
-   }
+const apiAxios = axios.create({
+   baseURL: import.meta.env.VITE_API_URL,
+   withCredentials: true,
+   headers: { 'Content-Type': 'application/json' },
+})
 
+apiAxios.interceptors.request.use(
+   (config) => {
+      const token = getAuthToken()
+      if (token) config.headers.Authorization = `Bearer ${token}`
+      return config
+   },
+   (error) => Promise.reject(error)
+)
+
+export async function callApiSimple({ method, apiPath, variables, headers }: CallApiSimpleProps) {
    try {
-      const response = await axios({
-         baseURL: baseUrlApi,
-         headers: headers ? { ...headers, ...header } : header,
-         method: method,
+      const response = await apiAxios.request({
          url: apiPath,
+         method,
+         headers,
          data: variables,
          params: method === 'get' ? variables : undefined,
-         withCredentials: true,
-      } as AxiosRequestConfig)
-
-      return {
-         success: true,
-         data: response.data,
-      }
+      })
+      return { success: true, data: response.data }
    } catch (error) {
-      const axiosError = error as AxiosError
-      return {
-         success: false,
-         error: axiosError.response || axiosError,
-      }
+      return { success: false, error }
    }
 }

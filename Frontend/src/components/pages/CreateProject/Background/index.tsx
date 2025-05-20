@@ -6,6 +6,7 @@ import { onChangeFormCreateProject } from 'store/modules/project'
 import { createNewProject } from 'api/project'
 import resizeBackground from 'utils/files/resizeBackground'
 import { Button, ButtonGroup } from '@chakra-ui/react'
+import { RootState } from '~/store'
 
 interface Revenue {
    [key: string]: any
@@ -26,12 +27,6 @@ interface FormCreateProject {
    additional_infos: AdditionalInfo[]
    logo?: File
    background?: File
-}
-interface RootState {
-   project: {
-      formCreateProject: FormCreateProject
-      isLoadingCreateNewProject: boolean
-   }
 }
 
 const CoverImage: React.FC = () => {
