@@ -1,54 +1,35 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Pagination } from 'antd'
 import styles from './styles.module.scss'
 
-TableCustom.propTypes = {
-    columns: PropTypes.array.isRequired,
-    dataSource: PropTypes.array.isRequired,
-    loading: PropTypes.bool,
-    rowKey: PropTypes.string,
-    onChangeCurrentPage: PropTypes.func,
-    pagination: PropTypes.object,
-    handleUpdate: PropTypes.func,
-    handleShowConfirmDelete: PropTypes.func,
-    onRow: PropTypes.func,
-}
-
-TableCustom.defaultProps = {
-    columns: [],
-    dataSource: [],
-    loading: false,
-    rowKey: 'id',
-    onChangeCurrentPage: () => {
-        /* noop */
-    },
+interface TableCustomProps {
+    columns: any[];
+    dataSource: any[];
+    loading?: boolean;
+    rowKey: string;
+    onChangeCurrentPage?: (page: number) => void;
     pagination: {
-        currentPage: 1,
-        perPage: 10,
-        totalRecord: 0,
-    },
-    handleUpdate: () => {
-        /* noop */
-    },
-    handleShowConfirmDelete: () => {
-        /* noop */
-    },
-    onRow: () => {
-        /* noop */
-    },
+        currentPage: number;
+        perPage: number;
+        totalRecord: number;
+    };
+    handleUpdate?: () => void;
+    handleShowConfirmDelete?: () => void;
+    onRow?: (record: any) => void;
+    onChange?: (pagination: any, filters: any, sorter: any) => void;
 }
 
-function TableCustom({
+const TableCustom: React.FC<TableCustomProps> = ({
     columns,
     dataSource,
     rowKey,
-    onRow, // Make sure this prop is received
+    onRow = () => {},
     pagination,
-    onChangeCurrentPage,
-    handleUpdate,
-    handleShowConfirmDelete,
-}) {
+    onChangeCurrentPage = () => {},
+    handleUpdate = () => {},
+    handleShowConfirmDelete = () => {},
+    onChange = () => {},
+}) => {
     return (
         <div className="p-8">
             <table className="w-full table-auto">
@@ -70,17 +51,17 @@ function TableCustom({
                     {dataSource.map((item, index) => (
                         <tr
                             key={item[rowKey]}
-                            className="border-b border-gray-200 cursor-pointer hover:bg-gray-50"
-                            onClick={() => onRow(item)} // Direct call to onRow
+                            className="border-b border-gray-200 hover:bg-gray-50"
                         >
                             {columns.map((col, i) => (
                                 <td
                                     key={i}
-                                    className={`p-3 ${col.align === 'center' ? 'text-center' : 'text-left'}`}
+                                    className={`p-3 ${col.align === 'center' ? 'text-center' : 'text-left'} ${col.key !== 'action' ? 'cursor-pointer' : ''}`}
                                     onClick={(e) => {
-                                        // Ngăn chặn bubble up nếu click vào nút action
                                         if (col.key === 'action') {
-                                            e.stopPropagation()
+                                            e.stopPropagation();
+                                        } else {
+                                            onRow(item);
                                         }
                                     }}
                                 >
@@ -92,7 +73,6 @@ function TableCustom({
                 </tbody>
             </table>
 
-            {/* Giữ nguyên phân trang Ant Design */}
             <div className="flex items-center justify-between mt-8">
                 <span className={styles.textPagination}>
                     <span>Showing {pagination.perPage * (pagination.currentPage - 1) + 1} to </span>
@@ -111,4 +91,4 @@ function TableCustom({
     )
 }
 
-export default TableCustom
+export default TableCustom 

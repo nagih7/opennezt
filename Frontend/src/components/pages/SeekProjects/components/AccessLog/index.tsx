@@ -1,18 +1,20 @@
 import { getMyProjectAccess } from 'api/activity'
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from 'store/hooks'
 import AccessBox from './AccessBox/Index'
 
 const AccessLog = () => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
+    
     // ========== STATE FROM REDUX ========== //
-    const projectAccess = useSelector((state) => state.activity.myProjectAccess)
+    const projectAccess = useAppSelector((state) => state.activity.myProjectAccess)
 
     // ========== USE EFFECT ========== //
     useEffect(() => {
         if (projectAccess.length === 0) dispatch(getMyProjectAccess())
         // eslint-disable-next-line
     }, [dispatch])
+
     // ========== RENDER COMPONENT ========== //
     return (
         <div className="w-4/12 2xl:w-[23.25rem] bg-white p-4 rounded-md shadow-sm h-fit">

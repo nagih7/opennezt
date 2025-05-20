@@ -95,14 +95,17 @@ const employeeSlice = createSlice({
       deleteEmployee: (state) => ({
          ...state,
          isLoadingBtnDeleteEmployee: true,
+         visibleModalDeleteEmployee: true,
       }),
       deleteEmployeeSuccess: (state) => ({
          ...state,
          isLoadingBtnDeleteEmployee: false,
+         visibleModalDeleteEmployee: false,
       }),
       deleteEmployeeFail: (state) => ({
          ...state,
          isLoadingBtnDeleteEmployee: false,
+         visibleModalDeleteEmployee: false,
       }),
    },
 })

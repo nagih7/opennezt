@@ -1,19 +1,35 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import PaginationCustom from 'components/UI/PaginationCustom'
 import { recruitTalents } from 'api/talent'
 import TalentBox from './TalentBox'
 import { accessToTalent } from 'api/activity'
 import { useNavigate } from 'react-router-dom'
+import { User, PaginationData, FormRecruitTalents } from '../../types'
+import { useAppDispatch } from '~/store/hooks'
 
-const ListTalents = () => {
-    const dispatch = useDispatch()
+interface PageData {
+    page: number;
+    pageSize: number;
+}
+
+interface RootState {
+    talent: {
+        talents: Array<{
+            user: User;
+        }>;
+        formRecruitTalents: FormRecruitTalents;
+        paginationRecruitTalents: PaginationData;
+    };
+}
+
+const ListTalents: React.FC = () => {
+    const dispatch = useAppDispatch()
     const navigate = useNavigate()
-    // ========== STATE FROM REDUX ========== //
-    const { talents, formRecruitTalents, paginationRecruitTalents } = useSelector((state) => state.talent)
+    
+    const { talents, formRecruitTalents, paginationRecruitTalents } = useSelector((state: RootState) => state.talent)
 
-    // ========== HANDLE FUNCTION ========== //
-    const onPageChange = (pageData) => {
+    const onPageChange = (pageData: PageData) => {
         dispatch(
             recruitTalents({
                 ...formRecruitTalents,
@@ -23,12 +39,11 @@ const ListTalents = () => {
         )
     }
 
-    const handleViewTalentDetails = (user) => {
+    const handleViewTalentDetails = (user: User) => {
         dispatch(accessToTalent(user._id))
         navigate(`/talents/${user._id}/details`)
     }
 
-    // ========== RENDER COMPONENT ========== //
     return (
         <div className="container flex w-full flex-col items-center justify-center gap-10 md:gap-20 py-8 mx-auto">
             <div className="grid lg:w-full w-fit lg:grid-cols-3 grid-cols-1 md:grid-cols-2 sm:gap-6 md:gap-8 lg:gap-3 gap-8">
@@ -38,11 +53,11 @@ const ListTalents = () => {
                         className="relative group h-[380px] cursor-pointer"
                         onMouseEnter={(e) => {
                             const children = e.currentTarget.querySelectorAll('.fade-element')
-                            children.forEach((child) => (child.style.opacity = 1))
+                            children.forEach((child) => ((child as HTMLElement).style.opacity = '1'))
                         }}
                         onMouseLeave={(e) => {
                             const children = e.currentTarget.querySelectorAll('.fade-element')
-                            children.forEach((child) => (child.style.opacity = 0))
+                            children.forEach((child) => ((child as HTMLElement).style.opacity = '0'))
                         }}
                     >
                         <TalentBox handleViewTalentDetails={handleViewTalentDetails} talent={talent} />
@@ -54,4 +69,4 @@ const ListTalents = () => {
     )
 }
 
-export default ListTalents
+export default ListTalents 

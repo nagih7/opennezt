@@ -1,10 +1,17 @@
 import { Image } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { Project } from 'types'
 import { OPENNEZT_BG_BLACK } from 'utils/constants'
 
-const ProjectList = ({ project, handleViewProjectDetails }) => {
+interface ProjectListProps {
+    project: Project;
+    handleViewProjectDetails: (project: Project) => void;
+}
+
+const ProjectList = ({ project, handleViewProjectDetails }: ProjectListProps) => {
     // ========== STATE ========== //
-    const [imageError, setImageError] = useState(false)
+    const [imageError, setImageError] = useState<boolean>(false)
+
     // ========== RENDER ========== //
     return (
         <li
@@ -16,7 +23,7 @@ const ProjectList = ({ project, handleViewProjectDetails }) => {
                     {!imageError ? (
                         <Image
                             aspectRatio={16 / 9}
-                            className="object-cover absolute w-[16rem] h-full !transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110 "
+                            className="object-cover absolute w-[16rem] h-full !transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110"
                             src={project.background}
                             alt={project.name}
                             onError={() => setImageError(true)}
@@ -29,10 +36,10 @@ const ProjectList = ({ project, handleViewProjectDetails }) => {
                 <div className="flex flex-col justify-center ml-4">
                     <div className="flex">
                         <p className="bg-[#EAEFF8] p-1 rounded-sm text-[#737F92] text-xs md:text-[0.85rem] font-semibold mr-4">
-                            {project.stage.name}
+                            {project.stage?.name}
                         </p>
                         <p className="text-xs font-semibold md:text-sm">
-                            By <span className="font-semibold text-blue-600">{project.user.name}</span>
+                            By <span className="font-semibold text-blue-600">{project.user?.name}</span>
                         </p>
                     </div>
 
@@ -41,7 +48,7 @@ const ProjectList = ({ project, handleViewProjectDetails }) => {
                     </h5>
                     <div className="flex items-center mt-3 text-xs text-gray-600 md:text-sm">
                         <p className="mr-4 text-xs text-nowrap">📖 {project.articles?.length} Posts</p>
-                        <p className="text-xs text-nowrap">👨‍🎓 {project.members.length} Members</p>
+                        <p className="text-xs text-nowrap">👨‍🎓 {project.members?.length} Members</p>
                     </div>
                 </div>
             </div>
