@@ -75,10 +75,10 @@ function InputMASQ(props) {
             placeholder={props.placeholder}
             onChange={(e) => props.onChange(e)}
             // onKeyDown={(e) => props.onKeyDown(e)}
-            onKeyPress={(e) => props.onKeyPress(e)}
+            // onKeyPress={(e) => props.onKeyPress(e)}
             onPressEnter={(e) => props.onPressEnter(e)}
             onBlur={(e) => props.onBlur(e)}
-            onFocus={(e) => props.onFocus(e)}
+            // onFocus={(e) => props.onFocus(e)}
             value={props.value}
             prefix={props.prefix}
             maxLength={props.maxLength}

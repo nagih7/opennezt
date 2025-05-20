@@ -95,7 +95,10 @@ const projectSlice = createSlice({
       }),
       getListMyProjectsSuccess: (state, action) => ({
          ...state,
-         myProjects: [...state.myProjects, ...action.payload.data.projects],
+         myProjects:
+            action.payload.data.page === 1
+               ? [...action.payload.data.projects]
+               : [...state.myProjects, ...action.payload.data.projects],
          paginationListMyProjects: {
             currentPage: action.payload.data.page,
             perPage: action.payload.data.per_page,
@@ -115,7 +118,10 @@ const projectSlice = createSlice({
       }),
       getListProjectsParticipatedSuccess: (state, action) => ({
          ...state,
-         projectsParticipated: [...state.projectsParticipated, ...action.payload.data.projects],
+         projectsParticipated:
+            action.payload.data.page === 1
+               ? [...action.payload.data.projects]
+               : [...state.projectsParticipated, ...action.payload.data.projects],
          paginationProjectsParticipated: {
             currentPage: action.payload.data.page,
             perPage: action.payload.data.per_page,

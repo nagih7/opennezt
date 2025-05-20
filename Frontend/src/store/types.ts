@@ -9,31 +9,32 @@ import { AppState } from 'store/modules/app/types'
 // import { EmployeeState } from 'store/modules/employee/types'
 // import { ManageState } from 'store/modules/manage/types'
 // import { TalentState } from 'store/modules/talent/types'
-// import { ProjectState } from 'store/modules/project/types'
+import { ProjectState } from 'store/modules/project/types'
 // import { ChatState } from 'store/modules/chat/types'
 // import { NotificationState } from 'store/modules/notification/types'
 // import { AIState } from 'store/modules/artificialIntelligence/types'
 // import { ArticleState } from 'store/modules/article/types'
-// import { ActivityState } from 'store/modules/activity/types'
+import { ActivityState } from 'store/modules/activity/types'
 // import { LinkPreviewState } from 'store/modules/linkPreview/types'
 // import { InterviewState } from 'store/modules/interview/types'
+import { UserState } from 'store/modules/user/types'
 
 // Define the root state type
 export interface RootState {
    app: AppState
    auth: AuthState
    // article: ArticleState
-   // user: UserState
+   user: UserState
    // manage: ManageState
    // profile: ProfileState
    // home: HomeState
    // employee: EmployeeState
    // talent: TalentState
-   // project: ProjectState
+   project: ProjectState
    // chat: ChatState
    // notification: NotificationState
    // artificialIntelligence: AIState
-   // activity: ActivityState
+   activity: ActivityState
    // linkPreview: LinkPreviewState
    // interview: InterviewState
 }
