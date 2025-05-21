@@ -5,9 +5,10 @@ import _ from 'lodash'
 import ButtonMASQ from '../../../../components/UI/Button'
 import { isValidate } from '../../../../utils/validate'
 import { forgotPassword } from '../../../../api/auth'
-import store from 'store/configureStore'
+import store from '~/store'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from '~/store'
 
 interface ForgotPasswordData {
    email: string
@@ -15,12 +16,6 @@ interface ForgotPasswordData {
 
 interface ErrorData {
    email: string
-}
-
-interface RootState {
-   auth: {
-      isSuccessForgotPassword: boolean
-   }
 }
 
 const ForgotPassword: React.FC = () => {

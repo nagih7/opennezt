@@ -7,7 +7,7 @@ import { getProjectRoleFramework } from 'api/user'
 import { useParams } from 'react-router-dom'
 import { postProjectDetailsActivitiesProjectRequirement } from 'api/activity'
 import { RootState } from 'store/types'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
 
 interface FormData {
    teamRoles: string[]

@@ -1,9 +1,7 @@
 import { Avatar, Stack, Tabs } from '@chakra-ui/react'
-import { IconlyChat, IconlyHome, IconlyProfile, IconlyUser } from 'components/UI/Iconly'
+import { IconlyChat, IconlyUser } from 'components/UI/Iconly'
 import React, { FC, useEffect } from 'react'
-import { CheckCircleFilled } from '@ant-design/icons'
 import img_project from '../../../../../../../assets/images/logo/opennezt_black.png'
-import img_avt from '../../../../../../../assets/images/background/avt.jpg'
 import { useDispatch, useSelector } from 'react-redux'
 import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants'
 import moment from 'moment'
@@ -11,54 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { getMyFriends } from 'api/profile'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
-
-interface User {
-   _id: string
-   name: string
-   avatar: string
-}
-
-interface Message {
-   content: string
-   user?: User
-   _id: string
-}
-
-interface Project {
-   name: string
-   logo: string
-}
-
-interface Conversation {
-   _id: string
-   type: {
-      name: string
-   }
-   members: User[]
-   data?: {
-      project?: Project
-   }
-   last_message?: Message
-   updated_at: string
-}
-
-interface Friend {
-   _id: string
-   name: string
-   avatar: string
-}
-
-interface RootState {
-   chat: {
-      conversations: Conversation[]
-   }
-   auth: {
-      authUser: User
-   }
-   profile: {
-      myFriends: Friend[]
-   }
-}
+import { RootState } from '~/store'
 
 const Conversations: FC = () => {
    const navigate = useNavigate()
@@ -102,8 +53,8 @@ const Conversations: FC = () => {
             <Tabs.Content value="message" className="flex-1 h-full overflow-y-scroll scrollbar-hide">
                <div className="h-full overflow-y-scroll scrollbar-hide">
                   {conversations
-                     .filter((conversation) => conversation.last_message)
-                     .map((conversation, index) => {
+                     .filter((conversation: any) => conversation.last_message)
+                     .map((conversation: any, index: number) => {
                         return (
                            <Stack
                               key={index}
@@ -197,7 +148,7 @@ const Conversations: FC = () => {
                   <div className=" mt-[15px] w-full">
                      {friends.length > 0 ? (
                         <>
-                           {conversations.map((conversation, index) => {
+                           {conversations.map((conversation: any, index: number) => {
                               return (
                                  <Stack
                                     key={index}

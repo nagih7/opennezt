@@ -6,10 +6,11 @@ import { handleCheckRoute } from '../../../../utils/helper'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { logout } from '../../../../api/auth'
-import store from 'store/configureStore'
+import store from '~/store'
 import { IconlyLogout, IconlySetting, IconlyUser } from 'components/UI/Iconly'
 import ProfileCardSidebar from './components/ProfileCardSidebar'
 import appRouteMap from 'routes/appRouteMap'
+import { RootState } from '~/store'
 
 interface SideBarProps {
    isShowSideBar: boolean
@@ -22,12 +23,6 @@ interface RouteItem {
    icon?: React.ReactNode
    routeActive?: string[]
    children?: RouteItem[]
-}
-
-interface RootState {
-   auth: {
-      authRole: string
-   }
 }
 
 const SideBar: React.FC<SideBarProps> = ({ isShowSideBar = true, handleToggleIsShowSideBar }) => {

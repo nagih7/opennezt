@@ -2,18 +2,13 @@ import React from 'react'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import { Avatar } from '@chakra-ui/react'
+import { RootState } from '~/store'
 
 interface AuthUser {
    name: string
    avatar?: string
    created_at?: string
    [key: string]: any
-}
-
-interface RootState {
-   auth: {
-      authUser: AuthUser
-   }
 }
 
 const ProfileCard: React.FC = () => {

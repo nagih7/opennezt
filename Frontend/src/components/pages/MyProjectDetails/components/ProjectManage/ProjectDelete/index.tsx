@@ -4,7 +4,7 @@ import { toaster } from 'components/UI/toaster'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteMyProject } from 'api/project'
 import { RootState } from 'store/types'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
 
 const ProjectDelete: React.FC = () => {
    const dispatch = useDispatch<AppDispatch>()

@@ -1,49 +1,43 @@
-import { AnyAction } from 'redux'
-import { ThunkAction } from 'redux-thunk'
+/**
+ * This file provides the central type definitions for the Redux store
+ * Import these types when working with Redux state, actions, or middleware
+ */
 
-// Import state types for each reducer
-import { AuthState } from 'store/modules/auth/types'
-import { AppState } from 'store/modules/app/types'
-import { ProfileState } from 'store/modules/profile/types'
-import { HomeState } from 'store/modules/home/types'
-import { EmployeeState } from 'store/modules/employee/types'
-import { ManageState } from 'store/modules/manage/types'
-import { TalentState } from 'store/modules/talent/types'
-import { ProjectState } from 'store/modules/project/types'
-import { ChatState } from 'store/modules/chat/types'
-import { NotificationState } from 'store/modules/notification/types'
-import { ArticleState } from 'store/modules/article/types'
-import { ActivityState } from 'store/modules/activity/types'
-import { LinkPreviewState } from 'store/modules/linkPreview/types'
-import { InterviewState } from 'store/modules/interview/types'
-import { UserState } from 'store/modules/user/types'
+import { RootState, AppDispatch } from './index'
+import { Action as ReduxToolkitAction, ThunkAction } from '@reduxjs/toolkit'
 
-// Define the root state type
-export interface RootState {
-   app: AppState
-   auth: AuthState
-   profile: ProfileState
-   home: HomeState
-   article: ArticleState
-   manage: ManageState
-   employee: EmployeeState
-   talent: TalentState
-   project: ProjectState
-   chat: ChatState
-   notification: NotificationState
-   activity: ActivityState
-   linkPreview: LinkPreviewState
-   interview: InterviewState
-   user: UserState
-}
+// Re-export the types from index
+export type { RootState, AppDispatch }
 
-// Define common Redux types
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, AnyAction>
+// Define a reusable AppThunk type for async actions
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, ReduxToolkitAction<string>>
 
 // Common action types
 export interface Action<T = any> {
    type: string
    payload?: T
+}
+
+// Common utility type for async state tracking
+export interface AsyncState<T = any> {
+   data: T | null
+   isLoading: boolean
+   error: string | null
+}
+
+// Create a utility for initializing async state
+export const createInitialAsyncState = <T>(): AsyncState<T> => ({
+   data: null,
+   isLoading: false,
+   error: null,
+})
+
+// Common pagination interface used across multiple modules
+export interface Pagination {
+   currentPage: number
+   perPage: number
+   totalPage: number
+   totalRecord: number
 }
 
 // Standard async action types

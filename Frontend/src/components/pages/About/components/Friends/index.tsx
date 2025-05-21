@@ -7,7 +7,7 @@ import { getMyFriends } from 'api/profile'
 import { Avatar, Tabs } from '@chakra-ui/react'
 import moment from 'moment'
 import { FRIEND_REQUEST_NOTIFICATION, WAITING_STATUS } from 'utils/constants'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
 import { RootState } from 'store/types'
 
 interface Friend {

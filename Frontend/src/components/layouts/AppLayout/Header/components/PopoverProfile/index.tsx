@@ -2,19 +2,11 @@ import React, { useEffect } from 'react'
 import styles from './styles.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import store from 'store/configureStore'
+import store from '~/store'
 import { logout } from 'api/auth'
 import { IconlyLogout, IconlySetting, IconlyUser } from 'components/UI/Iconly'
 import { Stack } from '@chakra-ui/react'
-
-interface RootState {
-   auth: {
-      isAuthSuccess: boolean
-      authUser: {
-         name: string
-      }
-   }
-}
+import { RootState } from '~/store'
 
 const PopoverProfile: React.FC = () => {
    const navigate = useNavigate()

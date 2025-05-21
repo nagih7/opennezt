@@ -11,6 +11,7 @@ import { createCertification, updateCertification, deleteCertification, getProfi
 import { DataList } from '@chakra-ui/react'
 import SelectCustom from 'components/UI/SelectCustom'
 import { setIsOpenModalCreateOrUpdateCertification } from '~/store/modules/profile'
+import { RootState } from '~/store'
 
 // Định nghĩa các interfaces
 interface Certification {
@@ -40,20 +41,6 @@ interface FormData {
 interface SelectEvent {
    value: string[]
    items?: { value: string; label: string }[]
-}
-
-interface RootState {
-   profile: {
-      profile: {
-         certifications?: Certification[]
-         [key: string]: any
-      } | null
-      isOpenModalCreateOrUpdateCertification: boolean
-      isLoadingCreateOrUpdateCertification: boolean
-   }
-   user: {
-      organizationFramework: any
-   }
 }
 
 type AppDispatch = any // Tạm thời dùng any, nên thay bằng kiểu từ Redux store thực tế
@@ -202,7 +189,7 @@ const Certifications: React.FC = () => {
    return (
       <div className="flex gap-8 flex-col md:flex-row w-full py-8 px-[16px]">
          <ProfileEditMenu />
-         <div className="md:w-8/12 w-full">
+         <div className="w-full md:w-8/12">
             <div className="bg-[#ffffff] hidden md:block p-8 rounded-md">
                {/* =========== Profile Card ========== */}
                <ProfileCard />

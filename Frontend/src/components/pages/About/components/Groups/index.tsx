@@ -6,7 +6,8 @@ import { getListProjectsParticipated } from 'api/project'
 // import ProjectBox from './components/ProjectBox'
 import { PROJECT_INVITATION_NOTIFICATION, WAITING_STATUS } from 'utils/constants'
 import InviteBox from './components/InviteBox'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
+import { RootState } from '~/store'
 
 interface Project {
    _id: string
@@ -40,16 +41,6 @@ interface Pagination {
    page: number
    limit: number
    total: number
-}
-
-interface RootState {
-   project: {
-      projectsParticipated: Project[]
-      paginationProjectsParticipated: Pagination
-   }
-   notification: {
-      notifications: Notification[]
-   }
 }
 
 const Groups: React.FC = () => {

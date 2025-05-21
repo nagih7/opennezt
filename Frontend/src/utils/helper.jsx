@@ -1,5 +1,5 @@
 import React from 'react'
-import store from '../store/configureStore'
+import store from '~/store'
 import { isValidate } from './validate'
 import moment from 'moment'
 import { notification } from 'antd'

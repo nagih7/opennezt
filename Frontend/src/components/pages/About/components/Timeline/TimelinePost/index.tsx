@@ -27,7 +27,7 @@ import {
 import CreateArticleForm from '../../../../Newfeeds/components/CreateAricleForm'
 import CommentList from '../../../../Newfeeds/components/CommentList'
 import UpdateArticleForm from '../../../../Newfeeds/components/UpdateArticleForm'
-import store from 'store/configureStore'
+import store from '~/store'
 import {
    deleteActivitySaveArticle,
    getActivitiesArticle,
@@ -35,7 +35,7 @@ import {
    postActivityUpdateArticle,
 } from 'api/activity'
 import { resetLinkPreview } from 'store/modules/linkPreview'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
 import { RootState } from 'store/types'
 
 // Interfaces for type safety

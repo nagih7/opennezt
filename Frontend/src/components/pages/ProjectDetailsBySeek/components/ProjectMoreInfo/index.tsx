@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { OPENNEZT_BG_BLACK } from 'utils/constants'
 import { RootState } from 'store/types'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
 
 interface Industry {
    id: string

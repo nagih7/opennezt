@@ -8,7 +8,7 @@ import { setVisibleModalCreateOrUpdateOrganization, setVisibleModalDeleteOrganiz
 import ModalCreateOrUpdate from '../ModalCreateOrUpdate'
 import InputMASQ from 'components/UI/Input'
 import ButtonMASQ from 'components/UI/Button'
-import store from 'store/configureStore'
+import store from '~/store'
 
 function OrganizationManage() {
    const dispatch = useDispatch()

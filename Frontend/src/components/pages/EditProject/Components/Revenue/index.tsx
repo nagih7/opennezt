@@ -13,6 +13,7 @@ import { CURRENCY } from 'utils/constants'
 import { updateProjectRevenue } from 'api/project'
 import { toaster } from 'components/UI/toaster'
 import { postProjectDetailsActivitiesRevenue } from 'api/activity'
+import { RootState } from '~/store'
 
 // Define types for the component
 interface Revenue {
@@ -30,13 +31,6 @@ interface FormRevenue {
    date: string
    amount: string | number
    currency: string[]
-}
-
-interface RootState {
-   project: {
-      myProjectDetails: Project
-      isLoadingUpdateMyProject: boolean
-   }
 }
 
 interface SelectEvent {

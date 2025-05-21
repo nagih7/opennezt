@@ -6,17 +6,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import LockResetIcon from '@mui/icons-material/LockReset'
 import { AppDispatch } from 'store/store.types'
+import { RootState } from '~/store'
 
 interface FormValues {
    password: string
    confirmPassword: string
-}
-
-interface RootState {
-   auth: {
-      isLoadingResetPassword: boolean
-      resetPasswordSuccess: boolean
-   }
 }
 
 const ResetPassword: React.FC = () => {
@@ -24,7 +18,7 @@ const ResetPassword: React.FC = () => {
    const navigate = useNavigate()
    const location = useLocation()
 
-   const { isLoadingResetPassword, resetPasswordSuccess } = useSelector((state: RootState) => state.auth)
+   const { isLoadingResetPassword, resetPasswordSuccess } = useSelector((state: RootStatetState) => state.auth)
 
    useEffect(() => {
       if (resetPasswordSuccess) {

@@ -8,20 +8,7 @@ import { useParams } from 'react-router-dom'
 import { updateProjectBackground } from 'api/project'
 import resizeBackground from 'utils/files/resizeBackground'
 import { postProjectDetailsActivitiesBackground } from 'api/activity'
-
-// Define types for the component
-interface Project {
-   _id: string
-   name: string
-   background?: string
-}
-
-interface RootState {
-   project: {
-      myProjectDetails: Project
-      isLoadingUpdateMyProject: boolean
-   }
-}
+import { RootState } from '~/store'
 
 const Background: React.FC = () => {
    const dispatch = useDispatch()

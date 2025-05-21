@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getMyProjectDetails } from 'api/project'
 import { Avatar, Tabs } from '@chakra-ui/react'
 import { RootState } from 'store/types'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
 
 interface Member {
    user: {

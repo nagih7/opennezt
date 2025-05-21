@@ -6,7 +6,7 @@ import { updateSectorRequirement } from 'api/project'
 import { getExperienceLevelFramwork, getIndustryFramework } from 'api/user'
 import { postProjectDetailsActivitiesProjectRequirement } from 'api/activity'
 import { RootState } from 'store/types'
-import { AppDispatch } from 'store/configureStore'
+import { AppDispatch } from '~/store'
 
 interface FormData {
    industries: string[]

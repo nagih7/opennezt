@@ -8,19 +8,7 @@ import { useParams } from 'react-router-dom'
 import { updateProjectLogo } from 'api/project'
 import resizeLogo from 'utils/files/resizeLogo'
 import { postProjectDetailsActivitiesLogo } from 'api/activity'
-
-// Define types for the component
-interface Project {
-   _id: string
-   logo?: string
-}
-
-interface RootState {
-   project: {
-      myProjectDetails: Project
-      isLoadingUpdateMyProject: boolean
-   }
-}
+import { RootState } from '~/store'
 
 const EditLogo: React.FC = () => {
    const dispatch = useDispatch()

@@ -5,15 +5,7 @@ import { onChangeFormCreateProject } from 'store/modules/project'
 import { useNavigate } from 'react-router-dom'
 import resizeLogo from 'utils/files/resizeLogo'
 import { Button, ButtonGroup } from '@chakra-ui/react'
-
-interface RootState {
-   project: {
-      formCreateProject: {
-         name: string
-         logo?: File
-      }
-   }
-}
+import { RootState } from '~/store'
 
 const Logo: React.FC = () => {
    const navigate = useNavigate()

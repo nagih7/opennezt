@@ -3,7 +3,7 @@ import icon_opennezt_img from 'assets/images/logo/opennezt_black.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { startInterview } from 'api/interview'
 import { useParams } from 'react-router-dom'
-import { AppDispatch } from '~/store/configureStore'
+import { AppDispatch } from '~/~/store'
 
 interface InterviewJoinSectionProps {
    handleTechnicalIssues: () => void

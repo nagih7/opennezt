@@ -3,19 +3,13 @@ import { CheckCircleFilled } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Avatar } from '@chakra-ui/react'
+import { RootState } from '~/store'
 
 // Define user type
 interface AuthUser {
    name?: string
    email?: string
    avatar?: string
-}
-
-// Define RootState type
-interface RootState {
-   auth: {
-      authUser: AuthUser | null
-   }
 }
 
 const ProfileCardSidebar: React.FC = () => {

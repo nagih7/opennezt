@@ -9,7 +9,8 @@ import { handleCheckValidateConfirm } from '../../../../utils/helper'
 import { register } from '../../../../api/auth'
 import { useSelector, useDispatch } from 'react-redux'
 import Logo from '../../../../assets/images/logo/opennezt_black.png'
-import { AppDispatch } from '~/store/configureStore'
+import { AppDispatch } from '~/~/store'
+import { RootState } from '~/store'
 
 // Define interfaces for type safety
 interface RegisterData {
@@ -24,15 +25,6 @@ interface ErrorData {
    email: string
    password: string
    confirmPassword: string
-}
-
-interface RootState {
-   auth: {
-      isLoadingRegister: boolean
-      authRegister: {
-         email?: string
-      } | null
-   }
 }
 
 const Register: React.FC = () => {

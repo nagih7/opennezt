@@ -6,6 +6,7 @@ import Statistical from './components/Statistical'
 import fb_img from 'assets/images/background/left-banner.webp'
 import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import ProjectDetails from './components/ProjectDetails'
+import { RootState } from '~/store'
 
 interface Project {
    // Define the project object structure according to your application
@@ -17,13 +18,6 @@ interface ProjectMatch {
    project: Project
    score?: number
    [key: string]: any
-}
-
-interface RootState {
-   artificialIntelligence: {
-      projects: ProjectMatch[]
-      isOpenModalMatchingProjects: boolean
-   }
 }
 
 const ModalMatchingProjects: React.FC = () => {

@@ -11,6 +11,7 @@ import { FUNDING_SOURCES, CURRENCY } from 'utils/constants'
 import SelectCustom from 'components/UI/SelectCustom'
 import { toaster } from 'components/UI/toaster'
 import { Button, ButtonGroup } from '@chakra-ui/react'
+import { RootState } from '~/store'
 
 const currencyFramework = createListCollection({
    items: CURRENCY['EN'],
@@ -23,15 +24,6 @@ interface FundingSource {
    name: string
    amount: string
    currency: string
-}
-
-interface RootState {
-   project: {
-      formCreateProject: {
-         name: string
-         funding_sources: FundingSource[]
-      }
-   }
 }
 
 const FundingSources: React.FC = () => {

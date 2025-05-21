@@ -6,6 +6,7 @@ import { onChangeFormCreateProject } from 'store/modules/project'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import { PROJECT_ADDITIONAL_INFO_FIELDS } from 'utils/constants/additionalInfor'
+import { RootState } from '~/store'
 
 interface Field {
    id: string
@@ -21,18 +22,6 @@ interface FormDataItem {
 
 interface ProjectFormData {
    [key: string]: string
-}
-
-interface RootState {
-   project: {
-      formCreateProject: {
-         name: string
-         additional_infos?: FormDataItem[]
-      }
-   }
-   app: {
-      language: string
-   }
 }
 
 const AdditionalInfo: React.FC = () => {
@@ -144,10 +133,10 @@ const AdditionalInfo: React.FC = () => {
                <div className="mt-8 bg-[#ffffff] rounded-md p-8">
                   <div className="flex flex-col w-full">
                      <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
-                        <div className="flex justify-between items-center">
+                        <div className="flex items-center justify-between">
                            <div>
                               <h4 className="text-xl font-semibold">Additional Information</h4>
-                              <p className="text-gray-600 text-sm mt-1">
+                              <p className="mt-1 text-sm text-gray-600">
                                  <strong className="font-medium">Note: max 500 characters for each field</strong>
                               </p>
                            </div>
@@ -155,7 +144,7 @@ const AdditionalInfo: React.FC = () => {
                      </div>
 
                      {/* Structured form fields */}
-                     <div className="border rounded-md overflow-hidden mb-6">
+                     <div className="mb-6 overflow-hidden border rounded-md">
                         <table className="w-full">
                            <tbody>
                               {fields.map((field, index) => (

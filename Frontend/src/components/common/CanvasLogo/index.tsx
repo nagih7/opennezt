@@ -67,7 +67,6 @@ const CanvasLogo: React.FC = () => {
       setCroppedImage(canvas.toDataURL())
    }, [crop])
 
-   console.log('croppedImage', croppedImage)
    // Crop ảnh
    const handleOnCrop = () => {
       if (!imageRef.current || !previewCanvasRef.current) return
