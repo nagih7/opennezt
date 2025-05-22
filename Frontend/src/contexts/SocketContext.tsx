@@ -1,7 +1,22 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { useSelector } from 'react-redux'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { io, Socket } from 'socket.io-client'
-import { RootState } from 'store/store.types'
+import { RootState } from '~/store'
+import { BaseComponentProps } from '~/types'
+import {
+   CONFIRM_FRIEND_REQUEST_NOTIFICATION,
+   CONFIRM_PROJECT_INVITATION_NOTIFICATION,
+   FRIEND_REQUEST_NOTIFICATION,
+   MESSAGE_TYPE,
+   PROJECT_INVITATION_NOTIFICATION,
+} from 'utils/constants'
+import { getConversations } from '~/api/chat'
+import { setNotifications } from '~/store/modules/notification'
+import { setMessages } from '~/store/modules/chat'
+import ModalMatchingProjects from '~/components/common/ModalMatchingProjects'
+import { AppDispatch } from '~/store'
+import { Notification } from '~/types/notification'
+import { Message } from '~/types/message'
 
 // Create a context to share socket with other components
 const SocketContext = createContext<Socket | null>(null)
@@ -14,14 +29,10 @@ export const useSocket = (): Socket | null => {
    return useContext(SocketContext)
 }
 
-// Define props type for the SocketProvider component
-interface SocketProviderProps {
-   children: ReactNode
-}
-
-// Socket provider component - manages socket connection
-export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
+// Socket provider component - manages socket connection and realtime events
+export const SocketProvider: React.FC<BaseComponentProps> = ({ children }) => {
    const { authUser } = useSelector((state: RootState) => state.auth)
+   const dispatch = useDispatch<AppDispatch>()
    const [socket, setSocket] = useState<Socket | null>(null)
 
    // Connect socket when component is rendered
@@ -53,5 +64,46 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       }
    }, [authUser])
 
-   return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+   // Set up event listeners for notifications and messages
+   useEffect(() => {
+      if (!socket) return
+
+      socket.on(FRIEND_REQUEST_NOTIFICATION, (notification: Notification) => {
+         dispatch(setNotifications(notification))
+      })
+
+      socket.on(CONFIRM_FRIEND_REQUEST_NOTIFICATION, (notification: Notification) => {
+         dispatch(setNotifications(notification))
+         dispatch(getConversations())
+      })
+
+      socket.on(MESSAGE_TYPE, (message: Message) => {
+         dispatch(setMessages({ message }))
+      })
+
+      socket.on(PROJECT_INVITATION_NOTIFICATION, (notification: Notification) => {
+         dispatch(setNotifications(notification))
+      })
+
+      socket.on(CONFIRM_PROJECT_INVITATION_NOTIFICATION, (notification: Notification) => {
+         dispatch(setNotifications(notification))
+         dispatch(getConversations())
+      })
+
+      // Clean up
+      return () => {
+         socket.off(FRIEND_REQUEST_NOTIFICATION)
+         socket.off(CONFIRM_FRIEND_REQUEST_NOTIFICATION)
+         socket.off(MESSAGE_TYPE)
+         socket.off(PROJECT_INVITATION_NOTIFICATION)
+         socket.off(CONFIRM_PROJECT_INVITATION_NOTIFICATION)
+      }
+   }, [socket, dispatch])
+
+   return (
+      <SocketContext.Provider value={socket}>
+         <ModalMatchingProjects />
+         {children}
+      </SocketContext.Provider>
+   )
 }

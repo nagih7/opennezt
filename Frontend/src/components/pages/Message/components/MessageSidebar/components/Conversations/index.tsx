@@ -9,11 +9,11 @@ import { useNavigate } from 'react-router-dom'
 import { getMyFriends } from 'api/profile'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
-import { RootState } from '~/store'
+import { AppDispatch, RootState } from '~/store'
 
 const Conversations: FC = () => {
    const navigate = useNavigate()
-   const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>()
+   const dispatch = useDispatch<AppDispatch>()
 
    // ========== STATE FROM REDUX STORE =========== //
    const { conversations } = useSelector((state: RootState) => state.chat)
@@ -63,7 +63,7 @@ const Conversations: FC = () => {
                               direction={'row'}
                            >
                               {(() => {
-                                 switch (conversation.type.name) {
+                                 switch (conversation.type) {
                                     case DIRECT_CONVERSATION:
                                        return (
                                           <Stack
@@ -157,7 +157,7 @@ const Conversations: FC = () => {
                                     direction={'row'}
                                  >
                                     {(() => {
-                                       switch (conversation.type.name) {
+                                       switch (conversation.type) {
                                           case DIRECT_CONVERSATION:
                                              return (
                                                 <Stack
@@ -258,7 +258,7 @@ const Conversations: FC = () => {
                                        direction={'row'}
                                     >
                                        {(() => {
-                                          switch (conversation.type.name) {
+                                          switch (conversation.type) {
                                              case GROUP_CONVERSATION:
                                                 return (
                                                    <Stack className="items-center gap-3" direction={'row'}>

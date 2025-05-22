@@ -4,6 +4,7 @@ import { WelcomeSection } from './components/WelcomeSection'
 import { InterviewCard } from './components/InterviewCard'
 import { getListProjectPracticeInterview } from 'api/project'
 import { useNavigate } from 'react-router-dom'
+import { RootState } from '~/store'
 
 interface Project {
    _id: string
@@ -15,14 +16,8 @@ interface Project {
    createdAt?: string
 }
 
-interface AuthState {
-   authUser: {
-      name: string
-   }
-}
-
 const Home: React.FC = () => {
-   const { authUser } = useSelector((state: { auth: AuthState }) => state.auth)
+   const { authUser } = useSelector((state: RootState) => state.auth)
    const navigate = useNavigate()
    const [latestProjects, setLatestProjects] = useState<Project[]>([])
    const [isLoading, setIsLoading] = useState(false)
@@ -96,11 +91,11 @@ const Home: React.FC = () => {
 
    return (
       <div className="mt-[2px] ml-[16px] p-8 bg-[#ffffff] w-full h-100vh 2xl:h-full">
-         <WelcomeSection user={authUser} />
+         <WelcomeSection user={authUser || undefined} />
          <div className="flex flex-col mt-8">
             <span className="text-2xl font-bold">Practice interview</span>
             <span className="text-[#6f7f92]">Practice real interview questions and pave your startup journey</span>
-            <div className="grid grid-cols-3 2xl:gap-10 gap-8 mt-4 pb-8">
+            <div className="grid grid-cols-3 gap-8 pb-8 mt-4 2xl:gap-10">
                {latestProjects && latestProjects.length > 0 ? (
                   latestProjects.map((project, index) => (
                      <div key={project?._id} className="cursor-pointer">
@@ -130,17 +125,17 @@ const Home: React.FC = () => {
                            key={index}
                            className="flex flex-col border-[2px] h-[290px] 2xl:h-[310px] rounded-xl animate-pulse bg-gray-100"
                         >
-                           <div className="h-1/2 bg-gray-200 rounded-t-xl"></div>
+                           <div className="bg-gray-200 h-1/2 rounded-t-xl"></div>
                            <div className="p-[10px]">
-                              <div className="h-5 bg-gray-300 rounded w-1/2 mb-2"></div>
-                              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                              <div className="h-8 bg-gray-200 rounded w-1/3 mt-4"></div>
+                              <div className="w-1/2 h-5 mb-2 bg-gray-300 rounded"></div>
+                              <div className="w-3/4 h-4 mb-2 bg-gray-200 rounded"></div>
+                              <div className="w-1/3 h-8 mt-4 bg-gray-200 rounded"></div>
                            </div>
                         </div>
                      ))
                ) : (
-                  <div className="col-span-3 text-center py-10">
-                     <p className="text-gray-500 text-lg">We will notify you when there is a new project!</p>
+                  <div className="col-span-3 py-10 text-center">
+                     <p className="text-lg text-gray-500">We will notify you when there is a new project!</p>
                   </div>
                )}
             </div>

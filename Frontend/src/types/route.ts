@@ -3,9 +3,15 @@
  */
 export interface RouteConfig {
    label: string
-   icon: React.ReactElement
+   icon?: React.ReactElement<{ size?: number; color?: string }>
    path: string
    routeActive: string[]
-   permissions: string[]
+   permissions?: string[]
    children?: RouteConfig[]
+}
+
+export interface Location {
+   pathName: string
+   payload: any
+   prevPathName: string
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo, createContext, ReactNode, Context } from 'react'
 import { useDispatch } from 'react-redux'
+import { subscribe } from 'api/app'
 import { subscribeWrapped } from 'utils/appActions'
 import urlBase64ToUint8Array from 'utils/webpush/urlBase64ToUint8Array'
 import { PUBLIC_VALID_KEY } from 'utils/constants'
@@ -9,6 +10,7 @@ interface WebPushContextType {
    isSubscribed: boolean
    subscription: PushSubscription | null
    error: string
+   stats: any
    subscribeToNotifications: () => Promise<boolean>
    unsubscribeFromNotifications: () => Promise<boolean>
 }
@@ -17,6 +19,7 @@ export const WebPushContext: Context<WebPushContextType> = createContext<WebPush
    isSubscribed: false,
    subscription: null,
    error: '',
+   stats: null,
    subscribeToNotifications: async () => false,
    unsubscribeFromNotifications: async () => false,
 })
@@ -33,6 +36,7 @@ export const WebPushProvider: React.FC<WebPushProviderProps> = ({ children }) =>
    const [subscription, setSubscription] = useState<PushSubscription | null>(null)
    const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null)
    const [error, setError] = useState<string>('')
+   const [stats, setStats] = useState<any>(null)
 
    // Register Service Worker
    const registerServiceWorker = useCallback(async (): Promise<void> => {
@@ -103,6 +107,7 @@ export const WebPushProvider: React.FC<WebPushProviderProps> = ({ children }) =>
          dispatch(subscribeWrapped(newSubscription) as unknown as AnyAction)
          return true
       } catch (err: unknown) {
+         const error = err as Error
          setError('Unable to subscribe to notifications. Please check browser permissions.')
          return false
       }
@@ -121,6 +126,7 @@ export const WebPushProvider: React.FC<WebPushProviderProps> = ({ children }) =>
          // You might want to notify your server about unsubscription
          return true
       } catch (err: unknown) {
+         const error = err as Error
          setError('Failed to unsubscribe from notifications.')
          return false
       }
@@ -161,10 +167,11 @@ export const WebPushProvider: React.FC<WebPushProviderProps> = ({ children }) =>
          isSubscribed,
          subscription,
          error,
+         stats,
          subscribeToNotifications,
          unsubscribeFromNotifications,
       }),
-      [isSubscribed, subscription, error, subscribeToNotifications, unsubscribeFromNotifications]
+      [isSubscribed, subscription, error, stats, subscribeToNotifications, unsubscribeFromNotifications]
    )
 
    return <WebPushContext.Provider value={contextValue}>{children}</WebPushContext.Provider>

@@ -1,41 +1,22 @@
-import React, { ReactNode, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import styles from './styles.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { setLocation } from '../../../store/modules/app'
 import LazyLoading from 'components/UI/LazyLoading'
 import banner from '../../../assets/images/background/banner_auth_layout.jpg'
 import { RootState } from '~/store'
+import { AuthLayoutProps } from '~/types'
 
-interface AuthLayoutProps {
-   title?: string
-   path?: string
-   children: ReactNode
-}
+const AuthLayout: React.FC<AuthLayoutProps> = ({ children, path }) => {
+   // const location = useSelector((state: RootState) => state.app.location)
+   // const navigate = useNavigate()
+   // const dispatch = useDispatch()
 
-interface LocationState {
-   pathName: string
-   prevPathName: string
-   payload?: any
-}
-
-const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title = '', path }) => {
-   const location = useSelector((state: RootState) => state.app.location)
-   const navigate = useNavigate()
-   const dispatch = useDispatch()
-
-   useEffect(() => {
-      if (location.pathName !== location.prevPathName) {
-         dispatch(
-            setLocation({
-               pathName: location.pathName,
-               payload: location.payload,
-               prevPathName: location.pathName,
-            })
-         )
-         navigate(location.pathName)
-      }
-   }, [location, navigate, dispatch])
+   // useEffect(() => {
+   //    if (location.pathName !== location.prevPathName) {
+   //       navigate(location.pathName)
+   //    }
+   // }, [location, navigate, dispatch])
 
    return (
       <div className={styles.layoutAuthWrap}>

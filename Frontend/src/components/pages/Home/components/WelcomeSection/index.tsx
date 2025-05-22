@@ -1,13 +1,10 @@
 import React from 'react'
 import { IconlyFace, IconlyFolder } from 'components/UI/Iconly'
 import { useNavigate } from 'react-router-dom'
-
-interface User {
-   name: string
-}
+import { AuthUser } from '~/store/modules/auth/types'
 
 interface WelcomeSectionProps {
-   user?: User
+   user?: AuthUser
 }
 
 export const WelcomeSection: React.FC<WelcomeSectionProps> = ({ user }) => {
@@ -25,7 +22,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({ user }) => {
       <div className="flex flex-col">
          <span className="text-2xl font-bold">Welcome back, {user?.name}</span>
          <span className="text-[#6f7f92] font-semibold">Suggested for you</span>
-         <div className="grid grid-cols-3 2xl:gap-10 gap-8 mt-4">
+         <div className="grid grid-cols-3 gap-8 mt-4 2xl:gap-10">
             <div className="flex flex-col p-3 border rounded-xl">
                <div className="flex items-center justify-between">
                   <span className="font-bold">Practice interviews</span>

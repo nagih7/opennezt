@@ -3,30 +3,22 @@ import { CheckCircleFilled } from '@ant-design/icons'
 import { IconlySetting } from 'components/UI/Iconly'
 import { Avatar } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
-
-interface AuthState {
-   auth: {
-      authUser: {
-         name: string
-         avatar: string
-      }
-   }
-}
+import { RootState } from '~/store'
 
 const MessageFooter: FC = () => {
    // ========== STATE FROM REDUX STORE ========== //
-   const { authUser } = useSelector((state: AuthState) => state.auth)
+   const { authUser } = useSelector((state: RootState) => state.auth)
    return (
       <div className="bg-[#ffffff] flex justify-between mt-[15px] rounded-md">
          <span className="flex items-center pl-[16px] py-[6px] pr-[8px]">
             <span className="mr-[10px]">
                <Avatar.Root>
-                  <Avatar.Fallback name={authUser.name} />
-                  <Avatar.Image src={authUser.avatar} />
+                  <Avatar.Fallback name={authUser?.name} />
+                  <Avatar.Image src={authUser?.avatar} />
                </Avatar.Root>
             </span>
             <span className="flex items-center text-[#6f7f92] gap-1 text-sm font-medium">
-               {authUser.name}
+               {authUser?.name}
                <CheckCircleFilled className="text-blue-500" />
             </span>
          </span>
