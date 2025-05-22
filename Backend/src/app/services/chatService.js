@@ -143,7 +143,7 @@ export async function getConversations(user) {
                 type: 1,
                 data: 1,
             },
-            type: 1,
+            type: '$type.name',
             last_message: 1,
             updated_at: 1,
         },

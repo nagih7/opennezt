@@ -1,47 +1,46 @@
-import React from 'react'
-import { NAVBAR_LABEL } from 'utils/constants'
 import { IconlyAddUser, IconlyChat, IconlyFolder, IconlyHome, IconlyProfile, IconlyWork } from 'components/UI/Iconly'
 import { RouteConfig } from 'types/route'
+import { Sidebar } from '~/config/constants'
 
 const appRouteMap: RouteConfig[] = [
    {
-      label: NAVBAR_LABEL.HOME,
-      icon: <IconlyHome size={24} color="#000" />,
+      label: Sidebar.HOME,
+      icon: <IconlyHome size={24} color="#fff" />,
       path: '/',
       routeActive: ['/'],
       permissions: ['home_page'],
    },
    {
-      label: NAVBAR_LABEL.ABOUT_ME,
-      icon: <IconlyProfile size={24} color="#000" />,
+      label: Sidebar.ABOUT_ME,
+      icon: <IconlyProfile size={24} color="#fff" />,
       path: '/about',
       routeActive: ['/about'],
       permissions: ['about_page'],
    },
    {
-      label: NAVBAR_LABEL.PROJECT,
-      icon: <IconlyFolder size={24} color="#000" />,
+      label: Sidebar.PROJECT,
+      icon: <IconlyFolder size={24} color="#fff" />,
       path: '/projects',
       routeActive: ['/projects'],
       permissions: ['projects_page'],
    },
    {
-      label: NAVBAR_LABEL.RECRUIT_TALENTS,
-      icon: <IconlyAddUser size={24} color="#000" />,
+      label: Sidebar.RECRUIT_TALENTS,
+      icon: <IconlyAddUser size={24} color="#fff" />,
       path: '/recruit-talents',
       routeActive: ['/recruit-talents'],
       permissions: ['recruit_talents_page'],
    },
    {
-      label: NAVBAR_LABEL.SEEK_PROJECTS,
-      icon: <IconlyWork size={24} color="#000" />,
+      label: Sidebar.SEEK_PROJECTS,
+      icon: <IconlyWork size={24} color="#fff" />,
       path: '/seek-projects',
       routeActive: ['/seek-projects'],
       permissions: ['seek_projects_page'],
    },
    {
-      label: NAVBAR_LABEL.MESSAGES,
-      icon: <IconlyChat size={24} color="#000" />,
+      label: Sidebar.MESSAGES,
+      icon: <IconlyChat size={24} color="#fff" />,
       path: '/conversation',
       routeActive: ['/conversation'],
       permissions: ['conversation_page'],

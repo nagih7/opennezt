@@ -1,77 +1,39 @@
-import { useSelector, useDispatch } from 'react-redux'
-import { useCallback } from 'react'
-import { RootState, Notification } from 'types'
-import store from '~/store'
-import { markAsRead, replyNotification } from 'api/notification'
+import { useState } from 'react'
+import { postProjectDetailsActivitiesNewMember } from '~/api/activity'
+import { replyNotification } from '~/api/notification'
+import { RootState, useAppDispatch, useAppSelector } from '~/store'
 
-/**
- * Custom hook for notification functionality
- * @returns Notification state and functions
- */
-export const useNotification = () => {
-   const dispatch = useDispatch()
-   const { notifications, isLoadingReplyNotification } = useSelector((state: RootState) => state.notification)
+const useNotification = () => {
+   const dispatch = useAppDispatch()
 
-   /**
-    * Mark a notification as read
-    * @param notification Notification to mark as read
-    */
-   const markNotificationAsRead = useCallback(async (notification: Notification) => {
-      if (notification.metadata?.read === false) {
-         await store.dispatch(markAsRead(notification._id))
+   // Store
+   const { notifications, isLoadingReplyNotification } = useAppSelector((state: RootState) => state.notification)
+
+   // State
+   const [notificationIndex, setNotificationIndex] = useState<number | null>(null)
+
+   // Function
+   const handleReplyNotification = (notification_id: string, action: string, index?: number) => {
+      if (index !== undefined) {
+         setNotificationIndex(index)
       }
-   }, [])
+      dispatch(replyNotification(notification_id, action))
+      if (action === 'confirm') {
+         postProjectDetailsActivitiesNewMember(notification_id)
+      }
+   }
 
-   /**
-    * Reply to a notification
-    * @param notificationId ID of notification
-    * @param action Action to take ('confirm' or 'delete')
-    */
-   const replyToNotification = useCallback(async (notificationId: string, action: string) => {
-      await store.dispatch(replyNotification(notificationId, action))
-   }, [])
-
-   /**
-    * Get unread notifications
-    * @returns Array of unread notifications
-    */
-   const getUnreadNotifications = useCallback((): Notification[] => {
-      return notifications.filter((notification) => notification.metadata?.read === false)
-   }, [notifications])
-
-   /**
-    * Get read notifications
-    * @returns Array of read notifications
-    */
-   const getReadNotifications = useCallback((): Notification[] => {
-      return notifications.filter((notification) => notification.metadata?.read === true)
-   }, [notifications])
-
-   /**
-    * Get notification count
-    * @returns Total number of notifications
-    */
-   const getNotificationCount = useCallback((): number => {
-      return notifications.length
-   }, [notifications])
-
-   /**
-    * Get unread notification count
-    * @returns Number of unread notifications
-    */
-   const getUnreadNotificationCount = useCallback((): number => {
-      return getUnreadNotifications().length
-   }, [getUnreadNotifications])
-
+   const handleMarkAsRead = async (notification: Notification) => {
+      // if (notification.metadata?.read === false) {
+      //    await store.dispatch(markAsRead(notification._id))
+      // }
+   }
    return {
       notifications,
-      unreadNotifications: getUnreadNotifications(),
-      readNotifications: getReadNotifications(),
+      notificationIndex,
       isLoadingReplyNotification,
-      markNotificationAsRead,
-      replyToNotification,
-      getNotificationCount,
-      getUnreadNotificationCount,
+      handleReplyNotification,
+      handleMarkAsRead,
    }
 }
 

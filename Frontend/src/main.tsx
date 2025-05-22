@@ -23,8 +23,8 @@ const isMobileDevice = (): boolean => {
 root.render(
    <React.StrictMode>
       <Provider store={store}>
-         <RootProvider>
-            <ChakraProvider>
+         <ChakraProvider>
+            <RootProvider>
                {isMobileDevice() ? (
                   <Mobile_Responsive />
                ) : (
@@ -33,8 +33,8 @@ root.render(
                      <Toaster />
                   </>
                )}
-            </ChakraProvider>
-         </RootProvider>
+            </RootProvider>
+         </ChakraProvider>
       </Provider>
    </React.StrictMode>
 )

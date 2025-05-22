@@ -22,16 +22,6 @@ function* handleActions(): Generator<Effect, void, any> {
       setAuthToken(token)
       yield put(getMe())
    })
-
-   // yield takeLatest(startRequestRegisterSuccess.type, function* () {
-   //    getNotification("success", "Register success. Please verify by email!");
-   //    yield put(setLocation({ pathName: "/login" }));
-   // });
-
-   // yield takeLatest(startRequestRegisterFail.type, function* () {
-   //    getNotification("error", "Register fail");
-   //    yield;
-   // });
 }
 
 export default function* loadAuthSaga(): Generator<Effect, void, any> {

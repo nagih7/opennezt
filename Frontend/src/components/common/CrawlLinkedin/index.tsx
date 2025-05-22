@@ -5,7 +5,7 @@ import { toaster } from 'components/UI/toaster'
 import { useDispatch } from 'react-redux'
 import { matchingProjects } from 'api/artificialIntelligence'
 import { setHideLinkedinNotification, getHideLinkedinNotification } from 'utils/localStorage'
-import { AppDispatch } from 'store/store.types'
+import { AppDispatch } from '~/store'
 
 interface CrawlLinkedinProps {
    status: boolean
