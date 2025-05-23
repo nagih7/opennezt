@@ -122,11 +122,7 @@ const router: RouteObject[] = [
    },
    {
       path: '/verify-authentication',
-      element: withSuspense(
-         <AuthLayout title={'Verify authentication'} path="verify">
-            <VerifyAuth />
-         </AuthLayout>
-      ),
+      element: withSuspense(<VerifyAuth />),
       loader: createLoader(false, 'LOAD_AUTH_PAGE'),
    },
    {
