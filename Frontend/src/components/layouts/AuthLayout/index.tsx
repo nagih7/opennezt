@@ -1,5 +1,4 @@
 import React from 'react'
-import LazyLoading from 'components/UI/LazyLoading'
 import banner from '../../../assets/images/background/banner_auth_layout.jpg'
 import { AuthLayoutProps } from '~/types'
 import { Auth } from '~/config/constants'
@@ -28,12 +27,10 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, path }) => {
          <div className="flex w-2/5 bg-white rounded-md shadow-lg">
             {(() => {
                switch (path) {
-                  case Auth.LOGIN:
+                  case Auth.LOGIN || Auth.FORGOT_PASSWORD:
                      return (
                         <>
-                           <div className="w-full h-full p-4 xl:w-1/2">
-                              <LazyLoading>{children}</LazyLoading>
-                           </div>
+                           <div className="w-full h-full p-4 xl:w-1/2">{children}</div>
                            <Banner />
                         </>
                      )
@@ -41,26 +38,11 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, path }) => {
                      return (
                         <>
                            <Banner />
-                           <div className="w-full h-full p-4 xl:w-1/2">
-                              <LazyLoading>{children}</LazyLoading>
-                           </div>
-                        </>
-                     )
-                  case Auth.FORGOT_PASSWORD:
-                     return (
-                        <>
-                           <div className="w-full h-full p-4 xl:w-1/2">
-                              <LazyLoading>{children}</LazyLoading>
-                           </div>
-                           <Banner />
+                           <div className="w-full h-full p-4 xl:w-1/2">{children}</div>
                         </>
                      )
                   default:
-                     return (
-                        <>
-                           <LazyLoading>{children}</LazyLoading>
-                        </>
-                     )
+                     return <>{children}</>
                }
             })()}
          </div>
