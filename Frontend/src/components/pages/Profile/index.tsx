@@ -6,8 +6,6 @@ import store from '~/store'
 import { useSelector } from 'react-redux'
 import { changeAvatar, changeBackground } from 'api/profile'
 import { Upload, Col, Row, Tabs, message } from 'antd'
-import AvatarDefault from 'assets/images/default/AvatarDefault.png'
-import BackgroundDefault from 'assets/images/default/BackgroundDefault.png'
 import CameraAltIcon from '@mui/icons-material/CameraAlt'
 import resizeLogo from 'utils/files/resizeLogo'
 import resizeBackground from 'utils/files/resizeBackground'
@@ -84,7 +82,7 @@ function Profile() {
                <div className={`${styles.profileItem} rounded-md`}>
                   <div className={styles.informationWrap}>
                      <div className={styles.backgroundWrap}>
-                        <img src={background || BackgroundDefault} className="rounded-md" />
+                        <img src={background} className="rounded-md" />
                         <div className={styles.buttonChangeBackground}>
                            <Upload {...propsBackground}>
                               <CameraAltIcon fontSize="2rem" />
@@ -99,14 +97,7 @@ function Profile() {
                                  <CameraAltIcon fontSize="12px" />
                               </Upload>
                            </div>
-                           <img
-                              src={avatar || AvatarDefault}
-                              onError={(e) => {
-                                 e.target.onerror = null
-                                 e.target.src = AvatarDefault
-                              }}
-                              alt={authUser.name}
-                           />
+                           <img src={avatar} alt={authUser.name} />
                         </div>
                         <div className={styles.infoWrap}>
                            <div className={styles.name}>{authUser.name}</div>

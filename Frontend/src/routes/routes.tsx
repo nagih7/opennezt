@@ -1,85 +1,110 @@
 import React from 'react'
 import { createBrowserRouter, RouteObject, LoaderFunction } from 'react-router-dom'
 import { rootLoader } from './rootLoader'
+import withSuspense from './loadingFallback'
 
-import AppLayout from 'components/layouts/AppLayout'
-import AuthLayout from 'components/layouts/AuthLayout'
-import Certifications from 'components/pages/EditProfile/components/Certifications'
-// Project
-import Details from 'components/pages/CreateProject/Details'
-import Stage from 'components/pages/CreateProject/Stage'
-import Revenue from 'components/pages/CreateProject/Revenue'
-import FundingSources from 'components/pages/CreateProject/FundingSources'
-import AdditonalInfo from 'components/pages/CreateProject/AdditionalInfo'
-import Logo from 'components/pages/CreateProject/Logo'
-import Background from 'components/pages/CreateProject/Background'
-import Invites from 'components/pages/CreateProject/Invites'
-import MyProjectDetails from 'components/pages/MyProjectDetails'
-// EditProfile
-import EditDetail from 'components/pages/EditProject/Components/Detail'
-import EditStage from 'components/pages/EditProject/Components/Stage'
-import EditRevenue from 'components/pages/EditProject/Components/Revenue'
-import EditFundingSources from 'components/pages/EditProject/Components/FundingSources'
-import EditAdditionalInfo from 'components/pages/EditProject/Components/AdditionalInfo'
-import EditLogo from 'components/pages/EditProject/Components/Logo'
-import EditBackground from 'components/pages/EditProject/Components/Background'
-import Members from 'components/pages/MyProjectDetails/components/Members'
-import ProjectManage from 'components/pages/MyProjectDetails/components/ProjectManage'
-// import NewConversation from 'components/pages/Message/components/NewConversation';
-import AccountSettings from 'components/pages/AccountSettings'
-import ProfileVisibility from 'components/pages/AccountSettings/components/ProfileVisibility'
-import PrivacyAndSecurity from 'components/pages/AccountSettings/components/PrivacyAndSecurity'
-import Shop from 'components/pages/AccountSettings/components/Shop'
-import BlockList from 'components/pages/AccountSettings/components/BlockList'
-import ExportData from 'components/pages/AccountSettings/components/ExportData'
-import MessageSidebar from 'components/pages/Message/components/MessageSidebar'
-import Interview from 'components/common/ModalMatchingProjects/components/Interview'
+// Layouts
+const AppLayout = React.lazy(() => import('components/layouts/AppLayout'))
+const AuthLayout = React.lazy(() => import('components/layouts/AuthLayout'))
 
-const Home = React.lazy(() => import('../components/pages/Home'))
+// Auth pages
 const Login = React.lazy(() => import('../components/pages/Auth/Login'))
 const Register = React.lazy(() => import('../components/pages/Auth/Register'))
 const ForgotPassword = React.lazy(() => import('../components/pages/Auth/ForgotPassword'))
-const Profile = React.lazy(() => import('../components/pages/Profile'))
-const Manage = React.lazy(() => import('../components/pages/Manage'))
-const UserManagement = React.lazy(() => import('../components/pages/UserManagement'))
-const RoleManage = React.lazy(() => import('../components/pages/Manage/components/RoleManage'))
-const TypeManage = React.lazy(() => import('../components/pages/Manage/components/TypeManage'))
-const IndustryManage = React.lazy(() => import('../components/pages/Manage/components/IndustryManage'))
-const ExperienceLevelManage = React.lazy(() => import('../components/pages/Manage/components/ExperienceLevelManage'))
-const CategoryManage = React.lazy(() => import('../components/pages/Manage/components/CategoryManage'))
-const SkillManage = React.lazy(() => import('../components/pages/Manage/components/SkillManage'))
-const OrganizationManage = React.lazy(() => import('../components/pages/Manage/components/OrganizationManage'))
-const About = React.lazy(() => import('../components/pages/About'))
-const Message = React.lazy(() => import('../components/pages/Message'))
-// const Newfeeds = React.lazy(() => import('../components/pages/Newfeeds'))
-const Project = React.lazy(() => import('../components/pages/Project'))
-const RecruitTalents = React.lazy(() => import('../components/pages/RecruitTalents'))
-const TalentDetails = React.lazy(() => import('../components/pages/TalentDetails'))
-const SeekProjects = React.lazy(() => import('../components/pages/SeekProjects'))
-const ProjectDetailsBySeek = React.lazy(() => import('../components/pages/ProjectDetailsBySeek'))
 const VerifyAuth = React.lazy(() => import('../components/pages/Auth/Verify'))
 const ResetPassword = React.lazy(() => import('../components/pages/Auth/ResetPassword'))
-const ArticleManage = React.lazy(() => import('../components/pages/Manage/components/ArticleManage'))
-// ========== EDIT PROFILE COMPONENTS ========== //
-const ProfessionalBackground = React.lazy(
-   () => import('../components/pages/EditProfile/components/ProfessionalBackground')
-)
-const Educations = React.lazy(() => import('../components/pages/EditProfile/components/Educations'))
-const Skills = React.lazy(() => import('../components/pages/EditProfile/components/Skills'))
-const AdditionalInfo = React.lazy(() => import('../components/pages/EditProfile/components/AdditionalInfo'))
-// const NotificationManagement = React.lazy(() => import('../components/pages/NotificationManagement'))
-// Define a custom RouteConfig type that extends RouteObject
-type RouteConfig = RouteObject
+
+// Main pages
+const Home = React.lazy(() => import('../components/pages/Home'))
+const Profile = React.lazy(() => import('../components/pages/Profile'))
+const About = React.lazy(() => import('../components/pages/About'))
+const Message = React.lazy(() => import('../components/pages/Message'))
+const Project = React.lazy(() => import('../components/pages/Project'))
+
+// Project related pages
+const ProjectFeatures = {
+   CreateProject: {
+      Details: React.lazy(() => import('components/pages/CreateProject/Details')),
+      Stage: React.lazy(() => import('components/pages/CreateProject/Stage')),
+      Revenue: React.lazy(() => import('components/pages/CreateProject/Revenue')),
+      FundingSources: React.lazy(() => import('components/pages/CreateProject/FundingSources')),
+      AdditionalInfo: React.lazy(() => import('components/pages/CreateProject/AdditionalInfo')),
+      Logo: React.lazy(() => import('components/pages/CreateProject/Logo')),
+      Background: React.lazy(() => import('components/pages/CreateProject/Background')),
+      Invites: React.lazy(() => import('components/pages/CreateProject/Invites')),
+   },
+   EditProject: {
+      Detail: React.lazy(() => import('components/pages/EditProject/Components/Detail')),
+      Stage: React.lazy(() => import('components/pages/EditProject/Components/Stage')),
+      Revenue: React.lazy(() => import('components/pages/EditProject/Components/Revenue')),
+      FundingSources: React.lazy(() => import('components/pages/EditProject/Components/FundingSources')),
+      AdditionalInfo: React.lazy(() => import('components/pages/EditProject/Components/AdditionalInfo')),
+      Logo: React.lazy(() => import('components/pages/EditProject/Components/Logo')),
+      Background: React.lazy(() => import('components/pages/EditProject/Components/Background')),
+   },
+   MyProject: {
+      Details: React.lazy(() => import('components/pages/MyProjectDetails')),
+      Members: React.lazy(() => import('components/pages/MyProjectDetails/components/Members')),
+      ProjectManage: React.lazy(() => import('components/pages/MyProjectDetails/components/ProjectManage')),
+   },
+}
+
+// Edit Profile related pages
+const EditProfileFeatures = {
+   ProfessionalBackground: React.lazy(
+      () => import('../components/pages/EditProfile/components/ProfessionalBackground')
+   ),
+   Educations: React.lazy(() => import('../components/pages/EditProfile/components/Educations')),
+   Certifications: React.lazy(() => import('components/pages/EditProfile/components/Certifications')),
+   Skills: React.lazy(() => import('../components/pages/EditProfile/components/Skills')),
+   AdditionalInfo: React.lazy(() => import('../components/pages/EditProfile/components/AdditionalInfo')),
+}
+
+// Account Settings related pages
+const AccountSettingsFeatures = {
+   Main: React.lazy(() => import('components/pages/AccountSettings')),
+   ProfileVisibility: React.lazy(() => import('components/pages/AccountSettings/components/ProfileVisibility')),
+   PrivacyAndSecurity: React.lazy(() => import('components/pages/AccountSettings/components/PrivacyAndSecurity')),
+   Shop: React.lazy(() => import('components/pages/AccountSettings/components/Shop')),
+   BlockList: React.lazy(() => import('components/pages/AccountSettings/components/BlockList')),
+   ExportData: React.lazy(() => import('components/pages/AccountSettings/components/ExportData')),
+}
+
+// Talent related pages
+const TalentFeatures = {
+   RecruitTalents: React.lazy(() => import('../components/pages/RecruitTalents')),
+   TalentDetails: React.lazy(() => import('../components/pages/TalentDetails')),
+   SeekProjects: React.lazy(() => import('../components/pages/SeekProjects')),
+   ProjectDetailsBySeek: React.lazy(() => import('../components/pages/ProjectDetailsBySeek')),
+}
+
+// Admin related pages
+const AdminFeatures = {
+   Manage: React.lazy(() => import('../components/pages/Manage')),
+   UserManagement: React.lazy(() => import('../components/pages/UserManagement')),
+   RoleManage: React.lazy(() => import('../components/pages/Manage/components/RoleManage')),
+   TypeManage: React.lazy(() => import('../components/pages/Manage/components/TypeManage')),
+   IndustryManage: React.lazy(() => import('../components/pages/Manage/components/IndustryManage')),
+   ExperienceLevelManage: React.lazy(() => import('../components/pages/Manage/components/ExperienceLevelManage')),
+   CategoryManage: React.lazy(() => import('../components/pages/Manage/components/CategoryManage')),
+   SkillManage: React.lazy(() => import('../components/pages/Manage/components/SkillManage')),
+   OrganizationManage: React.lazy(() => import('../components/pages/Manage/components/OrganizationManage')),
+   ArticleManage: React.lazy(() => import('../components/pages/Manage/components/ArticleManage')),
+}
+
+// Other components
+const MessageSidebar = React.lazy(() => import('components/pages/Message/components/MessageSidebar'))
+const Interview = React.lazy(() => import('components/common/ModalMatchingProjects/components/Interview'))
 
 // Define a helper function to create properly typed loader functions
 const createLoader = (isAuth: boolean, saga: string | null, permissions: string[] = []): LoaderFunction => {
    return (args) => rootLoader(args, isAuth, saga, permissions)
 }
 
-const router: RouteConfig[] = [
+const router: RouteObject[] = [
    {
       path: '/login',
-      element: (
+      element: withSuspense(
          <AuthLayout title={'Welcome back'} path="login">
             <Login />
          </AuthLayout>
@@ -88,7 +113,7 @@ const router: RouteConfig[] = [
    },
    {
       path: '/register',
-      element: (
+      element: withSuspense(
          <AuthLayout title={'Register account'} path="register">
             <Register />
          </AuthLayout>
@@ -97,7 +122,7 @@ const router: RouteConfig[] = [
    },
    {
       path: '/verify-authentication',
-      element: (
+      element: withSuspense(
          <AuthLayout title={'Verify authentication'} path="verify">
             <VerifyAuth />
          </AuthLayout>
@@ -106,7 +131,7 @@ const router: RouteConfig[] = [
    },
    {
       path: '/reset-password',
-      element: (
+      element: withSuspense(
          <AuthLayout title={'Reset password'} path="reset-password">
             <ResetPassword />
          </AuthLayout>
@@ -115,7 +140,7 @@ const router: RouteConfig[] = [
    },
    {
       path: '/forgot-password',
-      element: (
+      element: withSuspense(
          <AuthLayout title={'Forgot password'} path="forgot-password">
             <ForgotPassword />
          </AuthLayout>
@@ -124,7 +149,7 @@ const router: RouteConfig[] = [
    },
    {
       path: 'profile',
-      element: (
+      element: withSuspense(
          <AppLayout>
             <Profile />
          </AppLayout>
@@ -133,9 +158,9 @@ const router: RouteConfig[] = [
    },
    {
       path: 'admin/manage',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <Manage />
+            <AdminFeatures.Manage />
          </AppLayout>
       ),
       loader: createLoader(true, 'LOAD_MANAGE_PAGE'),
@@ -144,77 +169,77 @@ const router: RouteConfig[] = [
       path: 'admin/manage/users',
       element: (
          <AppLayout>
-            <UserManagement />
+            <AdminFeatures.UserManagement />
          </AppLayout>
       ),
    },
    {
       path: 'admin/manage/roles',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <RoleManage />
+            <AdminFeatures.RoleManage />
          </AppLayout>
       ),
    },
    {
       path: 'admin/manage/types',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <TypeManage />
+            <AdminFeatures.TypeManage />
          </AppLayout>
       ),
    },
    {
       path: 'admin/manage/industries',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <IndustryManage />
+            <AdminFeatures.IndustryManage />
          </AppLayout>
       ),
    },
    {
       path: 'admin/manage/experience-levels',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <ExperienceLevelManage />
+            <AdminFeatures.ExperienceLevelManage />
          </AppLayout>
       ),
    },
    {
       path: 'admin/manage/categories',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <CategoryManage />
+            <AdminFeatures.CategoryManage />
          </AppLayout>
       ),
    },
    {
       path: 'admin/manage/skills',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <SkillManage />
+            <AdminFeatures.SkillManage />
          </AppLayout>
       ),
    },
    {
       path: 'admin/manage/organizations',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <OrganizationManage />
+            <AdminFeatures.OrganizationManage />
          </AppLayout>
       ),
    },
    {
       path: 'admin/manage/articles',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <ArticleManage />
+            <AdminFeatures.ArticleManage />
          </AppLayout>
       ),
    },
    {
       path: '/',
-      element: (
+      element: withSuspense(
          <AppLayout>
             <Home />
          </AppLayout>
@@ -223,7 +248,7 @@ const router: RouteConfig[] = [
    },
    {
       path: '/about',
-      element: (
+      element: withSuspense(
          <AppLayout>
             <About />
          </AppLayout>
@@ -237,19 +262,9 @@ const router: RouteConfig[] = [
          },
       ],
    },
-   // {
-   //     path: '/activity',
-   //     element: (
-   //         <AppLayout>
-   //             <Newfeeds />
-   //         </AppLayout>
-   //     ),
-   //     loader: ({ request }) => rootLoader({ request }, true, 'LOAD_NEWFEED_PAGE'),
-   // },
-
    {
       path: '/projects',
-      element: (
+      element: withSuspense(
          <AppLayout>
             <Project />
          </AppLayout>
@@ -258,296 +273,259 @@ const router: RouteConfig[] = [
    },
    {
       path: '/recruit-talents',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <RecruitTalents />
+            <TalentFeatures.RecruitTalents />
          </AppLayout>
       ),
       loader: createLoader(true, 'LOAD_RECRUIT_TALENTS_PAGE'),
    },
    {
       path: '/talents/:id/details',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <TalentDetails />
+            <TalentFeatures.TalentDetails />
          </AppLayout>
       ),
       loader: createLoader(true, 'LOAD_TALENT_DETAILS_PAGE'),
    },
    {
       path: '/seek-projects',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <SeekProjects />
+            <TalentFeatures.SeekProjects />
          </AppLayout>
       ),
       loader: createLoader(true, 'LOAD_SEEK_PROJECT_PAGE'),
    },
    {
       path: 'projects/:id/details',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <ProjectDetailsBySeek />
+            <TalentFeatures.ProjectDetailsBySeek />
          </AppLayout>
       ),
       loader: createLoader(true, 'LOAD_PROJECT_DETAIL_PAGE'),
    },
-   // {
-   //     path: '/notification-management',
-   //     element: (
-   //         <AppLayout>
-   //             <NotificationManagement />
-   //         </AppLayout>
-   //     ),
-   //     loader: ({ request }) => rootLoader({ request }, true, 'LOAD_NOTIFICATION_MANAGEMENT_PAGE'),
-   // },
-   // {
-   // 	path: "/about/edit-profile",
-   // 	element: (
-   // 		<AppLayout>
-   // 			<EditProfile />
-   // 		</AppLayout>
-   // 	),
-   // 	loader: ({ request }) =>
-   // 		rootLoader({ request }, true, "LOAD_EDIT_PROFILE_PAGE"),
-   // },
    {
       path: '/about/edit-profile/professional-background',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <ProfessionalBackground />
+            <EditProfileFeatures.ProfessionalBackground />
          </AppLayout>
       ),
       loader: createLoader(true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
    {
       path: '/about/edit-profile/educations',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <Educations />
+            <EditProfileFeatures.Educations />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
    {
       path: '/about/edit-profile/certifications',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <Certifications />
+            <EditProfileFeatures.Certifications />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
    {
       path: '/about/edit-profile/skills',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <Skills />
+            <EditProfileFeatures.Skills />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
    {
       path: '/about/edit-profile/more',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <AdditionalInfo />
+            <EditProfileFeatures.AdditionalInfo />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
-   // {
-   //     path: '/about/edit-profile/cv',
-   //     element: (
-   //         <AppLayout>
-   //             <UploadCV />
-   //         </AppLayout>
-   //     ),
-   //     loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
-   // },
    {
       path: '/project/details',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <Details />
+            <ProjectFeatures.CreateProject.Details />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/stage',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <Stage />
+            <ProjectFeatures.CreateProject.Stage />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/revenue',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <Revenue />
+            <ProjectFeatures.CreateProject.Revenue />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/funding-sources',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <FundingSources />
+            <ProjectFeatures.CreateProject.FundingSources />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/additional-info',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <AdditonalInfo />
+            <ProjectFeatures.CreateProject.AdditionalInfo />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/logo',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <Logo />
+            <ProjectFeatures.CreateProject.Logo />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/background',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <Background />
+            <ProjectFeatures.CreateProject.Background />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/invites',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <Invites />
+            <ProjectFeatures.CreateProject.Invites />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/details',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <MyProjectDetails />
+            <ProjectFeatures.MyProject.Details />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PROJECT_DETAILS_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/basic',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <EditDetail />
+            <ProjectFeatures.EditProject.Detail />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/stage',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <EditStage />
+            <ProjectFeatures.EditProject.Stage />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/revenue',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <EditRevenue />
+            <ProjectFeatures.EditProject.Revenue />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/funding-sources',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <EditFundingSources />
+            <ProjectFeatures.EditProject.FundingSources />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/additional-info',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <EditAdditionalInfo />
+            <ProjectFeatures.EditProject.AdditionalInfo />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/logo',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <EditLogo />
+            <ProjectFeatures.EditProject.Logo />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/background',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <EditBackground />
+            <ProjectFeatures.EditProject.Background />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/project/details/members',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <Members />
+            <ProjectFeatures.MyProject.Members />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PROJECT_MEMBERS_PAGE'),
    },
    {
       path: '/project/details/setting',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <ProjectManage />
+            <ProjectFeatures.MyProject.ProjectManage />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PROJECT_SETTING_PAGE'),
    },
    {
       path: '/conversation',
-      element: (
+      element: withSuspense(
          <AppLayout>
             <Message />
          </AppLayout>
       ),
       loader: createLoader(true, 'LOAD_MESSAGES_PAGE'),
    },
-   // {
-   //     path: '/messages/new-conversation',
-   //     element: (
-   //         <AppLayout>
-   //             <NewConversation />
-   //         </AppLayout>
-   //     ),
-   //     loader: ({ request }) => rootLoader({ request }, true, 'LOAD_NEW_CONVERSATION_PAGE'),
-   // },
    {
       path: '/conversation/:id',
-      element: (
+      element: withSuspense(
          <AppLayout>
             <Message />
          </AppLayout>
@@ -556,62 +534,61 @@ const router: RouteConfig[] = [
    },
    {
       path: '/account-settings',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <AccountSettings />
+            <AccountSettingsFeatures.Main />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_ACCOUNT_SETTINGS_PAGE'),
    },
    {
       path: '/account-settings/profile-visibility',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <ProfileVisibility />
+            <AccountSettingsFeatures.ProfileVisibility />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PROFILE_VISIBILITY_PAGE'),
    },
-
    {
       path: '/account-settings/privacy-and-security',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <PrivacyAndSecurity />
+            <AccountSettingsFeatures.PrivacyAndSecurity />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PRIVACY_AND_SECURITY_PAGE'),
    },
    {
       path: '/account-settings/shop',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <Shop />
+            <AccountSettingsFeatures.Shop />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_SHOP_PAGE'),
    },
    {
       path: '/account-settings/block-list',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <BlockList />
+            <AccountSettingsFeatures.BlockList />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_BLOCK_LIST_PAGE'),
    },
    {
       path: '/account-settings/export-data',
-      element: (
+      element: withSuspense(
          <AppLayout>
-            <ExportData />
+            <AccountSettingsFeatures.ExportData />
          </AppLayout>
       ),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EXPORT_DATA_PAGE'),
    },
    {
       path: '/messages-sidebar',
-      element: (
+      element: withSuspense(
          <AppLayout>
             <MessageSidebar />
          </AppLayout>
@@ -620,7 +597,7 @@ const router: RouteConfig[] = [
    },
    {
       path: '/interview/:projectId',
-      element: <Interview />,
+      element: withSuspense(<Interview />),
       loader: ({ request }) => rootLoader({ request }, true, 'LOAD_INTERVIEW_PAGE'),
    },
 ]
