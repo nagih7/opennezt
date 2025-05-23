@@ -1,151 +1,83 @@
-import React, { useEffect, useState } from 'react'
-import styles from './styles.module.scss'
-import './styles.scss'
+import React from 'react'
 import InputMASQ from '../../../../components/UI/Input'
 import _ from 'lodash'
 import ButtonMASQ from '../../../../components/UI/Button'
-import { useNavigate } from 'react-router-dom'
-import { isValidate } from '../../../../utils/validate'
-import { handleCheckValidateConfirm } from '../../../../utils/helper'
-import { useSelector, useDispatch } from 'react-redux'
-import store from '~/store'
-import { Checkbox } from 'antd'
-import Social from './components/Social'
-import { login } from '../../../../api/auth'
+import { Checkbox, Tooltip } from 'antd'
 import Logo from '../../../../assets/images/logo/opennezt_black.png'
-import { resetForgotPassword } from '../../../../store/modules/auth'
-import { RootState } from '~/store'
-
-interface LoginData {
-   email: string
-   password: string
-}
-
-interface ErrorData {
-   email: string
-   password: string
-}
+import useLogin from './useLogin'
+import LinkedIn from '~/assets/images/icon/linkedin.svg'
+import Google from '~/assets/images/icon/google.svg'
+import Facebook from '~/assets/images/icon/facebook.svg'
+import Twitter from '~/assets/images/icon/twitter.svg'
 
 const Login: React.FC = () => {
-   const dispatch = useDispatch()
-   const navigate = useNavigate()
-   const [dataLogin, setDataLogin] = useState<LoginData>({
-      email: '',
-      password: '',
-   })
-   const [errorDataLogin, setErrorDataLogin] = useState<ErrorData>({
-      email: '',
-      password: '',
-   })
-   const [checkRemember, setCheckRemember] = useState<boolean>(false)
-   const isLoadingBtnLogin = useSelector((state: RootState) => state.auth.isLoadingBtnLogin)
-   const { isAuthSuccess, authRole } = useSelector((state: RootState) => state.auth)
-
-   useEffect(() => {
-      dispatch(resetForgotPassword())
-   }, [dispatch])
-
-   useEffect(() => {
-      handleResetError()
-   }, [dataLogin])
-
-   useEffect(() => {
-      if (isAuthSuccess) {
-         if (authRole === 'Super Admin') {
-            navigate('/')
-         } else if (authRole === 'User') {
-            navigate('/')
-         }
-      }
-   }, [isAuthSuccess, authRole, navigate])
-
-   const handleResetError = (): void => {
-      setErrorDataLogin({
-         email: '',
-         password: '',
-      })
-   }
-
-   const handleChangeInput = (valueInput: React.ChangeEvent<HTMLInputElement>, type: keyof LoginData): void => {
-      let value = valueInput.target.value
-      let data = _.cloneDeep(dataLogin)
-      data[type] = value
-      setDataLogin(data)
-   }
-
-   const validateBlur = (type: keyof LoginData): boolean => {
-      let validate = isValidate(dataLogin, type, errorDataLogin)
-      setErrorDataLogin(validate.error)
-      return validate.isError
-   }
-
-   const handleConfirmLogin = async (): Promise<void> => {
-      let validate = handleCheckValidateConfirm(dataLogin, errorDataLogin)
-      setErrorDataLogin(validate.dataError)
-      if (!validate.isError) {
-         await store.dispatch(login(dataLogin))
-      }
-   }
-
-   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
-      if (event.key === 'Enter') {
-         handleConfirmLogin()
-      }
-   }
-
-   const handleClickCheckBox = (e: any): void => {
-      setCheckRemember(e.target.checked)
-   }
+   const {
+      dataLogin,
+      errorDataLogin,
+      checkRemember,
+      isLoadingBtnLogin,
+      navigate,
+      handleChangeInput,
+      validateBlur,
+      handleConfirmLogin,
+      handleKeyDown,
+      handleClickCheckBox,
+      loginWithLinkedIn,
+      loginWithGoogle,
+   } = useLogin()
 
    return (
-      <div className={styles.loginWrap}>
-         <div className={styles.loginHeaderWrap}>
-            <div className={styles.logo}>
-               <img src={Logo} alt="logo-opennezt" />
+      <div className="flex flex-col items-center justify-center w-full my-8">
+         <div className="flex flex-col items-center w-full mb-6">
+            <div className="mb-4">
+               <img src={Logo} alt="logo-opennezt" className="h-16" />
             </div>
-            <h1 className={styles.title}>Login</h1>
+            <h1 className="text-2xl font-bold text-gray-800">Sign In</h1>
          </div>
-         <div className={styles.loginContent}>
-            <div className={styles.inputWrapper}>
-               <div className={styles.label}>Email *</div>
+         <div className="w-full p-6 bg-white rounded-lg">
+            <div className="mb-4">
+               <div className="mb-1 text-sm font-medium text-gray-700">Email *</div>
                <InputMASQ
                   type={'text'}
                   placeholder={'Enter email...'}
-                  onChange={(e) => handleChangeInput(e, 'email')}
+                  onChange={(e: any) => handleChangeInput(e, 'email')}
                   onBlur={() => validateBlur('email')}
                   value={dataLogin.email}
                   error={errorDataLogin.email}
                />
             </div>
 
-            <div className={styles.inputWrapper}>
-               <div className={styles.label}>Password *</div>
+            <div className="mb-6">
+               <div className="mb-1 text-sm font-medium text-gray-700">Password *</div>
                <InputMASQ
                   type={'password'}
                   placeholder={'******'}
                   value={dataLogin.password}
-                  onChange={(e) => handleChangeInput(e, 'password')}
+                  onChange={(e: any) => handleChangeInput(e, 'password')}
                   onBlur={() => validateBlur('password')}
-                  onKeyDown={(e) => handleKeyDown(e)}
+                  onKeyDown={(e: any) => handleKeyDown(e)}
                   error={errorDataLogin.password}
                />
             </div>
 
-            <div className={styles.btnUtilitiesWrap}>
-               <div className={`${styles.remember} input-checkbox-style`}>
-                  <Checkbox className={styles.checkBox} checked={checkRemember} onClick={(e) => handleClickCheckBox(e)}>
-                     <span>Remember me</span>
+            <div className="flex items-center justify-between mb-6">
+               <div className="flex items-center">
+                  <Checkbox checked={checkRemember} onClick={(e) => handleClickCheckBox(e)}>
+                     <span className="text-sm text-gray-600">Remember me</span>
                   </Checkbox>
                </div>
 
-               <div onClick={() => navigate('/forgot-password')} className={styles.btnForgetPassword}>
-                  Forgot password
+               <div
+                  onClick={() => navigate('/forgot-password')}
+                  className="text-sm text-blue-600 cursor-pointer hover:text-blue-800"
+               >
+                  Forgot password?
                </div>
             </div>
 
-            <div className={styles.btnWrap}>
+            <div className="mb-4">
                <ButtonMASQ
-                  textBtn={'Login'}
+                  textBtn={'Sign In'}
                   loading={isLoadingBtnLogin}
                   onClick={() => handleConfirmLogin()}
                   disable={false}
@@ -157,16 +89,45 @@ const Login: React.FC = () => {
                />
             </div>
 
-            <div className={styles.btnSwitchWrap}>
-               <div className={styles.btnRegister}>
-                  {"Don't have an account"}?{' '}
-                  <span className={styles.textRegister} onClick={() => navigate('/register')}>
-                     Signup now
+            <div className="mt-4 text-center">
+               <div className="text-sm text-gray-600">
+                  Don't have an account?{' '}
+                  <span
+                     className="text-blue-600 cursor-pointer hover:text-blue-800"
+                     onClick={() => navigate('/register')}
+                  >
+                     Sign up now
                   </span>
                </div>
             </div>
 
-            <Social />
+            {/* Social */}
+            <div className="flex flex-col items-center justify-center gap-4 pt-4 mt-4 border-t border-gray-200">
+               <p className="font-semibold text-gray-600 text-md">Login with socials</p>
+
+               <div className="flex items-center justify-center gap-4">
+                  <Tooltip title="LinkedIn" placement="top">
+                     <div className="w-10 h-10" onClick={loginWithLinkedIn}>
+                        <img src={LinkedIn} alt="LinkedIn" />
+                     </div>
+                  </Tooltip>
+                  <Tooltip title="Google" placement="top">
+                     <div className="w-10 h-10" onClick={loginWithGoogle}>
+                        <img src={Google} alt="Google" />
+                     </div>
+                  </Tooltip>
+                  <Tooltip title="Coming soon" placement="top">
+                     <div className="w-10 h-10">
+                        <img src={Facebook} alt="Facebook" />
+                     </div>
+                  </Tooltip>
+                  <Tooltip title="Coming soon" placement="top">
+                     <div className="w-10 h-10">
+                        <img src={Twitter} alt="Twitter" />
+                     </div>
+                  </Tooltip>
+               </div>
+            </div>
          </div>
       </div>
    )

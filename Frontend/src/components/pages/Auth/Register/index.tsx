@@ -1,109 +1,32 @@
-import React, { useEffect, useState } from 'react'
-import styles from './styles.module.scss'
-import InputMASQ from '../../../../components/UI/Input'
+import React from 'react'
 import _ from 'lodash'
+import InputMASQ from '../../../../components/UI/Input'
 import ButtonMASQ from '../../../../components/UI/Button'
-import { useNavigate } from 'react-router-dom'
-import { isValidate } from '../../../../utils/validate'
-import { handleCheckValidateConfirm } from '../../../../utils/helper'
-import { register } from '../../../../api/auth'
-import { useSelector, useDispatch } from 'react-redux'
 import Logo from '../../../../assets/images/logo/opennezt_black.png'
-import { AppDispatch } from '~/~/store'
-import { RootState } from '~/store'
-
-// Define interfaces for type safety
-interface RegisterData {
-   name: string
-   email: string
-   password: string
-   confirmPassword: string
-}
-
-interface ErrorData {
-   name: string
-   email: string
-   password: string
-   confirmPassword: string
-}
+import useRegister from './useRegister'
 
 const Register: React.FC = () => {
-   const dispatch = useDispatch<AppDispatch>()
-   const navigate = useNavigate()
-
-   const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false)
-   const [dataRegister, setDataRegister] = useState<RegisterData>({
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-   })
-   const [errorDataRegister, setErrorDataRegister] = useState<ErrorData>({
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-   })
-   const { isLoadingRegister, authRegister } = useSelector((state: RootState) => state.auth)
-
-   useEffect(() => {
-      if (authRegister && authRegister.email) {
-         setIsRegisterSuccess(true)
-      }
-   }, [authRegister])
-
-   useEffect(() => {
-      if (isRegisterSuccess === true) {
-         navigate('/verify-authentication')
-      }
-   }, [isRegisterSuccess, navigate])
-
-   useEffect(() => {
-      handleResetError()
-   }, [dataRegister])
-
-   const handleChangeInput = (valueInput: React.ChangeEvent<HTMLInputElement>, type: keyof RegisterData): void => {
-      const value = valueInput.target.value
-      const data = _.cloneDeep(dataRegister)
-      data[type] = value
-      setDataRegister(data)
-   }
-
-   const handleResetError = (): void => {
-      setErrorDataRegister({
-         name: '',
-         email: '',
-         password: '',
-         confirmPassword: '',
-      })
-   }
-
-   const validateBlur = (type: keyof RegisterData): boolean => {
-      const validate = isValidate(dataRegister, type, errorDataRegister)
-      setErrorDataRegister(validate.error)
-      return validate.isError
-   }
-
-   const handleConfirmRegister = async (): Promise<void> => {
-      const validate = handleCheckValidateConfirm(dataRegister, errorDataRegister)
-      setErrorDataRegister(validate.dataError)
-
-      if (!validate.isError) {
-         dispatch(register(dataRegister))
-      }
-   }
+   const {
+      dataRegister,
+      errorDataRegister,
+      isLoadingRegister,
+      handleChangeInput,
+      validateBlur,
+      navigate,
+      handleConfirmRegister,
+   } = useRegister()
 
    return (
-      <div className={styles.registerWrap}>
-         <div className={styles.registerHeaderWrap}>
-            <div className={styles.logo}>
-               <img src={Logo} alt="logo-opennezt" />
+      <div className="flex flex-col items-center justify-center w-full my-8">
+         <div className="flex flex-col items-center w-full mb-6">
+            <div className="mb-4">
+               <img src={Logo} alt="logo-opennezt" className="h-16" />
             </div>
-            <h1 className={styles.title}>Register</h1>
+            <h1 className="text-2xl font-bold text-gray-800">Create Account</h1>
          </div>
-         <div className={styles.registerContent}>
-            <div className={styles.inputWrapper}>
-               <div className={styles.label}>Full name *</div>
+         <div className="w-full p-6 bg-white rounded-lg">
+            <div className="mb-4">
+               <div className="mb-1 text-sm font-medium text-gray-700">Full name *</div>
                <InputMASQ
                   type={'text'}
                   placeholder={'Enter name...'}
@@ -114,8 +37,8 @@ const Register: React.FC = () => {
                />
             </div>
 
-            <div className={styles.inputWrapper}>
-               <div className={styles.label}>Email *</div>
+            <div className="mb-4">
+               <div className="mb-1 text-sm font-medium text-gray-700">Email *</div>
                <InputMASQ
                   type={'text'}
                   placeholder={'Enter email...'}
@@ -126,8 +49,8 @@ const Register: React.FC = () => {
                />
             </div>
 
-            <div className={styles.inputWrapper}>
-               <div className={styles.label}>Password *</div>
+            <div className="mb-4">
+               <div className="mb-1 text-sm font-medium text-gray-700">Password *</div>
                <InputMASQ
                   type={'password'}
                   placeholder={'******'}
@@ -138,8 +61,8 @@ const Register: React.FC = () => {
                />
             </div>
 
-            <div className={styles.inputWrapper}>
-               <div className={styles.label}>Confirm password *</div>
+            <div className="mb-6">
+               <div className="mb-1 text-sm font-medium text-gray-700">Confirm password *</div>
                <InputMASQ
                   type={'password'}
                   placeholder={'******'}
@@ -150,9 +73,9 @@ const Register: React.FC = () => {
                />
             </div>
 
-            <div className={styles.btnWrap} style={{ marginTop: '1.5rem' }}>
+            <div className="mb-4">
                <ButtonMASQ
-                  textBtn={'Register'}
+                  textBtn={'Sign Up'}
                   loading={isLoadingRegister}
                   onClick={handleConfirmRegister}
                   disable={false}
@@ -164,9 +87,12 @@ const Register: React.FC = () => {
                />
             </div>
 
-            <div className={styles.btnSwitchWrap}>
-               <div onClick={() => navigate('/login')} className={styles.btnRegister}>
-                  Already have an account, <span className={styles.text}>login</span>
+            <div className="mt-4 text-center">
+               <div className="text-sm text-gray-600">
+                  Already have an account?{' '}
+                  <span className="text-blue-600 cursor-pointer hover:text-blue-800" onClick={() => navigate('/login')}>
+                     Sign in
+                  </span>
                </div>
             </div>
          </div>
