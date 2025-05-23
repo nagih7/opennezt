@@ -7,6 +7,7 @@ export default {
       extend: {
          screens: {
             '2xl': '1875px', // Kích thước màn hình 2xl
+            '3xl': '2000px', // Kích thước màn hình 3xl
          },
          colors: {
             // Main

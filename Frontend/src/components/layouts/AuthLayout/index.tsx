@@ -1,78 +1,69 @@
-import React, { useEffect } from 'react'
-import styles from './styles.module.scss'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import React from 'react'
 import LazyLoading from 'components/UI/LazyLoading'
 import banner from '../../../assets/images/background/banner_auth_layout.jpg'
-import { RootState } from '~/store'
 import { AuthLayoutProps } from '~/types'
+import { Auth } from '~/config/constants'
+
+const Banner = () => {
+   return (
+      <div className="flex-col hidden w-1/2 h-full gap-2 overflow-hidden xl:flex">
+         <div className="h-1/2">
+            <img src={banner} alt="banner" className="object-cover w-full h-full" />
+         </div>
+
+         <div className="flex flex-col items-center justify-center flex-1 gap-2 p-4 text-center">
+            <h3 className="">Connecting Visionaries, Building Futures</h3>
+            <p className="">
+               OpenNezt is a platform that connects founders with talented individuals, enabling easy collaboration to
+               build strong teams and bring ideas to life.
+            </p>
+         </div>
+      </div>
+   )
+}
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children, path }) => {
-   // const location = useSelector((state: RootState) => state.app.location)
-   // const navigate = useNavigate()
-   // const dispatch = useDispatch()
-
-   // useEffect(() => {
-   //    if (location.pathName !== location.prevPathName) {
-   //       navigate(location.pathName)
-   //    }
-   // }, [location, navigate, dispatch])
-
    return (
-      <div className={styles.layoutAuthWrap}>
-         {path === 'login' && (
-            <div className={styles.mainWrap}>
-               <LazyLoading>{children}</LazyLoading>
-               <div className={styles.bannerWrap}>
-                  <div className={styles.banner}>
-                     <img src={banner} alt="banner" />
-                  </div>
-                  <div className={styles.bannerContent}>
-                     <h3 className={styles.authSlogan}>Connecting Visionaries, Building Futures</h3>
-                     <p className={styles.authDescription}>
-                        OpenNezt is a platform that connects founders with talented individuals, enabling easy
-                        collaboration to build strong teams and bring ideas to life.
-                     </p>
-                  </div>
-               </div>
-            </div>
-         )}
-         {path === 'register' && (
-            <div className={styles.mainWrap}>
-               <div className={styles.bannerWrap}>
-                  <div className={styles.banner}>
-                     <img src={banner} alt="banner" />
-                  </div>
-                  <div className={styles.bannerContent}>
-                     <h3 className={styles.authSlogan}>Connecting Visionaries, Building Futures</h3>
-                     <p className={styles.authDescription}>
-                        OpenNezt is a platform that connects founders with talented individuals, enabling easy
-                        collaboration to build strong teams and bring ideas to life.
-                     </p>
-                  </div>
-               </div>
-               <LazyLoading>{children}</LazyLoading>
-            </div>
-         )}
-         {path === 'forgot-password' && (
-            <div className={styles.mainWrap}>
-               <LazyLoading>{children}</LazyLoading>
-               <div className={styles.bannerWrap}>
-                  <div className={styles.banner}>
-                     <img src={banner} alt="banner" />
-                  </div>
-                  <div className={styles.bannerContent}>
-                     <h3 className={styles.authSlogan}>Connecting Visionaries, Building Futures</h3>
-                     <p className={styles.authDescription}>
-                        OpenNezt is a platform that connects founders with talented individuals, enabling easy
-                        collaboration to build strong teams and bring ideas to life.
-                     </p>
-                  </div>
-               </div>
-            </div>
-         )}
-         {path === 'verify' && <LazyLoading>{children}</LazyLoading>}
-         {path === 'reset-password' && <LazyLoading>{children}</LazyLoading>}
+      <div className="w-full h-[100vh] flex items-center justify-center">
+         <div className="flex w-2/5 bg-white rounded-md shadow-lg">
+            {(() => {
+               switch (path) {
+                  case Auth.LOGIN:
+                     return (
+                        <>
+                           <div className="w-full h-full p-4 xl:w-1/2">
+                              <LazyLoading>{children}</LazyLoading>
+                           </div>
+                           <Banner />
+                        </>
+                     )
+                  case Auth.REGISTER:
+                     return (
+                        <>
+                           <Banner />
+                           <div className="w-full h-full p-4 xl:w-1/2">
+                              <LazyLoading>{children}</LazyLoading>
+                           </div>
+                        </>
+                     )
+                  case Auth.FORGOT_PASSWORD:
+                     return (
+                        <>
+                           <div className="w-full h-full p-4 xl:w-1/2">
+                              <LazyLoading>{children}</LazyLoading>
+                           </div>
+                           <Banner />
+                        </>
+                     )
+                  default:
+                     return (
+                        <>
+                           <LazyLoading>{children}</LazyLoading>
+                        </>
+                     )
+               }
+            })()}
+         </div>
       </div>
    )
 }

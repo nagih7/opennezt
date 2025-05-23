@@ -5,6 +5,14 @@
 // export * from './validation'
 // export * from './type'
 
+export const Auth = {
+   LOGIN: 'login',
+   REGISTER: 'register',
+   FORGOT_PASSWORD: 'forgot_password',
+   RESET_PASSWORD: 'reset_password',
+   VERIFY: 'verify',
+}
+
 export const Sidebar = {
    ACTIVITY: 'Activity',
    ADMIN: 'Admin',
