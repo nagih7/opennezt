@@ -9,7 +9,7 @@ import {
    setVisibleModalDeleteExperienceLevel,
 } from 'store/modules/manage'
 import ModalCreateOrUpdate from '../ModalCreateOrUpdate'
-import InputMASQ from 'components/UI/Input'
+import { Input } from '~/components/UI/input'
 import ButtonMASQ from 'components/UI/Button'
 import store from '~/store'
 
@@ -155,7 +155,7 @@ function ExperienceLevelManage() {
       return (
          <div className={styles.mainModalWrap}>
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter name...'}
                   onChange={(e) => handleChangeInput(e, 'name')}
@@ -172,7 +172,7 @@ function ExperienceLevelManage() {
                </label>
             </div>
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter description...'}
                   onChange={(e) => handleChangeInput(e, 'description')}

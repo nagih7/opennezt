@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
 import ButtonMASQ from '../../../../../components/UI/Button'
 import { Col, Row } from 'antd'
-import InputMASQ from '../../../../../components/UI/Input'
+import { Input } from '~/components/UI/input'
 import _ from 'lodash'
-import { isValidate } from '../../../../../utils/validate'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleCheckValidateConfirm } from '../../../../../utils/helper'
 import { handleChangePassword } from '../../../../../api/profile'
@@ -17,12 +16,12 @@ interface DataChangePassword {
    confirmPassword: string
 }
 
-interface AuthUser {
+interface AuthAccount {
    name: string
 }
 
 function ChangePassword() {
-   const authUser = useSelector((state: any) => state.auth.authUser) as AuthUser
+   const authUser = useSelector((state: any) => state.auth.authUser) as AuthAccount
    const [dataChangePassword, setDataChangePassword] = useState<DataChangePassword>({
       currentPassword: '',
       password: '',
@@ -49,11 +48,11 @@ function ChangePassword() {
    }
 
    const validateBlur = (type: keyof DataChangePassword) => {
-      let data = dataChangePassword
-      let error = errorChangePassword
-      let validate = isValidate(data, type, error)
-      dispatch(setErrorChangePassword(validate.error))
-      return validate.isError
+      // let data = dataChangePassword
+      // let error = errorChangePassword
+      // let validate = isValidate(data, type, error)
+      // dispatch(setErrorChangePassword(validate.error))
+      // return validate.isError
    }
 
    const handleConfirmChangePassword = () => {
@@ -63,18 +62,18 @@ function ChangePassword() {
       data.append(`password`, dataChangePassword.password)
       data.append(`password_confirmation`, dataChangePassword.confirmPassword)
 
-      let validate = handleCheckValidateConfirm(dataValidate, errorChangePassword)
-      dispatch(setErrorChangePassword(validate.dataError))
-      if (!validate.isError) {
-         dispatch(handleChangePassword(data))
-      }
+      // let validate = handleCheckValidateConfirm(dataValidate, errorChangePassword)
+      // dispatch(setErrorChangePassword(validate.dataError))
+      // if (!validate.isError) {
+      dispatch(handleChangePassword(data))
+      // }
    }
 
    return (
       <div className={styles.editProfile}>
          <div className="bg-[#fff] rounded-md">
             <div className="p-8 border-b-[1px] border-gray-200">
-               <div className="sm:text-2xl text-xl font-medium text-center">Change Password</div>
+               <div className="text-xl font-medium text-center sm:text-2xl">Change Password</div>
             </div>
 
             <div className="p-8">

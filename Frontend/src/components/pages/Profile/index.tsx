@@ -10,14 +10,14 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt'
 import resizeLogo from 'utils/files/resizeLogo'
 import resizeBackground from 'utils/files/resizeBackground'
 
-interface AuthUser {
+interface AuthAccount {
    name: string
    avatar?: string
    background?: string
 }
 
 function Profile() {
-   const authUser = useSelector((state: any) => state.auth.authUser) as AuthUser
+   const authUser = useSelector((state: any) => state.auth.authUser) as AuthAccount
    const [avatar, setAvatar] = useState<string>('')
    const [background, setBackground] = useState<string>('')
    const [keyTable, setKeyTable] = useState<string>('1')

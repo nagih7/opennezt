@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import InputMASQ from '../../../../components/UI/Input'
+import { Input } from '~/components/UI/input'
 import ButtonMASQ from '../../../../components/UI/Button'
 import Logo from '../../../../assets/images/logo/opennezt_black.png'
 import useForgotPassword from './useForgotPassword'
@@ -29,7 +29,7 @@ const ForgotPassword: React.FC = () => {
          <div className="w-full p-6 bg-white rounded-lg">
             <div className="mb-6">
                <div className="mb-1 text-sm font-medium text-gray-700">Email *</div>
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter email...'}
                   onChange={(e: any) => handleChangeInput(e, 'email')}

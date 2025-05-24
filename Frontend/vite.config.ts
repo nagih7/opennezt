@@ -5,6 +5,9 @@ import path, { resolve } from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
    plugins: [react()],
+   css: {
+      postcss: './postcss.config.js',
+   },
    resolve: {
       alias: {
          // Alias cho các đường dẫn import ngắn gọn

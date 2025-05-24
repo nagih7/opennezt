@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import InputMASQ from '../../../../components/UI/Input'
+import { Input } from '~/components/UI/input'
 import ButtonMASQ from '../../../../components/UI/Button'
 import Logo from '../../../../assets/images/logo/opennezt_black.png'
 import useRegister from './useRegister'
@@ -27,7 +27,7 @@ const Register: React.FC = () => {
          <div className="w-full p-6 bg-white rounded-lg">
             <div className="mb-4">
                <div className="mb-1 text-sm font-medium text-gray-700">Full name *</div>
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter name...'}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInput(e, 'name')}
@@ -39,7 +39,7 @@ const Register: React.FC = () => {
 
             <div className="mb-4">
                <div className="mb-1 text-sm font-medium text-gray-700">Email *</div>
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter email...'}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInput(e, 'email')}
@@ -51,7 +51,7 @@ const Register: React.FC = () => {
 
             <div className="mb-4">
                <div className="mb-1 text-sm font-medium text-gray-700">Password *</div>
-               <InputMASQ
+               <Input
                   type={'password'}
                   placeholder={'******'}
                   value={dataRegister.password}
@@ -63,7 +63,7 @@ const Register: React.FC = () => {
 
             <div className="mb-6">
                <div className="mb-1 text-sm font-medium text-gray-700">Confirm password *</div>
-               <InputMASQ
+               <Input
                   type={'password'}
                   placeholder={'******'}
                   value={dataRegister.confirmPassword}

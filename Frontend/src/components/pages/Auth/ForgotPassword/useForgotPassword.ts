@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { forgotPassword } from '~/api/auth'
 import { AppDispatch, RootState, useAppSelector } from '~/store'
-import { ForgotPasswordError, ForgotPasswordPayload } from '~/types'
+import { ForgotPasswordPayload } from '~/types'
 import { isValidate } from '~/utils/validate'
 
 const useForgotPassword = () => {
@@ -17,7 +17,7 @@ const useForgotPassword = () => {
    // State
    const [isLoading, setIsLoading] = useState<boolean>(false)
    const [dataForgotPassword, setDataForgotPassword] = useState<ForgotPasswordPayload>({ email: '' })
-   const [errorDataForgotPassword, setErrorDataForgotPassword] = useState<ForgotPasswordError>({
+   const [errorDataForgotPassword, setErrorDataForgotPassword] = useState<ForgotPasswordPayload>({
       email: '',
    })
 

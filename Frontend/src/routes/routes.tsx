@@ -2,6 +2,7 @@ import React from 'react'
 import { createBrowserRouter, RouteObject, LoaderFunction } from 'react-router-dom'
 import { rootLoader } from './rootLoader'
 import withSuspense from './loadingFallback'
+import { LoaderArgs } from '~/types'
 
 // Layouts
 const AppLayout = React.lazy(() => import('components/layouts/AppLayout'))
@@ -97,8 +98,17 @@ const MessageSidebar = React.lazy(() => import('components/pages/Message/compone
 const Interview = React.lazy(() => import('components/common/ModalMatchingProjects/components/Interview'))
 
 // Define a helper function to create properly typed loader functions
-const createLoader = (isAuth: boolean, saga: string | null, permissions: string[] = []): LoaderFunction => {
-   return (args) => rootLoader(args, isAuth, saga, permissions)
+const createLoader = (
+   requireAuth: boolean = false,
+   saga: string | null = null,
+   permissions: string[] = []
+): LoaderFunction => {
+   return (args: LoaderArgs) =>
+      rootLoader(args, {
+         requireAuth,
+         saga,
+         permissions,
+      })
 }
 
 const router: RouteObject[] = [
@@ -132,7 +142,7 @@ const router: RouteObject[] = [
             <ResetPassword />
          </AuthLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, false, 'LOAD_AUTH_PAGE'),
+      loader: createLoader(false, 'LOAD_AUTH_PAGE'),
    },
    {
       path: '/forgot-password',
@@ -141,7 +151,7 @@ const router: RouteObject[] = [
             <ForgotPassword />
          </AuthLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, false, 'LOAD_AUTH_PAGE'),
+      loader: createLoader(false, 'LOAD_AUTH_PAGE'),
    },
    {
       path: 'profile',
@@ -152,87 +162,7 @@ const router: RouteObject[] = [
       ),
       loader: createLoader(true, 'LOAD_PROFILE_PAGE'),
    },
-   {
-      path: 'admin/manage',
-      element: withSuspense(
-         <AppLayout>
-            <AdminFeatures.Manage />
-         </AppLayout>
-      ),
-      loader: createLoader(true, 'LOAD_MANAGE_PAGE'),
-   },
-   {
-      path: 'admin/manage/users',
-      element: (
-         <AppLayout>
-            <AdminFeatures.UserManagement />
-         </AppLayout>
-      ),
-   },
-   {
-      path: 'admin/manage/roles',
-      element: withSuspense(
-         <AppLayout>
-            <AdminFeatures.RoleManage />
-         </AppLayout>
-      ),
-   },
-   {
-      path: 'admin/manage/types',
-      element: withSuspense(
-         <AppLayout>
-            <AdminFeatures.TypeManage />
-         </AppLayout>
-      ),
-   },
-   {
-      path: 'admin/manage/industries',
-      element: withSuspense(
-         <AppLayout>
-            <AdminFeatures.IndustryManage />
-         </AppLayout>
-      ),
-   },
-   {
-      path: 'admin/manage/experience-levels',
-      element: withSuspense(
-         <AppLayout>
-            <AdminFeatures.ExperienceLevelManage />
-         </AppLayout>
-      ),
-   },
-   {
-      path: 'admin/manage/categories',
-      element: withSuspense(
-         <AppLayout>
-            <AdminFeatures.CategoryManage />
-         </AppLayout>
-      ),
-   },
-   {
-      path: 'admin/manage/skills',
-      element: withSuspense(
-         <AppLayout>
-            <AdminFeatures.SkillManage />
-         </AppLayout>
-      ),
-   },
-   {
-      path: 'admin/manage/organizations',
-      element: withSuspense(
-         <AppLayout>
-            <AdminFeatures.OrganizationManage />
-         </AppLayout>
-      ),
-   },
-   {
-      path: 'admin/manage/articles',
-      element: withSuspense(
-         <AppLayout>
-            <AdminFeatures.ArticleManage />
-         </AppLayout>
-      ),
-   },
+
    {
       path: '/',
       element: withSuspense(
@@ -319,7 +249,7 @@ const router: RouteObject[] = [
             <EditProfileFeatures.Educations />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
+      loader: createLoader(true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
    {
       path: '/about/edit-profile/certifications',
@@ -328,7 +258,7 @@ const router: RouteObject[] = [
             <EditProfileFeatures.Certifications />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
+      loader: createLoader(true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
    {
       path: '/about/edit-profile/skills',
@@ -337,7 +267,7 @@ const router: RouteObject[] = [
             <EditProfileFeatures.Skills />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
+      loader: createLoader(true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
    {
       path: '/about/edit-profile/more',
@@ -346,7 +276,7 @@ const router: RouteObject[] = [
             <EditProfileFeatures.AdditionalInfo />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROFILE_PAGE'),
+      loader: createLoader(true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
    {
       path: '/project/details',
@@ -355,7 +285,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.CreateProject.Details />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/stage',
@@ -364,7 +294,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.CreateProject.Stage />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/revenue',
@@ -373,7 +303,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.CreateProject.Revenue />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/funding-sources',
@@ -382,7 +312,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.CreateProject.FundingSources />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/additional-info',
@@ -391,7 +321,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.CreateProject.AdditionalInfo />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/logo',
@@ -400,7 +330,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.CreateProject.Logo />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/background',
@@ -409,7 +339,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.CreateProject.Background />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/project/invites',
@@ -418,7 +348,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.CreateProject.Invites />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CREATE_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/details',
@@ -427,7 +357,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.MyProject.Details />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PROJECT_DETAILS_PAGE'),
+      loader: createLoader(true, 'LOAD_PROJECT_DETAILS_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/basic',
@@ -436,7 +366,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.EditProject.Detail />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/stage',
@@ -445,7 +375,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.EditProject.Stage />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/revenue',
@@ -454,7 +384,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.EditProject.Revenue />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/funding-sources',
@@ -463,7 +393,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.EditProject.FundingSources />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/additional-info',
@@ -472,7 +402,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.EditProject.AdditionalInfo />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/logo',
@@ -481,7 +411,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.EditProject.Logo />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/projects/me/:id/edit/background',
@@ -490,7 +420,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.EditProject.Background />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EDIT_PROJECT_PAGE'),
+      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
       path: '/project/details/members',
@@ -499,7 +429,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.MyProject.Members />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PROJECT_MEMBERS_PAGE'),
+      loader: createLoader(true, 'LOAD_PROJECT_MEMBERS_PAGE'),
    },
    {
       path: '/project/details/setting',
@@ -508,7 +438,7 @@ const router: RouteObject[] = [
             <ProjectFeatures.MyProject.ProjectManage />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PROJECT_SETTING_PAGE'),
+      loader: createLoader(true, 'LOAD_PROJECT_SETTING_PAGE'),
    },
    {
       path: '/conversation',
@@ -526,7 +456,7 @@ const router: RouteObject[] = [
             <Message />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_CONVERSATION_PAGE'),
+      loader: createLoader(true, 'LOAD_CONVERSATION_PAGE'),
    },
    {
       path: '/account-settings',
@@ -535,7 +465,7 @@ const router: RouteObject[] = [
             <AccountSettingsFeatures.Main />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_ACCOUNT_SETTINGS_PAGE'),
+      loader: createLoader(true, 'LOAD_ACCOUNT_SETTINGS_PAGE'),
    },
    {
       path: '/account-settings/profile-visibility',
@@ -544,7 +474,7 @@ const router: RouteObject[] = [
             <AccountSettingsFeatures.ProfileVisibility />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PROFILE_VISIBILITY_PAGE'),
+      loader: createLoader(true, 'LOAD_PROFILE_VISIBILITY_PAGE'),
    },
    {
       path: '/account-settings/privacy-and-security',
@@ -553,7 +483,7 @@ const router: RouteObject[] = [
             <AccountSettingsFeatures.PrivacyAndSecurity />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_PRIVACY_AND_SECURITY_PAGE'),
+      loader: createLoader(true, 'LOAD_PRIVACY_AND_SECURITY_PAGE'),
    },
    {
       path: '/account-settings/shop',
@@ -562,7 +492,7 @@ const router: RouteObject[] = [
             <AccountSettingsFeatures.Shop />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_SHOP_PAGE'),
+      loader: createLoader(true, 'LOAD_SHOP_PAGE'),
    },
    {
       path: '/account-settings/block-list',
@@ -571,7 +501,7 @@ const router: RouteObject[] = [
             <AccountSettingsFeatures.BlockList />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_BLOCK_LIST_PAGE'),
+      loader: createLoader(true, 'LOAD_BLOCK_LIST_PAGE'),
    },
    {
       path: '/account-settings/export-data',
@@ -580,7 +510,7 @@ const router: RouteObject[] = [
             <AccountSettingsFeatures.ExportData />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_EXPORT_DATA_PAGE'),
+      loader: createLoader(true, 'LOAD_EXPORT_DATA_PAGE'),
    },
    {
       path: '/messages-sidebar',
@@ -589,12 +519,12 @@ const router: RouteObject[] = [
             <MessageSidebar />
          </AppLayout>
       ),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_MESSAGES_SIDEBAR_PAGE'),
+      loader: createLoader(true, 'LOAD_MESSAGES_SIDEBAR_PAGE'),
    },
    {
       path: '/interview/:projectId',
       element: withSuspense(<Interview />),
-      loader: ({ request }) => rootLoader({ request }, true, 'LOAD_INTERVIEW_PAGE'),
+      loader: createLoader(true, 'LOAD_INTERVIEW_PAGE'),
    },
 ]
 

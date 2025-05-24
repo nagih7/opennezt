@@ -6,7 +6,7 @@ import TableManage from '../TableManage'
 import { createOrUpdateCategory, deleteCategory, getListCategory, getSkillCategories } from 'api/manage'
 import { setVisibleModalCreateOrUpdateCategory, setVisibleModalDeleteCategory } from 'store/modules/manage'
 import ModalCreateOrUpdate from '../ModalCreateOrUpdate'
-import InputMASQ from 'components/UI/Input'
+import { Input } from '~/components/UI/input'
 import ButtonMASQ from 'components/UI/Button'
 import SelectCustom from 'components/UI/Select/index'
 import store from '~/store'
@@ -182,7 +182,7 @@ function CategoryManage() {
                </label>
             </div>
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter name...'}
                   onChange={(e) => handleChangeInput(e, 'name')}
@@ -199,7 +199,7 @@ function CategoryManage() {
                </label>
             </div>
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter description...'}
                   onChange={(e) => handleChangeInput(e, 'description')}

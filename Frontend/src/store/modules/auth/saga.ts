@@ -1,5 +1,4 @@
 import { all, fork, takeLatest, put, Effect } from 'redux-saga/effects'
-import { startRequestLoginSuccess } from './index'
 import { setAuthToken } from '../../../utils/localStorage'
 import { getMe } from '../../../api/auth'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -17,11 +16,11 @@ function* loadRouteData(): Generator<Effect, void, any> {
 }
 
 function* handleActions(): Generator<Effect, void, any> {
-   yield takeLatest(startRequestLoginSuccess.type, function* (action: PayloadAction<LoginSuccessPayload>) {
-      const token = action.payload.data.access_token
-      setAuthToken(token)
-      yield put(getMe())
-   })
+   // yield takeLatest(startRequestLoginSuccess.type, function* (action: PayloadAction<LoginSuccessPayload>) {
+   //    const token = action.payload.data.access_token
+   //    setAuthToken(token)
+   //    yield put(getMe())
+   // })
 }
 
 export default function* loadAuthSaga(): Generator<Effect, void, any> {

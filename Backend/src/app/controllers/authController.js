@@ -9,14 +9,7 @@ export async function login(req, res) {
     if (validLogin && !validLogin.is_active) {
         abort(403, 'Account is not active. Please verify by email.')
     } else if (validLogin && validLogin.is_active) {
-        // Set cookie
-        res
-            // .cookie('access_token', authService.authToken(validLogin).access_token, {
-            //     httpOnly: true,
-            //     secure: process.env.NODE_ENV === 'production',
-            //     sameSite: 'strict',
-            // })
-            .jsonify(authService.authToken(validLogin))
+        res.jsonify(await authService.authToken(validLogin))
     } else {
         abort(400, 'Email or password is incorrect.')
     }

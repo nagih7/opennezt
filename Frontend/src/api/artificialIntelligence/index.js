@@ -1,4 +1,4 @@
-import callApi from 'api/callApi'
+import callReduxApi from 'api/callReduxApi'
 
 import {
    requestMatchingProjects,
@@ -11,7 +11,7 @@ export const matchingProjects = (linkedInUsername) => async (dispatch, getState)
    if (linkedInUsername) {
       path += `?linkedin_username=${linkedInUsername}`
    }
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [requestMatchingProjects, matchingProjectsSuccess, matchingProjectsFail],

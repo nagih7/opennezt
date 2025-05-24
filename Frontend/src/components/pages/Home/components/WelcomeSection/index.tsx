@@ -1,10 +1,10 @@
 import React from 'react'
 import { IconlyFace, IconlyFolder } from 'components/UI/Iconly'
 import { useNavigate } from 'react-router-dom'
-import { AuthUser } from '~/store/modules/auth/types'
+import { AuthAccount } from '~/store/modules/auth/types'
 
 interface WelcomeSectionProps {
-   user?: AuthUser
+   user?: AuthAccount
 }
 
 export const WelcomeSection: React.FC<WelcomeSectionProps> = ({ user }) => {

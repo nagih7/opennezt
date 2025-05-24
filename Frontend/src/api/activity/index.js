@@ -1,4 +1,4 @@
-import callApi, { callApiSimple } from 'api/callApi'
+import callReduxApi, { callApiSimple } from 'api/callReduxApi'
 
 import {
    // ========== PROJECT ACCESS ========== //
@@ -33,7 +33,7 @@ import {
 
 // ========== PROJECT ACCESS ========== //
 export const accessToProject = (projectId) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: `projects/${projectId}/access`,
       actionTypes: [requestAccessToProject, accessToProjectSuccess, accessToProjectFailure],
@@ -45,7 +45,7 @@ export const accessToProject = (projectId) => async (dispatch, getState) => {
 
 // ========== MY PROJECT ACCESS ========== //
 export const getMyProjectAccess = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `projects/access/me`,
       actionTypes: [requestGetMyProjectAccess, getMyProjectAccessSuccess, getMyProjectAccessFail],
@@ -57,7 +57,7 @@ export const getMyProjectAccess = () => async (dispatch, getState) => {
 
 // ========== ACCESS TO MY PROJECTS ========== //
 export const getAccessToMyProjects = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `projects/me/access`,
       actionTypes: [requestGetAccessToMyProjects, getAccessToMyProjectsSuccess, getAccessToMyProjectsFail],
@@ -69,7 +69,7 @@ export const getAccessToMyProjects = () => async (dispatch, getState) => {
 
 // ========== TALENT ACCESS ========== //
 export const accessToTalent = (profileId) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: `talents/${profileId}/access`,
       actionTypes: [requestAccessToTalent, accessToTalentSuccess, accessToTalentFailure],
@@ -81,7 +81,7 @@ export const accessToTalent = (profileId) => async (dispatch, getState) => {
 
 // ========== ACCESS TO MY PROFILE ========== //
 export const getAccessToMyProfile = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `profile/me/access`,
       actionTypes: [requestGetAccessToMyProfile, getAccessToMyProfileSuccess, getAccessToMyProfileFail],
@@ -95,7 +95,7 @@ export const getAccessToMyProfile = () => async (dispatch, getState) => {
 export const getActivitiesArticle =
    (options = {}) =>
    async (dispatch, getState) => {
-      return callApi({
+      return callReduxApi({
          method: 'get',
          apiPath: `article/activities`,
          actionTypes: [requestGetActivities, getActivitiesSuccess, getActivitiesFail],
@@ -143,7 +143,7 @@ export const deleteActivitySaveArticle = async (avitityId) => {
 
 // ========== GET PROJECT DETAILS ACTIVITIES ========== //
 export const getProjectDetailsActivities = (projectId) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `projects/me/${projectId}/activities`,
       actionTypes: [requestGetProjectDetailsActivity, getProjectDetailsActivitySuccess, getProjectDetailsActivityFail],

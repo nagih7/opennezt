@@ -42,7 +42,7 @@ export async function checkValidLogin({ email, password }) {
     return false
 }
 
-export function authToken(user) {
+export async function authToken(user) {
     // Generate access token
     const accessToken = generateToken({ user_id: user._id }, TOKEN_TYPE.AUTHORIZATION, LOGIN_EXPIRE_IN)
 
@@ -50,11 +50,15 @@ export function authToken(user) {
     const decode = jwt.decode(accessToken)
     const expireIn = decode.exp - decode.iat
 
+    // Get role
+    const role = await getRole(user.role_id)
+
     // Return access token and expire time
     return {
         access_token: accessToken,
         expire_in: expireIn,
         auth_type: 'Bearer Token',
+        role: role,
     }
 }
 
@@ -95,8 +99,8 @@ export async function profile(userId) {
 }
 
 export async function getRole(role_id) {
-    const role = await Role.findOne({ _id: role_id })
-    return { role: role.name }
+    const role = await Role.findById(role_id)
+    return role.name
 }
 
 export async function updateProfile(currentUser, { name, email, phone, avatar }) {
@@ -117,7 +121,7 @@ export async function updateProfile(currentUser, { name, email, phone, avatar })
 // ================== Social Login ================== //
 export async function loginWithLinkedIn() {
     const url =
-        await `${LINKEDIN_URL}?response_type=${LINKEDIN_RESPONSE_TYPE}&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${LINKEDIN_REDIRECT_URI}&scope=${LINKEDIN_SCOPE}&state=${LINKEDIN_STATE}`
+      await `${LINKEDIN_URL}?response_type=${LINKEDIN_RESPONSE_TYPE}&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${LINKEDIN_REDIRECT_URI}&scope=${LINKEDIN_SCOPE}&state=${LINKEDIN_STATE}`
     return url
 }
 

@@ -1,4 +1,4 @@
-import callApi from '../callApi'
+import callReduxApi from '../callReduxApi'
 import {
    getList,
    getListSuccess,
@@ -39,7 +39,7 @@ export const getListEmployee =
          path += `&order=${dataFilter.order}&column=${dataFilter.column}`
       }
 
-      return callApi({
+      return callReduxApi({
          method: 'get',
          apiPath: path,
          actionTypes: [getList, getListSuccess, getListFail],
@@ -50,7 +50,7 @@ export const getListEmployee =
    }
 
 export const getAllRoleForEmployee = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `users/all-roles`,
       actionTypes: [getAllRole, getAllRoleSuccess, getAllRoleFail],
@@ -61,7 +61,7 @@ export const getAllRoleForEmployee = () => async (dispatch, getState) => {
 }
 
 export const handleCreateEmployee = (data) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: `users`,
       actionTypes: [createEmployee, createEmployeeSuccess, createEmployeeFail],
@@ -72,7 +72,7 @@ export const handleCreateEmployee = (data) => async (dispatch, getState) => {
 }
 
 export const handleUpdateEmployee = (data, idEmployee) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: `users/${idEmployee}`,
       actionTypes: [updateEmployee, updateEmployeeSuccess, updateEmployeeFail],
@@ -83,7 +83,7 @@ export const handleUpdateEmployee = (data, idEmployee) => async (dispatch, getSt
 }
 
 export const handleDeleteEmployee = (idEmployee) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'delete',
       apiPath: `users/${idEmployee}`,
       actionTypes: [deleteEmployee, deleteEmployeeSuccess, deleteEmployeeFail],

@@ -1,4 +1,4 @@
-import callApi from 'api/callApi'
+import callReduxApi from 'api/callReduxApi'
 
 import {
    // ========== RECRUIT TALENTS ========== //
@@ -40,7 +40,7 @@ export const recruitTalents = (dataFilter) => async (dispatch, getState) => {
       path += `&skill_id=${dataFilter.skill}`
    }
 
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [requestRecruitTalents, recruitTalentsSuccess, recruitTalentsFail],
@@ -51,7 +51,7 @@ export const recruitTalents = (dataFilter) => async (dispatch, getState) => {
 }
 
 export const getTalentDetails = (id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `talents/${id}/details`,
       actionTypes: [requestGetTalentDetails, getTalentDetailsSuccess, getTalentDetailsFail],
@@ -63,7 +63,7 @@ export const getTalentDetails = (id) => async (dispatch, getState) => {
 
 // =========== REPLY FRIEND REQUEST =========== //
 export const replyFriendRequest = (notificationId, action) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'put',
       apiPath: `notifications/${notificationId}/reply`,
       actionTypes: [requestReplyFriendRequest, replyFriendRequestSuccess, replyFriendRequestFail],

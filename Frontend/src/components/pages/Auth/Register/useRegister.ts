@@ -4,9 +4,8 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { register } from '~/api/auth'
 import { AppDispatch, RootState, useAppSelector } from '~/store'
-import { RegisterError, RegisterPayload } from '~/types'
+import { RegisterPayload } from '~/types'
 import { handleCheckValidateConfirm } from '~/utils/helper'
-import { isValidate } from '~/utils/validate'
 
 const useRegister = () => {
    const navigate = useNavigate()
@@ -23,7 +22,7 @@ const useRegister = () => {
       password: '',
       confirmPassword: '',
    })
-   const [errorDataRegister, setErrorDataRegister] = useState<RegisterError>({
+   const [errorDataRegister, setErrorDataRegister] = useState<RegisterPayload>({
       name: '',
       email: '',
       password: '',
@@ -65,7 +64,7 @@ const useRegister = () => {
    }
 
    const validateBlur = (type: keyof RegisterPayload): boolean => {
-      const validate = isValidate(dataRegister, type, errorDataRegister)
+      // const validate = isValidate(dataRegister, type, errorDataRegister)
       setErrorDataRegister(validate.error)
       return validate.isError
    }
