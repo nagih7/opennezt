@@ -1,44 +1,10 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getListProjectsParticipated } from 'api/project'
+import React from 'react'
 import ProjectBox from './ProjectBox'
-import { RootState } from 'store/types'
-import { AppDispatch } from '~/store'
+import { useProjectsParticipated, UseProjectsParticipatedProps } from './useProjectsParticipated'
+import { Project } from './ProjectBox/useProjectBox'
 
-interface ProjectsParticipatedProps {
-   isBottom: boolean
-   setIsBottom: (value: boolean) => void
-}
-
-const ProjectsParticipated: React.FC<ProjectsParticipatedProps> = ({ isBottom, setIsBottom }) => {
-   const dispatch = useDispatch<AppDispatch>()
-
-   // ========== STATE FROM REDUX ========== //
-   const { projectsParticipated, paginationProjectsParticipated, isLoadingGetListProjectsParticipated } = useSelector(
-      (state: RootState) => state.project
-   )
-
-   // ========== USE EFFECT ========== //
-   useEffect(() => {
-      if (!projectsParticipated || projectsParticipated.length === 0) {
-         dispatch(getListProjectsParticipated(paginationProjectsParticipated))
-      }
-      // eslint-disable-next-line
-   }, [dispatch])
-
-   // Theo dõi sự kiện scroll
-   useEffect(() => {
-      if (isBottom) {
-         // Call API hoặc load thêm dữ liệu
-         dispatch(
-            getListProjectsParticipated({
-               ...paginationProjectsParticipated,
-               currentPage: parseInt(paginationProjectsParticipated.currentPage) + 1,
-            })
-         )
-         setIsBottom(false)
-      }
-   }, [isBottom, dispatch, paginationProjectsParticipated, setIsBottom])
+const ProjectsParticipated: React.FC<UseProjectsParticipatedProps> = (props) => {
+   const { projectsParticipated, isLoadingGetListProjectsParticipated } = useProjectsParticipated(props)
 
    return (
       <>
@@ -56,7 +22,9 @@ const ProjectsParticipated: React.FC<ProjectsParticipatedProps> = ({ isBottom, s
          )}
          <div className="grid md:grid-cols-2 grid-cols-1 gap-8">
             {projectsParticipated && projectsParticipated.length > 0 ? (
-               projectsParticipated.map((project, index) => <ProjectBox project={project} key={index} />)
+               projectsParticipated.map((project: Project, index: number) => (
+                  <ProjectBox project={project} key={index} />
+               ))
             ) : (
                <div className="hidden text-center text-gray-500 "></div>
             )}

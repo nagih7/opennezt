@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
-import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleCheck } from 'react-icons/fa6'
 import { useDispatch, useSelector } from 'react-redux'
 import { Avatar } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { getMyProjectDetails } from 'api/project'
-import { RootState } from 'store/types' // Add appropriate type for your Redux store
+import { AppDispatch, RootState } from 'store/types' // Add appropriate type for your Redux store
 
 const ProjectCard: React.FC = () => {
-   const dispatch = useDispatch()
+   const dispatch = useDispatch<AppDispatch>()
    const params = useParams<{ id: string }>()
    const { id } = params
    // ========== STATE FROM REDUX STORE ========== //
@@ -16,7 +16,7 @@ const ProjectCard: React.FC = () => {
    // ========== USE EFFECT ========== //
    useEffect(() => {
       if (!project || project?._id !== id) {
-         dispatch(getMyProjectDetails(id))
+         dispatch(getMyProjectDetails(id!))
       }
       // eslint-disable-next-line
    }, [dispatch, id])

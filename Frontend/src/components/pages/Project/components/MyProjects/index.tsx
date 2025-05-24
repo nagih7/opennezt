@@ -1,40 +1,9 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getListMyProjects } from 'api/project'
+import React from 'react'
 import ProjectBox from './ProjectBox'
-import { RootState } from 'store/types'
-import { AppDispatch } from '~/store'
+import { useMyProjects, UseMyProjectsProps } from './useMyProjects'
 
-interface MyProjectsProps {
-   isBottom: boolean
-   setIsBottom: (value: boolean) => void
-}
-
-const MyProjects: React.FC<MyProjectsProps> = ({ isBottom, setIsBottom }) => {
-   const dispatch = useDispatch<AppDispatch>()
-
-   // ========== STATE FROM REDUX ========== //
-   const { myProjects, paginationListMyProjects, isLoadingGetListMyProjects } = useSelector(
-      (state: RootState) => state.project
-   )
-
-   // LOẠI BỎ useEffect ban đầu để tránh gọi API trùng lặp
-   // Component cha (Project/index.tsx) đã xử lý việc tải dữ liệu ban đầu
-
-   // Theo dõi sự kiện scroll
-   useEffect(() => {
-      if (isBottom && !isLoadingGetListMyProjects) {
-         // Call API hoặc load thêm dữ liệu khi scroll xuống cuối
-         const nextPage = paginationListMyProjects.currentPage + 1 // Chuyển thành number
-         dispatch(
-            getListMyProjects({
-               ...paginationListMyProjects,
-               currentPage: nextPage,
-            })
-         )
-         setIsBottom(false)
-      }
-   }, [isBottom, dispatch, paginationListMyProjects, setIsBottom, isLoadingGetListMyProjects])
+const MyProjects: React.FC<UseMyProjectsProps> = (props) => {
+   const { myProjects, isLoadingGetListMyProjects } = useMyProjects(props)
 
    return (
       <>

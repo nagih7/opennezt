@@ -245,6 +245,15 @@ const router: RouteObject[] = [
    },
    // Create Project routes
    {
+      path: ROUTE_CONFIG.USER.PROJECT.CREATE.PREFIX,
+      element: withSuspense(
+         <AppLayout>
+            <ProjectFeatures.CreateProject.Details />
+         </AppLayout>
+      ),
+      loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
+   },
+   {
       path: ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC,
       element: withSuspense(
          <AppLayout>

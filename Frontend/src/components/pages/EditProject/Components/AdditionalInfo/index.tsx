@@ -1,156 +1,24 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Button } from '@chakra-ui/react'
 import ActionBar from '../../../EditProfile/components/ActionBar'
 import ProjectEditMenu from '../ProjectEditMenu'
 import ProjectCard from '../ProjectCard'
-import { useDispatch, useSelector } from 'react-redux'
-import { IconlyDelete, IconlyEdit, IconlyDocument } from 'components/UI/Iconly'
-import { useParams } from 'react-router-dom'
+import { IconlyEdit, IconlyDocument } from 'components/UI/Iconly'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
-import { toaster } from 'components/UI/toaster'
-import { updateProjectAdditionalInfos } from 'api/project'
-import { postProjectDetailsActivitiesAdditionalInfo } from 'api/activity'
-import { PROJECT_ADDITIONAL_INFO_FIELDS } from 'utils/constants/additionalInfor'
-import { AppDispatch } from '~/~/store'
-import { RootState } from '~/store'
-
-// Define types for the component
-interface Field {
-   id: string
-   name: string
-   value?: string
-   placeholder: string
-   backgroundColor?: string
-}
-
-interface AdditionalInfo {
-   name: string
-   content: string
-   value?: string
-}
-
-interface Project {
-   _id: string
-   name: string
-   additional_infos?: AdditionalInfo[]
-   created_at?: string
-   logo?: string
-}
+import { useEditAdditionalInfo } from './useEditAdditionalInfo'
 
 const EditAdditionalInfo: React.FC = () => {
-   const dispatch = useDispatch<AppDispatch>()
-   const params = useParams<{ id: string }>()
-   const { id } = params
-
-   // ========== STATE FROM REDUX STORE ========== //
-   const { myProjectDetails, isLoadingUpdateMyProject } = useSelector((state: RootState) => state.project)
-   const { language } = useSelector((state: RootState) => state.app) || { language: 'EN' }
-   const project = myProjectDetails
-
-   // Chọn danh sách trường dựa trên ngôn ngữ
-   const fields: Field[] =
-      PROJECT_ADDITIONAL_INFO_FIELDS[language as keyof typeof PROJECT_ADDITIONAL_INFO_FIELDS] ||
-      PROJECT_ADDITIONAL_INFO_FIELDS.EN
-
-   // ========== STATE ========== //
-   const [isEditing, setIsEditing] = useState<boolean>(false)
-   const [isSaving, setIsSaving] = useState<boolean>(false)
-   const [projectFormData, setProjectFormData] = useState<Record<string, string>>({})
-
-   // ========== USEEFFECT ========== //
-   useEffect(() => {
-      // Kiểm tra xem project và additional_infos có tồn tại không
-      if (project) {
-         console.log('Project data:', project) // Thêm log để kiểm tra
-
-         // Initialize form data with default structure
-         const initialData: Record<string, string> = {}
-         fields.forEach((field) => {
-            initialData[field.id] = ''
-         })
-
-         // Fill in data from project if available
-         if (project.additional_infos && project.additional_infos.length > 0) {
-            console.log('Project additional_infos:', project.additional_infos) // Thêm log để kiểm tra
-
-            project.additional_infos.forEach((item) => {
-               // Kiểm tra khớp giữa tên field trong additional_infos và trong fields
-               // Lưu ý: có thể cần so sánh cả name và value
-               const matchingField = fields.find(
-                  (field) => field.name === item.name || field.value === item.name || field.name === item.value
-               )
-
-               if (matchingField) {
-                  initialData[matchingField.id] = item.content
-                  console.log(`Matched field ${matchingField.id} with value ${item.content}`)
-               } else {
-                  console.log(`No match found for field: ${item.name}`)
-               }
-            })
-         }
-
-         console.log('Initial form data:', initialData) // Thêm log để kiểm tra
-         setProjectFormData(initialData)
-      }
-   }, [project, fields])
-
-   // ========== HANDLE FUNCTIONS ========== //
-   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      if (!isEditing) return
-
-      const { name, value } = e.target
-      setProjectFormData((prev) => ({
-         ...prev,
-         [name]: value,
-      }))
-   }
-
-   const toggleEdit = () => {
-      setIsEditing(!isEditing)
-   }
-
-   const handleSaveChanges = async () => {
-      setIsSaving(true)
-
-      // Prepare data from fields
-      const fieldData: AdditionalInfo[] = []
-      fields.forEach((field) => {
-         if (projectFormData[field.id]) {
-            fieldData.push({
-               name: field.name,
-               content: projectFormData[field.id],
-            })
-         }
-      })
-
-      try {
-         // Update project additional info
-         await dispatch(
-            updateProjectAdditionalInfos(id, {
-               additional_infos: fieldData,
-            })
-         )
-
-         // Post activity log
-         await postProjectDetailsActivitiesAdditionalInfo(id, {
-            additional_infos: fieldData,
-         })
-
-         toaster.create({
-            title: `Successfully updated additional information`,
-            type: 'success',
-         })
-
-         setIsEditing(false)
-      } catch (error) {
-         toaster.create({
-            title: `Failed to update additional information`,
-            type: 'error',
-         })
-      } finally {
-         setIsSaving(false)
-      }
-   }
+   // Use custom hook for all logic
+   const {
+      fields,
+      isEditing,
+      isSaving,
+      projectFormData,
+      isLoadingUpdateMyProject,
+      handleChange,
+      toggleEdit,
+      handleSaveChanges,
+   } = useEditAdditionalInfo()
 
    // ========== COMPONENT RENDER ========== //
    return (

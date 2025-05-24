@@ -180,13 +180,13 @@ const Sendinvite: React.FC = () => {
    // Xử lý gửi lời mời
    const handleConfirmInvite = async () => {
       if (!formRequest.teamRole || !formRequest.role) {
-         alert('Vui lòng chọn đầy đủ thông tin')
+         console.error('Team Role and Role are required')
          return
       }
 
       // Kiểm tra id người dùng có tồn tại không
       if (!selectedFriend || (!selectedFriend.id && !selectedFriend.friend_id)) {
-         alert('Không tìm thấy thông tin người dùng')
+         console.error('Không tìm thấy thông tin người dùng')
          return
       }
 
@@ -196,18 +196,16 @@ const Sendinvite: React.FC = () => {
       const userId = selectedFriend.id || selectedFriend.friend_id
 
       if (!userId) {
-         alert('Không tìm thấy ID người dùng')
+         console.error('Không tìm thấy ID người dùng')
          return
       }
 
       // Gửi request với đúng ID
       try {
-         await dispatch(
-            inviteMember(id, {
-               ...formRequest,
-               userId,
-            }) as any
-         )
+         ;(await inviteMember(id, {
+            ...formRequest,
+            userId,
+         })) as any
 
          // Gọi lại hàm fetchFriendInvites để cập nhật state
          const fetchFriendInvites = async () => {
@@ -225,7 +223,7 @@ const Sendinvite: React.FC = () => {
 
          handleCloseInviteModal()
       } catch (error) {
-         alert('Có lỗi xảy ra khi gửi lời mời')
+         console.error('Có lỗi xảy ra khi gửi lời mời:', error)
       }
    }
 
@@ -233,7 +231,7 @@ const Sendinvite: React.FC = () => {
    const handleCancelInvite = async () => {
       // Kiểm tra id người dùng có tồn tại không
       if (!selectedFriend || (!selectedFriend.id && !selectedFriend.friend_id)) {
-         alert('Không tìm thấy thông tin người dùng')
+         console.error('Không tìm thấy thông tin người dùng')
          return
       }
 
@@ -242,7 +240,7 @@ const Sendinvite: React.FC = () => {
       const userId = selectedFriend.id || selectedFriend.friend_id
 
       if (!userId) {
-         alert('Không tìm thấy ID người dùng')
+         console.error('Không tìm thấy ID người dùng')
          return
       }
 
@@ -266,7 +264,7 @@ const Sendinvite: React.FC = () => {
 
          handleCloseCancelModal()
       } catch (error) {
-         alert('Có lỗi xảy ra khi hủy lời mời')
+         console.error('Có lỗi xảy ra khi hủy lời mời')
       }
    }
 
