@@ -4,7 +4,6 @@ import ButtonMASQ from '../../../../../components/UI/Button'
 import { Col, Row } from 'antd'
 import _ from 'lodash'
 import store from '~/store'
-import { isValidate } from '../../../../../utils/validate'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleCheckValidateConfirm } from '../../../../../utils/helper'
 import { updateUser } from '../../../../../api/profile'
@@ -24,7 +23,7 @@ interface DataInfoUser {
    linkedin: string
 }
 
-interface AuthUser extends DataInfoUser {}
+interface AuthAccount extends DataInfoUser {}
 
 function EditProfile() {
    const [dataInfoUser, setDataInfoUser] = useState<DataInfoUser>({
@@ -39,7 +38,7 @@ function EditProfile() {
    })
    const errorInfoUser = useSelector((state: any) => state.profile.errorInfoUser)
    const loadingBtnUpdateInfoUser = useSelector((state: any) => state.profile.loadingBtnUpdateInfoUser)
-   const authUser = useSelector((state: any) => state.auth.authUser) as AuthUser
+   const authUser = useSelector((state: any) => state.auth.authUser) as AuthAccount
 
    useEffect(() => {
       setDataInfoUser({
@@ -88,28 +87,28 @@ function EditProfile() {
    const validateBlur = async (type: keyof DataInfoUser) => {
       let data = dataInfoUser
       let error = errorInfoUser
-      let validate = isValidate(data, type, error)
-      await store.dispatch(setErrorInfoUser(validate.error))
-      return validate.isError
+      // let validate = isValidate(data, type, error)
+      // await store.dispatch(setErrorInfoUser(validate.error))
+      // return validate.isError
    }
 
    const handleConfirmSaveInfoUser = async () => {
-      let dataValidate = dataInfoUser
-      let validate = handleCheckValidateConfirm(dataValidate, errorInfoUser)
-      await store.dispatch(setErrorInfoUser(validate.dataError))
-      if (!validate.isError) {
-         store.dispatch(updateUser(dataInfoUser))
-      }
+      // let dataValidate = dataInfoUser
+      // let validate = handleCheckValidateConfirm(dataValidate, errorInfoUser)
+      // await store.dispatch(setErrorInfoUser(validate.dataError))
+      // if (!validate.isError) {
+      store.dispatch(updateUser(dataInfoUser))
+      // }
    }
 
    return (
       <div className={styles.editProfile}>
          <div className="bg-[#fff] rounded-md">
             <div className="p-8 border-b-[1px] border-gray-200">
-               <div className="sm:text-2xl text-xl font-medium text-center">Personal Information</div>
+               <div className="text-xl font-medium text-center sm:text-2xl">Personal Information</div>
             </div>
             <div className="p-8">
-               <div className="flex sm:flex-row flex-col items-center w-full sm:gap-8 ">
+               <div className="flex flex-col items-center w-full sm:flex-row sm:gap-8 ">
                   <div className="w-full">
                      <div className="relative mb-8">
                         <input

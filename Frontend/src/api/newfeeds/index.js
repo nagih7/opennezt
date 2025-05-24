@@ -1,4 +1,4 @@
-import callApi from 'api/callApi'
+import callReduxApi from 'api/callReduxApi'
 import {
    getList,
    getListSuccess,
@@ -58,7 +58,7 @@ export const getListFeeds =
    ) =>
    async (dispatch, getState) => {
       let path = `article/article-list?cursor=${dataFilter.cursor}&limit=${dataFilter.limit}`
-      return callApi({
+      return callReduxApi({
          method: 'get',
          apiPath: path,
          actionTypes: [getList, getListSuccess, getListFail],
@@ -70,7 +70,7 @@ export const getListFeeds =
 
 export const getUserReactionsList = (articleIds) => async (dispatch, getState) => {
    const path = `article/user-reactions/${articleIds.join(',')}`
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [getUserReactions, getUserReactionsSuccess, getUserReactionsFail],
@@ -84,7 +84,7 @@ export const handleReactArticle =
    ({ articleId, data }) =>
    async (dispatch, getState) => {
       const path = `article/article-reaction/${articleId}`
-      return callApi({
+      return callReduxApi({
          method: 'post',
          apiPath: path,
          actionTypes: [reactArticle, reactArticleSuccess, reactArticleFail],
@@ -98,7 +98,7 @@ export const handleCreateArticle =
    ({ data }) =>
    async (dispatch, getState) => {
       const path = `article`
-      return callApi({
+      return callReduxApi({
          method: 'post',
          apiPath: path,
          actionTypes: [createArticle, createArticleSuccess, createArticleFail],
@@ -117,7 +117,7 @@ export const handleGetListComment =
    ) =>
    async (dispatch, getState) => {
       let path = `article/list-comments?articleId=${dataFilter.articleId}&limit=${dataFilter.limit}&page=${dataFilter.page}`
-      return callApi({
+      return callReduxApi({
          method: 'get',
          apiPath: path,
          actionTypes: [getListComment, getListCommentSuccess, getListCommentFail],
@@ -129,7 +129,7 @@ export const handleGetListComment =
 
 export const handleGetUserCommentReactions = (id) => async (dispatch, getState) => {
    const path = `article/user-comment-reactions/${id.join(',')}`
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [getUserCommentReactions, getUserCommentReactionsSuccess, getUserCommentReactionsFail],
@@ -143,7 +143,7 @@ export const handleReactComment =
    ({ commentId, data }) =>
    async (dispatch, getState) => {
       const path = `article/article-reaction/${commentId}`
-      return callApi({
+      return callReduxApi({
          method: 'post',
          apiPath: path,
          actionTypes: [reactComment, reactCommentSuccess, reactCommentFail],
@@ -157,7 +157,7 @@ export const handleCreateComment =
    ({ data }) =>
    async (dispatch, getState) => {
       const path = `article/create-comment`
-      return callApi({
+      return callReduxApi({
          method: 'post',
          apiPath: path,
          actionTypes: [createComment, createCommentSuccess, createCommentFail],
@@ -171,7 +171,7 @@ export const handleUpdateArticle =
    ({ id, data }) =>
    async (dispatch, getState) => {
       const path = `article/article-update/${id}`
-      return callApi({
+      return callReduxApi({
          method: 'put',
          apiPath: path,
          actionTypes: [updateArticle, updateArticleSuccess, updateArticleFail],
@@ -185,7 +185,7 @@ export const handleDeleteArticle =
    ({ id }) =>
    async (dispatch, getState) => {
       const path = `article/${id}`
-      return callApi({
+      return callReduxApi({
          method: 'delete',
          apiPath: path,
          actionTypes: [deleteArticle, deleteArticleSuccess, deleteArticleFail],
@@ -204,7 +204,7 @@ export const handleGetListReplyComment =
    }) =>
    async (dispatch, getState) => {
       const path = `article/list-reply-comment?articleId=${dataFilter.article_id}&parentId=${dataFilter.parent_id}&page=${dataFilter.page}&limit=${dataFilter.limit}`
-      return callApi({
+      return callReduxApi({
          method: 'get',
          apiPath: path,
          actionTypes: [getListReplyComment, getListReplyCommentSuccess, getListReplyCommentFail],
@@ -219,7 +219,7 @@ export const getProjectsToTag = (dataFilter) => async (dispatch, getState) => {
    if (dataFilter.keySearch) {
       path += `?keySearch=${dataFilter.keySearch}`
    }
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [requestGetProjectsToTag, getProjectsToTagSuccess, getProjectsToTagFail],
@@ -233,7 +233,7 @@ export const handleReplyComment =
    ({ data }) =>
    async (dispatch, getState) => {
       let path = `article/reply-comment`
-      return callApi({
+      return callReduxApi({
          method: 'post',
          apiPath: path,
          actionTypes: [replyComment, replyCommentSuccess, replyCommentFail],
@@ -245,7 +245,7 @@ export const handleReplyComment =
 
 export const handleGetUserReplyCommentReactions = (id) => async (dispatch, getState) => {
    const path = `article/user-comment-reactions/${id.join(',')}`
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [
@@ -263,7 +263,7 @@ export const handleBookmarkArticle =
    ({ data }) =>
    async (dispatch, getState) => {
       const path = `article/bookmark-article`
-      return callApi({
+      return callReduxApi({
          method: 'post',
          apiPath: path,
          actionTypes: [bookmarkArticle, bookmarkArticleSuccess, bookmarkArticleFail],
@@ -275,7 +275,7 @@ export const handleBookmarkArticle =
 
 export const handleGetUserBookmarks = (articleIds) => async (dispatch, getState) => {
    const path = `article/user-bookmarks/${articleIds.join(',')}`
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [getUserBookmarks, getUserBookmarksSuccess, getUserBookmarksFail],

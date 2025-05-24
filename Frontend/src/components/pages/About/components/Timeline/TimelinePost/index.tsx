@@ -67,7 +67,7 @@ interface DataFilter {
    limit: number
 }
 
-interface AuthUser {
+interface AuthAccount {
    _id: string
 }
 
@@ -322,7 +322,7 @@ const TimelinePost: React.FC = () => {
       [dispatch]
    )
 
-   const currentUserId = useSelector((state: RootState) => state.auth.authUser) as AuthUser
+   const currentUserId = useSelector((state: RootState) => state.auth.authUser) as AuthAccount
 
    const userFeeds = useMemo(() => {
       if (!feeds || feeds.length === 0) return []

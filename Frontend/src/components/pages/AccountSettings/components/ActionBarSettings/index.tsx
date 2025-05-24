@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { RootState } from '~/store'
 
-interface AuthUser {
+interface AuthAccount {
    name: string
    avatar?: string
    created_at?: string

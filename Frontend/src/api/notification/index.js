@@ -1,4 +1,4 @@
-import callApi from 'api/callApi'
+import callReduxApi from 'api/callReduxApi'
 import {
    startRequestReadRoot,
    startRequestReadRootSuccess,
@@ -19,7 +19,7 @@ import {
 
 // =========== Get Notification =========== //
 export const getNotifications = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: 'notifications/read',
       actionTypes: [requestGetNotifications, getNotificationsSuccess, getNotificationsFail],
@@ -31,7 +31,7 @@ export const getNotifications = () => async (dispatch, getState) => {
 
 // =========== Reply Notification =========== //
 export const replyNotification = (notificationId, action) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'put',
       apiPath: `notifications/${notificationId}/reply`,
       actionTypes: [requestReplyNotification, replyNotificationSuccess, replyNotificationFail],
@@ -66,7 +66,7 @@ export const readRoot =
          path += `&order=${dataFilter.order}`
       }
 
-      return callApi({
+      return callReduxApi({
          method: 'get',
          apiPath: path,
          actionTypes: [startRequestReadRoot, startRequestReadRootSuccess, startRequestReadRootFail],
@@ -78,7 +78,7 @@ export const readRoot =
 
 // =========== Mask as read =========== //
 export const markAsRead = (notificationId) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'put',
       apiPath: `notifications/${notificationId}/read`,
       actionTypes: [loadingMarkAsRead, markAsReadSuccess, markAsReadFail],

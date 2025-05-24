@@ -1,7 +1,4 @@
 import React from 'react'
-import InputMASQ from '../../../../components/UI/Input'
-import _ from 'lodash'
-import ButtonMASQ from '../../../../components/UI/Button'
 import { Checkbox, Tooltip } from 'antd'
 import Logo from '../../../../assets/images/logo/opennezt_black.png'
 import useLogin from './useLogin'
@@ -9,15 +6,18 @@ import LinkedIn from '~/assets/images/icon/linkedin.svg'
 import Google from '~/assets/images/icon/google.svg'
 import Facebook from '~/assets/images/icon/facebook.svg'
 import Twitter from '~/assets/images/icon/twitter.svg'
+import { Button } from '@chakra-ui/react'
+import { Input } from '~/components/UI/input'
 
 const Login: React.FC = () => {
    const {
       dataLogin,
+      loadingLogin,
       errorDataLogin,
       checkRemember,
-      isLoadingBtnLogin,
       navigate,
-      handleChangeInput,
+      onChangeLogin,
+      onFocusInputLogin,
       validateBlur,
       handleConfirmLogin,
       handleKeyDown,
@@ -37,10 +37,12 @@ const Login: React.FC = () => {
          <div className="w-full p-6 bg-white rounded-lg">
             <div className="mb-4">
                <div className="mb-1 text-sm font-medium text-gray-700">Email *</div>
-               <InputMASQ
+               <Input
+                  required
                   type={'text'}
                   placeholder={'Enter email...'}
-                  onChange={(e: any) => handleChangeInput(e, 'email')}
+                  onChange={(e: any) => onChangeLogin('email', e)}
+                  onFocus={() => onFocusInputLogin('email')}
                   onBlur={() => validateBlur('email')}
                   value={dataLogin.email}
                   error={errorDataLogin.email}
@@ -49,11 +51,12 @@ const Login: React.FC = () => {
 
             <div className="mb-6">
                <div className="mb-1 text-sm font-medium text-gray-700">Password *</div>
-               <InputMASQ
+               <Input
                   type={'password'}
                   placeholder={'******'}
                   value={dataLogin.password}
-                  onChange={(e: any) => handleChangeInput(e, 'password')}
+                  onChange={(e: any) => onChangeLogin('password', e)}
+                  onFocus={() => onFocusInputLogin('password')}
                   onBlur={() => validateBlur('password')}
                   onKeyDown={(e: any) => handleKeyDown(e)}
                   error={errorDataLogin.password}
@@ -76,17 +79,18 @@ const Login: React.FC = () => {
             </div>
 
             <div className="mb-4">
-               <ButtonMASQ
-                  textBtn={'Sign In'}
-                  loading={isLoadingBtnLogin}
+               <Button
+                  className="w-full bg-main-color"
+                  loading={loadingLogin}
                   onClick={() => handleConfirmLogin()}
-                  disable={false}
                   style={{
                      display: 'flex',
                      justifyContent: 'center',
                      alignItems: 'center',
                   }}
-               />
+               >
+                  Sign In
+               </Button>
             </div>
 
             <div className="mt-4 text-center">

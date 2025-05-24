@@ -1,6 +1,5 @@
 import React from 'react'
 import store from '~/store'
-import { isValidate } from './validate'
 import moment from 'moment'
 import { notification } from 'antd'
 import CloseIcon from 'assets/images/icon/close.svg'
@@ -71,69 +70,4 @@ export const isValidPhone = (phone) => {
       }
    }
    return result
-}
-
-export const handleCheckValidateConfirm = (data, errors) => {
-   let error = false
-   let keys = Object.keys(data)
-   let dataError = errors
-   keys.map((key) => {
-      let validate = isValidate(data, key, dataError)
-      dataError = validate.error
-      if (validate.isError) {
-         error = true
-      }
-   })
-
-   return {
-      isError: error,
-      dataError: dataError,
-   }
-}
-
-export const formatDate = (date) => {
-   return moment(date).format('MM/DD/YYYY')
-}
-
-const handleGetTypeNotification = (type) => {
-   let typeNotification = {}
-   switch (type) {
-      case 'error':
-         typeNotification = {
-            className: 'notification-error',
-            icon: error,
-         }
-         break
-      case 'warning':
-         typeNotification = {
-            className: 'notification-warning',
-            icon: warning,
-         }
-         break
-      default:
-         typeNotification = {
-            className: 'notification-success',
-            icon: success,
-         }
-   }
-   return typeNotification
-}
-
-export const getNotification = (type, content, duration = 3, align = 'top') => {
-   let typeNotification = handleGetTypeNotification(type)
-   notification[type]({
-      message: '',
-      description: (
-         <div className={`notification-content ${typeNotification.className}`}>
-            <div className={'icon-notification'}>
-               <img src={typeNotification.icon} alt="" />
-            </div>
-            <span className={'text-notification'}>{content}</span>
-         </div>
-      ),
-      closeIcon: <img src={CloseIcon} alt="" />,
-      placement: align,
-      duration: duration,
-      style: { fontWeight: 'normal' },
-   })
 }

@@ -1,4 +1,4 @@
-import callApi from '../callApi'
+import callReduxApi from '../callReduxApi'
 import {
    startRequestGetTotalUsers,
    startRequestGetTotalUsersSuccess,
@@ -80,7 +80,7 @@ import {
 } from '../../store/modules/manage'
 
 export const getTotalUsers = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `manage/total-users`,
       actionTypes: [startRequestGetTotalUsers, startRequestGetTotalUsersSuccess, startRequestGetTotalUsersFail],
@@ -113,7 +113,7 @@ export const getListRole =
          path += `&order=${dataFilter.order}&column=${dataFilter.column}`
       }
 
-      return callApi({
+      return callReduxApi({
          method: 'get',
          apiPath: path,
          actionTypes: [requestGetListRole, getListRoleSuccess, getListRoleFail],
@@ -127,7 +127,7 @@ export const createOrUpdateRole = (data, action, id) => async (dispatch, getStat
    if (action === 'UPDATE') {
       path += `/${id}`
    }
-   return callApi({
+   return callReduxApi({
       method: action === 'CREATE' ? 'post' : 'put',
       apiPath: path,
       actionTypes: [requestCreateOrUpdateRole, createOrUpdateRoleSuccess, createOrUpdateRoleFail],
@@ -137,7 +137,7 @@ export const createOrUpdateRole = (data, action, id) => async (dispatch, getStat
    })
 }
 export const deleteRole = (id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'delete',
       apiPath: `manage/roles/${id}`,
       actionTypes: [requestDeleteRole, deleteRoleSuccess, deleteRoleFail],
@@ -149,7 +149,7 @@ export const deleteRole = (id) => async (dispatch, getState) => {
 
 // ALL TYPES
 export const getAllTypes = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `manage/types/all`,
       actionTypes: [requestGetListType, getListTypeSuccess, getListTypeFail],
@@ -175,7 +175,7 @@ export const getListType = (dataFilter) => async (dispatch, getState) => {
       path += `&order=${dataFilter.order}&column=${dataFilter.column}`
    }
 
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [requestGetListType, getListTypeSuccess, getListTypeFail],
@@ -189,7 +189,7 @@ export const createOrUpdateType = (data, action, id) => async (dispatch, getStat
    if (action === 'UPDATE') {
       path += `/${id}`
    }
-   return callApi({
+   return callReduxApi({
       method: action === 'CREATE' ? 'post' : 'put',
       apiPath: path,
       actionTypes: [requestCreateOrUpdateType, createOrUpdateTypeSuccess, createOrUpdateTypeFail],
@@ -199,7 +199,7 @@ export const createOrUpdateType = (data, action, id) => async (dispatch, getStat
    })
 }
 export const deleteType = (id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'delete',
       apiPath: `manage/types/${id}`,
       actionTypes: [requestDeleteType, deleteTypeSuccess, deleteTypeFail],
@@ -225,7 +225,7 @@ export const getListIndustry = (dataFilter) => async (dispatch, getState) => {
       path += `&order=${dataFilter.order}&column=${dataFilter.column}`
    }
 
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [requestGetListIndustry, getListIndustrySuccess, getListIndustryFail],
@@ -239,7 +239,7 @@ export const createOrUpdateIndustry = (data, action, id) => async (dispatch, get
    if (action === 'UPDATE') {
       path += `/${id}`
    }
-   return callApi({
+   return callReduxApi({
       method: action === 'CREATE' ? 'post' : 'put',
       apiPath: path,
       actionTypes: [requestCreateOrUpdateIndustry, createOrUpdateIndustrySuccess, createOrUpdateIndustryFail],
@@ -249,7 +249,7 @@ export const createOrUpdateIndustry = (data, action, id) => async (dispatch, get
    })
 }
 export const deleteIndustry = (id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'delete',
       apiPath: `manage/industries/${id}`,
       actionTypes: [requestDeleteIndustry, deleteIndustrySuccess, deleteIndustryFail],
@@ -275,7 +275,7 @@ export const getListExperienceLevel = (dataFilter) => async (dispatch, getState)
       path += `&order=${dataFilter.order}&column=${dataFilter.column}`
    }
 
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [requestGetListExperienceLevel, getListExperienceLevelSuccess, getListExperienceLevelFail],
@@ -289,7 +289,7 @@ export const createOrUpdateExperienceLevel = (data, action, id) => async (dispat
    if (action === 'UPDATE') {
       path += `/${id}`
    }
-   return callApi({
+   return callReduxApi({
       method: action === 'CREATE' ? 'post' : 'put',
       apiPath: path,
       actionTypes: [
@@ -303,7 +303,7 @@ export const createOrUpdateExperienceLevel = (data, action, id) => async (dispat
    })
 }
 export const deleteExperienceLevel = (id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'delete',
       apiPath: `manage/experience-levels/${id}`,
       actionTypes: [requestDeleteExperienceLevel, deleteExperienceLevelSuccess, deleteExperienceLevelFail],
@@ -329,7 +329,7 @@ export const getListCategory = (dataFilter) => async (dispatch, getState) => {
       path += `&order=${dataFilter.order}&column=${dataFilter.column}`
    }
 
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [requestGetListCategory, getListCategorySuccess, getListCategoryFail],
@@ -343,7 +343,7 @@ export const createOrUpdateCategory = (data, action, id) => async (dispatch, get
    if (action === 'UPDATE') {
       path += `/${id}`
    }
-   return callApi({
+   return callReduxApi({
       method: action === 'CREATE' ? 'post' : 'put',
       apiPath: path,
       actionTypes: [requestCreateOrUpdateCategory, createOrUpdateCategorySuccess, createOrUpdateCategoryFail],
@@ -353,7 +353,7 @@ export const createOrUpdateCategory = (data, action, id) => async (dispatch, get
    })
 }
 export const deleteCategory = (id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'delete',
       apiPath: `manage/categories/${id}`,
       actionTypes: [requestDeleteCategory, deleteCategorySuccess, deleteCategoryFail],
@@ -379,7 +379,7 @@ export const getListSkill = (dataFilter) => async (dispatch, getState) => {
       path += `&order=${dataFilter.order}&column=${dataFilter.column}`
    }
 
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [requestGetListSkill, getListSkillSuccess, getListSkillFail],
@@ -393,7 +393,7 @@ export const createOrUpdateSkill = (data, action, id) => async (dispatch, getSta
    if (action === 'UPDATE') {
       path += `/${id}`
    }
-   return callApi({
+   return callReduxApi({
       method: action === 'CREATE' ? 'post' : 'put',
       apiPath: path,
       actionTypes: [requestCreateOrUpdateSkill, createOrUpdateSkillSuccess, createOrUpdateSkillFail],
@@ -403,7 +403,7 @@ export const createOrUpdateSkill = (data, action, id) => async (dispatch, getSta
    })
 }
 export const deleteSkill = (id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'delete',
       apiPath: `manage/skills/${id}`,
       actionTypes: [requestDeleteSkill, deleteSkillSuccess, deleteSkillFail],
@@ -414,7 +414,7 @@ export const deleteSkill = (id) => async (dispatch, getState) => {
 }
 
 export const getSkillCategories = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `manage/skills/categories`,
       actionTypes: [requestGetSkillCategories, getSkillCategoriesSuccess, getSkillCategoriesFail],
@@ -441,7 +441,7 @@ export const getListOrganization = (dataFilter) => async (dispatch, getState) =>
       path += `&order=${dataFilter.order}&column=${dataFilter.column}`
    }
 
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [requestGetListOrganization, getListOrganizationSuccess, getListOrganizationFail],
@@ -455,7 +455,7 @@ export const createOrUpdateOrganization = (data, action, id) => async (dispatch,
    if (action === 'UPDATE') {
       path += `/${id}`
    }
-   return callApi({
+   return callReduxApi({
       method: action === 'CREATE' ? 'post' : 'put',
       apiPath: path,
       actionTypes: [
@@ -469,7 +469,7 @@ export const createOrUpdateOrganization = (data, action, id) => async (dispatch,
    })
 }
 export const deleteOrganization = (id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'delete',
       apiPath: `manage/organizations/${id}`,
       actionTypes: [requestDeleteOrganization, deleteOrganizationSuccess, deleteOrganizationFail],
@@ -483,7 +483,7 @@ export const deleteOrganization = (id) => async (dispatch, getState) => {
 export const getManageArticleList = (dataFilter) => async (dispatch, getState) => {
    let path = `article/manage-article-list?page=${dataFilter.page}&limit=${dataFilter.perPage}`
 
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [getManageListArticle, getManageListArticleSuccess, getManageListArticleFail],

@@ -1,7 +1,7 @@
 import { all, fork, put, takeLatest, call, Effect } from 'redux-saga/effects'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { setTitlePage } from '../app'
-import { getAllRoleForEmployee, getListEmployee } from '../../../api/employee'
+import { getListEmployee } from '../../../api/employee'
 import {
    setErrorCreateOrUpdateEmployee,
    setVisibleModalCreateOrUpdateEmployee,
@@ -13,7 +13,6 @@ import {
    deleteEmployeeFail,
    deleteEmployeeSuccess,
 } from './index'
-import { getNotification } from '../../../utils/helper'
 import _ from 'lodash'
 
 // Define error interface
@@ -32,12 +31,11 @@ interface ErrorPayload {
 function* loadRouteData(): Generator<Effect, void, any> {
    yield put(setTitlePage('User Management'))
    // yield put(getListEmployee());
-   yield put(getAllRoleForEmployee())
+   // yield put(getAllRoleForEmployee())
 }
 
 function* handleActions(): Generator<Effect, void, any> {
    yield takeLatest(createEmployeeSuccess.type, function* (): Generator<Effect, void, any> {
-      getNotification('success', 'Create employee success')
       yield put(setVisibleModalCreateOrUpdateEmployee(false))
       // yield put(getListEmployee());
    })
@@ -59,11 +57,9 @@ function* handleActions(): Generator<Effect, void, any> {
             })
          )
       }
-      getNotification('error', 'Create employee fail')
    })
 
    yield takeLatest(updateEmployeeSuccess.type, function* (): Generator<Effect, void, any> {
-      getNotification('success', 'Update employee success')
       yield put(setVisibleModalCreateOrUpdateEmployee(false))
       yield put(getListEmployee())
    })
@@ -84,17 +80,14 @@ function* handleActions(): Generator<Effect, void, any> {
             })
          )
       }
-      getNotification('error', 'Update employee fail')
    })
 
    yield takeLatest(deleteEmployeeSuccess.type, function* (): Generator<Effect, void, any> {
-      getNotification('success', 'Delete employee success')
       yield put(setVisibleModalDeleteEmployee(false))
       yield put(getListEmployee())
    })
 
    yield takeLatest(deleteEmployeeFail.type, function* (): Generator<Effect, void, any> {
-      yield call(getNotification, 'error', 'Failed to delete employee.')
       yield put(setVisibleModalDeleteEmployee(false))
    })
 }

@@ -1,4 +1,4 @@
-import callApi from '../callApi'
+import callReduxApi from '../callReduxApi'
 import {
    // =========== GET CONVERSATIONS =========== //
    requestGetConversations,
@@ -21,7 +21,7 @@ import callSocket from 'api/callSocket'
 
 // =========== GET CONVERSATIONS =========== //
 export const getConversations = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: 'chat/conversations',
       actionTypes: [requestGetConversations, getConversationsSuccess, getConversationsFail],
@@ -33,7 +33,7 @@ export const getConversations = () => async (dispatch, getState) => {
 
 // ========== GET CONVERSATION ========== //
 export const getConversation = (conversation_id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `chat/conversations/${conversation_id}`,
       actionTypes: [requestGetConversation, getConversationSuccess, getConversationFail],
@@ -45,7 +45,7 @@ export const getConversation = (conversation_id) => async (dispatch, getState) =
 
 // ========== GET MESSAGES ========== //
 export const getMessages = (conversation_id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `chat/conversations/${conversation_id}/messages`,
       actionTypes: [requestGetMessages, getMessagesSuccess, getMessagesFail],
@@ -57,7 +57,7 @@ export const getMessages = (conversation_id) => async (dispatch, getState) => {
 
 // ========== SEND MESSAGE ========== //
 // export const sendMessage = (conversation_id, content) => async (dispatch, getState) => {
-//     return callApi({
+//     return callReduxApi({
 //         method: 'post',
 //         apiPath: `chat/conversations/${conversation_id}/messages`,
 //         actionTypes: [requestSendMessage, sendMessageSuccess, sendMessageFail],

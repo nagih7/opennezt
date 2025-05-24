@@ -1,28 +1,9 @@
-import callApi from '../callApi'
-import {
-   // startRequest,
-   // requestSuccess,
-   // requestError,
-   // ========== WEB PUSH ========== //
-   requestWebPush,
-   webPushSuccess,
-   webPushFail,
-} from '../../store/modules/app'
-
-// export const getList = () => async (dispatch, getState) => {
-//     return callApi({
-//         method: 'get',
-//         url: '/starter-pack/whitelist-round-status',
-//         actionTypes: [startRequest, requestSuccess, requestError],
-//         variables: {},
-//         dispatch,
-//         getState,
-//     })
-// }
+import callReduxApi from '../callReduxApi'
+import { requestWebPush, webPushSuccess, webPushFail } from '../../store/modules/app'
 
 // ========== WEB PUSH ========== //
 export const subscribe = (payload) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: '/subscribe',
       actionTypes: [requestWebPush, webPushSuccess, webPushFail],
@@ -33,7 +14,7 @@ export const subscribe = (payload) => async (dispatch, getState) => {
 }
 
 export const unsubscribe = (payload) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: '/subscribe/unsubscribe',
       actionTypes: [requestWebPush, webPushSuccess, webPushFail],
@@ -44,7 +25,7 @@ export const unsubscribe = (payload) => async (dispatch, getState) => {
 }
 
 export const trackingEvent = (payload) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: '/subscribe/notification-event',
       actionTypes: [requestWebPush, webPushSuccess, webPushFail],
@@ -55,7 +36,7 @@ export const trackingEvent = (payload) => async (dispatch, getState) => {
 }
 
 export const fetchStats = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: '/subscribe/stats',
       actionTypes: [requestWebPush, webPushSuccess, webPushFail],

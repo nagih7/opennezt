@@ -1,4 +1,4 @@
-import callApi from 'api/callApi'
+import callReduxApi from 'api/callReduxApi'
 import {
    requestStartInterview,
    startInterviewSuccess,
@@ -12,7 +12,7 @@ import {
 } from 'store/modules/interview'
 
 export const startInterview = (projectId) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: `interview/start`,
       actionTypes: [requestStartInterview, startInterviewSuccess, startInterviewFail],
@@ -29,7 +29,7 @@ export const replyInterview = (payload) => async (dispatch, getState) => {
    formData.append('audio', audio)
    formData.append('interview', JSON.stringify(interview))
 
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: `interview/reply`,
       actionTypes: [requestReplyInterview, replyInterviewSuccess, replyInterviewFail],
@@ -40,7 +40,7 @@ export const replyInterview = (payload) => async (dispatch, getState) => {
 }
 
 export const closeInterview = (payload) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: `interview/close`,
       actionTypes: [requestCloseInterview, closeInterviewSuccess, closeInterviewFail],

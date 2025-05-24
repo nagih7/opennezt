@@ -15,3 +15,8 @@ export interface Location {
    payload: any
    prevPathName: string
 }
+
+export interface LoaderArgs {
+   request: Request
+   params?: Record<string, string | undefined>
+}

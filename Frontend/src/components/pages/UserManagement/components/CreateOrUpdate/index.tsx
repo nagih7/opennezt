@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
-import InputMASQ from '../../../../../components/UI/Input'
+import { Input } from '~/components/UI/input'
 import ButtonMASQ from '../../../../../components/UI/Button'
 import _ from 'lodash'
-import { isValidate } from '../../../../../utils/validate'
 import { handleCheckValidateConfirm } from '../../../../../utils/helper'
 import ModalGeneral from '../../../../../components/UI/Modal/ModalGeneral'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,36 +13,36 @@ import {
 import { handleCreateEmployee, handleUpdateEmployee } from '../../../../../api/employee'
 
 interface Employee {
-   id: string;
-   name: string;
-   email: string;
-   phone: string;
+   id: string
+   name: string
+   email: string
+   phone: string
 }
 
 interface ConfigModal {
-   title: string;
-   type: 'CREATE' | 'UPDATE';
+   title: string
+   type: 'CREATE' | 'UPDATE'
 }
 
 interface CreateOrUpdateProps {
-   employee: Employee;
-   configModal: ConfigModal;
+   employee: Employee
+   configModal: ConfigModal
 }
 
 interface DataCreateOrUpdate {
-   name: string;
-   email: string;
-   phone: string;
-   password: string;
-   confirmPassword: string;
+   name: string
+   email: string
+   phone: string
+   password: string
+   confirmPassword: string
 }
 
 interface ErrorCreateOrUpdate {
-   name: string;
-   email: string;
-   phone: string;
-   password: string;
-   confirmPassword: string;
+   name: string
+   email: string
+   phone: string
+   password: string
+   confirmPassword: string
 }
 
 const CreateOrUpdate: React.FC<CreateOrUpdateProps> = ({ employee, configModal }) => {
@@ -54,8 +53,12 @@ const CreateOrUpdate: React.FC<CreateOrUpdateProps> = ({ employee, configModal }
       password: '',
       confirmPassword: '',
    })
-   const visibleModalCreateOrUpdateEmployee = useSelector((state: any) => state.employee.visibleModalCreateOrUpdateEmployee)
-   const isLoadingBtnCreateOrUpdateEmployee = useSelector((state: any) => state.employee.isLoadingBtnCreateOrUpdateEmployee)
+   const visibleModalCreateOrUpdateEmployee = useSelector(
+      (state: any) => state.employee.visibleModalCreateOrUpdateEmployee
+   )
+   const isLoadingBtnCreateOrUpdateEmployee = useSelector(
+      (state: any) => state.employee.isLoadingBtnCreateOrUpdateEmployee
+   )
    const errorCreateOrUpdateEmployee = useSelector((state: any) => state.employee.errorCreateOrUpdateEmployee)
    const dispatch = useDispatch()
 
@@ -93,7 +96,10 @@ const CreateOrUpdate: React.FC<CreateOrUpdateProps> = ({ employee, configModal }
       })
    }
 
-   const handleChangeInput = (valueInput: React.ChangeEvent<HTMLInputElement>, type: keyof DataCreateOrUpdate): void => {
+   const handleChangeInput = (
+      valueInput: React.ChangeEvent<HTMLInputElement>,
+      type: keyof DataCreateOrUpdate
+   ): void => {
       let value = valueInput.target.value
       let data = _.cloneDeep(dataCreateOrUpdate)
       data[type] = value
@@ -123,9 +129,9 @@ const CreateOrUpdate: React.FC<CreateOrUpdateProps> = ({ employee, configModal }
          data.append(`password`, dataCreateOrUpdate.password)
       }
 
-      let validate = handleCheckValidateConfirm(dataValidate, errorCreateOrUpdateEmployee)
-      dispatch(setErrorCreateOrUpdateEmployee(validate.dataError))
-      if (!validate.isError) {
+      // let validate = handleCheckValidateConfirm(dataValidate, errorCreateOrUpdateEmployee)
+      // dispatch(setErrorCreateOrUpdateEmployee(validate.dataError))
+      // if (!validate.isError) {
          if (configModal.type === 'CREATE') {
             dispatch(handleCreateEmployee(data))
          } else {
@@ -142,7 +148,7 @@ const CreateOrUpdate: React.FC<CreateOrUpdateProps> = ({ employee, configModal }
       >
          <div className={styles.mainModalWrap}>
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter name...'}
                   onChange={(e) => handleChangeInput(e, 'name')}
@@ -160,7 +166,7 @@ const CreateOrUpdate: React.FC<CreateOrUpdateProps> = ({ employee, configModal }
             </div>
 
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter email...'}
                   onChange={(e) => handleChangeInput(e, 'email')}
@@ -178,7 +184,7 @@ const CreateOrUpdate: React.FC<CreateOrUpdateProps> = ({ employee, configModal }
             </div>
 
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter phone...'}
                   onChange={(e) => handleChangeInput(e, 'phone')}
@@ -197,7 +203,7 @@ const CreateOrUpdate: React.FC<CreateOrUpdateProps> = ({ employee, configModal }
 
             {configModal.type === 'CREATE' ? (
                <div className="relative mb-8">
-                  <InputMASQ
+                  <Input
                      type={'password'}
                      placeholder={'Enter password...'}
                      onChange={(e) => handleChangeInput(e, 'password')}
@@ -219,7 +225,7 @@ const CreateOrUpdate: React.FC<CreateOrUpdateProps> = ({ employee, configModal }
 
             {configModal.type === 'CREATE' ? (
                <div className="relative mb-8">
-                  <InputMASQ
+                  <Input
                      type={'password'}
                      placeholder={'Enter password...'}
                      onChange={(e) => handleChangeInput(e, 'confirmPassword')}

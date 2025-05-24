@@ -1,4 +1,4 @@
-import callApi, { callApiSimple } from 'api/callApi'
+import callReduxApi, { callApiSimple } from 'api/callReduxApi'
 import {
    // ========== MY PROJECTS ========== //
    requestGetListMyProjects,
@@ -71,7 +71,7 @@ export const getListMyProjects = (dataFilter) => async (dispatch, getState) => {
    if (dataFilter.order && dataFilter.column) {
       path += `&order=${dataFilter.order}&column=${dataFilter.column}`
    }
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [requestGetListMyProjects, getListMyProjectsSuccess, getListMyProjectsFail],
@@ -93,7 +93,7 @@ export const getListProjectsParticipated = (dataFilter) => async (dispatch, getS
    if (dataFilter.order && dataFilter.column) {
       path += `&order=${dataFilter.order}&column=${dataFilter.column}`
    }
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [
@@ -109,7 +109,7 @@ export const getListProjectsParticipated = (dataFilter) => async (dispatch, getS
 
 // ========== CREATE NEW PROJECT ========== //
 export const createNewProject = (data) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: 'projects/me/create',
       actionTypes: [requestCreateNewProject, createNewProjectSuccess, createNewProjectFail],
@@ -121,7 +121,7 @@ export const createNewProject = (data) => async (dispatch, getState) => {
 
 // ========== GET MY PROJECT DETAILS ========== //
 export const getMyProjectDetails = (projectId) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `projects/me/${projectId}/details`,
       actionTypes: [requestGetMyProjectDetails, getMyProjectDetailsSuccess, getMyProjectDetailsFail],
@@ -133,7 +133,7 @@ export const getMyProjectDetails = (projectId) => async (dispatch, getState) => 
 
 // ========== UPDATE PROJECT BASIC ========== //
 export const updateProjectBasic = (projectId, formRequest) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'patch',
       apiPath: `projects/me/${projectId}/basic`,
       actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
@@ -145,7 +145,7 @@ export const updateProjectBasic = (projectId, formRequest) => async (dispatch, g
 
 // ========== UPDATE PROJECT SECTORS ========== //
 export const updateProjectSector = (projectId, formRequest) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'patch',
       apiPath: `projects/me/${projectId}/sector`,
       actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
@@ -157,7 +157,7 @@ export const updateProjectSector = (projectId, formRequest) => async (dispatch, 
 
 // ========== UPDATE PROJECT REVENUES ========== //
 export const updateProjectRevenue = (projectId, formRequest) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'patch',
       apiPath: `projects/me/${projectId}/revenues`,
       actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
@@ -169,7 +169,7 @@ export const updateProjectRevenue = (projectId, formRequest) => async (dispatch,
 
 // ========= UPDATE PROJECT FUNDING SOURCES ========== //
 export const updateProjectFundingSources = (projectId, formRequest) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'patch',
       apiPath: `projects/me/${projectId}/funding-sources`,
       actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
@@ -181,7 +181,7 @@ export const updateProjectFundingSources = (projectId, formRequest) => async (di
 
 // ========== UPDATE PROJECT ADDITIONAL INFOS ========== //
 export const updateProjectAdditionalInfos = (projectId, formRequest) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'patch',
       apiPath: `projects/me/${projectId}/additional-infos`,
       actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
@@ -193,7 +193,7 @@ export const updateProjectAdditionalInfos = (projectId, formRequest) => async (d
 
 // ========== UPDATE PROJECT LOGO ========== //
 export const updateProjectLogo = (projectId, formRequest) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'patch',
       apiPath: `projects/me/${projectId}/logo`,
       actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
@@ -205,7 +205,7 @@ export const updateProjectLogo = (projectId, formRequest) => async (dispatch, ge
 
 // ========== UPDATE PROJECT BACKGROUND ========== //
 export const updateProjectBackground = (projectId, formRequest) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'patch',
       apiPath: `projects/me/${projectId}/background`,
       actionTypes: [requestUpdateMyProject, updateMyProjectSuccess, updateMyProjectFail],
@@ -217,7 +217,7 @@ export const updateProjectBackground = (projectId, formRequest) => async (dispat
 
 // ========== DELETE MY PROJECT ========== //
 export const deleteMyProject = (projectId) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'delete',
       apiPath: `projects/${projectId}/delete`,
       actionTypes: [requestDeleteMyProject, deleteMyProjectSuccess, deleteMyProjectFail],
@@ -229,7 +229,7 @@ export const deleteMyProject = (projectId) => async (dispatch, getState) => {
 
 // ========== GET PROJECT DETAILS ========== //
 export const getProjectDetails = (projectId) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `projects/${projectId}/details`,
       actionTypes: [requestGetProjectDetails, getProjectDetailsSuccess, getProjectDetailsFail],
@@ -253,7 +253,7 @@ export const seekProjects = (dataFilter) => async (dispatch, getState) => {
       path += `&stage=${dataFilter.stage}`
    }
 
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: path,
       actionTypes: [requestSeekProjects, seekProjectsSuccess, seekProjectsFail],
@@ -265,7 +265,7 @@ export const seekProjects = (dataFilter) => async (dispatch, getState) => {
 
 // =========== APPLY TO JOIN PROJECT =========== //
 export const applyToJoinProject = (projectId, formRequest) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: `projects/${projectId}/apply`,
       actionTypes: [requestApplyToJoinProject, applyToJoinProjectSuccess, applyToJoinProjectFail],
@@ -277,7 +277,7 @@ export const applyToJoinProject = (projectId, formRequest) => async (dispatch, g
 
 // ========== PROJECT REQUIREMENT - ROLE ========== //
 export const updateRoleRequirement = (projectId, formRequest) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'patch',
       apiPath: `projects/me/${projectId}/requirements/role`,
       actionTypes: [requestUpdateRoleRequirement, updateRoleRequirementSuccess, updateRoleRequirementFail],
@@ -289,7 +289,7 @@ export const updateRoleRequirement = (projectId, formRequest) => async (dispatch
 
 // ========= PROJECT REQUIREMENT - SECTOR ========== //
 export const updateSectorRequirement = (projectId, formRequest) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'patch',
       apiPath: `projects/me/${projectId}/requirements/sector`,
       actionTypes: [requestUpdateSectorRequirement, updateSectorRequirementSuccess, updateSectorRequirementFail],
@@ -301,7 +301,7 @@ export const updateSectorRequirement = (projectId, formRequest) => async (dispat
 
 // ========= PROJECT REQUIREMENT - SKILL ========== //
 export const updateSkillRequirement = (projectId, formRequest) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'patch',
       apiPath: `projects/me/${projectId}/requirements/skill`,
       actionTypes: [requestUpdateSkillRequirement, updateSkillRequirementSuccess, updateSkillRequirementFail],
@@ -313,7 +313,7 @@ export const updateSkillRequirement = (projectId, formRequest) => async (dispatc
 
 // ========== SEARCH PROJECT ========== //
 export const searchMyProjects = (keySearch) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `projects/me/search?q=${keySearch}`,
       actionTypes: [requestSearchMyProjects, searchMyProjectsSuccess, searchMyProjectsFail],
@@ -325,7 +325,7 @@ export const searchMyProjects = (keySearch) => async (dispatch, getState) => {
 
 // ========== INVITE MEMBER ========== //
 export const inviteMember = (projectId, formRequest) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: `projects/me/${projectId}/invite`,
       actionTypes: [requestInviteMember, inviteMemberSuccess, inviteMemberFail],

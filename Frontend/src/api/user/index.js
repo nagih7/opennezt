@@ -1,4 +1,4 @@
-import callApi from '../callApi'
+import callReduxApi from '../callReduxApi'
 import {
    // INDUSTRY
    requestgetIndustryFramework,
@@ -38,7 +38,7 @@ import {
 
 // INDUSTRY
 export const getIndustryFramework = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: 'users/industries',
       actionTypes: [requestgetIndustryFramework, getIndustryFrameworkSuccess, getIndustryFrameworkFail],
@@ -50,7 +50,7 @@ export const getIndustryFramework = () => async (dispatch, getState) => {
 
 // EXPERIENCE LEVEL
 export const getExperienceLevelFramwork = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: 'users/experience-levels',
       actionTypes: [
@@ -66,7 +66,7 @@ export const getExperienceLevelFramwork = () => async (dispatch, getState) => {
 
 // CATEGORIES
 export const getCategoryFramework = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: 'users/categories',
       actionTypes: [requestGetCategoryFramework, getCategoryFrameworkSuccess, getCategoryFrameworkFail],
@@ -78,7 +78,7 @@ export const getCategoryFramework = () => async (dispatch, getState) => {
 
 // SUB CATEGORIES
 export const getSubCategoryFramework = (categoryId) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `users/categories/${categoryId}`,
       actionTypes: [requestGetSubCategoryFramework, getSubCategoryFrameworkSuccess, getSubCategoryFrameworkFail],
@@ -90,7 +90,7 @@ export const getSubCategoryFramework = (categoryId) => async (dispatch, getState
 
 // SKILLS
 export const getSkillFramework = (categoryId) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `users/skills/${categoryId}`,
       actionTypes: [requestGetSkillFramework, getSkillFrameworkSuccess, getSkillFrameworkFail],
@@ -102,7 +102,7 @@ export const getSkillFramework = (categoryId) => async (dispatch, getState) => {
 
 // STAGES
 export const getStageFramework = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: 'users/stages',
       actionTypes: [requestGetStageFramework, getStageFrameworkSuccess, getStageFrameworkFail],
@@ -114,7 +114,7 @@ export const getStageFramework = () => async (dispatch, getState) => {
 
 // PROJECT ROLE
 export const getProjectRoleFramework = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: 'users/roles/project',
       actionTypes: [requestGetProjectRoleFramework, getProjectRoleFrameworkSuccess, getProjectRoleFrameworkFail],
@@ -126,7 +126,7 @@ export const getProjectRoleFramework = () => async (dispatch, getState) => {
 
 // REQUEST ADD FRIEND
 export const sendFriendRequest = (userId, action) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: `users/${userId}/friend-request`,
       actionTypes: [requestSendFriendRequest, sendFriendRequestSuccess, sendFriendRequestFail],

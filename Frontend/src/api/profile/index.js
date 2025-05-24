@@ -1,4 +1,4 @@
-import callApi from '../callApi'
+import callReduxApi from '../callReduxApi'
 
 import {
    changePassword,
@@ -60,7 +60,7 @@ import {
 } from '../../store/modules/profile'
 
 export const updateUser = (data) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'put',
       apiPath: `/users`,
       actionTypes: [updateInfoUser, updateInfoUserSuccess, updateInfoUserFail],
@@ -71,7 +71,7 @@ export const updateUser = (data) => async (dispatch, getState) => {
 }
 
 export const handleChangePassword = (data) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'patch',
       apiPath: `/auth/change-password`,
       actionTypes: [changePassword, changePasswordSuccess, changePasswordFail],
@@ -82,7 +82,7 @@ export const handleChangePassword = (data) => async (dispatch, getState) => {
 }
 
 export const changeAvatar = (formData) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'put',
       apiPath: `/users/avatar`,
       actionTypes: [changeAvatarUser, changeAvatarUserSuccess, changeAvatarUserFail],
@@ -93,7 +93,7 @@ export const changeAvatar = (formData) => async (dispatch, getState) => {
 }
 
 export const changeBackground = (formData) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'put',
       apiPath: `/users/background`,
       actionTypes: [changeBackgroundUser, changeBackgroundUserSuccess, changeBackgroundUserFail],
@@ -105,7 +105,7 @@ export const changeBackground = (formData) => async (dispatch, getState) => {
 
 // ========== Profile ========== //
 export const getProfile = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `/profile`,
       actionTypes: [requestGetProfile, requestGetProfileSuccess, requestGetProfileFail],
@@ -115,7 +115,7 @@ export const getProfile = () => async (dispatch, getState) => {
 }
 
 export const updateProfessionalProfile = (data) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'put',
       apiPath: `/profile/professional`,
       actionTypes: [requestUpdateProfessionalProfile, UpdateProfessionalProfileSuccess, UpdateProfessionalProfileFail],
@@ -127,7 +127,7 @@ export const updateProfessionalProfile = (data) => async (dispatch, getState) =>
 
 // ========== Education ========== //
 export const createEducation = (data) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: `/profile/education`,
       actionTypes: [requestCreateOrUpdateEducation, createEducationSuccess, createOrUpdateEducationFail],
@@ -137,7 +137,7 @@ export const createEducation = (data) => async (dispatch, getState) => {
    })
 }
 export const updateEducation = (data) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'put',
       apiPath: `/profile/education`,
       actionTypes: [requestCreateOrUpdateEducation, updateEducationSuccess, createOrUpdateEducationFail],
@@ -147,7 +147,7 @@ export const updateEducation = (data) => async (dispatch, getState) => {
    })
 }
 export const deleteEducation = (id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'delete',
       apiPath: `/profile/education/${id}`,
       actionTypes: [requestDeleleEducation, deleteEducationSuccess, deleteEducationFail],
@@ -158,7 +158,7 @@ export const deleteEducation = (id) => async (dispatch, getState) => {
 
 // ========== Certification ========== //
 export const createCertification = (data, action) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'post',
       apiPath: `/profile/certification`,
       actionTypes: [requestCreateOrUpdateCertification, createCertificationSuccess, createOrUpdateCertificationFail],
@@ -169,7 +169,7 @@ export const createCertification = (data, action) => async (dispatch, getState) 
    })
 }
 export const updateCertification = (data) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'put',
       apiPath: `/profile/certification`,
       actionTypes: [requestCreateOrUpdateCertification, updateCertificationSuccess, createOrUpdateCertificationFail],
@@ -179,7 +179,7 @@ export const updateCertification = (data) => async (dispatch, getState) => {
    })
 }
 export const deleteCertification = (id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'delete',
       apiPath: `/profile/certification/${id}`,
       actionTypes: [requestDeleleCertification, deleteCertificationSuccess, deleteCertificationFail],
@@ -190,7 +190,7 @@ export const deleteCertification = (id) => async (dispatch, getState) => {
 
 // ========== Organization ========== //
 export const getOrganizationFramework = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `/profile/organizations`,
       actionTypes: [
@@ -204,7 +204,7 @@ export const getOrganizationFramework = () => async (dispatch, getState) => {
 }
 
 export const updateSkillProfile = (data) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'put',
       apiPath: `/profile/skills`,
       actionTypes: [requestUpdateSkills, updateSkillsSuccess, updateSkillsFail],
@@ -216,7 +216,7 @@ export const updateSkillProfile = (data) => async (dispatch, getState) => {
 
 // ========== Additional Info ========== //
 export const createProfileAdditionalInfo = (data, action) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: action === 'create' ? 'post' : 'put',
       apiPath: `/profile/additional-info`,
       actionTypes: [
@@ -230,7 +230,7 @@ export const createProfileAdditionalInfo = (data, action) => async (dispatch, ge
    })
 }
 export const updateProfileAdditionalInfo = (data) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'put',
       apiPath: `/profile/additional-info`,
       actionTypes: [
@@ -244,7 +244,7 @@ export const updateProfileAdditionalInfo = (data) => async (dispatch, getState) 
    })
 }
 export const deleteProfileAdditionalInfo = (id) => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'delete',
       apiPath: `/profile/additional-info/${id}`,
       actionTypes: [
@@ -259,7 +259,7 @@ export const deleteProfileAdditionalInfo = (id) => async (dispatch, getState) =>
 
 // ========== GET [Friends] ========== //
 export const getMyFriends = () => async (dispatch, getState) => {
-   return callApi({
+   return callReduxApi({
       method: 'get',
       apiPath: `/profile/friends`,
       actionTypes: [requestGetMyFriends, getMyFriendsSuccess, getMyFriendsFail],

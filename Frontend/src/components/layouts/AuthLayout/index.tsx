@@ -24,7 +24,7 @@ const Banner = () => {
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children, path }) => {
    return (
       <div className="w-full h-[100vh] flex items-center justify-center">
-         <div className="flex w-2/5 bg-white rounded-md shadow-lg">
+         <div className="flex w-1/2 bg-white rounded-md shadow-lg">
             {(() => {
                switch (path) {
                   case Auth.LOGIN || Auth.FORGOT_PASSWORD:

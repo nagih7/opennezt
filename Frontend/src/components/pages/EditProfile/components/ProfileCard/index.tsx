@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { Avatar } from '@chakra-ui/react'
 import { RootState } from '~/store'
 
-interface AuthUser {
+interface AuthAccount {
    name: string
    avatar?: string
    created_at?: string

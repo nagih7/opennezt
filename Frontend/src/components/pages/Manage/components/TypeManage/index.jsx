@@ -6,7 +6,7 @@ import TableManage from '../TableManage'
 import { createOrUpdateType, deleteType, getListType } from 'api/manage'
 import { setVisibleModalCreateOrUpdateType, setVisibleModalDeleteType } from 'store/modules/manage'
 import ModalCreateOrUpdate from '../ModalCreateOrUpdate'
-import InputMASQ from 'components/UI/Input'
+import { Input } from 'components/UI/input'
 import ButtonMASQ from 'components/UI/Button'
 import store from '~/store'
 
@@ -168,7 +168,7 @@ function TypeManage() {
       return (
          <div className="w-full">
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter class...'}
                   onChange={(e) => handleChangeInput(e, 'class')}
@@ -185,7 +185,7 @@ function TypeManage() {
             </div>
 
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter name...'}
                   onChange={(e) => handleChangeInput(e, 'name')}
@@ -203,7 +203,7 @@ function TypeManage() {
             </div>
 
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter description...'}
                   onChange={(e) => handleChangeInput(e, 'description')}

@@ -6,7 +6,7 @@ import TableManage from '../TableManage'
 import { createOrUpdateOrganization, deleteOrganization, getListOrganization } from 'api/manage'
 import { setVisibleModalCreateOrUpdateOrganization, setVisibleModalDeleteOrganization } from 'store/modules/manage'
 import ModalCreateOrUpdate from '../ModalCreateOrUpdate'
-import InputMASQ from 'components/UI/Input'
+import { Input } from '~components/UI/input'
 import ButtonMASQ from 'components/UI/Button'
 import store from '~/store'
 
@@ -172,7 +172,7 @@ function OrganizationManage() {
       return (
          <div className={styles.mainModalWrap}>
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter name...'}
                   onChange={(e) => handleChangeInput(e, 'name')}
@@ -189,7 +189,7 @@ function OrganizationManage() {
                </label>
             </div>
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter website...'}
                   onChange={(e) => handleChangeInput(e, 'website')}
@@ -206,7 +206,7 @@ function OrganizationManage() {
                </label>
             </div>
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter contact email...'}
                   onChange={(e) => handleChangeInput(e, 'contact_email')}
@@ -224,7 +224,7 @@ function OrganizationManage() {
             </div>
 
             <div className="relative mb-8">
-               <InputMASQ
+               <Input
                   type={'text'}
                   placeholder={'Enter description...'}
                   onChange={(e) => handleChangeInput(e, 'description')}
