@@ -1,0 +1,121 @@
+services: # Backend API Service
+   backend:
+      build:
+         context: ./Backend
+         dockerfile: Dockerfile
+      container_name: opennezt-backend
+      restart: unless-stopped
+      environment:
+         NODE_ENV: ${NODE_ENV:-development}
+         PORT: 3456
+         HOST: 0.0.0.0
+         # MongoDB Atlas Configuration
+         DB_NAME: ${DB_NAME:-OpenNezt-V1}
+         DB_USERNAME: ${DB_USERNAME:-your_atlas_username}
+         DB_PASSWORD: ${DB_PASSWORD:-your_atlas_password}
+         DB_USER: ${DB_USER:-your_atlas_user}
+         DB_AUTH_SOURCE: ${DB_AUTH_SOURCE:-admin}
+         # App Config
+         APP_NAME: ${APP_NAME:-OpenNezt}
+         APP_URL_API: ${APP_URL_API:-http://localhost:3456}
+         APP_URL_CLIENT: ${APP_URL_CLIENT:-http://localhost:3000}
+         OTHER_URLS_CLIENT: ${OTHER_URLS_CLIENT:-["http://localhost:5173", "https://opennezt.com", "https://beta.opennezt.com","http://localhost:3000","http://opennezt-frontend:3000","http://172.20.0.2:3000","http://172.20.0.3:3000","http://172.20.0.4:3000", "http://frontend:3000"]}
+         APP_URL_AUTH: ${APP_URL_AUTH:-auth}
+         SECRET_KEY: ${SECRET_KEY:-OpenNeztSecretKeyForProduction}
+         LOGIN_EXPIRE_IN: ${LOGIN_EXPIRE_IN:-7d}
+         VERIFY_EMAIL_EXPIRE_IN: ${VERIFY_EMAIL_EXPIRE_IN:-10m}
+         REQUESTS_LIMIT_PER_MINUTE: ${REQUESTS_LIMIT_PER_MINUTE:-200}
+         # Mail (Optional)
+         MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+         MAIL_PORT: ${MAIL_PORT:-587}
+         MAIL_SECURE: ${MAIL_SECURE:-false}
+         MAIL_USERNAME: ${MAIL_USERNAME:-}
+         MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+         MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-no-reply@opennezt.com}
+         MAIL_FROM_NAME: ${MAIL_FROM_NAME:-OpenNezt}
+         MAIL_TO: ${MAIL_TO:-admin@opennezt.com}
+         # Push Notifications
+         VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+         VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+         # External APIs (Optional)
+         OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+         OPENAI_API_URL: ${OPENAI_API_URL:-}
+         OPENAI_API_SPEECH_URL: ${OPENAI_API_SPEECH_URL:-}
+         LINKEDIN_CLIENT_ID: ${LINKEDIN_CLIENT_ID:-}
+         LINKEDIN_CLIENT_SECRET: ${LINKEDIN_CLIENT_SECRET:-}
+         GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+         GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+         AI_API_URL: ${AI_API_URL:-}
+         AI_API_TOKEN: ${AI_API_TOKEN:-}
+      ports:
+         - "3456:3456"
+         - "9229:9229" # Debug port
+      volumes:
+         - backend_logs:/app/private/logs
+         - backend_uploads:/app/public/uploads
+      networks:
+         - opennezt-network
+      healthcheck:
+         test: ["CMD", "curl", "-f", "http://localhost:3456/"]
+         interval: 30s
+         timeout: 10s
+         retries: 5
+         start_period: 60s
+
+   # Frontend Service (Optional - can be run separately)
+   frontend:
+      build:
+         context: ./Frontend
+         # dockerfile: Dockerfile #Production build
+         dockerfile: Dockerfile.dev # Development build
+      container_name: opennezt-frontend
+      restart: unless-stopped
+      environment:
+         NGINX_HOST: 0.0.0.0
+         NGINX_PORT: 3000
+      ports:
+         - "3000:3000"
+      depends_on:
+         backend:
+            condition: service_healthy
+      networks:
+         - opennezt-network
+      healthcheck:
+         test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+         interval: 30s
+         timeout: 10s
+         retries: 5
+         start_period: 30s
+
+   # Redis Service (for caching)
+   redis:
+      image: redis:7.2-alpine
+      container_name: opennezt-redis
+      restart: unless-stopped
+      ports:
+         - "6379:6379"
+      command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+      volumes:
+         - redis_data:/data
+      networks:
+         - opennezt-network
+      healthcheck:
+         test: ["CMD", "redis-cli", "ping"]
+         interval: 30s
+         timeout: 10s
+         retries: 3
+
+volumes:
+   redis_data:
+      driver: local
+   backend_uploads:
+      driver: local
+   backend_logs:
+      driver: local
+
+networks:
+   opennezt-network:
+      driver: bridge
+      ipam:
+         config:
+            - subnet: 172.20.0.0/16

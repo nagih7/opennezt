@@ -18,6 +18,7 @@ export default defineConfig({
          config: resolve(__dirname, 'src/config'),
          contexts: resolve(__dirname, 'src/contexts'),
          hooks: resolve(__dirname, 'src/hooks'),
+         lib: resolve(__dirname, 'src/lib'),
          routes: resolve(__dirname, 'src/routes'),
          services: resolve(__dirname, 'src/services'),
          store: resolve(__dirname, 'src/store'),

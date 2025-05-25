@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { forgotPassword } from '~/api/auth'
 import { AppDispatch, RootState, useAppSelector } from '~/store'
 import { ForgotPasswordPayload } from '~/types'
-import { isValidate } from '~/utils/validate'
+// import { isValidate } from '~/utils/validate'
 
 const useForgotPassword = () => {
    const navigate = useNavigate()
@@ -46,9 +46,10 @@ const useForgotPassword = () => {
    }
 
    const validateBlur = (type: keyof ForgotPasswordPayload): boolean => {
-      let validate = isValidate(dataForgotPassword, type, errorDataForgotPassword)
-      setErrorDataForgotPassword(validate.error)
-      return validate.isError
+      // let validate = isValidate(dataForgotPassword, type, errorDataForgotPassword)
+      // setErrorDataForgotPassword(validate.error)
+      // return validate.isError
+      return false // Placeholder for validation logic
    }
 
    const handleForgotPassword = () => {

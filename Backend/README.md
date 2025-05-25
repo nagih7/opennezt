@@ -4,21 +4,21 @@ Base Express JS is a foundational application for constructing RESTful APIs with
 
 ## Requirements
 
-- node >= 20
+-  node >= 20
 
 ## Usage
 
 1. Clone project
 2. Create `.env` file, copy content from [.env.example](./.env.example) to `.env` file and config in `.env`:
 
-- Config Runtime Environment
+-  Config Runtime Environment
 
 ```bash
 HOST=localhost
 PORT=3456
 ```
 
-- Config Project
+-  Config Project
 
 ```bash
 APP_NAME=OpenNezt App
@@ -38,18 +38,18 @@ LOGIN_EXPIRE_IN=7d
 REQUESTS_LIMIT_PER_MINUTE=100
 ```
 
-- Config MongoDb Database
+-  Config MongoDb Database
 
 ```bash
-DB_HOST=localhost
 DB_PORT=27017
+DB_USER=
 DB_USERNAME=
 DB_PASSWORD=
 DB_NAME=
 DB_AUTH_SOURCE=admin
 ```
 
-- Config Email
+-  Config Email
 
 ```bash
 MAIL_HOST=smtp.gmail.com
@@ -101,4 +101,3 @@ Password: OpenNezt@123.edu.vn
 ## Credits
 
 [Vuong Manh Nghia](https://github.com/vuongmanhnghia).
-[Nguyen Huy Hoang](https://github.com/hoanggxyuuki).
