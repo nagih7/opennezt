@@ -1,6 +1,6 @@
 import moment from 'moment'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { LinkOutlined, MoreOutlined, RollbackOutlined } from '@ant-design/icons'
+import { AiOutlineLink } from "react-icons/ai";
 import { IconlySend, IconlyStar } from 'components/UI/Iconly'
 import { useDispatch, useSelector } from 'react-redux'
 import { getConversation, getMessages, sendMessage } from 'api/chat'
@@ -148,7 +148,7 @@ const Chat = () => {
 
          <div className="flex items-center border-t border-gray-200 w-full bg-[#ffffff]">
             <div className="flex justify-center items-center w-[50px] h-[40px] my-1">
-               <LinkOutlined className="text-xl w-[30px] h-[30px]" />
+               <AiOutlineLink  className="text-xl w-[30px] h-[30px]" />
             </div>
             <div className="py-[12px] w-full">
                <TextAreaCustom

@@ -1,13 +1,14 @@
 import React from 'react'
-import { Checkbox, Tooltip } from 'antd'
-import Logo from '../../../../assets/images/logo/opennezt_black.png'
-import useLogin from './useLogin'
-import LinkedIn from '~/assets/images/icon/linkedin.svg'
-import Google from '~/assets/images/icon/google.svg'
-import Facebook from '~/assets/images/icon/facebook.svg'
-import Twitter from '~/assets/images/icon/twitter.svg'
 import { Button } from '@chakra-ui/react'
+import { Checkbox } from '~/components/UI/checkbox'
 import { Input } from '~/components/UI/input'
+import { Tooltip } from '~/components/UI/tooltip'
+import Logo from '~/assets/images/logo/opennezt_black.png'
+import linkedinIcon from '~/assets/images/icon/linkedin.svg'
+import googleIcon from '~/assets/images/icon/google.svg'
+import facebookIcon from '~/assets/images/icon/facebook.svg'
+import twitterIcon from '~/assets/images/icon/twitter.svg'
+import useLogin from './useLogin'
 
 const Login: React.FC = () => {
    const {
@@ -39,9 +40,9 @@ const Login: React.FC = () => {
                <div className="mb-1 text-sm font-medium text-gray-700">Email *</div>
                <Input
                   required
-                  type={'text'}
-                  placeholder={'Enter email...'}
-                  onChange={(e: any) => onChangeLogin('email', e)}
+                  type="text"
+                  placeholder="Enter email..."
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeLogin('email', e)}
                   onFocus={() => onFocusInputLogin('email')}
                   onBlur={() => validateBlur('email')}
                   value={dataLogin.email}
@@ -52,20 +53,23 @@ const Login: React.FC = () => {
             <div className="mb-6">
                <div className="mb-1 text-sm font-medium text-gray-700">Password *</div>
                <Input
-                  type={'password'}
-                  placeholder={'******'}
+                  type="password"
+                  placeholder="******"
                   value={dataLogin.password}
-                  onChange={(e: any) => onChangeLogin('password', e)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeLogin('password', e)}
                   onFocus={() => onFocusInputLogin('password')}
                   onBlur={() => validateBlur('password')}
-                  onKeyDown={(e: any) => handleKeyDown(e)}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleKeyDown(e)}
                   error={errorDataLogin.password}
                />
             </div>
 
             <div className="flex items-center justify-between mb-6">
                <div className="flex items-center">
-                  <Checkbox checked={checkRemember} onClick={(e) => handleClickCheckBox(e)}>
+                  <Checkbox
+                     checked={checkRemember}
+                     onChange={(e: React.FormEvent<HTMLLabelElement>) => handleClickCheckBox(e)}
+                  >
                      <span className="text-sm text-gray-600">Remember me</span>
                   </Checkbox>
                </div>
@@ -82,7 +86,7 @@ const Login: React.FC = () => {
                <Button
                   className="w-full bg-main-color"
                   loading={loadingLogin}
-                  onClick={() => handleConfirmLogin()}
+                  onClick={handleConfirmLogin}
                   style={{
                      display: 'flex',
                      justifyContent: 'center',
@@ -110,24 +114,24 @@ const Login: React.FC = () => {
                <p className="font-semibold text-gray-600 text-md">Login with socials</p>
 
                <div className="flex items-center justify-center gap-4">
-                  <Tooltip title="LinkedIn" placement="top">
+                  <Tooltip content="LinkedIn" placement="top" showArrow>
                      <div className="w-10 h-10" onClick={loginWithLinkedIn}>
-                        <img src={LinkedIn} alt="LinkedIn" />
+                        <img src={linkedinIcon} alt="LinkedIn" className="w-full h-full" />
                      </div>
                   </Tooltip>
-                  <Tooltip title="Google" placement="top">
+                  <Tooltip content="Google" placement="top" showArrow>
                      <div className="w-10 h-10" onClick={loginWithGoogle}>
-                        <img src={Google} alt="Google" />
+                        <img src={googleIcon} alt="Google" className="w-full h-full" />
                      </div>
                   </Tooltip>
-                  <Tooltip title="Coming soon" placement="top">
+                  <Tooltip content="Coming soon" placement="top" showArrow>
                      <div className="w-10 h-10">
-                        <img src={Facebook} alt="Facebook" />
+                        <img src={facebookIcon} alt="Facebook" className="w-full h-full" />
                      </div>
                   </Tooltip>
-                  <Tooltip title="Coming soon" placement="top">
+                  <Tooltip content="Coming soon" placement="top" showArrow>
                      <div className="w-10 h-10">
-                        <img src={Twitter} alt="Twitter" />
+                        <img src={twitterIcon} alt="Twitter" className="w-full h-full" />
                      </div>
                   </Tooltip>
                </div>

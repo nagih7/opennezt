@@ -1,7 +1,7 @@
 import React from 'react'
 import store from '~/store'
 import moment from 'moment'
-import { notification } from 'antd'
+import { toast } from '~/components/UI/toast'
 import CloseIcon from 'assets/images/icon/close.svg'
 import success from 'assets/images/icon/notification/success_16x16.svg'
 import error from 'assets/images/icon/notification/error_16x16.svg'
@@ -71,3 +71,8 @@ export const isValidPhone = (phone) => {
    }
    return result
 }
+
+export { toast } from 'sonner'
+
+toast.success('Thành công!')
+toast.error('Có lỗi xảy ra!')

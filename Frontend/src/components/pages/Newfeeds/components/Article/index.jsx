@@ -1,5 +1,5 @@
 import React, { forwardRef, useState, useRef, useEffect } from 'react'
-import { CheckCircleFilled } from '@ant-design/icons'
+import { GoPlus } from "react-icons/go";
 import { IconlyBookmark, IconlyDelete, IconlyMoreCircle } from 'components/UI/Iconly'
 import avt from 'assets/images/background/avt.jpg'
 import { IconlyChat } from 'components/UI/Iconly'
@@ -337,7 +337,7 @@ const Article = forwardRef(
                                     >
                                         {user[0]?.name}
                                     </a>
-                                    <CheckCircleFilled className="text-[#3897f0]" />
+                                    <GoPlus  className="text-[#3897f0]" />
                                 </div>
                                 {/* {user[0].name} */}
                                 {project[0] ? (

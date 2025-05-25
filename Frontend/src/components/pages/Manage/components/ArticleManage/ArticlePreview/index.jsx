@@ -1,5 +1,5 @@
 import React, { forwardRef, useState, useEffect } from 'react'
-import { CheckCircleFilled } from '@ant-design/icons'
+import { FaCircleCheck } from "react-icons/fa6";
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
 import { Avatar } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -141,7 +141,7 @@ const ArticlePreview = forwardRef(({ feed }, ref) => {
                 <div className="flex flex-col">
                     <div className="flex items-center gap-2">
                         <span className="font-medium">{user[0]?.name}</span>
-                        <CheckCircleFilled className="text-[#3897f0]" />
+                        <FaCircleCheck className="text-[#3897f0]" />
                         {project[0] && (
                             <span className="text-sm text-gray-600">
                                 in <b>{project[0]?.name}</b>

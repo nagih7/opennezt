@@ -1,6 +1,6 @@
 import React from 'react'
 import avt from 'assets/images/background/avt.jpg'
-import { CheckCircleFilled } from '@ant-design/icons'
+import { FaCircleCheck } from "react-icons/fa6";
 import { Image } from '@chakra-ui/react'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
 import { getReplyComment } from 'api/activity'
@@ -45,7 +45,7 @@ const ReplyComment = ({ reply, reaction, handleReactionReplyComment, selectComme
                 <div className="flex items-center">
                     <a className="flex items-center gap-1 text-sm font-medium no-underline text-black">
                         <span className="hover:text-[#3897f0]">{userData?.name}</span>
-                        {userData.verified && <CheckCircleFilled className="text-[#3897f0] w-[12px] h-[12px]" />}
+                        {userData.verified && <FaCircleCheck className="text-[#3897f0] w-[12px] h-[12px]" />}
                     </a>
                     <div className="pl-3">
                         <span className="text-[#6f7f92] text-xs">replied </span>

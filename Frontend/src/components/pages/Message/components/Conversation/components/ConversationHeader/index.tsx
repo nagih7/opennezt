@@ -1,6 +1,6 @@
 import { Avatar } from '@chakra-ui/react'
 import React, { FC } from 'react'
-import { CheckCircleFilled } from '@ant-design/icons'
+import { FaCircleCheck } from "react-icons/fa6";
 
 interface ConversationHeaderProps {
    name: string
@@ -18,7 +18,7 @@ const ConversationHeader: FC<ConversationHeaderProps> = ({ name, logo }) => {
          </span>
          <span className="flex items-center gap-1 font-[600]">
             {name}
-            <CheckCircleFilled className="text-blue-500" />
+            <FaCircleCheck className="text-blue-500" />
          </span>
       </div>
    )

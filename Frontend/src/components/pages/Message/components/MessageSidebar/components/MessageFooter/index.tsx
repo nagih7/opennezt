@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { CheckCircleFilled } from '@ant-design/icons'
+import { FaCircleCheck } from "react-icons/fa6";
 import { IconlySetting } from 'components/UI/Iconly'
 import { Avatar } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
@@ -19,7 +19,7 @@ const MessageFooter: FC = () => {
             </span>
             <span className="flex items-center text-[#6f7f92] gap-1 text-sm font-medium">
                {authUser?.name}
-               <CheckCircleFilled className="text-blue-500" />
+               <FaCircleCheck className="text-blue-500" />
             </span>
          </span>
          <a href="#" className="w-[50px] h-[50px] flex items-center justify-center">

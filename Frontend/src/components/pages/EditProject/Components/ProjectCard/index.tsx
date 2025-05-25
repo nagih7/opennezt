@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { CheckCircleFilled } from '@ant-design/icons'
+import { FaCircleCheck } from "react-icons/fa6";
 import { useDispatch, useSelector } from 'react-redux'
 import { Avatar } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
@@ -32,7 +32,7 @@ const ProjectCard: React.FC = () => {
          <div>
             <h4 className="flex items-center">
                {project?.name}
-               <CheckCircleFilled className="text-[#3897f0] ml-2" />
+               <FaCircleCheck className="text-[#3897f0] ml-2" />
             </h4>
             <span className="text-[#6f7f92]">
                {project?.created_at ? `Created since ${new Date(project.created_at).getFullYear()}` : ''}

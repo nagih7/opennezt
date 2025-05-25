@@ -1,6 +1,6 @@
 import React from 'react'
 import { IconlyTimeCircle, IconlyArrowRight } from 'components/UI/Iconly'
-import { ArrowsAltOutlined } from '@ant-design/icons'
+import { BsArrowsAngleExpand } from "react-icons/bs";
 import default_logo from '../../../../../assets/images/logo/opennezt_full_black_old.png'
 import style from '../../style.module.scss'
 
@@ -52,7 +52,7 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({
             </div>
             <div className="group-hover:block transition-all duration-700 ease-in-out hidden absolute right-0 top-0 bg-[#ffffff] rounded-lg m-[10px] cursor-pointer">
                <span className="p-2">Share</span>
-               <ArrowsAltOutlined className="border-l p-2" />
+               <BsArrowsAngleExpand  className="border-l p-2" />
             </div>
          </div>
          <div className="p-[10px] bg-[#ffffff] rounded-xl">

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { PlusOutlined } from '@ant-design/icons'
+import { GoPlus } from "react-icons/go";
 import StepHeader from '../StepHeader'
 import { IconlyDelete } from 'components/UI/Iconly'
 import { useDispatch, useSelector } from 'react-redux'
@@ -119,7 +119,7 @@ const Revenue: React.FC = () => {
                            className="flex items-center gap-1 cursor-pointer bg-[#2f65b9] rounded-md text-[#ffffff] px-[20px] py-2 mb-[14px]"
                            onClick={handleAddRevenue}
                         >
-                           <PlusOutlined className="text-[#ffffff]" />
+                           <GoPlus  className="text-[#ffffff]" />
                            <button height={50} className="text-xs bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold">
                               ADD REVENUE
                            </button>

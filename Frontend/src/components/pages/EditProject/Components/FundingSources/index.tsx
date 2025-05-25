@@ -3,7 +3,7 @@ import { Button, createListCollection } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import ActionBar from '../../../EditProfile/components/ActionBar'
 import ProjectEditMenu from '../ProjectEditMenu'
-import { PlusOutlined } from '@ant-design/icons'
+import { GoPlus } from "react-icons/go";
 import ProjectCard from '../ProjectCard'
 import { IconlyDelete } from 'components/UI/Iconly'
 import { useParams } from 'react-router-dom'
@@ -145,7 +145,7 @@ const EditFundingSources: React.FC = () => {
                      className="flex items-center gap-1 cursor-pointer bg-[#2f65b9] rounded-md text-[#ffffff] px-[20px] py-2 mb-[14px]"
                      onClick={handleAddFundingSource}
                   >
-                     <PlusOutlined className="text-[#ffffff]" />
+                     <GoPlus  className="text-[#ffffff]" />
                      <button height={50} className="text-xs bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold">
                         ADD FUNDING SOURCE
                      </button>

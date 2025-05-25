@@ -3,7 +3,7 @@ import { Button } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import SelectCustom from 'components/UI/SelectCustom'
 import { getCategoryFramework, getSkillFramework, getSubCategoryFramework } from 'api/user'
-import { Tag } from 'antd'
+import { Badge } from '~/components/UI/badge'
 import { updateSkillRequirement } from 'api/project'
 import { postProjectDetailsActivitiesProjectRequirement } from 'api/activity'
 import { RootState } from 'store/types'
@@ -177,7 +177,7 @@ const SkillRequirement: React.FC = () => {
             {/* =========== SKILLS ========== */}
             {mySkills?.map((skill, index) => (
                <div key={index} className="relative group">
-                  <Tag className="relative bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-full flex-wrap text-[1rem] cursor-pointer">
+                  <Badge className="relative bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-full flex-wrap text-[1rem] cursor-pointer">
                      <div
                         className="absolute top-[-6px] right-[-6px] text-blue-500 bg-white rounded-full px-[4px] hidden group-hover:block "
                         onClick={() => handleRemoveSkill(skill)}
@@ -185,7 +185,7 @@ const SkillRequirement: React.FC = () => {
                         ✕
                      </div>
                      {skill.name}
-                  </Tag>
+                  </Badge>
                </div>
             ))}
          </div>

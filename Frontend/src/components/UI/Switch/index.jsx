@@ -1,31 +1,26 @@
 import React from 'react'
-import { Switch } from 'antd'
+import { Switch } from '../../../ui/switch'
 import PropTypes from 'prop-types'
 import './styles.scss'
 
 SwitchMASQ.propTypes = {
-    onChange: PropTypes.func,
-    status: PropTypes.bool.isRequired,
-    disabled: PropTypes.bool.isRequired,
-    type: PropTypes.string,
+   onChange: PropTypes.func,
+   status: PropTypes.bool.isRequired,
+   disabled: PropTypes.bool.isRequired,
+   type: PropTypes.string,
 }
 
 SwitchMASQ.defaultProps = {
-    status: false,
-    disabled: false,
+   status: false,
+   disabled: false,
 }
 
 function SwitchMASQ(props) {
-    return (
-        <div className={`${props.type !== 'TABLE' ? 'switch-style-custom' : 'switch-table-style-custom'}`}>
-            <Switch
-                size={'small'}
-                disabled={props.disabled}
-                checked={props.status}
-                onChange={(e) => props.onChange(e)}
-            />
-        </div>
-    )
+   return (
+      <div className={`${props.type !== 'TABLE' ? 'switch-style-custom' : 'switch-table-style-custom'}`}>
+         <Switch checked={props.status} disabled={props.disabled} onCheckedChange={props.onChange} size="small" />
+      </div>
+   )
 }
 
 export default SwitchMASQ

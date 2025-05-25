@@ -8,7 +8,7 @@ import ProfileEditMenu from '../ProfileEditMenu'
 import ActionBar from '../ActionBar'
 import SelectCustom from 'components/UI/SelectCustom'
 import { toaster } from 'components/UI/toaster'
-import { Tag } from 'antd'
+import { Badge } from '~/components/UI/badge'
 import { AppDispatch } from '~/store/store.types'
 import { RootState } from '~/store'
 
@@ -208,7 +208,7 @@ const Skills = (): React.ReactElement => {
                   {/* =========== SKILLS ========== */}
                   {mySkills?.map((skill, index) => (
                      <div key={index} className="relative group">
-                        <Tag className="relative bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-full flex-wrap text-[1rem] cursor-pointer">
+                        <Badge className="relative bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-full flex-wrap text-[1rem] cursor-pointer">
                            <div
                               className="absolute top-[-6px] right-[-6px] text-blue-500 bg-white rounded-full px-[4px] hidden group-hover:block "
                               onClick={() => handleRemoveSkill(skill)}
@@ -216,7 +216,7 @@ const Skills = (): React.ReactElement => {
                               ✕
                            </div>
                            {skill.name}
-                        </Tag>
+                        </Badge>
                      </div>
                   ))}
                </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { CheckCircleFilled } from '@ant-design/icons'
+import { FaCircleCheck } from "react-icons/fa6";
 import fb_img from 'assets/images/background/left-banner.webp'
 import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import moment from 'moment'
@@ -75,7 +75,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({ activities, action }) => {
                            <a href="#" className="text-black no-underline">
                               {activity.user?.name}
                            </a>
-                           <CheckCircleFilled className="text-[#3897f0] mx-1" />
+                           <FaCircleCheck className="text-[#3897f0] mx-1" />
                            {action(activity.project ? activity.project : activity)}{' '}
                            <a href="#" className="no-underline text-[#6f7f92]">
                               <span className="text-xs">{moment(activity.timestamp).fromNow()}</span>

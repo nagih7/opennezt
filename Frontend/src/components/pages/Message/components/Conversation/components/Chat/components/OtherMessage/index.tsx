@@ -1,5 +1,4 @@
 import { Avatar } from '@chakra-ui/react'
-// import { RollbackOutlined, MoreOutlined } from '@ant-design/icons'
 // import { IconlyStar } from 'components/UI/Iconly'
 import moment from 'moment'
 import React, { FC } from 'react'

@@ -1,5 +1,6 @@
 import { IconlyAddUser, IconlyArrowLeft2 } from 'components/UI/Iconly'
-import { ArrowsAltOutlined, MoreOutlined } from '@ant-design/icons'
+import { BsArrowsAngleExpand } from "react-icons/bs";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 import React, { FC, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -96,7 +97,7 @@ const Conversation: FC = () => {
                </div>
                <div className="flex items-center">
                   <span className="flex items-center justify-center text-[#6f7f92] w-[50px] h-11">
-                     <ArrowsAltOutlined />
+                     <BsArrowsAngleExpand  />
                   </span>
 
                   <Popover.Root
@@ -111,7 +112,7 @@ const Conversation: FC = () => {
                         >
                            <Tooltip content="More" openDelay={0} closeDelay={100} positioning={{ placement: 'top' }}>
                               <span>
-                                 <MoreOutlined />
+                                 <HiOutlineDotsVertical  />
                               </span>
                            </Tooltip>
                         </span>

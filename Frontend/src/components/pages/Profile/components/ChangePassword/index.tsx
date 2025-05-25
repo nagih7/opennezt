@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
-import ButtonMASQ from '../../../../../components/UI/Button'
-import { Col, Row } from 'antd'
-import { Input } from '~/components/UI/input'
-import _ from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
-import { handleCheckValidateConfirm } from '../../../../../utils/helper'
 import { handleChangePassword } from '../../../../../api/profile'
-import { setErrorChangePassword } from '../../../../../store/modules/profile'
 import { Button } from '@chakra-ui/react'
 
 interface DataChangePassword {
@@ -16,18 +10,13 @@ interface DataChangePassword {
    confirmPassword: string
 }
 
-interface AuthAccount {
-   name: string
-}
-
 function ChangePassword() {
-   const authUser = useSelector((state: any) => state.auth.authUser) as AuthAccount
+   const authUser = useSelector((state: any) => state.auth.authUser)
    const [dataChangePassword, setDataChangePassword] = useState<DataChangePassword>({
       currentPassword: '',
       password: '',
       confirmPassword: '',
    })
-   const errorChangePassword = useSelector((state: any) => state.profile.errorChangePassword)
    const loadingBtnChangePassword = useSelector((state: any) => state.profile.loadingBtnChangePassword)
    const dispatch = useDispatch()
 
@@ -39,34 +28,19 @@ function ChangePassword() {
       })
    }, [authUser])
 
-   const handleChangeInput = (valueInput: React.ChangeEvent<HTMLInputElement>, type: keyof DataChangePassword) => {
-      let value = valueInput.target.value
-      let dataCloneDeep = dataChangePassword
-      let data = _.cloneDeep(dataCloneDeep)
-      data[type] = value
-      setDataChangePassword(data)
-   }
-
-   const validateBlur = (type: keyof DataChangePassword) => {
-      // let data = dataChangePassword
-      // let error = errorChangePassword
-      // let validate = isValidate(data, type, error)
-      // dispatch(setErrorChangePassword(validate.error))
-      // return validate.isError
+   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>, type: keyof DataChangePassword) => {
+      setDataChangePassword((prev) => ({
+         ...prev,
+         [type]: e.target.value,
+      }))
    }
 
    const handleConfirmChangePassword = () => {
-      let dataValidate = dataChangePassword
-      let data = new FormData()
-      data.append(`current_password`, dataChangePassword.currentPassword)
-      data.append(`password`, dataChangePassword.password)
-      data.append(`password_confirmation`, dataChangePassword.confirmPassword)
-
-      // let validate = handleCheckValidateConfirm(dataValidate, errorChangePassword)
-      // dispatch(setErrorChangePassword(validate.dataError))
-      // if (!validate.isError) {
-      dispatch(handleChangePassword(data))
-      // }
+      const data = new FormData()
+      data.append('current_password', dataChangePassword.currentPassword)
+      data.append('password', dataChangePassword.password)
+      data.append('password_confirmation', dataChangePassword.confirmPassword)
+      dispatch(handleChangePassword(data) as any)
    }
 
    return (
@@ -83,7 +57,6 @@ function ChangePassword() {
                         type={'password'}
                         placeholder={'Enter current password...'}
                         onChange={(e) => handleChangeInput(e, 'currentPassword')}
-                        onBlur={() => validateBlur('currentPassword')}
                         value={dataChangePassword.currentPassword}
                         className="p-[14px] border-[1px] w-full outline-none border-gray-200 rounded-lg "
                      />
@@ -99,7 +72,6 @@ function ChangePassword() {
                         type={'password'}
                         placeholder={'Enter new password...'}
                         onChange={(e) => handleChangeInput(e, 'password')}
-                        onBlur={() => validateBlur('password')}
                         value={dataChangePassword.password}
                         className="p-[14px] border-[1px] w-full outline-none border-gray-200 rounded-lg "
                      />
@@ -115,7 +87,6 @@ function ChangePassword() {
                         type={'password'}
                         placeholder={'Enter confirm new password...'}
                         onChange={(e) => handleChangeInput(e, 'confirmPassword')}
-                        onBlur={() => validateBlur('confirmPassword')}
                         value={dataChangePassword.confirmPassword}
                         className="p-[14px] border-[1px] w-full outline-none border-gray-200 rounded-lg "
                      />
@@ -129,10 +100,10 @@ function ChangePassword() {
                </div>
                <div className="flex justify-end">
                   <Button
-                     onClick={() => handleConfirmChangePassword()}
-                     isLoading={loadingBtnChangePassword}
+                     onClick={handleConfirmChangePassword}
+                     loading={loadingBtnChangePassword}
                      height={50}
-                     className="mt-[14px]  text-sm px-[18px] py-2 sm:text-base sm:px-[28px] sm:py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
+                     className="mt-[14px] text-sm px-[18px] py-2 sm:text-base sm:px-[28px] sm:py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
                      borderRadius={4}
                      loadingText="Loading..."
                      spinnerPlacement="start"
