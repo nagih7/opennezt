@@ -10,18 +10,18 @@ const AppLayout = React.lazy(() => import('components/layouts/AppLayout'))
 const AuthLayout = React.lazy(() => import('components/layouts/AuthLayout'))
 
 // Auth pages
-const Login = React.lazy(() => import('../components/pages/Auth/Login'))
-const Register = React.lazy(() => import('../components/pages/Auth/Register'))
-const ForgotPassword = React.lazy(() => import('../components/pages/Auth/ForgotPassword'))
-const VerifyAuth = React.lazy(() => import('../components/pages/Auth/Verify'))
-const ResetPassword = React.lazy(() => import('../components/pages/Auth/ResetPassword'))
+const Login = React.lazy(() => import('components/pages/Auth/Login'))
+const Register = React.lazy(() => import('components/pages/Auth/Register'))
+const ForgotPassword = React.lazy(() => import('components/pages/Auth/ForgotPassword'))
+const VerifyAuth = React.lazy(() => import('components/pages/Auth/Verify'))
+const ResetPassword = React.lazy(() => import('components/pages/Auth/ResetPassword'))
 
 // Main pages
-const Home = React.lazy(() => import('../components/pages/Home'))
-const Profile = React.lazy(() => import('../components/pages/Profile'))
-const About = React.lazy(() => import('../components/pages/About'))
-const Message = React.lazy(() => import('../components/pages/Message'))
-const Project = React.lazy(() => import('../components/pages/Project'))
+const Home = React.lazy(() => import('components/pages/Home'))
+const Profile = React.lazy(() => import('components/pages/Profile'))
+const About = React.lazy(() => import('components/pages/About'))
+const Message = React.lazy(() => import('components/pages/Message'))
+const Project = React.lazy(() => import('components/pages/Project'))
 
 // Project related pages
 const ProjectFeatures = {
@@ -53,13 +53,11 @@ const ProjectFeatures = {
 
 // Edit Profile related pages
 const EditProfileFeatures = {
-   ProfessionalBackground: React.lazy(
-      () => import('../components/pages/EditProfile/components/ProfessionalBackground')
-   ),
-   Educations: React.lazy(() => import('../components/pages/EditProfile/components/Educations')),
+   ProfessionalBackground: React.lazy(() => import('components/pages/EditProfile/components/ProfessionalBackground')),
+   Educations: React.lazy(() => import('components/pages/EditProfile/components/Educations')),
    Certifications: React.lazy(() => import('components/pages/EditProfile/components/Certifications')),
-   Skills: React.lazy(() => import('../components/pages/EditProfile/components/Skills')),
-   AdditionalInfo: React.lazy(() => import('../components/pages/EditProfile/components/AdditionalInfo')),
+   Skills: React.lazy(() => import('components/pages/EditProfile/components/Skills')),
+   AdditionalInfo: React.lazy(() => import('components/pages/EditProfile/components/AdditionalInfo')),
 }
 
 // Account Settings related pages
@@ -74,28 +72,18 @@ const AccountSettingsFeatures = {
 
 // Talent related pages
 const TalentFeatures = {
-   RecruitTalents: React.lazy(() => import('../components/pages/RecruitTalents')),
-   TalentDetails: React.lazy(() => import('../components/pages/TalentDetails')),
-   SeekProjects: React.lazy(() => import('../components/pages/SeekProjects')),
-   ProjectDetailsBySeek: React.lazy(() => import('../components/pages/ProjectDetailsBySeek')),
-}
-
-// Admin related pages
-const AdminFeatures = {
-   Manage: React.lazy(() => import('../components/pages/Manage')),
-   UserManagement: React.lazy(() => import('../components/pages/UserManagement')),
-   RoleManage: React.lazy(() => import('../components/pages/Manage/components/RoleManage')),
-   TypeManage: React.lazy(() => import('../components/pages/Manage/components/TypeManage')),
-   IndustryManage: React.lazy(() => import('../components/pages/Manage/components/IndustryManage')),
-   ExperienceLevelManage: React.lazy(() => import('../components/pages/Manage/components/ExperienceLevelManage')),
-   CategoryManage: React.lazy(() => import('../components/pages/Manage/components/CategoryManage')),
-   SkillManage: React.lazy(() => import('../components/pages/Manage/components/SkillManage')),
-   OrganizationManage: React.lazy(() => import('../components/pages/Manage/components/OrganizationManage')),
-   ArticleManage: React.lazy(() => import('../components/pages/Manage/components/ArticleManage')),
+   RecruitTalents: React.lazy(() => import('components/pages/RecruitTalents')),
+   TalentDetails: React.lazy(() => import('components/pages/TalentDetails')),
+   SeekProjects: React.lazy(() => import('components/pages/SeekProjects')),
+   ProjectDetailsBySeek: React.lazy(() => import('components/pages/ProjectDetailsBySeek')),
 }
 
 // Other components
-const Interview = React.lazy(() => import('components/common/ModalMatchingProjects/components/Interview'))
+const Interview = React.lazy(() => import('components/pages/Interview/Preview'))
+
+// Admin related pages
+// const AdminFeatures = {
+// }
 
 // Define a helper function to create properly typed loader functions
 const createLoader = (
@@ -522,6 +510,11 @@ const router: RouteObject[] = [
    },
    {
       path: ROUTE_CONFIG.USER.INTERVIEW.PREFIX,
+      element: withSuspense(<Interview />),
+      loader: createLoader(true, 'LOAD_INTERVIEW_PAGE'),
+   },
+   {
+      path: ROUTE_CONFIG.USER.INTERVIEW.DETAIL,
       element: withSuspense(<Interview />),
       loader: createLoader(true, 'LOAD_INTERVIEW_PAGE'),
    },

@@ -43,11 +43,14 @@ export default async function callReduxApi({
    if (!isFunction(dispatch) || !isFunction(getState)) {
       throw new Error('callGraphQLApi requires dispatch and getState functions')
    }
-
    const baseUrlApi = import.meta.env.VITE_API_URL
    const token = TokenManager.getUserToken()
+
+   // Check if variables is FormData to avoid setting Content-Type
+   const isFormData = variables instanceof FormData
+
    const header: Record<string, string> = {
-      'Content-Type': 'application/json',
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
       Authorization: token ? `Bearer ${token}` : '',
    }
 

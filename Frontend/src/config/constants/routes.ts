@@ -96,7 +96,7 @@ export const ROUTE_CONFIG = {
       // INTERVIEW
       INTERVIEW: {
          PREFIX: '/interviews/',
-         DETAIL: '/interviews/:id',
+         DETAIL: '/interviews/:projectId',
          CREATE: '/interviews/create',
          SCHEDULE: '/interviews/schedule',
          QUESTIONS: '/interviews/questions',
