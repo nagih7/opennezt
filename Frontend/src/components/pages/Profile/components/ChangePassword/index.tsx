@@ -2,46 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleChangePassword } from '../../../../../api/profile'
 import { Button } from '@chakra-ui/react'
-
-interface DataChangePassword {
-   currentPassword: string
-   password: string
-   confirmPassword: string
-}
+import useChangePassword from './hooks/useChangePassword'
 
 function ChangePassword() {
-   const authUser = useSelector((state: any) => state.auth.authUser)
-   const [dataChangePassword, setDataChangePassword] = useState<DataChangePassword>({
-      currentPassword: '',
-      password: '',
-      confirmPassword: '',
-   })
-   const loadingBtnChangePassword = useSelector((state: any) => state.profile.loadingBtnChangePassword)
-   const dispatch = useDispatch()
-
-   useEffect(() => {
-      setDataChangePassword({
-         currentPassword: '',
-         password: '',
-         confirmPassword: '',
-      })
-   }, [authUser])
-
-   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>, type: keyof DataChangePassword) => {
-      setDataChangePassword((prev) => ({
-         ...prev,
-         [type]: e.target.value,
-      }))
-   }
-
-   const handleConfirmChangePassword = () => {
-      const data = new FormData()
-      data.append('current_password', dataChangePassword.currentPassword)
-      data.append('password', dataChangePassword.password)
-      data.append('password_confirmation', dataChangePassword.confirmPassword)
-      dispatch(handleChangePassword(data) as any)
-   }
-
+   const {
+      dataChangePassword,
+        loadingBtnChangePassword,
+        handleChangeInput,
+        handleConfirmChangePassword,
+   } = useChangePassword()
    return (
       <div className="rounded-2xl px-4 my-8">
          <div className="bg-[#fff] rounded-md">

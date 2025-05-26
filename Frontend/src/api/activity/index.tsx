@@ -1,3 +1,4 @@
+import { Dispatch } from 'redux'
 import callReduxApi, { callApiSimple } from 'api/callReduxApi'
 
 import {
@@ -17,10 +18,6 @@ import {
    requestAccessToTalent,
    accessToTalentSuccess,
    accessToTalentFailure,
-   // ========== ACCESS TO MY PROFILE ========== //
-   requestGetAccessToMyProfile,
-   getAccessToMyProfileSuccess,
-   getAccessToMyProfileFail,
    // ========== GET ACTIVITIES ARTICLE ========== //
    requestGetActivities,
    getActivitiesSuccess,
@@ -30,9 +27,10 @@ import {
    getProjectDetailsActivitySuccess,
    getProjectDetailsActivityFail,
 } from 'store/modules/activity'
+import callApi from '../callApi'
 
 // ========== PROJECT ACCESS ========== //
-export const accessToProject = (projectId) => async (dispatch, getState) => {
+export const accessToProject = (projectId: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'post',
       apiPath: `projects/${projectId}/access`,
@@ -44,7 +42,7 @@ export const accessToProject = (projectId) => async (dispatch, getState) => {
 }
 
 // ========== MY PROJECT ACCESS ========== //
-export const getMyProjectAccess = () => async (dispatch, getState) => {
+export const getMyProjectAccess = () => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'get',
       apiPath: `projects/access/me`,
@@ -56,7 +54,7 @@ export const getMyProjectAccess = () => async (dispatch, getState) => {
 }
 
 // ========== ACCESS TO MY PROJECTS ========== //
-export const getAccessToMyProjects = () => async (dispatch, getState) => {
+export const getAccessToMyProjects = () => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'get',
       apiPath: `projects/me/access`,
@@ -68,7 +66,7 @@ export const getAccessToMyProjects = () => async (dispatch, getState) => {
 }
 
 // ========== TALENT ACCESS ========== //
-export const accessToTalent = (profileId) => async (dispatch, getState) => {
+export const accessToTalent = (profileId: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'post',
       apiPath: `talents/${profileId}/access`,
@@ -80,21 +78,17 @@ export const accessToTalent = (profileId) => async (dispatch, getState) => {
 }
 
 // ========== ACCESS TO MY PROFILE ========== //
-export const getAccessToMyProfile = () => async (dispatch, getState) => {
-   return callReduxApi({
+export const getAccessToMyProfile = () => {
+   return callApi({
       method: 'get',
-      apiPath: `profile/me/access`,
-      actionTypes: [requestGetAccessToMyProfile, getAccessToMyProfileSuccess, getAccessToMyProfileFail],
-      variables: {},
-      dispatch,
-      getState,
+      apiPath: `profile/me/access`
    })
 }
 
 // ========== GET ACTIVITIES ARTICLE ========== //
 export const getActivitiesArticle =
-   (options = {}) =>
-   async (dispatch, getState) => {
+   (options: any = {}) =>
+   async (dispatch: Dispatch, getState: () => any) => {
       return callReduxApi({
          method: 'get',
          apiPath: `article/activities`,
@@ -106,7 +100,7 @@ export const getActivitiesArticle =
    }
 
 // ========== POST ACTIVITIES CREATE ARTICLE ========== //
-export const postActivityCreateArticle = async (articleId) => {
+export const postActivityCreateArticle = async (articleId: any): Promise<any> => {
    return callApiSimple({
       method: 'post',
       apiPath: `article/activity/create/${articleId}`,
@@ -115,7 +109,7 @@ export const postActivityCreateArticle = async (articleId) => {
 }
 
 // ========== POST ACTIVITIES UPDATE ARTICLE ========== //
-export const postActivityUpdateArticle = async (articleId) => {
+export const postActivityUpdateArticle = async (articleId: any): Promise<any> => {
    return callApiSimple({
       method: 'post',
       apiPath: `article/activity/update/${articleId}`,
@@ -124,7 +118,7 @@ export const postActivityUpdateArticle = async (articleId) => {
 }
 
 // ========== POST ACTIVITIES SAVE ARTICLE ========== //
-export const postActivitySaveArticle = async (articleId) => {
+export const postActivitySaveArticle = async (articleId: any): Promise<any> => {
    return callApiSimple({
       method: 'post',
       apiPath: `article/activity/save/${articleId}`,
@@ -133,7 +127,7 @@ export const postActivitySaveArticle = async (articleId) => {
 }
 
 // ========== DELETE ACTIVITIES SAVE ARTICLE ========== //
-export const deleteActivitySaveArticle = async (avitityId) => {
+export const deleteActivitySaveArticle = async (avitityId: any): Promise<any> => {
    return callApiSimple({
       method: 'delete',
       apiPath: `article/activity/save/${avitityId}`,
@@ -142,7 +136,7 @@ export const deleteActivitySaveArticle = async (avitityId) => {
 }
 
 // ========== GET PROJECT DETAILS ACTIVITIES ========== //
-export const getProjectDetailsActivities = (projectId) => async (dispatch, getState) => {
+export const getProjectDetailsActivities = (projectId: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'get',
       apiPath: `projects/me/${projectId}/activities`,
@@ -154,7 +148,7 @@ export const getProjectDetailsActivities = (projectId) => async (dispatch, getSt
 }
 
 // ========== POST PROJECT DETAILS ACTIVITIES [ BASIC ] ========== //
-export const postProjectDetailsActivitiesBasic = async (projectId, formRequest) => {
+export const postProjectDetailsActivitiesBasic = async (projectId: any, formRequest: any): Promise<any> => {
    return callApiSimple({
       method: 'post',
       apiPath: `projects/me/${projectId}/basic/activity`,
@@ -163,7 +157,7 @@ export const postProjectDetailsActivitiesBasic = async (projectId, formRequest) 
 }
 
 // ========== POST PROJECT DETAILS ACTIVITIES [ SECTOR ] ========== //
-export const postProjectDetailsActivitiesSector = async (projectId, formRequest) => {
+export const postProjectDetailsActivitiesSector = async (projectId: any, formRequest: any): Promise<any> => {
    return callApiSimple({
       method: 'post',
       apiPath: `projects/me/${projectId}/sector/activity`,
@@ -171,7 +165,7 @@ export const postProjectDetailsActivitiesSector = async (projectId, formRequest)
    })
 }
 // ========== POST PROJECT DETAILS ACTIVITIES [ REVENUE ] ========== //
-export const postProjectDetailsActivitiesRevenue = async (projectId, formRequest) => {
+export const postProjectDetailsActivitiesRevenue = async (projectId: any, formRequest: any): Promise<any> => {
    return callApiSimple({
       method: 'post',
       apiPath: `projects/me/${projectId}/revenues/activity`,
@@ -179,7 +173,7 @@ export const postProjectDetailsActivitiesRevenue = async (projectId, formRequest
    })
 }
 // ========== POST PROJECT DETAILS ACTIVITIES [ FUNDING SOURCE ] ========== //
-export const postProjectDetailsActivitiesFundingSource = async (projectId, formRequest) => {
+export const postProjectDetailsActivitiesFundingSource = async (projectId: any, formRequest: any): Promise<any> => {
    return callApiSimple({
       method: 'post',
       apiPath: `projects/me/${projectId}/funding-sources/activity`,
@@ -187,7 +181,7 @@ export const postProjectDetailsActivitiesFundingSource = async (projectId, formR
    })
 }
 // ========== POST PROJECT DETAILS ACTIVITIES [ ADDITIONAL INFO ] ========== //
-export const postProjectDetailsActivitiesAdditionalInfo = async (projectId, formRequest) => {
+export const postProjectDetailsActivitiesAdditionalInfo = async (projectId: any, formRequest: any): Promise<any> => {
    return callApiSimple({
       method: 'post',
       apiPath: `projects/me/${projectId}/additional-infos/activity`,
@@ -195,7 +189,7 @@ export const postProjectDetailsActivitiesAdditionalInfo = async (projectId, form
    })
 }
 // ========== POST PROJECT DETAILS ACTIVITIES [ LOGO ] ========== //
-export const postProjectDetailsActivitiesLogo = async (projectId, formRequest) => {
+export const postProjectDetailsActivitiesLogo = async (projectId: any, formRequest: any): Promise<any> => {
    return callApiSimple({
       method: 'post',
       apiPath: `projects/me/${projectId}/logo/activity`,
@@ -203,7 +197,7 @@ export const postProjectDetailsActivitiesLogo = async (projectId, formRequest) =
    })
 }
 // ========== POST PROJECT DETAILS ACTIVITIES [ BACKGROUND ] ========== //
-export const postProjectDetailsActivitiesBackground = async (projectId, formRequest) => {
+export const postProjectDetailsActivitiesBackground = async (projectId: any, formRequest: any): Promise<any> => {
    return callApiSimple({
       method: 'post',
       apiPath: `projects/me/${projectId}/background/activity`,
@@ -211,7 +205,7 @@ export const postProjectDetailsActivitiesBackground = async (projectId, formRequ
    })
 }
 // ========== POST PROJECT DETAILS ACTIVITIES [ PROJECT REQUIREMENT ] ========== //
-export const postProjectDetailsActivitiesProjectRequirement = async (projectId) => {
+export const postProjectDetailsActivitiesProjectRequirement = async (projectId: any): Promise<any> => {
    return callApiSimple({
       method: 'post',
       apiPath: `projects/me/${projectId}/requirements/activity`,
@@ -219,7 +213,7 @@ export const postProjectDetailsActivitiesProjectRequirement = async (projectId) 
    })
 }
 // ========== POST PROJECT DETAILS ACTIVITIES [ NEW MEMBER ] ========== //
-export const postProjectDetailsActivitiesNewMember = async (invitationId) => {
+export const postProjectDetailsActivitiesNewMember = async (invitationId: any): Promise<any> => {
    return callApiSimple({
       method: 'post',
       apiPath: `projects/me/new-member/activity/${invitationId}`,

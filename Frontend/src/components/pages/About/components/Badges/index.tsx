@@ -1,5 +1,4 @@
 import React from 'react'
-import { Tabs as ChakraTabs } from '@chakra-ui/react'
 import RightSidebar from 'components/common/RightSidebar'
 
 const BookmarkedArticle: React.FC = () => <div>Bookmarked Articles Component</div>

@@ -77,19 +77,6 @@ const activitySlice = createSlice({
       accessToTalentFailure: (state: ActivityState) => ({
          ...state,
          isLoadingAccessTalent: false,
-      }), // ========== ACCESS TO MY PROFILE ========== //
-      requestGetAccessToMyProfile: (state: ActivityState) => ({
-         ...state,
-         isLoadingGetAccessToMyProfile: true,
-      }),
-      getAccessToMyProfileSuccess: (state: ActivityState, action: PayloadAction<any>) => ({
-         ...state,
-         accessToMyProfile: action.payload.data,
-         isLoadingGetAccessToMyProfile: false,
-      }),
-      getAccessToMyProfileFail: (state: ActivityState) => ({
-         ...state,
-         isLoadingGetAccessToMyProfile: false,
       }), // ========== GET ACTIVITIES ARTICLE ========== //
       requestGetActivities: (state: ActivityState) => ({
          ...state,
@@ -191,9 +178,6 @@ export const {
    requestAccessToTalent,
    accessToTalentSuccess,
    accessToTalentFailure,
-   requestGetAccessToMyProfile,
-   getAccessToMyProfileSuccess,
-   getAccessToMyProfileFail,
    requestGetActivities,
    getActivitiesSuccess,
    getActivitiesFail,

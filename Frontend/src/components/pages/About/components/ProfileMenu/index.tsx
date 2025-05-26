@@ -2,13 +2,7 @@ import { IconlyMessage, IconlyProfile, IconlyUser } from 'components/UI/Iconly'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ROUTE_CONFIG } from '~/config/constants/routes'
-
-type TabType = 'About' | 'Friends' | 'Groups' | 'Timeline' | 'Badges' | 'Messages' | 'Notifications' | 'Courses'
-
-interface ProfileMenuProps {
-   changeTab: TabType
-   setChangeTab: (tab: TabType) => void
-}
+import { ProfileMenuProps } from './types'
 
 const ProfileMenu: React.FC<ProfileMenuProps> = ({ changeTab, setChangeTab }) => {
    return (

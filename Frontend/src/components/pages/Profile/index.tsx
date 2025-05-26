@@ -8,52 +8,18 @@ import { changeAvatar, changeBackground } from 'api/profile'
 import resizeLogo from 'utils/files/resizeLogo'
 import resizeBackground from 'utils/files/resizeBackground'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '~/components/UI/tabs'
-
-interface AuthAccount {
-   name: string
-   avatar?: string
-   background?: string
-}
+import useProfile from './hooks/useProfile'
 
 function Profile() {
-   const authUser = useSelector((state: any) => state.auth.authUser) as AuthAccount
-   const [avatar, setAvatar] = useState<string>('')
-   const [background, setBackground] = useState<string>('')
-   const [keyTable, setKeyTable] = useState<string>('1')
-
-   useEffect(() => {
-      if (authUser.avatar) {
-         setAvatar(authUser.avatar)
-      }
-      if (authUser.background) {
-         setBackground(authUser.background)
-      }
-   }, [authUser])
-
-   const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0]
-      if (file) {
-         const avatar = await resizeLogo(file)
-         const formData = new FormData()
-         formData.append('avatar', avatar)
-         await store.dispatch(changeAvatar(formData))
-         setAvatar(URL.createObjectURL(avatar))
-         // Hiển thị thông báo thành công nếu cần
-      }
-   }
-
-   const handleBackgroundChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0]
-      if (file) {
-         const background = await resizeBackground(file)
-         const formData = new FormData()
-         formData.append('background', background)
-         await store.dispatch(changeBackground(formData))
-         setBackground(URL.createObjectURL(background))
-         // Hiển thị thông báo thành công nếu cần
-      }
-   }
-
+   const {
+      authUser,
+      background,
+      avatar,
+      keyTable,
+      setKeyTable,
+      handleBackgroundChange,
+      handleAvatarChange
+   } = useProfile()
    return (
       <div className="w-full h-full">
          <div className="flex flex-wrap -mx-2">

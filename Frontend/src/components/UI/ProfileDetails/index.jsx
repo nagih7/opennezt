@@ -42,7 +42,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">Professional Background</h5>
                <span
-                  onClick={() => navigate('/profile/edit-profile/professional-background')}
+                  onClick={() => navigate('/profile/edit/professional-background')}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -73,7 +73,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">Education</h5>
                <span
-                  onClick={() => navigate('/profile/edit-profile/educations')}
+                  onClick={() => navigate('/profile/edit/education')}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -112,7 +112,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">Certification</h5>
                <span
-                  onClick={() => navigate('/profile/edit-profile/certifications')}
+                  onClick={() => navigate('/profile/edit/certification')}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -165,7 +165,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">Expertise</h5>
                <span
-                  onClick={() => navigate('/profile/edit-profile/skills')}
+                  onClick={() => navigate('/profile/edit/skill')}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -252,7 +252,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">More </h5>
                <span
-                  onClick={() => navigate('/profile/edit-profile/more')}
+                  onClick={() => navigate('/profile/edit/description')}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />

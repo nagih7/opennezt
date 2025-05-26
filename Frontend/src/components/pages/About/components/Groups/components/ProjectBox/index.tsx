@@ -1,35 +1,15 @@
 import { Avatar, Button, Image } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React from 'react'
 import { FaRegFileAlt, FaUsers } from 'react-icons/fa'
 import { OPENNEZT_BG_BLACK } from 'utils/constants'
-
-interface User {
-   name?: string
-   avatar?: string
-}
-
-interface Member {
-   user?: User
-}
-
-interface Project {
-   _id?: string
-   name: string
-   background: string
-   logo: string
-   articles?: any[]
-   members?: Member[]
-}
-
-interface ProjectBoxProps {
-   project: Project
-}
+import { ProjectBoxProps } from './types'
+import useProjectBox from './hooks/useProjectBox'
 
 const ProjectBox: React.FC<ProjectBoxProps> = ({ project }) => {
-   // ========== STATE ========== //
-   const [errorBG, setErrorBG] = useState<boolean>(false)
-
-   // ========== RENDER ========== //
+   const {
+      errorBG,
+      setErrorBG
+   } = useProjectBox()
    return (
       <div className="bg-white  rounded-xl  w-100% h-[24.5rem] text-center border">
          <div className="w-full h-28 bg-gradient-to-r from-blue-500 to-indigo-700">

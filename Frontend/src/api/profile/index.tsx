@@ -7,9 +7,9 @@ import {
    updateInfoUser,
    updateInfoUserFail,
    updateInfoUserSuccess,
-   changeAvatarUser,
-   changeAvatarUserSuccess,
-   changeAvatarUserFail,
+   // changeAvatarUser,
+   // changeAvatarUserSuccess,
+   // changeAvatarUserFail,
    changeBackgroundUser,
    changeBackgroundUserSuccess,
    changeBackgroundUserFail,
@@ -53,13 +53,11 @@ import {
    requestDeleleProfileAdditionalInfo,
    deleteProfileAdditionalInfoSuccess,
    deleteProfileAdditionalInfoFail,
-   // ========== FRIENDS ========= //
-   requestGetMyFriends,
-   getMyFriendsSuccess,
-   getMyFriendsFail,
 } from '../../store/modules/profile'
+import { Dispatch } from 'redux'
+import callApi from '../callApi'
 
-export const updateUser = (data) => async (dispatch, getState) => {
+export const updateUser = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'put',
       apiPath: `/users`,
@@ -70,7 +68,7 @@ export const updateUser = (data) => async (dispatch, getState) => {
    })
 }
 
-export const handleChangePassword = (data) => async (dispatch, getState) => {
+export const handleChangePassword = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'patch',
       apiPath: `/auth/change-password`,
@@ -81,18 +79,18 @@ export const handleChangePassword = (data) => async (dispatch, getState) => {
    })
 }
 
-export const changeAvatar = (formData) => async (dispatch, getState) => {
-   return callReduxApi({
+export const changeAvatar = (formData: FormData) => {
+   return callApi({
       method: 'put',
       apiPath: `/users/avatar`,
-      actionTypes: [changeAvatarUser, changeAvatarUserSuccess, changeAvatarUserFail],
       variables: formData,
-      dispatch,
-      getState,
+      headers: {
+         'Content-Type': 'multipart/form-data'
+      }
    })
 }
 
-export const changeBackground = (formData) => async (dispatch, getState) => {
+export const changeBackground = (formData: FormData) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'put',
       apiPath: `/users/background`,
@@ -104,7 +102,7 @@ export const changeBackground = (formData) => async (dispatch, getState) => {
 }
 
 // ========== Profile ========== //
-export const getProfile = () => async (dispatch, getState) => {
+export const getProfile = () => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'get',
       apiPath: `/profile`,
@@ -114,7 +112,7 @@ export const getProfile = () => async (dispatch, getState) => {
    })
 }
 
-export const updateProfessionalProfile = (data) => async (dispatch, getState) => {
+export const updateProfessionalProfile = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'put',
       apiPath: `/profile/professional`,
@@ -126,7 +124,7 @@ export const updateProfessionalProfile = (data) => async (dispatch, getState) =>
 }
 
 // ========== Education ========== //
-export const createEducation = (data) => async (dispatch, getState) => {
+export const createEducation = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'post',
       apiPath: `/profile/education`,
@@ -136,7 +134,7 @@ export const createEducation = (data) => async (dispatch, getState) => {
       getState,
    })
 }
-export const updateEducation = (data) => async (dispatch, getState) => {
+export const updateEducation = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'put',
       apiPath: `/profile/education`,
@@ -146,7 +144,7 @@ export const updateEducation = (data) => async (dispatch, getState) => {
       getState,
    })
 }
-export const deleteEducation = (id) => async (dispatch, getState) => {
+export const deleteEducation = (id: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'delete',
       apiPath: `/profile/education/${id}`,
@@ -157,7 +155,7 @@ export const deleteEducation = (id) => async (dispatch, getState) => {
 }
 
 // ========== Certification ========== //
-export const createCertification = (data, action) => async (dispatch, getState) => {
+export const createCertification = (data: any, action: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'post',
       apiPath: `/profile/certification`,
@@ -168,7 +166,7 @@ export const createCertification = (data, action) => async (dispatch, getState) 
       action,
    })
 }
-export const updateCertification = (data) => async (dispatch, getState) => {
+export const updateCertification = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'put',
       apiPath: `/profile/certification`,
@@ -178,7 +176,7 @@ export const updateCertification = (data) => async (dispatch, getState) => {
       getState,
    })
 }
-export const deleteCertification = (id) => async (dispatch, getState) => {
+export const deleteCertification = (id: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'delete',
       apiPath: `/profile/certification/${id}`,
@@ -189,7 +187,7 @@ export const deleteCertification = (id) => async (dispatch, getState) => {
 }
 
 // ========== Organization ========== //
-export const getOrganizationFramework = () => async (dispatch, getState) => {
+export const getOrganizationFramework = () => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'get',
       apiPath: `/profile/organizations`,
@@ -203,7 +201,7 @@ export const getOrganizationFramework = () => async (dispatch, getState) => {
    })
 }
 
-export const updateSkillProfile = (data) => async (dispatch, getState) => {
+export const updateSkillProfile = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'put',
       apiPath: `/profile/skills`,
@@ -215,7 +213,7 @@ export const updateSkillProfile = (data) => async (dispatch, getState) => {
 }
 
 // ========== Additional Info ========== //
-export const createProfileAdditionalInfo = (data, action) => async (dispatch, getState) => {
+export const createProfileAdditionalInfo = (data: any, action: string) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: action === 'create' ? 'post' : 'put',
       apiPath: `/profile/additional-info`,
@@ -229,7 +227,7 @@ export const createProfileAdditionalInfo = (data, action) => async (dispatch, ge
       getState,
    })
 }
-export const updateProfileAdditionalInfo = (data) => async (dispatch, getState) => {
+export const updateProfileAdditionalInfo = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'put',
       apiPath: `/profile/additional-info`,
@@ -243,7 +241,8 @@ export const updateProfileAdditionalInfo = (data) => async (dispatch, getState) 
       getState,
    })
 }
-export const deleteProfileAdditionalInfo = (id) => async (dispatch, getState) => {
+
+export const deleteProfileAdditionalInfo = (id: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'delete',
       apiPath: `/profile/additional-info/${id}`,
@@ -258,13 +257,9 @@ export const deleteProfileAdditionalInfo = (id) => async (dispatch, getState) =>
 }
 
 // ========== GET [Friends] ========== //
-export const getMyFriends = () => async (dispatch, getState) => {
-   return callReduxApi({
+export const getMyFriends = () => {
+   return callApi({
       method: 'get',
       apiPath: `/profile/friends`,
-      actionTypes: [requestGetMyFriends, getMyFriendsSuccess, getMyFriendsFail],
-      variables: {},
-      dispatch,
-      getState,
    })
 }

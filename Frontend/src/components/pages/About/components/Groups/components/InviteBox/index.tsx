@@ -1,5 +1,4 @@
 import { Avatar, Button } from '@chakra-ui/react'
-import React from 'react'
 
 const InviteBox = ({ invite }: { invite: any }) => {
    return (

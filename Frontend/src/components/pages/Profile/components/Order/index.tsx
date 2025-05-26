@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './styles.module.scss'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '~/components/UI/tabs'
 import ListOrder from './components/ListOrder'
