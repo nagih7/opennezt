@@ -1,11 +1,25 @@
 import React from 'react'
 
-/**
- * @typedef {Object} FormatOptions
- * @property {boolean} [allowLinks=true] - Whether to convert URLs to clickable links
- * @property {boolean} [allowLineBreaks=true] - Whether to convert newlines to <br> tags
- * @property {boolean} [allowMarkdown=true] - Whether to process markdown syntax
- */
+// Type definitions
+interface FormatOptions {
+   allowLinks?: boolean
+   allowLineBreaks?: boolean
+   allowMarkdown?: boolean
+}
+
+interface ListItem {
+   type: 'ul' | 'ol'
+   indent: number
+   items: React.ReactElement[]
+   id: string
+}
+
+interface CodeBlockResult {
+   element: React.ReactElement
+   endLine: number
+}
+
+
 
 /**
  * Formats a message string with markdown-like syntax into React elements
@@ -20,12 +34,8 @@ import React from 'react'
  * - Links [text](url)
  * - Automatic URL detection
  * - Nested lists with proper indentation
- *
- * @param {string} message - The message to format
- * @param {FormatOptions} [options] - Formatting options
- * @returns {React.ReactNode} - Formatted message as React elements
  */
-function formatMessage(message, options = {}) {
+function formatMessage(message: string, options: FormatOptions = {}): React.ReactNode {
    // Default options
    const { allowLinks = true, allowLineBreaks = true, allowMarkdown = true } = options
 
@@ -37,7 +47,7 @@ function formatMessage(message, options = {}) {
    }
 
    // Simple escape for HTML to prevent XSS
-   const escapeHTML = (str) => {
+   const escapeHTML = (str: string): string => {
       return str
          .replace(/&/g, '&amp;')
          .replace(/</g, '&lt;')
@@ -49,11 +59,13 @@ function formatMessage(message, options = {}) {
    if (!allowMarkdown) {
       // If we're only handling links and/or line breaks
       const escaped = escapeHTML(message)
-
       if (allowLinks) {
          const linkedText = processLinks(escaped)
          if (allowLineBreaks) {
-            return convertLineBreaks(linkedText)
+            if (typeof linkedText === 'string') {
+               return convertLineBreaks(linkedText)
+            }
+            return linkedText
          }
          return linkedText
       }
@@ -63,16 +75,14 @@ function formatMessage(message, options = {}) {
       }
 
       return escaped
-   }
-
-   // Full markdown processing
+   }   // Full markdown processing
    const escaped = escapeHTML(message)
    const lines = escaped.split('\n')
-   const formattedElements = []
+   const formattedElements: React.ReactNode[] = []
 
    // State tracking for lists
-   let listStack = [] // Stack to track nested lists
-   let currentList = null // Current list being built
+   let listStack: ListItem[] = [] // Stack to track nested lists
+   let currentList: ListItem | null = null // Current list being built
 
    for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trimEnd()
@@ -82,7 +92,8 @@ function formatMessage(message, options = {}) {
          // Close any open lists
          closeAllLists(listStack, formattedElements)
 
-         const level = line.match(/^(#{1,6})/)[0].length
+         const levelMatch = line.match(/^(#{1,6})/)
+         const level = levelMatch ? levelMatch[0].length : 1
          const headerText = line.replace(/^#{1,6}\s+/, '')
          formattedElements.push(
             <React.Fragment key={`h-line-${i}`}>
@@ -156,31 +167,31 @@ function formatMessage(message, options = {}) {
 
 /**
  * Process a list item and update the list stack accordingly
- *
- * @param {string} listType - 'ul' or 'ol'
- * @param {number} indentLevel - Indentation level of the list item
- * @param {string} content - Content of the list item
- * @param {number} index - Line index for key generation
- * @param {Array} listStack - Stack of current lists being built
- * @param {Object} currentList - Current list being built
- * @param {Array} formattedElements - Array to add completed lists to
- * @param {boolean} allowLinks - Whether to process links
  */
-function processListItem(listType, indentLevel, content, index, listStack, currentList, formattedElements, allowLinks) {
+function processListItem(
+   listType: 'ul' | 'ol',
+   indentLevel: number,
+   content: string,
+   index: number,
+   listStack: ListItem[],
+   currentList: ListItem | null,
+   formattedElements: React.ReactNode[],
+   allowLinks: boolean
+): void {
    // Handle list nesting based on indent level
-   while (listStack.length > 0 && listStack[listStack.length - 1].indent > indentLevel) {
-      const completedList = listStack.pop()
+   while (listStack.length > 0 && listStack[listStack.length - 1].indent > indentLevel) {      const completedList = listStack.pop()
+      
+      if (!completedList) continue
 
       if (listStack.length === 0) {
          // This is a top-level list, add it to formatted elements
          formattedElements.push(createList(completedList.items, completedList.type, `list-${completedList.id}`))
-      } else {
-         // This is a nested list, add it as a child to parent list item
+      } else {         // This is a nested list, add it as a child to parent list item
          const parentList = listStack[listStack.length - 1]
-         const lastItem = parentList.items[parentList.items.length - 1]
+         const lastItem = parentList.items[parentList.items.length - 1] as React.ReactElement<any>
 
          // If the last item already has children, add to them
-         if (lastItem.props.children.length > 1) {
+         if (Array.isArray(lastItem.props.children)) {
             const updatedChildren = [...lastItem.props.children]
             updatedChildren.push(createList(completedList.items, completedList.type, `nested-${completedList.id}`))
 
@@ -218,19 +229,18 @@ function processListItem(listType, indentLevel, content, index, listStack, curre
 
 /**
  * Close all open lists in the stack and add them to formatted elements
- *
- * @param {Array} listStack - Stack of lists to close
- * @param {Array} formattedElements - Array to add completed lists to
  */
-function closeAllLists(listStack, formattedElements) {
+function closeAllLists(listStack: ListItem[], formattedElements: React.ReactNode[]): void {
    while (listStack.length > 0) {
       const list = listStack.pop()
+      
+      if (!list) continue
 
       if (listStack.length === 0) {
          formattedElements.push(createList(list.items, list.type, `list-${list.id}`))
       } else {
          const parentList = listStack[listStack.length - 1]
-         const lastItem = parentList.items[parentList.items.length - 1]
+         const lastItem = parentList.items[parentList.items.length - 1] as React.ReactElement<any>
 
          if (Array.isArray(lastItem.props.children)) {
             // If children already exist, append to them
@@ -251,13 +261,8 @@ function closeAllLists(listStack, formattedElements) {
 
 /**
  * Create a list React element
- *
- * @param {Array} items - List items as React elements
- * @param {string} type - 'ul' or 'ol'
- * @param {string} key - React key
- * @returns {React.ReactElement} - List element
  */
-function createList(items, type, key) {
+function createList(items: React.ReactElement[], type: 'ul' | 'ol', key: string): React.ReactElement {
    if (type === 'ul') {
       return (
          <ul className="my-2 ml-5 list-disc" key={key}>
@@ -275,12 +280,8 @@ function createList(items, type, key) {
 
 /**
  * Process a code block
- *
- * @param {Array} lines - All lines of the message
- * @param {number} startLineIndex - Starting line index of the code block
- * @returns {Object|null} - Object containing the code block element and end line index
  */
-function processCodeBlock(lines, startLineIndex) {
+function processCodeBlock(lines: string[], startLineIndex: number): CodeBlockResult | null {
    const startLine = lines[startLineIndex]
    const languageMatch = startLine.match(/^```(\w*)/)
    const language = languageMatch ? languageMatch[1] : ''
@@ -313,12 +314,8 @@ function processCodeBlock(lines, startLineIndex) {
 
 /**
  * Process inline formatting (bold, italic, code, links)
- *
- * @param {string} text - Text to format
- * @param {boolean} enableLinks - Whether to process links
- * @returns {Array} - Array of formatted React elements
  */
-function processInlineFormatting(text, enableLinks = true) {
+function processInlineFormatting(text: string, enableLinks: boolean = true): React.ReactNode {
    if (!text) return ''
 
    // First handle code spans to avoid processing markdown inside them
@@ -351,9 +348,7 @@ function processInlineFormatting(text, enableLinks = true) {
          type: 'text',
          content: text.substring(lastIndex),
       })
-   }
-
-   // Process other formatting for text parts
+   }   // Process other formatting for text parts
    return parts.map((part, i) => {
       if (part.type === 'code') {
          return (
@@ -362,14 +357,14 @@ function processInlineFormatting(text, enableLinks = true) {
             </code>
          )
       } else {
-         let content = part.content
+         let content: React.ReactNode = part.content
 
-         // Process bold
-         content = processBoldAndItalic(content)
+         // Process bold and italic
+         content = processBoldAndItalic(part.content)
 
          // Process links if enabled
          if (enableLinks) {
-            content = processLinks(content)
+            content = processLinks(content as any)
          }
 
          return content
@@ -379,11 +374,8 @@ function processInlineFormatting(text, enableLinks = true) {
 
 /**
  * Process bold and italic formatting
- *
- * @param {string} text - Text to process
- * @returns {Array} - Array of React elements
  */
-function processBoldAndItalic(text) {
+function processBoldAndItalic(text: string): React.ReactNode[] {
    const result = []
 
    // Split by bold markers
@@ -414,11 +406,8 @@ function processBoldAndItalic(text) {
 
 /**
  * Process italic formatting
- *
- * @param {string} text - Text to process
- * @returns {Array} - Array of React elements
  */
-function processItalic(text) {
+function processItalic(text: string): React.ReactNode[] {
    const result = []
 
    // Split by italic markers
@@ -448,11 +437,8 @@ function processItalic(text) {
 
 /**
  * Convert URLs to clickable links
- *
- * @param {string|Array} text - Text to process (can be a string or array)
- * @returns {Array} - Array of React elements with links
  */
-function processLinks(text) {
+function processLinks(text: string | React.ReactNode[]): React.ReactNode[] | React.ReactNode {
    // If text is already an array (from previous formatting), return it
    if (Array.isArray(text)) {
       return text
@@ -535,11 +521,8 @@ function processLinks(text) {
 
 /**
  * Convert line breaks to <br> tags
- *
- * @param {string} text - Text to process
- * @returns {Array} - Array of React elements with <br> tags
  */
-function convertLineBreaks(text) {
+function convertLineBreaks(text: string): React.ReactElement[] {
    return text.split('\n').map((line, i, arr) => (
       <React.Fragment key={`line-${i}`}>
          {line}
@@ -550,11 +533,8 @@ function convertLineBreaks(text) {
 
 /**
  * Optimize React elements for better performance
- *
- * @param {Array} elements - React elements to optimize
- * @returns {React.ReactElement} - Optimized elements wrapped in a fragment
  */
-function optimizeElements(elements) {
+function optimizeElements(elements: React.ReactNode[]): React.ReactElement {
    // Combine adjacent string elements
    const optimized = []
    let currentTextBuffer = ''
@@ -578,8 +558,8 @@ function optimizeElements(elements) {
    return <>{optimized}</>
 }
 
-export const renderContent = (content) => {
-   if (!content) return ''
+export const renderContent = (content: string): React.ReactElement[] => {
+   if (!content) return []
 
    // Decode HTML entities
    const decodedContent = content
@@ -591,7 +571,7 @@ export const renderContent = (content) => {
       .replace(/&#x2F;/g, '/')
 
    // Split by line breaks and create elements
-   return decodedContent.split('\n').map((line, index, array) => (
+   return decodedContent.split('\n').map((line: string, index: number, array: string[]) => (
       <React.Fragment key={index}>
          {line}
          {index < array.length - 1 && <br />}

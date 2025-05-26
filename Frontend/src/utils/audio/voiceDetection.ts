@@ -6,8 +6,51 @@
  * when speech starts and stops.
  */
 
+// Type definitions
+interface VoiceDetectorOptions {
+    threshold?: number
+    silenceDelay?: number
+    sampleRate?: number
+    audioFormat?: string
+    bitsPerSample?: number
+    onSpeechStart?: () => void
+    onSpeechEnd?: () => void
+    onError?: (error: Error | Event) => void
+    onListeningStart?: () => void
+    onListeningEnd?: () => void
+    onAudioReady?: (blob: Blob) => void
+}
+
+// Extend the Window interface to include webkit prefixed AudioContext
+declare global {
+    interface Window {
+        webkitAudioContext?: typeof AudioContext
+    }
+}
+
 class VoiceDetector {
-    constructor(options = {}) {
+    private options: Required<VoiceDetectorOptions>
+    private audioContext: AudioContext | null = null
+    private analyser: AnalyserNode | null = null
+    private microphoneStream: MediaStream | null = null
+    private isListening: boolean = false
+    private isSpeaking: boolean = false
+    private speechTimeout: NodeJS.Timeout | null = null
+    private audioProcessor: ScriptProcessorNode | null = null
+    private recordedChunks: Blob[] = []
+    private mediaRecorder: MediaRecorder | null = null
+    private isRecording: boolean = false
+    private rawAudioChunks: Float32Array[] = []
+
+    // Callbacks
+    private onSpeechStart: () => void
+    private onSpeechEnd: () => void
+    private onError: (error: Error | Event) => void
+    private onListeningStart: () => void
+    private onListeningEnd: () => void
+    private onAudioReady: (blob: Blob) => void
+
+    constructor(options: VoiceDetectorOptions = {}) {
         this.options = {
             threshold: 10, // Volume threshold to detect speech
             silenceDelay: 1000, // Time of silence to determine speech has ended (ms)
@@ -15,41 +58,32 @@ class VoiceDetector {
             audioFormat: 'audio/wav', // Try WAV format first if supported
             bitsPerSample: 16, // Bit depth for WAV encoding
             ...options,
-        }
-
-        this.audioContext = null
-        this.analyser = null
-        this.microphoneStream = null
-        this.isListening = false
-        this.isSpeaking = false
-        this.speechTimeout = null
-
-        // Audio recording related
-        this.audioProcessor = null
-        this.recordedChunks = []
-        this.mediaRecorder = null
-        this.isRecording = false
+        } as Required<VoiceDetectorOptions>
 
         // Callbacks
         this.onSpeechStart = options.onSpeechStart || (() => console.log('User is speaking'))
         this.onSpeechEnd = options.onSpeechEnd || (() => console.log('User stopped speaking'))
-        this.onError = options.onError || ((error) => console.error('Voice detection error:', error))
+        this.onError = options.onError || ((error: Error | Event) => console.error('Voice detection error:', error))
         this.onListeningStart = options.onListeningStart || (() => console.log('Voice detection started'))
         this.onListeningEnd = options.onListeningEnd || (() => console.log('Voice detection stopped'))
-        this.onAudioReady = options.onAudioReady || ((blob) => console.log('Audio recording ready', blob))
+        this.onAudioReady = options.onAudioReady || ((blob: Blob) => console.log('Audio recording ready', blob))
     }
 
     /**
      * Start voice detection
-     * @returns {Promise<boolean>} True if successfully started
+     * @returns Promise that resolves to true if successfully started
      */
-    async start() {
+    async start(): Promise<boolean> {
         try {
             // Clean up any existing audio context
             await this.stop()
 
             // Create audio context
             const AudioContext = window.AudioContext || window.webkitAudioContext
+            if (!AudioContext) {
+                throw new Error('Web Audio API is not supported in this browser')
+            }
+
             this.audioContext = new AudioContext({
                 sampleRate: this.options.sampleRate,
             })
@@ -75,7 +109,7 @@ class VoiceDetector {
             try {
                 // Try WAV first, then WebM
                 const mimeTypes = ['audio/wav', 'audio/webm']
-                let selectedMimeType = null
+                let selectedMimeType: string | null = null
 
                 // Find a supported format
                 for (const mimeType of mimeTypes) {
@@ -99,7 +133,7 @@ class VoiceDetector {
                 this.options.audioFormat = this.mediaRecorder.mimeType
             }
 
-            this.mediaRecorder.ondataavailable = (event) => {
+            this.mediaRecorder.ondataavailable = (event: BlobEvent) => {
                 if (event.data.size > 0) {
                     this.recordedChunks.push(event.data)
                 }
@@ -128,7 +162,7 @@ class VoiceDetector {
 
             return true
         } catch (err) {
-            this.onError(err)
+            this.onError(err as Error)
             this.isListening = false
             return false
         }
@@ -136,9 +170,8 @@ class VoiceDetector {
 
     /**
      * Stop voice detection
-     * @returns {Promise<void>}
      */
-    async stop() {
+    async stop(): Promise<void> {
         // Stop recording if active
         this.stopRecording()
 
@@ -170,7 +203,7 @@ class VoiceDetector {
     /**
      * Start recording audio
      */
-    startRecording() {
+    startRecording(): void {
         if (!this.isRecording && this.mediaRecorder && this.mediaRecorder.state !== 'recording') {
             this.recordedChunks = []
             this.mediaRecorder.start()
@@ -181,7 +214,7 @@ class VoiceDetector {
     /**
      * Stop recording audio
      */
-    stopRecording() {
+    stopRecording(): void {
         if (this.isRecording && this.mediaRecorder && this.mediaRecorder.state === 'recording') {
             this.mediaRecorder.stop()
             this.isRecording = false
@@ -191,7 +224,7 @@ class VoiceDetector {
     /**
      * Monitor sound levels and detect speech
      */
-    monitorSound() {
+    private monitorSound(): void {
         if (!this.analyser || !this.isListening) return
 
         const dataArray = new Uint8Array(this.analyser.fftSize)
@@ -235,47 +268,46 @@ class VoiceDetector {
 
     /**
      * Check if currently listening
-     * @returns {boolean}
      */
-    isActive() {
+    isActive(): boolean {
         return this.isListening
     }
 
     /**
      * Check if speech is detected
-     * @returns {boolean}
      */
-    isSpeechDetected() {
+    isSpeechDetected(): boolean {
         return this.isSpeaking
     }
 
     /**
      * Set speech detection threshold
-     * @param {number} threshold - Volume threshold level (0-100)
+     * @param threshold - Volume threshold level (0-100)
      */
-    setThreshold(threshold) {
+    setThreshold(threshold: number): void {
         this.options.threshold = threshold
     }
 
     /**
      * Create WAV file from audio data
-     * @param {Blob} audioBlob - The recorded audio blob
-     * @returns {Promise<Blob>} - A WAV file blob
+     * @param audioBlob - The recorded audio blob
+     * @returns A WAV file blob
      */
-    async createWavFile(audioBlob) {
+    async createWavFile(audioBlob: Blob): Promise<Blob> {
         // If we're already recording in WAV format, just return the blob
         if (this.options.audioFormat === 'audio/wav') {
             return audioBlob
         }
 
-        // For non-WAV formats, we either need to:
-        // 1. Accept the actual format (WebM/Ogg) as is, or
-        // 2. Convert to WAV format using AudioContext
-
         try {
             // Method to convert WebM/Ogg to WAV using AudioContext
             const arrayBuffer = await audioBlob.arrayBuffer()
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+            const AudioContext = window.AudioContext || window.webkitAudioContext
+            if (!AudioContext) {
+                throw new Error('Web Audio API is not supported')
+            }
+            
+            const audioContext = new AudioContext()
             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
 
             // Create WAV file
@@ -295,17 +327,17 @@ class VoiceDetector {
 
     /**
      * Convert AudioBuffer to WAV format
-     * @param {AudioBuffer} audioBuffer - The audio buffer to convert
-     * @returns {ArrayBuffer} - WAV file data as ArrayBuffer
+     * @param audioBuffer - The audio buffer to convert
+     * @returns WAV file data as ArrayBuffer
      */
-    audioBufferToWav(audioBuffer) {
+    private audioBufferToWav(audioBuffer: AudioBuffer): ArrayBuffer {
         const numChannels = audioBuffer.numberOfChannels
         const sampleRate = audioBuffer.sampleRate
         const format = 1 // PCM format
         const bitDepth = 16
 
         // Extract raw audio data
-        const channelData = []
+        const channelData: Float32Array[] = []
         for (let channel = 0; channel < numChannels; channel++) {
             channelData.push(audioBuffer.getChannelData(channel))
         }
@@ -319,11 +351,11 @@ class VoiceDetector {
 
     /**
      * Interleave multiple audio channels into a single buffer
-     * @param {Array<Float32Array>} channelData - Array of channel data
-     * @param {number} frameCount - Number of frames
-     * @returns {Float32Array} - Interleaved audio data
+     * @param channelData - Array of channel data
+     * @param frameCount - Number of frames
+     * @returns Interleaved audio data
      */
-    interleaveChannels(channelData, frameCount) {
+    private interleaveChannels(channelData: Float32Array[], frameCount: number): Float32Array {
         const numChannels = channelData.length
         const result = new Float32Array(frameCount * numChannels)
 
@@ -338,14 +370,20 @@ class VoiceDetector {
 
     /**
      * Encode audio data to WAV format
-     * @param {Float32Array} samples - Interleaved audio samples
-     * @param {number} format - Audio format (1 for PCM)
-     * @param {number} sampleRate - Sample rate
-     * @param {number} numChannels - Number of channels
-     * @param {number} bitDepth - Bit depth
-     * @returns {DataView} - WAV file as DataView
+     * @param samples - Interleaved audio samples
+     * @param format - Audio format (1 for PCM)
+     * @param sampleRate - Sample rate
+     * @param numChannels - Number of channels
+     * @param bitDepth - Bit depth
+     * @returns WAV file as DataView
      */
-    encodeWav(samples, format, sampleRate, numChannels, bitDepth) {
+    private encodeWav(
+        samples: Float32Array, 
+        format: number, 
+        sampleRate: number, 
+        numChannels: number, 
+        bitDepth: number
+    ): DataView {
         const bytesPerSample = bitDepth / 8
         const blockAlign = numChannels * bytesPerSample
 
@@ -382,11 +420,11 @@ class VoiceDetector {
 
     /**
      * Write a string to a DataView
-     * @param {DataView} view - DataView to write to
-     * @param {number} offset - Offset in the DataView
-     * @param {string} string - String to write
+     * @param view - DataView to write to
+     * @param offset - Offset in the DataView
+     * @param string - String to write
      */
-    writeString(view, offset, string) {
+    private writeString(view: DataView, offset: number, string: string): void {
         for (let i = 0; i < string.length; i++) {
             view.setUint8(offset + i, string.charCodeAt(i))
         }
@@ -394,11 +432,11 @@ class VoiceDetector {
 
     /**
      * Convert Float32 array to 16-bit PCM
-     * @param {DataView} view - DataView to write to
-     * @param {number} offset - Offset in the DataView
-     * @param {Float32Array} input - Input audio data
+     * @param view - DataView to write to
+     * @param offset - Offset in the DataView
+     * @param input - Input audio data
      */
-    floatTo16BitPCM(view, offset, input) {
+    private floatTo16BitPCM(view: DataView, offset: number, input: Float32Array): void {
         for (let i = 0; i < input.length; i++, offset += 2) {
             const s = Math.max(-1, Math.min(1, input[i]))
             view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true)
@@ -408,9 +446,11 @@ class VoiceDetector {
     /**
      * Set up direct recording using ScriptProcessorNode for raw PCM capture
      * This is more reliable for WAV creation than using MediaRecorder
-     * @param {MediaStreamAudioSourceNode} source - The audio source
+     * @param source - The audio source
      */
-    setupDirectRecording(source) {
+    private setupDirectRecording(source: MediaStreamAudioSourceNode): void {
+        if (!this.audioContext) return
+
         // Create a ScriptProcessorNode to capture raw audio data
         // Note: ScriptProcessorNode is deprecated but still widely supported
         // The replacement (AudioWorkletNode) is not as widely supported yet
@@ -425,7 +465,7 @@ class VoiceDetector {
         this.rawAudioChunks = []
 
         // Process audio data
-        this.audioProcessor.onaudioprocess = (e) => {
+        this.audioProcessor.onaudioprocess = (e: AudioProcessingEvent) => {
             // Only save data if actually recording
             if (this.isRecording) {
                 // Get raw audio data from input channel
@@ -442,26 +482,18 @@ class VoiceDetector {
 
 /**
  * Create a simple voice detector that logs to the console when speaking is detected
- * @returns {VoiceDetector} A configured voice detector instance
+ * @returns A configured voice detector instance
  */
-export const createSimpleVoiceDetector = () => {
+export const createSimpleVoiceDetector = (): VoiceDetector => {
     return new VoiceDetector()
 }
 
 /**
  * Create a voice detector with custom callbacks
- * @param {Object} options - Configuration options
- * @param {Function} options.onSpeechStart - Called when speech starts
- * @param {Function} options.onSpeechEnd - Called when speech ends
- * @param {Function} options.onError - Called on error
- * @param {Function} options.onAudioReady - Called when audio recording is ready with the audio blob
- * @param {number} options.threshold - Volume threshold (1-100, default: 10)
- * @param {number} options.silenceDelay - Silence delay in ms (default: 1000)
- * @param {number} options.sampleRate - Audio sample rate (default: 44100)
- * @param {string} options.audioFormat - Audio format MIME type (default: 'audio/webm')
- * @returns {VoiceDetector} A configured voice detector instance
+ * @param options - Configuration options
+ * @returns A configured voice detector instance
  */
-export const createVoiceDetector = (options) => {
+export const createVoiceDetector = (options: VoiceDetectorOptions): VoiceDetector => {
     return new VoiceDetector(options)
 }
 
