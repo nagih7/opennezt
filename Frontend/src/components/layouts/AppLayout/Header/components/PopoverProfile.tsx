@@ -11,7 +11,7 @@ const PopoverProfile: React.FC = () => {
          <div className="flex flex-col gap-2 p-2">
             <div
                className="flex items-center gap-2 p-[15px] hover:bg-[#f6f5f5] cursor-pointer rounded-md"
-               onClick={() => navigate('/profile')}
+               onClick={() => navigate('/me')}
             >
                <IconlyUser color={'#374151'} size={12} />
                Profile
