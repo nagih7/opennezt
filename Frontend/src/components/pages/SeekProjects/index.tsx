@@ -10,13 +10,14 @@ const SeekProjects = () => {
     const [action, setAction] = useState<ViewAction>('grid');
 
     return (
-        <div className="pt-[35px] px-[16px] flex gap-8 2xl:ml-5">
-            <div className="bg-gray-100 w-10/12 2xl:relative 2xl:left-[-1rem] 2xl:w-[70rem] ">
+        <div className="pt-[35px] w-full px-[16px] flex gap-8 ">
+            <div className="bg-gray-100 w-10/12 relative">
                 <FilterHeader action={action} setAction={setAction} />
                 <ListProjects action={action} />
             </div>
             <AccessLog />
         </div>
+
     );
 };
 

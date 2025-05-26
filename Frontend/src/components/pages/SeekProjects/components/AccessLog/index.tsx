@@ -17,7 +17,7 @@ const AccessLog = () => {
 
     // ========== RENDER COMPONENT ========== //
     return (
-        <div className="w-4/12 2xl:w-[23.25rem] bg-white p-4 rounded-md shadow-sm h-fit">
+        <div className="w-4/12 bg-white p-4 rounded-md shadow-sm h-fit">
             <h3 className="text-lg font-semiboldmb-4 border-b border-[#DEDEDE] pb-4">Recent Project</h3>
             <div className="flex flex-col gap-4">
                 {projectAccess.map((access, index) => (

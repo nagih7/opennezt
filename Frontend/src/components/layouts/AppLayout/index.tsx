@@ -15,7 +15,7 @@ const AppLayout: React.FC<BaseComponentProps> = ({ children }) => {
                <SideBar />
             </div>
             <div className="flex justify-center flex-1 w-full h-[100vh]">
-               <main className="flex flex-col items-center w-full overflow-x-hidden overflow-y-auto mb-[70px] bg-mainBackgroundColor">
+              <main className="flex flex-col items-center w-full overflow-x-hidden overflow-y-auto mb-[70px] bg-mainBackgroundColor">
                   {children}
                   {/* <Footer /> */}
                </main>

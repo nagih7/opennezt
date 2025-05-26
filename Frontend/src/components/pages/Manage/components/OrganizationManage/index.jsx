@@ -171,8 +171,9 @@ function OrganizationManage() {
       // CONFIG
       return (
          <div className={styles.mainModalWrap}>
+            {' '}
             <div className="relative mb-8">
-               <Input
+               <InputCustom
                   type={'text'}
                   placeholder={'Enter name...'}
                   onChange={(e) => handleChangeInput(e, 'name')}
@@ -186,10 +187,10 @@ function OrganizationManage() {
                   className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
                >
                   Name *
-               </label>
+               </label>{' '}
             </div>
             <div className="relative mb-8">
-               <Input
+               <InputCustom
                   type={'text'}
                   placeholder={'Enter website...'}
                   onChange={(e) => handleChangeInput(e, 'website')}
@@ -203,10 +204,10 @@ function OrganizationManage() {
                   className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
                >
                   Website *
-               </label>
+               </label>{' '}
             </div>
             <div className="relative mb-8">
-               <Input
+               <InputCustom
                   type={'text'}
                   placeholder={'Enter contact email...'}
                   onChange={(e) => handleChangeInput(e, 'contact_email')}
@@ -221,10 +222,9 @@ function OrganizationManage() {
                >
                   Contact email *
                </label>
-            </div>
-
+            </div>{' '}
             <div className="relative mb-8">
-               <Input
+               <InputCustom
                   type={'text'}
                   placeholder={'Enter description...'}
                   onChange={(e) => handleChangeInput(e, 'description')}

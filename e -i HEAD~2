@@ -1,0 +1,76 @@
+[33m8d0e9ea[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mtruong/fix-ui-seekproject[m[33m)[m fix-ui-seekproject
+[33m2a16047[m config
+[33m6327c55[m[33m ([m[1;31morigin/dev[m[33m)[m Merge pull request #283 from vuongmanhnghia/nagih/optimize
+[33mcfed5be[m update routes
+[33m129e93a[m Merge pull request #282 from vuongmanhnghia/nagih/optimize
+[33m15e6173[m update routes
+[33mf3961ae[m Merge pull request #280 from vuongmanhnghia/nagih/optimize
+[33m2c4dab4[m convert to ts (utils)
+[33m68761ca[m Merge pull request #279 from vuongmanhnghia/nagih/optimize
+[33m70d3b5e[m .
+[33m5f06235[m Merge pull request #278 from vuongmanhnghia/nagih/config-docker
+[33m86c0497[m[33m ([m[1;31morigin/nagih/config-docker[m[33m)[m config docker
+[33m17554e2[m Merge pull request #277 from vuongmanhnghia/truong/delete-antd
+[33mc733645[m[33m ([m[1;31morigin/truong/delete-antd[m[33m, [m[1;32mtruong/delete-antd[m[33m)[m delete/radix-ui
+[33m4c1e275[m[33m ([m[1;32mdev[m[33m)[m Merge pull request #276 from vuongmanhnghia/nagih/optimize
+[33mc80fe23[m Optimize auth
+[33m2ef0f0e[m Merge pull request #275 from vuongmanhnghia/nagih/optimize
+[33m3bbbdd5[m Optimize verify auth
+[33m910def6[m Merge pull request #274 from vuongmanhnghia/nagih/optimize
+[33mb9036b8[m Optimize Route
+[33m6ae625b[m Merge pull request #273 from vuongmanhnghia/nagih/optimize
+[33mb6b596c[m Optimize Auth
+[33m31644ad[m Merge pull request #272 from vuongmanhnghia/nagih/optimize
+[33m3395169[m Optimize app layout
+[33me9c739e[m Merge pull request #271 from vuongmanhnghia/nagih/convert-to-ts
+[33m49a7c5f[m[33m ([m[1;31morigin/nagih/convert-to-ts[m[33m)[m update interview
+[33m36fa546[m Merge pull request #270 from vuongmanhnghia/nagih/convert-to-ts
+[33mf408b2e[m update message
+[33m1ff91b4[m Merge pull request #269 from vuongmanhnghia/hoanqdy/convert-to-ts
+[33m445dcf4[m[33m ([m[1;31morigin/hoanqdy/convert-to-ts[m[33m)[m update convert
+[33m56cad3e[m Merge pull request #268 from vuongmanhnghia/huytan/convert-to-ts
+[33mdd7200c[m[33m ([m[1;31morigin/huytan/convert-to-ts[m[33m)[m convert to ts
+[33mc0ab26f[m Merge pull request #265 from vuongmanhnghia/nagih/convert-to-ts
+[33ma959432[m update convert
+[33m261903b[m Merge pull request #262 from vuongmanhnghia/nagih/convert-to-ts
+[33mfee6109[m config vite, optimize app
+[33mb2328d2[m Merge pull request #261 from vuongmanhnghia/nagih/convert-to-ts
+[33m12d9255[m convert routes + redux store to typeScript
+[33medf95b8[m Merge pull request #260 from vuongmanhnghia/nagih/convert-to-ts
+[33m9deff33[m update redux
+[33mc551146[m Merge pull request #259 from vuongmanhnghia/nagih/convert-to-ts
+[33mf37fa1d[m convert basic
+[33m0fd679f[m Merge pull request #258 from vuongmanhnghia/truong/ui-expertise
+[33md123197[m[33m ([m[1;31morigin/truong/ui-expertise[m[33m, [m[1;32mtruong/ui-expertise[m[33m)[m ui-expertise
+[33m346d5a1[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #257 from vuongmanhnghia/nagih/interview
+[33mdf4e0fe[m[33m ([m[1;31morigin/nagih/interview[m[33m)[m fix record when process
+[33mdfc9212[m Merge pull request #254 from vuongmanhnghia/huytan/createproject-editproject-additional-infor
+[33m755cb2a[m[33m ([m[1;31morigin/huytan/createproject-editproject-additional-infor[m[33m)[m fix additional edit, create project
+[33m3fed451[m Merge pull request #251 from vuongmanhnghia/truong/ui-education/certification
+[33mb97619b[m Merge pull request #253 from vuongmanhnghia/nagih/optimize
+[33m2b77e5f[m Merge pull request #252 from vuongmanhnghia/huytan/homepage-project
+[33mca4c6d4[m Merge pull request #244 from vuongmanhnghia/huytan/additional-infor
+[33mb11b4aa[m[33m ([m[1;31morigin/truong/ui-education/certification[m[33m)[m fix font size
+[33m9604ff6[m optimize
+[33mdc94da4[m[33m ([m[1;31morigin/huytan/homepage-project[m[33m)[m fix homepage interview
+[33m5456937[m[33m ([m[1;31morigin/huytan/additional-infor[m[33m)[m additional infor
+[33m1cab197[m Merge pull request #242 from vuongmanhnghia/nagih/interview
+[33m4fb4024[m update info start interview
+[33m5c107a9[m Merge pull request #241 from vuongmanhnghia/hoanqdy/fixmessage
+[33m951ef16[m[33m ([m[1;31morigin/hoanqdy/fixmessage[m[33m)[m fix-ui-seekproject
+[33m5b05cec[m Merge pull request #238 from vuongmanhnghia/cuongquoc/stepcreateproject
+[33m0a26f42[m[33m ([m[1;31morigin/cuongquoc/stepcreateproject[m[33m)[m step
+[33mfc70457[m Merge pull request #239 from vuongmanhnghia/hoanqdy/profiledetailscomponent
+[33m19cec06[m Profile Details Component
+[33mbca7dd4[m Merge pull request #236 from vuongmanhnghia/truong/ui-seekproject
+[33mde55c6e[m[33m ([m[1;31morigin/truong/ui-seekproject[m[33m)[m fix-ui-seekproject
+[33m5db0a13[m Merge pull request #235 from vuongmanhnghia/hoanqdy/fixmessage
+[33mf04e665[m fix message
+[33m40ee9ef[m Merge pull request #233 from vuongmanhnghia/truong/ui-education/certification
+[33m92311e2[m ui-education/certification
+[33m2fa1a27[m Merge pull request #234 from vuongmanhnghia/nagih/interview
+[33m95cb2ce[m update interview - update switch listening - speaking - fix call reply interview when AI speaking
+[33m9700521[m Merge pull request #232 from vuongmanhnghia/huytan/homePage-project
+[33mbc7fb70[m homePage(lastProject, navigation
+[33m4c279e4[m confirm hide notification access linkedin
+[33mc12639e[m Init commit (reset repo)
