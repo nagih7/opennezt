@@ -85,7 +85,7 @@ const AdditionalInfo: React.FC = () => {
             const newFormData = { ...prevFormData }
 
             fields.forEach((field) => {
-               const info = additional_infos.find((info) => info.name === field.name)
+               const info = additional_infos.find((info: any) => info.name === field.name)
                if (info) {
                   newFormData[field.id] = info.content || ''
                }
@@ -98,7 +98,7 @@ const AdditionalInfo: React.FC = () => {
             const newExistingData = { ...prevExistingData }
 
             fields.forEach((field) => {
-               const info = additional_infos.find((info) => info.name === field.name)
+               const info = additional_infos.find((info: any) => info.name === field.name)
                if (info) {
                   newExistingData[field.id] = info
                }

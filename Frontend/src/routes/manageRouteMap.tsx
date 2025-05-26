@@ -28,9 +28,9 @@ const manageRouteMap: RouteConfig[] = [
    {
       label: Sidebar.ABOUT_ME,
       icon: <IconlyProfile size={24} color="#fff" />,
-      path: '/about',
-      routeActive: ['/about'],
-      permissions: ['about_page'],
+      path: '/profile',
+      routeActive: ['/profile'],
+      permissions: ['profile_page'],
    },
    {
       label: Sidebar.PROJECT,

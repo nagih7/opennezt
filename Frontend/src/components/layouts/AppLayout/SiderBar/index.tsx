@@ -5,7 +5,7 @@ import useSidebar from './useSidebar'
 import { RouteConfig } from '~/types'
 import { useLocation } from 'react-router-dom'
 import { Avatar } from '@chakra-ui/react'
-import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleCheck } from 'react-icons/fa6'
 
 const SideBar: React.FC = () => {
    const location = useLocation()
@@ -17,7 +17,7 @@ const SideBar: React.FC = () => {
             <div
                style={{ cursor: 'pointer' }}
                className="flex items-center gap-3 pb-4 mb-6 border-b-[1px] border-gray-200"
-               onClick={() => navigate('/about')}
+               onClick={() => navigate('/profile')}
             >
                <Avatar.Root size={'xl'}>
                   <Avatar.Fallback name={authUser?.name} />

@@ -38,7 +38,7 @@ const useRegister = () => {
 
    useEffect(() => {
       if (isRegisterSuccess === true) {
-         navigate('/verify-authentication')
+         navigate('/verify')
       }
    }, [isRegisterSuccess, navigate])
 

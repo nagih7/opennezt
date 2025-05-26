@@ -8,7 +8,7 @@ const ProfileEditMenu: React.FC = () => {
 
    // ========== COMPONENT RENDER ========== //
    return (
-      <div className="md:w-4/12 w-full">
+      <div className="w-full md:w-4/12">
          {/* ========== Profile Edit Menu ========== */}
          <h6>
             <div
@@ -38,34 +38,34 @@ const ProfileEditMenu: React.FC = () => {
                   <ul className="flex flex-col items-center pl-0 mb-0">
                      <li className="w-full text-sm py-[21px] border-b-[1px] border-gray-200">
                         <Link
-                           to={'/about/edit-profile/professional-background'}
+                           to={'/profile/edit-profile/professional-background'}
                            className="text-[#6f7f92] no-underline"
                         >
                            Professional Background
                         </Link>
                      </li>
                      <li className="w-full text-sm py-[21px] border-b-[1px] border-gray-200">
-                        <Link to={'/about/edit-profile/educations'} className="text-[#6f7f92] no-underline">
+                        <Link to={'/profile/edit-profile/educations'} className="text-[#6f7f92] no-underline">
                            Educations
                         </Link>
                      </li>
                      <li className="w-full text-sm py-[21px] border-b-[1px] border-gray-200">
-                        <Link to={'/about/edit-profile/certifications'} className="text-[#6f7f92] no-underline">
+                        <Link to={'/profile/edit-profile/certifications'} className="text-[#6f7f92] no-underline">
                            Certifications
                         </Link>
                      </li>
                      <li className="w-full text-sm py-[21px] border-b-[1px] border-gray-200">
-                        <Link to={'/about/edit-profile/skills'} className="text-[#6f7f92] no-underline">
+                        <Link to={'/profile/edit-profile/skills'} className="text-[#6f7f92] no-underline">
                            Skills
                         </Link>
                      </li>
                      <li className="w-full text-sm py-[21px]">
-                        <Link to={'/about/edit-profile/more'} className="text-[#6f7f92] no-underline">
+                        <Link to={'/profile/edit-profile/more'} className="text-[#6f7f92] no-underline">
                            More
                         </Link>
                      </li>
                      {/* <li className="w-full text-sm py-[21px]">
-                                <Link to={'/about/edit-profile/cv'} className="text-[#6f7f92] no-underline">
+                                <Link to={'/profile/edit-profile/cv'} className="text-[#6f7f92] no-underline">
                                     CV
                                 </Link>
                             </li> */}

@@ -1,12 +1,34 @@
 export const ROUTE_CONFIG = {
    // User routes
    USER: {
+      // Authentication routes
       LOGIN: '/login',
       REGISTER: '/register',
+      VERIFY: '/verify',
+      RESET_PASSWORD: '/reset-password',
+      FORGOT_PASSWORD: '/forgot-password',
+      // Application routes
       HOME: '/',
       DASHBOARD: '/dashboard',
+      ME: '/me',
+      SETTINGS: '/account-settings',
+      // Profile routes
       PROFILE: '/profile',
-      SETTINGS: '/settings',
+      EDIT_PROFILE: '/profile/edit-profile',
+      // Project routes
+      MY_PROJECTS: '/projects/me',
+      PROJECT: '/projects',
+      CREATE_PROJECT: '/projects',
+      PROJECT_DETAIL: '/projects/detail',
+      // Talent routes
+      RECRUIT_TALENT: '/recruit-talents',
+      // Seek project routes
+      SEEK_PROJECT: '/seek-projects',
+      // Conversation routes
+      CONVERSATION: '/conversations',
+      CONVERSATION_DETAIL: '/conversations/:id',
+      // Interview routes
+      INTERVIEW: '/interviews',
    },
 
    // Admin routes
