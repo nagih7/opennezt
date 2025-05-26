@@ -4,7 +4,7 @@ import { FileUpload, Input, InputGroup, Button, Textarea, Dialog, Portal, CloseB
 import { LuSearch } from 'react-icons/lu'
 import { debounce } from 'lodash'
 import { CloseOutlined } from '@mui/icons-material'
-import { Avatar } from 'antd'
+import { Avatar } from '~/components/UI/avatar'
 import { useSelector, useDispatch } from 'react-redux'
 import { IconlyAddUser, IconlyImage2, IconlySwap, IconlyWork } from 'components/UI/Iconly'
 import { useNavigate } from 'react-router-dom'
@@ -436,7 +436,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                      </div>
                   </div>
                   <div className="flex gap-3 justify-start w-full">
-                     <Avatar size={50} src={authUser?.avatar} style={{ cursor: 'pointer' }}></Avatar>
+                     <Avatar src={authUser?.avatar} className="w-[50px] h-[50px] rounded-full cursor-pointer" />
                      <div>
                         <div href="#" className="flex items-center gap-2 text-black no-underline text-nowrap">
                            <span className="font-semibold">

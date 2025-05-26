@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, createListCollection } from '@chakra-ui/react'
-import { PlusOutlined } from '@ant-design/icons'
+import { GoPlus } from "react-icons/go";
 import ActionBar from '../../../EditProfile/components/ActionBar'
 import ProjectEditMenu from '../ProjectEditMenu'
 import ProjectCard from '../ProjectCard'
@@ -141,7 +141,7 @@ const EditRevenue: React.FC = () => {
                      className="flex items-center gap-1 cursor-pointer bg-[#2f65b9] rounded-md text-[#ffffff] px-[20px] py-2 mb-[14px]"
                      onClick={handleAddRevenue}
                   >
-                     <PlusOutlined className="text-[#ffffff]" />
+                     <GoPlus  className="text-[#ffffff]" />
                      <button height={50} className="text-xs bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold">
                         ADD REVENUE
                      </button>

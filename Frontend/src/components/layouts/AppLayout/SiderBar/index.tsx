@@ -5,7 +5,7 @@ import useSidebar from './useSidebar'
 import { RouteConfig } from '~/types'
 import { useLocation } from 'react-router-dom'
 import { Avatar } from '@chakra-ui/react'
-import { CheckCircleFilled } from '@ant-design/icons'
+import { FaCircleCheck } from "react-icons/fa6";
 
 const SideBar: React.FC = () => {
    const location = useLocation()
@@ -26,7 +26,7 @@ const SideBar: React.FC = () => {
                <div>
                   <div className="flex items-center gap-2 text-black no-underline text-nowrap">
                      <span className="font-semibold truncate w-36">{authUser?.name}</span>
-                     <CheckCircleFilled className="text-blue-500" />
+                     <FaCircleCheck className="text-blue-500" />
                   </div>
                   <div className="w-40 text-xs text-gray-500 truncate">@{authUser?.email}</div>
                </div>

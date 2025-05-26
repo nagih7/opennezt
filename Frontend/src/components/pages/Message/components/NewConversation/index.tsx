@@ -1,5 +1,6 @@
 import { IconlyArrowLeft2, IconlyStar } from 'components/UI/Iconly'
-import { ArrowsAltOutlined, WechatOutlined } from '@ant-design/icons'
+import { AiFillWechat } from "react-icons/ai";
+import { BsArrowsAngleExpand } from "react-icons/bs";
 import React, { FC } from 'react'
 import MessageSidebar from '../MessageSidebar'
 import { Link } from 'react-router-dom'
@@ -21,7 +22,7 @@ const NewConversation: FC = () => {
                      <span>Start a new conversation</span>
                   </div>
                   <span className="flex items-center justify-center text-[#6f7f92] w-[50px] h-11">
-                     <ArrowsAltOutlined />
+                     <BsArrowsAngleExpand  />
                   </span>
                </div>
                <div className="px-[15px] border-b border-gray-200 bg-[#ffffff]">
@@ -34,7 +35,7 @@ const NewConversation: FC = () => {
                </div>
                <div className="bg-[#ffffff] rounded-t-md w-full">
                   <div className=" flex flex-col items-center justify-center w-full pt-[15px]">
-                     <WechatOutlined className="text-8xl w-14 h-14 text-[#6f7f92] " />
+                     <AiFillWechat  className="text-8xl w-14 h-14 text-[#6f7f92] " />
                      <span className="text-[#6f7f92]  px-[10px] mt-[20px]">
                         Write a message to start the conversation
                      </span>

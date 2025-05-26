@@ -41,10 +41,9 @@ const ForgotPassword: React.FC = () => {
 
             <div className="mb-4">
                <ButtonMASQ
-                  textBtn={'Send Reset Link'}
-                  isLoading={isLoading}
+                  children={'Send Reset Link'}
+                  disabled={isLoading}
                   onClick={() => handleForgotPassword()}
-                  disable={isLoading}
                   style={{
                      display: 'flex',
                      justifyContent: 'center',

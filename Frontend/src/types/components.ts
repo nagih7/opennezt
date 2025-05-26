@@ -111,3 +111,19 @@ export interface ReduxAction<T = any> {
 export interface ReduxState {
    [key: string]: any
 }
+
+export interface CustomCheckboxProps extends BaseComponentProps {
+   checked?: boolean
+   onChange?: (e: React.FormEvent<HTMLLabelElement>) => void
+   children?: React.ReactNode
+   icon?: React.ReactNode
+   inputProps?: React.InputHTMLAttributes<HTMLInputElement>
+   rootRef?: React.RefObject<HTMLLabelElement>
+}
+
+export interface TooltipProps extends BaseComponentProps {
+   content: string
+   placement?: 'top' | 'bottom' | 'left' | 'right'
+   showArrow?: boolean
+   children: React.ReactNode
+}

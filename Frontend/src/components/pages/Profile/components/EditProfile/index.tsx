@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
-import ButtonMASQ from '../../../../../components/UI/Button'
-import { Col, Row } from 'antd'
-import _ from 'lodash'
-import store from '~/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { handleCheckValidateConfirm } from '../../../../../utils/helper'
 import { updateUser } from '../../../../../api/profile'
-import { Select, Space, Input } from 'antd'
-import { setErrorInfoUser } from '../../../../../store/modules/profile'
-import { listLanguage, listLocation, listCity } from '../../../../common/ListSelected'
 import { Button } from '@chakra-ui/react'
 
 interface DataInfoUser {
@@ -23,8 +15,6 @@ interface DataInfoUser {
    linkedin: string
 }
 
-interface AuthAccount extends DataInfoUser {}
-
 function EditProfile() {
    const [dataInfoUser, setDataInfoUser] = useState<DataInfoUser>({
       name: '',
@@ -36,69 +26,34 @@ function EditProfile() {
       facebook: '',
       linkedin: '',
    })
-   const errorInfoUser = useSelector((state: any) => state.profile.errorInfoUser)
    const loadingBtnUpdateInfoUser = useSelector((state: any) => state.profile.loadingBtnUpdateInfoUser)
-   const authUser = useSelector((state: any) => state.auth.authUser) as AuthAccount
+   const authUser = useSelector((state: any) => state.auth.authUser)
+   const dispatch = useDispatch()
 
    useEffect(() => {
-      setDataInfoUser({
-         name: authUser.name,
-         email: authUser.email,
-         phone: authUser.phone,
-         language: authUser.language,
-         region: authUser.region,
-         city: authUser.city,
-         facebook: authUser.facebook,
-         linkedin: authUser.linkedin,
-      })
+      if (authUser) {
+         setDataInfoUser({
+            name: authUser.name,
+            email: authUser.email,
+            phone: authUser.phone,
+            language: authUser.language,
+            region: authUser.region,
+            city: authUser.city,
+            facebook: authUser.facebook,
+            linkedin: authUser.linkedin,
+         })
+      }
    }, [authUser])
 
-   const handleChangeInput = (valueInput: React.ChangeEvent<HTMLInputElement>, type: keyof DataInfoUser) => {
-      let value = valueInput.target.value
-      let dataCloneDeep = dataInfoUser
-      let data = _.cloneDeep(dataCloneDeep)
-      data[type] = value
-      setDataInfoUser(data)
-   }
-
-   const onChange = (event: any, nameSelect?: string) => {
-      if (nameSelect && nameSelect.ExpertiseTarget) {
-         setDataInfoUser((prevState) => ({
-            ...prevState,
-            areas_of_expertise: {
-               ...prevState.areas_of_expertise,
-               [nameSelect.ExpertiseTarget]: event,
-            },
-         }))
-      } else if (nameSelect) {
-         setDataInfoUser((prevState) => ({
-            ...prevState,
-            [nameSelect]: event,
-         }))
-      } else {
-         const { name, value } = event.target
-         setDataInfoUser((prevState) => ({
-            ...prevState,
-            [name]: value,
-         }))
-      }
-   }
-
-   const validateBlur = async (type: keyof DataInfoUser) => {
-      let data = dataInfoUser
-      let error = errorInfoUser
-      // let validate = isValidate(data, type, error)
-      // await store.dispatch(setErrorInfoUser(validate.error))
-      // return validate.isError
+   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>, type: keyof DataInfoUser) => {
+      setDataInfoUser((prev) => ({
+         ...prev,
+         [type]: e.target.value,
+      }))
    }
 
    const handleConfirmSaveInfoUser = async () => {
-      // let dataValidate = dataInfoUser
-      // let validate = handleCheckValidateConfirm(dataValidate, errorInfoUser)
-      // await store.dispatch(setErrorInfoUser(validate.dataError))
-      // if (!validate.isError) {
-      store.dispatch(updateUser(dataInfoUser))
-      // }
+      dispatch(updateUser(dataInfoUser) as any)
    }
 
    return (
@@ -112,155 +67,69 @@ function EditProfile() {
                   <div className="w-full">
                      <div className="relative mb-8">
                         <input
-                           type={'text'}
+                           type="text"
                            value={dataInfoUser.name}
-                           onBlur={() => validateBlur('name')}
                            name="name"
-                           placeholder={'Enter name...'}
+                           placeholder="Enter name..."
                            onChange={(e) => handleChangeInput(e, 'name')}
                            required
-                           className="p-[14px] border-[1px] w-full outline-none border-gray-200 rounded-lg "
+                           className="p-[14px] border-[1px] w-full outline-none border-gray-200 rounded-lg"
                         />
-                        <label
-                           htmlFor=""
-                           className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
-                        >
+                        <label className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
                            Name *
                         </label>
                      </div>
                      <div className="relative mb-8">
                         <input
-                           type={'text'}
-                           placeholder={'Enter email...'}
+                           type="text"
+                           placeholder="Enter email..."
                            onChange={(e) => handleChangeInput(e, 'email')}
-                           onBlur={() => validateBlur('email')}
                            value={dataInfoUser.email}
                            required
                            className="p-[14px] border-[1px] w-full outline-none border-gray-200 rounded-lg "
                         />
-                        <label
-                           htmlFor=""
-                           className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
-                        >
+                        <label className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
                            Email *
                         </label>
                      </div>
                      <div className="relative mb-8">
                         <input
-                           type={'text'}
-                           placeholder={'Enter phone...'}
+                           type="text"
+                           placeholder="Enter phone..."
                            onChange={(e) => handleChangeInput(e, 'phone')}
-                           onBlur={() => validateBlur('phone')}
                            value={dataInfoUser.phone}
                            required
                            className="p-[14px] border-[1px] w-full outline-none border-gray-200 rounded-lg "
                         />
-                        <label
-                           htmlFor=""
-                           className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
-                        >
+                        <label className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
                            Phone *
                         </label>
                      </div>
                      <div className="relative mb-8">
-                        <Select
-                           value={dataInfoUser.language}
-                           mode="multiple"
-                           style={{
-                              width: '100%',
-                              height: '50px',
-                           }}
+                        <input
+                           type="text"
+                           placeholder="Enter link facebook..."
+                           onChange={(e) => handleChangeInput(e, 'facebook')}
+                           value={dataInfoUser.facebook}
                            required
-                           size="large"
-                           placeholder="Select language..."
-                           onChange={(value) => onChange(value, 'language')}
-                           options={listLanguage}
+                           className="p-[14px] border-[1px] w-full outline-none border-gray-200 rounded-lg "
                         />
-                        <label
-                           htmlFor=""
-                           className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
-                        >
-                           Category *
+                        <label className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
+                           Facebook *
                         </label>
                      </div>
                   </div>
                   <div className="w-full">
                      <div className="relative mb-8">
-                        <Select
-                           style={{
-                              width: '100%',
-                              height: '50px',
-                           }}
-                           value={dataInfoUser.region}
-                           required
-                           showSearch
-                           placeholder="Select region..."
-                           optionFilterProp="label"
-                           onChange={(value) => onChange(value, 'region')}
-                           size="large"
-                           options={listLocation}
-                        />
-                        <label
-                           htmlFor=""
-                           className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
-                        >
-                           Region *
-                        </label>
-                     </div>
-
-                     <div className="relative mb-8">
-                        <Select
-                           value={dataInfoUser.city}
-                           required
-                           showSearch
-                           placeholder="Select city..."
-                           optionFilterProp="label"
-                           onChange={(value) => onChange(value, 'city')}
-                           size="large"
-                           options={listCity}
-                           style={{
-                              width: '100%',
-                              height: '50px',
-                           }}
-                        />
-                        <label
-                           htmlFor=""
-                           className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
-                        >
-                           City *
-                        </label>
-                     </div>
-                     <div className="relative mb-8">
                         <input
-                           type={'text'}
-                           placeholder={'Enter link facebook...'}
-                           onChange={(e) => handleChangeInput(e, 'facebook')}
-                           onBlur={() => validateBlur('facebook')}
-                           value={dataInfoUser.facebook}
-                           required
-                           className="p-[14px] border-[1px] w-full outline-none border-gray-200 rounded-lg "
-                        />
-                        <label
-                           htmlFor=""
-                           className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
-                        >
-                           Facebook *
-                        </label>
-                     </div>
-                     <div className="relative mb-8">
-                        <input
-                           type={'text'}
-                           placeholder={'Enter linkedin...'}
+                           type="text"
+                           placeholder="Enter linkedin..."
                            onChange={(e) => handleChangeInput(e, 'linkedin')}
-                           onBlur={() => validateBlur('linkedin')}
                            value={dataInfoUser.linkedin}
                            required
                            className="p-[14px] border-[1px] w-full outline-none border-gray-200 rounded-lg "
                         />
-                        <label
-                           htmlFor=""
-                           className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]"
-                        >
+                        <label className="text-xs bg-[#ffffff] px-1 border-x-[1px] border-gray-200 absolute top-[-8px] left-[10px]">
                            LinkedIn *
                         </label>
                      </div>
@@ -268,8 +137,8 @@ function EditProfile() {
                </div>
                <div className="flex justify-end">
                   <Button
-                     onClick={() => handleConfirmSaveInfoUser()}
-                     isLoading={loadingBtnUpdateInfoUser}
+                     onClick={handleConfirmSaveInfoUser}
+                     loading={loadingBtnUpdateInfoUser}
                      height={50}
                      className="mt-[14px]  text-sm px-[18px] py-2 sm:text-base sm:px-[28px] sm:py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
                      borderRadius={4}

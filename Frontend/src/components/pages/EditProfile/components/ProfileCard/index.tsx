@@ -1,5 +1,5 @@
 import React from 'react'
-import { CheckCircleFilled } from '@ant-design/icons'
+import { FaCircleCheck } from "react-icons/fa6";
 import { useSelector } from 'react-redux'
 import { Avatar } from '@chakra-ui/react'
 import { RootState } from '~/store'
@@ -27,7 +27,7 @@ const ProfileCard: React.FC = () => {
          <div>
             <h4 className="flex items-center">
                {authUser?.name}
-               <CheckCircleFilled className="text-[#3897f0] ml-2" />
+               <FaCircleCheck className="text-[#3897f0] ml-2" />
             </h4>
             <span className="text-[#6f7f92]">
                {authUser?.created_at ? `Member since ${new Date(authUser.created_at).getFullYear()}` : ''}

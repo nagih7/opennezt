@@ -1,7 +1,7 @@
 import NotFound from 'components/UI/NotFound'
 import { Avatar } from '@chakra-ui/react'
 import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants'
-import { MoreOutlined } from '@ant-design/icons'
+import { HiOutlineDotsVertical } from "react-icons/hi";
 import { useMessage } from '~/hooks'
 import moment from 'moment'
 
@@ -50,7 +50,7 @@ const PopoverMessage: React.FC = () => {
                               </p>
                            </div>
                            <div className="justify-end hidden group-hover:flex">
-                              <MoreOutlined className="w-[15px] h-[15px] text-black" />
+                              <HiOutlineDotsVertical  className="w-[15px] h-[15px] text-black" />
                            </div>
                         </div>
                      </div>

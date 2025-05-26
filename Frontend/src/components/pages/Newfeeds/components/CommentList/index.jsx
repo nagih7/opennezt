@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CheckCircleFilled } from '@ant-design/icons'
+import { GoPlus } from "react-icons/go";
 import avt from 'assets/images/background/avt.jpg'
 import { IconlyChat } from 'components/UI/Iconly'
 import { IconlyHeart } from 'components/UI/Iconly'
@@ -600,7 +600,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                      <div className="flex flex-col gap-2 w-9/12 text-base font-medium">
                         <div className="flex items-center gap-2">
                            {user[0]?.name}
-                           <CheckCircleFilled className="text-[#3897f0]" />
+                           <FaCircleCheck className="text-[#3897f0]" />
                            <span className="text-sm">posted in</span>
                            <span className="">{project[0]?.name || 'no name'}</span>
                         </div>

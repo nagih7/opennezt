@@ -1,7 +1,8 @@
 import { IconlyStar } from 'components/UI/Iconly'
 import React, { FC } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowsAltOutlined, WechatOutlined } from '@ant-design/icons'
+import { AiFillWechat } from "react-icons/ai";
+import { BsArrowsAngleExpand } from "react-icons/bs";
 
 const NoChat: FC = () => {
    return (
@@ -11,13 +12,13 @@ const NoChat: FC = () => {
                <IconlyStar size={18} color={'#6f7f92'} />
             </a>
             <span className="flex items-center justify-center text-[#6f7f92] w-[50px] h-11">
-               <ArrowsAltOutlined />
+               <BsArrowsAngleExpand  />
             </span>
          </div>
          <div className="py-[16px] flex-1">
             <div className="flex flex-col items-center justify-center h-full gap-3 py-16">
                <p className="mb-0 w-14 h-14">
-                  <WechatOutlined className="text-8xl w-14 h-14 " />
+                  <AiFillWechat  className="text-8xl w-14 h-14 " />
                </p>
                <p className="mb-0 text-[#6f7f92]">Select a conversation to display messages</p>
                <p className="mb-0 text-[#6f7f92]">or</p>
