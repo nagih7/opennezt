@@ -17,16 +17,16 @@ export const CACHE_DIR = path.join(PRIVATE_DIR, 'cache')
 export const VIEW_DIR = path.join(SOURCE_DIR, 'views')
 
 export const APP_ENV = {
-   PRODUCTION: 'production',
-   DEVELOPMENT: 'development',
+    PRODUCTION: 'production',
+    DEVELOPMENT: 'development',
 }
 export const NODE_ENV = Object.values(APP_ENV).includes(process.env.NODE_ENV)
-   ? process.env.NODE_ENV
-   : APP_ENV.PRODUCTION
+    ? process.env.NODE_ENV
+    : APP_ENV.PRODUCTION
 
 // Loads `.env` file contents into process.env
 dotenv.config({
-   path: [path.join(APP_DIR, `.env.${NODE_ENV}`), path.join(APP_DIR, '.env')],
+    path: [path.join(APP_DIR, `.env.${NODE_ENV}`), path.join(APP_DIR, '.env')],
 })
 
 // environment
@@ -100,10 +100,10 @@ assert(!_.isEmpty(MAIL_TO), assertMsg('MAIL_TO'))
 
 // other
 export const TOKEN_TYPE = {
-   AUTHORIZATION: 'AUTHORIZATION',
-   FORGOT_PASSWORD: 'FORGOT_PASSWORD',
-   VERIFY_EMAIL: 'VERIFY_EMAIL',
-   ACCESS_TOKEN: 'ACCESS_TOKEN',
+    AUTHORIZATION: 'AUTHORIZATION',
+    FORGOT_PASSWORD: 'FORGOT_PASSWORD',
+    VERIFY_EMAIL: 'VERIFY_EMAIL',
+    ACCESS_TOKEN: 'ACCESS_TOKEN',
 }
 export const MAX_STRING_SIZE = 255
 export const MAX_AREAS_STRING_SIZE = 500
@@ -111,67 +111,67 @@ export const MAX_AREAS_STRING_SIZE = 500
 export const UUID_TRANSLATOR = short()
 
 export const STATUS_DEFAULT_MESSAGE = {
-   401: 'Please login to continue.',
-   403: 'You do not have permission to access this resource.',
-   404: 'Path does not exist.',
-   429: 'Too many requests. Please try again later.',
-   500: 'An error occurred. Please try again later.',
+    401: 'Please login to continue.',
+    403: 'You do not have permission to access this resource.',
+    404: 'Path does not exist.',
+    429: 'Too many requests. Please try again later.',
+    500: 'An error occurred. Please try again later.',
 }
 
 export const JOI_DEFAULT_OPTIONS = {
-   abortEarly: false,
-   errors: {
-      wrap: { label: false },
-      language: { 'any.exists': 'any.exists' },
-   },
-   externals: false,
-   stripUnknown: true,
-   messages: {
-      // boolean
-      'boolean.base': '{{#label}} wrong format.',
+    abortEarly: false,
+    errors: {
+        wrap: { label: false },
+        language: { 'any.exists': 'any.exists' },
+    },
+    externals: false,
+    stripUnknown: true,
+    messages: {
+        // boolean
+        'boolean.base': '{{#label}} wrong format.',
 
-      // string
-      'string.base': '{{#label}} wrong format.',
-      'string.empty': '{{#label}} cannot be left blank.',
-      'string.min': '{{#label}} must not be less than {{#limit}} characters.',
-      'string.max': '{{#label}} must not exceed {{#limit}} characters.',
-      'string.pattern.base': '{{#label}} is not in the correct format.',
-      'string.email': '{{#label}} is not in the correct format.',
+        // string
+        'string.base': '{{#label}} wrong format.',
+        'string.empty': '{{#label}} cannot be left blank.',
+        'string.min': '{{#label}} must not be less than {{#limit}} characters.',
+        'string.max': '{{#label}} must not exceed {{#limit}} characters.',
+        'string.pattern.base': '{{#label}} is not in the correct format.',
+        'string.email': '{{#label}} is not in the correct format.',
 
-      // number
-      'number.base': '{{#label}} wrong format.',
-      'number.integer': '{{#label}} wrong format.',
-      'number.min': '{{#label}} không được nhỏ hơn {{#limit}}.',
-      'number.max': '{{#label}} không được lớn hơn {{#limit}}.',
+        // number
+        'number.base': '{{#label}} wrong format.',
+        'number.integer': '{{#label}} wrong format.',
+        'number.min': '{{#label}} không được nhỏ hơn {{#limit}}.',
+        'number.max': '{{#label}} không được lớn hơn {{#limit}}.',
 
-      // array
-      'array.base': '{{#label}} wrong format.',
-      'array.unique': 'Các {{#label}} not allow same.',
-      'array.min': '{{#label}} must not have less than {{#limit}} elements.',
-      'array.max': '{{#label}} must not exceed {{#limit}} elements.',
-      'array.length': '{{#label}} must have exactly {{#limit}} elements.',
-      'array.includesRequiredUnknowns': '{{#label}} is invalid.',
-      'array.includesRequiredKnowns': '{{#label}} is invalid.',
+        // array
+        'array.base': '{{#label}} wrong format.',
+        'array.unique': 'Các {{#label}} not allow same.',
+        'array.min': '{{#label}} must not have less than {{#limit}} elements.',
+        'array.max': '{{#label}} must not exceed {{#limit}} elements.',
+        'array.length': '{{#label}} must have exactly {{#limit}} elements.',
+        'array.includesRequiredUnknowns': '{{#label}} is invalid.',
+        'array.includesRequiredKnowns': '{{#label}} is invalid.',
 
-      // object
-      'object.base': '{{#label}} wrong format.',
-      'object.unknown': 'The {#key} field is not defined.',
-      'object.instance': '{{#label}} is not in the correct format.',
+        // object
+        'object.base': '{{#label}} wrong format.',
+        'object.unknown': 'The {#key} field is not defined.',
+        'object.instance': '{{#label}} is not in the correct format.',
 
-      // binary
-      'binary.base': '{{#label}} wrong format.',
-      'binary.min': '{{#label}} must not be less than {{#limit}} bytes.',
-      'binary.max': '{{#label}} must not exceed {{#limit}} bytes.',
+        // binary
+        'binary.base': '{{#label}} wrong format.',
+        'binary.min': '{{#label}} must not be less than {{#limit}} bytes.',
+        'binary.max': '{{#label}} must not exceed {{#limit}} bytes.',
 
-      // any
-      'any.only': '{{#label}} is invalid.',
-      'any.required': '{{#label}} cannot be left blank.',
-      'any.unknown': 'The {#key} field is not defined.',
-      'any.invalid': '{{#label}} is invalid.',
-      'any.exists': '{{#label}} already exists.',
-      'any.empty': '{{#label}} does not exist.',
-      'any.invited': '{{#label}} has been invited.',
-   },
+        // any
+        'any.only': '{{#label}} is invalid.',
+        'any.required': '{{#label}} cannot be left blank.',
+        'any.unknown': 'The {#key} field is not defined.',
+        'any.invalid': '{{#label}} is invalid.',
+        'any.exists': '{{#label}} already exists.',
+        'any.empty': '{{#label}} does not exist.',
+        'any.invited': '{{#label}} has been invited.',
+    },
 }
 
 export const VALIDATE_PHONE_REGEX = /^(0[235789])[0-9]{8}$/
@@ -235,7 +235,7 @@ export const BLACKLISTED_URLS = ['traodocu.vn']
 
 // VALID URLS TYPE
 export const URL_PATTERN = new RegExp(
-   '^(https?:\\/\\/)' + // protocol
+    '^(https?:\\/\\/)' + // protocol
       '((([a-z\\d]([a-z\\d-]*[a-z\\d])?)\\.)+[a-z]{2,}|' + // domain name
       'localhost|' + // localhost
       '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|' + // ipv4
@@ -243,7 +243,7 @@ export const URL_PATTERN = new RegExp(
       '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
       '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
       '(\\#[-a-z\\d_]*)?$',
-   'i'
+    'i'
 )
 
 export const BOOKMARK_TARGET_TYPE_ENUM = ['article', 'project', 'talent']
