@@ -31,11 +31,12 @@ const callApi = async ({ method, apiPath, variables, headers }: BaseApiProps) =>
    //    const status = error?.response?.status || 500
    //    return { status, ...error.response.data }
    // }
+   const isFormData = variables instanceof FormData
 
    const response = await apiAxios.request({
       url: apiPath,
       method,
-      headers,
+      headers: isFormData ? { ...headers } : { 'Content-Type': 'application/json', ...headers },
       data: variables,
       params: method === 'get' ? variables : undefined,
    })

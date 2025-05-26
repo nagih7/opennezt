@@ -8,7 +8,7 @@ import store from '~/store'
 import { SocketProvider, WebPushProvider } from 'contexts'
 import Mobile_Responsive from 'components/common/Mobile_Responsive'
 import ChakraProvider from 'components/UI/provider'
-import { Toaster } from 'components/UI/toaster'
+import { Toaster } from 'sonner'
 
 // Define type for the root element
 const rootElement: HTMLElement | null = document.getElementById('root')

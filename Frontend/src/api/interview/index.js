@@ -24,10 +24,12 @@ export const startInterview = (projectId) => async (dispatch, getState) => {
 
 export const replyInterview = (payload) => async (dispatch, getState) => {
    const { audio, interview } = payload
+   console.log('replyInterview payload:', payload)
    // Create a FormData object to send the audio file
    const formData = new FormData()
    formData.append('audio', audio)
    formData.append('interview', JSON.stringify(interview))
+   console.log('replyInterview formData:', formData)
 
    return callReduxApi({
       method: 'post',
