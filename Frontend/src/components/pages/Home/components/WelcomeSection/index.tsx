@@ -15,7 +15,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({ user }) => {
    }
 
    const handleNavigateToCreateInterview = () => {
-      navigate('/about')
+      navigate('/profile')
    }
 
    return (
