@@ -1,9 +1,4 @@
-// export * from './app'
-// export * from './auth'
-// export * from './input'
-// export * from './api'
-// export * from './validation'
-// export * from './type'
+export * from './routes'
 
 export const Auth = {
    LOGIN: 'login',

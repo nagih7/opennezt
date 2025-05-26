@@ -24,7 +24,6 @@ export const rootLoader = async (loaderArgs: LoaderArgs, options: RootLoaderOpti
 
       // Determine route type
       const routeType = RouteHelper.getRouteType(pathname)
-      console.log(`🔍 Route type for ${pathname}: ${routeType}`)
 
       // Handle different route types
       switch (routeType) {

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toaster } from 'components/UI/toaster'
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import { RootState } from '~/store'
+import { ROUTE_CONFIG } from '~/config/constants/routes'
 
 interface FormData {
    industries: string[]
@@ -29,7 +30,7 @@ const Stage: React.FC = () => {
    // ========== USEEFFECT ========== //
    useEffect(() => {
       if (formCreateProject.name === '') {
-         navigate('/project/details')
+         navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC)
       }
    }, [navigate, formCreateProject.name])
 
@@ -66,7 +67,7 @@ const Stage: React.FC = () => {
 
    const handlePreviousStep = () => {
       dispatch(onChangeFormCreateProject(formData))
-      navigate('/project/details')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC)
    }
 
    const handleNextStep = () => {
@@ -86,12 +87,12 @@ const Stage: React.FC = () => {
          return
       }
       dispatch(onChangeFormCreateProject(formData))
-      navigate('/project/revenue')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.REVENUE)
    }
    const handlePrevStep = () => {
       if (currentStep > 0) {
          setCurrentStep((prev) => prev - 1)
-         navigate('/project/details')
+         navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC)
       }
    }
 

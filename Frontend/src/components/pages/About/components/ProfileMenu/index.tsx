@@ -1,6 +1,7 @@
 import { IconlyMessage, IconlyProfile, IconlyUser } from 'components/UI/Iconly'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { ROUTE_CONFIG } from '~/config/constants/routes'
 
 type TabType = 'About' | 'Friends' | 'Groups' | 'Timeline' | 'Badges' | 'Messages' | 'Notifications' | 'Courses'
 
@@ -64,7 +65,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ changeTab, setChangeTab }) =>
                </span>
             </li>
 
-            <Link className="no-underline" to={'/conversation'}>
+            <Link className="no-underline" to={ROUTE_CONFIG.USER.CONVERSATION.PREFIX}>
                <li
                   onClick={() => setChangeTab('Messages')}
                   className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]"

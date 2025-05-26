@@ -9,6 +9,7 @@ import {
 } from 'components/UI/Iconly'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { ROUTE_CONFIG } from '~/config/constants/routes'
 
 const ProjectMenu: React.FC = () => {
    return (
@@ -16,7 +17,7 @@ const ProjectMenu: React.FC = () => {
          <ul className="flex items-center 2xl:max-w-full max-w-[1170px] p-0 m-0 overflow-x-scroll scrollbar-hide">
             <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
                <Link
-                  to={'/projects/me/:id/details'}
+                  to={ROUTE_CONFIG.USER.PROJECT.ME.EDIT.BASIC}
                   className="no-underline bg-[#f8f9fa] mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2"
                >
                   <IconlyHome size={20} color={'#6f7f92'} />
@@ -34,7 +35,7 @@ const ProjectMenu: React.FC = () => {
             </li>
             <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]">
                <Link
-                  to={'/project/details/members'}
+                  to={ROUTE_CONFIG.USER.PROJECT.ME.EDIT.MEMBER}
                   className="no-underline bg-[#f8f9fa] mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2"
                >
                   <IconlyUser size={20} color={'#6f7f92'} />
@@ -71,7 +72,7 @@ const ProjectMenu: React.FC = () => {
             </li>
             <li className="flex flex-col items-center gap-3 py-[40px] px-[8px] ">
                <Link
-                  to={'/project/details/setting'}
+                  to={ROUTE_CONFIG.USER.PROJECT.ME.EDIT.SETTING}
                   className="no-underline bg-[#f8f9fa] mx-[60px] w-12 h-12 rounded-md  flex justify-center items-center gap-2"
                >
                   <IconlyActivity size={20} color={'#6f7f92'} />

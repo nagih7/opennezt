@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import resizeLogo from 'utils/files/resizeLogo'
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import { RootState } from '~/store'
+import { ROUTE_CONFIG } from '~/config/constants/routes'
 
 const Logo: React.FC = () => {
    const navigate = useNavigate()
@@ -20,7 +21,7 @@ const Logo: React.FC = () => {
    // ========== USEEFFECT ========== //
    useEffect(() => {
       if (formCreateProject.name === '') {
-         navigate('/project/details')
+         navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC)
       }
    }, [navigate, formCreateProject.name])
 
@@ -44,11 +45,11 @@ const Logo: React.FC = () => {
    }
 
    const handlePreviousStep = (): void => {
-      navigate('/project/additional-info')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.DESCRIPTION)
    }
 
    const handleNextStep = (): void => {
-      navigate('/project/background')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.BACKGROUND)
    }
 
    const handlePrevStep = (): void => {

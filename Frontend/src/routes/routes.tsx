@@ -176,7 +176,7 @@ const router: RouteObject[] = [
    },
    // About routes
    {
-      path: ROUTE_CONFIG.USER.PROFILE,
+      path: ROUTE_CONFIG.USER.PROFILE.PREFIX,
       element: withSuspense(
          <AppLayout>
             <About />
@@ -192,7 +192,7 @@ const router: RouteObject[] = [
       ],
    },
    {
-      path: ROUTE_CONFIG.USER.PROFILE + '/professional-background',
+      path: ROUTE_CONFIG.USER.PROFILE.EDIT.PROFESSIONAL_BACKGROUND,
       element: withSuspense(
          <AppLayout>
             <EditProfileFeatures.ProfessionalBackground />
@@ -201,7 +201,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.PROFILE + '/educations',
+      path: ROUTE_CONFIG.USER.PROFILE.EDIT.EDUCATION,
       element: withSuspense(
          <AppLayout>
             <EditProfileFeatures.Educations />
@@ -210,7 +210,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.PROFILE + '/certifications',
+      path: ROUTE_CONFIG.USER.PROFILE.EDIT.CERTIFICATION,
       element: withSuspense(
          <AppLayout>
             <EditProfileFeatures.Certifications />
@@ -219,7 +219,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.PROFILE + '/skills',
+      path: ROUTE_CONFIG.USER.PROFILE.EDIT.SKILL,
       element: withSuspense(
          <AppLayout>
             <EditProfileFeatures.Skills />
@@ -228,7 +228,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_EDIT_PROFILE_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.PROFILE + '/more',
+      path: ROUTE_CONFIG.USER.PROFILE.EDIT.DESCRIPTION,
       element: withSuspense(
          <AppLayout>
             <EditProfileFeatures.AdditionalInfo />
@@ -238,7 +238,7 @@ const router: RouteObject[] = [
    },
    // Project routes
    {
-      path: ROUTE_CONFIG.USER.PROJECT,
+      path: ROUTE_CONFIG.USER.PROJECT.PREFIX,
       element: withSuspense(
          <AppLayout>
             <Project />
@@ -247,7 +247,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.PROJECT + '/:id/details',
+      path: ROUTE_CONFIG.USER.PROJECT.DETAIL.PREFIX,
       element: withSuspense(
          <AppLayout>
             <TalentFeatures.ProjectDetailsBySeek />
@@ -257,7 +257,7 @@ const router: RouteObject[] = [
    },
    // Create Project routes
    {
-      path: ROUTE_CONFIG.USER.CREATE_PROJECT + '/details',
+      path: ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.CreateProject.Details />
@@ -266,7 +266,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.CREATE_PROJECT + '/stage',
+      path: ROUTE_CONFIG.USER.PROJECT.CREATE.STAGE,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.CreateProject.Stage />
@@ -275,7 +275,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.CREATE_PROJECT + '/revenue',
+      path: ROUTE_CONFIG.USER.PROJECT.CREATE.REVENUE,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.CreateProject.Revenue />
@@ -284,7 +284,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.CREATE_PROJECT + '/funding-sources',
+      path: ROUTE_CONFIG.USER.PROJECT.CREATE.FUNDING,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.CreateProject.FundingSources />
@@ -293,7 +293,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.CREATE_PROJECT + '/additional-info',
+      path: ROUTE_CONFIG.USER.PROJECT.CREATE.DESCRIPTION,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.CreateProject.AdditionalInfo />
@@ -302,7 +302,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.CREATE_PROJECT + '/logo',
+      path: ROUTE_CONFIG.USER.PROJECT.CREATE.LOGO,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.CreateProject.Logo />
@@ -311,7 +311,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.CREATE_PROJECT + '/background',
+      path: ROUTE_CONFIG.USER.PROJECT.CREATE.BACKGROUND,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.CreateProject.Background />
@@ -320,7 +320,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.CREATE_PROJECT + '/invites',
+      path: ROUTE_CONFIG.USER.PROJECT.CREATE.INVITE,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.CreateProject.Invites />
@@ -329,7 +329,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_CREATE_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.MY_PROJECTS + '/:id/details',
+      path: ROUTE_CONFIG.USER.PROJECT.ME.DETAIL,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.MyProject.Details />
@@ -338,7 +338,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_PROJECT_DETAILS_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.MY_PROJECTS + '/:id/edit/basic',
+      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.BASIC,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.EditProject.Detail />
@@ -347,7 +347,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.MY_PROJECTS + '/:id/edit/stage',
+      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.STAGE,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.EditProject.Stage />
@@ -356,7 +356,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.MY_PROJECTS + '/:id/edit/revenue',
+      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.REVENUE,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.EditProject.Revenue />
@@ -365,7 +365,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.MY_PROJECTS + '/:id/edit/funding-sources',
+      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.FUNDING,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.EditProject.FundingSources />
@@ -374,7 +374,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.MY_PROJECTS + '/:id/edit/additional-info',
+      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.DESCRIPTION,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.EditProject.AdditionalInfo />
@@ -383,7 +383,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.MY_PROJECTS + '/:id/edit/logo',
+      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.LOGO,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.EditProject.Logo />
@@ -392,7 +392,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.MY_PROJECTS + '/:id/edit/background',
+      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.BACKGROUND,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.EditProject.Background />
@@ -401,7 +401,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.PROJECT_DETAIL + '/members',
+      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.MEMBER,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.MyProject.Members />
@@ -410,7 +410,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_PROJECT_MEMBERS_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.PROJECT_DETAIL + '/setting',
+      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.SETTING,
       element: withSuspense(
          <AppLayout>
             <ProjectFeatures.MyProject.ProjectManage />
@@ -420,7 +420,7 @@ const router: RouteObject[] = [
    },
    // Talent routes
    {
-      path: ROUTE_CONFIG.USER.RECRUIT_TALENT,
+      path: ROUTE_CONFIG.USER.RECRUIT_TALENT.PREFIX,
       element: withSuspense(
          <AppLayout>
             <TalentFeatures.RecruitTalents />
@@ -429,7 +429,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_RECRUIT_TALENTS_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.RECRUIT_TALENT + '/:id',
+      path: ROUTE_CONFIG.USER.RECRUIT_TALENT.DETAIL,
       element: withSuspense(
          <AppLayout>
             <TalentFeatures.TalentDetails />
@@ -439,7 +439,7 @@ const router: RouteObject[] = [
    },
    // Seek Project routes
    {
-      path: ROUTE_CONFIG.USER.SEEK_PROJECT,
+      path: ROUTE_CONFIG.USER.SEEK_PROJECT.PREFIX,
       element: withSuspense(
          <AppLayout>
             <TalentFeatures.SeekProjects />
@@ -449,7 +449,7 @@ const router: RouteObject[] = [
    },
 
    {
-      path: ROUTE_CONFIG.USER.CONVERSATION,
+      path: ROUTE_CONFIG.USER.CONVERSATION.PREFIX,
       element: withSuspense(
          <AppLayout>
             <Message />
@@ -458,7 +458,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_MESSAGES_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.CONVERSATION_DETAIL,
+      path: ROUTE_CONFIG.USER.CONVERSATION.DETAIL,
       element: withSuspense(
          <AppLayout>
             <Message />
@@ -467,7 +467,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_CONVERSATION_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.SETTINGS,
+      path: ROUTE_CONFIG.USER.SETTING.PREFIX,
       element: withSuspense(
          <AppLayout>
             <AccountSettingsFeatures.Main />
@@ -476,7 +476,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_ACCOUNT_SETTINGS_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.SETTINGS + '/profile-visibility',
+      path: ROUTE_CONFIG.USER.SETTING.PROFILE,
       element: withSuspense(
          <AppLayout>
             <AccountSettingsFeatures.ProfileVisibility />
@@ -485,7 +485,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_PROFILE_VISIBILITY_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.SETTINGS + '/privacy-and-security',
+      path: ROUTE_CONFIG.USER.SETTING.PRIVACY_POLICY,
       element: withSuspense(
          <AppLayout>
             <AccountSettingsFeatures.PrivacyAndSecurity />
@@ -494,7 +494,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_PRIVACY_AND_SECURITY_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.SETTINGS + '/shop',
+      path: ROUTE_CONFIG.USER.SETTING.SHOP,
       element: withSuspense(
          <AppLayout>
             <AccountSettingsFeatures.Shop />
@@ -503,7 +503,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_SHOP_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.SETTINGS + '/block-list',
+      path: ROUTE_CONFIG.USER.SETTING.BLOCKLIST,
       element: withSuspense(
          <AppLayout>
             <AccountSettingsFeatures.BlockList />
@@ -512,7 +512,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_BLOCK_LIST_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.SETTINGS + '/export-data',
+      path: ROUTE_CONFIG.USER.SETTING.EXPORT,
       element: withSuspense(
          <AppLayout>
             <AccountSettingsFeatures.ExportData />
@@ -521,7 +521,7 @@ const router: RouteObject[] = [
       loader: createLoader(true, 'LOAD_EXPORT_DATA_PAGE'),
    },
    {
-      path: ROUTE_CONFIG.USER.INTERVIEW + '/:projectId',
+      path: ROUTE_CONFIG.USER.INTERVIEW.PREFIX,
       element: withSuspense(<Interview />),
       loader: createLoader(true, 'LOAD_INTERVIEW_PAGE'),
    },

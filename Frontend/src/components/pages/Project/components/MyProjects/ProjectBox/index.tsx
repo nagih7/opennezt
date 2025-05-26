@@ -3,6 +3,7 @@ import { IconlyDocument, IconlyUser } from 'components/UI/Iconly'
 import { useNavigate } from 'react-router-dom'
 import { Avatar, Button, Image } from '@chakra-ui/react'
 import { OPENNEZT_BG_BLACK } from 'utils/constants'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 interface Member {
    user: {
@@ -31,7 +32,7 @@ const ProjectBox: React.FC<ProjectBoxProps> = ({ project }) => {
    const [errorBG, setErrorBG] = useState<boolean>(false)
 
    const handleNavigateToProjectDetails = (project: Project) => {
-      navigate(`/projects/me/${project._id}/details`)
+      navigate(ROUTE_CONFIG.USER.PROJECT.ME.PREFIX + project._id)
    }
 
    return (
@@ -65,7 +66,7 @@ const ProjectBox: React.FC<ProjectBoxProps> = ({ project }) => {
                      </Avatar.Root>
                   </div>
                   <h5>
-                     <a href="#" className="text-black text-sm sm:text-lg no-underline">
+                     <a href="#" className="text-sm text-black no-underline sm:text-lg">
                         {project.name}
                      </a>
                   </h5>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { GoPlus } from "react-icons/go";
+import { GoPlus } from 'react-icons/go'
 import StepHeader from '../StepHeader'
 import { IconlyDelete } from 'components/UI/Iconly'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,6 +12,7 @@ import SelectCustom from 'components/UI/SelectCustom'
 import { toaster } from 'components/UI/toaster'
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import { RootState } from '~/store'
+import { ROUTE_CONFIG } from '~/config/constants/routes'
 
 const currencyFramework = createListCollection({
    items: CURRENCY['EN'],
@@ -35,7 +36,7 @@ const Revenue: React.FC = () => {
    // ========== USEEFFECT ========== //
    useEffect(() => {
       if (formCreateProject.name === '') {
-         navigate('/project/details')
+         navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC)
       }
    }, [navigate, formCreateProject.name])
 
@@ -67,12 +68,12 @@ const Revenue: React.FC = () => {
 
    const handlePreviousStep = () => {
       dispatch(onChangeFormCreateProject({ revenues: formData }))
-      navigate('/project/stage')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.STAGE)
    }
 
    const handleNextStep = async () => {
       dispatch(onChangeFormCreateProject({ revenues: formData }))
-      navigate('/project/funding-sources')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.FUNDING)
    }
 
    const handleAddRevenue = () => {
@@ -119,8 +120,8 @@ const Revenue: React.FC = () => {
                            className="flex items-center gap-1 cursor-pointer bg-[#2f65b9] rounded-md text-[#ffffff] px-[20px] py-2 mb-[14px]"
                            onClick={handleAddRevenue}
                         >
-                           <GoPlus  className="text-[#ffffff]" />
-                           <button height={50} className="text-xs bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold">
+                           <GoPlus className="text-[#ffffff]" />
+                           <button className="text-xs bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold">
                               ADD REVENUE
                            </button>
                         </div>
@@ -170,7 +171,6 @@ const Revenue: React.FC = () => {
                            <Button
                               onClick={handlePrevStep}
                               height={50}
-                              isDisabled={currentStep === 0}
                               className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold "
                            >
                               BACK TO PREVIOUS STEP

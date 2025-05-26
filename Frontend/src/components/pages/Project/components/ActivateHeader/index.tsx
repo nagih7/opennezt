@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import MyProjects from '../MyProjects'
 import ProjectsParticipated from '../ProjectsParticipated'
+import { ROUTE_CONFIG } from '~/config/constants/routes'
 
 interface ActivateHeaderProps {
    isBottom: boolean
@@ -38,7 +39,10 @@ const ActivateHeader: React.FC<ActivateHeaderProps> = ({
                         <span onClick={() => handleTabChange('projects-participated')}>Projects Participated</span>
                      </Tabs.Trigger>
                      <Tabs.Trigger value="create-project">
-                        <Link to={'/project/details'} className="no-underline text-[#6f7f92] font-medium">
+                        <Link
+                           to={ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC}
+                           className="no-underline text-[#6f7f92] font-medium"
+                        >
                            Create a Project
                         </Link>
                      </Tabs.Trigger>

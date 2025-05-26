@@ -1,7 +1,7 @@
 import { IconlyAddUser, IconlyArrowLeft2 } from 'components/UI/Iconly'
-import { BsArrowsAngleExpand } from "react-icons/bs";
-import { HiOutlineDotsVertical } from "react-icons/hi";
-import React, { FC, useState } from 'react'
+import { BsArrowsAngleExpand } from 'react-icons/bs'
+import { HiOutlineDotsVertical } from 'react-icons/hi'
+import { FC, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants'
@@ -12,6 +12,7 @@ import InviteMemberModal from './components/InviteMemberModal'
 import { setModalInviteMember } from 'store/modules/project'
 import NoChat from './components/NoChat'
 import Chat from './components/Chat'
+import { ROUTE_CONFIG } from '~/config/constants/routes'
 
 interface ParamTypes {
    id?: string
@@ -67,7 +68,10 @@ const Conversation: FC = () => {
          <>
             <div className="flex justify-between p-[10px] mb-[18px] bg-[#ffffff] rounded-md">
                <div className="flex items-center">
-                  <Link to={'/conversation'} className="hidden md:flex justify-center items-center w-[50px] h-11">
+                  <Link
+                     to={ROUTE_CONFIG.USER.CONVERSATION.PREFIX}
+                     className="hidden md:flex justify-center items-center w-[50px] h-11"
+                  >
                      <IconlyArrowLeft2 size={18} color={'#6f7f92'} />
                   </Link>
 
@@ -97,7 +101,7 @@ const Conversation: FC = () => {
                </div>
                <div className="flex items-center">
                   <span className="flex items-center justify-center text-[#6f7f92] w-[50px] h-11">
-                     <BsArrowsAngleExpand  />
+                     <BsArrowsAngleExpand />
                   </span>
 
                   <Popover.Root
@@ -112,7 +116,7 @@ const Conversation: FC = () => {
                         >
                            <Tooltip content="More" openDelay={0} closeDelay={100} positioning={{ placement: 'top' }}>
                               <span>
-                                 <HiOutlineDotsVertical  />
+                                 <HiOutlineDotsVertical />
                               </span>
                            </Tooltip>
                         </span>

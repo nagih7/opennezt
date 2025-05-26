@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { ROUTE_CONFIG } from '~/config/constants'
 import { RootState, useAppSelector } from '~/store'
 
 const useMessage = () => {
@@ -9,7 +10,7 @@ const useMessage = () => {
 
    // Function
    const handleNavigateChat = (id: string) => {
-      navigate(`/conversation/${id}`)
+      navigate(ROUTE_CONFIG.USER.CONVERSATION.PREFIX + id)
    }
 
    return {

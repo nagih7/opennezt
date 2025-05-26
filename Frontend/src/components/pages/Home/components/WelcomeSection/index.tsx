@@ -2,6 +2,7 @@ import React from 'react'
 import { IconlyFace, IconlyFolder } from 'components/UI/Iconly'
 import { useNavigate } from 'react-router-dom'
 import { AuthAccount } from '~/store/modules/auth/types'
+import { ROUTE_CONFIG } from '~/config/constants/routes'
 
 interface WelcomeSectionProps {
    user?: AuthAccount
@@ -11,11 +12,11 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({ user }) => {
    const navigate = useNavigate()
 
    const handleNavigateToCreateProject = () => {
-      navigate('/project/details')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC)
    }
 
    const handleNavigateToCreateInterview = () => {
-      navigate('/profile')
+      navigate(ROUTE_CONFIG.USER.PROFILE.PREFIX)
    }
 
    return (
