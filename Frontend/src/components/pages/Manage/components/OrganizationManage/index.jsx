@@ -6,7 +6,7 @@ import TableManage from '../TableManage'
 import { createOrUpdateOrganization, deleteOrganization, getListOrganization } from 'api/manage'
 import { setVisibleModalCreateOrUpdateOrganization, setVisibleModalDeleteOrganization } from 'store/modules/manage'
 import ModalCreateOrUpdate from '../ModalCreateOrUpdate'
-import { Input } from '~components/UI/input'
+import { Input } from '~/components/UI/input'
 import ButtonMASQ from 'components/UI/Button'
 import store from '~/store'
 

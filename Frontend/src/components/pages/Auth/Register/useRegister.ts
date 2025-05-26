@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { register } from '~/api/auth'
 import { AppDispatch, RootState, useAppSelector } from '~/store'
 import { RegisterPayload } from '~/types'
-import { handleCheckValidateConfirm } from '~/utils/helper'
+// import { handleCheckValidateConfirm } from '~/utils/helper'
 
 const useRegister = () => {
    const navigate = useNavigate()
@@ -65,17 +65,18 @@ const useRegister = () => {
 
    const validateBlur = (type: keyof RegisterPayload): boolean => {
       // const validate = isValidate(dataRegister, type, errorDataRegister)
-      setErrorDataRegister(validate.error)
-      return validate.isError
+      // setErrorDataRegister(validate.error)
+      // return validate.isError
+      return false
    }
 
    const handleConfirmRegister = async (): Promise<void> => {
-      const validate = handleCheckValidateConfirm(dataRegister, errorDataRegister)
-      setErrorDataRegister(validate.dataError)
+      // const validate = handleCheckValidateConfirm(dataRegister, errorDataRegister)
+      // setErrorDataRegister(validate.dataError)
 
-      if (!validate.isError) {
-         dispatch(register(dataRegister))
-      }
+      // if (!validate.isError) {
+      dispatch(register(dataRegister))
+      // }
    }
 
    return {

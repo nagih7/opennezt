@@ -132,3 +132,69 @@ export function validate<T>(
       event.onSuccess(result.data)
    }
 }
+
+export function isValidate<T>(
+   data: T,
+   type: 'register' | 'login' | 'forgotPassword' | 'resetPassword',
+   errorState: T
+): { error: T; isError: boolean } {
+   const errors = { ...errorState }
+   let hasError = false
+
+   // Get all fields from data object
+   const fields = Object.keys(data as any)
+
+   for (const field of fields) {
+      const value = (data as any)[field]
+
+      // Check if field is empty
+      if (!value || value.trim() === '') {
+         ;(errors as any)[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`
+         hasError = true
+         continue
+      }
+
+      // Email validation
+      if (field === 'email') {
+         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+         if (!emailRegex.test(value)) {
+            ;(errors as any)[field] = 'Please enter a valid email address'
+            hasError = true
+         }
+      }
+
+      // Password validation
+      if (field === 'password') {
+         if (value.length < 6) {
+            ;(errors as any)[field] = 'Password must be at least 6 characters long'
+            hasError = true
+         }
+      }
+
+      // Password confirmation validation
+      if (field === 'confirmPassword' && type === 'register') {
+         if (value !== (data as any).password) {
+            ;(errors as any)[field] = 'Passwords do not match'
+            hasError = true
+         }
+      }
+
+      // Phone validation (if present)
+      if (field === 'phone' || field === 'phoneNumber') {
+         const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/
+         if (!phoneRegex.test(value.replace(/\s/g, ''))) {
+            ;(errors as any)[field] = 'Please enter a valid phone number'
+            hasError = true
+         }
+      }
+
+      // Name validation (if present)
+      if ((field === 'firstName' || field === 'lastName' || field === 'name') && value.length < 2) {
+         ;(errors as any)[field] =
+            `${field.charAt(0).toUpperCase() + field.slice(1)} must be at least 2 characters long`
+         hasError = true
+      }
+   }
+
+   return { error: errors, isError: hasError }
+}

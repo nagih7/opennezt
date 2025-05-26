@@ -72,6 +72,49 @@ export const isValidPhone = (phone) => {
    return result
 }
 
+export const handleCheckValidateConfirm = (data, errors) => {
+   let isError = false
+   let dataError = { ...errors }
+
+   // Reset all errors first
+   Object.keys(dataError).forEach((key) => {
+      dataError[key] = ''
+   })
+
+   // Check each field in data
+   Object.keys(data).forEach((key) => {
+      const value = data[key]
+
+      if (!value || (typeof value === 'string' && value.trim() === '')) {
+         dataError[key] = `${key.charAt(0).toUpperCase() + key.slice(1)} is required`
+         isError = true
+      } else {
+         // Specific validation for different fields
+         if (key === 'email' && !isValidEmail(value)) {
+            dataError[key] = 'Please enter a valid email address'
+            isError = true
+         }
+
+         if (key === 'password' && !isValidPassword(value)) {
+            dataError[key] =
+               'Password must contain at least 1 uppercase, 1 lowercase, 1 number, 1 special character and be 6-50 characters long'
+            isError = true
+         }
+
+         if (key === 'phone' && !isValidPhone(value)) {
+            dataError[key] = 'Please enter a valid phone number'
+            isError = true
+         }
+      }
+   })
+
+   return {
+      isError,
+      dataError,
+      error: dataError,
+   }
+}
+
 export { toast } from 'sonner'
 
 toast.success('Thành công!')
