@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { FileUpload, Input, InputGroup, Button, Textarea, Dialog, Portal, CloseButton } from '@chakra-ui/react'
 import { LuSearch } from 'react-icons/lu'
 import { debounce } from 'lodash'
-import { CloseOutlined } from '@mui/icons-material'
-import { Avatar } from '~/components/UI/avatar'
+// import { CloseOutlined } from '@mui/icons-material'
+// import { Avatar } from '~/components/UI/avatar'
 import { useSelector, useDispatch } from 'react-redux'
 import { IconlyAddUser, IconlyImage2, IconlySwap, IconlyWork } from 'components/UI/Iconly'
 import { useNavigate } from 'react-router-dom'
@@ -119,7 +119,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                      <img
                         src={typeof image === 'string' ? image : URL.createObjectURL(image)}
                         alt={`Preview ${index}`}
-                        className="w-full auto object-cover rounded-md"
+                        className="object-cover w-full rounded-md auto"
                      />
                   </div>
                ))}
@@ -247,9 +247,9 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
       return (
          <div className="mt-4">
             {selectedPreview && (
-               <div className="relative border border-gray-200 hover:border-gray-300 rounded-xl overflow-hidden transition-all duration-200 bg-white shadow-sm">
+               <div className="relative overflow-hidden transition-all duration-200 bg-white border border-gray-200 shadow-sm hover:border-gray-300 rounded-xl">
                   {/* Action buttons */}
-                  <div className="absolute top-3 right-3 flex gap-2 z-10">
+                  <div className="absolute z-10 flex gap-2 top-3 right-3">
                      <button
                         onClick={() => setShowLinkPreviews(true)}
                         className="p-1.5 rounded-full bg-white/80 backdrop-blur hover:bg-white transition-all duration-200"
@@ -260,18 +260,18 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                         onClick={handleRemoveLinkPreview}
                         className="p-1.5 rounded-full bg-white/80 backdrop-blur hover:bg-white transition-all duration-200"
                      >
-                        <CloseOutlined style={{ fontSize: '16px', color: '#4B5563' }} />
+                        {/* <CloseOutlined style={{ fontSize: '16px', color: '#4B5563' }} /> */}
                      </button>
                   </div>
 
                   <div className="flex flex-col sm:flex-row">
                      {/* Image container */}
                      {selectedPreview.image && (
-                        <div className="sm:w-48 h-48 sm:h-auto flex-shrink-0">
+                        <div className="flex-shrink-0 h-48 sm:w-48 sm:h-auto">
                            <img
                               src={selectedPreview.image}
                               alt={selectedPreview.title}
-                              className="w-full h-full object-cover"
+                              className="object-cover w-full h-full"
                            />
                         </div>
                      )}
@@ -291,7 +291,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                               )}
                               <a
                                  href={selectedPreview.url}
-                                 className="text-sm text-gray-500 hover:text-blue-600 truncate"
+                                 className="text-sm text-gray-500 truncate hover:text-blue-600"
                                  target="_blank"
                                  rel="noopener noreferrer"
                               >
@@ -312,13 +312,13 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                      onClick={() => setShowLinkPreviews(false)}
                   />
                   <div className="relative bg-white rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-                     <div className="flex justify-between items-center mb-4">
+                     <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold text-gray-900">Choose Link Preview</h3>
                         <button
                            onClick={() => setShowLinkPreviews(false)}
                            className="p-1.5 rounded-full hover:bg-gray-100"
                         >
-                           <CloseOutlined style={{ fontSize: '18px' }} />
+                           {/* <CloseOutlined style={{ fontSize: '18px' }} /> */}
                         </button>
                      </div>
 
@@ -342,12 +342,12 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                                     <img
                                        src={preview.image}
                                        alt={preview.title}
-                                       className="w-24 h-24 object-cover rounded-lg"
+                                       className="object-cover w-24 h-24 rounded-lg"
                                     />
                                  )}
                                  <div className="flex-1 min-w-0">
-                                    <h4 className="font-medium text-gray-900 mb-1">{preview.title}</h4>
-                                    <p className="text-sm text-gray-600 line-clamp-2 mb-2">{preview.description}</p>
+                                    <h4 className="mb-1 font-medium text-gray-900">{preview.title}</h4>
+                                    <p className="mb-2 text-sm text-gray-600 line-clamp-2">{preview.description}</p>
                                     <div className="flex items-center gap-2">
                                        {preview.favicon && (
                                           <img src={preview.favicon} alt="" className="w-4 h-4 rounded-full" />
@@ -372,7 +372,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
       if (message !== 'This domain is not allow') return null
 
       return (
-         <div className="mt-2 px-4 py-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+         <div className="px-4 py-3 mt-2 border border-yellow-200 rounded-lg bg-yellow-50">
             <div className="flex items-start gap-2">
                <svg className="w-5 h-5 text-yellow-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path
@@ -422,21 +422,21 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
    return (
       <>
          <div className="fixed inset-0 flex justify-center items-center z-[999]">
-            <div className="fixed inset-0  bg-gray-900 bg-opacity-50" onClick={handleClick}></div>
+            <div className="fixed inset-0 bg-gray-900 bg-opacity-50" onClick={handleClick}></div>
             <div className="bg-[#ffffff] justify-center items-center w-[600px] p-8 rounded-md mb-4 z-10">
-               <div label="Caption" className="flex flex-col justify-center items-center gap-3">
-                  <div className="flex justify-between w-full border-b-2 border-gray-200 pb-2">
+               <div label="Caption" className="flex flex-col items-center justify-center gap-3">
+                  <div className="flex justify-between w-full pb-2 border-b-2 border-gray-200">
                      <span> </span>
                      <span className="text-2xl font-bold text-center">Create Post</span>
                      <div
                         onClick={handleClick}
-                        className="flex justify-center cursor-pointer items-center p-2 rounded-full w-9 h-9"
+                        className="flex items-center justify-center p-2 rounded-full cursor-pointer w-9 h-9"
                      >
-                        <CloseOutlined />
+                        {/* <CloseOutlined /> */}
                      </div>
                   </div>
-                  <div className="flex gap-3 justify-start w-full">
-                     <Avatar src={authUser?.avatar} className="w-[50px] h-[50px] rounded-full cursor-pointer" />
+                  <div className="flex justify-start w-full gap-3">
+                     {/* <Avatar src={authUser?.avatar} className="w-[50px] h-[50px] rounded-full cursor-pointer" /> */}
                      <div>
                         <div href="#" className="flex items-center gap-2 text-black no-underline text-nowrap">
                            <span className="font-semibold">
@@ -446,7 +446,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                         <div className="text-xs text-gray-500">@{authUser.email}</div>
                      </div>
                   </div>
-                  <div className="w-full text-wrap p-2 ">
+                  <div className="w-full p-2 text-wrap ">
                      <CaptionInput
                         ref={ref}
                         handleTextChange={(e) => {
@@ -502,7 +502,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                                                       onClick={() => handleSelectProject(project)}
                                                    >
                                                       <div className="flex items-center gap-4">
-                                                         <div className="flex-grow flex flex-col justify-between">
+                                                         <div className="flex flex-col justify-between flex-grow">
                                                             <h5 className="text-lg font-semibold">
                                                                <a href="#" className="text-black no-underline">
                                                                   {project?.name}
@@ -534,7 +534,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                         </Dialog.Root>
                      </div>
                   </div>
-                  <div className=" flex items-center justify-between border border-gray-200 rounded-md p-3 w-full">
+                  <div className="flex items-center justify-between w-full p-3 border border-gray-200 rounded-md ">
                      <span>Add to your post</span>
                      <div className="flex gap-3">
                         <div className="cursor-pointer">
@@ -548,7 +548,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                            >
                               <FileUpload.HiddenInput maxWidth="xl" />
                               <FileUpload.Trigger asChild>
-                                 <div className="cursor-pointer p-0 flex items-center justify-center">
+                                 <div className="flex items-center justify-center p-0 cursor-pointer">
                                     <IconlyImage2 size={30} color={'#000000'} />
                                  </div>
                               </FileUpload.Trigger>
@@ -563,7 +563,7 @@ const CreateArticleForm = forwardRef(({ onSubmitForm, onCloseForm, isLoadingCrea
                      </div>
                   </div>
 
-                  <div className="flex gap-3 w-full">
+                  <div className="flex w-full gap-3">
                      {isLoadingCreateArticle ? (
                         <Button
                            loading

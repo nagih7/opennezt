@@ -5,6 +5,7 @@ import { closeInterview, replyInterview } from '~/api/interview'
 interface UseInterviewStateProps {
    onSendAudio?: (blob: Blob) => void
    onCloseInterview?: () => void
+   onForceStopAudio?: () => void
 }
 
 interface UseInterviewStateReturn {
@@ -34,6 +35,7 @@ interface UseInterviewStateReturn {
 export const useInterviewState = ({
    onSendAudio,
    onCloseInterview,
+   onForceStopAudio,
 }: UseInterviewStateProps = {}): UseInterviewStateReturn => {
    const dispatch = useAppDispatch()
 
@@ -87,6 +89,9 @@ export const useInterviewState = ({
    }, [])
 
    const handleConfirmCloseInterview = useCallback((): void => {
+      // Call force stop audio callback before confirming close
+      onForceStopAudio?.()
+
       const payload = {
          interview: conversation,
          storage: confirmSendData,
@@ -100,7 +105,7 @@ export const useInterviewState = ({
 
       setIsOpenModalCloseInterview(false)
       onCloseInterview?.()
-   }, [conversation, confirmSendData, messages, dispatch, onCloseInterview])
+   }, [conversation, confirmSendData, messages, dispatch, onCloseInterview, onForceStopAudio])
 
    return {
       // Redux state

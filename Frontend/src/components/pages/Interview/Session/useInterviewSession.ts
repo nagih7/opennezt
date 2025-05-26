@@ -1,10 +1,11 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, RefObject } from 'react'
 import useInterviewPreview from '../Preview/useInterviewPreview'
 import { useVoiceDetection, useInterviewTimer, useAudioPlayer, useInterviewState } from './hooks'
+import useBotFrame from './components/BotFrame/useBotFrame'
 
 interface UseInterviewSessionManagerReturn {
    // Video ref from base interview hook
-   videoRef: React.RefObject<HTMLVideoElement | null>
+   videoRef: RefObject<HTMLVideoElement | null>
 
    // Voice detection state and controls
    isListening: boolean
@@ -41,12 +42,16 @@ interface UseInterviewSessionManagerReturn {
    handleConfirmCloseInterview: () => void
    onChangeConfirmSendData: (event: React.FormEvent) => void
    setIsOpenModalCloseInterview: (value: boolean) => void
+
+   // Bot frame controls
+   forceStopAudio: () => void
 }
 
 export const useInterviewSession = (): UseInterviewSessionManagerReturn => {
    const { videoRef } = useInterviewPreview()
 
-   // Initialize interview state hook
+   // Initialize bot frame hook
+   const { forceStopAudio } = useBotFrame() // Initialize interview state hook with enhanced close handler
    const {
       isOpenModalInterview,
       currentAction,
@@ -67,6 +72,7 @@ export const useInterviewSession = (): UseInterviewSessionManagerReturn => {
       onSendAudio: (blob) => {
          setAudioBlob(blob)
       },
+      onForceStopAudio: forceStopAudio,
    })
 
    // Initialize timer hook
@@ -198,7 +204,6 @@ export const useInterviewSession = (): UseInterviewSessionManagerReturn => {
       currentAudioUrl,
       playAudio,
 
-      // Interview state
       isOpenModalInterview,
       currentAction,
       messages,
@@ -209,11 +214,13 @@ export const useInterviewSession = (): UseInterviewSessionManagerReturn => {
       confirmSendData,
       audioBlob,
 
-      // Interview actions
       sendAudioMessage,
       handleCloseInterview,
       handleConfirmCloseInterview,
       onChangeConfirmSendData,
       setIsOpenModalCloseInterview,
+
+      // Bot frame controls
+      forceStopAudio,
    }
 }

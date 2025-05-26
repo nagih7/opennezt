@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from '@chakra-ui/react'
 import { Input } from '~/components/UI/input'
-import LockResetIcon from '@mui/icons-material/LockReset'
+// import LockResetIcon from '@mui/icons-material/LockReset'
 import useResetPassword from './useResetPassword'
 
 const ResetPassword: React.FC = () => {
@@ -61,7 +61,7 @@ const ResetPassword: React.FC = () => {
          <div className="w-full p-6 bg-white rounded-lg">
             <div className="flex flex-col items-center mb-6">
                <div className="p-3 mb-4 bg-blue-100 rounded-full">
-                  <LockResetIcon className="text-3xl text-blue-600" />
+                  {/* <LockResetIcon className="text-3xl text-blue-600" /> */}
                </div>
                <h2 className="mb-4 text-2xl font-bold text-gray-800">Reset Password</h2>
 

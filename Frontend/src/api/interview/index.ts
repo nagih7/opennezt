@@ -1,3 +1,4 @@
+import callApi from '../callApi'
 import callReduxApi from 'api/callReduxApi'
 import {
    requestStartInterview,
@@ -10,8 +11,10 @@ import {
    closeInterviewSuccess,
    closeInterviewFail,
 } from 'store/modules/interview'
+import { AppDispatch } from '~/store'
+import { BaseApiResponse } from '~/types'
 
-export const startInterview = (projectId) => async (dispatch, getState) => {
+export const startInterview = (projectId: string) => async (dispatch: AppDispatch, getState: any) => {
    return callReduxApi({
       method: 'post',
       apiPath: `interview/start`,
@@ -22,9 +25,8 @@ export const startInterview = (projectId) => async (dispatch, getState) => {
    })
 }
 
-export const replyInterview = (payload) => async (dispatch, getState) => {
+export const replyInterview = (payload: any) => async (dispatch: AppDispatch, getState: any) => {
    const { audio, interview } = payload
-   console.log('replyInterview payload:', payload)
    // Create a FormData object to send the audio file
    const formData = new FormData()
    formData.append('audio', audio)
@@ -41,7 +43,7 @@ export const replyInterview = (payload) => async (dispatch, getState) => {
    })
 }
 
-export const closeInterview = (payload) => async (dispatch, getState) => {
+export const closeInterview = (payload: any) => async (dispatch: AppDispatch, getState: any) => {
    return callReduxApi({
       method: 'post',
       apiPath: `interview/close`,
@@ -50,4 +52,8 @@ export const closeInterview = (payload) => async (dispatch, getState) => {
       dispatch,
       getState,
    })
+}
+
+export const fetchInterviewPracticeProjects = (): Promise<BaseApiResponse> => {
+   return callApi({ method: 'get', apiPath: 'interview/practice-projects', variables: {} })
 }

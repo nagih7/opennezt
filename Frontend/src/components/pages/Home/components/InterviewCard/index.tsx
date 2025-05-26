@@ -1,72 +1,48 @@
 import React from 'react'
 import { IconlyTimeCircle, IconlyArrowRight } from 'components/UI/Iconly'
-import { BsArrowsAngleExpand } from "react-icons/bs";
-import default_logo from '../../../../../assets/images/logo/opennezt_full_black_old.png'
-import style from '../../style.module.scss'
+import { BsArrowsAngleExpand } from 'react-icons/bs'
+import useHome from '../../useHome'
+import { BaseProjectProps } from '~/types'
+import { Avatar, AvatarFallback, AvatarImage } from '~/components/UI/avatar'
+import { OPENNEZT_LOGO } from '~/utils/constants'
 
 interface InterviewCardProps {
-   title: string
-   description: string
-   time: string
-   color: string
-   projectImage?: string | null
-   projectBackground?: string | null
-   onClickViewProject: () => void
-   onClickInterview: () => void
+   key: number
+   project: BaseProjectProps
 }
 
-export const InterviewCard: React.FC<InterviewCardProps> = ({
-   title,
-   description,
-   time,
-   color,
-   projectImage,
-   projectBackground,
-   onClickViewProject,
-   onClickInterview,
-}) => {
-   const gradientClass = style[`Gradient${color.charAt(0).toUpperCase() + color.slice(1)}`]
-
-   const isValidBackground =
-      projectBackground && projectBackground !== 'null' && !projectBackground.includes('static/null')
-
-   const backgroundStyle = isValidBackground
-      ? { backgroundImage: `url(${projectBackground})`, backgroundSize: 'cover', backgroundPosition: 'center' }
-      : {}
+export const InterviewCard: React.FC<InterviewCardProps> = ({ project }) => {
+   const { handleInterviewPractice: onInterviewPractice, handleViewProjectDetails: onViewDetail } = useHome()
 
    return (
       <div className="group flex flex-col border-[2px] hover:border-[#2f65b9] h-[290px] 2xl:h-[310px] rounded-xl transition-all duration-500 ease-in-out">
          <div
-            className={`relative ${
-               isValidBackground ? '' : gradientClass
-            } m-1 rounded-xl justify-center flex items-center`}
-            style={backgroundStyle}
-            onClick={onClickViewProject}
+            className="relative flex items-center justify-center m-1 rounded-xl"
+            onClick={() => onInterviewPractice(project?._id)}
          >
             <div className="bg-[#ffffff] transition-all duration-500 ease-in-out rounded-full p-[2px] my-[30px] group-hover:my-[10px]">
-               <img
-                  src={projectImage || default_logo}
-                  alt="logo"
-                  className="2xl:w-[80px] 2xl:h-[80px] w-[70px] h-[70px] border object-cover rounded-full"
-               />
+               <Avatar className="2xl:w-[80px] 2xl:h-[80px] w-[70px] h-[70px]">
+                  <AvatarImage src={project.logo || OPENNEZT_LOGO} alt={project.name} />
+                  <AvatarFallback>{project.name}</AvatarFallback>
+               </Avatar>
             </div>
             <div className="group-hover:block transition-all duration-700 ease-in-out hidden absolute right-0 top-0 bg-[#ffffff] rounded-lg m-[10px] cursor-pointer">
                <span className="p-2">Share</span>
-               <BsArrowsAngleExpand  className="border-l p-2" />
+               <BsArrowsAngleExpand className="p-2 border-l" />
             </div>
          </div>
          <div className="p-[10px] bg-[#ffffff] rounded-xl">
             <div className="flex flex-col justify-start">
-               <span className="text-lg font-bold">{title}</span>
-               <p className="text-sm text-[#6f7f92]">{description}</p>
+               <span className="text-lg font-bold">{project.name}</span>
+               <p className="text-sm text-[#6f7f92]">{project.description}</p>
                <div className="flex items-center w-fit gap-1 border rounded-lg p-[5px]">
                   <IconlyTimeCircle color={'#6f7f92'} size={20} />
-                  <span className="text-sm">{time}</span>
+                  <span className="text-sm">30m</span>
                </div>
             </div>
             <div
                className="group-hover:flex hidden transition-all duration-500 ease-in-out 2xl:text-base 2xl:font-bold text-sm mt-2 text-[#2f65b9] items-center font-semibold cursor-pointer"
-               onClick={onClickInterview}
+               onClick={() => onViewDetail(project?._id)}
             >
                <span className="mb-1">Start interview</span>
                <IconlyArrowRight color={'#2f65b9'} size={25} />

@@ -20,3 +20,8 @@ export async function closeInterview(req, res) {
     await interviewService.closeInterview(req.body)
     res.jsonify('Close interview successfully')
 }
+
+export async function getPracticeProjects(req, res) {
+    const result = await interviewService.getPracticeProjects()
+    res.jsonify(result, 'Get practice projects successfully')
+}

@@ -5,7 +5,7 @@ import {
    InterviewControls,
    InterviewHeader,
    CloseInterviewModal,
-   AIFrame,
+   BotFrame,
    UserFrame,
 } from './components'
 import { useInterviewSession } from './useInterviewSession'
@@ -40,7 +40,7 @@ const InterviewSession: React.FC = () => {
                   <Dialog.Body className="w-full flex-1 bg-[#201f24] p-0 flex flex-col overflow-hidden">
                      <div className="flex-1 px-8 pt-8 overflow-hidden">
                         <div className="relative w-full h-full">
-                           <AIFrame />
+                           <BotFrame />
                            <UserFrame videoRef={videoRef} />
 
                            <VoiceStatusIndicator

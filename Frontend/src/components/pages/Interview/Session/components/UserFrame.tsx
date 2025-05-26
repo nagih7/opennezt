@@ -1,6 +1,7 @@
+import { memo } from 'react'
 import { UserFrameProps } from '~/types'
 
-const UserFrame = ({ videoRef }: UserFrameProps) => {
+const UserFrame: React.FC<UserFrameProps> = memo(({ videoRef }) => {
    return (
       <div className="absolute bottom-0 right-0 p-4">
          <div className="relative">
@@ -13,12 +14,11 @@ const UserFrame = ({ videoRef }: UserFrameProps) => {
                playsInline
                muted
                style={{ transform: 'scaleX(-1)', outline: 'none' }}
-               disablePictureInPicture
                controlsList="nodownload nofullscreen noremoteplaybook"
             />
          </div>
       </div>
    )
-}
+})
 
 export default UserFrame

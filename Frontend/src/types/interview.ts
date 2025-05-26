@@ -22,7 +22,6 @@ export interface VoiceDetector {
    isActive: () => boolean
 }
 
-// Interview session
 export interface CloseInterviewModalProps {
    isOpen: boolean
    confirmSendData: boolean
@@ -47,5 +46,5 @@ export interface InterviewHeaderProps {
 }
 
 export interface UserFrameProps {
-   videoRef: React.RefObject<HTMLVideoElement | null>
+   videoRef: RefObject<HTMLVideoElement | null>
 }

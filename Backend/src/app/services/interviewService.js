@@ -1,7 +1,7 @@
 import { ObjectId, Interview } from '@/models'
 import { LINK_STATIC_URL, PUBLIC_DIR } from '@/configs/constants'
 import path from 'path'
-import { getProjectByMatching, getProjectDetailsToMatching } from './projectService'
+import { getInterviewPracticeProjects, getProjectByMatching, getProjectDetailsToMatching } from './projectService'
 import { getTypeOfBotMessage, getTypeOfUserMessage } from './typeService'
 import { FileUpload } from '@/utils/classes'
 import { callAPIInterview, convertSpeechToText, convertTextToSpeech, getProjectMatchingInterview } from './apiService'
@@ -178,4 +178,8 @@ export async function getProjectMatching(userId, profile) {
     }
 
     return matches
+}
+
+export async function getPracticeProjects() {
+    return await getInterviewPracticeProjects()
 }

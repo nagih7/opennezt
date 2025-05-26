@@ -1,3 +1,4 @@
+import callApi from '../callApi'
 import callReduxApi, { callApiSimple } from 'api/callReduxApi'
 import { AppDispatch } from '~/store'
 import {
@@ -46,7 +47,8 @@ import {
    updateSkillRequirementSuccess,
    updateSkillRequirementFail,
 } from '../../store/modules/project'
-import callApi from '../callApi'
+
+import { BaseApiResponse } from '~/types'
 
 // ========== My projects ========== //
 export const getListMyProjects = (dataFilter: any) => async (dispatch: AppDispatch, getState: () => any) => {
@@ -315,14 +317,5 @@ export const cancelInvitation = async (projectId: string, userId: string) => {
       method: 'post',
       apiPath: `projects/me/${projectId}/invitation/cancel`,
       variables: { userId },
-   })
-}
-
-// ========== GET [LIST PROJECT PRACTIVE INTERVIEW] ========== //
-export const getListProjectPracticeInterview = async (projectId: string) => {
-   return callApiSimple({
-      method: 'get',
-      apiPath: `projects/me/${projectId}/interview`,
-      variables: {},
    })
 }

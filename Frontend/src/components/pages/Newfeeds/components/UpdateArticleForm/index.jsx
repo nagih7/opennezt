@@ -16,8 +16,8 @@ import {
 } from '@chakra-ui/react'
 import { LuSearch, LuUpload } from 'react-icons/lu'
 import { debounce, last, set, update } from 'lodash'
-import { CloseOutlined } from '@mui/icons-material'
-import { Avatar } from '~/components/UI/avatar'
+// import { CloseOutlined } from '@mui/icons-material'
+// import { Avatar } from '~/components/UI/avatar'
 import { useDispatch, useSelector } from 'react-redux'
 import { IconlyAddUser, IconlyImage2, IconlyWork } from 'components/UI/Iconly'
 import { getProjectsToTag } from 'api/newfeeds'
@@ -143,7 +143,7 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
                      <img
                         src={typeof image === 'string' ? image : URL.createObjectURL(image)}
                         alt={`Preview ${index}`}
-                        className="w-full auto object-cover rounded-md"
+                        className="object-cover w-full rounded-md auto"
                      />
                   </div>
                ))}
@@ -184,19 +184,19 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
          <div className="fixed inset-0 flex justify-center items-center z-[999]">
             <div className="fixed inset-0 flex bg-gray-900 bg-opacity-50" onClick={handleClose}></div>{' '}
             <div className="bg-[#ffffff] w-[600px] p-8 rounded-md mb-4  z-[10]">
-               <div label="Caption" className="flex flex-col justify-center items-center gap-3">
-                  <div className="flex justify-between w-full border-b-2 border-gray-200 pb-2">
+               <div label="Caption" className="flex flex-col items-center justify-center gap-3">
+                  <div className="flex justify-between w-full pb-2 border-b-2 border-gray-200">
                      <span> </span>
                      <span className="text-2xl font-bold text-center">Edit Post</span>
                      <div
                         onClick={handleClose}
-                        className=" flex justify-center cursor-pointer items-center p-2 rounded-full w-9 h-9"
+                        className="flex items-center justify-center p-2 rounded-full cursor-pointer w-9 h-9"
                      >
-                        <CloseOutlined />
+                        {/* <CloseOutlined /> */}
                      </div>
                   </div>
-                  <div className="flex gap-3 justify-start w-full">
-                     <Avatar size={50} src={authUser?.avatar} style={{ cursor: 'pointer' }}></Avatar>
+                  <div className="flex justify-start w-full gap-3">
+                     {/* <Avatar size={50} src={authUser?.avatar} style={{ cursor: 'pointer' }}></Avatar> */}
                      <div>
                         <div href="#" className="flex items-center gap-2 text-black no-underline text-nowrap">
                            <span className="font-semibold ">
@@ -206,7 +206,7 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
                         <div className="text-xs text-gray-500">@{authUser?.email}</div>
                      </div>
                   </div>
-                  <div className="w-full text-wrap p-2 ">
+                  <div className="w-full p-2 text-wrap ">
                      <Textarea
                         ref={ref}
                         placeholder="Hire Talents For Your Project"
@@ -267,7 +267,7 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
                                                       onClick={() => handleSelectProject(project)}
                                                    >
                                                       <div className="flex items-center gap-4">
-                                                         <div className="flex-grow flex flex-col justify-between">
+                                                         <div className="flex flex-col justify-between flex-grow">
                                                             <h5 className="text-lg font-semibold">
                                                                <a href="#" className="text-black no-underline">
                                                                   {project?.name}
@@ -300,7 +300,7 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
                      </div>
                   </div>
 
-                  <div className=" flex items-center justify-between border border-gray-200 rounded-md p-3 w-full">
+                  <div className="flex items-center justify-between w-full p-3 border border-gray-200 rounded-md ">
                      <span>Add to your post</span>
                      <div className="flex gap-3">
                         <div className="cursor-pointer">
@@ -314,7 +314,7 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
                            >
                               <FileUpload.HiddenInput maxWidth="xl" />
                               <FileUpload.Trigger asChild>
-                                 <div className="cursor-pointer p-0 flex items-center justify-center">
+                                 <div className="flex items-center justify-center p-0 cursor-pointer">
                                     <IconlyImage2 size={30} color={'#000000'} />
                                  </div>
                               </FileUpload.Trigger>
@@ -329,7 +329,7 @@ const UpdateArticleForm = forwardRef(({ onClose, feed, onSubmit, isLoadingUpdate
                      </div>
                   </div>
 
-                  <div className="flex gap-3 w-full">
+                  <div className="flex w-full gap-3">
                      {isLoadingUpdateArticle ? (
                         <Button
                            loading
