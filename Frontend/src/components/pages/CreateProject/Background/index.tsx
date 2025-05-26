@@ -6,7 +6,8 @@ import { onChangeFormCreateProject } from 'store/modules/project'
 import { createNewProject } from 'api/project'
 import resizeBackground from 'utils/files/resizeBackground'
 import { Button, ButtonGroup } from '@chakra-ui/react'
-import { RootState } from '~/store'
+import { AppDispatch, RootState } from '~/store'
+import { ROUTE_CONFIG } from '~/config/constants/routes'
 
 interface Revenue {
    [key: string]: any
@@ -31,7 +32,7 @@ interface FormCreateProject {
 
 const CoverImage: React.FC = () => {
    const navigate = useNavigate()
-   const dispatch = useDispatch()
+   const dispatch = useDispatch<AppDispatch>()
    // ========== STATE FROM REDUX ========== //
    const { formCreateProject, isLoadingCreateNewProject } = useSelector((state: RootState) => state.project)
    // ========== STATE ========== //
@@ -40,7 +41,7 @@ const CoverImage: React.FC = () => {
    // ========== USEEFFECT ========== //
    useEffect(() => {
       if (formCreateProject.name === '') {
-         navigate('/project/details')
+         navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC)
       }
    }, [navigate, formCreateProject.name])
    const [currentStep, setCurrentStep] = useState<number>(6)
@@ -75,7 +76,7 @@ const CoverImage: React.FC = () => {
             formCreateProject.revenues
                .map((revenue) => {
                   let valid = true
-                  Object.keys(revenue).forEach((key) => {
+                  Object.keys(revenue).forEach((key: any) => {
                      if (
                         revenue[key] === '' ||
                         revenue[key] === null ||
@@ -130,7 +131,7 @@ const CoverImage: React.FC = () => {
             formCreateProject.additional_infos
                .map((info) => {
                   let valid = true
-                  Object.keys(info).forEach((key) => {
+                  Object.keys(info).forEach((key: any) => {
                      if (info[key] === '' || info[key] === null || info[key] === undefined || info[key].length === 0) {
                         valid = false
                      }
@@ -152,7 +153,7 @@ const CoverImage: React.FC = () => {
       dispatch(createNewProject(formData))
    }
    const handlePrevStep = (): void => {
-      navigate('/project/logo')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.LOGO)
       if (currentStep > 0) {
          setCurrentStep((prev) => prev - 1)
       }

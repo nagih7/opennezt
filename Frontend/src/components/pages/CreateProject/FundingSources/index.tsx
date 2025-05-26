@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { GoPlus } from "react-icons/go";
+import { GoPlus } from 'react-icons/go'
 import StepHeader from '../StepHeader'
 import { IconlyDelete } from 'components/UI/Iconly'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,6 +12,7 @@ import SelectCustom from 'components/UI/SelectCustom'
 import { toaster } from 'components/UI/toaster'
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import { RootState } from '~/store'
+import { ROUTE_CONFIG } from '~/config/constants/routes'
 
 const currencyFramework = createListCollection({
    items: CURRENCY['EN'],
@@ -38,7 +39,7 @@ const FundingSources: React.FC = () => {
    // ========== USEEFFECT ========== //
    useEffect(() => {
       if (formCreateProject.name === '') {
-         navigate('/project/details')
+         navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC)
       }
    }, [navigate, formCreateProject.name])
 
@@ -70,12 +71,12 @@ const FundingSources: React.FC = () => {
 
    const handlePreviousStep = () => {
       dispatch(onChangeFormCreateProject({ funding_sources: formData }))
-      navigate('/project/revenue')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.REVENUE)
    }
 
    const handleNextStep = async () => {
       dispatch(onChangeFormCreateProject({ funding_sources: formData }))
-      navigate('/project/additional-info')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.DESCRIPTION)
    }
 
    const handleAddFundingSource = () => {
@@ -122,7 +123,7 @@ const FundingSources: React.FC = () => {
                            className="flex items-center gap-1 cursor-pointer bg-[#2f65b9] rounded-md text-[#ffffff] px-[20px] py-2 mb-[14px]"
                            onClick={handleAddFundingSource}
                         >
-                           <GoPlus  className="text-[#ffffff]" />
+                           <GoPlus className="text-[#ffffff]" />
                            <button height={50} className="text-xs bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold">
                               ADD FUNDING SOURCE
                            </button>

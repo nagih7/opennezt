@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { GoPlus } from "react-icons/go";
+import { GoPlus } from 'react-icons/go'
 import avt from 'assets/images/background/avt.jpg'
 import { IconlyChat } from 'components/UI/Iconly'
 import { IconlyHeart } from 'components/UI/Iconly'
@@ -24,6 +24,7 @@ import { resetReply } from 'store/modules/article'
 import store from '~/store'
 import { useNavigate } from 'react-router-dom'
 import { handleGetLinkPreview } from 'api/linkPreview'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    const { _id, user, project, content, reaction_count, created_at, comment_count, link_preview } = feed
@@ -455,7 +456,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    }, [])
 
    const handleViewTalentDetails = (user) => {
-      navigate(`/talents/${user?._id}/details`)
+      navigate(ROUTE_CONFIG.USER.RECRUIT_TALENT.PREFIX + user._id)
    }
    const [isModalOpen, setIsModalOpen] = useState(false)
    const [selectedImageIndex, setSelectedImageIndex] = useState(0)
@@ -488,14 +489,14 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
 
    const LinkPreviewSkeleton = () => {
       return (
-         <div className="mt-4 border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+         <div className="mt-4 overflow-hidden bg-white border border-gray-200 shadow-sm rounded-xl">
             <div className="flex flex-col sm:flex-row animate-pulse">
-               <div className="sm:w-48 h-48 sm:h-auto flex-shrink-0 bg-gray-200"></div>
+               <div className="flex-shrink-0 h-48 bg-gray-200 sm:w-48 sm:h-auto"></div>
                <div className="flex-1 p-4">
                   <div className="space-y-3">
-                     <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                     <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                     <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                     <div className="w-3/4 h-4 bg-gray-200 rounded"></div>
+                     <div className="w-1/2 h-4 bg-gray-200 rounded"></div>
+                     <div className="w-1/4 h-4 bg-gray-200 rounded"></div>
                   </div>
                </div>
             </div>
@@ -524,7 +525,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
 
       return (
          <div
-            className="mt-4 border border-gray-200 hover:border-gray-300 rounded-xl overflow-hidden transition-all duration-200 bg-white shadow-sm cursor-pointer"
+            className="mt-4 overflow-hidden transition-all duration-200 bg-white border border-gray-200 shadow-sm cursor-pointer hover:border-gray-300 rounded-xl"
             onClick={() => {
                // Kiểm tra URL trước khi mở
                try {
@@ -537,8 +538,8 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
          >
             <div className="flex flex-col sm:flex-row">
                {previewData.image && (
-                  <div className="sm:w-48 h-48 sm:h-auto flex-shrink-0">
-                     <img src={previewData.image} alt={previewData.title} className="w-full h-full object-cover" />
+                  <div className="flex-shrink-0 h-48 sm:w-48 sm:h-auto">
+                     <img src={previewData.image} alt={previewData.title} className="object-cover w-full h-full" />
                   </div>
                )}
                <div className="flex-1 p-4">
@@ -572,7 +573,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
             </div>
             {/* Add a scrollable container for the content */}
             <div
-               className="flex-1 overflow-y-auto p-8 pb-24"
+               className="flex-1 p-8 pb-24 overflow-y-auto"
                style={{
                   scrollbarWidth: 'thin',
                   scrollbarColor: '#CBD5E1 #F1F5F9',
@@ -596,8 +597,8 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                   <div className="w-[65px]">
                      <img src={avt} className="w-[65px]  rounded-full" />
                   </div>
-                  <div className="flex justify-between items-center w-full">
-                     <div className="flex flex-col gap-2 w-9/12 text-base font-medium">
+                  <div className="flex items-center justify-between w-full">
+                     <div className="flex flex-col w-9/12 gap-2 text-base font-medium">
                         <div className="flex items-center gap-2">
                            {user[0]?.name}
                            <FaCircleCheck className="text-[#3897f0]" />
@@ -673,13 +674,13 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                                  <img
                                     src={typeof img === 'string' ? img : URL.createObjectURL(img)}
                                     alt={`Preview ${index + 1}`}
-                                    className="w-full h-full object-cover cursor-pointer rounded-lg hover:opacity-95 transition-opacity"
+                                    className="object-cover w-full h-full transition-opacity rounded-lg cursor-pointer hover:opacity-95"
                                  />
 
                                  {content.attachment.length > 4 && index === 3 && (
-                                    <div className="absolute inset-0 flex items-center justify-center rounded-lg overflow-hidden">
-                                       <div className="absolute inset-0 bg-black/25 hover:bg-black/30 transition-all duration-200" />
-                                       <span className="relative z-10 text-white text-2xl font-semibold drop-shadow">
+                                    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-lg">
+                                       <div className="absolute inset-0 transition-all duration-200 bg-black/25 hover:bg-black/30" />
+                                       <span className="relative z-10 text-2xl font-semibold text-white drop-shadow">
                                           +{content.attachment.length - 4}
                                        </span>
                                     </div>
@@ -700,13 +701,13 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                            {content.attachment.length > 1 && (
                               <>
                                  <button
-                                    className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-4xl bg-black/50 w-12 h-12 rounded-full flex items-center justify-center hover:bg-black/70 transition-all z-50"
+                                    className="absolute z-50 flex items-center justify-center w-12 h-12 text-4xl text-white transition-all -translate-y-1/2 rounded-full left-4 top-1/2 bg-black/50 hover:bg-black/70"
                                     onClick={handlePrevImage}
                                  >
                                     ‹
                                  </button>
                                  <button
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-4xl bg-black/50 w-12 h-12 rounded-full flex items-center justify-center hover:bg-black/70 transition-all z-50"
+                                    className="absolute z-50 flex items-center justify-center w-12 h-12 text-4xl text-white transition-all -translate-y-1/2 rounded-full right-4 top-1/2 bg-black/50 hover:bg-black/70"
                                     onClick={handleNextImage}
                                  >
                                     ›
@@ -723,7 +724,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                               className="max-w-full max-h-[90vh] object-contain rounded-lg"
                            />
                            <button
-                              className="absolute top-4 right-4 text-white text-xl bg-black/50 w-10 h-10 rounded-full hover:bg-black/70 transition-all flex items-center justify-center"
+                              className="absolute flex items-center justify-center w-10 h-10 text-xl text-white transition-all rounded-full top-4 right-4 bg-black/50 hover:bg-black/70"
                               onClick={(e) => {
                                  e.stopPropagation()
                                  setIsModalOpen(false)
@@ -734,9 +735,9 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                         </div>
 
                         {/* Controls container */}
-                        <div className="absolute bottom-4 flex flex-col items-center gap-4">
+                        <div className="absolute flex flex-col items-center gap-4 bottom-4">
                            {/* Số trang */}
-                           <div className="text-white bg-black/50 px-6 py-2 rounded-full text-sm font-medium">
+                           <div className="px-6 py-2 text-sm font-medium text-white rounded-full bg-black/50">
                               {selectedImageIndex + 1} / {content.attachment.length}
                            </div>
 
@@ -831,7 +832,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                   })}
             </div>
             {/* Comment form container */}
-            <div className="sticky bottom-0 left-0 right-0 border-gray-200 bg-white p-2 shadow-md rounded-md">
+            <div className="sticky bottom-0 left-0 right-0 p-2 bg-white border-gray-200 rounded-md shadow-md">
                <NewCommentForm
                   article_id={_id}
                   onSubmit={handleFormSubmit}

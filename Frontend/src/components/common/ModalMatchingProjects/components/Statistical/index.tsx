@@ -35,16 +35,6 @@ const Statistical: React.FC<StatisticalProps> = ({ project }) => {
    // const navigate = useNavigate()
    const [animatedPercentage, setAnimatedPercentage] = useState<number>(0)
 
-   // ========== HANDLER ========== //
-   // const handleViewProjectDetails = useCallback(
-   //    (project: Project) => {
-   //       dispatch(accessToProject(project._id))
-   //       navigate(`/projects/${project._id}/details`)
-   //       dispatch(setOpenModalMatchingProjects(false))
-   //    },
-   //    [dispatch, navigate]
-   // )
-
    const chart = useChart({
       data: [
          { point: project?.breakdown?.skills_fit || 0, criteria: 'Skill fit' },

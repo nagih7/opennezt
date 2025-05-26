@@ -5,6 +5,7 @@ import { InterviewCard } from './components/InterviewCard'
 import { getListProjectPracticeInterview } from 'api/project'
 import { useNavigate } from 'react-router-dom'
 import { RootState } from '~/store'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 interface Project {
    _id: string
@@ -80,11 +81,11 @@ const Home: React.FC = () => {
    }, [])
 
    const handleProjectClick = (projectId: string) => {
-      navigate(`/projects/${projectId}/details`)
+      navigate(ROUTE_CONFIG.USER.PROJECT.PREFIX + projectId)
    }
 
    const handleStartInterview = (projectId: string) => {
-      navigate(`/interview/${projectId}`)
+      navigate(ROUTE_CONFIG.USER.INTERVIEW.PREFIX + projectId)
    }
 
    const projectColors = ['pink', 'blue', 'purple']

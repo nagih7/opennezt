@@ -9,6 +9,7 @@ import { getProjectRoleFramework } from 'api/user'
 import SelectCustom from 'components/UI/SelectCustom'
 import { format } from 'date-fns'
 import { RootState } from 'store/types'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 interface Friend {
    id?: string
@@ -280,7 +281,7 @@ const Sendinvite: React.FC = () => {
 
    const handleNavigateToMessage = (userId?: string) => {
       if (!userId) return
-      navigate(`/conversation/${userId}`) // Điều hướng đến trang tin nhắn với người dùng
+      navigate(ROUTE_CONFIG.USER.CONVERSATION.PREFIX + userId) // Điều hướng đến trang tin nhắn với người dùng
    }
 
    return (
@@ -288,7 +289,7 @@ const Sendinvite: React.FC = () => {
          <div className="w-full h-full">
             <div className="px-[16px]">
                <div className="flex w-full gap-8">
-                  <div className="lg:w-10/12 w-full">
+                  <div className="w-full lg:w-10/12">
                      <div className="p-8 bg-[#ffffff] rounded-md">
                         <div className="flex justify-between items-center border-[1px] rounded-md caret-[#2f65b9] bg-[#f8f9fa] pl-[15px]">
                            <input
@@ -306,7 +307,7 @@ const Sendinvite: React.FC = () => {
                         </div>
                      </div>
                      <div className="mt-8">
-                        <div className="flex bg-white px-4 pt-4 font-bold text-sm border-b border-gray-200">
+                        <div className="flex px-4 pt-4 text-sm font-bold bg-white border-b border-gray-200">
                            <button
                               onClick={() => handleTabChange('all-friends')}
                               className={`mr-6 pb-2 ${
@@ -324,14 +325,14 @@ const Sendinvite: React.FC = () => {
                               }`}
                            >
                               Invited
-                              <span className="ml-1 bg-gray-100 text-gray-700 rounded-full px-2 text-xs">
+                              <span className="px-2 ml-1 text-xs text-gray-700 bg-gray-100 rounded-full">
                                  {invitedData.length}
                               </span>
                            </button>
                         </div>
 
                         <div className="bg-white">
-                           <div className="flex justify-between items-center bg-white p-4 w-full border-b border-gray-200">
+                           <div className="flex items-center justify-between w-full p-4 bg-white border-b border-gray-200">
                               <div>
                                  <h3 className="text-sm font-medium text-gray-700">
                                     {activeTab === 'all-friends'
@@ -351,7 +352,7 @@ const Sendinvite: React.FC = () => {
                            </div>
 
                            {/* Content area */}
-                           <div className="mx-auto p-4">
+                           <div className="p-4 mx-auto">
                               {activeTab === 'all-friends' ? (
                                  // Friends Tab Content
                                  filteredFriends.length > 0 ? (
@@ -371,7 +372,7 @@ const Sendinvite: React.FC = () => {
                                                 <img
                                                    src={friend.avatar || 'https://via.placeholder.com/80'}
                                                    alt={friend.name}
-                                                   className="w-16 h-16 rounded-full object-cover"
+                                                   className="object-cover w-16 h-16 rounded-full"
                                                 />
                                                 <div>
                                                    <h3 className="font-semibold">{friend.name}</h3>
@@ -389,11 +390,11 @@ const Sendinvite: React.FC = () => {
                                                             : undefined
                                                          handleOpenCancelModal(invitedFriend || friend)
                                                       }}
-                                                      className="bg-gray-400 text-white px-3 py-1 rounded mr-4 font-bold flex items-center hover:bg-gray-500 transition-colors"
+                                                      className="flex items-center px-3 py-1 mr-4 font-bold text-white transition-colors bg-gray-400 rounded hover:bg-gray-500"
                                                    >
                                                       <svg
                                                          xmlns="http://www.w3.org/2000/svg"
-                                                         className="h-4 w-4 mr-1"
+                                                         className="w-4 h-4 mr-1"
                                                          fill="none"
                                                          viewBox="0 0 24 24"
                                                          stroke="currentColor"
@@ -410,14 +411,14 @@ const Sendinvite: React.FC = () => {
                                                 ) : (
                                                    <button
                                                       onClick={() => handleOpenInviteModal(friend)}
-                                                      className="bg-blue-600 text-white px-2 py-1 rounded mr-4 font-bold hover:bg-blue-700 transition-colors"
+                                                      className="px-2 py-1 mr-4 font-bold text-white transition-colors bg-blue-600 rounded hover:bg-blue-700"
                                                    >
                                                       Invite to project
                                                    </button>
                                                 )}
                                                 <button
                                                    onClick={() => handleNavigateToMessage(friendId)}
-                                                   className="hover:bg-gray-100 p-2 rounded-full transition-colors"
+                                                   className="p-2 transition-colors rounded-full hover:bg-gray-100"
                                                 >
                                                    <IconlyMessage size={20} color={'#9BA8B1'} />
                                                 </button>
@@ -426,7 +427,7 @@ const Sendinvite: React.FC = () => {
                                        )
                                     })
                                  ) : (
-                                    <div className="text-center p-4 text-gray-500">
+                                    <div className="p-4 text-center text-gray-500">
                                        {searchQuery ? 'Can not find suitable friends' : 'No friends yet'}
                                     </div>
                                  )
@@ -442,7 +443,7 @@ const Sendinvite: React.FC = () => {
                                              <img
                                                 src={invited.avatar || 'https://via.placeholder.com/80'}
                                                 alt={invited.name}
-                                                className="w-16 h-16 rounded-full object-cover"
+                                                className="object-cover w-16 h-16 rounded-full"
                                              />
                                              <div>
                                                 <h3 className="font-semibold">{invited.name}</h3>
@@ -461,13 +462,13 @@ const Sendinvite: React.FC = () => {
                                           <div className="flex">
                                              <button
                                                 onClick={() => handleOpenCancelModal(invited)}
-                                                className="bg-red-500 text-white px-3 py-1 rounded mr-4 font-bold flex items-center hover:bg-red-600 transition-colors"
+                                                className="flex items-center px-3 py-1 mr-4 font-bold text-white transition-colors bg-red-500 rounded hover:bg-red-600"
                                              >
                                                 Cancel Invitation
                                              </button>
                                              <button
                                                 onClick={() => handleNavigateToMessage(invited.id)}
-                                                className="hover:bg-gray-100 p-2 rounded-full transition-colors"
+                                                className="p-2 transition-colors rounded-full hover:bg-gray-100"
                                              >
                                                 <IconlyMessage size={20} color={'#9BA8B1'} />
                                              </button>
@@ -476,7 +477,7 @@ const Sendinvite: React.FC = () => {
                                     )
                                  })
                               ) : (
-                                 <div className="text-center p-4 text-gray-500">
+                                 <div className="p-4 text-center text-gray-500">
                                     {searchQuery ? 'No matching invitee found' : 'No invitations have been sent yet.'}
                                  </div>
                               )}
@@ -575,7 +576,7 @@ const Sendinvite: React.FC = () => {
                         borderRadius={4}
                         loadingText="Canceling..."
                         spinnerPlacement="start"
-                        className="bg-red-600 text-white text-sm rounded-md font-medium hover:bg-red-700"
+                        className="text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
                      >
                         CANCEL INVITATION
                      </Button>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleCheck } from 'react-icons/fa6'
 import fb_img from 'assets/images/background/left-banner.webp'
 import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import moment from 'moment'
 import { Avatar } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { AnyAction } from 'redux'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 interface User {
    _id: string
@@ -39,7 +40,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({ activities, action }) => {
 
    // ========== HANDLE FUNCTION ========== //
    const handleViewTalentDetails = (user: User) => {
-      navigate(`/talents/${user._id}/details`)
+      navigate(ROUTE_CONFIG.USER.RECRUIT_TALENT.PREFIX + user._id)
    }
 
    useEffect(() => {

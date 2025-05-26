@@ -10,6 +10,7 @@ import { getMyFriends } from 'api/profile'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { AppDispatch, RootState } from '~/store'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 const Conversations: FC = () => {
    const navigate = useNavigate()
@@ -58,7 +59,7 @@ const Conversations: FC = () => {
                         return (
                            <Stack
                               key={index}
-                              onClick={() => navigate(`/conversation/${conversation._id}`)}
+                              onClick={() => navigate(ROUTE_CONFIG.USER.CONVERSATION.PREFIX + conversation._id)}
                               className="p-[15px] bg-[#ffffff] cursor-pointer overflow-hidden flex items-center gap-3 hover:bg-[#f8f9fa] "
                               direction={'row'}
                            >
@@ -152,7 +153,7 @@ const Conversations: FC = () => {
                               return (
                                  <Stack
                                     key={index}
-                                    onClick={() => navigate(`/conversation/${conversation._id}`)}
+                                    onClick={() => navigate(ROUTE_CONFIG.USER.CONVERSATION.PREFIX + conversation._id)}
                                     className="p-[15px] bg-[#ffffff] cursor-pointer overflow-hidden flex items-center gap-3 hover:bg-[#f8f9fa] "
                                     direction={'row'}
                                  >
@@ -253,7 +254,9 @@ const Conversations: FC = () => {
                                  return (
                                     <Stack
                                        key={index}
-                                       onClick={() => navigate(`/conversation/${conversation._id}`)}
+                                       onClick={() =>
+                                          navigate(ROUTE_CONFIG.USER.CONVERSATION.PREFIX + conversation._id)
+                                       }
                                        className="p-[15px] bg-[#ffffff] cursor-pointer overflow-hidden flex items-center gap-3 hover:bg-[#f8f9fa] "
                                        direction={'row'}
                                     >

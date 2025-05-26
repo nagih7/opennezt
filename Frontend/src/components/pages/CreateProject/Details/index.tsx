@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toaster } from 'components/UI/toaster'
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import { RootState } from '~/store'
+import { ROUTE_CONFIG } from '~/config/constants/routes'
 
 interface FormData {
    name: string
@@ -49,7 +50,7 @@ const Details: React.FC = () => {
          return
       }
       dispatch(onChangeFormCreateProject(formData))
-      navigate('/project/stage')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.STAGE)
    }
 
    const handleNext = () => {

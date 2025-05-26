@@ -1,9 +1,10 @@
-import { IconlyArrowLeft2, IconlyStar } from 'components/UI/Iconly'
-import { AiFillWechat } from "react-icons/ai";
-import { BsArrowsAngleExpand } from "react-icons/bs";
-import React, { FC } from 'react'
+import { IconlyArrowLeft2 } from 'components/UI/Iconly'
+import { AiFillWechat } from 'react-icons/ai'
+import { BsArrowsAngleExpand } from 'react-icons/bs'
+import { FC } from 'react'
 import MessageSidebar from '../MessageSidebar'
 import { Link } from 'react-router-dom'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 const NewConversation: FC = () => {
    return (
@@ -16,13 +17,16 @@ const NewConversation: FC = () => {
             <div className="w-10/12 h-auto">
                <div className="flex justify-between p-[10px] mb-[18px] bg-[#ffffff] rounded-md">
                   <div className="flex items-center">
-                     <Link to={'/conversation'} className="flex justify-center items-center w-[50px] h-11">
+                     <Link
+                        to={ROUTE_CONFIG.USER.CONVERSATION.PREFIX}
+                        className="flex justify-center items-center w-[50px] h-11"
+                     >
                         <IconlyArrowLeft2 size={18} color={'#6f7f92'} />
                      </Link>
                      <span>Start a new conversation</span>
                   </div>
                   <span className="flex items-center justify-center text-[#6f7f92] w-[50px] h-11">
-                     <BsArrowsAngleExpand  />
+                     <BsArrowsAngleExpand />
                   </span>
                </div>
                <div className="px-[15px] border-b border-gray-200 bg-[#ffffff]">
@@ -35,7 +39,7 @@ const NewConversation: FC = () => {
                </div>
                <div className="bg-[#ffffff] rounded-t-md w-full">
                   <div className=" flex flex-col items-center justify-center w-full pt-[15px]">
-                     <AiFillWechat  className="text-8xl w-14 h-14 text-[#6f7f92] " />
+                     <AiFillWechat className="text-8xl w-14 h-14 text-[#6f7f92] " />
                      <span className="text-[#6f7f92]  px-[10px] mt-[20px]">
                         Write a message to start the conversation
                      </span>

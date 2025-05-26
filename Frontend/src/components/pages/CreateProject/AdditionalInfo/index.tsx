@@ -7,6 +7,7 @@ import TextAreaCustom from 'components/UI/TextAreaCustom'
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import { PROJECT_ADDITIONAL_INFO_FIELDS } from 'utils/constants/additionalInfor'
 import { RootState } from '~/store'
+import { ROUTE_CONFIG } from '~/config/constants/routes'
 
 interface Field {
    id: string
@@ -42,7 +43,7 @@ const AdditionalInfo: React.FC = () => {
    // ========== USEEFFECT ========== //
    useEffect(() => {
       if (formCreateProject.name === '') {
-         navigate('/project/details')
+         navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC)
       }
       // Initialize form data with default structure if empty
       const initialData: ProjectFormData = {}
@@ -81,7 +82,7 @@ const AdditionalInfo: React.FC = () => {
       })
 
       dispatch(onChangeFormCreateProject({ additional_infos: fieldData }))
-      navigate('/project/funding-sources')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.FUNDING)
    }
 
    const handleNextStep = async (): Promise<void> => {
@@ -97,7 +98,7 @@ const AdditionalInfo: React.FC = () => {
       })
 
       dispatch(onChangeFormCreateProject({ additional_infos: fieldData }))
-      navigate('/project/logo')
+      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.LOGO)
    }
 
    const handlePrevStep = (): void => {

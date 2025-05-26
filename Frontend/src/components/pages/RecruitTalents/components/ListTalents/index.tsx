@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { User } from '../../types'
 import { useAppDispatch } from '~/store/hooks'
 import { RootState } from '~/store'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 interface PageData {
    page: number
@@ -32,7 +33,7 @@ const ListTalents: React.FC = () => {
 
    const handleViewTalentDetails = (user: User) => {
       dispatch(accessToTalent(user._id))
-      navigate(`/talents/${user._id}/details`)
+      navigate(ROUTE_CONFIG.USER.RECRUIT_TALENT.PREFIX + user._id)
    }
 
    return (
