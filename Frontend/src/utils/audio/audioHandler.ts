@@ -3,18 +3,51 @@
  * Provides functions to manage audio playback and events
  */
 
+// Type definitions
+interface AudioPlayerOptions {
+   onEnd?: () => void
+   onPlay?: () => void
+   onError?: (error: Event | Error) => void
+   onTimeUpdate?: (currentTime: number, duration: number) => void
+   autoPlay?: boolean
+}
+
+interface AudioPlayerController {
+   audio: HTMLAudioElement
+   play: () => void
+   pause: () => void
+   stop: () => void
+   isPlaying: () => boolean
+   getCurrentTime: () => number
+   getDuration: () => number
+   setVolume: (volume: number) => void
+   cleanup: () => void
+}
+
+interface SyncedAudioVideoOptions {
+   onAudioEnd?: () => void
+   onVideoEnd?: () => void
+   onSyncComplete?: () => void
+   autoStart?: boolean
+}
+
+interface SyncedAudioVideoController {
+   start: () => void
+   stop: () => void
+   pause: () => void
+   resume: () => void
+   isAudioEnded: () => boolean
+   isVideoEnded: () => boolean
+   cleanup: () => void
+}
+
 /**
  * Creates an audio player with enhanced event handling
- * @param {string} src - URL of the audio to play
- * @param {Object} options - Configuration options
- * @param {Function} options.onEnd - Callback function when audio ends
- * @param {Function} options.onPlay - Callback function when audio starts playing
- * @param {Function} options.onError - Callback function when audio encounters an error
- * @param {Function} options.onTimeUpdate - Callback function for time updates during playback
- * @param {boolean} options.autoPlay - Whether to automatically play the audio after loading
- * @returns {Object} Audio controller with methods and the audio element
+ * @param src - URL of the audio to play
+ * @param options - Configuration options
+ * @returns Audio controller with methods and the audio element
  */
-export const createAudioPlayer = (src, options = {}) => {
+export const createAudioPlayer = (src: string, options: AudioPlayerOptions = {}): AudioPlayerController => {
     const {
         onEnd = () => {
             /* noop */
@@ -22,7 +55,7 @@ export const createAudioPlayer = (src, options = {}) => {
         onPlay = () => {
             /* noop */
         },
-        onError = (error) => console.error('Audio playback error:', error),
+        onError = (error: Event | Error) => console.error('Audio playback error:', error),
         onTimeUpdate = () => {
             /* noop */
         },
@@ -30,10 +63,13 @@ export const createAudioPlayer = (src, options = {}) => {
     } = options
 
     // Create audio element
-    const audio = new Audio(src)
-
-    // Track if the audio has started playing
+    const audio = new Audio(src)    // Track if the audio has started playing
     let hasStarted = false
+
+    // Create a wrapper for the timeupdate handler
+    const timeUpdateHandler = () => {
+        onTimeUpdate(audio.currentTime, audio.duration)
+    }
 
     // Set up event listeners
     audio.addEventListener('ended', () => {
@@ -45,13 +81,11 @@ export const createAudioPlayer = (src, options = {}) => {
         onPlay()
     })
 
-    audio.addEventListener('error', (e) => {
+    audio.addEventListener('error', (e: Event) => {
         onError(e)
     })
 
-    audio.addEventListener('timeupdate', () => {
-        onTimeUpdate(audio.currentTime, audio.duration)
-    })
+    audio.addEventListener('timeupdate', timeUpdateHandler)
 
     // Start playing if autoPlay is enabled
     if (autoPlay) {
@@ -83,27 +117,25 @@ export const createAudioPlayer = (src, options = {}) => {
         getDuration: () => audio.duration,
 
         // Set volume (0-1)
-        setVolume: (volume) => {
+        setVolume: (volume: number) => {
             audio.volume = Math.min(Math.max(volume, 0), 1)
-        },
-
-        // Clean up method to remove event listeners
+        },        // Clean up method to remove event listeners
         cleanup: () => {
             audio.pause()
             audio.removeEventListener('ended', onEnd)
             audio.removeEventListener('playing', onPlay)
             audio.removeEventListener('error', onError)
-            audio.removeEventListener('timeupdate', onTimeUpdate)
+            audio.removeEventListener('timeupdate', timeUpdateHandler)
         },
     }
 }
 
 /**
  * Checks if an audio file exists and is playable
- * @param {string} url - URL of the audio to check
- * @returns {Promise<boolean>} Promise that resolves to true if audio is valid
+ * @param url - URL of the audio to check
+ * @returns Promise that resolves to true if audio is valid
  */
-export const checkAudioValidity = (url) => {
+export const checkAudioValidity = (url: string): Promise<boolean> => {
     return new Promise((resolve) => {
         const audio = new Audio()
 
@@ -140,12 +172,16 @@ export const checkAudioValidity = (url) => {
 
 /**
  * Creates a synchronized audio-video player
- * @param {string} audioSrc - URL of the audio to play
- * @param {HTMLVideoElement} videoElement - Video element to synchronize with
- * @param {Object} options - Configuration options for audio and synchronization
- * @returns {Object} Controller for the synchronized playback
+ * @param audioSrc - URL of the audio to play
+ * @param videoElement - Video element to synchronize with
+ * @param options - Configuration options for audio and synchronization
+ * @returns Controller for the synchronized playback
  */
-export const createSyncedAudioVideo = (audioSrc, videoElement, options = {}) => {
+export const createSyncedAudioVideo = (
+    audioSrc: string, 
+    videoElement: HTMLVideoElement, 
+    options: SyncedAudioVideoOptions = {}
+): SyncedAudioVideoController => {
     const {
         onAudioEnd = () => {
             /* noop */
@@ -170,7 +206,7 @@ export const createSyncedAudioVideo = (audioSrc, videoElement, options = {}) => 
             onAudioEnd()
             checkSyncComplete()
         },
-        onError: (error) => {
+        onError: (error: Event | Error) => {
             console.error('Audio sync error:', error)
             // If audio fails, still allow the video to play independently
             isAudioEnded = true

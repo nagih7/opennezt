@@ -1,27 +1,29 @@
-import React from 'react'
-import store from '~/store'
-import moment from 'moment'
+import store, { RootState } from '~/store'
 import { toast } from '~/components/UI/toast'
-import CloseIcon from 'assets/images/icon/close.svg'
-import success from 'assets/images/icon/notification/success_16x16.svg'
-import error from 'assets/images/icon/notification/error_16x16.svg'
-import warning from 'assets/images/icon/notification/warning_16x16.svg'
 
-export const VALIDATE_EMAIL_REGEX = /^[a-zA-Z0-9][a-zA-Z0-9_.+-]{1,}@[a-z0-9]{1,}(\.[a-z0-9]{1,}){1,2}$/
-export const VALIDATE_PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{6,50}$/
-export const VALIDATE_PHONE_REGEX_RULE = /^[0-9]{3}[0-9]{3}[0-9]{4}$/
+// Type definitions
+interface ValidationResult {
+   isError: boolean
+   dataError: Record<string, string>
+   error: Record<string, string>
+}
 
-export const handleCheckRoute = (routes, currentRoute) => {
+export const VALIDATE_EMAIL_REGEX: RegExp = /^[a-zA-Z0-9][a-zA-Z0-9_.+-]{1,}@[a-z0-9]{1,}(\.[a-z0-9]{1,}){1,2}$/
+export const VALIDATE_PASSWORD_REGEX: RegExp = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{6,50}$/
+export const VALIDATE_PHONE_REGEX_RULE: RegExp = /^[0-9]{3}[0-9]{3}[0-9]{4}$/
+
+export const handleCheckRoute = (routes: string[], currentRoute: string): boolean => {
    if (routes && routes.length > 0) {
       return routes.includes(currentRoute)
    }
+   return false
 }
 
-export const hasPermission = (permissions) => {
-   let { auth } = store.getState()
+export const hasPermission = (permissions: string[]): boolean => {
+   let { auth } = store.getState() as RootState
    let isPermission = false
    if (permissions) {
-      permissions.map((permission) => {
+      permissions.map((permission: string) => {
          if (
             auth.authUser &&
             auth.authUser.permissions &&
@@ -35,7 +37,7 @@ export const hasPermission = (permissions) => {
    return isPermission
 }
 
-export const isValidEmail = (email) => {
+export const isValidEmail = (email: string): boolean => {
    let result = false
    if (email && typeof email === 'string') {
       const regex = RegExp(VALIDATE_EMAIL_REGEX)
@@ -44,7 +46,7 @@ export const isValidEmail = (email) => {
    return result
 }
 
-export const isValidPassword = (password) => {
+export const isValidPassword = (password: string): boolean => {
    let result = false
    if (password && typeof password === 'string') {
       const regex = RegExp(VALIDATE_PASSWORD_REGEX)
@@ -53,7 +55,7 @@ export const isValidPassword = (password) => {
    return result
 }
 
-export const isValidPhone = (phone) => {
+export const isValidPhone = (phone: string): boolean => {
    let result = false
 
    if (phone && typeof phone === 'string') {
@@ -72,17 +74,20 @@ export const isValidPhone = (phone) => {
    return result
 }
 
-export const handleCheckValidateConfirm = (data, errors) => {
+export const handleCheckValidateConfirm = (
+   data: Record<string, any>,
+   errors: Record<string, string>
+): ValidationResult => {
    let isError = false
    let dataError = { ...errors }
 
    // Reset all errors first
-   Object.keys(dataError).forEach((key) => {
+   Object.keys(dataError).forEach((key: string) => {
       dataError[key] = ''
    })
 
    // Check each field in data
-   Object.keys(data).forEach((key) => {
+   Object.keys(data).forEach((key: string) => {
       const value = data[key]
 
       if (!value || (typeof value === 'string' && value.trim() === '')) {
