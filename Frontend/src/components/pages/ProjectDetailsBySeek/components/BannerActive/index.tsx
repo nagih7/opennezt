@@ -25,9 +25,9 @@ const BannerActive: React.FC = () => {
    const { projectDetails } = useSelector((state: RootState) => state.project)
 
    return (
-      <div className=" bg-[#07142e] w-[78.75rem] h-[18.75rem] relative top-[0rem] 2xl:w-[102rem]">
-         <div className="text-white font-bold relative top-[5rem]  border-b border-[#142039] pb-4 2xl:ml-[5.5rem]">
-            <ol className="flex mb-0">
+      <div className=" bg-[#07142e] w-full h-[18.75rem] relative top-[0rem]">
+         <div className="text-white font-bold relative top-[5rem]  border-b border-[#142039] pb-4 ml-[5.5rem]">
+            <ul className="flex mb-0">
                <li>
                   Seek Projects
                   <FaChevronRight className="inline mx-2" />
@@ -37,11 +37,11 @@ const BannerActive: React.FC = () => {
                   <FaChevronRight className="inline mx-2" />
                </li>
                <li>{projectDetails?.name}</li>
-            </ol>
-            <h3 className="ml-[2rem]">{projectDetails?.name}</h3>
+            </ul>
+            <span className="ml-[2rem] 2xl:text-2xl">{projectDetails?.name}</span>
          </div>
 
-         <div className="flex items-center mt-[-0.5rem] relative top-[5.8rem] ml-8 text-white 2xl:ml-[7rem]">
+         <div className="flex items-center mt-[-0.5rem] relative top-[5.8rem] ml-8 text-white ml-[7rem]">
             <Avatar.Root size="md" className="w-10 h-10 mr-3 rounded-full">
                <Avatar.Fallback name={projectDetails?.user?.name} />
                <Avatar.Image src={projectDetails?.user?.avatar} />
@@ -73,7 +73,7 @@ const BannerActive: React.FC = () => {
                </p>
             </div>
             <button className="ml-5 mb-[0.5rem]">
-               <IconlyBookmark size={24} color="#FFF" />
+               <IconlyBookmark size={24} color="#ffffff" />
             </button>
          </div>
       </div>
