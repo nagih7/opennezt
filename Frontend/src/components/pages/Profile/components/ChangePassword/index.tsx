@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import styles from './styles.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleChangePassword } from '../../../../../api/profile'
 import { Button } from '@chakra-ui/react'
@@ -44,14 +43,14 @@ function ChangePassword() {
    }
 
    return (
-      <div className={styles.editProfile}>
+      <div className="rounded-2xl px-4 my-8">
          <div className="bg-[#fff] rounded-md">
             <div className="p-8 border-b-[1px] border-gray-200">
                <div className="text-xl font-medium text-center sm:text-2xl">Change Password</div>
             </div>
 
             <div className="p-8">
-               <div className={styles.mainWrap}>
+               <div className="space-y-8">
                   <div className="relative mb-8">
                      <input
                         type={'password'}
