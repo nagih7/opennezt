@@ -51,7 +51,7 @@ import {
 import { BaseApiResponse } from '~/types'
 
 // ========== My projects ========== //
-export const getListMyProjects = (dataFilter: any) => async (dispatch: AppDispatch, getState: () => any) => {
+export const getListMyProjects = (dataFilter: any) => {
    let path = `projects/me?per_page=${dataFilter.perPage}&page=${dataFilter.currentPage}`
    if (dataFilter.keySearch) {
       path += `&q=${dataFilter.keySearch}`
@@ -63,18 +63,15 @@ export const getListMyProjects = (dataFilter: any) => async (dispatch: AppDispat
    if (dataFilter.order && dataFilter.column) {
       path += `&order=${dataFilter.order}&column=${dataFilter.column}`
    }
-   return callReduxApi({
+   return callApi({
       method: 'get',
       apiPath: path,
-      actionTypes: [requestGetListMyProjects, getListMyProjectsSuccess, getListMyProjectsFail],
       variables: {},
-      dispatch,
-      getState,
    })
 }
 
 // ========== PROJECTS PARTICIPATED ========== //
-export const getListProjectsParticipated = (dataFilter: any) => async (dispatch: AppDispatch, getState: () => any) => {
+export const getListProjectsParticipated = (dataFilter: any) => {
    let path = `projects/me/participated?per_page=${dataFilter.perPage}&page=${dataFilter.currentPage}`
    if (dataFilter.keySearch) {
       path += `&q=${dataFilter.keySearch}`
@@ -85,17 +82,10 @@ export const getListProjectsParticipated = (dataFilter: any) => async (dispatch:
    if (dataFilter.order && dataFilter.column) {
       path += `&order=${dataFilter.order}&column=${dataFilter.column}`
    }
-   return callReduxApi({
+   return callApi({
       method: 'get',
       apiPath: path,
-      actionTypes: [
-         requestGetListProjectsParticipated,
-         getListProjectsParticipatedSuccess,
-         getListProjectsParticipatedFail,
-      ],
       variables: {},
-      dispatch,
-      getState,
    })
 }
 

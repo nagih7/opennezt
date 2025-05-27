@@ -1,8 +1,5 @@
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getListMyProjects } from 'api/project'
-import { RootState } from 'store/types'
-import { AppDispatch } from '~/store'
+import { useEffect, useState } from 'react'
+import { getListMyProjects } from '~/api/project'
 
 export interface UseMyProjectsProps {
    isBottom: boolean
@@ -10,30 +7,70 @@ export interface UseMyProjectsProps {
 }
 
 export const useMyProjects = ({ isBottom, setIsBottom }: UseMyProjectsProps) => {
-   const dispatch = useDispatch<AppDispatch>()
+   // ========== STATE ========== //
+   const [myProjects, setMyProjects] = useState<any[]>([])
+   const [paginationListMyProjects, setPaginationListMyProjects] = useState({
+      currentPage: 1,
+      perPage: 6,
+      totalPage: 1,
+      totalRecord: 0,
+   })
+   const [isLoadingGetListMyProjects, setIsLoadingGetListMyProjects] = useState<boolean>(false)
 
-   // ========== STATE FROM REDUX ========== //
-   const { myProjects, paginationListMyProjects, isLoadingGetListMyProjects } = useSelector(
-      (state: RootState) => state.project
-   )
+   // ========== EFFECTS ========== //
+   useEffect(() => {
+      // Chỉ tải dữ liệu khi component được mount lần đầu
+      if (myProjects.length === 0) {
+         loadProjects(1, true)
+      }
+   }, [])
 
-   // Theo dõi sự kiện scroll
    useEffect(() => {
       if (isBottom && !isLoadingGetListMyProjects) {
-         // Call API hoặc load thêm dữ liệu khi scroll xuống cuối
-         const nextPage = paginationListMyProjects.currentPage + 1
-         dispatch(
-            getListMyProjects({
-               ...paginationListMyProjects,
-               currentPage: nextPage,
-            })
-         )
+         getListMyProjects({
+            ...paginationListMyProjects,
+            currentPage: paginationListMyProjects.currentPage + 1,
+         })
+
          setIsBottom(false)
       }
-   }, [isBottom, dispatch, paginationListMyProjects, setIsBottom, isLoadingGetListMyProjects])
+   }, [isBottom, paginationListMyProjects, setIsBottom, isLoadingGetListMyProjects])
+
+   const loadProjects = async (page: number, isInitial: boolean = false) => {
+      try {
+         setIsLoadingGetListMyProjects(true)
+
+         const response = await getListMyProjects({
+            currentPage: page,
+            perPage: paginationListMyProjects.perPage,
+            keySearch: '',
+         })
+
+         if (response?.status === 200 && response?.data) {
+            const { projects } = response.data
+
+            if (isInitial) {
+               // Gán dữ liệu ban đầu
+               setMyProjects(projects || [])
+            } else {
+               // Thêm dữ liệu vào danh sách hiện tại (cho infinite scroll)
+               setMyProjects((prev) => [...prev, ...(projects || [])])
+            }
+         }
+      } catch (error) {
+         console.error('Lỗi khi tải projects:', error)
+      } finally {
+         setIsLoadingGetListMyProjects(false)
+      }
+   }
 
    return {
       myProjects,
+      setMyProjects,
+      paginationListMyProjects,
+      setPaginationListMyProjects,
       isLoadingGetListMyProjects,
+      setIsLoadingGetListMyProjects,
+      loadProjects,
    }
 }

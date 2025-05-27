@@ -50,7 +50,7 @@ export const useEditStage = () => {
       if (!project || project?.id !== id) {
          dispatch(getMyProjectDetails(id!))
       }
-   }, [dispatch, id, project])
+   }, [dispatch, id])
 
    useEffect(() => {
       // CHỈ LOAD KHI project ID khác với đã load

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { updateProjectBackground } from 'api/project'
 import { postProjectDetailsActivitiesBackground } from 'api/activity'
@@ -8,7 +8,6 @@ import { RootState } from '~/store'
 import { toast } from 'sonner'
 
 export const useEditBackground = () => {
-   const dispatch = useDispatch()
    const params = useParams<{ id: string }>()
    const { id } = params
 
@@ -25,8 +24,6 @@ export const useEditBackground = () => {
    useEffect(() => {
       // CHỈ LOAD KHI project ID khác với đã load
       if (project && project._id === id && loadedProjectId.current !== id) {
-         console.log('Loading background data for project:', id)
-
          setBgURL(project?.background || '')
          setBgFile(null) // Reset background file when loading new project
 
@@ -35,66 +32,78 @@ export const useEditBackground = () => {
    }, [project, id])
 
    // ========== ONCHANGE FUNCTION ========== //
+   // const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+   //    try {
+   //       // Check if the file is an image
+   //       const file = event.target.files?.[0]
+   //       if (!file) return
+
+   //       // Validate file type
+   //       if (!file.type.startsWith('image/')) {
+   //          toast.error('Please select a valid image file.')
+   //          return
+   //       }
+
+   //       // Validate file size (e.g., max 10MB for background images)
+   //       const maxSize = 10 * 1024 * 1024 // 10MB in bytes
+   //       if (file.size > maxSize) {
+   //          toast.error('File size must be less than 10MB.')
+   //          return
+   //       }
+
+   //       const background = await resizeBackground(file)
+   //       setBgFile(background)
+   //       setBgURL(URL.createObjectURL(background))
+   //    } catch (error: any) {
+   //       toast.error('Failed to process the image. Please try again.')
+   //    }
+   // }
+
+   // const handleSaveChanges = async () => {
+   //    try {
+   //       if (!bgFile) {
+   //          toast.error('Please select a background image first.')
+   //          return
+   //       }
+
+   //       console.log('Uploading background file:', bgFile.name)
+
+   //       const formData = new FormData()
+   //       formData.append('background', bgFile)
+   //       console.log('Form data prepared for background upload:', formData)
+   //       await updateProjectBackground(id!, formData)
+   //       await postProjectDetailsActivitiesBackground(id!, formData)
+
+   //       toast.success('Project background updated successfully!')
+   //    } catch (error: any) {
+   //       console.error('Save background error:', error)
+
+   //       // Hiển thị lỗi chi tiết từ backend nếu có
+   //       if (error.response?.data?.detail) {
+   //          const errorDetail = error.response.data.detail
+   //          const errorMessages = Object.values(errorDetail).join(', ')
+   //          toast.error(`Validation error: ${errorMessages}`)
+   //       } else {
+   //          toast.error('Failed to update project background. Please try again.')
+   //       }
+   //    }
+   // }
+
    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-      try {
-         // Check if the file is an image
-         const file = event.target.files?.[0]
-         if (!file) return
+      // Check if the file is an image
+      const file = event.target.files?.[0]
+      if (!file) return
 
-         console.log('Selected file:', file.name, file.type, file.size)
-
-         // Validate file type
-         if (!file.type.startsWith('image/')) {
-            toast.error('Please select a valid image file.')
-            return
-         }
-
-         // Validate file size (e.g., max 10MB for background images)
-         const maxSize = 10 * 1024 * 1024 // 10MB in bytes
-         if (file.size > maxSize) {
-            toast.error('File size must be less than 10MB.')
-            return
-         }
-
-         const background = await resizeBackground(file)
-         setBgFile(background)
-         setBgURL(URL.createObjectURL(background))
-
-         console.log('Background processed successfully')
-      } catch (error: any) {
-         console.error('File processing error:', error)
-         toast.error('Failed to process the image. Please try again.')
-      }
+      const background = await resizeBackground(file)
+      setBgFile(background)
+      setBgURL(URL.createObjectURL(background))
    }
 
    const handleSaveChanges = async () => {
-      try {
-         if (!bgFile) {
-            toast.error('Please select a background image first.')
-            return
-         }
-
-         console.log('Uploading background file:', bgFile.name)
-
-         const formData = new FormData()
-         formData.append('background', bgFile)
-
-         await updateProjectBackground(id!, formData)
-         await postProjectDetailsActivitiesBackground(id!)
-
-         toast.success('Project background updated successfully!')
-      } catch (error: any) {
-         console.error('Save background error:', error)
-
-         // Hiển thị lỗi chi tiết từ backend nếu có
-         if (error.response?.data?.detail) {
-            const errorDetail = error.response.data.detail
-            const errorMessages = Object.values(errorDetail).join(', ')
-            toast.error(`Validation error: ${errorMessages}`)
-         } else {
-            toast.error('Failed to update project background. Please try again.')
-         }
-      }
+      const formData = new FormData()
+      formData.append('background', bgFile!)
+      await updateProjectBackground(id!, formData)
+      await postProjectDetailsActivitiesBackground(id!, formData)
    }
 
    return {

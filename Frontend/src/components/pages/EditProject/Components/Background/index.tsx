@@ -7,7 +7,7 @@ import { useEditBackground } from './useEditBackground'
 
 const Background: React.FC = () => {
    // Use custom hook for all logic
-   const { bgURL, bgFile, isLoadingUpdateMyProject, handleFileChange, handleSaveChanges } = useEditBackground()
+   const { bgURL, isLoadingUpdateMyProject, handleFileChange, handleSaveChanges } = useEditBackground()
 
    return (
       <div className="flex gap-8 w-full py-8 px-[16px]">

@@ -4,7 +4,6 @@ import { useMyProjects, UseMyProjectsProps } from './useMyProjects'
 
 const MyProjects: React.FC<UseMyProjectsProps> = (props) => {
    const { myProjects, isLoadingGetListMyProjects } = useMyProjects(props)
-
    return (
       <>
          {myProjects && myProjects.length === 0 && !isLoadingGetListMyProjects && (
