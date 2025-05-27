@@ -1,5 +1,6 @@
-import { Alert, Avatar, Badge, Button, Image, Input, Stack, Text } from '@chakra-ui/react'
+import { Alert, Avatar, Badge, Image, Input, Stack, Text } from '@chakra-ui/react'
 import { changeAvatar } from 'api/profile'
+import Button from '~/components/UI/Button' 
 import {
    DialogActionTrigger,
    DialogBody,
@@ -17,10 +18,11 @@ import {
    IconlySearch,
    IconlyShieldDone,
 } from 'components/UI/Iconly'
+import { BsStars } from 'react-icons/bs'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsOpenAvatarPreview } from 'store/modules/profile'
-import Loading from './components/Loading'
 import { matchingProjects } from 'api/artificialIntelligence'
 import { setOpenModalMatchingProjects } from 'store/modules/artificialIntelligence'
 import CrawlLinkedin from 'components/common/CrawlLinkedin'
@@ -79,25 +81,38 @@ const ProfileOverview = () => {
          <div className="flex items-center w-full flex-nowrap">
             <div className="w-4/12">
                <div className="flex items-center justify-center">
-                  {isLoadingMatchingProjects && <Loading />}
-                  {projects.length === 0 && !isLoadingMatchingProjects && (
+                  {(projects.length === 0 || isLoadingMatchingProjects) && (
                      <div
-                        className="flex items-center gap-2 bg-[#2f65b9] cursor-pointer py-2 px-[15px] rounded-md"
-                        onClick={() => setIsOpenModalConfirmMatchingProjects(true)}
+                        className="flex items-center gap-2 bg-gradient-to-r from-[#0606AFCC] to-[#AE2135E5] cursor-pointer py-2 px-[15px] rounded-xl"
+                        onClick={() => !isLoadingMatchingProjects && setIsOpenModalConfirmMatchingProjects(true)}
+                        style={{ opacity: isLoadingMatchingProjects ? 0.8 : 1 }}
                      >
-                        <IconlySearch color={'#ffffff'} size={15} />
-                        <button className="text-[#ffffff] font-medium text-sm">Matching projects with AI</button>
+                        {isLoadingMatchingProjects ? (
+                           <AiOutlineLoading3Quarters className="text-[#ffffff] w-5 h-5 animate-spin" />
+                        ) : (
+                           <BsStars className="text-[#ffffff] w-5 h-5" />
+                        )}
+                       <Button
+                           variant="ghost"
+                           className="text-[#ffffff] font-medium text-sm p-0 h-auto min-h-0 bg-transparent hover:bg-transparent"
+                           disabled={isLoadingMatchingProjects}
+                        >
+                           {isLoadingMatchingProjects ? 'Matching...' : 'Apply with AI'}
+                        </Button>
                      </div>
                   )}
                   {projects.length > 0 && !isLoadingMatchingProjects && (
                      <div
-                        className="flex items-center gap-2 bg-[#2f65b9] cursor-pointer py-2 px-[15px] rounded-md"
+                        className="flex items-center gap-2 bg-gradient-to-r from-[#0606AFCC] to-[#AE2135E5] cursor-pointer py-2 px-[15px] rounded-xl"
                         onClick={() => dispatch(setOpenModalMatchingProjects(true))}
                      >
                         <IconlyFolder color={'#ffffff'} size={15} />
-                        <button className="text-[#ffffff] font-medium text-xs md:text-sm">
+                        <Button
+                           variant="ghost"
+                           className="text-[#ffffff] font-medium text-xs md:text-sm p-0 h-auto min-h-0 bg-transparent hover:bg-transparent"
+                        >
                            View matching projects
-                        </button>
+                        </Button>
                      </div>
                   )}
                </div>
