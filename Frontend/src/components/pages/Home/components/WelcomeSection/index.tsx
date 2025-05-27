@@ -1,5 +1,6 @@
 import React from 'react'
-import { IconlyFace, IconlyFolder } from 'components/UI/Iconly'
+import { BsPersonVideo3 } from "react-icons/bs";
+import { FaRegFolder } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom'
 import { AuthAccount } from '~/store/modules/auth/types'
 import { ROUTE_CONFIG } from '~/config/constants/routes'
@@ -27,7 +28,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({ user }) => {
             <div className="flex flex-col p-3 border rounded-xl">
                <div className="flex items-center justify-between">
                   <span className="font-bold">Practice interviews</span>
-                  <IconlyFace color={'orange'} size={25} />
+                  <BsPersonVideo3 className='w-7 h-7 text-gray-500'/>
                </div>
                <span className="flex-1 text-[#6f7f92] text-sm mt-1">
                   Prepare for your next opportunity with 100+ live interviews ready for you.
@@ -44,7 +45,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({ user }) => {
             <div className="flex flex-col p-3 border rounded-xl">
                <div className="flex items-center justify-between">
                   <span className="font-bold">Add your own Project</span>
-                  <IconlyFolder color={'green'} size={25} />
+                  <FaRegFolder className='w-7 h-7 text-gray-500'/>
                </div>
                <span className="flex-1 text-[#6f7f92] text-sm mt-1">
                   Start building your dream team by adding a project and matching with the right co-founders and talent.
