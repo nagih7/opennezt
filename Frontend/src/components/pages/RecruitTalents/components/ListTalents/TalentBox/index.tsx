@@ -36,23 +36,23 @@ const TalentBox: React.FC<TalentBoxProps> = ({ talent, handleViewTalentDetails }
                         </ul>
                     </div>
                 </div>
-            </div>
-            <div className="md:absolute bottom-[-40px] group-hover:bottom-[-21px] group-hover:translate-x-0 translate-x-full transition-all duration-700 ease-in-out left-0 w-[280px] p-[16px] bg-[#f6f4f4] flex flex-col justify-center items-center gap-2">
-                <div className="font-semibold text-black no-underline">{talent.user.name}</div>
+                <div className="absolute bottom-[-130px] group-hover:bottom-[-90px]  translate-x-full transition-all duration-700 ease-in-out left-[-280px] w-[280px] p-[16px] bg-[#f6f4f4] flex flex-col justify-center items-center gap-2">
+                    <div className="font-semibold text-black no-underline">{talent.user.name}</div>
 
-                <div
-                    className="mt-[16px] fade-element"
-                    style={{
-                        opacity: 0,
-                        transition: 'opacity 0.3s ease-in-out',
-                    }}
-                >
-                    <Button
-                        onClick={() => handleViewTalentDetails(talent.user)}
-                        className="no-underline text-white font-semibold text-xs bg-[#2f65b9] px-[24px] py-[12px] rounded-md"
+                    <div
+                        className="mt-[16px] fade-element"
+                        style={{
+                            opacity: 0,
+                            transition: 'opacity 0.3s ease-in-out',
+                        }}
                     >
-                        VIEW DETAILS
-                    </Button>
+                        <Button
+                            onClick={() => handleViewTalentDetails(talent.user)}
+                            className="no-underline text-white font-semibold text-xs bg-[#2f65b9] px-[24px] py-[12px] rounded-md"
+                        >
+                            VIEW DETAILS
+                        </Button>
+                    </div>
                 </div>
             </div>
         </>
