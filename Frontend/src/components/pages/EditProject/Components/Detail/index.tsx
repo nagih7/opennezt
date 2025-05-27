@@ -1,73 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Button } from '@chakra-ui/react'
 import ActionBar from '../../../EditProfile/components/ActionBar'
 import ProjectEditMenu from '../ProjectEditMenu'
 import ProjectCard from '../ProjectCard'
-import { useDispatch, useSelector } from 'react-redux'
 import InputCustom from 'components/UI/InputCustom'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
-import { getMyProjectDetails, updateProjectBasic } from 'api/project'
-import { useParams } from 'react-router-dom'
-import { postProjectDetailsActivitiesBasic } from 'api/activity'
-import { AppDispatch } from '~/~/store'
-import { RootState } from '~/store'
-
-interface FormData {
-   name: string
-   description: string
-}
+import { useEditDetail } from './useEditDetail'
 
 const EditDetail: React.FC = () => {
-   const dispatch = useDispatch<AppDispatch>()
-   const params = useParams<{ id: string }>()
-   const { id } = params
-
-   // ========== STATE FROM REDUX STORE ========== //
-   const { myProjectDetails, isLoadingUpdateMyProject } = useSelector((state: RootState) => state.project)
-   const project = myProjectDetails
-
-   // ========== STATE MANAGEMENT ========== //
-   const [formData, setFormData] = useState<FormData>({
-      name: '',
-      description: '',
-   })
-
-   // ========== USE EFFECT ========== //
-
-   useEffect(() => {
-      if (!project || project?._id !== id) {
-         dispatch(getMyProjectDetails(id))
-      }
-      // eslint-disable-next-line
-   }, [dispatch, id])
-
-   useEffect(() => {
-      if (project) {
-         setFormData({
-            name: project?.name || '',
-            description: project?.description || '',
-         })
-      }
-      // eslint-disable-next-line
-   }, [project])
-
-   // ========== HANDLE CHANGE FUNCTION ========== //
-   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = event.target
-      setFormData((prevState) => ({
-         ...prevState,
-         [name]: value,
-      }))
-   }
-   const handleSaveChanges = async () => {
-      dispatch(
-         updateProjectBasic(id, {
-            name: formData.name,
-            description: formData.description,
-         })
-      )
-      await postProjectDetailsActivitiesBasic(id, formData)
-   }
+   // Use custom hook for all logic
+   const { formData, isLoadingUpdateMyProject, handleChange, handleSaveChanges } = useEditDetail()
    // ========== COMPONENT RENDER ========== //
    return (
       <div className="flex gap-8 w-full py-8 px-[16px]">

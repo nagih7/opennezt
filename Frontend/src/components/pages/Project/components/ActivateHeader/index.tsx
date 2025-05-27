@@ -1,31 +1,12 @@
 import { Tabs } from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react'
 import MyProjects from '../MyProjects'
 import ProjectsParticipated from '../ProjectsParticipated'
-import { ROUTE_CONFIG } from '~/config/constants/routes'
+import { useActivateHeader, UseActivateHeaderProps } from './useActivateHeader'
 
-interface ActivateHeaderProps {
-   isBottom: boolean
-   setIsBottom: (value: boolean) => void
-   onTabChange?: (tab: string) => void
-   activeTab?: string
-}
+const ActivateHeader: React.FC<UseActivateHeaderProps> = (props) => {
+   const { activeTab, setActive, isBottom, setIsBottom, handleCreateProject } = useActivateHeader(props)
 
-const ActivateHeader: React.FC<ActivateHeaderProps> = ({
-   isBottom,
-   setIsBottom,
-   onTabChange,
-   activeTab = 'my-projects',
-}) => {
-   // Chỉ gọi onTabChange khi tab thay đổi
-   const handleTabChange = (tab: string) => {
-      if (onTabChange) {
-         onTabChange(tab)
-      }
-   }
-
-   // ========== RENDER ========== //
    return (
       <div className="mx-[-16px] px-[16px] mb-8">
          <div className="flex items-center justify-between border-b-[1px] border-[#f3f4f5]">
@@ -33,18 +14,19 @@ const ActivateHeader: React.FC<ActivateHeaderProps> = ({
                <Tabs.List className="flex items-center justify-between border-b-[1px] border-[#f3f4f5]">
                   <div className="flex w-full sm:flex-row flex-col justify-center sm:justify-start items-center text-nowrap mt-[1rem] font-bold gap-8">
                      <Tabs.Trigger value="my-projects">
-                        <span onClick={() => handleTabChange('my-projects')}>My Projects</span>
+                        <span onClick={() => setActive('my-projects')} className="font-medium">
+                           My Projects
+                        </span>
                      </Tabs.Trigger>
                      <Tabs.Trigger value="projects-participated">
-                        <span onClick={() => handleTabChange('projects-participated')}>Projects Participated</span>
+                        <span onClick={() => setActive('projects-participated')} className="font-medium">
+                           Projects Participated
+                        </span>
                      </Tabs.Trigger>
                      <Tabs.Trigger value="create-project">
-                        <Link
-                           to={ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC}
-                           className="no-underline text-[#6f7f92] font-medium"
-                        >
+                        <span onClick={handleCreateProject} className="font-medium">
                            Create a Project
-                        </Link>
+                        </span>
                      </Tabs.Trigger>
                   </div>
                   {/* <div className="px-[16px]">

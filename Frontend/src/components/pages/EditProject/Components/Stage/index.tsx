@@ -1,120 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Button } from '@chakra-ui/react'
 import ActionBar from '../../../EditProfile/components/ActionBar'
 import ProjectEditMenu from '../ProjectEditMenu'
 import ProjectCard from '../ProjectCard'
 import SelectCustom from 'components/UI/SelectCustom'
-import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import { getMyProjectDetails, updateProjectSector } from 'api/project'
-import { getIndustryFramework, getStageFramework } from 'api/user'
-import { toaster } from 'components/UI/toaster'
-import { postProjectDetailsActivitiesSector } from 'api/activity'
-import { RootState } from '~/store'
-
-// Define types for the component
-interface Industry {
-   _id: string
-   name?: string
-}
-
-interface Stage {
-   _id: string
-   name?: string
-}
-
-interface Project {
-   _id: string
-   id?: string
-   industries?: Industry[]
-   stage?: Stage
-}
-
-interface FormData {
-   industries: string[]
-   stage: string[]
-}
-
-interface SelectEvent {
-   value: string[]
-}
+import { useEditStage } from './useEditStage'
 
 const EditStage: React.FC = () => {
-   const dispatch = useDispatch()
-   const params = useParams<{ id: string }>()
-   const { id } = params
-
-   // ========== STATE FROM REDUX STORE ========== //
-   const { myProjectDetails, isLoadingUpdateMyProject } = useSelector((state: RootState) => state.project)
-   const { industryFramework, stageFramework } = useSelector((state: RootState) => state.user)
-   const project = myProjectDetails
-
-   // ========== STATE MANAGEMENT ========== //
-   const [formData, setFormData] = useState<FormData>({
-      industries: [],
-      stage: [],
-   })
-
-   // ========== USE EFFECT ========== //
-   useEffect(() => {
-      if (!project || project?.id !== id) {
-         dispatch(getMyProjectDetails(id))
-      }
-      // eslint-disable-next-line
-   }, [dispatch, id])
-
-   useEffect(() => {
-      if (project) {
-         setFormData({
-            industries: project?.industries?.map((item) => item._id) || [],
-            stage: project?.stage?._id ? [project.stage._id] : [],
-         })
-      }
-      // eslint-disable-next-line
-   }, [project])
-
-   useEffect(() => {
-      if (!industryFramework.length) dispatch(getIndustryFramework())
-      // eslint-disable-next-line
-   }, [dispatch])
-
-   useEffect(() => {
-      if (!stageFramework.length) dispatch(getStageFramework())
-      // eslint-disable-next-line
-   }, [dispatch])
-
-   // ========== HANDLE CHANGE FUNCTION ========== //
-   const handleChange = (event: SelectEvent, nameSelect?: string) => {
-      if (formData.industries.length > 2) {
-         setFormData({
-            ...formData,
-            industries: formData.industries.slice(0, 2),
-         })
-      }
-      if (event.value.length > 2) {
-         toaster.create({
-            type: 'error',
-            title: 'You can only select up to 2 industries',
-         })
-         return
-      }
-      if (nameSelect) {
-         setFormData({ ...formData, [nameSelect]: event.value })
-      }
-   }
-
-   const handleSaveChanges = async () => {
-      await dispatch(
-         updateProjectSector(id, {
-            industries: formData.industries,
-            stage: formData.stage[0],
-         })
-      )
-      await postProjectDetailsActivitiesSector(id, {
-         industries: formData.industries,
-         stage: formData.stage[0],
-      })
-   }
+   // Use custom hook for all logic
+   const { formData, isLoadingUpdateMyProject, industryFramework, stageFramework, handleChange, handleSaveChanges } =
+      useEditStage()
 
    // ========== COMPONENT RENDER ========== //
    return (
@@ -140,7 +35,7 @@ const EditStage: React.FC = () => {
                      label="Industries"
                      collection={industryFramework}
                      placeholder="Ex: Business"
-                     onChange={(e: SelectEvent) => handleChange(e, 'industries')}
+                     onChange={(e: any) => handleChange(e, 'industries')}
                      value={formData.industries}
                      name="industries"
                   />
@@ -149,7 +44,7 @@ const EditStage: React.FC = () => {
                      label="Stage"
                      collection={stageFramework}
                      placeholder="Ex: Idea Stage"
-                     onChange={(e: SelectEvent) => handleChange(e, 'stage')}
+                     onChange={(e: any) => handleChange(e, 'stage')}
                      value={formData.stage}
                      name="stage"
                   />

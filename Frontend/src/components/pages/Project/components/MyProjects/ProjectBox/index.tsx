@@ -1,39 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { IconlyDocument, IconlyUser } from 'components/UI/Iconly'
-import { useNavigate } from 'react-router-dom'
 import { Avatar, Button, Image } from '@chakra-ui/react'
 import { OPENNEZT_BG_BLACK } from 'utils/constants'
-import { ROUTE_CONFIG } from '~/config/constants'
+import { useProjectBox, UseProjectBoxProps } from './useProjectBox'
 
-interface Member {
-   user: {
-      name: string
-      avatar?: string
-   }
-}
-
-interface Project {
-   _id: string
-   name: string
-   background?: string
-   logo?: string
-   articles?: any[]
-   members?: Member[]
-}
-
-interface ProjectBoxProps {
-   project: Project
-}
-
-const ProjectBox: React.FC<ProjectBoxProps> = ({ project }) => {
-   const navigate = useNavigate()
-
-   // ========== STATE ========== //
-   const [errorBG, setErrorBG] = useState<boolean>(false)
-
-   const handleNavigateToProjectDetails = (project: Project) => {
-      navigate(ROUTE_CONFIG.USER.PROJECT.ME.PREFIX + project._id)
-   }
+const ProjectBox: React.FC<UseProjectBoxProps> = (props) => {
+   const { project } = props
+   console.log('ProjectBox props:', project)
+   const { errorBG, setErrorBG, handleNavigateToProjectDetails } = useProjectBox()
 
    return (
       <div className="mx-[-16px] px-[16px]">

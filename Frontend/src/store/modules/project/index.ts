@@ -146,7 +146,7 @@ const projectSlice = createSlice({
             description: 'You have successfully created the project',
             type: 'success',
          })
-         window.location.href = `/projects/me/${action.payload.data.project_id}/details`
+         window.location.href = `/projects/me/${action.payload.data.project_id}`
          return {
             ...state,
             isLoadingCreateNewProject: false,
@@ -177,36 +177,6 @@ const projectSlice = createSlice({
          ...state,
          isLoadingGetMyProjectDetails: false,
       }),
-
-      // ========= UPDATE PROJECT ========== //
-      requestUpdateMyProject: (state) => ({
-         ...state,
-         isLoadingUpdateMyProject: true,
-      }),
-      updateMyProjectSuccess: (state, action) => {
-         toaster.create({
-            title: 'Update project successfully',
-            type: 'success',
-         })
-         return {
-            ...state,
-            myProjectDetails: {
-               ...state.myProjectDetails,
-               ...action.payload.data,
-            },
-            isLoadingUpdateMyProject: false,
-         }
-      },
-      updateMyProjectFail: (state) => {
-         toaster.create({
-            title: 'Update project failed',
-            type: 'error',
-         })
-         return {
-            ...state,
-            isLoadingUpdateMyProject: false,
-         }
-      },
 
       // ========== PROJECT DETAILS ========== //
       requestGetProjectDetails: (state) => ({
@@ -422,53 +392,6 @@ const projectSlice = createSlice({
             isLoadingUpdateSkillRequirement: false,
          }
       },
-
-      // ========== SEARCH MY PROJECTS ========== //
-      requestSearchMyProjects: (state) => ({
-         ...state,
-         isLoadingSearchMyProjects: true,
-      }),
-      searchMyProjectsSuccess: (state, action) => ({
-         ...state,
-         myProjectsBySearch: action.payload.data,
-         isLoadingSearchMyProjects: false,
-      }),
-      searchMyProjectsFail: (state) => ({
-         ...state,
-         isLoadingSearchMyProjects: false,
-      }),
-      // ========== INVITE MEMBER ========== //
-      requestInviteMember: (state) => ({
-         ...state,
-         isLoadingInviteMember: true,
-      }),
-      inviteMemberSuccess: (state) => {
-         toaster.create({
-            title: 'Invite member successfully',
-            description: 'You have successfully invited the member',
-            type: 'success',
-         })
-         return {
-            ...state,
-            isLoadingInviteMember: false,
-            isOpenModalInviteMember: false,
-         }
-      },
-      inviteMemberFail: (state, action) => {
-         toaster.create({
-            title: `${Object.values(action.payload.data.detail)[0]}`,
-            description: 'You have failed to invite the member',
-            type: 'error',
-         })
-         return {
-            ...state,
-            isLoadingInviteMember: false,
-         }
-      },
-      setModalInviteMember: (state, action) => ({
-         ...state,
-         isOpenModalInviteMember: action.payload,
-      }),
       // ========== HANDLE BOOKMARK PROJECT ========== //
       requestBookmarkProject: (state) => ({
          ...state,
@@ -541,10 +464,6 @@ export const {
    requestGetMyProjectDetails,
    getMyProjectDetailsSuccess,
    getMyProjectDetailsFail,
-   // ========= UPDATE PROJECT ========== //
-   requestUpdateMyProject,
-   updateMyProjectSuccess,
-   updateMyProjectFail,
    // ========== Projects ========== //
    requestGetProjectDetails,
    getProjectDetailsSuccess,
@@ -577,15 +496,6 @@ export const {
    requestUpdateSkillRequirement,
    updateSkillRequirementSuccess,
    updateSkillRequirementFail,
-   // ========== SEARCH MY PROJECTS ========== //
-   requestSearchMyProjects,
-   searchMyProjectsSuccess,
-   searchMyProjectsFail,
-   // ========== INVITE MEMBER ========== //
-   requestInviteMember,
-   inviteMemberSuccess,
-   inviteMemberFail,
-   setModalInviteMember,
    // ========== HANDLE BOOKMARK PROJECT ========== //
    requestBookmarkProject,
    bookmarkProjectSuccess,

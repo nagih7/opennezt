@@ -1,52 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Button } from '@chakra-ui/react'
 import ActionBar from '../../../EditProfile/components/ActionBar'
 import ProjectEditMenu from '../ProjectEditMenu'
 import ProjectCard from '../ProjectCard'
-import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import { updateProjectLogo } from 'api/project'
-import resizeLogo from 'utils/files/resizeLogo'
-import { postProjectDetailsActivitiesLogo } from 'api/activity'
-import { RootState } from '~/store'
+import { useEditLogo } from './useEditLogo'
 
 const EditLogo: React.FC = () => {
-   const dispatch = useDispatch()
-   const params = useParams<{ id: string }>()
-   const { id } = params
-   // ========== STATE FROM REDUX STORE ========== //
-   const { myProjectDetails, isLoadingUpdateMyProject } = useSelector((state: RootState) => state.project)
-   const project = myProjectDetails
-   // ========== STATE ========== //
-   const [logoURL, setLogoURL] = useState<string>('')
-   const [logoFile, setLogoFile] = useState<File | null>(null)
-   // ========== USEEFFECT ========== //
-
-   useEffect(() => {
-      if (project) {
-         setLogoURL(project?.logo || '')
-      }
-      // eslint-disable-next-line
-   }, [project])
-
-   // ========== ONCHANGE FUNCTION ========== //
-   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-      // Check if the file is an image
-      const file = event.target.files?.[0]
-      if (!file) return
-
-      const logo = await resizeLogo(file)
-      setLogoFile(logo)
-      setLogoURL(URL.createObjectURL(logo))
-   }
-
-   const handleSaveChanges = async () => {
-      if (!logoFile) return
-      const formData = new FormData()
-      formData.append('logo', logoFile)
-      await dispatch(updateProjectLogo(id, formData))
-      await postProjectDetailsActivitiesLogo(id, formData)
-   }
+   // Use custom hook for all logic
+   const { logoURL, logoFile, isLoadingUpdateMyProject, handleFileChange, handleSaveChanges } = useEditLogo()
 
    return (
       <div className="flex gap-8 w-full py-8 px-[16px]">

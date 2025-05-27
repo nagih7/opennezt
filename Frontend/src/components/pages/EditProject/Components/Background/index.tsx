@@ -1,52 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Button } from '@chakra-ui/react'
 import ActionBar from '../../../EditProfile/components/ActionBar'
 import ProjectEditMenu from '../ProjectEditMenu'
 import ProjectCard from '../ProjectCard'
-import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import { updateProjectBackground } from 'api/project'
-import resizeBackground from 'utils/files/resizeBackground'
-import { postProjectDetailsActivitiesBackground } from 'api/activity'
-import { RootState } from '~/store'
+import { useEditBackground } from './useEditBackground'
 
 const Background: React.FC = () => {
-   const dispatch = useDispatch()
-   const params = useParams<{ id: string }>()
-   const { id } = params
-   // ========== STATE FROM REDUX STORE ========== //
-   const { myProjectDetails, isLoadingUpdateMyProject } = useSelector((state: RootState) => state.project)
-   const project = myProjectDetails
-   // ========== STATE ========== //
-   const [bgURL, setBgURL] = useState<string>('')
-   const [bgFile, setBgFile] = useState<File | null>(null)
-   // ========== USEEFFECT ========== //
-
-   useEffect(() => {
-      if (project) {
-         setBgURL(project?.background || '')
-      }
-      // eslint-disable-next-line
-   }, [project])
-
-   // ========== ONCHANGE FUNCTION ========== //
-   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-      // Check if the file is an image
-      const file = event.target.files?.[0]
-      if (!file) return
-
-      const background = await resizeBackground(file)
-      setBgFile(background)
-      setBgURL(URL.createObjectURL(background))
-   }
-
-   const handleSaveChanges = async () => {
-      if (!bgFile) return
-      const formData = new FormData()
-      formData.append('background', bgFile)
-      dispatch(updateProjectBackground(id, formData))
-      await postProjectDetailsActivitiesBackground(id)
-   }
+   // Use custom hook for all logic
+   const { bgURL, bgFile, isLoadingUpdateMyProject, handleFileChange, handleSaveChanges } = useEditBackground()
 
    return (
       <div className="flex gap-8 w-full py-8 px-[16px]">

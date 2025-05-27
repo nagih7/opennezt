@@ -1,22 +1,9 @@
 import { IconlySearch } from 'components/UI/Iconly'
-import React, { useState } from 'react'
+import React from 'react'
+import { useSearchProjectHeader, UseSearchProjectHeaderProps } from './useSearchProjectHeader'
 
-interface SearchProjectHeaderProps {
-   onSearch: (term: string) => void
-}
-
-const SearchProjectHeader: React.FC<SearchProjectHeaderProps> = ({ onSearch }) => {
-   const [searchTerm, setSearchTerm] = useState<string>('')
-
-   const handleSearch = () => {
-      onSearch(searchTerm)
-   }
-
-   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-         handleSearch()
-      }
-   }
+const SearchProjectHeader: React.FC<UseSearchProjectHeaderProps> = (props) => {
+   const { searchTerm, setSearchTerm, handleSearch, handleKeyPress } = useSearchProjectHeader(props)
 
    return (
       <div className="p-8 bg-[#ffffff] rounded-md">

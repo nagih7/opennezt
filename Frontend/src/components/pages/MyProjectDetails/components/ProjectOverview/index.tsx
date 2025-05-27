@@ -51,7 +51,7 @@ const ProjectOverview: React.FC<ProjectProps> = ({ project }) => {
                   <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                      <h5 className="mb-0">Secter</h5>
                      <Link
-                        to={ROUTE_CONFIG.USER.PROJECT.PREFIX + id + 'edit/stage'}
+                        to={ROUTE_CONFIG.USER.PROJECT.ME.PREFIX + id + '/edit/stage'}
                         className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                      >
                         <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -88,7 +88,7 @@ const ProjectOverview: React.FC<ProjectProps> = ({ project }) => {
                   <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                      <h5 className="mb-0">Revenue</h5>
                      <Link
-                        to={ROUTE_CONFIG.USER.PROJECT.PREFIX + id + '/edit/revenue'}
+                        to={ROUTE_CONFIG.USER.PROJECT.ME.PREFIX + id + '/edit/revenue'}
                         className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                      >
                         <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -161,7 +161,7 @@ const ProjectOverview: React.FC<ProjectProps> = ({ project }) => {
                   <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                      <h5 className="mb-0">Funding Sources</h5>
                      <Link
-                        to={ROUTE_CONFIG.USER.PROJECT.PREFIX + id + '/edit/funding'}
+                        to={ROUTE_CONFIG.USER.PROJECT.ME.PREFIX + id + '/edit/funding'}
                         className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                      >
                         <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -220,7 +220,7 @@ const ProjectOverview: React.FC<ProjectProps> = ({ project }) => {
                   <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                      <h5 className="mb-0">More</h5>
                      <Link
-                        to={ROUTE_CONFIG.USER.PROJECT.PREFIX + id + '/edit/description'}
+                        to={ROUTE_CONFIG.USER.PROJECT.ME.PREFIX + id + '/edit/description'}
                         className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                      >
                         <IconlyEditSquare size={20} color={'#ffffff'} />
