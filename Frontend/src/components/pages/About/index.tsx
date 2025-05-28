@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React from 'react'
 import ProfileMenu from './components/ProfileMenu'
 import ProfessionalProfile from './components/ProfessionalProfile'
 import Friends from './components/Friends'
@@ -7,19 +6,16 @@ import { Image } from '@chakra-ui/react'
 import Groups from './components/Groups'
 import ProfileOverview from './components/ProfileOverview'
 import { OPENNEZT_BG_BLACK } from 'utils/constants'
-import { RootState } from 'store/types'
-
-type TabType = 'About' | 'Friends' | 'Groups' | 'Timeline' | 'Badges' | 'Messages' | 'Notifications' | 'Courses'
+import useAbout from './components/hooks/useAbout'
 
 const About: React.FC = () => {
-   // ========== STATE FROM REDUX STORE ========== //
-   const { authUser } = useSelector((state: RootState) => state.auth)
-
-   // ========== STATE ========== //
-   const [changeTab, setChangeTab] = useState<TabType>('About')
-   const [imageError, setImageError] = useState<boolean>(false)
-
-   // ========== RENDER ========== //
+   const {
+      authUser,
+      changeTab,
+      setChangeTab,
+      imageError,
+      setImageError
+   } = useAbout()
    return (
       <div className="relative bg-[#ffffff] w-full max-h-full mb-8">
          {!imageError ? (

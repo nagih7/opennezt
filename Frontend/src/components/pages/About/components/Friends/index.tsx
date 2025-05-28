@@ -1,92 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import RightSidebar from 'components/common/RightSidebar'
 import NotificationBadge from './NotificationBadge'
 import { IconlyDelete } from 'components/UI/Iconly'
-import { useDispatch, useSelector } from 'react-redux'
-import { getMyFriends } from 'api/profile'
 import { Avatar, Tabs } from '@chakra-ui/react'
 import moment from 'moment'
-import { FRIEND_REQUEST_NOTIFICATION, WAITING_STATUS } from 'utils/constants'
-import { AppDispatch } from '~/store'
-import { RootState } from 'store/types'
-
-interface Friend {
-   user: {
-      _id: string
-      name: string
-      email: string
-      avatar: string
-   }
-   created_at: string
-}
-
-interface Notification {
-   _id: string
-   type?: {
-      name: string
-   }
-   metadata?: {
-      status: string
-   }
-   user: {
-      name: string
-      avatar: string
-      _id: string
-   }
-   timestamp: string
-}
-
-type OrderByType = 'Newest' | 'Oldest' | 'Active'
+import useFriends from './hooks/useFriends'
+import { Friend, Notification } from './types'
 
 const Friends: React.FC = () => {
-   const dispatch = useDispatch<AppDispatch>()
-   // ========== STATE ========== //
-   const [isActive, setIsActive] = useState<string>('friends')
-   const [orderBy] = useState<OrderByType>('Newest')
-
-   // ========== STATE FROM REDUX ========== //
-   const friends = useSelector((state: RootState) => state.profile.myFriends)
-   const notis = useSelector((state: RootState) => state.notification.notifications)
-
-   const notifications = notis.filter(
-      (notification: Notification) =>
-         notification.type?.name === FRIEND_REQUEST_NOTIFICATION && notification.metadata?.status === WAITING_STATUS
-   )
-   // ========== STATE ========== //
-
-   const sortList = <T extends { timestamp?: string; lastActive?: string }>(list: T[]): T[] => {
-      return [...list].sort((a, b) => {
-         if (orderBy === 'Newest' && a.timestamp && b.timestamp)
-            return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-         if (orderBy === 'Oldest' && a.timestamp && b.timestamp)
-            return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-         if (a.lastActive && b.lastActive) return b.lastActive.localeCompare(a.lastActive)
-         return 0
-      })
-   }
-
-   // ========== USE EFFECT ========== //
-   useEffect(() => {
-      if (friends?.length === 0) {
-         dispatch(getMyFriends())
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch])
-
-   // ========== HANDLER ========== //
-   const handleDeleteFriend = (friend: Friend): void => {
-      /*noop */
-   }
-   const handleDeleteRequest = (request: Notification): void => {
-      /*noop */
-   }
-   const handleAcceptRequest = (request: Notification): void => {
-      /*noop */
-   }
-   const handleNavigateToChat = (friend: Friend): void => {
-      /*noop */
-   }
-
+   const {
+      isActive,
+      setIsActive,
+      friends,
+      notifications,
+      handleDeleteFriend,
+      handleDeleteRequest,
+      handleAcceptRequest,
+      handleNavigateToChat
+   } = useFriends()
    return (
       <div className="flex gap-3">
          <div className="w-full lg:w-10/12">

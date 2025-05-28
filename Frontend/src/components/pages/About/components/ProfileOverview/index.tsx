@@ -20,61 +20,30 @@ import {
 } from 'components/UI/Iconly'
 import { BsStars } from 'react-icons/bs'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setIsOpenAvatarPreview } from 'store/modules/profile'
-import { matchingProjects } from 'api/artificialIntelligence'
 import { setOpenModalMatchingProjects } from 'store/modules/artificialIntelligence'
 import CrawlLinkedin from 'components/common/CrawlLinkedin'
-import { getHideLinkedinNotification } from 'utils/localStorage'
+import useProfileOverview from './hooks/useProfileOverview'
 
 const ProfileOverview = () => {
-   // ========== DISPATCH ========== //
-   const dispatch = useDispatch()
-   // ========== STATE FROM REDUX STORE ========== //
-   const { authUser } = useSelector((state) => state.auth)
-   const { isLoadingBtnChangeAvatar, isOpenAvatarPreview } = useSelector((state) => state.profile)
-   const { profile } = useSelector((state) => state.profile)
-   const { projects, isLoadingMatchingProjects } = useSelector((state) => state.artificialIntelligence)
-   // ========== STATE ========== //
-   const [avatarFile, setAvatarFile] = useState(null)
-   const [avatarFileSrc, setAvatarFileSrc] = useState(null)
-   const [isOpenModalConfirmMatchingProjects, setIsOpenModalConfirmMatchingProjects] = useState(false)
-   const [isOpenModalCrawlLinkedin, setIsOpenModalCrawlLinkedin] = useState(false)
-
-   // ========== LOGIC ========== //
-   const handleUploadAvatar = (event) => {
-      const file = event.target.files[0] // Lấy file đầu tiên từ input
-      if (file) {
-         setAvatarFile(file)
-         setAvatarFileSrc(URL.createObjectURL(file))
-         dispatch(setIsOpenAvatarPreview(true))
-      }
-   }
-
-   const handleCloseAvatarPreview = (event) => {
-      dispatch(setIsOpenAvatarPreview(event))
-      document.getElementById('file-upload').value = ''
-   }
-
-   const handleSaveAvatar = async (file) => {
-      const formData = new FormData()
-      formData.append('avatar', file)
-      dispatch(changeAvatar(formData))
-   }
-
-   const handleMatchingProjects = () => {
-      // Check if user has opted to hide the notification
-      const hideNotification = getHideLinkedinNotification()
-      if (hideNotification) {
-         // If user chose to hide, just call the matching projects directly
-         dispatch(matchingProjects())
-      } else {
-         // Otherwise show the LinkedIn crawl modal
-         setIsOpenModalCrawlLinkedin(true)
-      }
-      setIsOpenModalConfirmMatchingProjects(false)
-   }
+   const {
+      dispatch,
+      authUser,
+      isLoadingBtnChangeAvatar,
+      isOpenAvatarPreview,
+      profile,
+      projects,
+      isLoadingMatchingProjects,
+      avatarFile,
+      avatarFileSrc,
+      isOpenModalConfirmMatchingProjects,
+      setIsOpenModalConfirmMatchingProjects,
+      setIsOpenModalCrawlLinkedin,
+      handleUploadAvatar,
+      handleCloseAvatarPreview,
+      handleSaveAvatar,
+      handleMatchingProjects,
+      isOpenModalCrawlLinkedin,
+   } = useProfileOverview()
 
    return (
       <div className="p-8 bg-[#ffffff] rounded-md">
@@ -156,7 +125,7 @@ const ProfileOverview = () => {
                   width="auto"
                   lazyMount
                   open={isOpenAvatarPreview}
-                  onOpenChange={(e) => handleCloseAvatarPreview(e.open)}
+                  onOpenChange={handleCloseAvatarPreview}
                >
                   <DialogContent className="flex items-center justify-center">
                      <DialogHeader className="flex">
@@ -164,7 +133,7 @@ const ProfileOverview = () => {
                      </DialogHeader>
                      <DialogBody>
                         <Image
-                           src={avatarFileSrc}
+                           src={avatarFileSrc || undefined}
                            boxSize="150px"
                            borderRadius="full"
                            fit="cover"
@@ -180,12 +149,12 @@ const ProfileOverview = () => {
                            loadingText="Saving..."
                            spinnerPlacement="start"
                            variant="solid"
-                           onClick={() => handleSaveAvatar(avatarFile)}
+                           onClick={() => avatarFile && handleSaveAvatar(avatarFile)}
                         >
                            Save
                         </Button>
                      </DialogFooter>
-                     <DialogCloseTrigger onClick={() => handleCloseAvatarPreview(false)} />
+                     <DialogCloseTrigger onClick={handleCloseAvatarPreview} />
                   </DialogContent>
                </DialogRoot>
                <h5 className="text-[#000000] font-bold text-xs md:text-lg flex gap-1 items-center">
@@ -201,7 +170,7 @@ const ProfileOverview = () => {
                   )}
                   {authUser?.linkedin && (
                      <div className="flex items-center gap-1 text-[#6f7f92] font-medium">
-                        <IconlyBookmark size={15} color={'#000000'} />
+                        <IconlyBookmark size={15} color={'#000000'} backgroundColor="transparent" />
                         <span className="text-sm">
                            <a
                               href={authUser?.linkedin}
@@ -241,7 +210,7 @@ const ProfileOverview = () => {
                   <Text className="text-lg font-bold from-stone-900">Matching projects with AI</Text>
                </DialogHeader>
                <DialogBody>
-                  <Stack spacing={4} className="w-full">
+                  <Stack gap={4} className="w-full">
                      <div className="text-[#000000] font-[500] text-md flex gap-1 items-center">
                         To provide you with the most accurate and relevant matches, our AI system needs to analyze the
                         following:
