@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import styles from './styles.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '../../../../../api/profile'
 import { Button } from '@chakra-ui/react'
@@ -57,7 +56,7 @@ function EditProfile() {
    }
 
    return (
-      <div className={styles.editProfile}>
+      <div className="rounded-2xl px-4 my-8">
          <div className="bg-[#fff] rounded-md">
             <div className="p-8 border-b-[1px] border-gray-200">
                <div className="text-xl font-medium text-center sm:text-2xl">Personal Information</div>

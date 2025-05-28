@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import styles from './styles.module.scss'
 import EditProfile from './components/EditProfile'
 import ChangePassword from './components/ChangePassword'
 import store from '~/store'
@@ -56,47 +55,47 @@ function Profile() {
    }
 
    return (
-      <div className={styles.profileWrap}>
+      <div className="w-full h-full">
          <div className="flex flex-wrap -mx-2">
-            <div className="w-full px-2 mb-4">
-               <div className={`${styles.profileItem} rounded-md`}>
-                  <div className={styles.informationWrap}>
-                     <div className={styles.backgroundWrap}>
-                        <img src={background} className="rounded-md" alt="background" />
-                        <div className={styles.buttonChangeBackground}>
+            <div className="w-full px-2">
+               <div className="flex flex-col h-full bg-white rounded-md transition-transform duration-300 ease-in-out">
+                  <div className="relative flex justify-start items-center border-b border-gray-200 bg-gray-100/70">
+                     <div className="relative select-none flex justify-center items-center w-full h-[300px] overflow-hidden rounded-t-md">
+                        <img src={background} className="w-full h-[300px] bg-contain object-contain brightness-75" alt="background" />
+                        <div className="absolute bottom-4 right-6 bg-white py-2 px-3 rounded-lg cursor-pointer shadow-lg hover:bg-gray-100 transition-colors">
                            <label className="cursor-pointer">
                               <input type="file" className="hidden" onChange={handleBackgroundChange} />
-                              <CameraAltIcon fontSize="large" />
-                              <span className={styles.btnWrap}>Update Background</span>
+                              <CameraAltIcon fontSize="inherit" />
+                              <span className="ml-2 text-sm">Update Background</span>
                            </label>
                         </div>
                      </div>
-                     <div className={styles.infomationContent}>
-                        <div className={styles.avatarWrap}>
-                           <div className={styles.btnChangeAvatar}>
+                     <div className="absolute bottom-2 left-4">
+                        <div className="group ml-4 select-none w-20 h-20 rounded-full overflow-hidden cursor-pointer relative text-black mb-2.5 shadow-lg">
+                           <div className="w-full h-5 bottom-0 bg-gray-100/90 absolute flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                               <label className="cursor-pointer">
                                  <input type="file" className="hidden" onChange={handleAvatarChange} />
-                                 <CameraAltIcon fontSize="large" />
+                                 <CameraAltIcon fontSize="inherit" />
                               </label>
                            </div>
                            <img src={avatar} alt={authUser.name} />
                         </div>
-                        <div className={styles.infoWrap}>
-                           <div className={styles.name}>{authUser.name}</div>
-                           <div className={styles.btnWrap}></div>
+                        <div className="ml-4 drop-shadow-lg">
+                           <div className="text-lg mb-1 text-white font-bold">{authUser.name}</div>
+                           <div className="mt-2.5"></div>
                         </div>
                      </div>
-                  </div>
-                  <div className={`${styles.tabWrap} tab-custom`}>
-                     <Tabs defaultValue={keyTable} onValueChange={setKeyTable}>
-                        <TabsList>
+                  </div>                 
+                  <div className="flex w-full justify-between border-t border-gray-200 bg-[#ffffff] rounded-b-lg pt-3">
+                     <Tabs value={keyTable} onValueChange={setKeyTable} className="flex flex-col h-full w-full">
+                        <TabsList className='w-full flex justify-start mb-3'>
                            <TabsTrigger value="1">Edit profile</TabsTrigger>
                            <TabsTrigger value="2">Change password</TabsTrigger>
                         </TabsList>
-                        <TabsContent value="1">
+                        <TabsContent value="1" className='w-full bg-[#f4f5f6]'>
                            <EditProfile />
                         </TabsContent>
-                        <TabsContent value="2">
+                        <TabsContent value="2" className='w-full bg-[#f4f5f6]'>
                            <ChangePassword />
                         </TabsContent>
                      </Tabs>
