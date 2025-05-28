@@ -1,7 +1,7 @@
 import { Image } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Project } from 'types'
-import { OPENNEZT_BG_BLACK } from 'utils/constants'
+import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
 
 interface ProjectListProps {
     project: Project;
@@ -18,20 +18,24 @@ const ProjectList = ({ project, handleViewProjectDetails }: ProjectListProps) =>
             onClick={() => handleViewProjectDetails(project)}
             className="overflow-hidden rounded-sm cursor-pointer group"
         >
-            <div className="bg-white flex items-center p-4 2xl:w-[68rem]pt-3 w-full">
-                <div className="relative w-[16rem] h-[10rem] rounded-md overflow-hidden group">
-                    {!imageError ? (
-                        <Image
-                            aspectRatio={16 / 9}
-                            className="object-cover absolute w-[16rem] h-full !transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110"
-                            src={project.background}
-                            alt={project.name}
-                            onError={() => setImageError(true)}
-                        />
-                    ) : (
-                        <Image aspectRatio={16 / 9} src={OPENNEZT_BG_BLACK} alt={project.name} />
-                    )}
-                </div>
+            <div className="bg-white flex items-center p-4 2xl:w-[68rem]pt-3 w-full">                <div className="relative w-[16rem] h-[10rem] rounded-md overflow-hidden group">
+                {!imageError && project.background ? (
+                    <Image
+                        aspectRatio={16 / 9}
+                        className="object-cover absolute w-full h-full bg-cover !transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110"
+                        src={project.background}
+                        alt={project.name}
+                        onError={() => setImageError(true)}
+                    />
+                ) : (
+                    <Image
+                        aspectRatio={16 / 9}
+                        src={OPENNEZT_LOGO_GRADIENT}
+                        alt={project.name}
+                        className="object-contain w-full h-full bg-cover"
+                    />
+                )}
+            </div>
 
                 <div className="flex flex-col justify-center ml-4">
                     <div className="flex">

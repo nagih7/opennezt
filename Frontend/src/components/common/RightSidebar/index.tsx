@@ -73,10 +73,12 @@ const RightSidebar: React.FC<RightSidebarProps> = ({ activities, action }) => {
                            <Avatar.Image src={activity.user?.avatar} />
                         </Avatar.Root>
                         <p className="text-[#6f7f92] text-sm mb-0">
-                           <a href="#" className="text-black no-underline">
-                              {activity.user?.name}
-                           </a>
-                           <FaCircleCheck className="text-[#3897f0] mx-1" />
+                           <div className='flex items-center gap-1'> 
+                              <a href="#" className="text-black no-underline">
+                                 {activity.user?.name}
+                              </a>
+                              <FaCircleCheck className="text-[#3897f0] mx-1" />
+                           </div>
                            {action(activity.project ? activity.project : activity)}{' '}
                            <a href="#" className="no-underline text-[#6f7f92]">
                               <span className="text-xs">{moment(activity.timestamp).fromNow()}</span>
