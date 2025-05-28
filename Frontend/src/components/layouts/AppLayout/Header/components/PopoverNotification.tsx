@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import { Avatar, Spinner } from '@chakra-ui/react'
 import { useNotification } from '~/hooks'
-import { CheckOutlined, CloseOutlined } from '@mui/icons-material'
+// import { CheckOutlined, CloseOutlined } from '@mui/icons-material'
 import { Notification } from '~/types'
 import { Action, NotificationType, Status } from '~/config/constants'
 
@@ -54,14 +54,14 @@ const Actions: React.FC<ActionsProps> = ({ notification, index }) => {
             className="px-[12px] py-[8px] text-xs font-medium bg-[#2f65b9] text-white rounded-md flex items-center gap-1"
             onClick={() => handleReplyNotification(notification._id, Action.CONFIRM, index)}
          >
-            <CheckOutlined fontSize="small" />
+            {/* <CheckOutlined fontSize="small" /> */}
             Confirm
          </button>
          <button
             className="px-[12px] py-[8px] text-xs font-medium bg-[gray] text-[white] rounded-md flex items-center gap-1"
             onClick={() => handleReplyNotification(notification._id, Action.DELETE)}
          >
-            <CloseOutlined fontSize="small" />
+            {/* <CloseOutlined fontSize="small" /> */}
             Delete
          </button>
       </div>

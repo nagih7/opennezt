@@ -3,6 +3,51 @@
  * Provides functions to manage audio playback and events
  */
 
+// Global audio instance tracking
+class AudioInstanceManager {
+   private static instance: AudioInstanceManager
+   private audioInstances: Set<HTMLAudioElement> = new Set()
+
+   static getInstance(): AudioInstanceManager {
+      if (!AudioInstanceManager.instance) {
+         AudioInstanceManager.instance = new AudioInstanceManager()
+      }
+      return AudioInstanceManager.instance
+   }
+
+   addAudio(audio: HTMLAudioElement): void {
+      this.audioInstances.add(audio)
+   }
+
+   removeAudio(audio: HTMLAudioElement): void {
+      this.audioInstances.delete(audio)
+   }
+
+   stopAllAudio(): void {
+      this.audioInstances.forEach((audio) => {
+         try {
+            audio.pause()
+            audio.currentTime = 0
+            audio.src = ''
+         } catch (error) {
+            console.warn('Error stopping audio instance:', error)
+         }
+      })
+      this.audioInstances.clear()
+   }
+   getActiveCount(): number {
+      return this.audioInstances.size
+   }
+}
+
+// Export manager instance for external use
+export const audioInstanceManager = AudioInstanceManager.getInstance()
+
+// Utility function to stop all audio instances
+export const stopAllAudio = (): void => {
+   audioInstanceManager.stopAllAudio()
+}
+
 // Type definitions
 interface AudioPlayerOptions {
    onEnd?: () => void
@@ -60,11 +105,17 @@ export const createAudioPlayer = (src: string, options: AudioPlayerOptions = {})
          /* noop */
       },
       autoPlay = true,
-   } = options
+   } = options // Create audio element
+   const audio = new Audio(src)
 
-   // Create audio element
-   const audio = new Audio(src) // Track if the audio has started playing
+   // Add to global manager
+   const audioManager = AudioInstanceManager.getInstance()
+   audioManager.addAudio(audio) // Track if the audio has started playing
    let hasStarted = false
+
+   // Get the global audio instance manager
+   const audioInstanceManager = AudioInstanceManager.getInstance()
+   audioInstanceManager.addAudio(audio)
 
    // Create a wrapper for the timeupdate handler
    const timeUpdateHandler = () => {
@@ -119,13 +170,21 @@ export const createAudioPlayer = (src: string, options: AudioPlayerOptions = {})
       // Set volume (0-1)
       setVolume: (volume: number) => {
          audio.volume = Math.min(Math.max(volume, 0), 1)
-      }, // Clean up method to remove event listeners
+      }, // Clean up method to remove event listeners and stop audio
       cleanup: () => {
+         // Force stop audio playback first
          audio.pause()
+         audio.currentTime = 0
+         audio.src = '' // Clear the audio source to free memory
+
+         // Remove all event listeners
          audio.removeEventListener('ended', onEnd)
          audio.removeEventListener('playing', onPlay)
          audio.removeEventListener('error', onError)
          audio.removeEventListener('timeupdate', timeUpdateHandler)
+
+         // Remove from global audio instance manager
+         audioInstanceManager.removeAudio(audio)
       },
    }
 }
@@ -241,7 +300,6 @@ export const createSyncedAudioVideo = (
          videoElement.play()
          audioPlayer.play()
       },
-
       stop: () => {
          audioPlayer.stop()
          videoElement.pause()
@@ -260,9 +318,15 @@ export const createSyncedAudioVideo = (
 
       isAudioEnded: () => isAudioEnded,
       isVideoEnded: () => isVideoEnded,
-
       cleanup: () => {
+         // Stop everything first
+         audioPlayer.stop()
+         videoElement.pause()
+         videoElement.currentTime = 0
+
          audioPlayer.cleanup()
+
+         // Remove video event listeners
          videoElement.removeEventListener('ended', handleVideoEnded)
       },
    }

@@ -9,14 +9,14 @@ const interviewRouter = Router()
 
 interviewRouter.use(requireAuthentication)
 
-// ========= POST [Interview - Start interview] ==============//
+// BẮT ĐẦU CUỘC PHỎNG VẤN
 interviewRouter.post(
     '/start',
     asyncHandler(validate(interviewRequest.startInterview)),
     asyncHandler(interviewController.startInterview)
 )
 
-// Reply interview with audio
+// TRẢ LỜI PHỎNG VẤN
 interviewRouter.post(
     '/reply',
     asyncHandler(validate(interviewRequest.replyInterview)),
@@ -29,5 +29,8 @@ interviewRouter.post(
     asyncHandler(validate(interviewRequest.closeInterview)),
     asyncHandler(interviewController.closeInterview)
 )
+
+// LẤY DANH SÁCH PROJECTS LUYỆN TẬP PHỎNG VẤN
+interviewRouter.get('/practice-projects', asyncHandler(interviewController.getPracticeProjects))
 
 export default interviewRouter

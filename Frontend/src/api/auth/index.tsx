@@ -116,14 +116,14 @@ export const login = (data: LoginPayload): Promise<BaseApiResponse> => {
    })
 }
 
-export const getMe = () => {
+export const getMe = (): Promise<BaseApiResponse> => {
    return callApi({
       method: 'get',
       apiPath: `auth/me`,
    })
 }
 
-export const getAuthAdmin = () => {
+export const getAuthAdmin = (): Promise<BaseApiResponse> => {
    return callApi({
       method: 'get',
       apiPath: `auth/admin/me`,

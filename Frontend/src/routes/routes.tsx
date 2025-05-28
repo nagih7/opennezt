@@ -79,7 +79,7 @@ const TalentFeatures = {
 }
 
 // Other components
-const Interview = React.lazy(() => import('components/pages/Interview/Preview'))
+const Interview = React.lazy(() => import('~/components/pages/InterviewBeta/Preview'))
 
 // Admin related pages
 // const AdminFeatures = {
