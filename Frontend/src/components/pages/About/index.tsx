@@ -5,7 +5,7 @@ import Friends from './components/Friends'
 import { Image } from '@chakra-ui/react'
 import Groups from './components/Groups'
 import ProfileOverview from './components/ProfileOverview'
-import { OPENNEZT_BG_BLACK } from 'utils/constants'
+import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
 import useAbout from './components/hooks/useAbout'
 
 const About: React.FC = () => {
@@ -33,7 +33,7 @@ const About: React.FC = () => {
                alt={authUser?.name || ''}
                aspectRatio={16 / 9}
                width="100%"
-               src={OPENNEZT_BG_BLACK}
+               src={OPENNEZT_LOGO_GRADIENT}
             />
          )}
          <div className="absolute w-full top-[275px] px-[16px]">

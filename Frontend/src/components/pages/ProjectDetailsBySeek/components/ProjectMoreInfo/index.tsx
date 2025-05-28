@@ -9,7 +9,7 @@ import {
 } from 'components/UI/Iconly'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { OPENNEZT_BG_BLACK } from 'utils/constants'
+import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
 import { RootState, AppDispatch } from '~/store'
 import { Alert, Blockquote, Button, Dialog, Image, Portal, Stack } from '@chakra-ui/react'
 import SelectCustom from '~/components/UI/SelectCustom'
@@ -56,7 +56,7 @@ const ProjectMoreInfo: React.FC = () => {
 
    // ========== RENDER ========== //
    return (
-      <div className="bg-white relative h-fit top-[-14.75rem] 2xl:w-4/12 2xl:mr-[250px]">
+      <div className="bg-white relative h-fit w-[300px] top-[-14.75rem] 2xl:w-4/12 2xl:mr-[250px]">
          {!imageError ? (
             <Image
                src={projectDetails?.background}
@@ -68,7 +68,7 @@ const ProjectMoreInfo: React.FC = () => {
          ) : (
             <Image
                aspectRatio={5 / 3}
-               src={OPENNEZT_BG_BLACK}
+               src={OPENNEZT_LOGO_GRADIENT}
                alt={projectDetails?.name}
                width="100%"
                className="bg-contain"

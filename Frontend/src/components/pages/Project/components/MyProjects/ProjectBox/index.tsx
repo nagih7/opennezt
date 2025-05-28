@@ -1,7 +1,7 @@
 import React from 'react'
 import { IconlyDocument, IconlyUser } from 'components/UI/Iconly'
 import { Avatar, Button, Image } from '@chakra-ui/react'
-import { OPENNEZT_BG_BLACK } from 'utils/constants'
+import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
 import { useProjectBox, UseProjectBoxProps } from './useProjectBox'
 
 const ProjectBox: React.FC<UseProjectBoxProps> = (props) => {
@@ -26,9 +26,9 @@ const ProjectBox: React.FC<UseProjectBoxProps> = (props) => {
                   width="100%"
                   aspectRatio={10 / 5}
                   objectFit="cover"
-                  src={OPENNEZT_BG_BLACK}
+                  src={OPENNEZT_LOGO_GRADIENT}
                   alt="OpenNezt"
-                  className="px-10"
+                  className="bg-contain"
                />
             )}
             <div className="flex flex-col items-center p-8">
@@ -63,7 +63,7 @@ const ProjectBox: React.FC<UseProjectBoxProps> = (props) => {
                   </li>
                </ul>
 
-               <ul className="mb-0 pl-0 border-t-[1px] w-full pt-[24px] relative flex items-center justify-center">
+               <ul className="mb-0 pl-0 border-t-[1px] w-full pt-[24px] relative h-[50px] flex items-center justify-center">
                   {project.members?.map((member, index) => (
                      <li key={index} className="ml-[-15px]">
                         <Avatar.Root size={'sm'} className="h-9 w-9 rounded-full border-2 border-[#ffffff]">

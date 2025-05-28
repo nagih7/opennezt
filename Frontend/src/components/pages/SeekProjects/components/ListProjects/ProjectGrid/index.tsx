@@ -2,6 +2,7 @@ import { Image } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Project } from 'types'
 import { OPENNEZT_BG_BLACK } from 'utils/constants'
+import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
 
 interface ProjectGridProps {
     project: Project;
@@ -29,8 +30,8 @@ const ProjectGrid = ({ project, handleViewProjectDetails }: ProjectGridProps) =>
                             onError={() => setImageError(true)}
                         />
                     ) : (
-                        <div className="absolute flex items-center justify-center object-cover w-full px-8">
-                            <Image src={OPENNEZT_BG_BLACK} alt={project?.name} />
+                        <div className="absolute flex items-center justify-center object-cover w-full">
+                            <Image src={OPENNEZT_LOGO_GRADIENT} alt={project?.name} />
                         </div>
                     )}
                 </div>
