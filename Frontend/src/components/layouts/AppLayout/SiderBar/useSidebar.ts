@@ -11,16 +11,13 @@ const useSidebar = () => {
    const navigate = useNavigate()
 
    // Store
-   const { authUser, authRole } = useAppSelector((state: RootState) => state.auth)
+   const { authUser } = useAppSelector((state: RootState) => state.auth)
    const { isShowSideBar } = useAppSelector((state: RootState) => state.app)
    const [location, setLocation] = useState<Location>({
       pathName: '',
       payload: {},
       prevPathName: '',
    })
-
-   // State
-   const [routes, setRoutes] = useState<RouteConfig[]>([])
 
    // Effect
    useEffect(() => {
@@ -33,14 +30,6 @@ const useSidebar = () => {
          navigate(location.pathName)
       }
    }, [location, navigate])
-
-   useEffect(() => {
-      if (authRole === AuthRole.SUPER_ADMIN) {
-         setRoutes(AdminRoute)
-      } else {
-         setRoutes(UserRoute)
-      }
-   }, [authRole])
 
    // Function
    const handleToggleMenu = (navbarItem: RouteConfig) => {
@@ -56,7 +45,7 @@ const useSidebar = () => {
 
    return {
       authUser,
-      routes,
+      routes: UserRoute,
       isShowSideBar,
       handleToggleMenu,
       handleConfirmLogOut,

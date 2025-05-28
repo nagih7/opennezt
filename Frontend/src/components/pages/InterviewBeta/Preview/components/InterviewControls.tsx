@@ -1,6 +1,6 @@
 import React from 'react'
 import { IconlyVideo, IconlyVoice, IconlyVolumeUp } from 'components/UI/Iconly'
-import DeviceSelector from './DeviceSelector'
+import DeviceSelector from '~/components/pages/Interview/Preview/components/DeviceSelector'
 
 interface InterviewControlsProps {
    selectedAudioInput: MediaDeviceInfo | null

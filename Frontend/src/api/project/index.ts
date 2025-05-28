@@ -287,7 +287,7 @@ export const updateSkillRequirement =
    }
 
 // ========== SEARCH PROJECT ========== //
-export const searchMyProjects = (keySearch: string) => {
+export const searchMyProjects = (keySearch: string): Promise<BaseApiResponse> => {
    return callApi({
       method: 'get',
       apiPath: `projects/me/search?q=${keySearch}`,
@@ -295,7 +295,7 @@ export const searchMyProjects = (keySearch: string) => {
 }
 
 // ========== INVITE MEMBER ========== //
-export const inviteMember = (projectId: string, formRequest: any) => {
+export const inviteMember = (projectId: string, formRequest: any): Promise<BaseApiResponse> => {
    return callApi({
       method: 'post',
       apiPath: `projects/me/${projectId}/invite`,
@@ -304,16 +304,16 @@ export const inviteMember = (projectId: string, formRequest: any) => {
 }
 
 // ========== GET LIST FRIEND INVITE ========== //
-export const getListFriendInvite = async (projectId: string) => {
-   return callApiSimple({
+export const getListFriendInvite = async (projectId: string): Promise<BaseApiResponse> => {
+   return callApi({
       method: 'get',
       apiPath: `projects/me/${projectId}/invitation`,
       variables: {},
    })
 }
 // ========== Cancel Invitation ========== //
-export const cancelInvitation = async (projectId: string, userId: string) => {
-   return callApiSimple({
+export const cancelInvitation = async (projectId: string, userId: string): Promise<BaseApiResponse> => {
+   return callApi({
       method: 'post',
       apiPath: `projects/me/${projectId}/invitation/cancel`,
       variables: { userId },

@@ -1,14 +1,17 @@
 import React from 'react'
 import { BsPersonVideo3 } from 'react-icons/bs'
-import { FaRegFolder } from 'react-icons/fa'
-import useHome from '../../useHome'
+import { FaRegFolder } from 'react-icons/fa6'
 
-export const WelcomeSection: React.FC = () => {
-   const { authUser, handleNavigateCreateProject, handleNavigateInterview } = useHome()
+interface WelcomeSectionProps {
+   username: string
+   navigateCreateProject: () => void
+   navigateInterview: () => void
+}
 
+const WelcomeSection: React.FC<WelcomeSectionProps> = ({ username, navigateCreateProject, navigateInterview }) => {
    return (
       <div className="flex flex-col">
-         <span className="text-2xl font-bold">Welcome back, {authUser?.name}</span>
+         <span className="text-2xl font-bold">Welcome back, {username}</span>
          <span className="text-[#6f7f92] font-semibold">Suggested for you</span>
          <div className="grid grid-cols-3 gap-8 mt-4 2xl:gap-10">
             <div className="flex flex-col p-3 border rounded-xl">
@@ -22,7 +25,7 @@ export const WelcomeSection: React.FC = () => {
                <div className="flex justify-end">
                   <button
                      className="bg-[#2f65b9] text-white rounded-lg px-4 py-2 text-sm font-semibold mt-4"
-                     onClick={handleNavigateCreateProject}
+                     onClick={navigateCreateProject}
                   >
                      Start now
                   </button>
@@ -36,7 +39,7 @@ export const WelcomeSection: React.FC = () => {
                <span className="flex-1 text-[#6f7f92] text-sm mt-1">
                   Start building your dream team by adding a project and matching with the right co-founders and talent.
                </span>
-               <div className="flex justify-end" onClick={handleNavigateInterview}>
+               <div className="flex justify-end" onClick={navigateInterview}>
                   <button className="bg-[#2f65b9] text-white rounded-lg px-4 py-2 text-sm font-semibold mt-4">
                      Complete now
                   </button>
@@ -46,3 +49,5 @@ export const WelcomeSection: React.FC = () => {
       </div>
    )
 }
+
+export default WelcomeSection

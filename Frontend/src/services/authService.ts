@@ -1,7 +1,7 @@
 import { AuthAccount } from '~/store/modules/auth/types'
 import { TokenManager } from '~/utils/tokenManager'
 import { AuthCache } from '~/utils/authCache'
-import { getAuthAdmin, getMe } from '~/api/auth'
+import { getAuthAdmin, getAuthUser } from '~/api/auth'
 
 export class AuthService {
    // AuthAccount authentication
@@ -12,13 +12,8 @@ export class AuthService {
          return cachedUser
       }
 
-      const token = TokenManager.getUserToken()
-      if (!token) {
-         throw new Error('NO_TOKEN')
-      }
-
       try {
-         const res = await getMe()
+         const res = await getAuthUser()
          const user: AuthAccount = res.data
 
          // Cache the result
@@ -41,13 +36,9 @@ export class AuthService {
          return cachedAdmin
       }
 
-      const token = TokenManager.getAdminToken()
-      if (!token) {
-         throw new Error('NO_TOKEN')
-      }
-
       try {
-         const admin = await getAuthAdmin()
+         const res = await getAuthAdmin()
+         const admin: AuthAccount = res.data
 
          // Cache the result
          AuthCache.setCachedAdmin(admin)

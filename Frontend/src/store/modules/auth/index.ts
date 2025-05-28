@@ -6,7 +6,6 @@ const initialState: AuthState = {
    isAuthSuccess: false,
    authorize: 'user',
    authRegister: {},
-   authRole: '',
    resetPasswordSuccess: false,
    errorRegister: {
       name: '',
@@ -16,9 +15,6 @@ const initialState: AuthState = {
       password: '',
       confirmPassword: '',
    },
-   isLoadingGetMe: false,
-   isLoadingBtnLogin: false,
-   isLoadingGetAuthRole: false,
    isRegisterSuccess: false,
    isLoadingRegister: false,
    isSuccessForgotPassword: false,
@@ -44,44 +40,6 @@ const authSlice = createSlice({
    name: 'auth',
    initialState,
    reducers: {
-      // setAuthState: (state: AuthState, action: PayloadAction<AuthState>) => ({
-      //    ...state,
-      //    ...action.payload,
-      // }),
-
-      startRequestGetMe: (state: AuthState) => ({
-         ...state,
-         isLoadingGetMe: true,
-      }),
-      startRequestGetMeSuccess: (state: AuthState, action: PayloadAction<any>) => ({
-         ...state,
-         isAuthSuccess: true,
-         isLoadingGetMe: false,
-         authUser: action.payload.data,
-         authorize: action.payload.data.role,
-      }),
-      startRequestGetMeFail: (state: AuthState) => ({
-         ...state,
-         isAuthSuccess: false,
-         isLoadingGetMe: false,
-         authUser: null,
-         authorize: 'user',
-      }),
-      requestGetAuthRole: (state: AuthState) => ({
-         ...state,
-         authRole: '',
-         isLoadingGetAuthRole: true,
-      }),
-      getAuthRoleSuccess: (state: AuthState, action: PayloadAction<any>) => ({
-         ...state,
-         authRole: action.payload.data.role,
-         isLoadingGetAuthRole: false,
-      }),
-      getAuthRoleFail: (state: AuthState, action: PayloadAction<any>) => ({
-         ...state,
-         authRole: '',
-         isLoadingGetAuthRole: false,
-      }),
       startRequestRegister: (state: AuthState) => ({
          ...state,
          isLoadingRegister: true,
@@ -218,12 +176,6 @@ const authSlice = createSlice({
 // Export actions and reducer
 export const {
    setAuthState,
-   startRequestGetMe,
-   startRequestGetMeSuccess,
-   startRequestGetMeFail,
-   requestGetAuthRole,
-   getAuthRoleSuccess,
-   getAuthRoleFail,
    startRequestRegister,
    startRequestRegisterSuccess,
    startRequestRegisterFail,

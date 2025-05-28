@@ -1,7 +1,7 @@
 import React from 'react'
 import { IconlyTimeCircle, IconlyArrowRight } from 'components/UI/Iconly'
 import { BsArrowsAngleExpand } from 'react-icons/bs'
-import useHome from '../../useHome'
+// import useHome from '../../useHome'
 import { BaseProjectProps } from '~/types'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/UI/avatar'
 import { OPENNEZT_LOGO } from '~/utils/constants'
@@ -9,20 +9,20 @@ import { OPENNEZT_LOGO } from '~/utils/constants'
 interface InterviewCardProps {
    key: number
    project: BaseProjectProps
+   onInterviewPractice: (projectId: string) => void
+   onViewDetail: (projectId: string) => void
 }
 
-export const InterviewCard: React.FC<InterviewCardProps> = ({ project }) => {
-   const { handleInterviewPractice: onInterviewPractice, handleViewProjectDetails: onViewDetail } = useHome()
-
+export const InterviewCard: React.FC<InterviewCardProps> = ({ project, onInterviewPractice, onViewDetail }) => {
    return (
       <div className="group flex flex-col border-[2px] hover:border-[#2f65b9] h-[290px] 2xl:h-[310px] rounded-xl transition-all duration-500 ease-in-out">
          <div
-            className="relative flex items-center justify-center m-1 rounded-xl"
-            onClick={() => onInterviewPractice(project?._id)}
+            className="relative flex items-center justify-center m-1 cursor-pointer rounded-xl"
+            onClick={() => onViewDetail(project?._id)}
          >
             <div className="bg-[#ffffff] transition-all duration-500 ease-in-out rounded-full p-[2px] my-[30px] group-hover:my-[10px]">
                <Avatar className="2xl:w-[80px] 2xl:h-[80px] w-[70px] h-[70px]">
-                  <AvatarImage src={project.logo || OPENNEZT_LOGO} alt={project.name} />
+                  <AvatarImage src={project?.logo || OPENNEZT_LOGO} alt={project.name} />
                   <AvatarFallback>{project.name}</AvatarFallback>
                </Avatar>
             </div>
@@ -42,7 +42,7 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ project }) => {
             </div>
             <div
                className="group-hover:flex hidden transition-all duration-500 ease-in-out 2xl:text-base 2xl:font-bold text-sm mt-2 text-[#2f65b9] items-center font-semibold cursor-pointer"
-               onClick={() => onViewDetail(project?._id)}
+               onClick={() => onInterviewPractice(project?._id)}
             >
                <span className="mb-1">Start interview</span>
                <IconlyArrowRight color={'#2f65b9'} size={25} />

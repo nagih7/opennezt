@@ -1,5 +1,4 @@
 import store, { RootState } from '~/store'
-import { toast } from '~/components/UI/toast'
 
 // Type definitions
 interface ValidationResult {
@@ -119,8 +118,3 @@ export const handleCheckValidateConfirm = (
       error: dataError,
    }
 }
-
-export { toast } from 'sonner'
-
-toast.success('Thành công!')
-toast.error('Có lỗi xảy ra!')

@@ -11,7 +11,7 @@ const InterviewJoinSection: React.FC<InterviewJoinSectionProps> = ({ handleTechn
 
    // RENDERING
    return (
-      <div className="flex flex-col items-center justify-center gap-3 mt-[30px] md:mt-[120px] 2xl:mt-[150px]">
+      <div className="flex flex-col items-center justify-center gap-3 mt-[30px]">
          <span className="text-xl font-semibold 2xl:text-2xl">Ready to join?</span>
          <img className="w-10 h-10 bg-center rounded-full" src={icon_opennezt_img} alt="OpenNezt Logo" />
          <span className="text-[#6f7f92] font-semibold">OpenNezt AI is in the call</span>

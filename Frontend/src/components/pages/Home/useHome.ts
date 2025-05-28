@@ -28,7 +28,7 @@ const useHome = () => {
          }
       }
       fetchProjects()
-   }, [])
+   }, [authUser])
 
    // Handlers
    const handleViewProjectDetails = (projectId: string) => {

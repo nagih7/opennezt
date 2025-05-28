@@ -4,12 +4,10 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { login, loginWithSocial } from '~/api/auth'
 import { AppDispatch, RootState, useAppSelector } from '~/store'
-import { resetForgotPassword, setAuthState } from '~/store/modules/auth'
+import { setAuthState } from '~/store/modules/auth'
 import { AuthState } from '~/store/modules/auth/types'
 import { LoginPayload, LoginSchema } from '~/types'
-import { setAuthToken } from '~/utils/localStorage'
 import { validate } from '~/utils'
-import useAuth from '~/hooks/useAuth'
 import { TokenManager } from '~/utils/tokenManager'
 
 // Create a simple validate function if isValidate isn't available
@@ -34,10 +32,6 @@ const validateField = (data: any, fieldName: string, errorState: any) => {
 const useLogin = () => {
    const dispatch = useDispatch<AppDispatch>()
    const navigate = useNavigate()
-   const { getAuth } = useAuth()
-
-   // Store
-   const { isLoadingBtnLogin } = useAppSelector((state: RootState) => state.auth)
 
    // State
    const [checkRemember, setCheckRemember] = useState<boolean>(false)
@@ -46,24 +40,9 @@ const useLogin = () => {
    const [dataLogin, setDataLogin] = useState<LoginPayload>({ email: '', password: '' })
    const [errorDataLogin, setErrorDataLogin] = useState<LoginPayload>({ email: '', password: '' })
 
-   // Effect
-   useEffect(() => {
-      dispatch(resetForgotPassword())
-   }, [dispatch])
-
    useEffect(() => {
       handleResetError()
    }, [dataLogin])
-
-   useEffect(() => {
-      const params = new URLSearchParams(window.location.search)
-      const token = params.get('access_token')
-
-      if (token) {
-         setAuthToken(token)
-         getAuth()
-      }
-   }, [])
 
    // Function
    const handleResetError = (): void => {
@@ -105,7 +84,6 @@ const useLogin = () => {
                      dispatch(
                         setAuthState({
                            isAuthSuccess: true,
-                           authRole: res.data.role,
                         } as AuthState)
                      )
                      navigate('/')
@@ -149,7 +127,6 @@ const useLogin = () => {
       loadingLogin,
       errorDataLogin,
       checkRemember,
-      isLoadingBtnLogin,
       messageError,
       navigate,
       onChangeLogin,

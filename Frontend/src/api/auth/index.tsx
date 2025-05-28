@@ -5,9 +5,6 @@ import { AppDispatch } from '~/store'
 import { BaseApiResponse, LoginPayload } from '~/types'
 
 import {
-   startRequestGetMe,
-   startRequestGetMeFail,
-   startRequestGetMeSuccess,
    startRequestRegister,
    startRequestRegisterSuccess,
    startRequestRegisterFail,
@@ -20,34 +17,9 @@ import {
    startRequestResetPassword,
    startRequestResetPasswordSuccess,
    startRequestResetPasswordFail,
-   requestGetAuthRole,
-   getAuthRoleSuccess,
-   getAuthRoleFail,
 } from '../../store/modules/auth'
 
 const baseUrlApi = import.meta.env.VITE_API_URL
-
-// export const getMe = () => async (dispatch: AppDispatch, getState: () => any) => {
-//    return callReduxApi({
-//       method: 'get',
-//       apiPath: `auth/me`,
-//       actionTypes: [startRequestGetMe, startRequestGetMeSuccess, startRequestGetMeFail],
-//       variables: {},
-//       dispatch,
-//       getState,
-//    })
-// }
-
-export const getAuthRole = () => async (dispatch: AppDispatch, getState: () => any) => {
-   return callReduxApi({
-      method: 'get',
-      apiPath: `auth/role`,
-      actionTypes: [requestGetAuthRole, getAuthRoleSuccess, getAuthRoleFail],
-      variables: {},
-      dispatch,
-      getState,
-   })
-}
 
 export const register = (data: any) => async (dispatch: AppDispatch, getState: () => any) => {
    return callReduxApi({
@@ -116,7 +88,7 @@ export const login = (data: LoginPayload): Promise<BaseApiResponse> => {
    })
 }
 
-export const getMe = (): Promise<BaseApiResponse> => {
+export const getAuthUser = (): Promise<BaseApiResponse> => {
    return callApi({
       method: 'get',
       apiPath: `auth/me`,

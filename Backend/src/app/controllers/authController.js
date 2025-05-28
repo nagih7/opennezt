@@ -9,7 +9,7 @@ export async function login(req, res) {
     if (validLogin && !validLogin.is_active) {
         abort(403, 'Account is not active. Please verify by email.')
     } else if (validLogin && validLogin.is_active) {
-        res.jsonify(await authService.authToken(validLogin))
+        res.jsonify(authService.authToken(validLogin))
     } else {
         abort(400, 'Email or password is incorrect.')
     }
