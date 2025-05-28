@@ -2,12 +2,12 @@ import React from 'react'
 import { IconlyEditSquare, IconlySetting } from '~/components/UI/Iconly'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/UI/avatar'
 import { Input } from '~/components/UI/input'
-import useMessageSidebar from './useMessageSidebar'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/UI/tabs'
 import ChatCard from './ChatCard'
+import useChat from '../useChat'
 
 const MessageSidebar: React.FC = () => {
-   const { authUser, allChat, directChat, groupChat, navigateToConversation } = useMessageSidebar()
+   const { authUser, allChat, directChat, groupChat, navigateToConversation } = useChat()
 
    if (!authUser) return
 
@@ -26,13 +26,13 @@ const MessageSidebar: React.FC = () => {
          </div>
 
          {/* Content */}
-         <Tabs defaultValue="all" className="w-full flex-1 overflow-hidden bg-[#ffffff] rounded-md p-[13px]">
-            <TabsList className="grid w-full grid-cols-3">
+         <Tabs defaultValue="all" className="w-full flex-1 overflow-hidden bg-[#ffffff] rounded-md flex flex-col">
+            <TabsList className="grid grid-cols-3 m-3">
                <TabsTrigger value="all">All</TabsTrigger>
                <TabsTrigger value="direct">Direct</TabsTrigger>
                <TabsTrigger value="group">Group</TabsTrigger>
             </TabsList>
-            <TabsContent value="all" className="h-full overflow-y-auto scroll-smooth scrollbar-hide">
+            <TabsContent value="all" className="flex-1 p-3 overflow-y-auto scroll-smooth">
                {allChat.map((conversation: any, index: number) => {
                   if (!conversation.members || conversation.members.length === 0) return null
                   return (
@@ -41,12 +41,12 @@ const MessageSidebar: React.FC = () => {
                         conversation={conversation}
                         userId={authUser._id}
                         index={index}
-                        onNavigate={() => navigateToConversation(conversation._id)}
+                        onNavigate={() => navigateToConversation(conversation)}
                      />
                   )
                })}
             </TabsContent>
-            <TabsContent value="direct">
+            <TabsContent value="direct" className="flex-1 p-3 overflow-y-auto scroll-smooth">
                {directChat.map((conversation: any, index: number) => {
                   if (!conversation.members || conversation.members.length === 0) return null
                   return (
@@ -60,7 +60,7 @@ const MessageSidebar: React.FC = () => {
                   )
                })}
             </TabsContent>
-            <TabsContent value="group">
+            <TabsContent value="group" className="flex-1 p-3 overflow-y-auto scroll-smooth">
                {groupChat.map((conversation: any, index: number) => {
                   if (!conversation.members || conversation.members.length === 0) return null
                   return (

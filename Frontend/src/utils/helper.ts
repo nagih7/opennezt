@@ -12,10 +12,27 @@ export const VALIDATE_PASSWORD_REGEX: RegExp = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[
 export const VALIDATE_PHONE_REGEX_RULE: RegExp = /^[0-9]{3}[0-9]{3}[0-9]{4}$/
 
 export const handleCheckRoute = (routes: string[], currentRoute: string): boolean => {
-   if (routes && routes.length > 0) {
-      return routes.includes(currentRoute)
+   if (!routes || routes.length === 0) {
+      return false
    }
-   return false
+
+   return routes.some((route) => {
+      // Exact match
+      if (route === currentRoute) {
+         return true
+      }
+
+      // Dynamic route matching
+      if (route.includes(':')) {
+         // Convert route pattern to regex
+         // Replace :param with regex pattern to match any non-slash characters
+         const regexPattern = route.replace(/:[^/]+/g, '[^/]+')
+         const regex = new RegExp(`^${regexPattern}$`)
+         return regex.test(currentRoute)
+      }
+
+      return false
+   })
 }
 
 export const hasPermission = (permissions: string[]): boolean => {

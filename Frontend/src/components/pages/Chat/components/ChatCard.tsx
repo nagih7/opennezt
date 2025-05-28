@@ -15,7 +15,7 @@ const ChatCard: React.FC<ChatCardProps> = ({ conversation, userId, index, onNavi
       <div
          key={index}
          onClick={onNavigate}
-         className="p-4 bg-[#ffffff] cursor-pointer overflow-hidden flex items-center gap-2 hover:bg-[#f8f9fa]"
+         className="p-4 bg-[#ffffff] cursor-pointer overflow-hidden flex items-center gap-2 hover:bg-[#f8f9fa] rounded-md"
       >
          <div className="flex items-center flex-1 gap-3 overflow-hidden">
             <Avatar>

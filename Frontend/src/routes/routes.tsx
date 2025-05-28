@@ -20,7 +20,7 @@ const ResetPassword = React.lazy(() => import('components/pages/Auth/ResetPasswo
 const Home = React.lazy(() => import('components/pages/Home'))
 const Profile = React.lazy(() => import('components/pages/Profile'))
 const About = React.lazy(() => import('components/pages/About'))
-const Message = React.lazy(() => import('components/pages/Message'))
+const Chat = React.lazy(() => import('components/pages/Chat'))
 const Project = React.lazy(() => import('components/pages/Project'))
 
 // Project related pages
@@ -449,7 +449,7 @@ const router: RouteObject[] = [
       path: ROUTE_CONFIG.USER.CONVERSATION.PREFIX,
       element: withSuspense(
          <AppLayout>
-            <Message />
+            <Chat />
          </AppLayout>
       ),
       loader: createLoader(true, 'LOAD_MESSAGES_PAGE'),
@@ -458,7 +458,7 @@ const router: RouteObject[] = [
       path: ROUTE_CONFIG.USER.CONVERSATION.DETAIL,
       element: withSuspense(
          <AppLayout>
-            <Message />
+            <Chat />
          </AppLayout>
       ),
       loader: createLoader(true, 'LOAD_CONVERSATION_PAGE'),

@@ -5,7 +5,6 @@ import { TokenManager } from '~/utils/tokenManager'
 const apiAxios = axios.create({
    baseURL: import.meta.env.VITE_API_URL,
    withCredentials: true,
-   headers: { 'Content-Type': 'application/json' },
 })
 
 apiAxios.interceptors.request.use(
@@ -31,12 +30,11 @@ const callApi = async ({ method, apiPath, variables, headers }: BaseApiProps) =>
    //    const status = error?.response?.status || 500
    //    return { status, ...error.response.data }
    // }
-   const isFormData = variables instanceof FormData
 
    const response = await apiAxios.request({
       url: apiPath,
       method,
-      headers: isFormData ? { ...headers } : { 'Content-Type': 'application/json', ...headers },
+      headers: { 'Content-Type': 'application/json', ...headers },
       data: variables,
       params: method === 'get' ? variables : undefined,
    })

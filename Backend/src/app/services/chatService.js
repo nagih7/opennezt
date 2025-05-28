@@ -211,7 +211,6 @@ export async function getConversation(user, { conversationId }) {
                 {
                     $project: {
                         _id: 0,
-                        class: 1,
                         name: 1,
                     },
                 },
@@ -250,6 +249,53 @@ export async function getConversation(user, { conversationId }) {
             preserveNullAndEmptyArrays: true,
         },
     }
+    const messageLookupStage = {
+        $lookup: {
+            from: 'messages',
+            localField: '_id',
+            foreignField: 'conversation_id',
+            as: 'messages',
+            pipeline: [
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user_id',
+                        foreignField: '_id',
+                        as: 'user',
+                        pipeline: [
+                            {
+                                $project: {
+                                    _id: 1,
+                                    name: 1,
+                                    avatar: {
+                                        $cond: {
+                                            if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                            then: '$avatar',
+                                            else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $unwind: '$user',
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        user: 1,
+                        content: 1,
+                        read_by: 1,
+                        pinned: 1,
+                        status: 1,
+                        timestamp: 1,
+                    },
+                },
+            ],
+        },
+    }
     const projectStage = {
         $project: {
             _id: 1,
@@ -258,11 +304,12 @@ export async function getConversation(user, { conversationId }) {
                 type: 1,
                 data: 1,
             },
-            type: 1,
+            type: '$type.name',
             last_message: 1,
             data: {
                 project: 1,
             },
+            messages: 1,
             created_at: 1,
             updated_at: 1,
         },
@@ -275,6 +322,7 @@ export async function getConversation(user, { conversationId }) {
         unwindTypeStage,
         lookupProjectStage,
         unwindProjectStage,
+        messageLookupStage,
         projectStage,
     ])
 

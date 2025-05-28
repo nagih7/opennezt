@@ -12,11 +12,9 @@ import {
 } from 'utils/constants'
 import { getConversations } from '~/api/chat'
 import { setNotifications } from '~/store/modules/notification'
-import { setMessages } from '~/store/modules/chat'
 import ModalMatchingProjects from '~/components/common/ModalMatchingProjects'
 import { AppDispatch } from '~/store'
 import { Notification } from '~/types/notification'
-import { Message } from '~/types/message'
 
 // Create a context to share socket with other components
 const SocketContext = createContext<Socket | null>(null)
@@ -77,9 +75,7 @@ export const SocketProvider: React.FC<BaseComponentProps> = ({ children }) => {
          dispatch(getConversations())
       })
 
-      socket.on(MESSAGE_TYPE, (message: Message) => {
-         dispatch(setMessages({ message }))
-      })
+      socket.on(MESSAGE_TYPE, (message: any) => {})
 
       socket.on(PROJECT_INVITATION_NOTIFICATION, (notification: Notification) => {
          dispatch(setNotifications(notification))
