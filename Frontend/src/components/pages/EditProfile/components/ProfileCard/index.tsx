@@ -1,27 +1,17 @@
 import React from 'react'
 import { FaCircleCheck } from "react-icons/fa6";
-import { useSelector } from 'react-redux'
 import { Avatar } from '@chakra-ui/react'
-import { RootState } from '~/store'
-
-interface AuthAccount {
-   name: string
-   avatar?: string
-   created_at?: string
-   [key: string]: any
-}
+import useProfileCard from './hooks/useProfileCard';
 
 const ProfileCard: React.FC = () => {
-   // ========== STATE FROM REDUX STORE ========== //
-   const { authUser } = useSelector((state: RootState) => state.auth)
-
+   const { authUser } = useProfileCard()
    // ========== COMPONENT RENDER ========== //
    return (
       <div className="flex items-center gap-3 pb-8 border-b-[1px] border-gray-200 mb-8">
          <div>
             <Avatar.Root shape={'rounded'} size={'2xl'}>
-               <Avatar.Fallback name={authUser.name} />
-               <Avatar.Image src={authUser.avatar} />
+               <Avatar.Fallback name={authUser?.name} />
+               <Avatar.Image src={authUser?.avatar} />
             </Avatar.Root>
          </div>
          <div>

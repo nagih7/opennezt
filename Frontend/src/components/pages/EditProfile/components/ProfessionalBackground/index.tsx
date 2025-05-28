@@ -1,111 +1,21 @@
 import { Button } from '@chakra-ui/react'
-import { getProfile, updateProfessionalProfile } from 'api/profile'
-import { getExperienceLevelFramwork, getIndustryFramework } from 'api/user'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
 import ProfileCard from '../ProfileCard'
 import ProfileEditMenu from '../ProfileEditMenu'
 import ActionBar from '../ActionBar'
 import SelectCustom from 'components/UI/SelectCustom'
-import { toaster } from 'components/UI/toaster'
-import { AppDispatch } from '~/store/store.types'
-import { RootState } from '~/store'
-
-// Định nghĩa các interface
-interface Industry {
-   _id: string
-   name?: string
-   [key: string]: any
-}
-
-interface ExperienceLevel {
-   _id: string
-   name?: string
-   [key: string]: any
-}
-
-interface Profile {
-   industries?: Industry[]
-   experience_level?: ExperienceLevel
-   [key: string]: any
-}
-
-interface FormData {
-   industries: string[]
-   experience_level: string[]
-}
-
-interface SelectEvent {
-   value: string[]
-   items?: { value: string; label: string }[]
-}
+import { useProfessionalBackground } from './hooks/useProfessionalBackground'
+import { SelectEvent } from './types'
 
 const ProfessionalBackground: React.FC = () => {
-   const dispatch = useDispatch<AppDispatch>()
-
-   // ========== STATE FROM REDUX STORE ========== //
-   const { profile, isLoadingUpdateProfile } = useSelector((state: RootState) => state.profile)
-   const { industryFramework, experienceLevelFramework } = useSelector((state: RootState) => state.user)
-
-   // ========== STATE MANAGEMENT ========== //
-   const [formData, setFormData] = useState<FormData>({
-      industries: [],
-      experience_level: [],
-   })
-
-   // ========== USE EFFECT ========== //
-   useEffect(() => {
-      if (!profile) dispatch(getProfile())
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch])
-
-   useEffect(() => {
-      dispatch(getIndustryFramework())
-      dispatch(getExperienceLevelFramwork())
-   }, [dispatch])
-
-   useEffect(() => {
-      if (profile) {
-         setFormData({
-            ...formData,
-            industries: profile?.industries?.map((industry) => industry._id) || [],
-            experience_level: profile?.experience_level?._id ? [profile.experience_level._id] : [],
-         })
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [profile])
-
-   // ========== HANDLE CHANGE FUNCTION ========== //
-   const handleChange = (event: SelectEvent, nameSelect: keyof FormData): void => {
-      if (nameSelect === 'industries') {
-         if (formData.industries.length > 2) {
-            setFormData({
-               ...formData,
-               industries: formData.industries.slice(0, 2),
-            })
-         }
-         if (event.value.length > 2) {
-            toaster.create({
-               type: 'error',
-               title: 'You can only select up to 2 industries',
-            })
-            return
-         }
-      }
-      setFormData({
-         ...formData,
-         [nameSelect]: event.value,
-      })
-   }
-
-   const handleSaveChanges = (): void => {
-      dispatch(
-         updateProfessionalProfile({
-            industry_ids: formData.industries,
-            experience_level_id: formData.experience_level[0],
-         })
-      )
-   }
+   const {
+      formData,
+      industryFramework,
+      experienceLevelFramework,
+      isLoadingUpdateProfile,
+      handleChange,
+      handleSaveChanges,
+   } = useProfessionalBackground()
 
    // ========== COMPONENT RENDER ========== //
    return (

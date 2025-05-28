@@ -1,171 +1,32 @@
 import { Button, Dialog, Portal, Stack } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
 import ProfileCard from '../ProfileCard'
 import ProfileEditMenu from '../ProfileEditMenu'
 import ActionBar from '../ActionBar'
 import InputCustom from 'components/UI/InputCustom'
 import moment from 'moment'
 import { IconlyEdit, IconlyDelete } from 'components/UI/Iconly'
-import { createEducation, updateEducation, deleteEducation, getProfile } from 'api/profile'
 import { DataList } from '@chakra-ui/react'
-import { setIsOpenModalCreateOrUpdateEducation } from '~/store/modules/profile'
-import { RootState } from '~/store'
-
-// Định nghĩa các interfaces
-interface Education {
-   _id: string
-   school?: string
-   degree?: string
-   field_of_study?: string
-   start_date?: string
-   end_date?: string
-   grade?: string
-   activities?: string
-   is_lifetime?: boolean
-   organization_id?: string | string[]
-   [key: string]: any
-}
-
-interface FormData {
-   school?: string
-   degree?: string
-   field_of_study?: string
-   start_date?: string
-   end_date?: string
-   grade?: string
-   activities?: string
-   is_lifetime?: boolean
-   organization_id?: string | string[]
-   expiration_date?: string | null
-   [key: string]: any
-}
-
-type AppDispatch = any // Tạm thời dùng any, nên thay bằng kiểu từ Redux store thực tế
+import { useEducations } from './hooks/useEducations'
+import { Education } from './types'
 
 const Educations: React.FC = () => {
-   const dispatch = useDispatch<AppDispatch>()
-
-   // ========== STATE FROM REDUX STORE ========== //
-   const { profile } = useSelector((state: RootState) => state.profile)
-   const { educations = [] } = profile || {}
-   const { isOpenModalCreateOrUpdateEducation, isLoadingCreateOrUpdateEducation } = useSelector(
-      (state: RootState) => state.profile
-   )
-
-   // ========== STATE MANAGEMENT ========== //
-   const [action, setAction] = useState<'create' | 'update' | ''>('')
-   const [formData, setFormData] = useState<FormData>({})
-   const [targetDelete, setTargetDelete] = useState<Education | null>(null)
-   const [isOpenModalDeleteEducation, setIsOpenModalDeleteEducation] = useState<boolean>(false)
-
-   // ========== USE EFFECT ========== //
-   useEffect(() => {
-      if (!profile) dispatch(getProfile())
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch])
-
-   // ========== HANDLE CHANGE FUNCTION ========== //
-   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-      setFormData({
-         ...formData,
-         [e.target.name]: e.target.value,
-      })
-   }
-
-   const handleAddCertification = (): void => {
-      dispatch(setIsOpenModalCreateOrUpdateEducation(true))
-      setAction('create')
-      setFormData({
-         school: '',
-         degree: '',
-         field_of_study: '',
-         start_date: '',
-         end_date: '',
-         grade: '',
-         activities: '',
-      })
-   }
-
-   const handleUpdateEducation = (education: Education): void => {
-      dispatch(setIsOpenModalCreateOrUpdateEducation(true))
-      setAction('update')
-      setFormData({
-         ...education,
-         start_date: moment(education.start_date).format('YYYY-MM'),
-         end_date: education.end_date ? moment(education.end_date).format('YYYY-MM') : '',
-      })
-   }
-
-   const handleOpenModalDelete = (education: Education): void => {
-      setIsOpenModalDeleteEducation(true)
-      setTargetDelete(education)
-   }
-
-   const handleDeleteEducation = (): void => {
-      if (targetDelete?._id) {
-         dispatch(deleteEducation(targetDelete._id))
-      }
-      setIsOpenModalDeleteEducation(false)
-   }
-
-   const handleSaveChanges = (): void => {
-      if (formData.is_lifetime) {
-         const { organization_id, expiration_date, ...rest } = formData
-         switch (action) {
-            case 'create':
-               dispatch(
-                  createEducation({
-                     ...rest,
-                     expiration_date: null,
-                     organization_id:
-                        typeof organization_id === 'object' ? organization_id[0] : Array(organization_id)[0],
-                  })
-               )
-               break
-            case 'update':
-               dispatch(
-                  updateEducation({
-                     ...rest,
-                     expiration_date: null,
-                     organization_id:
-                        typeof organization_id === 'object' ? organization_id[0] : Array(organization_id)[0],
-                  })
-               )
-               break
-            default:
-               break
-         }
-      } else {
-         const { organization_id, ...rest } = formData
-         switch (action) {
-            case 'create':
-               dispatch(
-                  createEducation({
-                     ...rest,
-                     organization_id:
-                        typeof organization_id === 'object' ? organization_id[0] : Array(organization_id)[0],
-                  })
-               )
-               break
-            case 'update':
-               dispatch(
-                  updateEducation({
-                     ...rest,
-                     organization_id:
-                        typeof organization_id === 'object' ? organization_id[0] : Array(organization_id)[0],
-                  })
-               )
-               break
-            default:
-               break
-         }
-      }
-   }
-
-   const handleClose = (): void => {
-      dispatch(setIsOpenModalCreateOrUpdateEducation(false))
-   }
+   const {
+      educations,
+      action,
+      formData,
+      isOpenModalCreateOrUpdateEducation,
+      isLoadingCreateOrUpdateEducation,
+      isOpenModalDeleteEducation,
+      handleChange,
+      handleAddEducation,
+      handleUpdateEducation,
+      handleOpenModalDelete,
+      handleDeleteEducation,
+      handleSaveChanges,
+      handleClose,
+      setIsOpenModalDeleteEducation
+   } = useEducations()
 
    // ========== COMPONENT RENDER ========== //
    return (
@@ -184,7 +45,7 @@ const Educations: React.FC = () => {
                      <h4 className="">Educations</h4>
                   </div>
                   <Button
-                     onClick={handleAddCertification}
+                     onClick={handleAddEducation}
                      height={50}
                      className="mt-[14px] px-[18px] text-sm sm:px-[28px] py-2 sm:py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
                      borderRadius={4}
@@ -197,7 +58,7 @@ const Educations: React.FC = () => {
                </div>
                <div>
                   <div className="px-[16px]">
-                     {educations?.map((education, index) => (
+                     {educations?.map((education: Education, index: React.Key | null | undefined) => (
                         <DataList.Root orientation="horizontal" key={index}>
                            <div key={index}>
                               <div className=" shadow rounded-[0.6rem]">

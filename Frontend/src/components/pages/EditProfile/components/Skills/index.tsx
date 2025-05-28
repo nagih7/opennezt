@@ -1,143 +1,28 @@
 import { Button } from '@chakra-ui/react'
-import { getProfile, updateSkillProfile } from 'api/profile'
-import { getCategoryFramework, getSkillFramework, getSubCategoryFramework } from 'api/user'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
 import ProfileCard from '../ProfileCard'
 import ProfileEditMenu from '../ProfileEditMenu'
 import ActionBar from '../ActionBar'
 import SelectCustom from 'components/UI/SelectCustom'
-import { toaster } from 'components/UI/toaster'
 import { Badge } from '~/components/UI/badge'
-import { AppDispatch } from '~/store/store.types'
-import { RootState } from '~/store'
-
-interface Skill {
-   _id: string
-   name: string
-   category_id: string
-}
-
-interface Profile {
-   skills: Skill[]
-   [key: string]: any
-}
-
-interface FormData {
-   categories: string[]
-   subcategories: string[]
-   skills: string[]
-   skillFormat: Skill[]
-}
-
-interface SelectEvent {
-   value: string[]
-   items?: { value: string; label: string }[]
-}
+import { useSkills } from './hooks/useSkills'
+import { SelectEvent } from './types'
 
 const Skills = (): React.ReactElement => {
-   // Sử dụng AppDispatch thay vì mặc định
-   const dispatch = useDispatch<AppDispatch>()
-
-   // ========== STATE FROM REDUX STORE ========== //
-   const { categoryFramework, subCategoryFramework, skillFramework } = useSelector((state: RootState) => state.user)
-   const { profile, isLoadingUpdateSkills } = useSelector((state: RootState) => state.profile)
-   const { skills } = profile || { skills: [] }
-
-   // ========== STATE MANAGEMENT ========== //
-   const [formData, setFormData] = useState<FormData>({
-      categories: [],
-      subcategories: [],
-      skills: [],
-      skillFormat: [],
-   })
-   const [mySkills, setMySkills] = useState<Skill[]>([])
-
-   // ========== USE EFFECT ========== //
-   useEffect(() => {
-      if (!profile) dispatch(getProfile())
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch])
-
-   useEffect(() => {
-      if (!categoryFramework?.items?.length) {
-         dispatch(getCategoryFramework())
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch])
-
-   useEffect(() => {
-      if (skills) {
-         setMySkills(skills)
-      }
-   }, [skills])
-
-   // ========== HANDLE CHANGE FUNCTION ========== //
-   const handleChangeCategory = (event: SelectEvent): void => {
-      setFormData({
-         ...formData,
-         categories: event.value,
-         subcategories: [],
-         skills: [],
-         skillFormat: [],
-      })
-      dispatch(getSubCategoryFramework(event.value[0]))
-   }
-
-   const handleChangeSubCategory = (event: SelectEvent): void => {
-      setFormData({
-         ...formData,
-         subcategories: event.value,
-         skills: [],
-         skillFormat: [],
-      })
-      dispatch(getSkillFramework(event.value[0]))
-   }
-
-   const handleChangeSkill = (event: SelectEvent): void => {
-      if (event.items) {
-         setFormData({
-            ...formData,
-            skills: event.value,
-            skillFormat: event.items.map((item) => ({
-               _id: item.value,
-               name: item.label,
-               category_id: formData.subcategories[0],
-            })),
-         })
-      }
-   }
-
-   const handleAddSkill = (): void => {
-      // Verify if the skill is already added
-      const isExist = mySkills.find((skill) => skill._id === formData.skills[0])
-      if (isExist) {
-         toaster.create({
-            title: `Skill already added.`,
-            type: 'error',
-         })
-      } else {
-         setMySkills([...mySkills, ...formData.skillFormat])
-         setFormData({
-            ...formData,
-            skills: [],
-            skillFormat: [],
-         })
-      }
-   }
-
-   const handleRemoveSkill = (skill: Skill): void => {
-      const newSkills = mySkills.filter((item) => item.name !== skill.name)
-      setMySkills(newSkills)
-   }
-
-   const handleSaveChanges = (): void => {
-      dispatch(
-         updateSkillProfile({
-            skills: mySkills,
-         })
-      )
-   }
+   const {
+      categoryFramework,
+      subCategoryFramework,
+      skillFramework,
+      formData,
+      mySkills,
+      isLoadingUpdateSkills,
+      handleChangeCategory,
+      handleChangeSubCategory,
+      handleChangeSkill,
+      handleAddSkill,
+      handleRemoveSkill,
+      handleSaveChanges
+   } = useSkills()
 
    // ========== COMPONENT RENDER ========== //
    return (

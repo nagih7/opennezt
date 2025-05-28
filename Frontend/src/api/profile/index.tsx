@@ -7,52 +7,9 @@ import {
    updateInfoUser,
    updateInfoUserFail,
    updateInfoUserSuccess,
-   // changeAvatarUser,
-   // changeAvatarUserSuccess,
-   // changeAvatarUserFail,
    changeBackgroundUser,
    changeBackgroundUserSuccess,
    changeBackgroundUserFail,
-   // ========== Profile ========== //
-   requestGetProfile,
-   requestGetProfileSuccess,
-   requestGetProfileFail,
-   requestUpdateProfessionalProfile,
-   UpdateProfessionalProfileSuccess,
-   UpdateProfessionalProfileFail,
-   // ========== Education ========== //
-   requestCreateOrUpdateEducation,
-   createEducationSuccess,
-   updateEducationSuccess,
-   createOrUpdateEducationFail,
-   // ========== Delete Education ========== //
-   requestDeleleEducation,
-   deleteEducationSuccess,
-   deleteEducationFail,
-   // ========== Certification ========== //
-   requestCreateOrUpdateCertification,
-   createCertificationSuccess,
-   updateCertificationSuccess,
-   createOrUpdateCertificationFail,
-   requestDeleleCertification,
-   deleteCertificationSuccess,
-   deleteCertificationFail,
-   // ========== Skills ========== //
-   requestUpdateSkills,
-   updateSkillsSuccess,
-   updateSkillsFail,
-   // ========== Organization ========== //
-   requestgetOrganizationFramework,
-   requestgetOrganizationFrameworkSuccess,
-   requestgetOrganizationFrameworkFail,
-   // ========== Additional Info ========== //
-   requestCreateOrUpdateProfileAdditionalInfo,
-   createProfileAdditionalInfoSuccess,
-   updateProfileAdditionalInfoSuccess,
-   createOrUpdateProfileAdditionalInfoFail,
-   requestDeleleProfileAdditionalInfo,
-   deleteProfileAdditionalInfoSuccess,
-   deleteProfileAdditionalInfoFail,
 } from '../../store/modules/profile'
 import { Dispatch } from 'redux'
 import callApi from '../callApi'
@@ -102,157 +59,106 @@ export const changeBackground = (formData: FormData) => async (dispatch: Dispatc
 }
 
 // ========== Profile ========== //
-export const getProfile = () => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
+export const getProfile = () => {
+   return callApi({
       method: 'get',
       apiPath: `/profile`,
-      actionTypes: [requestGetProfile, requestGetProfileSuccess, requestGetProfileFail],
-      dispatch,
-      getState,
    })
 }
 
-export const updateProfessionalProfile = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
+export const updateProfessionalProfile = (data: any) => {
+   return callApi({
       method: 'put',
       apiPath: `/profile/professional`,
-      actionTypes: [requestUpdateProfessionalProfile, UpdateProfessionalProfileSuccess, UpdateProfessionalProfileFail],
       variables: data,
-      dispatch,
-      getState,
    })
 }
 
 // ========== Education ========== //
-export const createEducation = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
+export const createEducation = (data: any) => {
+   return callApi({
       method: 'post',
       apiPath: `/profile/education`,
-      actionTypes: [requestCreateOrUpdateEducation, createEducationSuccess, createOrUpdateEducationFail],
       variables: data,
-      dispatch,
-      getState,
    })
 }
-export const updateEducation = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
+
+export const updateEducation = (data: any) => {
+   return callApi({
       method: 'put',
       apiPath: `/profile/education`,
-      actionTypes: [requestCreateOrUpdateEducation, updateEducationSuccess, createOrUpdateEducationFail],
       variables: data,
-      dispatch,
-      getState,
    })
 }
-export const deleteEducation = (id: any) => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
+
+export const deleteEducation = (id: any) => {
+   return callApi({
       method: 'delete',
       apiPath: `/profile/education/${id}`,
-      actionTypes: [requestDeleleEducation, deleteEducationSuccess, deleteEducationFail],
-      dispatch,
-      getState,
    })
 }
 
 // ========== Certification ========== //
-export const createCertification = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
+export const createCertification = (data: any) => {
+   return callApi({
       method: 'post',
       apiPath: `/profile/certification`,
-      actionTypes: [requestCreateOrUpdateCertification, createCertificationSuccess, createOrUpdateCertificationFail],
       variables: data,
-      dispatch,
-      getState,
    })
 }
-export const updateCertification = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
+export const updateCertification = (data: any) => {
+   return callApi({
       method: 'put',
       apiPath: `/profile/certification`,
-      actionTypes: [requestCreateOrUpdateCertification, updateCertificationSuccess, createOrUpdateCertificationFail],
       variables: data,
-      dispatch,
-      getState,
    })
 }
-export const deleteCertification = (id: any) => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
+
+export const deleteCertification = (id: any) => {
+   return callApi({
       method: 'delete',
       apiPath: `/profile/certification/${id}`,
-      actionTypes: [requestDeleleCertification, deleteCertificationSuccess, deleteCertificationFail],
-      dispatch,
-      getState,
    })
 }
 
 // ========== Organization ========== //
-export const getOrganizationFramework = () => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
+export const getOrganizationFramework = () => {
+   return callApi({
       method: 'get',
       apiPath: `/profile/organizations`,
-      actionTypes: [
-         requestgetOrganizationFramework,
-         requestgetOrganizationFrameworkSuccess,
-         requestgetOrganizationFrameworkFail,
-      ],
-      dispatch,
-      getState,
    })
 }
 
-export const updateSkillProfile = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
+export const updateSkillProfile = (data: any) => {
+   return callApi({
       method: 'put',
       apiPath: `/profile/skills`,
-      actionTypes: [requestUpdateSkills, updateSkillsSuccess, updateSkillsFail],
       variables: data,
-      dispatch,
-      getState,
    })
 }
 
 // ========== Additional Info ========== //
 export const createProfileAdditionalInfo =
-   (data: any, action: string) => async (dispatch: Dispatch, getState: () => any) => {
-      return callReduxApi({
+   (data: any, action: string) => {
+      return callApi({
          method: action === 'create' ? 'post' : 'put',
          apiPath: `/profile/additional-info`,
-         actionTypes: [
-            requestCreateOrUpdateProfileAdditionalInfo,
-            createProfileAdditionalInfoSuccess,
-            createOrUpdateProfileAdditionalInfoFail,
-         ],
          variables: data,
-         dispatch,
-         getState,
       })
    }
-export const updateProfileAdditionalInfo = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
+   
+export const updateProfileAdditionalInfo = (data: any) => {
+   return callApi({
       method: 'put',
       apiPath: `/profile/additional-info`,
-      actionTypes: [
-         requestCreateOrUpdateProfileAdditionalInfo,
-         updateProfileAdditionalInfoSuccess,
-         createOrUpdateProfileAdditionalInfoFail,
-      ],
       variables: data,
-      dispatch,
-      getState,
    })
 }
 
-export const deleteProfileAdditionalInfo = (id: any) => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
+export const deleteProfileAdditionalInfo = (id: any) => {
+   return callApi({
       method: 'delete',
       apiPath: `/profile/additional-info/${id}`,
-      actionTypes: [
-         requestDeleleProfileAdditionalInfo,
-         deleteProfileAdditionalInfoSuccess,
-         deleteProfileAdditionalInfoFail,
-      ],
-      dispatch,
-      getState,
    })
 }
 
