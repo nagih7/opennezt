@@ -1,6 +1,6 @@
 import { Alert, Avatar, Badge, Image, Input, Stack, Text } from '@chakra-ui/react'
 import { changeAvatar } from 'api/profile'
-import Button from '~/components/UI/Button' 
+import { Button } from '~/components/UI/button'
 import {
    DialogActionTrigger,
    DialogBody,
@@ -61,7 +61,7 @@ const ProfileOverview = () => {
                         ) : (
                            <BsStars className="text-[#ffffff] w-5 h-5" />
                         )}
-                       <Button
+                        <Button
                            variant="ghost"
                            className="text-[#ffffff] font-medium text-sm p-0 h-auto min-h-0 bg-transparent hover:bg-transparent"
                            disabled={isLoadingMatchingProjects}
@@ -148,7 +148,7 @@ const ProfileOverview = () => {
                            loading={isLoadingBtnChangeAvatar}
                            loadingText="Saving..."
                            spinnerPlacement="start"
-                           variant="solid"
+                           // variant="solid"
                            onClick={() => avatarFile && handleSaveAvatar(avatarFile)}
                         >
                            Save
