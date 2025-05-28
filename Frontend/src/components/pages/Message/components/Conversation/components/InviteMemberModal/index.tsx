@@ -1,24 +1,24 @@
+import React, { useEffect, useState } from 'react'
 import { Alert, Avatar, Blockquote, Button, CloseButton, Dialog, Portal, Stack, Text } from '@chakra-ui/react'
 import { inviteMember, searchMyProjects } from 'api/project'
 import { getProjectRoleFramework } from 'api/user'
 import InputCustom from 'components/UI/InputCustom'
 import SelectCustom from 'components/UI/SelectCustom'
 import { debounce } from 'lodash'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import store from '~/store'
-import { setModalInviteMember } from 'store/modules/project'
+import { RootState, useAppDispatch, useAppSelector } from '~/store'
+import { BaseProjectProps } from '~/types'
+// import { setModalInviteMember } from 'store/modules/project'
 
-const InviteMemberModal = () => {
-   const dispatch = useDispatch()
+const InviteMemberModal: React.FC = () => {
+   const dispatch = useAppDispatch()
    // ========== STATE FROM REDUX ========== //
-   const { conversation } = useSelector((state) => state.chat)
-   const { projectRoleFramework, projectTeamRoleFramework } = useSelector((state) => state.user)
+   const { conversation } = useAppSelector((state: RootState) => state.chat)
+   const { projectRoleFramework, projectTeamRoleFramework } = useAppSelector((state: RootState) => state.user)
    const { myProjectsBySearch, isLoadingSearchMyProjects, isOpenModalInviteMember, isLoadingInviteMember } =
-      useSelector((state) => state.project)
+      useAppSelector((state: RootState) => state.project)
 
    // ========== STATE ========== //
-   const [projectSelected, setProjectSelected] = useState(null)
+   const [projectSelected, setProjectSelected] = useState<BaseProjectProps | null>(null)
    const [formRequest, setFormRequest] = useState({
       teamRole: '',
       role: '',
@@ -37,7 +37,7 @@ const InviteMemberModal = () => {
       if (e.target.value === '') {
          return
       }
-      dispatch(searchMyProjects(e.target.value))
+      searchMyProjects(e.target.value)
    }, 300)
 
    const handleRemoveProject = () => {
@@ -48,14 +48,15 @@ const InviteMemberModal = () => {
       })
    }
 
-   const handleChangeFormRequest = (e, field) => {
+   const handleChangeFormRequest = (e: any, field: any) => {
       setFormRequest((prev) => ({
          ...prev,
          [field]: e.value[0],
       }))
    }
    const handleConfirmInvite = async () => {
-      await store.dispatch(inviteMember(projectSelected._id, { ...formRequest, userId: conversation.members[0]._id }))
+      if (!projectSelected) return
+      inviteMember(projectSelected._id, { ...formRequest, userId: conversation.members[0]._id })
       setFormRequest({
          teamRole: '',
          role: '',
@@ -64,7 +65,7 @@ const InviteMemberModal = () => {
    }
 
    const handleClose = () => {
-      dispatch(setModalInviteMember(false))
+      // dispatch(setModalInviteMember(false))
    }
 
    // ========== RENDER ========== //
@@ -135,7 +136,7 @@ const InviteMemberModal = () => {
                                        <Stack spacing={4} direction={'row'} align={'center'}>
                                           <Avatar.Root size={'sm'}>
                                              <Avatar.Fallback name={projectSelected.name} />
-                                             <Avatar.Image src={projectSelected.logo} />
+                                             <Avatar.Image src={projectSelected.logo || undefined} />
                                           </Avatar.Root>
                                           <Text className="mb-0">{projectSelected.name}</Text>
                                        </Stack>
@@ -151,7 +152,7 @@ const InviteMemberModal = () => {
                                        label="Team Role"
                                        required
                                        collection={projectTeamRoleFramework}
-                                       onChange={(e) => handleChangeFormRequest(e, 'teamRole')}
+                                       onChange={(e: any) => handleChangeFormRequest(e, 'teamRole')}
                                        value={[formRequest.teamRole]}
                                     />
                                     <SelectCustom
@@ -159,7 +160,7 @@ const InviteMemberModal = () => {
                                        label="Role"
                                        required
                                        collection={projectRoleFramework}
-                                       onChange={(e) => handleChangeFormRequest(e, 'role')}
+                                       onChange={(e: any) => handleChangeFormRequest(e, 'role')}
                                        value={[formRequest.role]}
                                     />
                                  </>

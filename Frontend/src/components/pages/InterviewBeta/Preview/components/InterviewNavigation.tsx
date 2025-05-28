@@ -7,7 +7,7 @@ const InterviewNavigation: React.FC = () => {
    const navigate = useNavigate()
 
    return (
-      <div className="flex items-center justify-between ">
+      <div className="flex items-center justify-between w-full">
          <img
             src={logo_opennezt_img}
             className="2xl:w-[300px] w-[220px] h-full cursor-pointer"
@@ -24,7 +24,6 @@ const InterviewNavigation: React.FC = () => {
             >
                Go to dashboard
             </div>
-            \\
          </div>
       </div>
    )

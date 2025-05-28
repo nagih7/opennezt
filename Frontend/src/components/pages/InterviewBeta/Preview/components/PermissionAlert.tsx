@@ -1,7 +1,7 @@
 import React from 'react'
 
 interface PermissionAlertProps {
-   error?: string
+   error?: string | null
    permissionStatus: {
       camera: 'granted' | 'denied' | 'prompt'
       microphone: 'granted' | 'denied' | 'prompt'

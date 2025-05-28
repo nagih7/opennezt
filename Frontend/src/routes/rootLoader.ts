@@ -97,7 +97,6 @@ const handleGuestOnlyRoute = async (pathname: string): Promise<Response | null> 
 
             return redirect(ROUTE_CONFIG.USER.HOME)
          } catch (error) {
-            console.log('❌ Invalid user token - allowing access to guest route')
             // Token invalid, allow access to login/register
          }
       }

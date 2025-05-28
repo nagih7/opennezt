@@ -85,8 +85,8 @@ export const changeAvatar = (formData: FormData) => {
       apiPath: `/users/avatar`,
       variables: formData,
       headers: {
-         'Content-Type': 'multipart/form-data'
-      }
+         'Content-Type': 'multipart/form-data',
+      },
    })
 }
 
@@ -155,7 +155,7 @@ export const deleteEducation = (id: any) => async (dispatch: Dispatch, getState:
 }
 
 // ========== Certification ========== //
-export const createCertification = (data: any, action: any) => async (dispatch: Dispatch, getState: () => any) => {
+export const createCertification = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'post',
       apiPath: `/profile/certification`,
@@ -163,7 +163,6 @@ export const createCertification = (data: any, action: any) => async (dispatch: 
       variables: data,
       dispatch,
       getState,
-      action,
    })
 }
 export const updateCertification = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
@@ -213,20 +212,21 @@ export const updateSkillProfile = (data: any) => async (dispatch: Dispatch, getS
 }
 
 // ========== Additional Info ========== //
-export const createProfileAdditionalInfo = (data: any, action: string) => async (dispatch: Dispatch, getState: () => any) => {
-   return callReduxApi({
-      method: action === 'create' ? 'post' : 'put',
-      apiPath: `/profile/additional-info`,
-      actionTypes: [
-         requestCreateOrUpdateProfileAdditionalInfo,
-         createProfileAdditionalInfoSuccess,
-         createOrUpdateProfileAdditionalInfoFail,
-      ],
-      variables: data,
-      dispatch,
-      getState,
-   })
-}
+export const createProfileAdditionalInfo =
+   (data: any, action: string) => async (dispatch: Dispatch, getState: () => any) => {
+      return callReduxApi({
+         method: action === 'create' ? 'post' : 'put',
+         apiPath: `/profile/additional-info`,
+         actionTypes: [
+            requestCreateOrUpdateProfileAdditionalInfo,
+            createProfileAdditionalInfoSuccess,
+            createOrUpdateProfileAdditionalInfoFail,
+         ],
+         variables: data,
+         dispatch,
+         getState,
+      })
+   }
 export const updateProfileAdditionalInfo = (data: any) => async (dispatch: Dispatch, getState: () => any) => {
    return callReduxApi({
       method: 'put',

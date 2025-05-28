@@ -1,11 +1,11 @@
-import React, { FC } from 'react'
-import { FaCircleCheck } from "react-icons/fa6";
+import React from 'react'
+import { FaCircleCheck } from 'react-icons/fa6'
 import { IconlySetting } from 'components/UI/Iconly'
 import { Avatar } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import { RootState } from '~/store'
 
-const MessageFooter: FC = () => {
+const MessageFooter: React.FC = () => {
    // ========== STATE FROM REDUX STORE ========== //
    const { authUser } = useSelector((state: RootState) => state.auth)
    return (

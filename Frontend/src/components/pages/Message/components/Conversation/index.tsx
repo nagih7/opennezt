@@ -9,7 +9,7 @@ import { Popover, Portal, Stack } from '@chakra-ui/react'
 import { Tooltip } from 'components/UI/tooltip'
 import ConversationHeader from './components/ConversationHeader'
 import InviteMemberModal from './components/InviteMemberModal'
-import { setModalInviteMember } from 'store/modules/project'
+// import { setModalInviteMember } from 'store/modules/project'
 import NoChat from './components/NoChat'
 import Chat from './components/Chat'
 import { ROUTE_CONFIG } from '~/config/constants/routes'
@@ -42,7 +42,6 @@ interface ConversationState {
 }
 
 const Conversation: FC = () => {
-   const dispatch = useDispatch()
    const params = useParams<ParamTypes>()
    const { id } = params
 
@@ -54,7 +53,7 @@ const Conversation: FC = () => {
 
    // ========== HANDLE FUNCTION MODAL ========== //
    const handleOpenModal = () => {
-      dispatch(setModalInviteMember(true))
+      // dispatch(setModalInviteMember(true))
       setIsOpenMoreActions(false)
    }
 

@@ -5,7 +5,7 @@ import { BaseComponentProps } from '~/types'
 import useApp from './useApp'
 
 const AppLayout: React.FC<BaseComponentProps> = ({ children }) => {
-   const {} = useApp()
+   useApp()
 
    return (
       <div className="flex flex-col h-screen bg-main-bg-color">

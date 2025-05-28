@@ -20,7 +20,6 @@ export interface AuthState {
    isAuthSuccess: boolean
    authorize: string
    authRegister: Record<string, any>
-   authRole: string
    resetPasswordSuccess: boolean
    errorRegister: {
       name: string
@@ -30,9 +29,6 @@ export interface AuthState {
       password: string
       confirmPassword: string
    }
-   isLoadingGetMe: boolean
-   isLoadingBtnLogin: boolean
-   isLoadingGetAuthRole: boolean
    isRegisterSuccess: boolean
    isLoadingRegister: boolean
    isSuccessForgotPassword: boolean

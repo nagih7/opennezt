@@ -1,34 +1,29 @@
+import React, { useEffect } from 'react'
 import { Avatar, Stack, Tabs } from '@chakra-ui/react'
 import { IconlyChat, IconlyUser } from 'components/UI/Iconly'
-import React, { FC, useEffect } from 'react'
 import img_project from '../../../../../../../assets/images/logo/opennezt_black.png'
-import { useDispatch, useSelector } from 'react-redux'
 import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants'
 import moment from 'moment'
 import { useNavigate } from 'react-router-dom'
 import { getMyFriends } from 'api/profile'
-import { AnyAction } from 'redux'
-import { ThunkDispatch } from 'redux-thunk'
-import { AppDispatch, RootState } from '~/store'
+import { RootState, useAppSelector } from '~/store'
 import { ROUTE_CONFIG } from '~/config/constants'
 
-const Conversations: FC = () => {
+const Conversations: React.FC = () => {
    const navigate = useNavigate()
-   const dispatch = useDispatch<AppDispatch>()
 
    // ========== STATE FROM REDUX STORE =========== //
-   const { conversations } = useSelector((state: RootState) => state.chat)
+   const { conversations } = useAppSelector((state: RootState) => state.chat)
 
    console.log(conversations)
-   const { authUser } = useSelector((state: RootState) => state.auth)
-   const friends = useSelector((state: RootState) => state.profile.myFriends)
+   const { authUser } = useAppSelector((state: RootState) => state.auth)
+   const friends = useAppSelector((state: RootState) => state.profile.myFriends)
 
    useEffect(() => {
       if (friends?.length === 0) {
-         dispatch(getMyFriends())
+         getMyFriends()
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch])
+   }, [])
 
    // ========== COMPONENT RENDER =========== //
    return (

@@ -1,15 +1,4 @@
-import { all, fork, takeLatest, put, Effect } from 'redux-saga/effects'
-import { setAuthToken } from '../../../utils/localStorage'
-import { getMe } from '../../../api/auth'
-import { PayloadAction } from '@reduxjs/toolkit'
-
-// Define types for the action payloads
-interface LoginSuccessPayload {
-   data: {
-      access_token: string
-      [key: string]: any
-   }
-}
+import { all, fork, Effect } from 'redux-saga/effects'
 
 function* loadRouteData(): Generator<Effect, void, any> {
    // Implementation placeholder

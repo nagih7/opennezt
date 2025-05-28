@@ -46,7 +46,7 @@ const InterviewContent: React.FC = () => {
                permissionStatus={permissionData.permissionStatus}
                requestMediaPermissions={requestMediaPermissions}
             />
-            <div className="flex flex-col md:flex-row items-center gap-[30px] md:gap-[60px] 2xl:gap-[100px] 2xl:ml-[100px]">
+            <div className="flex flex-col md:flex-row items-center gap-[30px] md:gap-[60px] 2xl:gap-[100px] 2xl:ml-[100px] w-full">
                <div className="flex flex-col w-full gap-3 md:w-auto over">
                   <InterviewHeader />
                   <VideoPreview videoRef={videoRef} />

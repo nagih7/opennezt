@@ -25,36 +25,32 @@ const Interview: React.FC = () => {
    } = useInterviewPreview()
 
    return (
-      <div className="p-[16px] w-full h-screen bg-[#ffffff] overflow-y-auto">
+      <div className="p-[16px] w-full h-screen bg-[#ffffff] overflow-y-auto flex flex-col items-center">
          <InterviewNavigation />
-         <div className="mt-4 2xl:mt-10">
-            <div className="flex w-full h-full">
-               <div className="w-1/12"></div>
-               <div className="w-10/12">
-                  <PermissionAlert
-                     error={error}
-                     permissionStatus={permissionStatus}
-                     requestMediaPermissions={requestMediaPermissions}
-                  />
+         <div className="flex flex-col w-10/12 h-full mt-4 2xl:mt-10">
+            <PermissionAlert
+               error={error}
+               permissionStatus={permissionStatus}
+               requestMediaPermissions={requestMediaPermissions}
+            />
 
-                  <div className="flex flex-col md:flex-row items-center gap-[30px] md:gap-[60px] 2xl:gap-[100px] 2xl:ml-[100px]">
-                     <div className="flex flex-col w-full gap-3 md:w-auto over">
-                        <InterviewHeader />
-                        <VideoPreview videoRef={videoRef} />
-                        <InterviewControls
-                           selectedAudioInput={selectedAudioInput}
-                           selectedAudioOutput={selectedAudioOutput}
-                           selectedVideo={selectedVideo}
-                           audioInputDevices={audioInputDevices}
-                           audioOutputDevices={audioOutputDevices}
-                           videoDevices={videoDevices}
-                           handleDeviceSelect={handleDeviceSelect}
-                        />
-                     </div>
-                     <InterviewJoinSection handleTechnicalIssues={handleTechnicalIssues} />
-                  </div>
+            <div className="flex flex-col lg:flex-row items-center gap-10 2xl:gap-[100px] w-full">
+               <div className="flex flex-col w-2/3 gap-3 overflow-hidden">
+                  <InterviewHeader />
+                  <VideoPreview videoRef={videoRef} />
+                  <InterviewControls
+                     selectedAudioInput={selectedAudioInput}
+                     selectedAudioOutput={selectedAudioOutput}
+                     selectedVideo={selectedVideo}
+                     audioInputDevices={audioInputDevices}
+                     audioOutputDevices={audioOutputDevices}
+                     videoDevices={videoDevices}
+                     handleDeviceSelect={handleDeviceSelect}
+                  />
                </div>
-               <div className="w-1/12"></div>
+               <div className="w-1/3">
+                  <InterviewJoinSection handleTechnicalIssues={handleTechnicalIssues} />
+               </div>
             </div>
          </div>
          <Session videoRef={videoRef} />
