@@ -11,7 +11,7 @@ interface InputProps extends React.ComponentProps<'input'> {
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
    ({ className, type, error, isShowError = true, ...props }, ref) => {
       return (
-         <div className="flex flex-col gap-2">
+         <div className="flex flex-col w-full gap-2">
             <input
                type={type}
                className={cn(
