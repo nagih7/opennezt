@@ -2,7 +2,7 @@ import { Button, Popover, Portal, Stack, StackSeparator } from '@chakra-ui/react
 // import { SearchOutlined } from '@mui/icons-material'
 import { seekProjects } from 'api/project'
 import { getIndustryFramework, getStageFramework } from 'api/user'
-import { IconlyFilter } from 'components/UI/Iconly'
+import { IconlyFilter, IconlySearch } from 'components/UI/Iconly'
 import SelectCustom from 'components/UI/SelectCustom'
 import { FC, useEffect, useState, KeyboardEvent, ChangeEvent } from 'react'
 import { setFilterSeekProjects } from '~/store/modules/project'
@@ -153,7 +153,7 @@ const FilterHeader: FC<FilterHeaderProps> = ({ action, setAction }) => {
                   onClick={handleSaveFilter}
                   className="bg-[#2F65B9] px-4 py-2 text-white"
                >
-                  {/* <SearchOutlined /> */}
+                  <IconlySearch size={24} color={'white'} />
                </Button>
             </div>
             <button
