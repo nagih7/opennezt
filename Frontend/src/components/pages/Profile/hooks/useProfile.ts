@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
-import { changeAvatar, changeBackground } from "~/api/profile"
-import store from "~/store"
+import { useAppSelector, useAppDispatch } from "~/store/hooks"
+import { changeAvatar, changeBackground, getProfile } from "~/api/profile"
 import resizeBackground from "~/utils/files/resizeBackground"
 import resizeLogo from "~/utils/files/resizeLogo"
-import { OPENNEZT_LOGO_GRADIENT } from "~/utils/constants/asset"
+import { OPENNEZT_LOGO_GRADIENT, OPENNEZT_LOGO } from "~/utils/constants/asset"
 
 interface AuthAccount {
    name: string
@@ -13,14 +12,18 @@ interface AuthAccount {
 }
 
 const useProfile = () => {
-    const authUser = useSelector((state: any) => state.auth.authUser) as AuthAccount
-    const [avatar, setAvatar] = useState<string>('')
-    const [background, setBackground] = useState<string>(OPENNEZT_LOGO_GRADIENT)
-    const [keyTable, setKeyTable] = useState<string>('1')
+   const authUser = useAppSelector((state: any) => state.auth.authUser) as AuthAccount
+   const dispatch = useAppDispatch()
+   const [avatar, setAvatar] = useState<string>(OPENNEZT_LOGO)
+   const [background, setBackground] = useState<string>(OPENNEZT_LOGO_GRADIENT)
+   const [keyTable, setKeyTable] = useState<string>('1')
 
    useEffect(() => {
       if (authUser.avatar) {
          setAvatar(authUser.avatar)
+      } else {
+         // Set default avatar when no avatar is provided
+         setAvatar(OPENNEZT_LOGO)
       }
       if (authUser.background) {
          setBackground(authUser.background)
@@ -33,35 +36,71 @@ const useProfile = () => {
    const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0]
       if (file) {
-         const avatar = await resizeLogo(file)
-         const formData = new FormData()
-         formData.append('avatar', avatar)
-         await store.dispatch(changeAvatar(formData))
-         setAvatar(URL.createObjectURL(avatar))
-         // Hiển thị thông báo thành công nếu cần
+         try {
+            const resizedAvatar = await resizeLogo(file)
+            const formData = new FormData()
+            formData.append('avatar', resizedAvatar)
+            await changeAvatar(formData)
+            
+            // Update local state immediately for better UX
+            setAvatar(URL.createObjectURL(resizedAvatar))
+            
+            // Refresh profile data from server to get updated avatar URL
+            const profileData = await getProfile()
+            if (profileData?.data?.avatar) {
+               setAvatar(profileData.data.avatar)
+            }
+            
+         } catch (error) {
+            // Handle error silently or show user notification
+         }
       }
    }
 
    const handleBackgroundChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0]
       if (file) {
-         const background = await resizeBackground(file)
-         const formData = new FormData()
-         formData.append('background', background)
-         await store.dispatch(changeBackground(formData))
-         setBackground(URL.createObjectURL(background))
-         // Hiển thị thông báo thành công nếu cần
+         try {
+            const resizedBackground = await resizeBackground(file)
+            const formData = new FormData()
+            formData.append('background', resizedBackground)
+            await dispatch(changeBackground(formData))
+            
+            // Update local state immediately for better UX
+            setBackground(URL.createObjectURL(resizedBackground))
+            
+            // Refresh profile data from server to get updated background URL
+            const profileData = await getProfile()
+            if (profileData?.data?.background) {
+               setBackground(profileData.data.background)
+            }
+            
+         } catch (error) {
+            // Handle error silently or show user notification
+         }
       }
    }
+
+   const handleAvatarError = () => {
+      setAvatar(OPENNEZT_LOGO)
+   }
+
+   const handleBackgroundError = () => {
+      setBackground(OPENNEZT_LOGO_GRADIENT)
+   }
+
    return {
-        authUser,
-        avatar,
-        background,
-        keyTable,
-        setKeyTable,
-        handleAvatarChange,
-        handleBackgroundChange,
+      authUser,
+      avatar,
+      background,
+      keyTable,
+      setKeyTable,
+      handleAvatarChange,
+      handleBackgroundChange,
+      handleAvatarError,
+      handleBackgroundError,
    }
 }
+
 export default useProfile
    
