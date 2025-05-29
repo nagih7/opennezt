@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { IoMdArrowDropdown } from 'react-icons/io'
 import { RiArrowRightSFill } from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 const ProfileDetails = ({ profile }) => {
    const formatDate = (dateString) => {
@@ -42,7 +43,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">Professional Background</h5>
                <span
-                  onClick={() => navigate('/profile/edit/professional-background')}
+                  onClick={() => navigate(ROUTE_CONFIG.USER.PROFILE.EDIT.PROFESSIONAL_BACKGROUND)}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -73,7 +74,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">Education</h5>
                <span
-                  onClick={() => navigate('/profile/edit/education')}
+                  onClick={() => navigate(ROUTE_CONFIG.USER.PROFILE.EDIT.EDUCATION)}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -112,7 +113,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">Certification</h5>
                <span
-                  onClick={() => navigate('/profile/edit/certification')}
+                  onClick={() => navigate(ROUTE_CONFIG.USER.PROFILE.EDIT.CERTIFICATION)}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -165,7 +166,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">Expertise</h5>
                <span
-                  onClick={() => navigate('/profile/edit/skill')}
+                  onClick={() => navigate(ROUTE_CONFIG.USER.PROFILE.EDIT.SKILL)}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -252,7 +253,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">More </h5>
                <span
-                  onClick={() => navigate('/profile/edit/description')}
+                  onClick={() => navigate(ROUTE_CONFIG.USER.PROFILE.EDIT.DESCRIPTION)}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />

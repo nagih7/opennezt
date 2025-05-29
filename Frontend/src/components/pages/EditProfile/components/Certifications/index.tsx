@@ -1,190 +1,36 @@
 import { Button, Dialog, Portal, Stack, Switch } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
 import ProfileCard from '../ProfileCard'
 import ProfileEditMenu from '../ProfileEditMenu'
 import ActionBar from '../ActionBar'
 import InputCustom from 'components/UI/InputCustom'
 import moment from 'moment'
 import { IconlyEdit, IconlyDelete } from 'components/UI/Iconly'
-import { createCertification, updateCertification, deleteCertification, getProfile } from 'api/profile'
 import { DataList } from '@chakra-ui/react'
 import SelectCustom from 'components/UI/SelectCustom'
-import { setIsOpenModalCreateOrUpdateCertification } from '~/store/modules/profile'
-import { RootState } from '~/store'
+import useCertifications from './hooks/useCertifications'
 
 // Định nghĩa các interfaces
-interface Certification {
-   _id: string
-   name?: string
-   organization?: string
-   issue_date?: string
-   expiration_date?: string | null
-   credential_id?: string
-   credential_url?: string
-   is_lifetime?: boolean
-   [key: string]: any
-}
-
-interface FormData {
-   name?: string
-   organization?: string
-   issue_date?: string
-   expiration_date?: string | null
-   credential_id?: string
-   credential_url?: string
-   is_lifetime?: boolean
-   organization_id?: string | string[]
-   [key: string]: any
-}
-
-interface SelectEvent {
-   value: string[]
-   items?: { value: string; label: string }[]
-}
-
-type AppDispatch = any // Tạm thời dùng any, nên thay bằng kiểu từ Redux store thực tế
-
 const Certifications: React.FC = () => {
-   const dispatch = useDispatch<AppDispatch>()
-
-   // ========== STATE FROM REDUX STORE ========== //
-   const { profile } = useSelector((state: RootState) => state.profile)
-   const { certifications = [] } = profile || {}
-   const { isOpenModalCreateOrUpdateCertification, isLoadingCreateOrUpdateCertification } = useSelector(
-      (state: RootState) => state.profile
-   )
-   const { organizationFramework } = useSelector((state: RootState) => state.user)
-
-   // ========== STATE MANAGEMENT ========== //
-   const [action, setAction] = useState<'create' | 'update' | ''>('')
-   const [formData, setFormData] = useState<FormData>({})
-   const [targetDelete, setTargetDelete] = useState<Certification | null>(null)
-   const [isOpenModalDeleteCertification, setIsOpenModalDeleteCertification] = useState<boolean>(false)
-
-   // ========== USE EFFECT ========== //
-   useEffect(() => {
-      if (!profile) dispatch(getProfile())
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch])
-
-   // ========== HANDLE CHANGE FUNCTION ========== //
-   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-      setFormData({
-         ...formData,
-         [e.target.name]: e.target.value,
-      })
-   }
-
-   const handleChangeSwitch = (isChecked: boolean): void => {
-      setFormData({
-         ...formData,
-         is_lifetime: isChecked,
-         expiration_date: isChecked ? null : formData.expiration_date,
-      })
-   }
-
-   const handleChangeSelect = (event: SelectEvent): void => {
-      setFormData({
-         ...formData,
-         organization_id: event.value,
-      })
-   }
-
-   const handleAddCertification = (): void => {
-      dispatch(setIsOpenModalCreateOrUpdateCertification(true))
-      setAction('create')
-      setFormData({
-         name: '',
-         organization: '',
-         issue_date: '',
-         expiration_date: '',
-         credential_id: '',
-         credential_url: '',
-         is_lifetime: false,
-         organization_id: [],
-      })
-   }
-
-   const handleUpdateCertification = (certification: Certification): void => {
-      dispatch(setIsOpenModalCreateOrUpdateCertification(true))
-      setAction('update')
-      setFormData({
-         ...certification,
-         issue_date: moment(certification.issue_date).format('YYYY-MM-DD'),
-         expiration_date: certification.expiration_date
-            ? moment(certification.expiration_date).format('YYYY-MM-DD')
-            : '',
-         organization_id: certification.organization_id ? [certification.organization_id] : [],
-      })
-   }
-
-   const handleOpenModalDelete = (certification: Certification): void => {
-      setIsOpenModalDeleteCertification(true)
-      setTargetDelete(certification)
-   }
-
-   const handleDeleteCertification = (): void => {
-      if (targetDelete?._id) {
-         dispatch(deleteCertification(targetDelete._id))
-      }
-      setIsOpenModalDeleteCertification(false)
-   }
-
-   const handleSaveChanges = (): void => {
-      if (formData.is_lifetime) {
-         const { organization_id, ...rest } = formData
-         switch (action) {
-            case 'create':
-               dispatch(
-                  createCertification({
-                     ...rest,
-                     expiration_date: null,
-                     organization_id: typeof organization_id === 'object' ? organization_id[0] : organization_id,
-                  })
-               )
-               break
-            case 'update':
-               dispatch(
-                  updateCertification({
-                     ...rest,
-                     expiration_date: null,
-                     organization_id: typeof organization_id === 'object' ? organization_id[0] : organization_id,
-                  })
-               )
-               break
-            default:
-               break
-         }
-      } else {
-         const { organization_id, ...rest } = formData
-         switch (action) {
-            case 'create':
-               dispatch(
-                  createCertification({
-                     ...rest,
-                     organization_id: typeof organization_id === 'object' ? organization_id[0] : organization_id,
-                  })
-               )
-               break
-            case 'update':
-               dispatch(
-                  updateCertification({
-                     ...rest,
-                     organization_id: typeof organization_id === 'object' ? organization_id[0] : organization_id,
-                  })
-               )
-               break
-            default:
-               break
-         }
-      }
-   }
-
-   const handleClose = (): void => {
-      dispatch(setIsOpenModalCreateOrUpdateCertification(false))
-   }
-
+   const {      
+      certifications,
+      isOpenModalCreateOrUpdateCertification,
+      isLoadingCreateOrUpdateCertification,
+      organizationFramework,
+      action,
+      formData,
+      isOpenModalDeleteCertification,
+      handleChange,
+      handleChangeSwitch,
+      handleChangeSelect,
+      handleAddCertification,
+      handleUpdateCertification,
+      handleOpenModalDelete,
+      handleDeleteCertification,
+      handleSaveChanges,
+      handleClose,
+      setIsOpenModalDeleteCertification
+   } = useCertifications()
    // ========== COMPONENT RENDER ========== //
    return (
       <div className="flex gap-8 flex-col md:flex-row w-full py-8 px-[16px]">

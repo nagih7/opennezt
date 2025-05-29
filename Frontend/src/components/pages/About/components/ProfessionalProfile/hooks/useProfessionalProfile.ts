@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
-import { useDispatch } from "react-redux"
 import { getAccessToMyProfile } from "~/api/activity"
 import { getProfile } from "~/api/profile"
-import { AppDispatch, RootState } from "~/store"
 
 const useProfessionalProfile = () => {
-       const dispatch = useDispatch<AppDispatch>()
-   // ========== STATE FROM REDUX STORE ========== //
-   const { profile } = useSelector((state: RootState) => state.profile)
    // ========== ACCESS TO MY PROFILE ========== //
    const [accessToMyProfile, setAccessToMyProfile] = useState([])
-
-   // ========== USE EFFECT ========== //
+   const [profile, setProfile] = useState<any>(null)
    useEffect(() => {
-      if (!profile) dispatch(getProfile())
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch])
+      if (!profile) {
+         const fetchProfile = async () => {
+            const response = await getProfile()
+            if (response && response.data) {
+               setProfile(response.data)
+            }
+         }
+         if (profile === null) {
+            fetchProfile()
+         }
+   }}, [profile, getProfile])
 
    useEffect(() => {
       const fetchAccessToMyProfile = async () => {
@@ -33,7 +34,7 @@ const useProfessionalProfile = () => {
       if (accessToMyProfile.length === 0) {
          fetchAccessToMyProfile()
       }
-   }, []) // Remove accessToMyProfile from dependencies
+   }, [])
 
    return {
         profile,

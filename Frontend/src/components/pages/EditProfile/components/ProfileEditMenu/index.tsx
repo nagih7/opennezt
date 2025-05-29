@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
 import { IconlyArrowDown2, IconlyArrowUp2, IconlyProfile } from 'components/UI/Iconly'
-import React, { useState } from 'react'
+import React from 'react'
+import useProfileEditMenu from './hooks/useProfileEditMenu'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 const ProfileEditMenu: React.FC = () => {
-   // ========== STATE MANAGEMENT ========== //
-   const [isOpen, setIsOpen] = useState<boolean>(true)
-
+   const {
+      isOpen,
+      setIsOpen,
+   } = useProfileEditMenu()
    // ========== COMPONENT RENDER ========== //
    return (
       <div className="w-full md:w-4/12">
@@ -38,29 +41,29 @@ const ProfileEditMenu: React.FC = () => {
                   <ul className="flex flex-col items-center pl-0 mb-0">
                      <li className="w-full text-sm py-[21px] border-b-[1px] border-gray-200">
                         <Link
-                           to={'/profile/edit-profile/professional-background'}
+                           to={ROUTE_CONFIG.USER.PROFILE.EDIT.PROFESSIONAL_BACKGROUND}
                            className="text-[#6f7f92] no-underline"
                         >
                            Professional Background
                         </Link>
                      </li>
                      <li className="w-full text-sm py-[21px] border-b-[1px] border-gray-200">
-                        <Link to={'/profile/edit-profile/educations'} className="text-[#6f7f92] no-underline">
+                        <Link to={ROUTE_CONFIG.USER.PROFILE.EDIT.EDUCATION} className="text-[#6f7f92] no-underline">
                            Educations
                         </Link>
                      </li>
                      <li className="w-full text-sm py-[21px] border-b-[1px] border-gray-200">
-                        <Link to={'/profile/edit-profile/certifications'} className="text-[#6f7f92] no-underline">
+                        <Link to={ROUTE_CONFIG.USER.PROFILE.EDIT.CERTIFICATION} className="text-[#6f7f92] no-underline">
                            Certifications
                         </Link>
                      </li>
                      <li className="w-full text-sm py-[21px] border-b-[1px] border-gray-200">
-                        <Link to={'/profile/edit-profile/skills'} className="text-[#6f7f92] no-underline">
+                        <Link to={ROUTE_CONFIG.USER.PROFILE.EDIT.SKILL} className="text-[#6f7f92] no-underline">
                            Skills
                         </Link>
                      </li>
                      <li className="w-full text-sm py-[21px]">
-                        <Link to={'/profile/edit-profile/more'} className="text-[#6f7f92] no-underline">
+                        <Link to={ROUTE_CONFIG.USER.PROFILE.EDIT.DESCRIPTION} className="text-[#6f7f92] no-underline">
                            More
                         </Link>
                      </li>
