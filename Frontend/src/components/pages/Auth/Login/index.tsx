@@ -1,5 +1,4 @@
 import React from 'react'
-import { Button } from '@chakra-ui/react'
 import { Checkbox } from '~/components/UI/checkbox'
 import { Input } from '~/components/UI/input'
 import { Tooltip } from '~/components/UI/tooltip'
@@ -9,6 +8,8 @@ import googleIcon from '~/assets/images/icon/google.svg'
 import facebookIcon from '~/assets/images/icon/facebook.svg'
 import twitterIcon from '~/assets/images/icon/twitter.svg'
 import useLogin from './useLogin'
+import { Loader2 } from 'lucide-react'
+import { Button, ButtonPrimary } from '~/components/UI/button'
 
 const Login: React.FC = () => {
    const {
@@ -83,8 +84,7 @@ const Login: React.FC = () => {
             </div>
 
             <div className="mb-4">
-               <Button
-                  className="w-full bg-main-color"
+               <ButtonPrimary
                   loading={loadingLogin}
                   onClick={handleConfirmLogin}
                   style={{
@@ -94,7 +94,7 @@ const Login: React.FC = () => {
                   }}
                >
                   Sign In
-               </Button>
+               </ButtonPrimary>
             </div>
 
             <div className="mt-4 text-center">

@@ -7,7 +7,7 @@ import { createOrUpdateRole, deleteRole, getAllTypes, getListRole } from 'api/ma
 import { setVisibleModalCreateOrUpdateRole, setVisibleModalDeleteRole } from 'store/modules/manage'
 import ModalCreateOrUpdate from '../ModalCreateOrUpdate'
 import { Input } from '~/components/UI/input'
-import ButtonMASQ from 'components/UI/Button'
+import { Button } from 'components/UI/button'
 import SelectCustom from 'components/UI/Select/index'
 import store from '~/store'
 
@@ -218,7 +218,7 @@ function RoleManage() {
                </label>
             </div>
             <div className={styles.btnWrap}>
-               <ButtonMASQ
+               <Button
                   textBtn={'Save'}
                   loading={isLoadingBtnCreateOrUpdateRole}
                   onClick={() => handleConfirmCreateOrUpdate()}

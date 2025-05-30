@@ -7,7 +7,7 @@ import { createOrUpdateOrganization, deleteOrganization, getListOrganization } f
 import { setVisibleModalCreateOrUpdateOrganization, setVisibleModalDeleteOrganization } from 'store/modules/manage'
 import ModalCreateOrUpdate from '../ModalCreateOrUpdate'
 import { Input } from '~/components/UI/input'
-import ButtonMASQ from 'components/UI/Button'
+import { Button } from 'components/UI/Button'
 import store from '~/store'
 
 function OrganizationManage() {
@@ -241,7 +241,7 @@ function OrganizationManage() {
                </label>
             </div>
             <div className={styles.btnWrap}>
-               <ButtonMASQ
+               <Button
                   textBtn={'Save'}
                   loading={isLoadingBtnCreateOrUpdateOrganization}
                   onClick={() => handleConfirmCreateOrUpdate()}

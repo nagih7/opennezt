@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
 import { Input } from 'components/UI/input'
-import ButtonMASQ from '../../../../../components/UI/Button'
+import { Button } from '~/components/UI/button'
 import _ from 'lodash'
-// import { handleCheckValidateConfirm } from '../../../../../utils/helper'
-import ModalGeneralComponent from '../../../../../components/UI/Modal/ModalGeneral'
+// import { handleCheckValidateConfirm } from '~/utils/helper'
+import ModalGeneralComponent from '~/components/UI/Modal/ModalGeneral'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-   setErrorCreateOrUpdateEmployee,
-   setVisibleModalCreateOrUpdateEmployee,
-} from '../../../../../store/modules/employee'
-import { handleCreateEmployee, handleUpdateEmployee } from '../../../../../api/employee'
+import { setErrorCreateOrUpdateEmployee, setVisibleModalCreateOrUpdateEmployee } from '~/store/modules/employee'
+import { handleCreateEmployee, handleUpdateEmployee } from '~/api/employee'
 
 // Type for Redux dispatch with async actions
 type AppDispatch = any
@@ -254,7 +251,7 @@ const CreateOrUpdate: React.FC<CreateOrUpdateProps> = ({ employee, configModal }
             )}
 
             <div className={styles.btnWrap}>
-               <ButtonMASQ
+               <Button
                   textBtn={'Save'}
                   loading={isLoadingBtnCreateOrUpdateEmployee}
                   onClick={() => handleConfirmCreateOrUpdateUser()}

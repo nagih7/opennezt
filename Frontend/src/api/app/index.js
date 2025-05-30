@@ -3,6 +3,7 @@ import { requestWebPush, webPushSuccess, webPushFail } from '../../store/modules
 
 // ========== WEB PUSH ========== //
 export const subscribe = (payload) => async (dispatch, getState) => {
+   console.log('subscribe payload', payload)
    return callReduxApi({
       method: 'post',
       apiPath: '/subscribe',

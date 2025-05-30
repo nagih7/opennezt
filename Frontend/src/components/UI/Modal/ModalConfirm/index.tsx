@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './styles.module.scss'
 import './styles.scss'
 import { Dialog, DialogContent } from '../../../UI/dialog'
-import ButtonMASQ from '../../Button'
+import { Button } from '../../button'
 
 interface ModalConfirmProps {
    isModalOpen: boolean
@@ -54,12 +54,12 @@ const ModalConfirm: React.FC<ModalConfirmProps> = ({
 
             <div className={styles.btnWrap}>
                {textBtnConfirm.length > 0 ? (
-                  <ButtonMASQ textBtn={textBtnConfirm} onClick={() => onConfirm()} loading={loadingBtnConfirm} />
+                  <Button textBtn={textBtnConfirm} onClick={() => onConfirm()} loading={loadingBtnConfirm} />
                ) : (
                   ''
                )}
 
-               <ButtonMASQ
+               <Button
                   textBtn={textBtnCancel}
                   onClick={() => onClose()}
                   style={{
