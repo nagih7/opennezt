@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { sendMessage } from '~/api/chat'
+import { useSocket } from '~/contexts'
 import { MessageProps } from '~/types'
 import validateMessage from '~/utils/validateMessage'
 
@@ -19,6 +20,7 @@ interface UseChatActionReturn {
 }
 
 const useChatAction = ({ currentChatId, onSendMessage }: UseChatActionProps): UseChatActionReturn => {
+   const socket = useSocket()
    const textareaRef = useRef<HTMLTextAreaElement>(null)
    // State
    const [loading, setLoading] = useState<boolean>(false)
@@ -64,8 +66,7 @@ const useChatAction = ({ currentChatId, onSendMessage }: UseChatActionProps): Us
       if (valid) {
          setLoading(true)
          try {
-            const res = await sendMessage(currentChatId, cleanedMessage)
-            console.log('Message sent:', res)
+            const res = await sendMessage(currentChatId, cleanedMessage, socket)
             if (res.success) {
                const newMessage: MessageProps = {
                   _id: res.data._id,

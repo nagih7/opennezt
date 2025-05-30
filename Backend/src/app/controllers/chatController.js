@@ -20,12 +20,6 @@ export async function getMessages(req, res) {
     res.status(200).jsonify(messages)
 }
 
-// ========== SEND [MESSAGE] ========== //
-export async function sendMessage(req, res) {
-    const message = await chatService.sendMessage(req.currentUser, req.params, req.body)
-    res.status(200).jsonify(message)
-}
-
 export const getReceiverIds = async (userId) => {
     try {
         const senderIds = await Message.find({

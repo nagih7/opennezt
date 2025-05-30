@@ -7,13 +7,6 @@ const initialState: AppState = {
    isThemeLight: false,
    title: 'Dashboard',
    language: 'EN',
-   // Web push related state
-   isLoadingWebPush: false,
-   isSubscribed: false,
-   subscription: null,
-   registration: null,
-   stats: null,
-   error: null,
 }
 
 // Create a typed slice for app state
@@ -45,36 +38,12 @@ const appSlice = createSlice({
          ...state,
          language: action.payload,
       }),
-
-      // Web push related reducers
-      requestWebPush: (state) => ({
-         ...state,
-         isLoadingWebPush: true,
-      }),
-      webPushSuccess: (state) => ({
-         ...state,
-         isLoadingWebPush: false,
-      }),
-      webPushFail: (state) => ({
-         ...state,
-         isLoadingWebPush: false,
-      }),
    },
 })
 
 // Export actions with TypeScript typing
-export const {
-   handleSetIsShowSideBar,
-   setTitlePage,
-   startRequest,
-   requestSuccess,
-   requestError,
-   setLanguage,
-   // Web push related actions
-   requestWebPush,
-   webPushSuccess,
-   webPushFail,
-} = appSlice.actions
+export const { handleSetIsShowSideBar, setTitlePage, startRequest, requestSuccess, requestError, setLanguage } =
+   appSlice.actions
 
 // Export the reducer
 export default appSlice.reducer

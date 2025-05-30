@@ -10,9 +10,6 @@ chatRouter.use(asyncHandler(requireAuthentication))
 // ========== GET [MESSAGES] ========== //
 chatRouter.get('/conversations/:conversationId/messages', asyncHandler(chatController.getMessages))
 
-// ========== SEND [MESSAGE] ========== //
-chatRouter.post('/conversations/:conversationId/messages', asyncHandler(chatController.sendMessage))
-
 // ========== GET [CONVERSATION] ========== //
 chatRouter.get('/conversations/:conversationId', asyncHandler(chatController.getConversation))
 

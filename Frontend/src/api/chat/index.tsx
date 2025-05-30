@@ -1,6 +1,6 @@
 import callApi from '../callApi'
-import callSocket from 'api/callSocket'
-import { BaseApiResponse } from '~/types'
+import callSocket from '../callSocket'
+import { BaseApiResponse, BaseSocketResponse } from '~/types'
 
 // =========== GET CONVERSATIONS =========== //
 export const getConversations = (): Promise<BaseApiResponse> => {
@@ -29,24 +29,15 @@ export const getMessages = (conversation_id: string): Promise<BaseApiResponse> =
    })
 }
 
-// ========== SEND MESSAGE ========== //
-// export const sendMessage =
-//    (conversation_id: string, content: string | undefined, socket: any) =>
-//    async (dispatch: AppDispatch, getState: any) => {
-//       return callSocket({
-//          event: 'message',
-//          actionTypes: [requestSendMessage, sendMessageSuccess, sendMessageFail],
-//          payload: { conversation_id, content },
-//          dispatch,
-//          getState,
-//          socket,
-//       })
-//    }
-
-export const sendMessage = (conversation_id: string, content: string | undefined): Promise<BaseApiResponse> => {
-   return callApi({
-      method: 'post',
-      apiPath: `chat/conversations/${conversation_id}/messages`,
-      variables: { content },
+// ========== SEND MESSAGE VIA SOCKET ========== //
+export const sendMessage = async (
+   conversation_id: string,
+   content: string | undefined,
+   socket: any
+): Promise<BaseSocketResponse> => {
+   return callSocket({
+      event: 'message',
+      payload: { conversation_id, content },
+      socket,
    })
 }
