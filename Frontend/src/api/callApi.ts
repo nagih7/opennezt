@@ -34,7 +34,7 @@ const callApi = async ({ method, apiPath, variables, headers }: BaseApiProps) =>
    const response = await apiAxios.request({
       url: apiPath,
       method,
-      headers: { 'Content-Type': 'application/json', ...headers },
+      headers: headers ? headers : { 'Content-Type': 'application/json' },
       data: variables,
       params: method === 'get' ? variables : undefined,
    })

@@ -160,6 +160,7 @@ export const updateProjectLogo = (projectId: string, formRequest: any) => {
       method: 'patch',
       apiPath: `projects/me/${projectId}/logo`,
       variables: formRequest,
+      headers: {},
    })
 }
 
@@ -169,6 +170,7 @@ export const updateProjectBackground = (projectId: string, formRequest: any) => 
       method: 'patch',
       apiPath: `projects/me/${projectId}/background`,
       variables: formRequest,
+      headers: {},
    })
 }
 
