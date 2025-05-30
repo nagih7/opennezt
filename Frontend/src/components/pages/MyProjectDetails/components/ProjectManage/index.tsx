@@ -11,7 +11,7 @@ const ProjectManage: React.FC = () => {
             <div className="lg:w-10/12 w-full">
                <Tabs.Root defaultValue="Project Requirement" variant="plain">
                   <div className="p-8 bg-[#ffffff] rounded-md">
-                     <Tabs.List>
+                     <Tabs.List className="gap-6">
                         <Tabs.Trigger value="Project Requirement">Project Requirement</Tabs.Trigger>
                         <Tabs.Trigger value="delete">Delete</Tabs.Trigger>
                         <Tabs.Indicator rounded="l2" />
