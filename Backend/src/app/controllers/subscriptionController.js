@@ -10,8 +10,3 @@ export async function unsubscribe(req, res) {
     await subscriptionService.unsubscribe(req.currentUser, endpoint)
     return res.jsonify('Unsubscribed successfully')
 }
-
-export async function trackingEvent(req, res) {
-    await subscriptionService.trackingEvent(req.currentUser, req.body)
-    return res.jsonify('Event tracked successfully')
-}

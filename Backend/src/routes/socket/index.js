@@ -19,7 +19,6 @@ const disconnectHandler = async (socket) => {
         if (user_id) {
             delete userSockets[socket.id]
         }
-        console.log('User disconnected:', user_id)
     })
 }
 

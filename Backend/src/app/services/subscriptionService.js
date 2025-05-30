@@ -13,7 +13,6 @@ export async function subscribe(user, requestBody) {
         existingSubscription.expirationTime = expirationTime
         existingSubscription.updated_at = new Date()
         await existingSubscription.save()
-        console.log('Đã cập nhật subscription')
     } else {
         // Tạo subscription mới
         const newSubscription = new Subscription({
@@ -23,7 +22,6 @@ export async function subscribe(user, requestBody) {
             user_id: user._id,
         })
         await newSubscription.save()
-        console.log('Đã lưu subscription mới')
 
         // Gửi thông báo chào mừng
         const payload = JSON.stringify({
@@ -40,10 +38,5 @@ export async function subscribe(user, requestBody) {
 }
 
 export async function unsubscribe(user, endpoint) {
-    console.log('Đang xử lý hủy đăng ký nhận thông báo...', endpoint)
     await Subscription.findOneAndDelete({ endpoint: endpoint, user_id: user._id })
-}
-
-export async function trackingEvent(user, requestBody) {
-    await console.log('Đang xử lý sự kiện theo dõi...', requestBody)
 }

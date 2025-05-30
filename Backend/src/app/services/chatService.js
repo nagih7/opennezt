@@ -1,5 +1,5 @@
-import { LINK_STATIC_URL, MESSAGE_TYPE, TEXT_MESSAGE } from '@/configs'
-import { Message, ObjectId, Conversation, Type, User } from '@/models'
+import { LINK_STATIC_URL } from '@/configs'
+import { Message, ObjectId, Conversation } from '@/models'
 
 // ========== GET [CONVERSATIONS] ========== //
 export async function getConversations(user) {
@@ -389,62 +389,4 @@ export async function getMessages(user, { conversationId }) {
         },
     ])
     return messages
-}
-
-// ========== SEND [MESSAGE -- NO SOCKET] ========== //
-export async function sendMessage(user, { conversationId }, { content }) {
-    const conversation = await Conversation.findOne({
-        _id: conversationId,
-        members: { $elemMatch: { user_id: user._id } },
-    })
-    const typeMessage = await Type.findOne({ class: MESSAGE_TYPE, name: TEXT_MESSAGE })
-    if (!conversation || !typeMessage) {
-        throw new Error('Conversation not found')
-    }
-
-    const message = new Message({
-        conversation_id: conversation._id,
-        user_id: user._id,
-        content,
-        type_id: typeMessage._id,
-        read_by: [],
-        status: 'sent',
-    })
-    await message.save()
-    conversation.updated_at = new Date()
-    conversation.save()
-
-    const user_message = await User.aggregate([
-        {
-            $match: {
-                _id: message.user_id,
-            },
-        },
-        {
-            $project: {
-                _id: 1,
-                name: 1,
-                avatar: {
-                    $cond: {
-                        if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
-                        then: '$avatar',
-                        else: { $concat: [LINK_STATIC_URL, '$avatar'] },
-                    },
-                },
-            },
-        },
-    ])
-
-    message.user = user_message[0]
-
-    return {
-        _id: message._id,
-        user: user_message[0],
-        conversation_id: message.conversation_id,
-        content: message.content,
-        read_by: message.read_by,
-        pinned: message.pinned,
-        status: message.status,
-        timestamp: message.timestamp,
-    }
 }

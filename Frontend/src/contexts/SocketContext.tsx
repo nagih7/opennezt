@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { io, Socket } from 'socket.io-client'
-import { RootState } from '~/store'
+import { useAppDispatch, useAppSelector } from '~/store'
 import { BaseComponentProps } from '~/types'
 import {
    CONFIRM_FRIEND_REQUEST_NOTIFICATION,
@@ -12,7 +11,6 @@ import {
 } from 'utils/constants'
 import { setNotifications } from '~/store/modules/notification'
 import ModalMatchingProjects from '~/components/common/ModalMatchingProjects'
-import { AppDispatch } from '~/store'
 import { Notification } from '~/types/notification'
 
 // Create a context to share socket with other components
@@ -28,8 +26,8 @@ export const useSocket = (): Socket | null => {
 
 // Socket provider component - manages socket connection and realtime events
 export const SocketProvider: React.FC<BaseComponentProps> = ({ children }) => {
-   const { authUser } = useSelector((state: RootState) => state.auth)
-   const dispatch = useDispatch<AppDispatch>()
+   const { authUser } = useAppSelector((state) => state.auth)
+   const dispatch = useAppDispatch()
    const [socket, setSocket] = useState<Socket | null>(null)
 
    // Connect socket when component is rendered
@@ -43,7 +41,7 @@ export const SocketProvider: React.FC<BaseComponentProps> = ({ children }) => {
             console.log('Connected to socket server...')
 
             // Get token from localStorage and emit 'login' event
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('user_token')
             socketInstance.emit('login', token)
          })
 

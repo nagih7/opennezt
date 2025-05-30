@@ -92,7 +92,6 @@ const useChat = () => {
       if (!socket || !currentChat) return
 
       const handleNewMessage = (message: MessageProps) => {
-         console.log('New message received:', message)
          if (message.conversation_id !== currentChat._id) return
          setCurrentChat((prevChat) => {
             if (!prevChat) return null
