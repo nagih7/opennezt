@@ -7,7 +7,6 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { getListFriendInvite, inviteMember, cancelInvitation } from 'api/project'
 import { getProjectRoleFramework } from 'api/user'
 import SelectCustom from 'components/UI/SelectCustom'
-import { format } from 'date-fns'
 import { RootState } from 'store/types'
 import { ROUTE_CONFIG } from '~/config/constants'
 
@@ -34,10 +33,8 @@ interface FormRequest {
 
 interface ListFriendsInviteResponse {
    data?: {
-      data?: {
-         userInviteList: Friend[]
-         invitedList: InvitedUser[]
-      }
+      userInviteList: Friend[]
+      invitedList: InvitedUser[]
    }
 }
 
@@ -46,13 +43,11 @@ const Sendinvite: React.FC = () => {
    const navigate = useNavigate()
    const { id } = useParams<{ id: string }>()
    const { projectRoleFramework, projectTeamRoleFramework } = useSelector((state: RootState) => state.user)
-   const [listFriendsInvite, setListFriendsInvite] = useState<ListFriendsInviteResponse | null>(null)
-
-   // Sửa lại useMemo để truy cập đúng cấu trúc dữ liệu
+   const [listFriendsInvite, setListFriendsInvite] = useState<ListFriendsInviteResponse | null>(null) // Sửa lại useMemo để truy cập đúng cấu trúc dữ liệu
    const friendsData = useMemo(() => {
-      // Thử tất cả các đường dẫn có thể để đảm bảo lấy được dữ liệu
-      if (listFriendsInvite?.data?.data?.userInviteList) {
-         return listFriendsInvite.data.data.userInviteList
+      // Truy cập response.data trực tiếp thay vì response.data.data
+      if (listFriendsInvite?.data?.userInviteList) {
+         return listFriendsInvite.data.userInviteList
       }
 
       // Trả về mảng rỗng nếu không tìm thấy dữ liệu
@@ -60,9 +55,9 @@ const Sendinvite: React.FC = () => {
    }, [listFriendsInvite])
 
    const invitedData = useMemo(() => {
-      // Thử tất cả các đường dẫn có thể để đảm bảo lấy được dữ liệu
-      if (listFriendsInvite?.data?.data?.invitedList) {
-         return listFriendsInvite.data.data.invitedList
+      // Truy cập response.data trực tiếp thay vì response.data.data
+      if (listFriendsInvite?.data?.invitedList) {
+         return listFriendsInvite.data.invitedList
       }
 
       // Trả về mảng rỗng nếu không tìm thấy dữ liệu
@@ -81,9 +76,7 @@ const Sendinvite: React.FC = () => {
    const [formRequest, setFormRequest] = useState<FormRequest>({
       teamRole: '',
       role: '',
-   })
-
-   // Lấy dữ liệu từ API
+   }) // Lấy dữ liệu từ API
    useEffect(() => {
       // Thay đổi từ dispatch sang gọi API trực tiếp và set state
       const fetchFriendInvites = async () => {
@@ -92,12 +85,21 @@ const Sendinvite: React.FC = () => {
 
             const response = await getListFriendInvite(id)
 
-            // Xử lý cấu trúc response lồng nhau
+            // Debug logs
+            console.log('API Response:', response)
+            console.log('Response data:', response?.data)
+            console.log('User invite list:', response?.data?.userInviteList)
+            console.log('Invited list:', response?.data?.invitedList)
+
+            // Xử lý cấu trúc response
             setListFriendsInvite(response)
 
-            // Truy cập response.data.data cho đúng cấu trúc
-            const userList = response?.data?.data?.userInviteList || []
-            const invitedList = response?.data?.data?.invitedList || []
+            // Truy cập response.data trực tiếp thay vì response.data.data
+            const userList = response?.data?.userInviteList || []
+            const invitedList = response?.data?.invitedList || []
+
+            console.log('Final user list:', userList)
+            console.log('Final invited list:', invitedList)
 
             setFilteredFriends(userList)
             setFilteredInvited(invitedList)
@@ -112,14 +114,14 @@ const Sendinvite: React.FC = () => {
       if (!projectRoleFramework?.items?.length || !projectTeamRoleFramework?.items?.length) {
          dispatch(getProjectRoleFramework() as any)
       }
-   }, [id, projectRoleFramework, projectTeamRoleFramework, dispatch])
-
-   // Lọc danh sách bạn bè dựa trên search query
+   }, [id, projectRoleFramework, projectTeamRoleFramework, dispatch]) // Lọc danh sách bạn bè dựa trên search query
    useEffect(() => {
       if (searchQuery.trim() === '') {
          setFilteredFriends(friendsData)
       } else {
-         const filtered = friendsData.filter((friend) => friend.name.toLowerCase().includes(searchQuery.toLowerCase()))
+         const filtered = friendsData.filter((friend: Friend) =>
+            friend.name.toLowerCase().includes(searchQuery.toLowerCase())
+         )
          setFilteredFriends(filtered)
       }
    }, [friendsData, searchQuery])
@@ -129,7 +131,9 @@ const Sendinvite: React.FC = () => {
       if (searchQuery.trim() === '') {
          setFilteredInvited(invitedData)
       } else {
-         const filtered = invitedData.filter((friend) => friend.name.toLowerCase().includes(searchQuery.toLowerCase()))
+         const filtered = invitedData.filter((friend: InvitedUser) =>
+            friend.name.toLowerCase().includes(searchQuery.toLowerCase())
+         )
          setFilteredInvited(filtered)
       }
    }, [invitedData, searchQuery])
@@ -198,23 +202,21 @@ const Sendinvite: React.FC = () => {
       if (!userId) {
          console.error('Không tìm thấy ID người dùng')
          return
-      }
-
-      // Gửi request với đúng ID
+      } // Gửi request với đúng ID
       try {
-         ;(await inviteMember(id, {
+         await inviteMember(id, {
             ...formRequest,
             userId,
-         })) as any
+         })
 
          // Gọi lại hàm fetchFriendInvites để cập nhật state
          const fetchFriendInvites = async () => {
             try {
                const response = await getListFriendInvite(id)
                setListFriendsInvite(response)
-               // Sửa đường dẫn để truy cập đúng cấu trúc dữ liệu
-               setFilteredFriends(response?.data?.data?.userInviteList || [])
-               setFilteredInvited(response?.data?.data?.invitedList || [])
+               // Cập nhật đúng đường dẫn truy cập dữ liệu
+               setFilteredFriends(response?.data?.userInviteList || [])
+               setFilteredInvited(response?.data?.invitedList || [])
             } catch (error) {
                console.error('Failed to fetch friend invites:', error)
             }
@@ -243,7 +245,6 @@ const Sendinvite: React.FC = () => {
          console.error('Không tìm thấy ID người dùng')
          return
       }
-
       try {
          // Gọi API hủy lời mời
          await cancelInvitation(id, userId)
@@ -254,26 +255,16 @@ const Sendinvite: React.FC = () => {
                const response = await getListFriendInvite(id)
                setListFriendsInvite(response)
                // Cập nhật đúng đường dẫn truy cập dữ liệu
-               setFilteredFriends(response?.data?.data?.userInviteList || [])
-               setFilteredInvited(response?.data?.data?.invitedList || [])
+               setFilteredFriends(response?.data?.userInviteList || [])
+               setFilteredInvited(response?.data?.invitedList || [])
             } catch (error) {
                console.error('Failed to fetch friend invites:', error)
             }
          }
          await fetchFriendInvites()
-
          handleCloseCancelModal()
       } catch (error) {
          console.error('Có lỗi xảy ra khi hủy lời mời')
-      }
-   }
-
-   // Format date để hiển thị
-   const formatDate = (dateString: string) => {
-      try {
-         return format(new Date(dateString), 'dd/MM/yyyy HH:mm')
-      } catch (error) {
-         return dateString
       }
    }
 
