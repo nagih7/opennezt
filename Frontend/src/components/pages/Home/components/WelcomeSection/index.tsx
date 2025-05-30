@@ -25,7 +25,7 @@ const WelcomeSection: React.FC<WelcomeSectionProps> = ({ username, navigateCreat
                <div className="flex justify-end">
                   <button
                      className="bg-[#2f65b9] text-white rounded-lg px-4 py-2 text-sm font-semibold mt-4"
-                     onClick={navigateCreateProject}
+                     onClick={navigateInterview}
                   >
                      Start now
                   </button>
@@ -39,7 +39,7 @@ const WelcomeSection: React.FC<WelcomeSectionProps> = ({ username, navigateCreat
                <span className="flex-1 text-[#6f7f92] text-sm mt-1">
                   Start building your dream team by adding a project and matching with the right co-founders and talent.
                </span>
-               <div className="flex justify-end" onClick={navigateInterview}>
+               <div className="flex justify-end" onClick={navigateCreateProject}>
                   <button className="bg-[#2f65b9] text-white rounded-lg px-4 py-2 text-sm font-semibold mt-4">
                      Complete now
                   </button>
