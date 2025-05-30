@@ -1,4 +1,4 @@
-import { Button, Popover, Portal, Stack, StackSeparator } from '@chakra-ui/react'
+import { Button, createListCollection, Popover, Portal, Stack, StackSeparator } from '@chakra-ui/react'
 // import { SearchOutlined } from '@mui/icons-material'
 import { seekProjects } from 'api/project'
 import { getIndustryFramework, getStageFramework } from 'api/user'
@@ -7,6 +7,7 @@ import SelectCustom from 'components/UI/SelectCustom'
 import { FC, useEffect, useState, KeyboardEvent, ChangeEvent } from 'react'
 import { setFilterSeekProjects } from '~/store/modules/project'
 import { useAppDispatch, useAppSelector } from '~/store/hooks'
+import { Collection } from '~/store/modules/user/types'
 
 interface FilterHeaderProps {
    action: 'grid' | 'list'
@@ -29,7 +30,8 @@ const FilterHeader: FC<FilterHeaderProps> = ({ action, setAction }) => {
    const dispatch = useAppDispatch()
 
    const { isLoadingSeekProjects, filterSeekProjects } = useAppSelector((state) => state.project)
-   const { industryFramework, stageFramework } = useAppSelector((state) => state.user)
+   const { stageFramework } = useAppSelector((state) => state.user)
+   const [industryFramework, setIndustryFramework] = useState<any>(null)
 
    const [dataFilter, setDataFilter] = useState<FilterState>({
       keySearch: filterSeekProjects?.keySearch || '',
@@ -44,10 +46,24 @@ const FilterHeader: FC<FilterHeaderProps> = ({ action, setAction }) => {
       dispatch(seekProjects(dataFilter))
    }, []) // Empty dependency array to only run once on mount
 
+   const fetchIndustryFramework = async () => {
+         const response = await getIndustryFramework()
+         if (response && response.data) {
+            setIndustryFramework(
+               createListCollection({
+               items: response.data.map((industry: any) => ({
+                  label: industry.name,
+                  value: industry._id,
+               })),
+            }),
+            )
+         }
+      }
+
    // Load frameworks if needed
    useEffect(() => {
       if (!industryFramework?.items?.length) {
-         dispatch(getIndustryFramework())
+         fetchIndustryFramework()
       }
       if (!stageFramework?.items?.length) {
          dispatch(getStageFramework())
