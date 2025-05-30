@@ -1,5 +1,4 @@
 import { Alert, Avatar, Badge, Image, Input, Stack, Text } from '@chakra-ui/react'
-import { changeAvatar } from 'api/profile'
 import { Button } from '~/components/UI/button'
 import {
    DialogActionTrigger,
@@ -10,14 +9,7 @@ import {
    DialogHeader,
    DialogRoot,
 } from 'components/UI/dialog'
-import {
-   IconlyBookmark,
-   IconlyCamera,
-   IconlyFolder,
-   IconlyLocation,
-   IconlySearch,
-   IconlyShieldDone,
-} from 'components/UI/Iconly'
+import { IconlyBookmark, IconlyCamera, IconlyFolder, IconlyLocation, IconlyShieldDone } from 'components/UI/Iconly'
 import { BsStars } from 'react-icons/bs'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { setOpenModalMatchingProjects } from 'store/modules/artificialIntelligence'
@@ -51,38 +43,27 @@ const ProfileOverview = () => {
             <div className="w-4/12">
                <div className="flex items-center justify-center">
                   {(projects.length === 0 || isLoadingMatchingProjects) && (
-                     <div
+                     <Button
                         className="flex items-center gap-2 bg-gradient-to-r from-[#0606AFCC] to-[#AE2135E5] cursor-pointer py-2 px-[15px] rounded-xl"
+                        disabled={isLoadingMatchingProjects}
                         onClick={() => !isLoadingMatchingProjects && setIsOpenModalConfirmMatchingProjects(true)}
-                        style={{ opacity: isLoadingMatchingProjects ? 0.8 : 1 }}
                      >
                         {isLoadingMatchingProjects ? (
                            <AiOutlineLoading3Quarters className="text-[#ffffff] w-5 h-5 animate-spin" />
                         ) : (
                            <BsStars className="text-[#ffffff] w-5 h-5" />
                         )}
-                        <Button
-                           variant="ghost"
-                           className="text-[#ffffff] font-medium text-sm p-0 h-auto min-h-0 bg-transparent hover:bg-transparent"
-                           disabled={isLoadingMatchingProjects}
-                        >
-                           {isLoadingMatchingProjects ? 'Matching...' : 'Apply with AI'}
-                        </Button>
-                     </div>
+                        {isLoadingMatchingProjects ? 'Matching...' : 'Apply with AI'}
+                     </Button>
                   )}
                   {projects.length > 0 && !isLoadingMatchingProjects && (
-                     <div
+                     <Button
                         className="flex items-center gap-2 bg-gradient-to-r from-[#0606AFCC] to-[#AE2135E5] cursor-pointer py-2 px-[15px] rounded-xl"
                         onClick={() => dispatch(setOpenModalMatchingProjects(true))}
                      >
                         <IconlyFolder color={'#ffffff'} size={15} />
-                        <Button
-                           variant="ghost"
-                           className="text-[#ffffff] font-medium text-xs md:text-sm p-0 h-auto min-h-0 bg-transparent hover:bg-transparent"
-                        >
-                           View matching projects
-                        </Button>
-                     </div>
+                        View matching projects
+                     </Button>
                   )}
                </div>
             </div>
@@ -91,7 +72,7 @@ const ProfileOverview = () => {
                   <label
                      htmlFor="file-upload"
                      className="absolute top-[-150px] right-[-80px] z-50 bg-[#2f65b9] w-8 h-8 rounded-full flex items-center justify-center
-							cursor-pointer"
+                     cursor-pointer"
                   >
                      <IconlyCamera size={18} color={'#ffffff'} />
                   </label>
