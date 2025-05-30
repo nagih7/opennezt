@@ -23,6 +23,7 @@ const Message: React.FC = () => {
       groupChat,
       currentChat,
       messagesContainerRef,
+      onSendMessage,
       navigateToConversation,
       navigateToPrefix,
    } = useChat()
@@ -210,7 +211,7 @@ const Message: React.FC = () => {
                <InviteMemberModal /> */}
 
                {/* Actionbar */}
-               <ChatActionBar currentChatId={currentChat._id} />
+               <ChatActionBar currentChatId={currentChat._id} onSendMessage={onSendMessage} />
             </div>
          )}
          {/* CONTENT */}

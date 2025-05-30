@@ -1,52 +1,50 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
-import TableCustom from '../../../components/UI/Table'
-import ButtonMASQ from '../../../components/UI/Button'
-import SwitchMASQ from '../../../components/UI/Switch'
+import TableCustom from '~/components/UI/Table'
+import { Button } from '~/components/UI/button'
 import CreateOrUpdate from './components/CreateOrUpdate'
-import ModalConfirm from '../../../components/UI/Modal/ModalConfirm'
+import ModalConfirm from '~/components/UI/Modal/ModalConfirm'
 import { useDispatch, useSelector } from 'react-redux'
-import { getListEmployee, handleDeleteEmployee } from '../../../api/employee'
-import { setVisibleModalCreateOrUpdateEmployee, setVisibleModalDeleteEmployee } from '../../../store/modules/employee'
+import { getListEmployee, handleDeleteEmployee } from '~/api/employee'
+import { setVisibleModalCreateOrUpdateEmployee, setVisibleModalDeleteEmployee } from '~/store/modules/employee'
 import _ from 'lodash'
 import Filter from './components/Filter'
 import BtnFilter from '../../UI/ButtonFilter'
-import AvatarDefault from '../../../assets/images/default/AvatarDefault.png'
+import AvatarDefault from '~/assets/images/default/AvatarDefault.png'
 import { IconlyDelete, IconlyEdit } from 'components/UI/Iconly'
 import type { Dispatch } from '@reduxjs/toolkit'
 
 interface Employee {
-  id: string;
-  _id: string;
-  name: string;
-  email: string;
-  phone: string;
-  avatar?: string;
-  is_active: boolean;
-  status: boolean;
+   id: string
+   _id: string
+   name: string
+   email: string
+   phone: string
+   avatar?: string
+   is_active: boolean
+   status: boolean
 }
 
 interface DataFilter {
-  keySearch: string;
-  status: string;
-  perPage: number;
-  page: number;
-  order: number | null;
-  column: string | null;
+   keySearch: string
+   status: string
+   perPage: number
+   page: number
+   order: number | null
+   column: string | null
 }
 
 interface ConfigModal {
-  title: string;
-  type: 'CREATE' | 'UPDATE';
+   title: string
+   type: 'CREATE' | 'UPDATE'
 }
 
 function UserManagement() {
    const dispatch = useDispatch<Dispatch<any>>()
 
    const authUser = useSelector((state: any) => state.auth.authUser)
-   const { users, isLoadingGetListUser, paginationListUser, visibleModalDeleteUser, isLoadingBtnDeleteEmployee } = useSelector(
-      (state: any) => state.employee
-   )
+   const { users, isLoadingGetListUser, paginationListUser, visibleModalDeleteUser, isLoadingBtnDeleteEmployee } =
+      useSelector((state: any) => state.employee)
 
    const [employee, setEmployee] = useState<Employee>({} as Employee)
    const [configModal, setConfigModal] = useState<ConfigModal>({
@@ -186,18 +184,18 @@ function UserManagement() {
                      <div onClick={() => handleEdit(record)} className="cursor-pointer">
                         <IconlyEdit color={'#000000'} size={25} backgroundColor={'#000000'} />
                      </div>
-                     <div 
+                     <div
                         onClick={(e) => {
-                           e.preventDefault();
-                           e.stopPropagation();
-                           handleShowConfirmDelete(record);
-                        }} 
+                           e.preventDefault()
+                           e.stopPropagation()
+                           handleShowConfirmDelete(record)
+                        }}
                         className="cursor-pointer"
                      >
                         <IconlyDelete color={'#000000'} size={25} />
                      </div>
                      <div className={`switch-table-style-custom ${styles.btnWrap}`}>
-                        <SwitchMASQ disabled={true} status={record.status} />
+                        {/* <SwitchMASQ disabled={true} status={record.status} /> */}
                      </div>
                   </div>
                ) : (
@@ -214,7 +212,7 @@ function UserManagement() {
             <div className="flex items-center justify-between p-8 border-b border-gray-200">
                <span className="text-2xl font-medium ">Total records ({paginationListUser.totalRecord})</span>
                <div className={styles.btnWrap}>
-                  <ButtonMASQ
+                  <Button
                      onClick={() => handleCreate()}
                      style={{
                         minWidth: '80px',
@@ -226,7 +224,7 @@ function UserManagement() {
                         alignItems: 'center',
                      }}
                      textBtn={'Create'}
-                  ></ButtonMASQ>
+                  ></Button>
                </div>
             </div>
             <div className="flex justify-between gap-4 px-8 pt-8">

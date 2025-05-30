@@ -1,20 +1,13 @@
 import React from 'react'
 import _ from 'lodash'
 import { Input } from '~/components/UI/input'
-import ButtonMASQ from '../../../../components/UI/Button'
 import Logo from '../../../../assets/images/logo/opennezt_black.png'
 import useRegister from './useRegister'
+import { ButtonPrimary } from '~/components/UI/button'
 
 const Register: React.FC = () => {
-   const {
-      dataRegister,
-      errorDataRegister,
-      isLoadingRegister,
-      handleChangeInput,
-      validateBlur,
-      navigate,
-      handleConfirmRegister,
-   } = useRegister()
+   const { dataRegister, errorDataRegister, handleChangeInput, validateBlur, navigate, handleConfirmRegister } =
+      useRegister()
 
    return (
       <div className="flex flex-col items-center justify-center w-full my-8">
@@ -74,17 +67,12 @@ const Register: React.FC = () => {
             </div>
 
             <div className="mb-4">
-               <ButtonMASQ
-                  textBtn={'Sign Up'}
-                  loading={isLoadingRegister}
+               <ButtonPrimary
+                  className="w-full h-10 text-white rounded-md bg-main-color hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                   onClick={handleConfirmRegister}
-                  disable={false}
-                  style={{
-                     display: 'flex',
-                     justifyContent: 'center',
-                     alignItems: 'center',
-                  }}
-               />
+               >
+                  Sign up
+               </ButtonPrimary>
             </div>
 
             <div className="mt-4 text-center">

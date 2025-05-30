@@ -7,7 +7,7 @@ import { createOrUpdateSkill, deleteSkill, getListSkill, getSkillCategories } fr
 import { setVisibleModalCreateOrUpdateSkill, setVisibleModalDeleteSkill } from 'store/modules/manage'
 import ModalCreateOrUpdate from '../ModalCreateOrUpdate'
 import { Input } from '~/components/UI/input'
-import ButtonMASQ from 'components/UI/Button'
+import { Button } from 'components/UI/button'
 import SelectCustom from 'components/UI/Select/index'
 import store from '~/store'
 
@@ -232,7 +232,7 @@ function SkillManage() {
                </label>
             </div>
             <div className={styles.btnWrap}>
-               <ButtonMASQ
+               <Button
                   textBtn={'Save'}
                   loading={isLoadingBtnCreateOrUpdateSkill}
                   onClick={() => handleConfirmCreateOrUpdate()}

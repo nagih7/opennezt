@@ -10,7 +10,6 @@ import {
    MESSAGE_TYPE,
    PROJECT_INVITATION_NOTIFICATION,
 } from 'utils/constants'
-import { getConversations } from '~/api/chat'
 import { setNotifications } from '~/store/modules/notification'
 import ModalMatchingProjects from '~/components/common/ModalMatchingProjects'
 import { AppDispatch } from '~/store'
@@ -72,10 +71,8 @@ export const SocketProvider: React.FC<BaseComponentProps> = ({ children }) => {
 
       socket.on(CONFIRM_FRIEND_REQUEST_NOTIFICATION, (notification: Notification) => {
          dispatch(setNotifications(notification))
-         dispatch(getConversations())
+         // dispatch(getConversations())
       })
-
-      socket.on(MESSAGE_TYPE, (message: any) => {})
 
       socket.on(PROJECT_INVITATION_NOTIFICATION, (notification: Notification) => {
          dispatch(setNotifications(notification))
@@ -83,7 +80,7 @@ export const SocketProvider: React.FC<BaseComponentProps> = ({ children }) => {
 
       socket.on(CONFIRM_PROJECT_INVITATION_NOTIFICATION, (notification: Notification) => {
          dispatch(setNotifications(notification))
-         dispatch(getConversations())
+         // dispatch(getConversations())
       })
 
       // Clean up

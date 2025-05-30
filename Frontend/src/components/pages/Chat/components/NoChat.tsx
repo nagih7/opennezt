@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { AiFillWechat } from 'react-icons/ai'
 
 const NoChat: React.FC = () => {
@@ -12,18 +11,11 @@ const NoChat: React.FC = () => {
             <p className="mb-0 text-[#6f7f92]">Select a conversation to display messages</p>
             <p className="mb-0 text-[#6f7f92]">or</p>
             <p className="mb-0">
-               <Link
-                  to={'/messages-sidebar'}
-                  className="block md:hidden px-[28px] text-sm font-semibold py-[11px] bg-[#2f65b9] rounded-md no-underline text-[#ffffff]"
-               >
-                  START A NEW CONVERSATION
-               </Link>
-               <Link
-                  to={'/messages-sidebar'}
+               <p
                   className="hidden md:block px-[28px] text-sm font-semibold py-[11px] bg-[#2f65b9] rounded-md no-underline text-[#ffffff]"
                >
                   START A NEW CONVERSATION
-               </Link>
+               </p>
             </p>
          </div>
       </div>

@@ -10,7 +10,7 @@ import {
 } from 'store/modules/manage'
 import ModalCreateOrUpdate from '../ModalCreateOrUpdate'
 import { Input } from '~/components/UI/input'
-import ButtonMASQ from 'components/UI/Button'
+import { Button } from 'components/UI/button'
 import store from '~/store'
 
 function ExperienceLevelManage() {
@@ -189,7 +189,7 @@ function ExperienceLevelManage() {
                </label>
             </div>
             <div className={styles.btnWrap}>
-               <ButtonMASQ
+               <Button
                   textBtn={'Save'}
                   loading={isLoadingBtnCreateOrUpdateExperienceLevel}
                   onClick={() => handleConfirmCreateOrUpdate()}

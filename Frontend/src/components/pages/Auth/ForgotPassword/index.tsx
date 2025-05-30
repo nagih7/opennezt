@@ -1,9 +1,9 @@
 import React from 'react'
 import _ from 'lodash'
 import { Input } from '~/components/UI/input'
-import ButtonMASQ from '../../../../components/UI/Button'
 import Logo from '../../../../assets/images/logo/opennezt_black.png'
 import useForgotPassword from './useForgotPassword'
+import { ButtonPrimary } from '~/components/UI/button'
 
 const ForgotPassword: React.FC = () => {
    const {
@@ -40,15 +40,10 @@ const ForgotPassword: React.FC = () => {
             </div>
 
             <div className="mb-4">
-               <ButtonMASQ
+               <ButtonPrimary
                   children={'Send Reset Link'}
                   disabled={isLoading}
                   onClick={() => handleForgotPassword()}
-                  style={{
-                     display: 'flex',
-                     justifyContent: 'center',
-                     alignItems: 'center',
-                  }}
                />
             </div>
 

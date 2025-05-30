@@ -7,7 +7,7 @@ import { createOrUpdateCategory, deleteCategory, getListCategory, getSkillCatego
 import { setVisibleModalCreateOrUpdateCategory, setVisibleModalDeleteCategory } from 'store/modules/manage'
 import ModalCreateOrUpdate from '../ModalCreateOrUpdate'
 import { Input } from '~/components/UI/input'
-import ButtonMASQ from 'components/UI/Button'
+import { Button } from 'components/UI/button'
 import SelectCustom from 'components/UI/Select/index'
 import store from '~/store'
 
@@ -216,7 +216,7 @@ function CategoryManage() {
                </label>
             </div>
             <div className={styles.btnWrap}>
-               <ButtonMASQ
+               <Button
                   textBtn={'Save'}
                   loading={isLoadingBtnCreateOrUpdateCategory}
                   onClick={() => handleConfirmCreateOrUpdate()}

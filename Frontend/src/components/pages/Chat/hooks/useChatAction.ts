@@ -1,13 +1,15 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { sendMessage } from '~/api/chat'
+import { MessageProps } from '~/types'
 import validateMessage from '~/utils/validateMessage'
 
 interface UseChatActionProps {
    currentChatId: string
-   onSendMessage?: (message: string) => void
+   onSendMessage: (message: MessageProps) => void
 }
 
 interface UseChatActionReturn {
+   loading: boolean
    textareaRef: React.RefObject<HTMLTextAreaElement | null>
    message: string
    isMultiLine: boolean
@@ -16,7 +18,7 @@ interface UseChatActionReturn {
    handleKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void
 }
 
-const useChatAction = ({ currentChatId }: UseChatActionProps): UseChatActionReturn => {
+const useChatAction = ({ currentChatId, onSendMessage }: UseChatActionProps): UseChatActionReturn => {
    const textareaRef = useRef<HTMLTextAreaElement>(null)
    // State
    const [loading, setLoading] = useState<boolean>(false)
@@ -57,15 +59,29 @@ const useChatAction = ({ currentChatId }: UseChatActionProps): UseChatActionRetu
    }, [])
 
    const handleSendMessage = useCallback(async () => {
-      if (!currentChatId) return
+      if (!currentChatId || loading) return
       const { valid, cleanedMessage } = validateMessage(message)
       if (valid) {
          setLoading(true)
          try {
-            console.log('Sending message:', cleanedMessage)
             const res = await sendMessage(currentChatId, cleanedMessage)
+            console.log('Message sent:', res)
+            if (res.success) {
+               const newMessage: MessageProps = {
+                  _id: res.data._id,
+                  conversation_id: currentChatId,
+                  content: cleanedMessage || '',
+                  user: res.data.user,
+                  timestamp: res.data.timestamp,
+               }
+               onSendMessage(newMessage)
+            } else {
+               console.error('Failed to send message:', res.message)
+            }
          } catch (error) {
             console.error('Error sending message:', error)
+         } finally {
+            setLoading(false)
          }
 
          setMessage('')
@@ -88,6 +104,7 @@ const useChatAction = ({ currentChatId }: UseChatActionProps): UseChatActionRetu
    )
 
    return {
+      loading,
       textareaRef,
       message,
       isMultiLine,
