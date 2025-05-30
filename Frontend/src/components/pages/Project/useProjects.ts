@@ -1,19 +1,26 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getAccessToMyProjects } from 'api/activity'
-import { getListMyProjects, getListProjectsParticipated } from 'api/project'
-import { AppDispatch, RootState } from 'store/types'
+import { getAccessToMyProjects } from '~/api/activity'
+import { getListMyProjects, getListProjectsParticipated } from '~/api/project'
 
 let hasInitialized = false
 
 export const useProjects = () => {
-   const dispatch = useDispatch<AppDispatch>()
-
-   // ========== STATE FROM REDUX STORE ========== //
-   const { myProjects, paginationListMyProjects, isLoadingGetListMyProjects, paginationProjectsParticipated } =
-      useSelector((state: RootState) => state.project)
-
-   const { accessToMyProjects } = useSelector((state: RootState) => state.activity)
+   // ========== state ========== //
+   const [myProjects, setMyProjects] = useState<any[]>([])
+   const [paginationListMyProjects, setPaginationListMyProjects] = useState({
+      currentPage: 1,
+      perPage: 6,
+      totalPage: 1,
+      totalRecord: 0,
+   })
+   const [isLoadingGetListMyProjects, setIsLoadingGetListMyProjects] = useState<boolean>(false)
+   const [paginationProjectsParticipated, setPaginationProjectsParticipated] = useState({
+      currentPage: 1,
+      perPage: 6,
+      totalPage: 1,
+      totalRecord: 0,
+   })
+   const [accessToMyProjects, setAccessToMyProjects] = useState<any[]>([])
 
    // ========== STATE ========== //
    const [isBottom, setIsBottom] = useState<boolean>(false)
@@ -32,29 +39,27 @@ export const useProjects = () => {
    })
 
    // Ref cho container scroll
-   const scrollContainerRef = useRef<HTMLDivElement>(null)
-
-   // ====== KHỞI TẠO DỮ LIỆU ======
+   const scrollContainerRef = useRef<HTMLDivElement>(null) // ====== KHỞI TẠO DỮ LIỆU ======
    useEffect(() => {
       // Chặn gọi API khi Strict Mode gây ra double-mounting
       if (hasInitialized) return
       hasInitialized = true
 
-      const initializeData = () => {
+      const initializeData = async () => {
          // Tải dữ liệu "My Projects" ban đầu
          if (myProjects.length === 0) {
-            dispatch(
-               getListMyProjects({
-                  ...paginationListMyProjects,
-                  currentPage: 1,
-                  keySearch: '',
-               })
-            )
+            // TODO: Replace with API call using fetch/axios
+            await getListMyProjects({
+               ...paginationListMyProjects,
+               currentPage: 1,
+               keySearch: '',
+            })
          }
 
          // Tải danh sách activity nếu cần
          if (!accessToMyProjects || accessToMyProjects.length === 0) {
-            dispatch(getAccessToMyProjects())
+            // TODO: Replace with API call using fetch/axios
+            await getAccessToMyProjects()
          }
       }
 
@@ -93,9 +98,7 @@ export const useProjects = () => {
             container.removeEventListener('scroll', checkScroll)
          }
       }
-   }, [checkScroll])
-
-   // Hàm tìm kiếm memoized
+   }, [checkScroll]) // Hàm tìm kiếm memoized
    const handleSearch = useCallback(
       (term: string) => {
          // Tránh gọi API nếu searchTerm không thay đổi
@@ -104,27 +107,21 @@ export const useProjects = () => {
          setSearchTerm(term)
 
          if (activeTab === 'my-projects') {
-            dispatch(
-               getListMyProjects({
-                  ...paginationListMyProjects,
-                  currentPage: 1,
-                  keySearch: term,
-               })
-            )
+            getListMyProjects({
+               ...paginationListMyProjects,
+               currentPage: 1,
+               keySearch: term,
+            })
          } else if (activeTab === 'projects-participated') {
-            dispatch(
-               getListProjectsParticipated({
-                  ...paginationProjectsParticipated,
-                  currentPage: 1,
-                  keySearch: term,
-               })
-            )
+            getListProjectsParticipated({
+               ...paginationProjectsParticipated,
+               currentPage: 1,
+               keySearch: term,
+            })
          }
       },
-      [activeTab, dispatch, paginationListMyProjects, paginationProjectsParticipated, searchTerm]
-   )
-
-   // Hàm thay đổi tab memoized
+      [activeTab, paginationListMyProjects, paginationProjectsParticipated, searchTerm]
+   ) // Hàm thay đổi tab memoized
    const handleTabChange = useCallback(
       (tab: string) => {
          // Tránh re-render nếu tab không thay đổi
@@ -135,16 +132,17 @@ export const useProjects = () => {
          // Khi chuyển tab, chỉ tải dữ liệu của tab mới nếu chưa tải
          if (tab === 'projects-participated' && !initializedRef.current.projectsParticipated) {
             initializedRef.current.projectsParticipated = true
-            dispatch(
-               getListProjectsParticipated({
-                  ...paginationProjectsParticipated,
-                  currentPage: 1,
-                  keySearch: searchTerm,
-               })
-            )
+            // TODO: Replace with API call using fetch/axios
+            // dispatch(
+            //    getListProjectsParticipated({
+            //       ...paginationProjectsParticipated,
+            //       currentPage: 1,
+            //       keySearch: searchTerm,
+            //    })
+            // )
          }
       },
-      [activeTab, dispatch, paginationProjectsParticipated, searchTerm]
+      [activeTab, paginationProjectsParticipated, searchTerm]
    )
 
    return {
@@ -155,5 +153,15 @@ export const useProjects = () => {
       accessToMyProjects,
       handleSearch,
       handleTabChange,
+      // Additional state and setters for API data
+      myProjects,
+      setMyProjects,
+      paginationListMyProjects,
+      setPaginationListMyProjects,
+      isLoadingGetListMyProjects,
+      setIsLoadingGetListMyProjects,
+      paginationProjectsParticipated,
+      setPaginationProjectsParticipated,
+      setAccessToMyProjects,
    }
 }
