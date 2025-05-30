@@ -327,39 +327,6 @@ const projectSlice = createSlice({
             isLoadingUpdateRoleRequirement: false,
          }
       },
-      // ========= PROJECT REQUIREMENT - SECTOR ========== //
-      requestUpdateSectorRequirement: (state) => ({
-         ...state,
-         isLoadingUpdateSectorRequirement: true,
-      }),
-      updateSectorRequirementSuccess: (state, action) => {
-         toaster.create({
-            title: 'Update sector requirement successfully',
-            type: 'success',
-         })
-         return {
-            ...state,
-            myProjectDetails: {
-               ...state.myProjectDetails,
-               requirements: {
-                  ...state.myProjectDetails.requirements,
-                  industry_ids: action.payload.data?.industries,
-                  experience_level_ids: action.payload.data?.experienceLevels,
-               },
-            },
-            isLoadingUpdateSectorRequirement: false,
-         }
-      },
-      updateSectorRequirementFail: (state) => {
-         toaster.create({
-            title: 'Update sector requirement failed',
-            type: 'error',
-         })
-         return {
-            ...state,
-            isLoadingUpdateSectorRequirement: false,
-         }
-      },
       // ========= PROJECT REQUIREMENT - SKILL ========== //
       requestUpdateSkillRequirement: (state) => ({
          ...state,
@@ -488,10 +455,6 @@ export const {
    requestUpdateRoleRequirement,
    updateRoleRequirementSuccess,
    updateRoleRequirementFail,
-   // ========= PROJECT REQUIREMENT - SECTOR ========== //
-   requestUpdateSectorRequirement,
-   updateSectorRequirementSuccess,
-   updateSectorRequirementFail,
    // ======== PROJECT REQUIREMENT - SKILL ========== //
    requestUpdateSkillRequirement,
    updateSkillRequirementSuccess,

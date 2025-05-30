@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button } from '@chakra-ui/react'
+import { Button, createListCollection } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import SelectCustom from 'components/UI/SelectCustom'
 import { getCategoryFramework, getSkillFramework, getSubCategoryFramework } from 'api/user'
@@ -35,9 +35,12 @@ const SkillRequirement: React.FC = () => {
    const dispatch = useDispatch<AppDispatch>()
    // ========== STATE FROM REDUX STORE  ========== //
    const { myProjectDetails, isLoadingUpdateSkillRequirement } = useSelector((state: RootState) => state.project)
-   const { categoryFramework, subCategoryFramework, skillFramework } = useSelector((state: RootState) => state.user)
 
-   // ========== STATE MANAGEMENT ========== //
+   // ========== LOCAL STATE MANAGEMENT ========== //
+   const [categoryFramework, setCategoryFramework] = useState<any>(null)
+   const [subCategoryFramework, setSubCategoryFramework] = useState<any>(null)
+   const [skillFramework, setSkillFramework] = useState<any>(null)
+
    const [formData, setFormData] = useState<FormData>({
       categories: [],
       subcategories: [],
@@ -47,38 +50,90 @@ const SkillRequirement: React.FC = () => {
    const [mySkills, setMySkills] = useState<Skill[]>([])
 
    // ========== USE EFFECT ========== //
-   // ========== EFFECTS  ========== //
    useEffect(() => {
       if (myProjectDetails?.requirements?.skills?.length > 0) {
          setMySkills(myProjectDetails?.requirements?.skills)
       }
    }, [myProjectDetails])
 
-   useEffect(() => {
-      if (categoryFramework.items?.length === 0) {
-         dispatch(getCategoryFramework())
+   // ========== FETCH FRAMEWORKS ========== //
+   const fetchCategoryFramework = async () => {
+      try {
+         const response = await getCategoryFramework()
+         if (response && response.data) {
+            setCategoryFramework(
+               createListCollection({
+                  items: response.data.map((category: any) => ({
+                     label: category.name,
+                     value: category._id,
+                  })),
+               })
+            )
+         }
+      } catch (error) {
+         console.error('Error fetching category framework:', error)
+         setCategoryFramework(createListCollection({ items: [] }))
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch])
+   }
+
+   useEffect(() => {
+      fetchCategoryFramework()
+   }, [])
 
    // ========== HANDLE CHANGE FUNCTION ========== //
-   const handleChangeCategory = (event: SelectEvent): void => {
+   const handleChangeCategory = async (event: SelectEvent): Promise<void> => {
       setFormData({
          ...formData,
          categories: event.value,
          subcategories: [],
          skills: [],
       })
-      dispatch(getSubCategoryFramework(event.value[0]))
+
+      // Fetch subcategories
+      try {
+         setSubCategoryFramework(null) // Reset trước khi fetch
+         const response = await getSubCategoryFramework(event.value[0])
+         if (response && response.data) {
+            setSubCategoryFramework(
+               createListCollection({
+                  items: response.data.map((category: any) => ({
+                     label: category.name,
+                     value: category._id,
+                  })),
+               })
+            )
+         }
+      } catch (error) {
+         console.error('Error fetching subcategory framework:', error)
+         setSubCategoryFramework(createListCollection({ items: [] }))
+      }
    }
 
-   const handleChangeSubCategory = (event: SelectEvent): void => {
+   const handleChangeSubCategory = async (event: SelectEvent): Promise<void> => {
       setFormData({
          ...formData,
          subcategories: event.value,
          skills: [],
       })
-      dispatch(getSkillFramework(event.value[0]))
+
+      // Fetch skills
+      try {
+         setSkillFramework(null) // Reset trước khi fetch
+         const response = await getSkillFramework(event.value[0])
+         if (response && response.data) {
+            setSkillFramework(
+               createListCollection({
+                  items: response.data.map((skill: any) => ({
+                     label: skill.name,
+                     value: skill._id,
+                  })),
+               })
+            )
+         }
+      } catch (error) {
+         console.error('Error fetching skill framework:', error)
+         setSkillFramework(createListCollection({ items: [] }))
+      }
    }
 
    const handleChangeSkill = (event: SelectEvent): void => {
@@ -91,7 +146,6 @@ const SkillRequirement: React.FC = () => {
             _id: item.value,
             name: item.label,
             category_id: formData.subcategories[0],
-            // subcategory_id: formData.subcategories[0],
          })),
       })
    }
@@ -120,43 +174,53 @@ const SkillRequirement: React.FC = () => {
    }
 
    const handleSaveProjectRequirement = async (): Promise<void> => {
-      // Filter skills with unique _id
-      const skills = mySkills.filter((skill, index, self) => index === self.findIndex((s) => s._id === skill._id))
+      try {
+         // Filter skills with unique _id
+         const skills = mySkills.filter((skill, index, self) => index === self.findIndex((s) => s._id === skill._id))
 
-      dispatch(updateSkillRequirement(myProjectDetails._id, { skills }))
-      await postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id)
+         dispatch(updateSkillRequirement(myProjectDetails._id, { skills }))
+         await postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id)
+      } catch (error) {
+         console.error('Error updating skill requirement:', error)
+      }
    }
 
    // ========= RENDER  ========== //
    return (
       <div className="flex flex-col gap-4 mt-8 mb-8">
-         <SelectCustom
-            required
-            label="Category"
-            placeholder="Ex: Software Engineer"
-            collection={categoryFramework}
-            onChange={(event: SelectEvent) => handleChangeCategory(event)}
-            value={formData?.categories}
-         />
-         <SelectCustom
-            disabled={formData?.categories?.length === 0}
-            required
-            label="Sub Category"
-            placeholder="Ex: Software Engineer"
-            collection={subCategoryFramework}
-            onChange={(event: SelectEvent) => handleChangeSubCategory(event)}
-            value={formData.subcategories}
-         />
-         <SelectCustom
-            multiple
-            disabled={formData?.subcategories?.length === 0}
-            required
-            label="Experience Level"
-            placeholder="Ex: Entry Level"
-            collection={skillFramework}
-            onChange={(event: SelectEvent) => handleChangeSkill(event)}
-            value={formData.skills}
-         />
+         {categoryFramework && (
+            <SelectCustom
+               required
+               label="Category"
+               placeholder="Ex: Software Engineer"
+               collection={categoryFramework}
+               onChange={(event: SelectEvent) => handleChangeCategory(event)}
+               value={formData?.categories}
+            />
+         )}
+         {subCategoryFramework && (
+            <SelectCustom
+               disabled={formData?.categories?.length === 0}
+               required
+               label="Sub Category"
+               placeholder="Ex: Software Engineer"
+               collection={subCategoryFramework}
+               onChange={(event: SelectEvent) => handleChangeSubCategory(event)}
+               value={formData.subcategories}
+            />
+         )}
+         {skillFramework && (
+            <SelectCustom
+               multiple
+               disabled={formData?.subcategories?.length === 0}
+               required
+               label="Skills"
+               placeholder="Ex: React, Node.js"
+               collection={skillFramework}
+               onChange={(event: SelectEvent) => handleChangeSkill(event)}
+               value={formData.skills}
+            />
+         )}
          <div className="flex justify-end">
             <div className="">
                <Button

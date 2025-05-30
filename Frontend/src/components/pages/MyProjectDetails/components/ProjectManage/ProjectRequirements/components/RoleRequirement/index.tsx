@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateRoleRequirement } from 'api/project'
 import SelectCustom from 'components/UI/SelectCustom'
 import { getProjectRoleFramework } from 'api/user'
-import { useParams } from 'react-router-dom'
 import { postProjectDetailsActivitiesProjectRequirement } from 'api/activity'
 import { RootState } from 'store/types'
 import { AppDispatch } from '~/store'
@@ -23,7 +22,6 @@ const RoleRequirement: React.FC = () => {
    const dispatch = useDispatch<AppDispatch>()
    // ========== STATE FROM REDUX STORE  ========== //
    const { myProjectDetails, isLoadingUpdateRoleRequirement } = useSelector((state: RootState) => state.project)
-
    const { projectTeamRoleFramework, projectRoleFramework } = useSelector((state: RootState) => state.user)
 
    // ========== STATE  ========== //
@@ -49,10 +47,11 @@ const RoleRequirement: React.FC = () => {
    }, [myProjectDetails])
 
    useEffect(() => {
-      if (projectTeamRoleFramework.items?.length === 0 || projectRoleFramework.items?.length === 0)
+      // Kiểm tra nếu frameworks chưa có data thì fetch
+      if (!projectTeamRoleFramework?.items?.length || !projectRoleFramework?.items?.length) {
          dispatch(getProjectRoleFramework())
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch])
+      }
+   }, [dispatch, projectTeamRoleFramework?.items?.length, projectRoleFramework?.items?.length])
 
    // ========== HANDLE CHANGE  ========== //
    const handleChange = (event: SelectEvent, nameSelect: string): void => {
@@ -62,8 +61,12 @@ const RoleRequirement: React.FC = () => {
    }
 
    const handleSaveProjectRequirement = async (): Promise<void> => {
-      dispatch(updateRoleRequirement(myProjectDetails._id, formData))
-      await postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id)
+      try {
+         dispatch(updateRoleRequirement(myProjectDetails._id, formData))
+         await postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id)
+      } catch (error) {
+         console.error('Error updating role requirement:', error)
+      }
    }
 
    // ========= RENDER  ========== //
@@ -71,24 +74,28 @@ const RoleRequirement: React.FC = () => {
       <div className="flex flex-col gap-4 mb-4">
          <h5>What positions are missing in your project?</h5>
          <div className="relative">
-            <SelectCustom
-               multiple
-               label="Team Role"
-               collection={projectTeamRoleFramework}
-               onChange={(e: SelectEvent) => handleChange(e, 'teamRoles')}
-               value={formData.teamRoles}
-               name="teamRoles"
-            />
+            {projectTeamRoleFramework && (
+               <SelectCustom
+                  multiple
+                  label="Team Role"
+                  collection={projectTeamRoleFramework}
+                  onChange={(e: SelectEvent) => handleChange(e, 'teamRoles')}
+                  value={formData.teamRoles}
+                  name="teamRoles"
+               />
+            )}
          </div>
          <div className="relative">
-            <SelectCustom
-               multiple
-               label="Role"
-               collection={projectRoleFramework}
-               onChange={(e: SelectEvent) => handleChange(e, 'roles')}
-               value={formData.roles}
-               name="roles"
-            />
+            {projectRoleFramework && (
+               <SelectCustom
+                  multiple
+                  label="Role"
+                  collection={projectRoleFramework}
+                  onChange={(e: SelectEvent) => handleChange(e, 'roles')}
+                  value={formData.roles}
+                  name="roles"
+               />
+            )}
          </div>
          <div className="flex justify-end">
             <Button

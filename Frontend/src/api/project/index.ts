@@ -38,10 +38,6 @@ import {
    requestUpdateRoleRequirement,
    updateRoleRequirementSuccess,
    updateRoleRequirementFail,
-   // ========= PROJECT REQUIREMENT - SECTOR ========== //
-   requestUpdateSectorRequirement,
-   updateSectorRequirementSuccess,
-   updateSectorRequirementFail,
    // ========= PROJECT REQUIREMENT - SKILL ========== //
    requestUpdateSkillRequirement,
    updateSkillRequirementSuccess,
@@ -251,17 +247,13 @@ export const updateRoleRequirement =
    }
 
 // ========= PROJECT REQUIREMENT - SECTOR ========== //
-export const updateSectorRequirement =
-   (projectId: string, formRequest: any) => async (dispatch: AppDispatch, getState: () => any) => {
-      return callReduxApi({
-         method: 'patch',
-         apiPath: `projects/me/${projectId}/requirements/sector`,
-         actionTypes: [requestUpdateSectorRequirement, updateSectorRequirementSuccess, updateSectorRequirementFail],
-         variables: formRequest,
-         dispatch,
-         getState,
-      })
-   }
+export const updateSectorRequirement = (projectId: string, formRequest: any) => {
+   return callApi({
+      method: 'patch',
+      apiPath: `projects/me/${projectId}/requirements/sector`,
+      variables: formRequest,
+   })
+}
 
 // ========= PROJECT REQUIREMENT - SKILL ========== //
 export const updateSkillRequirement =

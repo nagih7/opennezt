@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button } from '@chakra-ui/react'
+import { Button, createListCollection } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import SelectCustom from 'components/UI/SelectCustom'
 import { updateSectorRequirement } from 'api/project'
@@ -22,7 +22,10 @@ const SectorRequirement: React.FC = () => {
    const dispatch = useDispatch<AppDispatch>()
    // ========== STATE FROM REDUX STORE  ========== //
    const { myProjectDetails, isLoadingUpdateSectorRequirement } = useSelector((state: RootState) => state.project)
-   const { industryFramework, experienceLevelFramework } = useSelector((state: RootState) => state.user)
+
+   // ========== LOCAL STATE FOR FRAMEWORKS ========== //
+   const [industryFramework, setIndustryFramework] = useState<any>(null)
+   const [experienceLevelFramework, setExperienceLevelFramework] = useState<any>(null)
 
    // ========== STATE  ========== //
    const [formData, setFormData] = useState<FormData>({
@@ -46,15 +49,49 @@ const SectorRequirement: React.FC = () => {
       }
    }, [myProjectDetails])
 
-   useEffect(() => {
-      if (industryFramework.items?.length === 0) dispatch(getIndustryFramework())
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch])
+   // ========== FETCH FRAMEWORKS ========== //
+   const fetchIndustryFramework = async () => {
+      try {
+         const response = await getIndustryFramework()
+         if (response && response.data) {
+            setIndustryFramework(
+               createListCollection({
+                  items: response.data.map((industry: any) => ({
+                     label: industry.name,
+                     value: industry._id,
+                  })),
+               })
+            )
+         }
+      } catch (error) {
+         console.error('Error fetching industry framework:', error)
+         setIndustryFramework(createListCollection({ items: [] }))
+      }
+   }
+
+   const fetchExperienceLevelFramework = async () => {
+      try {
+         const response = await getExperienceLevelFramwork()
+         if (response && response.data) {
+            setExperienceLevelFramework(
+               createListCollection({
+                  items: response.data.map((level: any) => ({
+                     label: level.name,
+                     value: level._id,
+                  })),
+               })
+            )
+         }
+      } catch (error) {
+         console.error('Error fetching experience level framework:', error)
+         setExperienceLevelFramework(createListCollection({ items: [] }))
+      }
+   }
 
    useEffect(() => {
-      if (experienceLevelFramework.items?.length === 0) dispatch(getExperienceLevelFramwork())
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch])
+      fetchIndustryFramework()
+      fetchExperienceLevelFramework()
+   }, [])
 
    // ========== HANDLE CHANGE  ========== //
    const handleChange = (event: SelectEvent, nameSelect: string): void => {
@@ -64,30 +101,38 @@ const SectorRequirement: React.FC = () => {
    }
 
    const handleSaveProjectRequirement = async (): Promise<void> => {
-      dispatch(updateSectorRequirement(myProjectDetails._id, formData))
-      await postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id)
+      try {
+         await updateSectorRequirement(myProjectDetails._id, formData)
+         await postProjectDetailsActivitiesProjectRequirement(myProjectDetails._id)
+      } catch (error) {
+         console.error('Error updating sector requirement:', error)
+      }
    }
 
    // ========= RENDER  ========== //
    return (
       <div className="flex flex-col gap-4 mt-8 mb-4">
          <div className="relative">
-            <SelectCustom
-               multiple
-               label="Industries"
-               collection={industryFramework}
-               onChange={(e: SelectEvent) => handleChange(e, 'industries')}
-               value={formData.industries}
-            />
+            {industryFramework && (
+               <SelectCustom
+                  multiple
+                  label="Industries"
+                  collection={industryFramework}
+                  onChange={(e: SelectEvent) => handleChange(e, 'industries')}
+                  value={formData.industries}
+               />
+            )}
          </div>
          <div className="relative">
-            <SelectCustom
-               multiple
-               label="Experience Level"
-               collection={experienceLevelFramework}
-               onChange={(e: SelectEvent) => handleChange(e, 'experienceLevels')}
-               value={formData.experienceLevels}
-            />
+            {experienceLevelFramework && (
+               <SelectCustom
+                  multiple
+                  label="Experience Level"
+                  collection={experienceLevelFramework}
+                  onChange={(e: SelectEvent) => handleChange(e, 'experienceLevels')}
+                  value={formData.experienceLevels}
+               />
+            )}
          </div>
          <div className="flex justify-end">
             <Button
