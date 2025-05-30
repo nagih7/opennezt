@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { postProjectDetailsActivitiesNewMember } from '~/api/activity'
-import { replyNotification } from '~/api/notification'
+import { replyNotification, markAsRead } from '~/api/notification'
 import { RootState, useAppDispatch, useAppSelector } from '~/store'
+import { Notification } from '~/types'
 
 const useNotification = () => {
    const dispatch = useAppDispatch()
@@ -24,10 +25,11 @@ const useNotification = () => {
    }
 
    const handleMarkAsRead = async (notification: Notification) => {
-      // if (notification.metadata?.read === false) {
-      //    await store.dispatch(markAsRead(notification._id))
-      // }
+      if (notification.metadata?.read === false) {
+         await dispatch(markAsRead(notification._id))
+      }
    }
+
    return {
       notifications,
       notificationIndex,

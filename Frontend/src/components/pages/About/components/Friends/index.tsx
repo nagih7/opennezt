@@ -16,7 +16,7 @@ const Friends: React.FC = () => {
       handleDeleteFriend,
       handleDeleteRequest,
       handleAcceptRequest,
-      handleNavigateToChat
+      handleNavigateToChat,
    } = useFriends()
    return (
       <div className="flex gap-3">
@@ -59,7 +59,6 @@ const Friends: React.FC = () => {
                                     <span className="text-sm text-gray-500">{friend.user?.email}</span>
                                  </div>
                               </div>
-
                               <div className="flex items-center space-x-4">
                                  <span className="text-sm text-gray-500">{moment(friend.created_at).fromNow()}</span>
 

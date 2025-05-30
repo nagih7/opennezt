@@ -69,7 +69,7 @@ const Actions: React.FC<ActionsProps> = ({ notification, index }) => {
 }
 
 const PopoverNotification: React.FC = () => {
-   const { notifications, notificationIndex, isLoadingReplyNotification } = useNotification()
+   const { notifications, notificationIndex, isLoadingReplyNotification, handleMarkAsRead } = useNotification()
 
    return (
       <div className="flex flex-col items-center w-full">
@@ -78,31 +78,34 @@ const PopoverNotification: React.FC = () => {
             {notifications?.length > 0 &&
                notifications.map((notification, index) => (
                   <div
-                     className="p-4 flex items-between justify-between hover:bg-[#f6f5f5] cursor-pointer rounded-md gap-4"
-                     key={index}
+                     className={`p-4 flex items-center justify-between hover:bg-[#f6f5f5] cursor-pointer rounded-md gap-4 ${
+                        notification.metadata?.read === false ? 'bg-blue-50 border-l-4 border-blue-500' : ''
+                     }`}
+                     key={notification._id}
+                     onClick={() => handleMarkAsRead(notification)}
                   >
                      <Avatar.Root size={'sm'}>
                         <Avatar.Fallback name={notification.user?.name} />
                         <Avatar.Image src={notification.user?.avatar} />
                      </Avatar.Root>
-                     <div className="flex flex-col flex-1">
-                        <NotificationItem notification={notification} />
-                        <span className="text-[#6f7f92] text-xs">{moment(notification.timestamp).fromNow()}</span>
-                     </div>
-                     <div className="flex items-center justify-end">
-                        {notificationIndex === index && isLoadingReplyNotification && <Spinner size="md" />}
-
-                        {notificationIndex === index &&
-                           !isLoadingReplyNotification &&
-                           notification.metadata.status === Status.WAITING && (
-                              <Actions notification={notification} index={index} />
+                     {/* Nội dung và nút trên 2 dòng */}
+                     <div className="flex flex-1 flex-col gap-2">
+                        <div className="flex-1 min-w-0">
+                           <NotificationItem notification={notification} />
+                           <span className="text-[#6f7f92] text-xs block">
+                              {moment(notification.timestamp).fromNow()}
+                           </span>
+                        </div>
+                        {/* Nút Confirm/Delete hoặc Spinner */}
+                        <div className="flex items-center gap-2 mt-2 justify-end">
+                           {notificationIndex === index && isLoadingReplyNotification ? (
+                              <Spinner size="md" />
+                           ) : (
+                              notification.metadata?.status?.toLowerCase() === Status.WAITING.toLowerCase() && (
+                                 <Actions notification={notification} index={index} />
+                              )
                            )}
-
-                        {notificationIndex !== index && notification.metadata.status === Status.CONFIRM && null}
-
-                        {notificationIndex !== index && notification.metadata.status === Status.WAITING && (
-                           <Actions notification={notification} index={index} />
-                        )}
+                        </div>
                      </div>
                   </div>
                ))}

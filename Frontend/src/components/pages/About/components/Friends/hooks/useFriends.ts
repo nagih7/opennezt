@@ -1,13 +1,17 @@
-import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
-import { useDispatch } from "react-redux"
-import { getMyFriends } from "~/api/profile"
-import { AppDispatch, RootState } from "~/store"
-import { FRIEND_REQUEST_NOTIFICATION, WAITING_STATUS } from "~/utils/constants"
-import { Friend, Notification, OrderByType } from "../types"
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { getMyFriends } from '~/api/profile'
+import { AppDispatch, RootState } from '~/store'
+import { FRIEND_REQUEST_NOTIFICATION, WAITING_STATUS } from '~/utils/constants'
+import { Friend, Notification, OrderByType } from '../types'
+import { replyNotification } from '~/api/notification'
+import { useNavigate } from 'react-router-dom'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 const useFriends = () => {
    const dispatch = useDispatch<AppDispatch>()
+   const navigate = useNavigate()
    // ========== STATE ========== //
    const [isActive, setIsActive] = useState<string>('friends')
    const [orderBy] = useState<OrderByType>('Newest')
@@ -25,21 +29,21 @@ const useFriends = () => {
    const sortList = <T extends Friend | Notification>(list: T[]): T[] => {
       return [...list].sort((a, b) => {
          if (orderBy === 'Newest') {
-            const dateA = 'created_at' in a ? a.created_at : a.timestamp;
-            const dateB = 'created_at' in b ? b.created_at : b.timestamp;
+            const dateA = 'created_at' in a ? a.created_at : a.timestamp
+            const dateB = 'created_at' in b ? b.created_at : b.timestamp
             if (dateA && dateB) {
-               return new Date(dateB).getTime() - new Date(dateA).getTime();
+               return new Date(dateB).getTime() - new Date(dateA).getTime()
             }
          }
          if (orderBy === 'Oldest') {
-            const dateA = 'created_at' in a ? a.created_at : a.timestamp;
-            const dateB = 'created_at' in b ? b.created_at : b.timestamp;
+            const dateA = 'created_at' in a ? a.created_at : a.timestamp
+            const dateB = 'created_at' in b ? b.created_at : b.timestamp
             if (dateA && dateB) {
-               return new Date(dateA).getTime() - new Date(dateB).getTime();
+               return new Date(dateA).getTime() - new Date(dateB).getTime()
             }
          }
-         return 0;
-      });
+         return 0
+      })
    }
 
    // ========== USE EFFECT ========== //
@@ -49,7 +53,7 @@ const useFriends = () => {
             const response = await getMyFriends()
             setFriends(response.data)
          } catch (error) {
-            console.error("Failed to fetch friends:", error)
+            console.error('Failed to fetch friends:', error)
          }
       }
       if (friends?.length === 0) {
@@ -72,20 +76,21 @@ const useFriends = () => {
       /*noop */
    }
    const handleAcceptRequest = (request: Notification): void => {
+      dispatch(replyNotification(request._id, 'confirm'))
       /*noop */
    }
    const handleNavigateToChat = (friend: Friend): void => {
-      /*noop */
+      navigate(ROUTE_CONFIG.USER.CONVERSATION.PREFIX)
    }
    return {
-        isActive,
-        setIsActive,
-        friends: sortList(friends).filter((item): item is Friend => 'created_at' in item),
-        notifications: sortList(notifications),
-        handleDeleteFriend,
-        handleDeleteRequest,
-        handleAcceptRequest,
-        handleNavigateToChat
+      isActive,
+      setIsActive,
+      friends: sortList(friends).filter((item): item is Friend => 'created_at' in item),
+      notifications: sortList(notifications),
+      handleDeleteFriend,
+      handleDeleteRequest,
+      handleAcceptRequest,
+      handleNavigateToChat,
    }
 }
 
