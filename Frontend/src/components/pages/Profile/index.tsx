@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import EditProfile from './components/EditProfile'
 import ChangePassword from './components/ChangePassword'
-import store from '~/store'
-import { useSelector } from 'react-redux'
-import { changeAvatar, changeBackground } from 'api/profile'
 // import CameraAltIcon from '@mui/icons-material/CameraAlt'
-import resizeLogo from 'utils/files/resizeLogo'
-import resizeBackground from 'utils/files/resizeBackground'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '~/components/UI/tabs'
 import useProfile from './hooks/useProfile'
+import { FaCamera } from "react-icons/fa";
+
 
 function Profile() {
    const {
@@ -18,7 +15,9 @@ function Profile() {
       keyTable,
       setKeyTable,
       handleBackgroundChange,
-      handleAvatarChange
+      handleAvatarChange,
+      handleAvatarError,
+      handleBackgroundError
    } = useProfile()
    return (
       <div className="w-full h-full">
@@ -29,13 +28,14 @@ function Profile() {
                      <div className="relative select-none flex justify-center items-center w-full h-[300px] overflow-hidden rounded-t-md">
                         <img
                            src={background}
-                           className="w-full h-[300px] bg-contain object-contain brightness-75"
+                           className="w-full h-[300px] bg-contain object-cover brightness-75"
                            alt="background"
+                           onError={handleBackgroundError}
                         />
                         <div className="absolute px-3 py-2 transition-colors bg-white rounded-lg shadow-lg cursor-pointer bottom-4 right-6 hover:bg-gray-100">
-                           <label className="cursor-pointer">
+                           <label className="flex items-center cursor-pointer">
                               <input type="file" className="hidden" onChange={handleBackgroundChange} />
-                              {/* <CameraAltIcon fontSize="inherit" /> */}
+                              <FaCamera className='w-4 h-4' />
                               <span className="ml-2 text-sm">Update Background</span>
                            </label>
                         </div>
@@ -45,10 +45,10 @@ function Profile() {
                            <div className="absolute bottom-0 flex items-center justify-center w-full h-5 transition-opacity duration-300 opacity-0 bg-gray-100/90 group-hover:opacity-100">
                               <label className="cursor-pointer">
                                  <input type="file" className="hidden" onChange={handleAvatarChange} />
-                                 {/* <CameraAltIcon fontSize="inherit" /> */}
+                                 <FaCamera className='w-4 h-4' />
                               </label>
                            </div>
-                           <img src={avatar} alt={authUser.name} />
+                           <img src={avatar} alt={authUser.name} onError={handleAvatarError} />
                         </div>
                         <div className="ml-4 drop-shadow-lg">
                            <div className="mb-1 text-lg font-bold text-white">{authUser.name}</div>

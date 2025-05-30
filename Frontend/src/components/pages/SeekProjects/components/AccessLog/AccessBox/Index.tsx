@@ -23,7 +23,7 @@ const AccessBox: FC<AccessBoxProps> = ({ access }) => {
 
    return (
       <div onClick={() => handleViewProjectDetails(access.project)} className="relative flex gap-3 cursor-pointer">
-         {!imageError ? (
+         {!imageError && access.project.background ?  (
             <Image
                className="relative w-[4.5rem] h-[4.5rem] rounded-md object-cover"
                src={access.project.background}

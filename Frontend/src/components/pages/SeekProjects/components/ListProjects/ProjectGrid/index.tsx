@@ -1,7 +1,6 @@
 import { Image } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Project } from 'types'
-import { OPENNEZT_BG_BLACK } from 'utils/constants'
 import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
 
 interface ProjectGridProps {
@@ -19,11 +18,11 @@ const ProjectGrid = ({ project, handleViewProjectDetails }: ProjectGridProps) =>
             onClick={() => handleViewProjectDetails(project)}
             className="overflow-hidden rounded-sm cursor-pointer group"
         >
-            <div className="w-full max-w-lg h-[360px] mx-auto bg-white rounded-[0.2rem]">
+            <div className="w-full h-[360px] mx-auto bg-white rounded-[0.2rem]">
                 <div className="relative flex items-center justify-center w-full h-48 overflow-hidden mx-autorounded-md group">
-                    {!imageError ? (
+                    {!imageError && project?.background ?  (
                         <Image
-                            className="object-cover absolute w-full h-auto transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110 overflow-hidden rounded-sm cursor-pointer"
+                            className="object-cover absolute w-full 2xl:h-[360px] h-[300px] transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110 overflow-hidden rounded-sm cursor-pointer"
                             aspectRatio={16 / 9}
                             src={project?.background}
                             alt={project?.name}
@@ -31,11 +30,11 @@ const ProjectGrid = ({ project, handleViewProjectDetails }: ProjectGridProps) =>
                         />
                     ) : (
                         <div className="absolute flex items-center justify-center object-cover w-full">
-                            <Image src={OPENNEZT_LOGO_GRADIENT} alt={project?.name} />
+                            <Image src={OPENNEZT_LOGO_GRADIENT} alt={project?.name} className='w-full 2xl:h-[360px] h-[300px]' />
                         </div>
                     )}
                 </div>
-                <div className="relative p-4 top-[-3rem] 2xl:top-[-0.75rem]">
+                <div className="relative p-4">
                     <div className="flex items-center justify-between">
                         <p className="bg-[#EAEFF8] p-1 rounded-sm text-[#737F92] text-xs md:text-[0.85rem] font-semibold">
                             {project.stage?.name}

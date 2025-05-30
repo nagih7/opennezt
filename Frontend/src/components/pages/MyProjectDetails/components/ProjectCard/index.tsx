@@ -1,6 +1,6 @@
 import { Image } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { OPENNEZT_BG_BLACK, OPENNEZT_LOGO } from 'utils/constants'
+import { OPENNEZT_LOGO_GRADIENT, OPENNEZT_LOGO } from 'utils/constants'
 
 interface ProjectCardProps {
    project: {
@@ -18,7 +18,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
    return (
       <>
          <div className="w-full">
-            {!backgroundError ? (
+            {!backgroundError && project.background ?  (
                <Image
                   src={project.background}
                   alt={project.name}
@@ -28,7 +28,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                   onError={() => setBackgroundError(true)}
                />
             ) : (
-               <Image alt={project.name} aspectRatio={10 / 3} width="100%" objectFit="cover" src={OPENNEZT_BG_BLACK} />
+               <div className="flex items-center justify-center bg-[#EAEFF8]" style={{ aspectRatio: '10/3' }}>
+               <Image
+                  src={OPENNEZT_LOGO_GRADIENT}
+                  alt="OpenNezt"
+                  className="h-[480px] w-full object-contain"
+               />
+            </div>
+
             )}
          </div>
 
@@ -37,7 +44,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                <div className="flex-1 item-left">
                   <div className="flex gap-3">
                      <div className="p-[4px] mt-[-60px] rounded-md bg-[#ffffff]">
-                        {!logoError ? (
+                        {!logoError && project.logo ? (
                            <Image
                               src={project.logo}
                               className="w-[150px] h-[150px] rounded-md"
@@ -48,9 +55,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                               onError={() => setLogoError(true)}
                            />
                         ) : (
-                           <div className="h-[150px] w-[150px] flex items-center justify-center bg-gray-200 p-4 user-select-none">
-                              <Image src={OPENNEZT_LOGO} alt="OpenNezt" />
-                           </div>
+                           <div className="h-[150px] w-[150px] flex items-center justify-center bg-[#EAEFF8] rounded-md p-4">
+                           <Image
+                              src={OPENNEZT_LOGO}
+                              alt="OpenNezt"
+                              className="h-full w-full object-contain"
+                           />
+                        </div>
+
                         )}
                      </div>
                      <div>

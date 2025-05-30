@@ -11,7 +11,7 @@ const ProjectBox: React.FC<UseProjectBoxProps> = (props) => {
    return (
       <div className="mx-[-16px] px-[16px]">
          <div className="bg-[#ffffff] border-[1px] rounded-md">
-            {!errorBG ? (
+            {!errorBG && project.background ? (
                <Image
                   src={project.background}
                   alt={project.name}
@@ -21,14 +21,13 @@ const ProjectBox: React.FC<UseProjectBoxProps> = (props) => {
                   onError={() => setErrorBG(true)}
                />
             ) : (
+               <div className="w-full aspect-[10/5] flex items-center justify-center bg-[#EAEFF8]">
                <Image
-                  width="100%"
-                  aspectRatio={10 / 5}
-                  objectFit="cover"
                   src={OPENNEZT_LOGO_GRADIENT}
                   alt="OpenNezt"
-                  className="bg-contain"
+                  className="object-contain"
                />
+            </div>
             )}
             <div className="flex flex-col items-center p-8">
                <div className="flex flex-col items-center mt-[-80px]">
