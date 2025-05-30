@@ -60,6 +60,14 @@ export const getSkillFramework = (categoryId: any) => {
 }
 
 // STAGES
+export const getStageFrameworkDirect = () => {
+   return callApi({
+      method: 'get',
+      apiPath: 'users/stages',
+   })
+}
+
+// STAGES (Redux version - keeping for backward compatibility)
 export const getStageFramework = () => async (dispatch: Dispatch, getState: any) => {
    return callReduxApi({
       method: 'get',

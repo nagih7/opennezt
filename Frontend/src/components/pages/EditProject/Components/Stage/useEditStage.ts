@@ -2,11 +2,12 @@ import { useEffect, useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getMyProjectDetails, updateProjectSector } from 'api/project'
-import { getIndustryFramework, getStageFramework } from 'api/user'
+import { getIndustryFramework, getStageFrameworkDirect } from 'api/user'
 import { postProjectDetailsActivitiesSector } from 'api/activity'
 import { AppDispatch, RootState } from '~/store'
 import { toast } from 'sonner'
 import { toaster } from 'components/UI/toaster'
+import { createListCollection } from '@chakra-ui/react'
 
 // Define types for the hook
 interface Industry {
@@ -35,8 +36,19 @@ export const useEditStage = () => {
 
    // ========== STATE FROM REDUX STORE ========== //
    const { myProjectDetails, isLoadingUpdateMyProject } = useSelector((state: RootState) => state.project)
-   const { industryFramework, stageFramework } = useSelector((state: RootState) => state.user)
    const project = myProjectDetails
+
+   // ========== LOCAL STATE FOR FRAMEWORKS ========== //
+   const [industryFramework, setIndustryFramework] = useState<any>(
+      createListCollection({
+         items: [],
+      })
+   )
+   const [stageFramework, setStageFramework] = useState<any>(
+      createListCollection({
+         items: [],
+      })
+   )
 
    // ========== STATE ========== //
    const [formData, setFormData] = useState<FormData>({
@@ -45,7 +57,42 @@ export const useEditStage = () => {
    })
    const loadedProjectId = useRef<string | null>(null)
 
-   // ========== USE EFFECT ========== //
+   // ========== FETCH FRAMEWORKS ========== //
+   const fetchIndustryFramework = async () => {
+      try {
+         const response = await getIndustryFramework()
+         if (response && response.data) {
+            setIndustryFramework(
+               createListCollection({
+                  items: response.data.map((industry: any) => ({
+                     label: industry.name,
+                     value: industry._id,
+                  })),
+               })
+            )
+         }
+      } catch (error) {
+         console.error('Error fetching industry framework:', error)
+      }
+   }
+
+   const fetchStageFramework = async () => {
+      try {
+         const response = await getStageFrameworkDirect()
+         if (response && response.data) {
+            setStageFramework(
+               createListCollection({
+                  items: response.data.map((stage: any) => ({
+                     label: stage.name,
+                     value: stage._id,
+                  })),
+               })
+            )
+         }
+      } catch (error) {
+         console.error('Error fetching stage framework:', error)
+      }
+   } // ========== USE EFFECT ========== //
    useEffect(() => {
       if (!project || project?.id !== id) {
          dispatch(getMyProjectDetails(id!))
@@ -67,12 +114,16 @@ export const useEditStage = () => {
    }, [project, id])
 
    useEffect(() => {
-      if (!industryFramework.length) dispatch(getIndustryFramework())
-   }, [dispatch, industryFramework.length])
+      if (!industryFramework.items?.length) {
+         fetchIndustryFramework()
+      }
+   }, [industryFramework.items?.length])
 
    useEffect(() => {
-      if (!stageFramework.length) dispatch(getStageFramework())
-   }, [dispatch, stageFramework.length])
+      if (!stageFramework.items?.length) {
+         fetchStageFramework()
+      }
+   }, [stageFramework.items?.length])
 
    // ========== HANDLE CHANGE FUNCTION ========== //
    const handleChange = (event: SelectEvent, nameSelect?: string) => {

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 export interface Member {
    user: {
@@ -26,7 +27,8 @@ export const useProjectBox = () => {
    const [errorBG, setErrorBG] = useState<boolean>(false)
 
    const handleNavigateToProjectDetails = (project: Project) => {
-      navigate(`/projects/${project._id}/details`)
+      const projectId = project._id
+      navigate(ROUTE_CONFIG.USER.PROJECT.DETAIL.PREFIX.replace(':id', projectId))
    }
 
    return {

@@ -77,7 +77,7 @@ const ProjectBox: React.FC<UseProjectBoxProps> = (props) => {
                      onClick={() => handleNavigateToProjectDetails(project)}
                      className="bg-[#eaeff8] text-[#2f65b9] hover:bg-[#2f65b9] hover:text-[#ffffff] transition duration- text-sm rounded-md font-semibold px-[28px] py-[15px] mx-[14px] no-underline"
                   >
-                     MANAGE PROJECT
+                     VIEW PROJECT
                   </Button>
                </div>
             </div>
