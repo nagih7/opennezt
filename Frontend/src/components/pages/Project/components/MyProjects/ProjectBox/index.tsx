@@ -6,7 +6,6 @@ import { useProjectBox, UseProjectBoxProps } from './useProjectBox'
 
 const ProjectBox: React.FC<UseProjectBoxProps> = (props) => {
    const { project } = props
-   console.log('ProjectBox props:', project)
    const { errorBG, setErrorBG, handleNavigateToProjectDetails } = useProjectBox()
 
    return (

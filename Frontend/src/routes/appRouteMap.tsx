@@ -42,7 +42,7 @@ const appRouteMap: RouteConfig[] = [
       label: Sidebar.MESSAGES,
       icon: <IconlyChat size={24} color="#fff" />,
       path: ROUTE_CONFIG.USER.CONVERSATION.PREFIX,
-      routeActive: [ROUTE_CONFIG.USER.CONVERSATION.PREFIX],
+      routeActive: [ROUTE_CONFIG.USER.CONVERSATION.PREFIX, ROUTE_CONFIG.USER.CONVERSATION.DETAIL],
       permissions: ['conversation_page'],
    },
 ]

@@ -39,6 +39,6 @@
          "utils/*": ["utils/*"]
       }
    },
-   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"],
+   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx", "vite-env.d.ts"],
    "references": [{ "path": "./tsconfig.node.json" }]
 }
