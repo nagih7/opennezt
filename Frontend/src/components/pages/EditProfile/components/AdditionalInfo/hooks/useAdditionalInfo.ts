@@ -19,7 +19,6 @@ const useAdditionalInfo = () => {
    const [formData, setFormData] = useState<FormData>({})
    const [existingData, setExistingData] = useState<ExistingData>({})
    const [isSaving, setIsSaving] = useState<boolean>(false)
-   const [isEditing, setIsEditing] = useState<boolean>(false)
 
    // ========== Profile Data Fetching ========== //
    const [profile, setProfile] = useState<any>(null)
@@ -86,18 +85,11 @@ const useAdditionalInfo = () => {
 
    // ========== HANDLE CHANGE FUNCTION ========== //
    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-      if (!isEditing) return
-
       setFormData({
          ...formData,
          [e.target.name]: e.target.value,
       })
    }
-
-   const toggleEdit = (): void => {
-      setIsEditing(!isEditing)
-   }
-
 
    const handleCreateProfileAdditionalInfo = async (submitData: { name: string; content: string; _id?: string}): Promise<void> => {
       const response = await createProfileAdditionalInfo(submitData, 'create')
@@ -189,7 +181,6 @@ const useAdditionalInfo = () => {
       Promise.all(promises)
          .then(() => {
             setIsSaving(false)
-            setIsEditing(false)
          })
          .catch(() => {
             setIsSaving(false)
@@ -200,9 +191,7 @@ const useAdditionalInfo = () => {
         formData,
         existingData,
         isSaving,
-        isEditing,
         handleChange,
-        toggleEdit,
         handleSaveAll,
    }
 }

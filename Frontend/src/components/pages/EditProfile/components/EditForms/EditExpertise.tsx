@@ -66,7 +66,7 @@ const EditExpertise: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                         <Button
                            disabled={formData?.skills?.length === 0}
                            onClick={handleAddSkill}
-                           height={50}
+                           height={35}
                            className="mt-[14px] text-sm px-[18px] py-2 sm:text-base sm:px-[28px] sm:py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
                            borderRadius={4}
                            loading={false}
@@ -94,24 +94,20 @@ const EditExpertise: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                      </div>
                   ))}
                </div>
-               <div className="px-[16px] flex flex-col gap-8">
-                  <div className="flex justify-end">
-                     <div className="">
-                        <Button
-                           loading={isLoadingUpdateSkills}
-                           disabled={mySkills?.length === 0}
-                           onClick={handleSave}
-                           height={50}
-                           className="mt-[14px] text-sm px-[18px] py-2 sm:text-base sm:px-[28px] sm:py-3 bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-                           borderRadius={4}
-                           loadingText="Loading..."
-                           spinnerPlacement="start"
-                        >
-                           SAVE CHANGES
-                        </Button>
-                     </div>
-                  </div>
-               </div>
+            <div className="flex gap-2 pt-4 border-t border-gray-200">
+               <Button
+                  onClick={handleSave}
+                  loading={isLoadingUpdateSkills}
+                  className="bg-[#2f65b9] text-white flex-1"
+                  size="sm"
+                  disabled={mySkills.length === 0}
+               >
+                  Save Changes
+               </Button>
+               <Button onClick={onClose} variant="outline" className="flex-1" size="sm">
+                  Cancel
+               </Button>
+            </div>
       </div>
    )
 }
