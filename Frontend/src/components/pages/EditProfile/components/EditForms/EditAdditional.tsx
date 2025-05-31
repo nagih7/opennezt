@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button } from '@chakra-ui/react'
 import useAdditionalInfo from '../AdditionalInfo/hooks/useAdditionalInfo'
-import { IconlyDocument, IconlyEdit } from '~/components/UI/Iconly'
 import TextAreaCustom from '~/components/UI/TextAreaCustom'
 
 const EditAdditional: React.FC<{ onClose: () => void }> = ({ onClose }) => {
@@ -9,9 +8,7 @@ const EditAdditional: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       fields,
         formData,
         isSaving,
-        isEditing,
         handleChange,
-        toggleEdit,
         handleSaveAll
    } = useAdditionalInfo()
 
@@ -46,15 +43,6 @@ const EditAdditional: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                     <label htmlFor={field.id} className="font-medium text-gray-700">
                                        {field.name}
                                     </label>
-                                    {!isEditing && index === 0 && (
-                                       <Button
-                                          onClick={toggleEdit}
-                                          className="bg-[#2f65b9] text-white px-3 py-1 rounded-md"
-                                          size="sm"
-                                       >
-                                          <IconlyEdit size={18} color="#ffffff" backgroundColor={undefined} />
-                                       </Button>
-                                    )}
                                  </div>
                                  <TextAreaCustom
                                     id={field.id}
@@ -64,7 +52,6 @@ const EditAdditional: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                     onChange={handleChange}
                                     value={formData[field.id] || ''}
                                     rows={4}
-                                    disabled={!isEditing}
                                     nomax={true}
                                  />
                               </td>
@@ -74,29 +61,18 @@ const EditAdditional: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   </table>
                </div>
             <div className="flex gap-2 pt-4 border-t border-gray-200">
+               <Button
+                  onClick={handleSave}
+                  loading={isSaving}
+                  className="bg-[#2f65b9] text-white flex-1"
+                  size="sm"
+               >
+                  Save Changes
+               </Button>
                <Button onClick={onClose} variant="outline" className="flex-1" size="sm">
                   Cancel
                </Button>
             </div>
-
-               {isEditing && (
-                  <div className="flex justify-end mt-4 space-x-3">
-                     <Button onClick={toggleEdit} className="px-6 py-2 text-white bg-gray-400 rounded-md">
-                        Cancel
-                     </Button>
-                     <Button
-                        onClick={handleSave}
-                        loading={isSaving}
-                        loadingText="Saving..."
-                        className="bg-[#2f65b9] text-white px-6 py-2 rounded-md"
-                     >
-                        <span className="mr-2">
-                           <IconlyDocument size={18} color="#ffffff" />
-                        </span>{' '}
-                        Save
-                     </Button>
-                  </div>
-               )}
       </div>
    )
 }
