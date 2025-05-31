@@ -1,20 +1,9 @@
-import { Alert, Avatar, Badge, Image, Input, Stack, Text } from '@chakra-ui/react'
+import { Avatar, Badge } from '@chakra-ui/react'
 import { Button } from '~/components/UI/button'
-import {
-   DialogActionTrigger,
-   DialogBody,
-   DialogCloseTrigger,
-   DialogContent,
-   DialogFooter,
-   DialogHeader,
-   DialogRoot,
-} from 'components/UI/dialog'
 import { IconlyBookmark, IconlyCamera, IconlyFolder, IconlyLocation, IconlyShieldDone } from 'components/UI/Iconly'
-import { BsStars } from 'react-icons/bs'
-import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { setOpenModalMatchingProjects } from 'store/modules/artificialIntelligence'
-import CrawlLinkedin from 'components/common/CrawlLinkedin'
 import useProfileOverview from './hooks/useProfileOverview'
+import { Input } from '~/components/UI/input'
+import MatchingProfile from '../MatchingProfile'
 
 const ProfileOverview = () => {
    const {
@@ -23,8 +12,6 @@ const ProfileOverview = () => {
       isLoadingBtnChangeAvatar,
       isOpenAvatarPreview,
       profile,
-      projects,
-      isLoadingMatchingProjects,
       avatarFile,
       avatarFileSrc,
       isOpenModalConfirmMatchingProjects,
@@ -33,7 +20,6 @@ const ProfileOverview = () => {
       handleUploadAvatar,
       handleCloseAvatarPreview,
       handleSaveAvatar,
-      handleMatchingProjects,
       isOpenModalCrawlLinkedin,
    } = useProfileOverview()
 
@@ -42,29 +28,7 @@ const ProfileOverview = () => {
          <div className="flex items-center w-full flex-nowrap">
             <div className="w-4/12">
                <div className="flex items-center justify-center">
-                  {(projects.length === 0 || isLoadingMatchingProjects) && (
-                     <Button
-                        className="flex items-center gap-2 bg-gradient-to-r from-[#0606AFCC] to-[#AE2135E5] cursor-pointer py-2 px-[15px] rounded-xl"
-                        disabled={isLoadingMatchingProjects}
-                        onClick={() => !isLoadingMatchingProjects && setIsOpenModalConfirmMatchingProjects(true)}
-                     >
-                        {isLoadingMatchingProjects ? (
-                           <AiOutlineLoading3Quarters className="text-[#ffffff] w-5 h-5 animate-spin" />
-                        ) : (
-                           <BsStars className="text-[#ffffff] w-5 h-5" />
-                        )}
-                        {isLoadingMatchingProjects ? 'Matching...' : 'Apply with AI'}
-                     </Button>
-                  )}
-                  {projects.length > 0 && !isLoadingMatchingProjects && (
-                     <Button
-                        className="flex items-center gap-2 bg-gradient-to-r from-[#0606AFCC] to-[#AE2135E5] cursor-pointer py-2 px-[15px] rounded-xl"
-                        onClick={() => dispatch(setOpenModalMatchingProjects(true))}
-                     >
-                        <IconlyFolder color={'#ffffff'} size={15} />
-                        View matching projects
-                     </Button>
-                  )}
+                  <MatchingProfile />
                </div>
             </div>
             <div className="flex flex-col items-center w-4/12">
@@ -101,7 +65,7 @@ const ProfileOverview = () => {
                      Online
                   </Badge>
                </div>
-               <DialogRoot
+               {/* <Dialog
                   size={'xs'}
                   width="auto"
                   lazyMount
@@ -137,10 +101,10 @@ const ProfileOverview = () => {
                      </DialogFooter>
                      <DialogCloseTrigger onClick={handleCloseAvatarPreview} />
                   </DialogContent>
-               </DialogRoot>
+               </Dialog> */}
                <h5 className="text-[#000000] font-bold text-xs md:text-lg flex gap-1 items-center">
                   {authUser?.name}
-                  <IconlyShieldDone size={24} color="#3897f0" className="text-[#3897f0] mx-[6px]" />
+                  <IconlyShieldDone size={24} color="#3897f0" />
                </h5>
                <div className="flex items-center mt-[8px] gap-4">
                   {authUser?.region && (
@@ -184,53 +148,6 @@ const ProfileOverview = () => {
                </ul>
             </div>
          </div>
-         {/* AI MATCHING */}
-         <DialogRoot size={'lg'} placement={'center'} lazyMount open={isOpenModalConfirmMatchingProjects}>
-            <DialogContent>
-               <DialogHeader className="flex">
-                  <Text className="text-lg font-bold from-stone-900">Matching projects with AI</Text>
-               </DialogHeader>
-               <DialogBody>
-                  <Stack gap={4} className="w-full">
-                     <div className="text-[#000000] font-[500] text-md flex gap-1 items-center">
-                        To provide you with the most accurate and relevant matches, our AI system needs to analyze the
-                        following:
-                     </div>
-                     <div className="text-[#2f65b9] font-[500] text-md flex gap-1 items-center">
-                        - Your project profile, including its description, goals, tractions and requirements.
-                     </div>
-                     <div className="text-[#2f65b9] font-[500] text-md flex gap-1 items-center">
-                        - Profiles of your founding team and core team, including skills, roles, and expertise.
-                     </div>
-                     <div className="italic">
-                        This information will only be used to enhance the matching process and recommend talents who
-                        best align with your needs. Your data will remain confidential and protected under our Privacy
-                        Policy.
-                     </div>
-
-                     <Alert.Root status="info">
-                        <Alert.Indicator />
-                        <Alert.Title>
-                           Do you consent to allowing our AI system to access this information for the purpose of
-                           generating matches?
-                        </Alert.Title>
-                     </Alert.Root>
-                  </Stack>
-               </DialogBody>
-               <DialogFooter className="user-select-none">
-                  <DialogActionTrigger asChild>
-                     <Button variant="outline" onClick={() => setIsOpenModalConfirmMatchingProjects(false)}>
-                        Cancel
-                     </Button>
-                  </DialogActionTrigger>
-                  <Button variant="solid" onClick={handleMatchingProjects}>
-                     Confirm
-                  </Button>
-               </DialogFooter>
-               <DialogCloseTrigger onClick={() => setIsOpenModalConfirmMatchingProjects(false)} />
-            </DialogContent>
-         </DialogRoot>
-         <CrawlLinkedin status={isOpenModalCrawlLinkedin} setStatus={setIsOpenModalCrawlLinkedin} />
       </div>
    )
 }

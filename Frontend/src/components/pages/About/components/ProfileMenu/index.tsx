@@ -43,7 +43,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ changeTab, setChangeTab }) =>
                </span>
             </li>
             <li
-               onClick={() => setChangeTab('Groups')}
+               // onClick={() => setChangeTab('Groups')}
                className="flex flex-col items-center gap-3 py-[40px] px-[8px] border-r-[1px] border-[#f4f5f6]"
             >
                <a

@@ -56,7 +56,7 @@ export async function createProject(user, requestBody) {
     await project.save()
     // Revenue
     if (revenues?.length > 0) {
-        const revenueBulk = revenues.map((revenue) => ({
+        const revenueBulk = revenues.map(revenue => ({
             ...revenue,
             project_id: project._id,
         }))
@@ -64,7 +64,7 @@ export async function createProject(user, requestBody) {
     }
     // Funding Source
     if (funding_sources?.length > 0) {
-        project.funding_sources = funding_sources.map((funding_source) => ({
+        project.funding_sources = funding_sources.map(funding_source => ({
             ...funding_source,
             project_id: project._id,
         }))
@@ -72,7 +72,7 @@ export async function createProject(user, requestBody) {
     }
     // Additional Info
     if (additional_infos?.length > 0) {
-        project.additional_infos = additional_infos.map((additional_info) => ({
+        project.additional_infos = additional_infos.map(additional_info => ({
             ...additional_info,
             project_id: project._id,
         }))
@@ -183,15 +183,7 @@ export async function getListMyProjects(user, { q, page, per_page, field, order 
         },
     }
 
-    const projects = await Project.aggregate([
-        matchStage,
-        lookupMemberStage,
-        lookupArticleStage,
-        sortStage,
-        skipStage,
-        limitStage,
-        projectStage,
-    ])
+    const projects = await Project.aggregate([matchStage, lookupMemberStage, lookupArticleStage, sortStage, skipStage, limitStage, projectStage])
 
     const filter = { user_id: user._id, name: { $regex: q, $options: 'i' } }
     const total = await Project.countDocuments(filter)
@@ -236,7 +228,7 @@ export async function getListProjectsParticipated(user, { q, page, per_page, fie
 
     const matchStage = {
         $match: {
-            _id: { $in: participated.map((item) => item._id) },
+            _id: { $in: participated.map(item => item._id) },
         },
     }
     const lookupMemberStage = {
@@ -314,15 +306,7 @@ export async function getListProjectsParticipated(user, { q, page, per_page, fie
         },
     }
 
-    const projects = await Project.aggregate([
-        matchStage,
-        lookupMemberStage,
-        lookupArticleStage,
-        sortStage,
-        skipStage,
-        limitStage,
-        projectStage,
-    ])
+    const projects = await Project.aggregate([matchStage, lookupMemberStage, lookupArticleStage, sortStage, skipStage, limitStage, projectStage])
 
     const total = participated.length
     const last_page = Math.ceil(total / per_page)
@@ -817,10 +801,7 @@ export async function getProjectDetails(user, projectId) {
 
 // ========== PATCH [Project - Basic] ========== //
 export async function updateBasic(user, { id }, requestBody) {
-    await Project.updateOne(
-        { user_id: user._id, _id: id },
-        { name: requestBody.name, description: requestBody.description }
-    )
+    await Project.updateOne({ user_id: user._id, _id: id }, { name: requestBody.name, description: requestBody.description })
     return requestBody
 }
 
@@ -828,11 +809,11 @@ export async function updateBasic(user, { id }, requestBody) {
 export async function updateSector(user, { id }, requestBody) {
     await Project.updateOne(
         { user_id: user._id, _id: id },
-        { industry_ids: requestBody.industries.map((item) => item._id), stage_id: requestBody.stage._id }
+        { industry_ids: requestBody.industries.map(item => item._id), stage_id: requestBody.stage._id }
     )
 
     return {
-        industries: requestBody.industries.map((item) => {
+        industries: requestBody.industries.map(item => {
             return { _id: item._id, name: item.name, description: item.description }
         }),
         stage: { _id: requestBody.stage._id, name: requestBody.stage.name, description: requestBody.stage.description },
@@ -846,13 +827,13 @@ export async function updateRevenue(user, { id }, requestBody) {
     const { revenues } = requestBody
     await Revenue.deleteMany({ project_id: project._id }).exec()
     if (revenues?.length > 0) {
-        const revenueBulk = revenues.map((revenue) => ({
+        const revenueBulk = revenues.map(revenue => ({
             ...revenue,
             project_id: project._id,
         }))
         const newRevenues = await Revenue.insertMany(revenueBulk)
         return {
-            revenues: newRevenues.map((item) => ({
+            revenues: newRevenues.map(item => ({
                 _id: item._id,
                 amount: item.amount,
                 currency: item.currency,
@@ -869,13 +850,13 @@ export async function updateFundingSource(user, { id }, requestBody) {
     const { funding_sources } = requestBody
     await FundingSource.deleteMany({ project_id: project._id }).exec()
     if (funding_sources?.length > 0) {
-        const fundingSourceBulk = funding_sources.map((funding_source) => ({
+        const fundingSourceBulk = funding_sources.map(funding_source => ({
             ...funding_source,
             project_id: project._id,
         }))
         const newFundingSources = await FundingSource.insertMany(fundingSourceBulk)
         return {
-            funding_sources: newFundingSources.map((item) => ({
+            funding_sources: newFundingSources.map(item => ({
                 _id: item._id,
                 name: item.name,
                 amount: item.amount,
@@ -892,13 +873,13 @@ export async function updateAdditionalInfo(user, { id }, requestBody) {
     const { additional_infos } = requestBody
     await ProjectAdditionalInfo.deleteMany({ project_id: project._id }).exec()
     if (additional_infos?.length > 0) {
-        const additionalInfoBulk = additional_infos.map((additional_info) => ({
+        const additionalInfoBulk = additional_infos.map(additional_info => ({
             ...additional_info,
             project_id: project._id,
         }))
         await ProjectAdditionalInfo.insertMany(additionalInfoBulk)
         return {
-            additional_infos: additional_infos.map((item) => ({
+            additional_infos: additional_infos.map(item => ({
                 _id: item._id,
                 name: item.name,
                 content: item.content,
@@ -974,10 +955,7 @@ export async function updateSectorRequirement(user, { id }, requestBody) {
         })
         await requirement.save()
     } else {
-        await ProjectRequirement.updateOne(
-            { project_id: project._id },
-            { industry_ids: industries, experience_level_ids: experienceLevels }
-        )
+        await ProjectRequirement.updateOne({ project_id: project._id }, { industry_ids: industries, experience_level_ids: experienceLevels })
     }
     return { industries, experienceLevels }
 }
@@ -1524,7 +1502,7 @@ export async function inviteMember(user, projectId, requestBody, io) {
         { $unwind: '$data.project' },
         { $project: { _id: 1, user: 1, data: { project: 1 }, type: 1, timestamp: 1, metadata: 1 } },
     ])
-    const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === userId.toString())
+    const userSocketId = Object.keys(userSockets).find(socketId => userSockets[socketId] === userId.toString())
     if (userSocketId) {
         io.to(userSocketId).emit(PROJECT_INVITATION_NOTIFICATION, notification[0])
     }
@@ -1541,7 +1519,7 @@ export async function inviteMember(user, projectId, requestBody, io) {
             type: PROJECT_INVITATION_NOTIFICATION,
         },
     })
-    webpush.sendNotification(subscription, payload).catch(async (err) => {
+    webpush.sendNotification(subscription, payload).catch(async err => {
         if (err.statusCode === 410 || err.statusCode === 404) {
             await Subscription.deleteOne({ endpoint: subscription.endpoint })
         } else {
@@ -1819,36 +1797,21 @@ export async function updateNewMemberActivity(user, { invitationId }) {
         await activity.save()
         return activity
     } else {
-        throw new Error(
-            `Lời mời chưa được xác nhận. Trạng thái hiện tại: ${invitation.metadata?.status || 'không có trạng thái'}`
-        )
+        throw new Error(`Lời mời chưa được xác nhận. Trạng thái hiện tại: ${invitation.metadata?.status || 'không có trạng thái'}`)
     }
 }
 
 // LẤY CHI TIẾT THÔNG TIN DỰ ÁN BẰNG ID
 export async function getProjectDetailsToMatching(projectId) {
     const project = await Project.aggregate([
-        {
-            $match: {
-                _id: new ObjectId(projectId),
-            },
-        },
+        { $match: { _id: new ObjectId(projectId) } },
         {
             $lookup: {
                 from: 'industries',
                 localField: 'industry_ids',
                 foreignField: '_id',
                 as: 'industries',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 0,
-                            name: 1,
-                            email: 1,
-                            phone: 1,
-                        },
-                    },
-                ],
+                pipeline: [{ $project: { _id: 0, name: 1, email: 1, phone: 1 } }],
             },
         },
         {
@@ -1857,34 +1820,17 @@ export async function getProjectDetailsToMatching(projectId) {
                 localField: 'stage_id',
                 foreignField: '_id',
                 as: 'stage',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 0,
-                            name: 1,
-                        },
-                    },
-                ],
+                pipeline: [{ $project: { _id: 0, name: 1 } }],
             },
         },
-        {
-            $unwind: '$stage',
-        },
+        { $unwind: '$stage' },
         {
             $lookup: {
                 from: 'project_additional_infos',
                 localField: '_id',
                 foreignField: 'project_id',
                 as: 'additional_infos',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 0,
-                            name: 1,
-                            content: 1,
-                        },
-                    },
-                ],
+                pipeline: [{ $project: { _id: 0, name: 1, content: 1 } }],
             },
         },
         {
@@ -1900,14 +1846,7 @@ export async function getProjectDetailsToMatching(projectId) {
                             localField: 'team_role_ids',
                             foreignField: '_id',
                             as: 'team_roles',
-                            pipeline: [
-                                {
-                                    $project: {
-                                        _id: 0,
-                                        name: 1,
-                                    },
-                                },
-                            ],
+                            pipeline: [{ $project: { _id: 0, name: 1 } }],
                         },
                     },
                     {
@@ -1916,14 +1855,7 @@ export async function getProjectDetailsToMatching(projectId) {
                             localField: 'role_ids',
                             foreignField: '_id',
                             as: 'roles',
-                            pipeline: [
-                                {
-                                    $project: {
-                                        _id: 0,
-                                        name: 1,
-                                    },
-                                },
-                            ],
+                            pipeline: [{ $project: { _id: 0, name: 1 } }],
                         },
                     },
                     {
@@ -1932,14 +1864,7 @@ export async function getProjectDetailsToMatching(projectId) {
                             localField: 'industry_ids',
                             foreignField: '_id',
                             as: 'industries',
-                            pipeline: [
-                                {
-                                    $project: {
-                                        _id: 0,
-                                        name: 1,
-                                    },
-                                },
-                            ],
+                            pipeline: [{ $project: { _id: 0, name: 1 } }],
                         },
                     },
                     {
@@ -1948,14 +1873,7 @@ export async function getProjectDetailsToMatching(projectId) {
                             localField: 'experience_level_ids',
                             foreignField: '_id',
                             as: 'experience_levels',
-                            pipeline: [
-                                {
-                                    $project: {
-                                        _id: 0,
-                                        name: 1,
-                                    },
-                                },
-                            ],
+                            pipeline: [{ $project: { _id: 0, name: 1 } }],
                         },
                     },
                     {
@@ -1964,53 +1882,16 @@ export async function getProjectDetailsToMatching(projectId) {
                             localField: 'skill_ids',
                             foreignField: '_id',
                             as: 'skills',
-                            pipeline: [
-                                {
-                                    $project: {
-                                        _id: 0,
-                                        name: 1,
-                                    },
-                                },
-                            ],
+                            pipeline: [{ $project: { _id: 0, name: 1 } }],
                         },
                     },
                     {
                         $addFields: {
-                            team_roles: {
-                                $map: {
-                                    input: '$team_roles',
-                                    as: 'team_role',
-                                    in: '$$team_role.name',
-                                },
-                            },
-                            roles: {
-                                $map: {
-                                    input: '$roles',
-                                    as: 'role',
-                                    in: '$$role.name',
-                                },
-                            },
-                            industries: {
-                                $map: {
-                                    input: '$industries',
-                                    as: 'industry',
-                                    in: '$$industry.name',
-                                },
-                            },
-                            experience_levels: {
-                                $map: {
-                                    input: '$experience_levels',
-                                    as: 'experience_level',
-                                    in: '$$experience_level.name',
-                                },
-                            },
-                            skills: {
-                                $map: {
-                                    input: '$skills',
-                                    as: 'skill',
-                                    in: '$$skill.name',
-                                },
-                            },
+                            team_roles: { $map: { input: '$team_roles', as: 'team_role', in: '$$team_role.name' } },
+                            roles: { $map: { input: '$roles', as: 'role', in: '$$role.name' } },
+                            industries: { $map: { input: '$industries', as: 'industry', in: '$$industry.name' } },
+                            experience_levels: { $map: { input: '$experience_levels', as: 'experience_level', in: '$$experience_level.name' } },
+                            skills: { $map: { input: '$skills', as: 'skill', in: '$$skill.name' } },
                         },
                     },
                     {
@@ -2029,24 +1910,8 @@ export async function getProjectDetailsToMatching(projectId) {
                 ],
             },
         },
-        {
-            $unwind: {
-                path: '$project_requirement',
-                preserveNullAndEmptyArrays: true,
-            },
-        },
-        {
-            $addFields: {
-                industries: {
-                    $map: {
-                        input: '$industries',
-                        as: 'industry',
-                        in: '$$industry.name',
-                    },
-                },
-                stage: '$stage.name',
-            },
-        },
+        { $unwind: { path: '$project_requirement', preserveNullAndEmptyArrays: true } },
+        { $addFields: { industries: { $map: { input: '$industries', as: 'industry', in: '$$industry.name' } }, stage: '$stage.name' } },
         {
             $project: {
                 _id: 0,
@@ -2061,30 +1926,20 @@ export async function getProjectDetailsToMatching(projectId) {
         },
     ])
 
+    console.log('Project Details:', project)
     return project[0] || null
 }
 
 export async function getProjectByMatching(projectId) {
     const project = await Project.aggregate([
-        {
-            $match: {
-                _id: new ObjectId(projectId),
-            },
-        },
+        { $match: { _id: new ObjectId(projectId) } },
         {
             $lookup: {
                 from: 'industries',
                 localField: 'industry_ids',
                 foreignField: '_id',
                 as: 'industries',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 0,
-                            name: 1,
-                        },
-                    },
-                ],
+                pipeline: [{ $project: { _id: 0, name: 1 } }],
             },
         },
         {
@@ -2405,6 +2260,7 @@ export async function getProjectByMatching(projectId) {
             },
         },
     ])
+    console.log('Project By Matching:', project)
 
     return project[0] || null
 }
@@ -2445,10 +2301,7 @@ export async function getListInviteToProject(user, projectId) {
                             {
                                 $match: {
                                     $expr: {
-                                        $and: [
-                                            { $eq: ['$user_id', '$$friendId'] },
-                                            { $eq: ['$project_id', '$$projectId'] },
-                                        ],
+                                        $and: [{ $eq: ['$user_id', '$$friendId'] }, { $eq: ['$project_id', '$$projectId'] }],
                                     },
                                 },
                             },
@@ -2498,7 +2351,7 @@ export async function getListInviteToProject(user, projectId) {
                             $eq: await Type.findOne({
                                 class: NOTIFICATION_TYPE,
                                 name: PROJECT_INVITATION_NOTIFICATION,
-                            }).then((type) => type._id),
+                            }).then(type => type._id),
                         },
                     },
                 },

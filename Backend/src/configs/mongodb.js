@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import {DATABASE_URI, DB_NAME, DB_USERNAME, DB_PASSWORD, DB_AUTH_SOURCE} from './constants'
+import { DATABASE_URI, DB_NAME, DB_USERNAME, DB_PASSWORD, DB_AUTH_SOURCE } from './constants'
 
 const mongoDb = {
     connect() {

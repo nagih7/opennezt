@@ -7,7 +7,7 @@ import { FileUpload } from '@/utils/classes'
 import { callAPIInterview, convertSpeechToText, convertTextToSpeech, getProjectMatchingInterview } from './apiService'
 import verifyVoice from '@/utils/classes/verify-voice'
 
-export const createNewInterviewNotSave = (payload) => {
+export const createNewInterviewNotSave = payload => {
     const { project_id, user_id, conversation_id, ...data } = payload
     const interview = new Interview({
         project_id: new ObjectId(project_id),
@@ -18,7 +18,7 @@ export const createNewInterviewNotSave = (payload) => {
     return interview
 }
 
-export const createNewInterview = async (payload) => {
+export const createNewInterview = async payload => {
     const { project_id, user_id, conversation_id, ...data } = payload
     const interview = new Interview({
         project_id: new ObjectId(project_id),
@@ -31,7 +31,7 @@ export const createNewInterview = async (payload) => {
     return interview
 }
 
-export const addInterviewMessage = (payload) => {
+export const addInterviewMessage = payload => {
     const { content, type, attachments } = payload
     // Thêm tin nhắn vào cuộc phỏng vấn
     // const interview = await Interview.findById(interview_id).lean()
@@ -151,7 +151,7 @@ export async function closeInterview(requestBody) {
     if (!storage) return
     else {
         // Xoá các audio trong Message của BOT trong cuộc hội thoại
-        const newMessages = messages.map((message) => {
+        const newMessages = messages.map(message => {
             if (message.attachments) {
                 const path = message.attachments.replace(LINK_STATIC_URL, '')
                 FileUpload.remove(path)
