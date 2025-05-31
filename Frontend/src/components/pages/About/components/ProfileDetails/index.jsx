@@ -1,10 +1,12 @@
 import { FaCheck } from 'react-icons/fa6'
-import { IconlyEditSquare, IconlyStar } from '../Iconly'
+import { IconlyEditSquare, IconlyStar } from '../../../../UI/Iconly'
 import React, { useState } from 'react'
 import { IoMdArrowDropdown } from 'react-icons/io'
 import { RiArrowRightSFill } from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_CONFIG } from '~/config/constants'
+import { Dialog, Portal } from '@chakra-ui/react'
+import { EditAdditional, EditBackground, EditCertification, EditEducation, EditExpertise } from '~/components/pages/EditProfile/components/EditForms'
 
 const ProfileDetails = ({ profile }) => {
    const formatDate = (dateString) => {
@@ -37,13 +39,19 @@ const ProfileDetails = ({ profile }) => {
    const [openExpertiseRequest, setOpenExpertiseRequest] = useState({})
    const toUpper = (text) => text?.toUpperCase()
 
+   const [activeForm, setActiveForm] = useState(null)
+
+   const closeForm = () => {
+      setActiveForm(null)
+   }
+
    return (
       <div className="w-full lg:w-10/12">
          <div className="bg-[#ffffff] rounded-md">
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">Professional Background</h5>
                <span
-                  onClick={() => navigate(ROUTE_CONFIG.USER.PROFILE.EDIT.PROFESSIONAL_BACKGROUND)}
+                  onClick={() => setActiveForm('professionalBackground')}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -74,7 +82,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">Education</h5>
                <span
-                  onClick={() => navigate(ROUTE_CONFIG.USER.PROFILE.EDIT.EDUCATION)}
+                  onClick={() => setActiveForm('education')}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -113,7 +121,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">Certification</h5>
                <span
-                  onClick={() => navigate(ROUTE_CONFIG.USER.PROFILE.EDIT.CERTIFICATION)}
+                  onClick={() => setActiveForm('certification')}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -166,7 +174,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">Expertise</h5>
                <span
-                  onClick={() => navigate(ROUTE_CONFIG.USER.PROFILE.EDIT.SKILL)}
+                  onClick={() => setActiveForm('expertise')}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -253,7 +261,7 @@ const ProfileDetails = ({ profile }) => {
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">More </h5>
                <span
-                  onClick={() => navigate(ROUTE_CONFIG.USER.PROFILE.EDIT.DESCRIPTION)}
+                  onClick={() => setActiveForm('additionalInfos')}
                   className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
@@ -276,6 +284,56 @@ const ProfileDetails = ({ profile }) => {
                )}
             </div>
          </div>
+         <Dialog.Root size="lg" placement="center" open={activeForm === 'professionalBackground'} motionPreset="slide-in-bottom">
+            <Portal>
+               <Dialog.Backdrop />
+               <Dialog.Positioner>
+                  <Dialog.Content className="w-[500px] max-w-[95vw] p-0 mx-auto shadow-2xl border border-gray-200/50 rounded-xl bg-white/95 backdrop-blur-sm">
+                     <EditBackground onClose={closeForm} />
+                  </Dialog.Content>
+               </Dialog.Positioner>
+            </Portal>
+         </Dialog.Root>
+         <Dialog.Root size="lg" placement="center" open={activeForm === 'education'} motionPreset="slide-in-bottom">
+            <Portal>
+               <Dialog.Backdrop />
+               <Dialog.Positioner>
+                  <Dialog.Content className="w-[500px] max-w-[95vw] p-0 mx-auto shadow-2xl border border-gray-200/50 rounded-xl bg-white/95 backdrop-blur-sm">
+                     <EditEducation onClose={closeForm} />
+                  </Dialog.Content>
+               </Dialog.Positioner>
+            </Portal>
+         </Dialog.Root>
+                  <Dialog.Root size="lg" placement="center" open={activeForm === 'certification'} motionPreset="slide-in-bottom">
+            <Portal>
+               <Dialog.Backdrop />
+               <Dialog.Positioner>
+                  <Dialog.Content className="w-[500px] max-w-[95vw] p-0 mx-auto shadow-2xl border border-gray-200/50 rounded-xl bg-white/95 backdrop-blur-sm">
+                     <EditCertification onClose={closeForm} />
+                  </Dialog.Content>
+               </Dialog.Positioner>
+            </Portal>
+         </Dialog.Root>
+         <Dialog.Root size="lg" placement="center" open={activeForm === 'expertise'} motionPreset="slide-in-bottom">
+            <Portal>
+               <Dialog.Backdrop />
+               <Dialog.Positioner>
+                  <Dialog.Content className="w-[500px] max-w-[95vw] p-0 mx-auto shadow-2xl border border-gray-200/50 rounded-xl bg-white/95 backdrop-blur-sm">
+                     <EditExpertise onClose={closeForm} />
+                  </Dialog.Content>
+               </Dialog.Positioner>
+            </Portal>
+         </Dialog.Root>
+                  <Dialog.Root size="lg" placement="center" open={activeForm === 'additionalInfos'} motionPreset="slide-in-bottom">
+            <Portal>
+               <Dialog.Backdrop />
+               <Dialog.Positioner>
+                  <Dialog.Content className="w-[500px] max-w-[95vw] p-0 mx-auto shadow-2xl border border-gray-200/50 rounded-xl bg-white/95 backdrop-blur-sm">
+                     <EditAdditional onClose={closeForm} />
+                  </Dialog.Content>
+               </Dialog.Positioner>
+            </Portal>
+         </Dialog.Root>
       </div>
    )
 }

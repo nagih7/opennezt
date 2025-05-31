@@ -1,5 +1,5 @@
 import RightSidebar from 'components/common/RightSidebar'
-import ProfileDetails from 'components/UI/ProfileDetails'
+import ProfileDetails from '~/components/pages/About/components/ProfileDetails'
 import useProfessionalProfile from './hooks/useProfessionalProfile'
 
 const action = () => {
