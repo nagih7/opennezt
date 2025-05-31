@@ -4,10 +4,10 @@ import { useDispatch } from 'react-redux'
 import { getMyFriends } from '~/api/profile'
 import { AppDispatch, RootState } from '~/store'
 import { FRIEND_REQUEST_NOTIFICATION, WAITING_STATUS } from '~/utils/constants'
-import { Friend, Notification, OrderByType } from '../types'
 import { replyNotification } from '~/api/notification'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_CONFIG } from '~/config/constants'
+import { Friend, Notification, OrderByType } from '~/types'
 
 const useFriends = () => {
    const dispatch = useDispatch<AppDispatch>()

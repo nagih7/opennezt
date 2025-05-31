@@ -4,7 +4,7 @@ import { matchingProjects } from '~/api/artificialIntelligence'
 import { MatchingProjectProps, ProjectDetailsProps } from '~/types'
 import { setHideLinkedinNotification } from '~/utils/localStorage'
 
-const useMatchingProfile = () => {
+export const useMatchingProfile = () => {
    // State
    const [matches, setMatches] = useState<MatchingProjectProps[]>([])
    const [loading, setLoading] = useState<boolean>(false)
@@ -125,5 +125,3 @@ const useMatchingProfile = () => {
       handleShowProject,
    }
 }
-
-export default useMatchingProfile

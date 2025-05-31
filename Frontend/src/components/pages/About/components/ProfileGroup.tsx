@@ -1,52 +1,16 @@
 import React, { useEffect } from 'react'
-import { Tabs } from '@chakra-ui/react'
+import { Avatar, Tabs } from '@chakra-ui/react'
 import RightSidebar from 'components/common/RightSidebar'
 import { useDispatch, useSelector } from 'react-redux'
-import { getListProjectsParticipated } from 'api/project'
-// import ProjectBox from './components/ProjectBox'
 import { PROJECT_INVITATION_NOTIFICATION, WAITING_STATUS } from 'utils/constants'
-import InviteBox from './components/InviteBox'
 import { AppDispatch } from '~/store'
 import { RootState } from '~/store'
-
-interface Project {
-   _id: string
-   name: string
-   background: string
-   logo: string
-   articles?: any[]
-   members?: any[]
-}
-
-interface Notification {
-   _id: string
-   type?: {
-      name: string
-   }
-   metadata?: {
-      status: string
-   }
-   user: {
-      name: string
-      avatar: string
-   }
-   data?: {
-      project?: {
-         name: string
-      }
-   }
-}
-
-interface Pagination {
-   page: number
-   limit: number
-   total: number
-}
+import { Button } from '~/components/UI/button'
 
 const Groups: React.FC = () => {
    const dispatch = useDispatch<AppDispatch>()
    // ========== STATE FROM REDUX ========== //
-   const { projectsParticipated, paginationProjectsParticipated } = useSelector((state: RootState) => state.project)
+   const { projectsParticipated } = useSelector((state: RootState) => state.project)
    const { notifications } = useSelector((state: RootState) => state.notification)
 
    const projects = projectsParticipated || []
@@ -58,7 +22,7 @@ const Groups: React.FC = () => {
    // ========== USE EFFECT ========== //
    useEffect(() => {
       if (!projectsParticipated || projectsParticipated.length === 0) {
-         dispatch(getListProjectsParticipated(paginationProjectsParticipated))
+         // dispatch(getListProjectsParticipated(paginationProjectsParticipated))
       }
       // eslint-disable-next-line
    }, [dispatch])
@@ -94,13 +58,7 @@ const Groups: React.FC = () => {
                         <div className="p-6 bg-white rounded-lg">
                            <h4 className="mb-4 text-lg font-semibold">Groups({projects?.length})</h4>
                            <hr className="mb-4" />
-                           <div className="grid grid-cols-3 gap-8">
-                              {projects.map(
-                                 (project) =>
-                                    /* <ProjectBox project={project} key={project._id} /> */
-                                    null
-                              )}
-                           </div>
+                           <div className="grid grid-cols-3 gap-8"></div>
                         </div>
                      </Tabs.Content>
                      <Tabs.Content value="Invitations">
@@ -114,7 +72,27 @@ const Groups: React.FC = () => {
                                  <h4 className="mb-4 text-lg font-semibold">Invitations({invitations?.length})</h4>
                                  <hr className="mb-4" />
                                  {invitations.map((invite) => (
-                                    <InviteBox invite={invite} key={invite._id} />
+                                    <div className="flex items-center justify-between p-4 mb-3 bg-white border rounded-lg">
+                                       <div className="flex items-center space-x-4">
+                                          <Avatar.Root className="w-[4.5rem] h-[4.5rem] rounded-full">
+                                             <Avatar.Image src={invite.user?.avatar} />
+                                             <Avatar.Fallback>{invite.user?.name}</Avatar.Fallback>
+                                          </Avatar.Root>
+
+                                          <div className="flex items-center space-x-1">
+                                             <p className="font-medium">
+                                                <strong>{invite.user?.name}</strong> invite you to group{' '}
+                                                <strong>{invite.data?.project?.name}</strong>
+                                             </p>
+                                          </div>
+                                       </div>
+                                       <div className="flex space-x-4">
+                                          <Button className="bg-blue-500 text-white hover:!bg-blue-400 hover:!text-white font-bold">
+                                             Accept
+                                          </Button>
+                                          <Button className="bg-[#F4F5F6] font-bold">Delete</Button>
+                                       </div>
+                                    </div>
                                  ))}
                               </div>
                            )}

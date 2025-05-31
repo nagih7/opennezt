@@ -138,15 +138,14 @@ export const updateSkillProfile = (data: any) => {
 }
 
 // ========== Additional Info ========== //
-export const createProfileAdditionalInfo =
-   (data: any, action: string) => {
-      return callApi({
-         method: action === 'create' ? 'post' : 'put',
-         apiPath: `/profile/additional-info`,
-         variables: data,
-      })
-   }
-   
+export const createProfileAdditionalInfo = (data: any, action: string) => {
+   return callApi({
+      method: action === 'create' ? 'post' : 'put',
+      apiPath: `/profile/additional-info`,
+      variables: data,
+   })
+}
+
 export const updateProfileAdditionalInfo = (data: any) => {
    return callApi({
       method: 'put',

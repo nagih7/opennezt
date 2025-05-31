@@ -1,27 +1,26 @@
-import { Avatar, Badge } from '@chakra-ui/react'
+import React from 'react'
+import { Badge } from '@chakra-ui/react'
 import { Button } from '~/components/UI/button'
-import { IconlyBookmark, IconlyCamera, IconlyFolder, IconlyLocation, IconlyShieldDone } from 'components/UI/Iconly'
-import useProfileOverview from './hooks/useProfileOverview'
+import { IconlyBookmark, IconlyCamera, IconlyLocation, IconlyShieldDone } from 'components/UI/Iconly'
+import { useProfileAvatar } from '../hooks'
+import MatchingProfile from './MatchingProfile'
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '~/components/UI/dialog'
+import { Avatar, AvatarImage } from '~/components/UI/avatar'
+import { AVATAR_DEFAULT } from '~/utils/constants'
 import { Input } from '~/components/UI/input'
-import MatchingProfile from '../MatchingProfile'
 
-const ProfileOverview = () => {
+const ProfileOverview: React.FC = () => {
    const {
-      dispatch,
       authUser,
-      isLoadingBtnChangeAvatar,
+      loading,
       isOpenAvatarPreview,
       profile,
       avatarFile,
       avatarFileSrc,
-      isOpenModalConfirmMatchingProjects,
-      setIsOpenModalConfirmMatchingProjects,
-      setIsOpenModalCrawlLinkedin,
       handleUploadAvatar,
       handleCloseAvatarPreview,
       handleSaveAvatar,
-      isOpenModalCrawlLinkedin,
-   } = useProfileOverview()
+   } = useProfileAvatar()
 
    return (
       <div className="p-8 bg-[#ffffff] rounded-md">
@@ -40,18 +39,12 @@ const ProfileOverview = () => {
                   >
                      <IconlyCamera size={18} color={'#ffffff'} />
                   </label>
-                  <a href="#" className="absolute top-[-137px]">
-                     <Avatar.Root
-                        shape="rounded"
-                        width="150px"
-                        className=" bg-[#ffffff] p-1 object-cover max-w-[150px] h-[150px] rounded-md"
-                     >
-                        <Avatar.Fallback name={authUser?.name} />
-                        <Avatar.Image src={authUser?.avatar} />
-                     </Avatar.Root>
-                  </a>
+                  <Avatar className="absolute top-[-137px] bg-[#ffffff] p-1 object-cover max-w-[150px] w-[150px] h-[150px] overflow-hidden rounded-md">
+                     <AvatarImage src={authUser?.avatar} />
+                     <AvatarImage src={AVATAR_DEFAULT} />
+                  </Avatar>
                   <Input
-                     // value={avatarFile}
+                     value={avatarFileSrc || undefined}
                      id="file-upload"
                      type="file"
                      accept="image/png, image/jpeg"
@@ -65,43 +58,26 @@ const ProfileOverview = () => {
                      Online
                   </Badge>
                </div>
-               {/* <Dialog
-                  size={'xs'}
-                  width="auto"
-                  lazyMount
-                  open={isOpenAvatarPreview}
-                  onOpenChange={handleCloseAvatarPreview}
-               >
-                  <DialogContent className="flex items-center justify-center">
-                     <DialogHeader className="flex">
-                        <Text className="text-lg font-bold from-stone-900">Choose profile picture</Text>
+               <Dialog open={isOpenAvatarPreview} onOpenChange={handleCloseAvatarPreview}>
+                  <DialogContent className="flex flex-col items-center justify-center">
+                     <DialogHeader>
+                        <p className="text-lg font-bold from-stone-900">Choose profile picture</p>
                      </DialogHeader>
-                     <DialogBody>
-                        <Image
-                           src={avatarFileSrc || undefined}
-                           boxSize="150px"
-                           borderRadius="full"
-                           fit="cover"
-                           alt="Avatar Preview"
-                        />
-                     </DialogBody>
-                     <DialogFooter className="user-select-none">
-                        <DialogActionTrigger asChild>
-                           <Button variant="outline">Cancel</Button>
-                        </DialogActionTrigger>
-                        <Button
-                           loading={isLoadingBtnChangeAvatar}
-                           loadingText="Saving..."
-                           spinnerPlacement="start"
-                           // variant="solid"
-                           onClick={() => avatarFile && handleSaveAvatar(avatarFile)}
-                        >
+                     <img
+                        src={avatarFileSrc || undefined}
+                        className="rounded-md object-cover w-[150px] h-[150px] user-select-none"
+                        alt="Avatar Preview"
+                     />
+                     <DialogFooter>
+                        <Button variant="outline" onClick={handleCloseAvatarPreview}>
+                           Cancel
+                        </Button>
+                        <Button loading={loading} onClick={() => avatarFile && handleSaveAvatar(avatarFile)}>
                            Save
                         </Button>
                      </DialogFooter>
-                     <DialogCloseTrigger onClick={handleCloseAvatarPreview} />
                   </DialogContent>
-               </Dialog> */}
+               </Dialog>
                <h5 className="text-[#000000] font-bold text-xs md:text-lg flex gap-1 items-center">
                   {authUser?.name}
                   <IconlyShieldDone size={24} color="#3897f0" />
@@ -134,17 +110,17 @@ const ProfileOverview = () => {
             <div className="w-4/12">
                <ul className="flex flex-wrap items-center justify-center gap-5 p-0 m-0 text-xs md:text-base ">
                   {/* <li className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
-                            <h5>{profile.activities}</h5>
-                            Views
-                        </li> */}
+                     <h5>{profile.activities || 0}</h5>
+                     Views
+                  </li> */}
                   <li className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
                      <h5>{profile?.articles?.length || 0}</h5>
                      <span className="text-[#6f7f92] font-medium">Posts</span>
                   </li>
-                  <li className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
+                  {/* <li className="flex flex-col items-center  after:border-l-2 after:border-[#e0e6ec]">
                      <h5>{profile?.activities || 0}</h5>
                      <span className="text-[#6f7f92] font-medium">Views</span>
-                  </li>
+                  </li> */}
                </ul>
             </div>
          </div>

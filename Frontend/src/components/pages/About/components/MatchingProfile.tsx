@@ -10,7 +10,7 @@ import {
    DialogTitle,
    DialogTrigger,
 } from '~/components/UI/dialog'
-import useMatchingProfile from '../hooks/useMatchingProfile'
+import { useMatchingProfile } from '../hooks'
 import { BsStars } from 'react-icons/bs'
 import { Alert, AlertDescription } from '~/components/UI/alert'
 import { AlertCircleIcon } from 'lucide-react'
