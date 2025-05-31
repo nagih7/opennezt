@@ -1,13 +1,10 @@
-import { Button } from '@chakra-ui/react'
 import React from 'react'
-import ProfileCard from '../ProfileCard'
-import ProfileEditMenu from '../ProfileEditMenu'
-import ActionBar from '../ActionBar'
-import { IconlyDocument, IconlyEdit } from 'components/UI/Iconly'
-import TextAreaCustom from 'components/UI/TextAreaCustom'
-import useAdditionalInfo from './hooks/useAdditionalInfo'
+import { Button } from '@chakra-ui/react'
+import useAdditionalInfo from '../AdditionalInfo/hooks/useAdditionalInfo'
+import { IconlyDocument, IconlyEdit } from '~/components/UI/Iconly'
+import TextAreaCustom from '~/components/UI/TextAreaCustom'
 
-const AdditionalInfo: React.FC = () => {
+const EditAdditional: React.FC<{ onClose: () => void }> = ({ onClose }) => {
    const {
       fields,
         formData,
@@ -17,20 +14,15 @@ const AdditionalInfo: React.FC = () => {
         toggleEdit,
         handleSaveAll
    } = useAdditionalInfo()
-   // ========== COMPONENT RENDER ========== //
+
+   const handleSave = () => {
+      handleSaveAll()
+      onClose()
+   }
+
    return (
-      <div className="flex gap-8 flex-col md:flex-row w-full py-8 px-[16px]">
-         <ProfileEditMenu />
-         <div className="w-full md:w-8/12">
-            <div className="bg-[#ffffff] p-8 hidden md:block rounded-md">
-               {/* =========== Profile Card ========== */}
-               <ProfileCard />
-               {/* =========== Action Bar  ========== */}
-               <ActionBar />
-            </div>
-            <div className="bg-[#ffffff] p-8 rounded-md md:mt-8">
-               <div className="pb-[20px] mb-8 border-b-[1px] border-gray-200">
-                  <div className="flex items-center justify-between">
+      <div className="w-[500px] max-w-[95vw] max-h-[80vh] overflow-y-auto p-6">
+         <div className="pb-4 mb-4 border-b border-gray-200">
                      <div>
                         <h4 className="text-xl font-semibold">Additional Information</h4>
                         <p className="mt-1 text-sm text-gray-600">
@@ -38,11 +30,8 @@ const AdditionalInfo: React.FC = () => {
                            <strong className="font-bold">Note: max 500 characters for each field</strong>
                         </p>
                      </div>
-                  </div>
-               </div>
-
-               {/* Direct input fields instead of a modal */}
-               <div className="overflow-hidden border rounded-md">
+         </div>
+         <div className="overflow-hidden border rounded-md">
                   <table className="w-full">
                      <tbody>
                         {/* Render fields dynamically from fields array */}
@@ -84,6 +73,11 @@ const AdditionalInfo: React.FC = () => {
                      </tbody>
                   </table>
                </div>
+            <div className="flex gap-2 pt-4 border-t border-gray-200">
+               <Button onClick={onClose} variant="outline" className="flex-1" size="sm">
+                  Cancel
+               </Button>
+            </div>
 
                {isEditing && (
                   <div className="flex justify-end mt-4 space-x-3">
@@ -91,7 +85,7 @@ const AdditionalInfo: React.FC = () => {
                         Cancel
                      </Button>
                      <Button
-                        onClick={handleSaveAll}
+                        onClick={handleSave}
                         loading={isSaving}
                         loadingText="Saving..."
                         className="bg-[#2f65b9] text-white px-6 py-2 rounded-md"
@@ -103,10 +97,8 @@ const AdditionalInfo: React.FC = () => {
                      </Button>
                   </div>
                )}
-            </div>
-         </div>
       </div>
    )
 }
 
-export default AdditionalInfo
+export default EditAdditional
