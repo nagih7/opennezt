@@ -24,8 +24,6 @@ export const useEditLogo = () => {
    useEffect(() => {
       // CHỈ LOAD KHI project ID khác với đã load
       if (project && project._id === id && loadedProjectId.current !== id) {
-         console.log('Loading logo data for project:', id)
-
          setLogoURL(project?.logo || '')
          setLogoFile(null) // Reset logo file when loading new project
 

@@ -1,9 +1,8 @@
-import React from 'react'
-import { Link, useParams } from 'react-router-dom'
+import React, { useState } from 'react'
 import { IconlyEditSquare } from 'components/UI/Iconly'
-import { HStack, Tag } from '@chakra-ui/react'
+import { HStack, Tag, Dialog, Portal } from '@chakra-ui/react'
 import ProjectActivity from '../ProjectActivity'
-import { ROUTE_CONFIG } from '~/config/constants'
+import { SectorForm, RevenueForm, FundingForm, MoreForm } from '../../../EditProject/Components/Forms'
 
 interface Industry {
    id: string
@@ -24,7 +23,8 @@ interface FundingSource {
 
 interface AdditionalInfo {
    name: string
-   content: string
+   content?: string
+   description?: string
 }
 
 interface ProjectProps {
@@ -40,22 +40,24 @@ interface ProjectProps {
 }
 
 const ProjectOverview: React.FC<ProjectProps> = ({ project }) => {
-   const params = useParams<{ id: string }>()
-   const { id } = params
+   const [activeForm, setActiveForm] = useState<string | null>(null)
+
+   const closeForm = () => setActiveForm(null)
 
    return (
       <div className="px-[16px]">
          <div className="flex w-full gap-8">
             <div className="w-full lg:w-10/12">
                <div className="bg-[#ffffff] rounded-md">
+                  {' '}
                   <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                      <h5 className="mb-0">Secter</h5>
-                     <Link
-                        to={ROUTE_CONFIG.USER.PROJECT.ME.PREFIX + id + '/edit/stage'}
+                     <button
                         className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
+                        onClick={() => setActiveForm('sector')}
                      >
                         <IconlyEditSquare size={20} color={'#ffffff'} />
-                     </Link>
+                     </button>
                   </div>
                   <div className="p-8">
                      <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
@@ -83,16 +85,17 @@ const ProjectOverview: React.FC<ProjectProps> = ({ project }) => {
                         </li>
                      </ul>
                   </div>
-               </div>
+               </div>{' '}
                <div className="bg-[#ffffff] rounded-md mt-8">
+                  {' '}
                   <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                      <h5 className="mb-0">Revenue</h5>
-                     <Link
-                        to={ROUTE_CONFIG.USER.PROJECT.ME.PREFIX + id + '/edit/revenue'}
+                     <button
                         className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
+                        onClick={() => setActiveForm('revenue')}
                      >
                         <IconlyEditSquare size={20} color={'#ffffff'} />
-                     </Link>
+                     </button>
                   </div>
                   <div className="p-8">
                      <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
@@ -156,16 +159,18 @@ const ProjectOverview: React.FC<ProjectProps> = ({ project }) => {
                         </li>
                      </ul>
                   </div>
-               </div>
+               </div>{' '}
                <div className="bg-[#ffffff] rounded-md mt-8">
+                  {' '}
                   <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
+                     {' '}
                      <h5 className="mb-0">Funding Sources</h5>
-                     <Link
-                        to={ROUTE_CONFIG.USER.PROJECT.ME.PREFIX + id + '/edit/funding'}
+                     <button
                         className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
+                        onClick={() => setActiveForm('funding')}
                      >
                         <IconlyEditSquare size={20} color={'#ffffff'} />
-                     </Link>
+                     </button>
                   </div>
                   <div className="p-8">
                      <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
@@ -215,35 +220,61 @@ const ProjectOverview: React.FC<ProjectProps> = ({ project }) => {
                         </li>
                      </ul>
                   </div>
-               </div>
+               </div>{' '}
                <div className="bg-[#ffffff] rounded-md mt-8">
+                  {' '}
                   <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
+                     {' '}
                      <h5 className="mb-0">More</h5>
-                     <Link
-                        to={ROUTE_CONFIG.USER.PROJECT.ME.PREFIX + id + '/edit/description'}
+                     <button
                         className="bg-[#4374c0] w-7 h-7 flex items-center justify-center rounded-md cursor-pointer"
+                        onClick={() => setActiveForm('more')}
                      >
                         <IconlyEditSquare size={20} color={'#ffffff'} />
-                     </Link>
+                     </button>
                   </div>
                   <div className="p-8">
+                     {' '}
                      <ul className="grid grid-cols-1 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
-                        {project?.additional_infos && project.additional_infos.length > 0 ? (
-                           project.additional_infos.map((additional_info, index) => (
-                              <li key={index} className="px-[16px] mb-6">
-                                 <div className="mb-2 text-sm font-medium uppercase">
-                                    {additional_info.name || 'N/A'}
-                                 </div>
-                                 <div>
-                                    <p className="mb-2 text-base font-medium text-black">
-                                       {additional_info.content || 'N/A'}
-                                    </p>
-                                 </div>
-                                 {index < (project.additional_infos?.length ?? 0) - 1 && (
-                                    <hr className="my-4 border-[#f4f5f6]" />
-                                 )}
-                              </li>
-                           ))
+                        {project?.additional_infos &&
+                        Array.isArray(project.additional_infos) &&
+                        project.additional_infos.length > 0 ? (
+                           project.additional_infos
+                              .filter(
+                                 (additional_info): additional_info is AdditionalInfo =>
+                                    additional_info && typeof additional_info === 'object' && additional_info !== null
+                              )
+                              .map((additional_info, index, filteredArray) => {
+                                 return (
+                                    <li
+                                       key={`additional-info-${index}-${additional_info.name || 'unnamed'}`}
+                                       className="px-[16px] mb-6"
+                                    >
+                                       <div className="mb-2 text-sm font-medium uppercase">
+                                          {additional_info?.name || 'N/A'}
+                                       </div>
+                                       <div>
+                                          <p className="mb-2 text-base font-medium text-black">
+                                             {(() => {
+                                                try {
+                                                   return (
+                                                      additional_info?.content || additional_info?.description || 'N/A'
+                                                   )
+                                                } catch (error) {
+                                                   console.error(
+                                                      'Error accessing additional_info properties:',
+                                                      error,
+                                                      additional_info
+                                                   )
+                                                   return 'N/A'
+                                                }
+                                             })()}
+                                          </p>
+                                       </div>
+                                       {index < filteredArray.length - 1 && <hr className="my-4 border-[#f4f5f6]" />}
+                                    </li>
+                                 )
+                              })
                         ) : (
                            <li className="px-[16px] mb-10">
                               <div className="mb-2 text-sm font-medium uppercase">Additional Information</div>
@@ -254,10 +285,55 @@ const ProjectOverview: React.FC<ProjectProps> = ({ project }) => {
                         )}
                      </ul>
                   </div>
-               </div>
+               </div>{' '}
             </div>
             <ProjectActivity />
          </div>
+
+         {/* Dialog Components */}
+         <Dialog.Root size="lg" placement="center" open={activeForm === 'sector'} motionPreset="slide-in-bottom">
+            <Portal>
+               <Dialog.Backdrop />
+               <Dialog.Positioner>
+                  <Dialog.Content className="w-[500px] max-w-[95vw] p-0 mx-auto shadow-2xl border border-gray-200/50 rounded-xl bg-white/95 backdrop-blur-sm">
+                     <SectorForm onClose={closeForm} />
+                  </Dialog.Content>
+               </Dialog.Positioner>
+            </Portal>
+         </Dialog.Root>
+
+         <Dialog.Root size="lg" placement="center" open={activeForm === 'revenue'} motionPreset="slide-in-bottom">
+            <Portal>
+               <Dialog.Backdrop />
+               <Dialog.Positioner>
+                  <Dialog.Content className="w-[600px] max-w-[95vw] p-0 mx-auto shadow-2xl border border-gray-200/50 rounded-xl bg-white/95 backdrop-blur-sm">
+                     <RevenueForm onClose={closeForm} />
+                  </Dialog.Content>
+               </Dialog.Positioner>
+            </Portal>
+         </Dialog.Root>
+
+         <Dialog.Root size="lg" placement="center" open={activeForm === 'funding'} motionPreset="slide-in-bottom">
+            <Portal>
+               <Dialog.Backdrop />
+               <Dialog.Positioner>
+                  <Dialog.Content className="w-[600px] max-w-[95vw] p-0 mx-auto shadow-2xl border border-gray-200/50 rounded-xl bg-white/95 backdrop-blur-sm">
+                     <FundingForm onClose={closeForm} />
+                  </Dialog.Content>
+               </Dialog.Positioner>
+            </Portal>
+         </Dialog.Root>
+
+         <Dialog.Root size="lg" placement="center" open={activeForm === 'more'} motionPreset="slide-in-bottom">
+            <Portal>
+               <Dialog.Backdrop />
+               <Dialog.Positioner>
+                  <Dialog.Content className="w-[600px] max-w-[95vw] p-0 mx-auto shadow-2xl border border-gray-200/50 rounded-xl bg-white/95 backdrop-blur-sm">
+                     <MoreForm onClose={closeForm} />
+                  </Dialog.Content>
+               </Dialog.Positioner>
+            </Portal>
+         </Dialog.Root>
       </div>
    )
 }
