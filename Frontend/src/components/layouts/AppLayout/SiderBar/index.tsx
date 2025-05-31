@@ -4,8 +4,9 @@ import { IconlyLogout, IconlySetting, IconlyUser } from 'components/UI/Iconly'
 import useSidebar from './useSidebar'
 import { RouteConfig } from '~/types'
 import { useLocation } from 'react-router-dom'
-import { Avatar } from '@chakra-ui/react'
 import { FaCircleCheck } from 'react-icons/fa6'
+import { AVATAR_DEFAULT } from '~/utils/constants'
+import { Avatar, AvatarImage } from '~/components/UI/avatar'
 
 const SideBar: React.FC = () => {
    const location = useLocation()
@@ -19,10 +20,10 @@ const SideBar: React.FC = () => {
                className="flex items-center gap-3 pb-4 mb-6 border-b-[1px] border-gray-200"
                onClick={() => navigate('/profile')}
             >
-               <Avatar.Root size={'xl'}>
-                  <Avatar.Fallback name={authUser?.name} />
-                  <Avatar.Image src={authUser?.avatar} alt={authUser?.name || 'User avatar'} />
-               </Avatar.Root>
+               <Avatar className="w-[48px] h-[48px]">
+                  <AvatarImage src={authUser?.avatar || undefined} />
+                  <AvatarImage src={AVATAR_DEFAULT} />
+               </Avatar>
                <div>
                   <div className="flex items-center gap-2 text-black no-underline text-nowrap">
                      <span className="font-semibold truncate w-36">{authUser?.name}</span>

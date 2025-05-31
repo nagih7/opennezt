@@ -5,7 +5,6 @@ import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import moment from 'moment'
 import { Avatar } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { AnyAction } from 'redux'
 import { ROUTE_CONFIG } from '~/config/constants'
 
 interface User {
@@ -73,7 +72,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({ activities, action }) => {
                            <Avatar.Image src={activity.user?.avatar} />
                         </Avatar.Root>
                         <p className="text-[#6f7f92] text-sm mb-0">
-                           <div className='flex items-center gap-1'> 
+                           <div className="flex items-center gap-1">
                               <a href="#" className="text-black no-underline">
                                  {activity.user?.name}
                               </a>

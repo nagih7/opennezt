@@ -4,10 +4,9 @@ import ChangePassword from './components/ChangePassword'
 // import CameraAltIcon from '@mui/icons-material/CameraAlt'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '~/components/UI/tabs'
 import useProfile from './hooks/useProfile'
-import { FaCamera } from "react-icons/fa";
+import { FaCamera } from 'react-icons/fa'
 
-
-function Profile() {
+const Profile: React.FC = () => {
    const {
       authUser,
       background,
@@ -17,7 +16,7 @@ function Profile() {
       handleBackgroundChange,
       handleAvatarChange,
       handleAvatarError,
-      handleBackgroundError
+      handleBackgroundError,
    } = useProfile()
    return (
       <div className="w-full h-full">
@@ -35,7 +34,7 @@ function Profile() {
                         <div className="absolute px-3 py-2 transition-colors bg-white rounded-lg shadow-lg cursor-pointer bottom-4 right-6 hover:bg-gray-100">
                            <label className="flex items-center cursor-pointer">
                               <input type="file" className="hidden" onChange={handleBackgroundChange} />
-                              <FaCamera className='w-4 h-4' />
+                              <FaCamera className="w-4 h-4" />
                               <span className="ml-2 text-sm">Update Background</span>
                            </label>
                         </div>
@@ -45,7 +44,7 @@ function Profile() {
                            <div className="absolute bottom-0 flex items-center justify-center w-full h-5 transition-opacity duration-300 opacity-0 bg-gray-100/90 group-hover:opacity-100">
                               <label className="cursor-pointer">
                                  <input type="file" className="hidden" onChange={handleAvatarChange} />
-                                 <FaCamera className='w-4 h-4' />
+                                 <FaCamera className="w-4 h-4" />
                               </label>
                            </div>
                            <img src={avatar} alt={authUser.name} onError={handleAvatarError} />

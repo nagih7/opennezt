@@ -1,9 +1,8 @@
+import React from 'react'
 import { Tabs } from '@chakra-ui/react'
 import RightSidebar from 'components/common/RightSidebar'
 
-import React from 'react'
-import TimelinePost from './TimelinePost'
-const Timeline = () => {
+const Timeline: React.FC = () => {
    return (
       <>
          <div className="flex gap-3">
@@ -21,9 +20,7 @@ const Timeline = () => {
                      </Tabs.List>
                      <div className="mt-2">
                         <Tabs.Content value="All Post">
-                           <>
-                              <TimelinePost />
-                           </>
+                           <>{/* <TimelinePost /> */}</>
                         </Tabs.Content>
                      </div>
                   </div>

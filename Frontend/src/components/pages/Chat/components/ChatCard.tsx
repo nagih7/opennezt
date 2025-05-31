@@ -19,8 +19,8 @@ const ChatCard: React.FC<ChatCardProps> = ({ conversation, userId, index, onNavi
       >
          <div className="flex items-center flex-1 gap-3 overflow-hidden">
             <Avatar>
-               <AvatarFallback>{conversation?.members[0]?.name}</AvatarFallback>
-               <AvatarImage src={conversation?.members[0]?.avatar || AVATAR_DEFAULT} />
+               <AvatarImage src={conversation?.members[0]?.avatar || undefined} />
+               <AvatarImage src={AVATAR_DEFAULT} />
             </Avatar>
             <div className="flex-1 overflow-hidden">
                <p className="text-sm font-bold">{conversation.members[0].name}</p>

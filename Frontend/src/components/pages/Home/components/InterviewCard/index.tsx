@@ -22,8 +22,8 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ project, onIntervi
          >
             <div className="bg-[#ffffff] transition-all duration-500 ease-in-out rounded-full p-[2px] my-[30px] group-hover:my-[10px]">
                <Avatar className="2xl:w-[80px] 2xl:h-[80px] w-[70px] h-[70px]">
-                  <AvatarImage src={project?.logo || OPENNEZT_LOGO} alt={project.name} />
-                  <AvatarFallback>{project.name}</AvatarFallback>
+                  <AvatarImage src={project?.logo || undefined} alt={project.name} />
+                  <AvatarImage src={OPENNEZT_LOGO} alt={project.name} />
                </Avatar>
             </div>
             <div className="group-hover:block transition-all duration-700 ease-in-out hidden absolute right-0 top-0 bg-[#ffffff] rounded-lg m-[10px] cursor-pointer">

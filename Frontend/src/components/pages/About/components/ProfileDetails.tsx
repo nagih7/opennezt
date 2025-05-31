@@ -1,48 +1,59 @@
 import { FaCheck } from 'react-icons/fa6'
-import { IconlyEditSquare, IconlyStar } from '../../../../UI/Iconly'
+import { IconlyEditSquare, IconlyStar } from '../../../UI/Iconly'
 import React, { useState } from 'react'
 import { IoMdArrowDropdown } from 'react-icons/io'
 import { RiArrowRightSFill } from 'react-icons/ri'
-import { useNavigate } from 'react-router-dom'
-import { ROUTE_CONFIG } from '~/config/constants'
 import { Dialog, Portal } from '@chakra-ui/react'
-import { EditAdditional, EditBackground, EditCertification, EditEducation, EditExpertise } from '~/components/pages/EditProfile/components/EditForms'
+import {
+   EditAdditional,
+   EditBackground,
+   EditCertification,
+   EditEducation,
+   EditExpertise,
+} from '~/components/pages/EditProfile/components/EditForms'
+import {
+   ActiveFormType,
+   Certification,
+   Education,
+   GroupedSkills,
+   Industry,
+   OpenExpertiseRequest,
+   Profile,
+   ProfileAdditionalInfo,
+   Skill,
+} from '~/types'
 
-const ProfileDetails = ({ profile }) => {
-   const formatDate = (dateString) => {
+interface ProfileDetailsProps {
+   profile: Profile | null
+}
+
+const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile }) => {
+   const formatDate = (dateString?: string): string => {
       if (!dateString) return 'N/A'
       const date = new Date(dateString)
       return `${date.getMonth() + 1}/${date.getFullYear()}`
    }
 
-   const navigate = useNavigate()
-
-   const groupedSkills =
-      profile?.skills?.reduce((acc, skill) => {
-         let key = skill.category.name
+   const groupedSkills: GroupedSkills | null =
+      profile?.skills?.reduce((acc: GroupedSkills, skill: Skill) => {
+         const key = skill.category.name
          if (!acc[key]) {
             acc[key] = {
                category: skill.category,
                skills: [],
             }
          }
-         acc[key].skills.push({
-            name: skill.name,
-            description: skill.description,
-            _id: skill._id,
-         })
+         acc[key].skills.push(skill)
          return acc
-      }, {}) || {}
+      }, {} as GroupedSkills) || null
 
-   const result = Object.values(groupedSkills) || []
+   const result = groupedSkills ? Object.values(groupedSkills) : []
 
-   const [openExpertiseRequest, setOpenExpertiseRequest] = useState({})
-   const toUpper = (text) => text?.toUpperCase()
+   const [openExpertiseRequest, setOpenExpertiseRequest] = useState<OpenExpertiseRequest>({})
+   const [activeForm, setActiveForm] = useState<ActiveFormType>('')
 
-   const [activeForm, setActiveForm] = useState(null)
-
-   const closeForm = () => {
-      setActiveForm(null)
+   const closeForm = (): void => {
+      setActiveForm('')
    }
 
    return (
@@ -63,7 +74,7 @@ const ProfileDetails = ({ profile }) => {
                      <div className="mb-2 text-sm font-medium">INDUSTRY</div>
                      <div>
                         <p className="mb-2 text-base font-medium text-black line-clamp-3">
-                           {profile?.industries?.map((industry) => industry.name).join(', ') || 'N/A'}
+                           {profile?.industries?.map((industry: Industry) => industry.name).join(', ') || 'N/A'}
                         </p>
                      </div>
                   </li>
@@ -87,14 +98,14 @@ const ProfileDetails = ({ profile }) => {
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
                </span>
-            </div>
+            </div>{' '}
             <div className="p-8">
-               {profile?.educations?.length > 0 ? (
-                  profile.educations.map((education, index) => (
+               {profile?.educations && profile.educations.length > 0 ? (
+                  profile.educations.map((education: Education, index: number) => (
                      <div
-                        key={index}
+                        key={education._id || index}
                         className={`${index > 0 ? 'pt-4' : ''} ${
-                           index < profile.educations.length - 1 ? 'border-b' : ''
+                           index < (profile.educations?.length || 0) - 1 ? 'border-b' : ''
                         } flex gap-3 pb-4`}
                      >
                         <img className="w-[70px] h-[70px] object-contain" src="/opennezt.png" />
@@ -126,14 +137,14 @@ const ProfileDetails = ({ profile }) => {
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
                </span>
-            </div>
+            </div>{' '}
             <div className="p-8">
-               {profile?.certifications?.length > 0 ? (
-                  profile.certifications.map((certification, index) => (
+               {profile?.certifications && profile.certifications.length > 0 ? (
+                  profile.certifications.map((certification: Certification, index: number) => (
                      <div
-                        key={index}
+                        key={certification._id || index}
                         className={`${index > 0 ? 'pt-4' : ''} ${
-                           index < profile.certifications.length - 1 ? 'border-b' : ''
+                           index < (profile.certifications?.length || 0) - 1 ? 'border-b' : ''
                         } relative flex w-full justify-between items-center pb-4`}
                      >
                         <div className="flex gap-3">
@@ -180,24 +191,6 @@ const ProfileDetails = ({ profile }) => {
                   <IconlyEditSquare size={20} color={'#ffffff'} />
                </span>
             </div>
-            {/* <div className="p-8">
-                    {result?.length > 0 ? (
-                        <ul className="grid grid-cols-2 p-0 mb-0 mx-[-16px] text-[#6f7f92]">
-                            {result?.map((re, idx) => (
-                                <li className="px-[16px] mb-10" key={idx}>
-                                    <div className="mb-2 text-sm font-medium uppercase">{re?.category?.name}</div>
-                                    <div>
-                                        <p className="mb-2 text-base font-medium text-black">
-                                            {re?.skills?.map((skill) => skill?.name).join(', ') || 'N/A'}
-                                        </p>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <div className="p-8 text-[#6f7f92]">No expertise added yet</div>
-                    )}
-                </div> */}
             <div className="p-8">
                {result?.length > 0 ? (
                   <ul className="pl-0 mb-0 space-y-4">
@@ -235,8 +228,9 @@ const ProfileDetails = ({ profile }) => {
                            >
                               <div className="px-[24px]">
                                  <div className="px-[24px]">
+                                    {' '}
                                     <ul className="flex flex-col items-center pl-0 mb-0 cursor-pointer">
-                                       {item.skills.map((skill, subIndex) => (
+                                       {item.skills.map((skill) => (
                                           <li
                                              key={skill._id}
                                              className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
@@ -266,15 +260,15 @@ const ProfileDetails = ({ profile }) => {
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
                </span>
-            </div>
+            </div>{' '}
             <div className="p-8">
-               {profile?.additional_infos?.length > 0 ? (
+               {profile?.additional_infos && profile.additional_infos.length > 0 ? (
                   <ul className=" p-0 mb-0 mx-[-16px] text-[#6f7f92]">
-                     {profile?.additional_infos?.map((info, idx) => (
-                        <li className="px-[16px] mb-10" key={idx}>
-                           <div className="mb-2 text-sm font-medium uppercase">{info?.name}</div>
+                     {profile.additional_infos.map((info: ProfileAdditionalInfo, idx: number) => (
+                        <li className="px-[16px] mb-10" key={info._id || idx}>
+                           <div className="mb-2 text-sm font-medium uppercase">{info?.title}</div>
                            <div>
-                              <p className="mb-2 text-base font-medium text-black line-clamp-3">{info?.content}</p>
+                              <p className="mb-2 text-base font-medium text-black line-clamp-3">{info?.description}</p>
                            </div>
                         </li>
                      ))}
@@ -284,7 +278,12 @@ const ProfileDetails = ({ profile }) => {
                )}
             </div>
          </div>
-         <Dialog.Root size="lg" placement="center" open={activeForm === 'professionalBackground'} motionPreset="slide-in-bottom">
+         <Dialog.Root
+            size="lg"
+            placement="center"
+            open={activeForm === 'professionalBackground'}
+            motionPreset="slide-in-bottom"
+         >
             <Portal>
                <Dialog.Backdrop />
                <Dialog.Positioner>
@@ -304,7 +303,7 @@ const ProfileDetails = ({ profile }) => {
                </Dialog.Positioner>
             </Portal>
          </Dialog.Root>
-                  <Dialog.Root size="lg" placement="center" open={activeForm === 'certification'} motionPreset="slide-in-bottom">
+         <Dialog.Root size="lg" placement="center" open={activeForm === 'certification'} motionPreset="slide-in-bottom">
             <Portal>
                <Dialog.Backdrop />
                <Dialog.Positioner>
@@ -324,7 +323,12 @@ const ProfileDetails = ({ profile }) => {
                </Dialog.Positioner>
             </Portal>
          </Dialog.Root>
-                  <Dialog.Root size="lg" placement="center" open={activeForm === 'additionalInfos'} motionPreset="slide-in-bottom">
+         <Dialog.Root
+            size="lg"
+            placement="center"
+            open={activeForm === 'additionalInfos'}
+            motionPreset="slide-in-bottom"
+         >
             <Portal>
                <Dialog.Backdrop />
                <Dialog.Positioner>

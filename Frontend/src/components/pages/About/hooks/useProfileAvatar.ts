@@ -1,21 +1,17 @@
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
-import type { AppDispatch, RootState } from '~/store'
+import { useAppSelector } from '~/store'
 import { changeAvatar } from '~/api/profile'
+import resizeLogo from '~/utils/files/resizeLogo'
 
-const useProfileOverview = () => {
-   const dispatch = useDispatch<AppDispatch>()
+export const useProfileAvatar = () => {
    // ========== STATE FROM REDUX STORE ========== //
-   const { authUser } = useSelector((state: RootState) => state.auth)
-   const { isLoadingBtnChangeAvatar } = useSelector((state: RootState) => state.profile)
-   const { profile } = useSelector((state: RootState) => state.profile)
+   const { authUser } = useAppSelector((state) => state.auth)
+   const { profile } = useAppSelector((state) => state.profile)
    // ========== STATE ========== //
+   const [loading, setLoading] = useState<boolean>(false)
    const [avatarFile, setAvatarFile] = useState<File | null>(null)
    const [avatarFileSrc, setAvatarFileSrc] = useState<string | null>(null)
-   const [isOpenModalConfirmMatchingProjects, setIsOpenModalConfirmMatchingProjects] = useState(false)
-   const [isOpenModalCrawlLinkedin, setIsOpenModalCrawlLinkedin] = useState(false)
-   const [isOpenAvatarPreview, setIsOpenAvatarPreview] = useState<Boolean>(false)
+   const [isOpenAvatarPreview, setIsOpenAvatarPreview] = useState<boolean>(false)
 
    // ========== LOGIC ========== //
    const handleUploadAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,63 +33,49 @@ const useProfileOverview = () => {
    }
 
    const handleSaveAvatar = async (avatarFile: File) => {
+      if (!avatarFile) {
+         console.error('No avatar file selected')
+         return
+      }
+      setLoading(true)
+
       try {
-         if (!avatarFile) {
-            console.error('No avatar file selected')
-            return
-         }
-
+         const resizedAvatarFile = await resizeLogo(avatarFile) // Assuming resizeLogo is defined elsewhere
          const formData = new FormData()
-         formData.append('avatar', avatarFile, avatarFile.name) // Add filename as third parameter
-
-         // Debug logs
-         console.log('Avatar file details:', {
-            name: avatarFile.name,
-            type: avatarFile.type,
-            size: avatarFile.size,
-         })
+         formData.append('avatar', resizedAvatarFile, avatarFile.name) // Add filename as third parameter
 
          // Verify FormData content
          for (let [key, value] of formData.entries()) {
             console.log(`${key}:`, value)
          }
 
-         const response = await changeAvatar(formData)
-
-         if (response) {
-            // Reset states after successful upload
-            setAvatarFile(null)
-            setAvatarFileSrc(null)
-            setIsOpenAvatarPreview(false)
-         }
+         await changeAvatar(formData)
       } catch (error) {
          console.error('Error uploading avatar:', error)
+      } finally {
+         // Reset avatar file and source after saving
+         setAvatarFile(null)
+         setAvatarFileSrc(null)
+         setIsOpenAvatarPreview(false)
+         setLoading(false)
       }
    }
 
    return {
-      // ========== DISPATCH ========== //
-      dispatch,
       // ========== STATE FROM REDUX STORE ========== //
       authUser,
-      isLoadingBtnChangeAvatar,
+      loading,
       isOpenAvatarPreview,
       profile,
       // ========== STATE ========== //
       avatarFile,
       avatarFileSrc,
-      isOpenModalConfirmMatchingProjects,
-      isOpenModalCrawlLinkedin,
       // ========== LOGIC ========== //
       handleUploadAvatar,
       handleCloseAvatarPreview,
       handleSaveAvatar,
-      setIsOpenModalConfirmMatchingProjects,
-      setIsOpenModalCrawlLinkedin,
       setAvatarFile,
       setAvatarFileSrc,
       setIsOpenAvatarPreview,
    }
 }
-
-export default useProfileOverview

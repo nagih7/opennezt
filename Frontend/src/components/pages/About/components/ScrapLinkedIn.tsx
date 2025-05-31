@@ -31,9 +31,9 @@ const ScrapLinkedIn: React.FC<ScrapLinkedInProps> = ({
    onSkip,
 }) => {
    return (
-      <Dialog open={open}>
+      <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
          <DialogTrigger asChild>
-            <Button type="submit" onClick={() => setOpen(true)}>
+            <Button type="submit" onClick={() => setOpen(true)} className="text-white bg-main-color hover:bg-blue-700">
                Confirm
             </Button>
          </DialogTrigger>

@@ -26,13 +26,13 @@ const MessageWrap: React.FC<MessageWrapProps> = ({
    prevUserId,
 }) => {
    return (
-      <div className={`flex w-full gap-2` + (ownerId === userId && ' flex-row-reverse')} key={messageId}>
+      <div className={`flex w-full gap-2 ` + (ownerId === userId && ' flex-row-reverse')} key={messageId}>
          {ownerId === prevUserId ? (
             <div className="w-[35px] h-[35px]" />
          ) : (
             <Avatar className="w-[35px] h-[35px]">
-               <AvatarFallback>{ownerName}</AvatarFallback>
-               <AvatarImage src={favicon || AVATAR_DEFAULT} />
+               <AvatarImage src={favicon || undefined} />
+               <AvatarImage src={AVATAR_DEFAULT} />
             </Avatar>
          )}
 
