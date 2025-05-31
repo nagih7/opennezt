@@ -4,6 +4,8 @@ import { Avatar, Tabs } from '@chakra-ui/react'
 import moment from 'moment'
 import useFriends from '../hooks/useFriends'
 import { Friend, Notification } from '~/types'
+import { FaCheckCircle } from 'react-icons/fa'
+import { Mail } from 'lucide-react'
 
 const ProfileFriends: React.FC = () => {
    const {
@@ -50,14 +52,14 @@ const ProfileFriends: React.FC = () => {
                            className="flex items-center justify-between p-4 mb-3 bg-gray-100 rounded-lg"
                         >
                            <div className="flex items-center space-x-4">
-                              <Avatar.Root className="w-[4.5rem] h-[4.5rem] rounded-full">
+                              <Avatar.Root className="w-14 h-14 rounded-full">
                                  <Avatar.Image src={friend.user.avatar} />
                                  <Avatar.Fallback name={friend.user?.name} />
                               </Avatar.Root>
                               <div>
                                  <div className="flex items-center space-x-1">
                                     <span className="font-medium">{friend.user?.name}</span>
-                                    <span className="text-blue-500">✅</span>
+                                    <FaCheckCircle className=" text-blue-500" />
                                  </div>
                                  <span className="text-sm text-gray-500">{friend.user?.email}</span>
                               </div>
@@ -66,7 +68,7 @@ const ProfileFriends: React.FC = () => {
                               <span className="text-sm text-gray-500">{moment(friend.created_at).fromNow()}</span>
 
                               <button className="text-lg text-blue-500" onClick={() => handleNavigateToChat(friend)}>
-                                 ✉️
+                                 <Mail size={23} />
                               </button>
                               <button onClick={() => handleDeleteFriend(friend)} className="text-lg">
                                  <IconlyDelete size={23} color={'#FF0000'} />
