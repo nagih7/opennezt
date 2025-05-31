@@ -1,13 +1,14 @@
 import React from 'react'
 import { Badge } from '@chakra-ui/react'
 import { Button } from '~/components/UI/button'
-import { IconlyBookmark, IconlyCamera, IconlyLocation, IconlyShieldDone } from 'components/UI/Iconly'
+import { IconlyBookmark, IconlyCamera, IconlyLocation } from 'components/UI/Iconly'
 import { useProfileAvatar } from '../hooks'
 import MatchingProfile from './MatchingProfile'
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '~/components/UI/dialog'
 import { Avatar, AvatarImage } from '~/components/UI/avatar'
 import { AVATAR_DEFAULT } from '~/utils/constants'
 import { Input } from '~/components/UI/input'
+import { FaCheckCircle } from 'react-icons/fa'
 
 const ProfileOverview: React.FC = () => {
    const {
@@ -79,8 +80,9 @@ const ProfileOverview: React.FC = () => {
                   </DialogContent>
                </Dialog>
                <h5 className="text-[#000000] font-bold text-xs md:text-lg flex gap-1 items-center">
+
                   {authUser?.name}
-                  <IconlyShieldDone size={24} color="#3897f0" />
+                  <FaCheckCircle className="text-blue-500" />
                </h5>
                <div className="flex items-center mt-[8px] gap-4">
                   {authUser?.region && (
