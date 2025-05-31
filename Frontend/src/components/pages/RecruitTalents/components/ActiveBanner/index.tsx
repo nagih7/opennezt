@@ -1,13 +1,13 @@
 import { IconlyArrowRight2 } from "components/UI/Iconly";
 import React from "react";
+import { OPENNEZT_BACKGROUND_GRADIENT } from "~/utils/constants";
 
 const RecruitTalentActiveBanner: React.FC = () => {
     return (
         <div
             className="h-[300px] text-[#ffffff] pl-8 py-32 bg-local bg-center "
             style={{
-                backgroundImage:
-                    "url(https://wordpress.iqonic.design/product/wp/socialv/wp-content/uploads/buddypress/groups/14/cover-image/62be922d671b9-bp-cover-image.jpg)",
+                backgroundImage: `url(${OPENNEZT_BACKGROUND_GRADIENT})`,
                 objectFit: "cover",
             }}>
             <div className="flex flex-col items-center justify-center">
