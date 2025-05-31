@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import BannerActive from './components/BannerActive'
 import ProjectOverview from './components/ProjectOverview'
-import ProjectMoreInfo from './components/ProjectMoreInfo' 
+import ProjectMoreInfo from './components/ProjectMoreInfo'
 import { getProjectDetails } from 'api/project'
 import { AppDispatch } from '~/store'
 
@@ -19,9 +19,9 @@ const ProjectDetailsBySeek: React.FC = () => {
 
    return (
       <>
-         <div className="w-full">
+         <div className="w-full h-full px-4">
             <BannerActive />
-            <div className="flex w-full gap-6 mt-8">
+            <div className="flex w-full gap-8">
                <ProjectOverview />
                <ProjectMoreInfo />
             </div>

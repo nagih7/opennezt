@@ -1,7 +1,5 @@
 import {
    IconlyIndustry,
-   IconlyInfoSquare,
-   IconlyTickSquare,
    IconlyEarlyStage,
    IconlyFundingSource,
    IconlyParticipants,
@@ -9,9 +7,8 @@ import {
 } from 'components/UI/Iconly'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
 import { RootState, AppDispatch } from '~/store'
-import { Alert, Blockquote, Button, Dialog, Image, Portal, Stack } from '@chakra-ui/react'
+import { Alert, Blockquote, Button, Dialog, Portal, Stack } from '@chakra-ui/react'
 import SelectCustom from '~/components/UI/SelectCustom'
 import { setOpenModalConfirmApply } from '~/store/modules/project'
 import { getProjectRoleFramework } from '~/api/user'
@@ -32,7 +29,6 @@ const ProjectMoreInfo: React.FC = () => {
       teamRole: '',
       role: '',
    })
-   const [imageError, setImageError] = useState<boolean>(false) // ========== HANDLE FUNCTION ========== //
    const handleOpenModalConfirmApply = () => {
       dispatch(getProjectRoleFramework())
       dispatch(setOpenModalConfirmApply(true))
@@ -56,66 +52,39 @@ const ProjectMoreInfo: React.FC = () => {
 
    // ========== RENDER ========== //
    return (
-      <div className="bg-white relative h-fit w-[300px] top-[-14.75rem] 2xl:w-4/12 2xl:mr-[250px]">
-         {!imageError ? (
-            <Image
-               src={projectDetails?.background}
-               alt={projectDetails?.name}
-               onError={() => setImageError(true)}
-               aspectRatio={5 / 3}
-               width="100%"
-            />
-         ) : (
-            <Image
-               aspectRatio={5 / 3}
-               src={OPENNEZT_LOGO_GRADIENT}
-               alt={projectDetails?.name}
-               width="100%"
-               className="bg-contain"
-            />
-         )}
-
-         <div className="bg-[#EAEFF8] h-[7.5rem]">
-            {projectDetails?.applied ? (
-               <p className="bg-[#E3F5F1] flex relative top-[1.75rem] p-6 mx-[24px] border-l-[3px] border-[#00C792] text-[#00C792] items-center gap-1">
-                  <IconlyTickSquare size={20} color={'#00C792'} />
-                  Applied
+      <div className='mt-8'>
+         <div className="bg-[#ffffff] rounded-md">
+            <div className="p-4 2xl:p-6 border-b">
+               <span className="text-lg 2xl:text-xl font-semibold">The Project Includes:</span>
+            </div>
+            <div className="p-4 2xl:p-6">
+               <p className=" text-[#6F7F92] flex">
+                  <IconlyIndustry color={'#2F65B9'} />
+                  {projectDetails?.industries?.length} Main Industries
                </p>
-            ) : (
-               <p className="bg-[#ffffff] flex relative top-[1.75rem] p-6 mx-[24px] border-l-[3px] border-[#ffe41b] text-[#ffe41b] items-center gap-1">
-                  <IconlyInfoSquare size={20} color={'#ffe41b'} />
-                  Not Applied
-               </p>
-            )}
-         </div>
-         <div className="p-4">
-            <h4 className="font-bold">The Project Includes:</h4>
-            <p className="mt-7 text-[#6F7F92] flex">
-               <IconlyIndustry color={'#2F65B9'} />
-               {projectDetails?.industries?.length} Main Industries
-            </p>
-            <p className="text-[#6F7F92] flex">
-               <IconlyEarlyStage color={'#2F65B9'} />
-               {projectDetails?.stage?.name}
-            </p>
-            {projectDetails?.funding_sources?.length ? (
                <p className="text-[#6F7F92] flex">
-                  <IconlyFundingSource color={'#2F65B9'} />
-                  {projectDetails?.funding_sources?.length} Funding Sources
+                  <IconlyEarlyStage color={'#2F65B9'} />
+                  {projectDetails?.stage?.name}
                </p>
-            ) : null}
-            <p className="text-[#6F7F92] flex">
-               <IconlyParticipants color={'#2F65B9'} />
-               {projectDetails?.members?.length} Participants in the Project
-            </p>
-
-            {projectDetails?.revenues && projectDetails?.revenues?.length > 0 && (
+               {projectDetails?.funding_sources?.length ? (
+                  <p className="text-[#6F7F92] flex">
+                     <IconlyFundingSource color={'#2F65B9'} />
+                     {projectDetails?.funding_sources?.length} Funding Sources
+                  </p>
+               ) : null}
                <p className="text-[#6F7F92] flex">
-                  <IconlyRevenue color={'#2F65B9'} />
-                  Revenue {projectDetails?.revenues?.slice(-1)[0].amount} (
-                  {projectDetails?.revenues?.slice(-1)[0].currency})
+                  <IconlyParticipants color={'#2F65B9'} />
+                  {projectDetails?.members?.length} Participants in the Project
                </p>
-            )}
+
+               {projectDetails?.revenues && projectDetails?.revenues?.length > 0 && (
+                  <p className="text-[#6F7F92] flex">
+                     <IconlyRevenue color={'#2F65B9'} />
+                     Revenue {projectDetails?.revenues?.slice(-1)[0].amount} (
+                     {projectDetails?.revenues?.slice(-1)[0].currency})
+                  </p>
+               )}
+            </div>
          </div>
          {projectDetails && projectDetails?.applied === false && isLoadingGetProjectDetails === false && (
             <Button
@@ -130,7 +99,7 @@ const ProjectMoreInfo: React.FC = () => {
                Apply
             </Button>
          )}
-
+         {/* Modal Confirm Apply */}
          <Dialog.Root
             open={isOpenModalConfirmApply}
             onOpenChange={(e: any) => (e.open ? null : handleCloseModalConfirmApply())}
@@ -200,6 +169,33 @@ const ProjectMoreInfo: React.FC = () => {
                </Dialog.Positioner>
             </Portal>
          </Dialog.Root>
+         {/* Reviews */}
+         <div className='bg-[#ffffff] rounded-md mt-8'>
+            <div className="p-4 2xl:p-6 border-b">
+               <span className="text-lg 2xl:text-xl font-semibold">Reviews</span>
+            </div>
+            <div className="p-4 2xl:p-6">
+               <ul>
+                  <li className='flex items-center gap-2'>
+                     <img src="https://i.pravatar.cc/300?img=4" alt="" className='w-20 h-20 ' />
+                     <div className="flex flex-col ">
+                        <h3 className='text-base 2xl:text-lg'>Vuong Manh Nghia </h3>
+                        <div className="flex text-yellow-400 text-base 2xl:text-[1.2rem]">
+                           <span>⭐</span>
+                           <span>⭐</span>
+                           <span>⭐</span>
+                           <span>⭐</span>
+                           <span className="text-gray-300">⭐</span>
+                        </div>
+                        <p className="text-[#6F7F92] text-xs 2xl:text-sm">
+                           It was a fantastic course with lots of hands on training and fun! Absolutely
+                           recommended to all food lovers !
+                        </p>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+         </div>
       </div>
    )
 }
