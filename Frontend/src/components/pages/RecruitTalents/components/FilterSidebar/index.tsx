@@ -11,14 +11,26 @@ import {
 } from 'api/user'
 import { recruitTalents } from 'api/talent'
 import { setFormRecruitTalents } from 'store/modules/talent'
-import InputCustom from 'components/UI/InputCustom'
+import { Input } from 'components/UI/input'
 import { FormRecruitTalents, SelectEvent } from '../../types'
 import { RootState } from '~/store'
+import {
+   Select,
+   SelectContent,
+   SelectGroup,
+   SelectItem,
+   SelectLabel,
+   SelectTrigger,
+   SelectValue,
+} from '~/components/UI/select.tsx'
+import { useFilter } from '../../hooks'
 
 interface DataFilter extends FormRecruitTalents {}
 
 const FilterSidebar: React.FC = () => {
    const dispatch = useAppDispatch()
+
+   const { industries, categories, subcategories, skills } = useFilter()
 
    const { industryFramework, experienceLevelFramework, categoryFramework, subCategoryFramework, skillFramework } =
       useSelector((state: RootState) => state.user)
@@ -49,13 +61,13 @@ const FilterSidebar: React.FC = () => {
 
    useEffect(() => {
       if (industryFramework?.items?.length === 0) {
-         dispatch(getIndustryFramework())
+         // dispatch(getIndustryFramework())
       }
    }, [dispatch, industryFramework])
 
    useEffect(() => {
       if (experienceLevelFramework?.items?.length === 0) {
-         dispatch(getExperienceLevelFramwork())
+         // dispatch(getExperienceLevelFramwork())
       }
    }, [dispatch, experienceLevelFramework])
 
@@ -96,10 +108,10 @@ const FilterSidebar: React.FC = () => {
 
       switch (nameSelect) {
          case 'category':
-            dispatch(getSubCategoryFramework(event.value[0]))
+            // dispatch(getSubCategoryFramework(event.value[0]))
             break
          case 'subcategory':
-            dispatch(getSkillFramework(event.value[0]))
+            // dispatch(getSkillFramework(event.value[0]))
             break
          default:
             break
@@ -117,15 +129,32 @@ const FilterSidebar: React.FC = () => {
    return (
       <>
          <div className="bg-[#ffffff] rounded-md mb-8">
-            <InputCustom
+            <Input
                height="40px"
                placeholder="Search by name, email, etc."
                value={dataFilter.keySearch}
                onChange={handleChangeInput}
-               label="Search"
                name="keySearch"
             />
          </div>
+         <div className="bg-[#ffffff] rounded-md mb-8">
+            <Select onValueChange={(value) => console.log(value)}>
+               <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a fruit" />
+               </SelectTrigger>
+               <SelectContent>
+                  <SelectGroup>
+                     <SelectLabel>Fruits</SelectLabel>
+                     <SelectItem value="apple">Apple</SelectItem>
+                     <SelectItem value="banana">Banana</SelectItem>
+                     <SelectItem value="blueberry">Blueberry</SelectItem>
+                     <SelectItem value="grapes">Grapes</SelectItem>
+                     <SelectItem value="pineapple">Pineapple</SelectItem>
+                  </SelectGroup>
+               </SelectContent>
+            </Select>
+         </div>
+
          {industryFramework?.items?.length > 0 && (
             <div className="bg-[#ffffff] rounded-md mb-8">
                <SelectCustom

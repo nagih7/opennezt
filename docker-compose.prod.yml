@@ -1,12 +1,10 @@
-services: # Backend API Service
+services:
    backend:
-      build:
-         context: ./Backend
-         dockerfile: Dockerfile.dev
-      container_name: opennezt-backend
+      image: ${DOCKER_REGISTRY:-your-dockerhub-username}/opennezt-backend:${VERSION:-latest}
+      container_name: opennezt-backend-prod
       restart: unless-stopped
       environment:
-         NODE_ENV: ${NODE_ENV:-development}
+         NODE_ENV: production
          PORT: 3456
          HOST: 0.0.0.0
          # MongoDB Atlas Configuration
@@ -16,27 +14,28 @@ services: # Backend API Service
          DB_USER: ${DB_USER}
          DB_AUTH_SOURCE: ${DB_AUTH_SOURCE}
          # App Config
-         APP_NAME: ${APP_NAME}
+         APP_NAME: ${APP_NAME:-OpenNezt}
          APP_URL_API: ${APP_URL_API}
          APP_URL_CLIENT: ${APP_URL_CLIENT}
          OTHER_URLS_CLIENT: ${OTHER_URLS_CLIENT}
-         APP_URL_AUTH: ${APP_URL_AUTH}
+         APP_URL_AUTH: ${APP_URL_AUTH:-auth}
          SECRET_KEY: ${SECRET_KEY}
-         LOGIN_EXPIRE_IN: ${LOGIN_EXPIRE_IN}
-         VERIFY_EMAIL_EXPIRE_IN: ${VERIFY_EMAIL_EXPIRE_IN}
-         REQUESTS_LIMIT_PER_MINUTE: ${REQUESTS_LIMIT_PER_MINUTE}
-         # Mail (Optional)
+         LOGIN_EXPIRE_IN: ${LOGIN_EXPIRE_IN:-7d}
+         VERIFY_EMAIL_EXPIRE_IN: ${VERIFY_EMAIL_EXPIRE_IN:-10m}
+         REQUESTS_LIMIT_PER_MINUTE: ${REQUESTS_LIMIT_PER_MINUTE:-200}
+         # Mail Configuration
          MAIL_HOST: ${MAIL_HOST}
-         MAIL_PORT: ${MAIL_PORT}
-         MAIL_SECURE: ${MAIL_SECURE}
+         MAIL_PORT: ${MAIL_PORT:-587}
+         MAIL_SECURE: ${MAIL_SECURE:-false}
          MAIL_USERNAME: ${MAIL_USERNAME}
          MAIL_PASSWORD: ${MAIL_PASSWORD}
          MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
-         MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+         MAIL_FROM_NAME: ${MAIL_FROM_NAME:-OpenNezt}
          MAIL_TO: ${MAIL_TO}
+         # Push Notifications
          VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
          VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
-         # External APIs (Optional)
+         # External APIs
          OPENAI_API_KEY: ${OPENAI_API_KEY}
          OPENAI_API_URL: ${OPENAI_API_URL}
          OPENAI_API_SPEECH_URL: ${OPENAI_API_SPEECH_URL}
@@ -48,26 +47,22 @@ services: # Backend API Service
          AI_API_TOKEN: ${AI_API_TOKEN}
       ports:
          - "3456:3456"
-         - "9229:9229" # Debug port
       volumes:
          - backend_logs:/app/private/logs
          - backend_uploads:/app/public/uploads
       networks:
          - opennezt-network
       healthcheck:
-         test: ["CMD", "curl", "-f", "http://localhost:3456/"]
+         test: ["CMD", "curl", "-f", "http://localhost:3456/health"]
          interval: 30s
          timeout: 10s
          retries: 5
          start_period: 60s
 
-   # Frontend Service (Optional - can be run separately)
+   # Frontend Service
    frontend:
-      build:
-         context: ./Frontend
-         # dockerfile: Dockerfile #Production build
-         dockerfile: Dockerfile.dev # Development build
-      container_name: opennezt-frontend
+      image: ${DOCKER_REGISTRY:-your-dockerhub-username}/opennezt-frontend:${VERSION:-latest}
+      container_name: opennezt-frontend-prod
       restart: unless-stopped
       environment:
          NGINX_HOST: 0.0.0.0
@@ -89,20 +84,44 @@ services: # Backend API Service
    # Redis Service (for caching)
    redis:
       image: redis:7.2-alpine
-      container_name: opennezt-redis
+      container_name: opennezt-redis-prod
       restart: unless-stopped
       ports:
          - "6379:6379"
-      command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+      command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru --requirepass ${REDIS_PASSWORD:-opennezt_redis_pass}
       volumes:
          - redis_data:/data
       networks:
          - opennezt-network
       healthcheck:
-         test: ["CMD", "redis-cli", "ping"]
+         test:
+            [
+               "CMD",
+               "redis-cli",
+               "-a",
+               "${REDIS_PASSWORD:-opennezt_redis_pass}",
+               "ping",
+            ]
          interval: 30s
          timeout: 10s
          retries: 3
+
+   # Nginx Reverse Proxy (Optional)
+   nginx:
+      image: nginx:alpine
+      container_name: opennezt-nginx
+      restart: unless-stopped
+      ports:
+         - "80:80"
+         - "443:443"
+      volumes:
+         - ./nginx.conf:/etc/nginx/nginx.conf:ro
+         - ./ssl:/etc/nginx/ssl:ro
+      depends_on:
+         - frontend
+         - backend
+      networks:
+         - opennezt-network
 
 volumes:
    redis_data:

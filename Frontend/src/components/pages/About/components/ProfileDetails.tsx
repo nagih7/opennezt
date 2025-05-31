@@ -260,7 +260,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile }) => {
                >
                   <IconlyEditSquare size={20} color={'#ffffff'} />
                </span>
-            </div>{' '}
+            </div>
             <div className="p-8">
                {profile?.additional_infos && profile.additional_infos.length > 0 ? (
                   <ul className=" p-0 mb-0 mx-[-16px] text-[#6f7f92]">
