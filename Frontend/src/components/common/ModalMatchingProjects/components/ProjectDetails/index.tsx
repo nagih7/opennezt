@@ -2,52 +2,25 @@ import React, { useState } from 'react'
 import { IconlyFace, IconlyShieldDone } from 'components/UI/Iconly'
 import { RiArrowRightSFill } from 'react-icons/ri'
 import { IoMdArrowDropdown } from 'react-icons/io'
-import { FaCheck } from 'react-icons/fa6'
-import { Avatar, Image } from '@chakra-ui/react'
-import { OPENNEZT_BG_BLACK } from 'utils/constants'
 import { toUpper } from 'lodash'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { setOpenModalMatchingProjects } from 'store/modules/artificialIntelligence'
 import { setProjectInterview } from 'store/modules/interview'
+import { ProjectDetailsProps } from '~/types'
+import { Avatar, AvatarImage } from '~/components/UI/avatar'
+import { OPENNEZT_LOGO_GRADIENT } from '~/utils/constants'
+import { ROUTE_CONFIG } from '~/config/constants'
 
-interface ProjectMember {
-   name: string
-   avatar?: string
-   role: string
-   team_role: string
-   [key: string]: any
+interface ComponentProjectDetailsProps {
+   project: ProjectDetailsProps | null
 }
 
-interface AdditionalInfo {
-   name: string
-   content: string
-}
-
-interface Project {
-   _id?: string
-   name?: string
-   background?: string
-   logo?: string
-   industries?: string[]
-   stage?: string
-   requirement?: Record<string, string[]>
-   additional_infos?: AdditionalInfo[]
-   members?: ProjectMember[]
-   [key: string]: any
-}
-
-interface ProjectDetailsProps {
-   project?: Project | null
-}
-
-const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project }) => {
+const ProjectDetails: React.FC<ComponentProjectDetailsProps> = ({ project }) => {
+   if (!project) return null
    const navigate = useNavigate()
    const dispatch = useDispatch()
    // ========== STATE ========== //
-   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({})
-   const [errorBG, setErrorBG] = useState<boolean>(false)
-   const requirements = project?.requirement ? Object.keys(project.requirement) : []
+   const requirements = project.requirement ? Object.keys(project.requirement) : []
    const [openExpertiseRequest, setOpenExpertiseRequest] = useState<Record<string, boolean>>(
       requirements.reduce((acc: Record<string, boolean>, item: string) => {
          acc[item] = false
@@ -58,40 +31,40 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project }) => {
    // ========== HANDLER ========== //
    const handleStartInterview = () => {
       if (project) {
-         dispatch(setOpenModalMatchingProjects(false))
+         // dispatch(setOpenModalMatchingProjects(false))
          dispatch(setProjectInterview(project))
-         navigate(`/interview/${project._id}`)
+         navigate(ROUTE_CONFIG.USER.INTERVIEW.PREFIX + `${project._id}`)
       }
    }
 
    // ========== RENDER ========== //
    return (
-      <div className="px-[16px]">
+      <div className="px-[16px] w-3/4">
          <div className="bg-[#ffffff] rounded-md">
-            {!errorBG ? (
-               <Image
-                  src={project?.background}
-                  alt={project?.name || 'Project Background'}
-                  aspectRatio={10 / 3}
-                  width="full"
-                  className="object-cover w-full rounded-t-md"
-                  onError={() => setErrorBG(true)}
+            <div className="relative w-full h-[400px] overflow-hidden rounded-md">
+               <img
+                  className="object-cover w-full h-full"
+                  alt={project.name}
+                  src={project.background || OPENNEZT_LOGO_GRADIENT}
+                  onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                     e.currentTarget.src = OPENNEZT_LOGO_GRADIENT
+                  }}
                />
-            ) : (
-               <Image
-                  src={OPENNEZT_BG_BLACK}
-                  alt="OpenNezt"
-                  aspectRatio={10 / 3}
-                  width="full"
-                  className="object-cover w-full rounded-t-md"
-               />
-            )}
+            </div>
             <div className="flex justify-between p-8">
                <div className="flex flex-col gap-2">
-                  <Avatar.Root className="mt-[-130px] w-[150px] h-[150px] rounded-full p-[2px] bg-[#ffffff]">
-                     <Avatar.Fallback name={project?.name} />
-                     <Avatar.Image src={project?.logo} />
-                  </Avatar.Root>
+                  <Avatar className="mt-[-130px] w-[150px] h-[150px] rounded-full p-[2px] bg-[#ffffff]">
+                     <AvatarImage
+                        src={project.logo || undefined}
+                        alt={project.name}
+                        className="object-cover w-full h-full rounded-full"
+                     />
+                     <AvatarImage
+                        src={OPENNEZT_LOGO_GRADIENT}
+                        alt={project.name}
+                        className="object-cover w-full h-full rounded-full"
+                     />
+                  </Avatar>
                   <div>
                      <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-2">
@@ -175,7 +148,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project }) => {
                                  <div className="px-[24px]">
                                     <div className="px-[24px]">
                                        <ul className="flex flex-col items-center pl-0 mb-0 cursor-pointer">
-                                          {project?.requirement?.[item]?.map((subItem, subIndex) => (
+                                          {/* {project?.requirement?.[item]?.map((subItem, subIndex) => (
                                              <li
                                                 key={subIndex}
                                                 className="flex items-center justify-between w-full text-sm py-[21px] border-b-[1px] border-gray-200"
@@ -183,7 +156,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project }) => {
                                                 {subItem}
                                                 {checkedItems['basic'] && <FaCheck className="text-[#4374c0]" />}
                                              </li>
-                                          ))}
+                                          ))} */}
                                        </ul>
                                     </div>
                                  </div>
@@ -237,10 +210,18 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project }) => {
                         <div className="flex flex-wrap items-center justify-center gap-10">
                            {project?.members?.map((member, index) => (
                               <div key={index} className="relative flex flex-col items-center">
-                                 <Avatar.Root className="w-[120px] h-[120px] bg-center object-cover">
-                                    <Avatar.Fallback name={member?.name} />
-                                    <Avatar.Image src={member?.avatar} />
-                                 </Avatar.Root>
+                                 <Avatar className="w-[120px] h-[120px] bg-center object-cover">
+                                    <AvatarImage
+                                       src={member?.avatar || undefined}
+                                       alt={member?.name}
+                                       className="object-cover w-full h-full rounded-full"
+                                    />
+                                    <AvatarImage
+                                       src={OPENNEZT_LOGO_GRADIENT}
+                                       alt={member?.name}
+                                       className="object-cover w-full h-full rounded-full"
+                                    />
+                                 </Avatar>
                                  <span className="absolute bottom-[25px] text-xs font-semibold  py-1 bg-[#ffffff] rounded-full text-center border ">
                                     {member?.role}/{member?.team_role}
                                  </span>

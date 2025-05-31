@@ -6,16 +6,10 @@ import { Image } from '@chakra-ui/react'
 import Groups from './components/Groups'
 import ProfileOverview from './components/ProfileOverview'
 import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
-import useAbout from './components/hooks/useAbout'
+import useAbout from './hooks/useAbout'
 
 const About: React.FC = () => {
-   const {
-      authUser,
-      changeTab,
-      setChangeTab,
-      imageError,
-      setImageError
-   } = useAbout()
+   const { authUser, changeTab, setChangeTab, imageError, setImageError } = useAbout()
    return (
       <div className="relative bg-[#ffffff] w-full max-h-full mb-8">
          {!imageError ? (

@@ -1,10 +1,8 @@
-import { useState } from "react"
-import { useSelector } from "react-redux"
-import { useDispatch } from "react-redux"
-import type { AppDispatch, RootState } from "~/store"
-import { matchingProjects } from "~/api/artificialIntelligence"
-import { changeAvatar } from "~/api/profile"
-import { getHideLinkedinNotification } from "~/utils/localStorage"
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import type { AppDispatch, RootState } from '~/store'
+import { changeAvatar } from '~/api/profile'
 
 const useProfileOverview = () => {
    const dispatch = useDispatch<AppDispatch>()
@@ -12,7 +10,6 @@ const useProfileOverview = () => {
    const { authUser } = useSelector((state: RootState) => state.auth)
    const { isLoadingBtnChangeAvatar } = useSelector((state: RootState) => state.profile)
    const { profile } = useSelector((state: RootState) => state.profile)
-   const { projects, isLoadingMatchingProjects } = useSelector((state: RootState) => state.artificialIntelligence)
    // ========== STATE ========== //
    const [avatarFile, setAvatarFile] = useState<File | null>(null)
    const [avatarFileSrc, setAvatarFileSrc] = useState<string | null>(null)
@@ -42,76 +39,60 @@ const useProfileOverview = () => {
    const handleSaveAvatar = async (avatarFile: File) => {
       try {
          if (!avatarFile) {
-            console.error('No avatar file selected');
-            return;
+            console.error('No avatar file selected')
+            return
          }
 
-         const formData = new FormData();
-         formData.append('avatar', avatarFile, avatarFile.name); // Add filename as third parameter
-         
+         const formData = new FormData()
+         formData.append('avatar', avatarFile, avatarFile.name) // Add filename as third parameter
+
          // Debug logs
          console.log('Avatar file details:', {
             name: avatarFile.name,
             type: avatarFile.type,
-            size: avatarFile.size
-         });
-         
+            size: avatarFile.size,
+         })
+
          // Verify FormData content
          for (let [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
+            console.log(`${key}:`, value)
          }
 
-         const response = await changeAvatar(formData);
-         
+         const response = await changeAvatar(formData)
+
          if (response) {
             // Reset states after successful upload
-            setAvatarFile(null);
-            setAvatarFileSrc(null);
-            setIsOpenAvatarPreview(false);
+            setAvatarFile(null)
+            setAvatarFileSrc(null)
+            setIsOpenAvatarPreview(false)
          }
       } catch (error) {
-         console.error('Error uploading avatar:', error);
+         console.error('Error uploading avatar:', error)
       }
-   }
-
-   const handleMatchingProjects = () => {
-      // Check if user has opted to hide the notification
-      const hideNotification = getHideLinkedinNotification()
-      if (hideNotification) {
-         // If user chose to hide, just call the matching projects directly
-         dispatch(matchingProjects())
-      } else {
-         // Otherwise show the LinkedIn crawl modal
-         setIsOpenModalCrawlLinkedin(true)
-      }
-      setIsOpenModalConfirmMatchingProjects(false)
    }
 
    return {
-        // ========== DISPATCH ========== //
-        dispatch,
-        // ========== STATE FROM REDUX STORE ========== //
-        authUser,
-        isLoadingBtnChangeAvatar,
-        isOpenAvatarPreview,
-        profile,
-        projects,
-        isLoadingMatchingProjects,
-        // ========== STATE ========== //
-        avatarFile,
-        avatarFileSrc,
-        isOpenModalConfirmMatchingProjects,
-        isOpenModalCrawlLinkedin,
-        // ========== LOGIC ========== //
-        handleUploadAvatar,
-        handleCloseAvatarPreview,
-        handleSaveAvatar,
-        handleMatchingProjects,
-        setIsOpenModalConfirmMatchingProjects,
-        setIsOpenModalCrawlLinkedin,
-        setAvatarFile,
-        setAvatarFileSrc,
-        setIsOpenAvatarPreview,
+      // ========== DISPATCH ========== //
+      dispatch,
+      // ========== STATE FROM REDUX STORE ========== //
+      authUser,
+      isLoadingBtnChangeAvatar,
+      isOpenAvatarPreview,
+      profile,
+      // ========== STATE ========== //
+      avatarFile,
+      avatarFileSrc,
+      isOpenModalConfirmMatchingProjects,
+      isOpenModalCrawlLinkedin,
+      // ========== LOGIC ========== //
+      handleUploadAvatar,
+      handleCloseAvatarPreview,
+      handleSaveAvatar,
+      setIsOpenModalConfirmMatchingProjects,
+      setIsOpenModalCrawlLinkedin,
+      setAvatarFile,
+      setAvatarFileSrc,
+      setIsOpenAvatarPreview,
    }
 }
 

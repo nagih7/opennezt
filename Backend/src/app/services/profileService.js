@@ -10,50 +10,41 @@ import {
     Friend,
 } from '@/models'
 
-// LẤY CHI TIẾT THÔNG TIN CÁ NHÂN
+/**
+ *
+ * @param {*} userId
+ * @returns {Promise<Object>} Returns the profile details of a user.
+ * @description Trả về base profile của người dùng
+ * Bao gồm các thông tin như sau:
+ * - username: string
+ * - industries: string[]
+ * - experience_level: string
+ * - skills: string[]
+ * - additional_infos: { name: string, content: string }[]
+ * - educations: {...}[]
+ * - certifications: {...}[]
+ */
 export async function getProfileDetail(userId) {
     const profile = await Profile.aggregate([
-        {
-            $match: {
-                user_id: userId,
-            },
-        },
+        { $match: { user_id: userId } },
         {
             $lookup: {
                 from: 'users',
                 localField: 'user_id',
                 foreignField: '_id',
                 as: 'user',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 0,
-                            name: 1,
-                        },
-                    },
-                ],
+                pipeline: [{ $project: { _id: 0, name: 1 } }],
             },
         },
-        {
-            $unwind: { path: '$user', preserveNullAndEmptyArrays: true },
-        },
-        {
-            $unwind: { path: '$categories', preserveNullAndEmptyArrays: true },
-        },
+        { $unwind: { path: '$user', preserveNullAndEmptyArrays: true } },
+        { $unwind: { path: '$categories', preserveNullAndEmptyArrays: true } },
         {
             $lookup: {
                 from: 'industries',
                 localField: 'industry_ids',
                 foreignField: '_id',
                 as: 'industries',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 0,
-                            name: 1,
-                        },
-                    },
-                ],
+                pipeline: [{ $project: { _id: 0, name: 1 } }],
             },
         },
         {
@@ -62,33 +53,17 @@ export async function getProfileDetail(userId) {
                 localField: 'experience_level_id',
                 foreignField: '_id',
                 as: 'experience_level',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 0,
-                            name: 1,
-                        },
-                    },
-                ],
+                pipeline: [{ $project: { _id: 0, name: 1 } }],
             },
         },
-        {
-            $unwind: '$experience_level',
-        },
+        { $unwind: '$experience_level' },
         {
             $lookup: {
                 from: 'skills',
                 localField: 'skill_ids',
                 foreignField: '_id',
                 as: 'skills',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 0,
-                            name: 1,
-                        },
-                    },
-                ],
+                pipeline: [{ $project: { _id: 0, name: 1 } }],
             },
         },
         {
@@ -97,15 +72,7 @@ export async function getProfileDetail(userId) {
                 localField: '_id',
                 foreignField: 'profile_id',
                 as: 'additional_infos',
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 0,
-                            name: 1,
-                            content: 1,
-                        },
-                    },
-                ],
+                pipeline: [{ $project: { _id: 0, name: 1, content: 1 } }],
             },
         },
         {
@@ -143,19 +110,10 @@ export async function getProfileDetail(userId) {
                             localField: 'organization_id',
                             foreignField: '_id',
                             as: 'organization',
-                            pipeline: [
-                                {
-                                    $project: {
-                                        _id: 0,
-                                        name: 1,
-                                    },
-                                },
-                            ],
+                            pipeline: [{ $project: { _id: 0, name: 1 } }],
                         },
                     },
-                    {
-                        $unwind: '$organization',
-                    },
+                    { $unwind: '$organization' },
                     {
                         $project: {
                             _id: 0,
@@ -173,21 +131,9 @@ export async function getProfileDetail(userId) {
         {
             $addFields: {
                 username: '$user.name',
-                industries: {
-                    $map: {
-                        input: '$industries',
-                        as: 'industry',
-                        in: '$$industry.name',
-                    },
-                },
+                industries: { $map: { input: '$industries', as: 'industry', in: '$$industry.name' } },
                 experience_level: '$experience_level.name',
-                skills: {
-                    $map: {
-                        input: '$skills',
-                        as: 'skill',
-                        in: '$$skill.name',
-                    },
-                },
+                skills: { $map: { input: '$skills', as: 'skill', in: '$$skill.name' } },
             },
         },
         {
