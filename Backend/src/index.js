@@ -3,16 +3,7 @@ import path from 'path'
 import serveFavicon from 'serve-favicon'
 import helmet from 'helmet'
 import multer from 'multer'
-import {
-    APP_DEBUG,
-    NODE_ENV,
-    PUBLIC_DIR,
-    VIEW_DIR,
-    APP_URL_CLIENT,
-    MAIL_TO,
-    VAPID_PUBLIC_KEY,
-    VAPID_PRIVATE_KEY,
-} from './configs'
+import { APP_DEBUG, NODE_ENV, PUBLIC_DIR, VIEW_DIR, APP_URL_CLIENT, MAIL_TO, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, APP_ENV } from './configs'
 import { jsonify, sendMail } from './handlers/responseHandler'
 import corsHandler from './handlers/corsHandler'
 import httpRequestHandler from './handlers/httpRequestHandler'
@@ -82,7 +73,7 @@ function setupApp(app) {
 function setupSocketIo(server) {
     return socketIo(server, {
         cors: {
-            origin: NODE_ENV === 'development' ? true : APP_URL_CLIENT,
+            origin: NODE_ENV === APP_ENV.DEVELOPMENT ? true : APP_URL_CLIENT,
             methods: ['GET', 'POST'],
             allowedHeaders: ['my-custom-header'],
             credentials: true,

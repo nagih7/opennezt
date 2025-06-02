@@ -1,30 +1,51 @@
 {
-  "presets": [
-    [
-      "@babel/preset-env",
-      {
-        "targets": {
-          "node": "current"
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "targets": {
+                    "node": "20"
+                },
+                "useBuiltIns": "usage",
+                "corejs": 3
+            }
+        ]
+    ],
+    "plugins": [
+        "@babel/plugin-transform-runtime",
+        [
+            "module-resolver",
+            {
+                "root": ["./src"],
+                "alias": {
+                    "@": "./src",
+                    "@controllers": "./src/app/controllers",
+                    "@middleware": "./src/app/middleware",
+                    "@services": "./src/app/services",
+                    "@requests": "./src/app/requests",
+                    "@handlers": "./src/handlers",
+                    "@models": "./src/models",
+                    "@routes": "./src/routes",
+                    "@seeders": "./src/seeders",
+                    "@tasks": "./src/tasks",
+                    "@utils": "./src/utils",
+                    "@configs": "./src/configs",
+                    "@views": "./src/views"
+                }
+            }
+        ]
+    ],
+    "env": {
+        "development": {
+            "sourceMaps": "inline",
+            "retainLines": true
+        },
+        "production": {
+            "sourceMaps": false,
+            "comments": false
+        },
+        "test": {
+            "plugins": ["@babel/plugin-transform-runtime"]
         }
-      }
-    ]
-  ],
-  "plugins": [
-    "@babel/plugin-transform-runtime",
-    [
-      "module-resolver",
-      {
-        "alias": {
-          "@": "./src"
-        }
-      }
-    ]
-  ],
-  "ignore": ["./build", "./node_modules"],
-  "comments": false,
-  "env": {
-    "build": {
-      "sourceMaps": true
     }
-  }
 }

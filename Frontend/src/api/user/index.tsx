@@ -17,6 +17,7 @@ import {
    sendFriendRequestFail,
 } from '../../store/modules/talent'
 import callApi from '../callApi'
+import { BaseApiResponse } from '~/types'
 
 // INDUSTRY
 export const getIndustryFramework = () => {
@@ -27,7 +28,7 @@ export const getIndustryFramework = () => {
 }
 
 // EXPERIENCE LEVEL
-export const getExperienceLevelFramwork = () => {
+export const getExperienceLevelFramwork = (): Promise<BaseApiResponse> => {
    return callApi({
       method: 'get',
       apiPath: 'users/experience-levels',
@@ -35,7 +36,7 @@ export const getExperienceLevelFramwork = () => {
 }
 
 // CATEGORIES
-export const getCategoryFramework = (): any => {
+export const getCategoryFramework = (): Promise<BaseApiResponse> => {
    return callApi({
       method: 'get',
       apiPath: 'users/categories',
@@ -44,7 +45,7 @@ export const getCategoryFramework = (): any => {
 }
 
 // SUB CATEGORIES
-export const getSubCategoryFramework = (categoryId: any) => {
+export const getSubCategoryFramework = (categoryId: string): Promise<BaseApiResponse> => {
    return callApi({
       method: 'get',
       apiPath: `users/categories/${categoryId}`,
@@ -52,7 +53,7 @@ export const getSubCategoryFramework = (categoryId: any) => {
 }
 
 // SKILLS
-export const getSkillFramework = (categoryId: any) => {
+export const getSkillFramework = (categoryId: string): Promise<BaseApiResponse> => {
    return callApi({
       method: 'get',
       apiPath: `users/skills/${categoryId}`,
