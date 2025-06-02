@@ -192,7 +192,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile }) => {
                </span>
             </div>
             <div className="p-8">
-               {profile.linkin?.length > 0 ? (
+               {result?.length > 0 ? (
                   <ul className="pl-0 mb-0 space-y-4">
                      {result.map((item, index) => (
                         <li key={index} className="flex flex-col">
@@ -251,6 +251,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile }) => {
                )}
             </div>
          </div>
+
          <div className="bg-[#ffffff] rounded-md mt-8">
             <div className="flex items-center justify-between border-b-[1px] border-[#f4f5f6] p-8">
                <h5 className="mb-0">More </h5>
