@@ -1,14 +1,5 @@
 import { ACCESS_TYPE, LINK_STATIC_URL, PROFILE_ACCESS } from '@/configs'
-import {
-    Certification,
-    Education,
-    Profile,
-    ProfileAdditionalInfo,
-    Organization,
-    Type,
-    ActivityLog,
-    Friend,
-} from '@/models'
+import { Certification, Education, Profile, ProfileAdditionalInfo, Organization, Type, ActivityLog, Friend, LinkedInProfile } from '@/models'
 
 /**
  *
@@ -269,6 +260,15 @@ export async function getProfile(user) {
             ],
         },
     }
+    const lookupLinkedInProfile = {
+        $lookup: {
+            from: 'linkedin_profiles',
+            localField: 'user_id',
+            foreignField: 'user_id',
+            as: 'linkedin_profile',
+        },
+    }
+
     const addfieldStage = {
         $addFields: {
             activities: {
@@ -293,11 +293,15 @@ export async function getProfile(user) {
         lookupAdditionalInfo,
         lookupArticle,
         lookupActivity,
+        lookupLinkedInProfile,
     ]
 
     const unwindStages = [
         {
             $unwind: { path: '$experience_level', preserveNullAndEmptyArrays: true },
+        },
+        {
+            $unwind: { path: '$linkedin_profile', preserveNullAndEmptyArrays: true },
         },
     ]
     const projectStage = {
@@ -485,8 +489,8 @@ export async function deleteProfileCertification(user, certificationId) {
 
 // ========== PUT [Skills] ========== //
 export async function updateProfileSkills(user, requestBody) {
-    const skills = [...new Set(requestBody.skills.map((skill) => skill._id._id.toString()))]
-    const categories = [...new Set(requestBody.skills.map((skill) => skill._id.category_id.toString()))]
+    const skills = [...new Set(requestBody.skills.map(skill => skill._id._id.toString()))]
+    const categories = [...new Set(requestBody.skills.map(skill => skill._id.category_id.toString()))]
     const profile = await Profile.findOne({ user_id: user._id })
     if (!profile) {
         const newProfile = new Profile({
@@ -726,4 +730,12 @@ export async function getMyFriends(
     // ])
 
     return friends
+}
+
+export async function getLinkinProfile(user_id) {
+    const profile = await LinkedInProfile.findOne({ userId: user_id }).select('username skills')
+    if (!profile) {
+        return null
+    }
+    return profile
 }

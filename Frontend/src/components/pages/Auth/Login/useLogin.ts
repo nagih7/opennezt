@@ -1,13 +1,14 @@
 import { cloneDeep } from 'lodash'
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { login, loginWithSocial } from '~/api/auth'
-import { AppDispatch, RootState, useAppSelector } from '~/store'
+import { useMatching } from '~/contexts'
+import { useAppDispatch } from '~/store'
 import { setAuthState } from '~/store/modules/auth'
 import { AuthState } from '~/store/modules/auth/types'
 import { LoginPayload, LoginSchema } from '~/types'
 import { validate } from '~/utils'
+import { getHideLinkedinNotification } from '~/utils/localStorage'
 import { TokenManager } from '~/utils/tokenManager'
 
 // Create a simple validate function if isValidate isn't available
@@ -30,8 +31,10 @@ const validateField = (data: any, fieldName: string, errorState: any) => {
 }
 
 const useLogin = () => {
-   const dispatch = useDispatch<AppDispatch>()
+   const dispatch = useAppDispatch()
    const navigate = useNavigate()
+
+   const { setOpenModalScrapLinkedin } = useMatching()
 
    // State
    const [checkRemember, setCheckRemember] = useState<boolean>(false)
@@ -87,6 +90,8 @@ const useLogin = () => {
                         } as AuthState)
                      )
                      navigate('/')
+                     const savedPreference = getHideLinkedinNotification()
+                     if (!savedPreference) setOpenModalScrapLinkedin(true)
                   }
                })
                .catch((err) => {

@@ -5,8 +5,8 @@ import { RouterProvider } from 'react-router-dom'
 import routes from './routes/routes'
 import { Provider } from 'react-redux'
 import store from '~/store'
-import { SocketProvider } from 'contexts'
-import Mobile_Responsive from 'components/common/Mobile_Responsive'
+import { SocketProvider, MatchingProvider } from 'contexts'
+import Mobile_Responsive from '~/components/common/Mobile_Responsive'
 import ChakraProvider from 'components/UI/provider'
 import { Toaster } from 'sonner'
 import { WebPushProvider, WebPushConfig } from './contexts/webpush'
@@ -39,14 +39,16 @@ root.render(
          <ChakraProvider>
             <SocketProvider>
                <WebPushProvider config={webPushConfig}>
-                  {isMobileDevice() ? (
-                     <Mobile_Responsive />
-                  ) : (
-                     <>
-                        <RouterProvider router={routes} />
-                        <Toaster />
-                     </>
-                  )}
+                  <MatchingProvider>
+                     {isMobileDevice() ? (
+                        <Mobile_Responsive />
+                     ) : (
+                        <>
+                           <RouterProvider router={routes} />
+                           <Toaster />
+                        </>
+                     )}
+                  </MatchingProvider>
                </WebPushProvider>
             </SocketProvider>
          </ChakraProvider>

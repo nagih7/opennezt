@@ -3,13 +3,13 @@
  */
 
 const AUTH_TOKEN_STORE_KEY = 'token'
-const LINKEDIN_NOTIFICATION_KEY = 'hideLinkedinNotification'
+const LINKEDIN_NOTIFICATION_KEY = 'hide_linkedin_notification'
 
 /**
  * Removes the authentication token from localStorage
  */
 export const removeAuthToken = (): void => {
-    localStorage.removeItem(AUTH_TOKEN_STORE_KEY)
+   localStorage.removeItem(AUTH_TOKEN_STORE_KEY)
 }
 
 /**
@@ -17,7 +17,7 @@ export const removeAuthToken = (): void => {
  * @param token The authentication token to store
  */
 export const setAuthToken = (token: string): void => {
-    localStorage.setItem(AUTH_TOKEN_STORE_KEY, token)
+   localStorage.setItem(AUTH_TOKEN_STORE_KEY, token)
 }
 
 /**
@@ -25,7 +25,7 @@ export const setAuthToken = (token: string): void => {
  * @returns The stored authentication token or null if not found
  */
 export const getAuthToken = (): string | null => {
-    return localStorage.getItem(AUTH_TOKEN_STORE_KEY)
+   return localStorage.getItem(AUTH_TOKEN_STORE_KEY)
 }
 
 /**
@@ -33,7 +33,7 @@ export const getAuthToken = (): string | null => {
  * @returns true if a token exists, false otherwise
  */
 export const hasAuthToken = (): boolean => {
-    return !!getAuthToken()
+   return !!getAuthToken()
 }
 
 /**
@@ -41,7 +41,7 @@ export const hasAuthToken = (): boolean => {
  * @param name The key of the item to remove
  */
 export const removeItem = (name: string): void => {
-    localStorage.removeItem(name)
+   localStorage.removeItem(name)
 }
 
 /**
@@ -50,7 +50,7 @@ export const removeItem = (name: string): void => {
  * @param value The value to store
  */
 export const setItem = (name: string, value: string): void => {
-    localStorage.setItem(name, value)
+   localStorage.setItem(name, value)
 }
 
 /**
@@ -59,7 +59,7 @@ export const setItem = (name: string, value: string): void => {
  * @returns The stored item or null if not found
  */
 export const getItem = (name: string): string | null => {
-    return localStorage.getItem(name)
+   return localStorage.getItem(name)
 }
 
 /**
@@ -67,7 +67,7 @@ export const getItem = (name: string): string | null => {
  * @param hide Whether to hide LinkedIn notifications
  */
 export const setHideLinkedinNotification = (hide: boolean): void => {
-    localStorage.setItem(LINKEDIN_NOTIFICATION_KEY, JSON.stringify(hide))
+   localStorage.setItem(LINKEDIN_NOTIFICATION_KEY, JSON.stringify(hide))
 }
 
 /**
@@ -75,6 +75,6 @@ export const setHideLinkedinNotification = (hide: boolean): void => {
  * @returns The stored preference or false if not found
  */
 export const getHideLinkedinNotification = (): boolean => {
-    const value = localStorage.getItem(LINKEDIN_NOTIFICATION_KEY)
-    return value ? JSON.parse(value) : false
+   const value = localStorage.getItem(LINKEDIN_NOTIFICATION_KEY)
+   return value ? JSON.parse(value) : false
 }

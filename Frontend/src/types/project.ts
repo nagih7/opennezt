@@ -1,3 +1,5 @@
+import { MemberProjectProps } from './user'
+
 export interface BaseProjectProps {
    _id: string
    name: string
@@ -8,18 +10,10 @@ export interface BaseProjectProps {
    createdAt?: string
 }
 
-export interface MemberProps {
-   _id: string
-   name: string
-   role: string
-   team_role: string
-   avatar?: string | null
-}
-
 export interface ProjectDetailsProps extends BaseProjectProps {
    stage: string
    industries: string[]
-   members: MemberProps[]
+   members: MemberProjectProps[]
    additional_infos?: any[]
    requirement?: any
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import RightSidebar from 'components/common/RightSidebar'
+import RightSidebar from '~/components/common/RightSidebar'
 import ActiveBanner from './components/ActiveBanner'
 import SearchProjectHeader from './components/SearchProjectHeader'
 import ActivateHeader from './components/ActivateHeader'

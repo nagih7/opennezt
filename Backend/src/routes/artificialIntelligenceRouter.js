@@ -7,7 +7,10 @@ const openAIRouter = Router()
 
 openAIRouter.use(requireAuthentication)
 
-// ========= GET [Matching - Projects] ==============//
+// Scrap linkedin
+openAIRouter.post('/scrap/linkedin', asyncHandler(aiController.scrapLinkedIn))
+
+// Matching projects
 openAIRouter.get('/matching/projects', asyncHandler(aiController.matchingProjects))
 
 export default openAIRouter

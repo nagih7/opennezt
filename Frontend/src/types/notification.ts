@@ -19,8 +19,8 @@ export interface NotificationData {
 }
 
 export interface NotificationUser {
-   _id?: string
-   name?: string
+   _id: string
+   name: string
    avatar?: string
    [key: string]: any
 }
@@ -28,9 +28,8 @@ export interface NotificationUser {
 export interface Notification {
    _id: string
    type: NotificationType
-   user?: NotificationUser
-   source_id?: string
-   timestamp?: string
+   user: NotificationUser
+   timestamp: string
    metadata?: NotificationMetadata
    data?: NotificationData
    message?: string
