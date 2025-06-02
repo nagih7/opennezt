@@ -1,48 +1,32 @@
-import React, { ChangeEvent } from 'react'
-import logo_opennezt_img from '../../../../assets/images/logo/opennezt_full_black_old.png'
-import { Dialog, DialogContent, DialogTrigger } from '~/components/UI/dialog'
-import { Button } from '~/components/UI/button'
+import React from 'react'
+import { OPENNEZT_BG_BLACK_ERASER } from '~/utils/constants'
+import { Dialog, DialogContent } from '~/components/UI/dialog'
+import { useMatching } from '~/contexts'
 
-interface ScrapLinkedInProps {
-   username: string
-   open: boolean
-   confirmed: boolean
-   hideNotification: boolean
-   setOpen: (status: boolean) => void
-   onChange: (e: ChangeEvent<HTMLInputElement>) => void
-   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
-   onConfirm: (e: ChangeEvent<HTMLInputElement>) => void
-   onHideNotification: (e: ChangeEvent<HTMLInputElement>) => void
-   onSubmit: () => void
-   onSkip: () => void
-}
+const ScrapLinkedIn: React.FC = () => {
+   const {
+      openModalScrapLinkedin: open,
+      linkedinUsername: username,
+      confirmed,
+      hideNotification,
 
-const ScrapLinkedIn: React.FC<ScrapLinkedInProps> = ({
-   open,
-   username,
-   confirmed,
-   hideNotification,
-   setOpen,
-   onChange,
-   onKeyDown,
-   onConfirm,
-   onHideNotification,
-   onSubmit,
-   onSkip,
-}) => {
+      setOpenModalScrapLinkedin: setOpen,
+      handleUsernameChange: onChange,
+      handleKeyDown: onKeyDown,
+      handleConfirmationChange: onConfirm,
+      handleHideNotificationChange: onHideNotification,
+      handleSubmit: onSubmit,
+      handleSkip: onSkip,
+   } = useMatching()
+
    return (
       <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
-         <DialogTrigger asChild>
-            <Button type="submit" onClick={() => setOpen(true)} className="text-white bg-main-color hover:bg-blue-700">
-               Confirm
-            </Button>
-         </DialogTrigger>
          <DialogContent className="w-screen h-screen max-w-full max-h-full ">
             <div className="flex flex-col items-center justify-center gap-5 p-10">
                <div className="flex flex-col items-center gap-5">
                   <div className="flex items-center justify-center gap-2">
                      <span className="text-3xl font-extrabold">How do you want to complete your</span>
-                     <img src={logo_opennezt_img} alt="" className="h-8" />
+                     <img src={OPENNEZT_BG_BLACK_ERASER} alt="OpenNezt" className="h-8" />
                      <span className="text-3xl font-extrabold">profile?</span>
                   </div>
                   <div className="flex items-center gap-1 text-xl font-semibold">

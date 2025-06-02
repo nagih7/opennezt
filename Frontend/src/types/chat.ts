@@ -1,8 +1,4 @@
-export interface MemberProps {
-   _id: string
-   name: string
-   avatar?: string
-}
+import { BaseMemberProps } from './user'
 
 export interface DataConversationProps {
    project?: {
@@ -15,7 +11,7 @@ export interface DataConversationProps {
 export interface BaseConversationProps {
    _id: string
    type: 'group' | 'direct'
-   members: MemberProps[]
+   members: BaseMemberProps[]
    name?: string
    last_message?: {
       content: string
@@ -29,7 +25,7 @@ export interface BaseConversationProps {
 export interface BaseChatProps {
    _id: string
    type: 'group' | 'direct'
-   members: MemberProps[]
+   members: BaseMemberProps[]
    name?: string
    last_message?: {
       content: string
@@ -44,14 +40,14 @@ export interface MessageProps {
    _id: string
    conversation_id: string
    content: string
-   user: MemberProps
+   user: BaseMemberProps
    timestamp: string
    attachments?: {
       type: string
       url: string
    }[]
    reactions?: {
-      user: MemberProps
+      user: BaseMemberProps
       type: string
    }[]
    replies?: MessageProps[]

@@ -10,7 +10,6 @@ import {
    PROJECT_INVITATION_NOTIFICATION,
 } from 'utils/constants'
 import { setNotifications } from '~/store/modules/notification'
-import ModalMatchingProjects from '~/components/common/ModalMatchingProjects'
 import { Notification } from '~/types/notification'
 
 // Create a context to share socket with other components
@@ -91,10 +90,5 @@ export const SocketProvider: React.FC<BaseComponentProps> = ({ children }) => {
       }
    }, [socket, dispatch])
 
-   return (
-      <SocketContext.Provider value={socket}>
-         <ModalMatchingProjects />
-         {children}
-      </SocketContext.Provider>
-   )
+   return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
 }

@@ -151,32 +151,39 @@ async function scrapeSkills(page, profileId) {
             timeout: 15000,
         })
 
+        page.on('console', msg => {
+            const type = msg.type()
+            const text = msg.text()
+            console.log(`[Browser ${type.toUpperCase()}]:`, text)
+        })
+
+        page.on('pageerror', error => {
+            console.log('Page error:', error.message)
+        })
+
         const skills = await page.evaluate(() => {
+            console.log('Starting skill extraction...')
             const spans = Array.from(
-            // eslint-disable-next-line no-undef
+                // eslint-disable-next-line no-undef
                 document.querySelectorAll("span[aria-hidden='true']:not(.notification-badge__count)")
             )
-
-            const rawTexts = spans.map((span) => span.textContent.trim()).filter((text) => text && !/^\d+$/.test(text))
+            const imgs = Array.from(
+                // eslint-disable-next-line no-undef
+                document.querySelectorAll("img[alt='Skill badge']")
+            )
+            const rawTexts = spans.map(span => span.textContent.trim()).filter(text => text && !/^\d+$/.test(text))
+            console.log(JSON.stringify(rawTexts, null, 2))
 
             // Blacklist keywords (UI elements, actions)
-            const blacklistKeywords = [
-                'Send profile',
-                'Save to PDF',
-                'Follow',
-                'Report',
-                'Block',
-                'About this profile',
-                'Messaging',
-            ]
+            const blacklistKeywords = ['Send profile', 'Save to PDF', 'Follow', 'Report', 'Block', 'About this profile', 'Messaging']
 
             // Check if text contains blacklisted keywords
-            const isBlacklisted = (text) => {
-                return blacklistKeywords.some((keyword) => text.toLowerCase().includes(keyword.toLowerCase()))
+            const isBlacklisted = text => {
+                return blacklistKeywords.some(keyword => text.toLowerCase().includes(keyword.toLowerCase()))
             }
 
             // Filter real skills and remove duplicates
-            return [...new Set(rawTexts.filter((text) => !isBlacklisted(text)))]
+            return [...new Set(rawTexts.filter(text => !isBlacklisted(text)))]
         })
 
         return skills
@@ -209,7 +216,7 @@ async function getSkillsForProfile(username) {
 
         // Scrape skills using existing session
         const skills = await scrapeSkills(session.page, username)
-        return skills || [] // Trả về mảng rỗng nếu không tìm thấy kỹ năng
+        return skills || []
     } catch (error) {
         console.error('LinkedIn scraper error:', error.message)
 

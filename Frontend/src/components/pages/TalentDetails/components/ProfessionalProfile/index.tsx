@@ -1,5 +1,5 @@
 import React from 'react'
-import RightSidebar from 'components/common/RightSidebar'
+import RightSidebar from '~/components/common/RightSidebar'
 import ProfileDetails from '~/components/pages/About/components/ProfileDetails'
 import { TalentProfile } from 'types/talent'
 import { Activity, SidebarAction } from 'types/activity'

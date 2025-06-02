@@ -98,20 +98,4 @@ export interface Friend {
    created_at: string
 }
 
-export interface Notification {
-   _id: string
-   type?: {
-      name: string
-   }
-   metadata?: {
-      status: string
-   }
-   user: {
-      name: string
-      avatar: string
-      _id: string
-   }
-   timestamp: string
-}
-
 export type OrderByType = 'Newest' | 'Oldest' | 'Active'

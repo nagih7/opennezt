@@ -7,13 +7,14 @@ import { useLocation } from 'react-router-dom'
 import { FaCircleCheck } from 'react-icons/fa6'
 import { AVATAR_DEFAULT } from '~/utils/constants'
 import { Avatar, AvatarImage } from '~/components/UI/avatar'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 const SideBar: React.FC = () => {
    const location = useLocation()
    const { authUser, routes, navigate, handleToggleMenu, handleConfirmLogOut } = useSidebar()
 
    return (
-      <div className="flex flex-col w-full h-full border-t-2 border-gray-100">
+      <div className="flex-col hidden h-full p-5 overflow-hidden border-t-2 border-gray-100 w-navbar lg:flex">
          <div className="flex-1 overflow-y-scroll scrollbar-hide bg-[#ffffff] p-8">
             <div
                style={{ cursor: 'pointer' }}
@@ -67,10 +68,10 @@ const SideBar: React.FC = () => {
 
          <div className="w-full py-4 px-3 bg-[#ffffff] text-gray-500">
             <ul className="flex items-center justify-around w-full list-none p-3 bg-[#f8f9fa] rounded-md">
-               <li className="cursor-pointer" onClick={() => navigate('/account-settings')}>
+               <li className="cursor-pointer" onClick={() => navigate(ROUTE_CONFIG.USER.SETTING.PREFIX)}>
                   <IconlySetting size={24} color={'rgb(107 114 128 / var(--tw-text-opacity, 1))'} />
                </li>
-               <li className="cursor-pointer" onClick={() => navigate('/profile')}>
+               <li className="cursor-pointer" onClick={() => navigate(ROUTE_CONFIG.USER.PROFILE.PREFIX)}>
                   <IconlyUser size={24} color={'rgb(107 114 128 / var(--tw-text-opacity, 1))'} />
                </li>
                <li className="cursor-pointer" onClick={() => handleConfirmLogOut()}>

@@ -13,7 +13,7 @@ import {
    handleBookmarkArticle,
 } from '../../../api/newfeeds'
 import { useDispatch, useSelector } from 'react-redux'
-import RightSidebar from 'components/common/RightSidebar'
+import RightSidebar from '~/components/common/RightSidebar'
 import {
    updateDeletedArticle,
    updateReaction,

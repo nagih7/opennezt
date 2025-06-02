@@ -3,10 +3,6 @@ export { WebPushProvider } from './WebpushProvider'
 export { WebPushContext } from './WebpushContext'
 export { WebPushErrorBoundary } from './WebPushErrorBoundary'
 
-// Hooks
-export { useWebPush } from './hooks/useWebpush'
-export { useWebPushPermission } from './hooks/useWebpushPermission'
-
 // Types - Explicitly export the config
 export type {
    WebPushConfig,

@@ -1,7 +1,7 @@
 import { ActionBar, Button, Kbd, Portal, Spinner, Table, Tabs } from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import RightSidebar from 'components/common/RightSidebar'
+import RightSidebar from '~/components/common/RightSidebar'
 import store, { AppDispatch } from '~/store'
 import moment from 'moment'
 import {

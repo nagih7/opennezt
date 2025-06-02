@@ -192,7 +192,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile }) => {
                </span>
             </div>
             <div className="p-8">
-               {result?.length > 0 ? (
+               {profile.linkin?.length > 0 ? (
                   <ul className="pl-0 mb-0 space-y-4">
                      {result.map((item, index) => (
                         <li key={index} className="flex flex-col">

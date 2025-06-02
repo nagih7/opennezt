@@ -10,11 +10,9 @@ import {
    DialogTitle,
    DialogTrigger,
 } from '~/components/UI/dialog'
-import { useMatchingProfile } from '../hooks'
 import { BsStars } from 'react-icons/bs'
 import { Alert, AlertDescription } from '~/components/UI/alert'
 import { AlertCircleIcon } from 'lucide-react'
-import ScrapLinkedIn from './ScrapLinkedIn'
 import { IconlyFolder, IconlyLocation } from '~/components/UI/Iconly'
 import { MatchingProjectProps } from '~/types'
 import { OPENNEZT_LOGO_GRADIENT } from '~/utils/constants'
@@ -22,6 +20,7 @@ import { Avatar, AvatarImage } from '~/components/UI/avatar'
 import { Badge } from '~/components/UI/badge'
 import ProjectDetails from '~/components/common/ModalMatchingProjects/components/ProjectDetails'
 import Statistical from '~/components/common/ModalMatchingProjects/components/Statistical'
+import { useMatching } from '~/contexts'
 
 const MatchingProfile: React.FC = () => {
    const {
@@ -29,26 +28,15 @@ const MatchingProfile: React.FC = () => {
       loading,
       openModalConfirm,
       showMatches,
-      openModalScrapLinkedin,
-      linkedinUsername,
-      confirmed,
-      hideNotification,
       matchSelected,
       showProject,
 
       setOpenModalConfirm,
-      setOpenModalScrapLinkedin,
       setShowMatches,
       setShowProject,
-
-      handleUsernameChange,
-      handleKeyDown,
-      handleConfirmationChange,
-      handleHideNotificationChange,
-      handleSubmit,
-      handleSkip,
       handleShowProject,
-   } = useMatchingProfile()
+      handleComfirmMatchingProjects,
+   } = useMatching()
 
    if (matches.length > 0)
       return (
@@ -181,19 +169,13 @@ const MatchingProfile: React.FC = () => {
                   <DialogClose asChild>
                      <Button variant="outline">Cancel</Button>
                   </DialogClose>
-                  <ScrapLinkedIn
-                     username={linkedinUsername}
-                     confirmed={confirmed}
-                     open={openModalScrapLinkedin}
-                     hideNotification={hideNotification}
-                     setOpen={setOpenModalScrapLinkedin}
-                     onChange={handleUsernameChange}
-                     onKeyDown={handleKeyDown}
-                     onConfirm={handleConfirmationChange}
-                     onHideNotification={handleHideNotificationChange}
-                     onSubmit={handleSubmit}
-                     onSkip={handleSkip}
-                  />
+                  <Button
+                     type="submit"
+                     onClick={handleComfirmMatchingProjects}
+                     className="text-white bg-main-color hover:bg-blue-700"
+                  >
+                     Confirm
+                  </Button>
                </DialogFooter>
             </DialogContent>
          </Dialog>

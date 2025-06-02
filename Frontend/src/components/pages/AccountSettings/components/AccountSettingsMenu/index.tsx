@@ -1,6 +1,7 @@
 import { IconlyArrowDown2, IconlyArrowUp2, IconlySetting } from 'components/UI/Iconly'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 const AccountSettingsMenu: React.FC = () => {
    const [isOpen, setIsOpen] = useState<boolean>(true)
@@ -34,27 +35,27 @@ const AccountSettingsMenu: React.FC = () => {
                <div className="px-[24px]">
                   <ul className="flex flex-col items-center pl-0 mb-0">
                      <li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
-                        <Link to={'/account-settings/profile-visibility'} className="text-[#6f7f92] no-underline ">
+                        <Link to={ROUTE_CONFIG.USER.SETTING.PROFILE} className="text-[#6f7f92] no-underline ">
                            Profile Visibility
                         </Link>
                      </li>
                      <li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
-                        <Link to={'/account-settings/privacy-and-security'} className="text-[#6f7f92]  no-underline ">
+                        <Link to={ROUTE_CONFIG.USER.SETTING.PRIVACY_POLICY} className="text-[#6f7f92]  no-underline ">
                            Privacy and security
                         </Link>
                      </li>
                      <li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
-                        <Link to={'/account-settings/shop'} className="text-[#6f7f92]  no-underline ">
+                        <Link to={ROUTE_CONFIG.USER.SETTING.SHOP} className="text-[#6f7f92]  no-underline ">
                            Shop
                         </Link>
                      </li>
                      <li className=" w-full text-sm py-[21px] border-b-[1px]  border-gray-200 ">
-                        <Link to={'/account-settings/block-list'} className="text-[#6f7f92]  no-underline ">
+                        <Link to={ROUTE_CONFIG.USER.SETTING.BLOCKLIST} className="text-[#6f7f92]  no-underline ">
                            Block List
                         </Link>
                      </li>
                      <li className=" w-full text-sm py-[21px] ">
-                        <Link to={'/account-settings/export-data'} className="text-[#6f7f92]  no-underline ">
+                        <Link to={ROUTE_CONFIG.USER.SETTING.EXPORT} className="text-[#6f7f92]  no-underline ">
                            Export Data
                         </Link>
                      </li>

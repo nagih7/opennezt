@@ -1,6 +1,7 @@
 import React from 'react'
 import { IconlyLogout, IconlySetting, IconlyUser } from 'components/UI/Iconly'
 import { usePersionalInfo } from '~/hooks'
+import { ROUTE_CONFIG } from '~/config/constants'
 
 const PopoverProfile: React.FC = () => {
    const { authUser, navigate, handleConfirmLogOut } = usePersionalInfo()
@@ -19,7 +20,7 @@ const PopoverProfile: React.FC = () => {
 
             <div
                className="flex items-center gap-2 p-[15px] hover:bg-[#f6f5f5] cursor-pointer rounded-md"
-               onClick={() => navigate('/account-settings')}
+               onClick={() => navigate(ROUTE_CONFIG.USER.SETTING.PREFIX)}
             >
                <IconlySetting color={'#374151'} size={12} />
                <span>Account Settings</span>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Tabs } from '@chakra-ui/react'
-import RightSidebar from 'components/common/RightSidebar'
+import RightSidebar from '~/components/common/RightSidebar'
 
 const Timeline: React.FC = () => {
    return (
