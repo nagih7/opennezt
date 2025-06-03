@@ -7,7 +7,7 @@ const socketRoutes = async io => {
         await socket.on('login', async token => {
             await socketAuthentication(socket, token)
         }),
-            await chatRouter(socket, io)
+        await chatRouter(socket, io)
 
         await disconnectHandler(socket)
     })

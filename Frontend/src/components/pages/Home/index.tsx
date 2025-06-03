@@ -25,13 +25,13 @@ const Home: React.FC = () => {
          />
          <div className="flex flex-col mt-8">
             <span className="text-2xl font-bold">Practice interview</span>
-            <span className="text-[#6f7f92]">Practice real interview questions and pave your startup journey</span>
-            <div className="grid grid-cols-3 gap-8 pb-8 mt-4 2xl:gap-10">
+            <span className="text-[#6f7f92]">Practice real interview questions and pave your startup journey</span>            <div className="grid grid-cols-3 gap-8 pb-8 mt-4 2xl:gap-10">
                {projects &&
                   projects.length > 0 &&
                   projects.map((project: BaseProjectProps, index: number) => (
                      <InterviewCard
                         key={index}
+                        index={index}
                         project={project}
                         onInterviewPractice={handleInterviewPractice}
                         onViewDetail={handleViewProjectDetails}

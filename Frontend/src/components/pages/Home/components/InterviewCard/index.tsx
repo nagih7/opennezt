@@ -7,32 +7,20 @@ import { Avatar, AvatarFallback, AvatarImage } from '~/components/UI/avatar'
 import { OPENNEZT_LOGO } from '~/utils/constants'
 
 interface InterviewCardProps {
-   key: number
+   index: number
    project: BaseProjectProps
    onInterviewPractice: (projectId: string) => void
    onViewDetail: (projectId: string) => void
 }
 
-export const InterviewCard: React.FC<InterviewCardProps> = ({ project, onInterviewPractice, onViewDetail }) => {
+export const InterviewCard: React.FC<InterviewCardProps> = ({ project, onInterviewPractice, onViewDetail, index }) => {
    const gradients = [
       'bg-gradient-to-r from-[#B7445580] to-[#CBA9AE33]',
-      'bg-gradient-to-r from-[#B7445580] to-[#CBA9AE33]', 
-      'bg-gradient-to-r from-[#0A5D9980] to-[#A9D6FF33]', 
+      'bg-gradient-to-r from-[#0A5D9980] to-[#A9D6FF33]',
       'bg-gradient-to-r from-[#56368780] to-[#877A9A33]',
    ]
 
-   const getGradientIndex = (projectId: string) => {
-      if (!projectId) return 0
-      let hash = 0
-      for (let i = 0; i < projectId.length; i++) {
-         const char = projectId.charCodeAt(i)
-         hash = ((hash << 5) - hash) + char
-         hash = hash & hash 
-      }
-      return Math.abs(hash) % gradients.length
-   }
-
-   const selectedGradient = gradients[getGradientIndex(project?._id || '')]
+   const selectedGradient = gradients[index % gradients.length]
 
    return (
       <div className="group flex flex-col border-[2px] hover:border-[#2f65b9] h-[290px] 2xl:h-[310px] rounded-xl transition-all duration-500 ease-in-out">
@@ -48,7 +36,7 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ project, onIntervi
             </div>
             <div className="group-hover:flex items-center transition-all duration-700 ease-in-out hidden absolute right-0 top-0 bg-[#ffffff] rounded-lg m-[10px] cursor-pointer">
                <span className="p-2 border-r">Share</span>
-               <BsArrowsAngleExpand className='w-3 h-3 mx-3'/>
+               <BsArrowsAngleExpand className='w-3 h-3 mx-3' />
             </div>
          </div>
          <div className="p-[10px] bg-[#ffffff] rounded-xl">
