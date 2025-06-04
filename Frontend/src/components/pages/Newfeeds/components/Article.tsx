@@ -1,23 +1,42 @@
 import React, { forwardRef, useState, useRef, useEffect } from 'react'
 import { GoPlus } from 'react-icons/go'
 import { IconlyBookmark, IconlyDelete, IconlyMoreCircle } from 'components/UI/Iconly'
-import avt from 'assets/images/background/avt.jpg'
 import { IconlyChat } from 'components/UI/Iconly'
 import { IconlyHeart } from 'components/UI/Iconly'
 import { IconlySend } from 'components/UI/Iconly'
 import { IconlyEdit } from 'components/UI/Iconly'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
-import { Button, Avatar } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
 import { handleGetLinkPreview } from 'api/linkPreview'
 import { ROUTE_CONFIG } from '~/config/constants'
+import { Article as ArticleType } from '~/types'
+import { useAppDispatch, useAppSelector } from '~/store'
+import { Avatar, AvatarImage } from '~/components/UI/avatar'
+import { AVATAR_DEFAULT } from '~/utils/constants'
 
-const Article = forwardRef(
+interface BookmarkData {
+   article_id: string
+   marked: string
+}
+
+interface ArticleProps {
+   feed: ArticleType
+   reaction?: string
+   onReaction: (articleId: string, formData: FormData) => Promise<void>
+   isLoading: boolean
+   onSelect: (feed: ArticleType) => Promise<void>
+   onEdit: (feed: ArticleType) => Promise<void>
+   onDelete: (id: string) => void
+   onBookmark: (data: BookmarkData) => Promise<void>
+   bookmark?: string
+}
+
+const Article = forwardRef<HTMLDivElement, ArticleProps>(
    ({ feed, reaction, onReaction, isLoading, onSelect, onEdit, onDelete, onBookmark, bookmark }, ref) => {
       const { _id, user, project, content, reaction_count, created_at, comment_count, link_preview } = feed
-      const dispatch = useDispatch()
-      const { linkDataArticle, isLoadingGetLinkPreview } = useSelector((state) => state.linkPreview)
+      const dispatch = useAppDispatch()
+      const { linkDataArticle, isLoadingGetLinkPreview } = useAppSelector((state) => state.linkPreview)
       const [previewData, setPreviewData] = useState(null)
 
       // Thêm useEffect để lấy link preview data
@@ -60,7 +79,7 @@ const Article = forwardRef(
          if (!previewData) return null
 
          // Hàm kiểm tra và format URL
-         const getDisplayUrl = (url) => {
+         const getDisplayUrl = (url: string) => {
             try {
                const urlObject = new URL(url)
                return urlObject.hostname
@@ -118,13 +137,13 @@ const Article = forwardRef(
          if (reaction == undefined) {
             return (
                <div onClick={() => handleReactionClick('like')} style={{ cursor: 'pointer' }}>
-                  <IconlyHeart size={25} color={'#6f7f92'} />
+                  <IconlyHeart size={25} color={'#6f7f92'} backgroundColor="none" />
                </div>
             )
          }
       }
 
-      const handleReactionClick = (type) => {
+      const handleReactionClick = (type: any) => {
          if (isLoading) return
          const data = new FormData()
          data.append('type', type)
@@ -159,7 +178,7 @@ const Article = forwardRef(
       const dropdownRef = useRef(null)
 
       useEffect(() => {
-         const handleClickOutside = (event) => {
+         const handleClickOutside = (event: any) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                setIsShowMore(false)
             }
@@ -185,7 +204,7 @@ const Article = forwardRef(
       //End of Posted Date Logic
       //==================================================================================================
 
-      const handleBookmark = (data) => {
+      const handleBookmark = (data: any) => {
          onBookmark(data)
       }
 
@@ -218,13 +237,13 @@ const Article = forwardRef(
                      })
                   }
                >
-                  <IconlyBookmark size={25} color={'#6f7f92'} />
+                  <IconlyBookmark size={25} color={'#6f7f92'} backgroundColor={'none'} />
                </div>
             )
          }
       }
 
-      const authUser = useSelector((state) => state.auth.authUser)
+      const authUser = useAppSelector((state) => state.auth.authUser)
 
       const verifyAction = () => {
          if (authUser?._id === user[0]?._id) {
@@ -236,30 +255,30 @@ const Article = forwardRef(
          }
       }
 
-      const handleViewTalentDetails = (user) => {
+      const handleViewTalentDetails = (user: any) => {
          navigate(ROUTE_CONFIG.USER.RECRUIT_TALENT.PREFIX + user._id)
       }
 
       const [isModalOpen, setIsModalOpen] = useState(false)
       const [selectedImageIndex, setSelectedImageIndex] = useState(0)
 
-      const handlePrevImage = (e) => {
+      const handlePrevImage = (e: any) => {
          e.stopPropagation()
          setSelectedImageIndex((prev) => (prev === 0 ? content.attachment.length - 1 : prev - 1))
       }
 
-      const handleNextImage = (e) => {
+      const handleNextImage = (e: any) => {
          e.stopPropagation()
          setSelectedImageIndex((prev) => (prev === content.attachment.length - 1 ? 0 : prev + 1))
       }
 
-      const parseContent = (text) => {
+      const parseContent = (text: any) => {
          if (!text) return ''
 
          const parts = text.split(/(https?:\/\/[^\s]+)/g)
 
          return parts
-            .map((part, index) => {
+            .map((part: any) => {
                if (part.match(/(https?:\/\/[^\s]+)/g)) {
                   // Cắt ngắn URL nếu quá dài
                   const displayUrl = part.length > 50 ? part.substring(0, 47) + '...' : part
@@ -313,10 +332,10 @@ const Article = forwardRef(
 
             <div className="flex items-center gap-3">
                <div className="w-[65px] cursor-pointer" onClick={() => handleViewTalentDetails(user[0])}>
-                  <Avatar.Root className="w-[50px] h-[50px] rounded-full ">
-                     <Avatar.Fallback name={user[0]?.name} />
-                     <Avatar.Image src={user[0].avatar} />
-                  </Avatar.Root>
+                  <Avatar className="w-[50px] h-[50px] rounded-full ">
+                     <AvatarImage src={user[0]?.avatar || undefined} />
+                     <AvatarImage src={AVATAR_DEFAULT} />
+                  </Avatar>
                </div>
                <div className="flex items-center justify-between w-full">
                   <div className="flex flex-col w-9/12 gap-2 text-base font-medium">
@@ -550,7 +569,7 @@ const Article = forwardRef(
                            ? reaction_count > 1000
                               ? Math.floor(reaction_count / 1000) + 'k'
                               : reaction_count
-                           : ' '}{' '}
+                           : ''}
                      </span>
                   </a>
                   <a

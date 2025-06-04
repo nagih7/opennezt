@@ -14,7 +14,7 @@ const SideBar: React.FC = () => {
    const { authUser, routes, navigate, handleToggleMenu, handleConfirmLogOut } = useSidebar()
 
    return (
-      <div className="flex-col hidden h-full p-5 overflow-hidden border-t-2 border-gray-100 w-navbar lg:flex">
+      <div className="flex-col hidden h-full overflow-hidden border-t-2 border-gray-100 w-navbar lg:flex">
          <div className="flex-1 overflow-y-scroll scrollbar-hide bg-[#ffffff] p-8">
             <div
                style={{ cursor: 'pointer' }}

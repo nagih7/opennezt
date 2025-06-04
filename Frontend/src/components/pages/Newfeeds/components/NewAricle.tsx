@@ -1,12 +1,16 @@
-import AvatarDefault from '../../../../../assets/images/default/AvatarDefault.png'
+import AvatarDefault from '../../../../assets/images/default/AvatarDefault.png'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Input } from '~/components/UI/input'
-const NewArticle = ({ onOpenForm }) => {
-   const { authUser } = useSelector((state) => state.auth)
-   const handleClick = () => {
+import { NewArticleProps, RootState } from '~/types'
+
+const NewArticle: React.FC<NewArticleProps> = ({ onOpenForm }) => {
+   const { authUser } = useSelector((state: RootState) => state.auth)
+
+   const handleClick = (): void => {
       onOpenForm()
    }
+
    return (
       <>
          <div className="flex gap-3 bg-[#ffffff] p-8 rounded-md mb-4 w-full">

@@ -78,6 +78,10 @@ const TalentFeatures = {
    ProjectDetailsBySeek: React.lazy(() => import('components/pages/ProjectDetailsBySeek')),
 }
 
+// const FeedFeatures = {
+//    Feed: React.lazy(() => import('components/pages/Newfeeds')),
+// }
+
 // Other components
 const Interview = React.lazy(() => import('~/components/pages/InterviewBeta/Preview'))
 
@@ -527,6 +531,14 @@ const router: RouteObject[] = [
       element: withSuspense(<Interview />),
       loader: createLoader(true, 'LOAD_INTERVIEW_PAGE'),
    },
+   // {
+   //    path: ROUTE_CONFIG.USER.FEED.PREFIX,
+   //    element: withSuspense(
+   //       <AppLayout>
+   //          <FeedFeatures.Feed />
+   //       </AppLayout>
+   //    ),
+   // },
 ]
 
 const routes = createBrowserRouter(router)

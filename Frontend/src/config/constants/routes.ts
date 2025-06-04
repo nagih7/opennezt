@@ -101,6 +101,13 @@ export const ROUTE_CONFIG = {
          SCHEDULE: '/interviews/schedule',
          QUESTIONS: '/interviews/questions',
       },
+      // // FEED
+      // FEED: {
+      //    PREFIX: '/feed',
+      //    DETAIL: '/feed/:id',
+      //    CREATE: '/feed/create',
+      //    EDIT: '/feed/edit/:id',
+      // },
    },
 
    // Admin routes

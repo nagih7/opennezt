@@ -35,8 +35,31 @@ import {
    postActivityUpdateArticle,
 } from 'api/activity'
 import { resetLinkPreview } from 'store/modules/linkPreview'
+import { RootState, Article as ArticleType, ArticleFormData, UserReaction, AppDispatch, DataFilter } from '~/types'
 
-const unifiedAction = (activity) => {
+interface Activity {
+   user?: {
+      name?: string
+   }
+   activity_type?: {
+      name?: string
+   }
+   article?: {
+      caption?: string
+   }
+}
+
+interface BookmarkData {
+   article_id: string
+   marked: string
+}
+
+interface BookmarkItem {
+   target_id: string
+   marked: string
+}
+
+const unifiedAction = (activity: Activity | string | null): React.ReactElement => {
    if (typeof activity === 'string' || !activity || activity === null) {
       return <span>has interacted with {activity}</span>
    }
@@ -78,8 +101,8 @@ const unifiedAction = (activity) => {
    }
 }
 
-function NewFeeds() {
-   const dispatch = useDispatch()
+function NewFeeds(): React.ReactElement {
+   const dispatch = useDispatch<AppDispatch>()
 
    const {
       feeds,
@@ -93,18 +116,18 @@ function NewFeeds() {
       isOpenUpdateForm,
       pagination,
       bookmarks,
-   } = useSelector((state) => state.article)
+   } = useSelector((state: RootState) => state.article)
 
    const {
       activities,
-      isLoading: isLoadingActivities,
+      isLoadingActivities,
       // hasMore: hasMoreActivities,
       // skip: activitiesSkip,
       limit: activitiesLimit,
-   } = useSelector((state) => state.activity)
+   } = useSelector((state: RootState) => state.activity)
    const { nextCursor, limit, hasMore } = pagination
 
-   const [dataFilter, setDataFilter] = useState({
+   const [dataFilter, setDataFilter] = useState<DataFilter>({
       cursor: 0,
       limit: limit,
    })
@@ -132,7 +155,7 @@ function NewFeeds() {
             getListFeeds({
                cursor: new Date(),
                limit: limit,
-            })
+            } as any)
          )
       }
    }, [dispatch, feeds.length, limit, hasMore])
@@ -152,12 +175,11 @@ function NewFeeds() {
    useEffect(() => {
       cursorRef.current = nextCursor
    }, [nextCursor])
-   //End
-   //Lướt xuống bài viết cuối thì load tiếp
-   const observerRef = useRef(null)
+   //End   //Lướt xuống bài viết cuối thì load tiếp
+   const observerRef = useRef<IntersectionObserver | null>(null)
 
    const lastElementRef = useCallback(
-      (node) => {
+      (node: HTMLDivElement | null) => {
          // Ngắt kết nối observer cũ
          if (observerRef.current) {
             observerRef.current.disconnect()
@@ -198,24 +220,24 @@ function NewFeeds() {
       }
    }, [onetimefeeds, dispatch])
 
-   const reactionMap = useMemo(() => {
-      return new Map(reactions.map((r) => [r.target_id.toString(), r.type]))
+   const reactionMap = useMemo((): Map<string, string> => {
+      return new Map(reactions.map((r: UserReaction) => [r.target_id.toString(), r.type]))
    }, [reactions])
    //End Reaction User's Status
    //Form Create Article
 
-   const handleOpenForm = useCallback(() => {
+   const handleOpenForm = useCallback((): void => {
       dispatch(openCreateForm())
       dispatch(resetLinkPreview())
    }, [dispatch])
 
-   const handleCloseForm = useCallback(() => {
+   const handleCloseForm = useCallback((): void => {
       dispatch(closeCreateForm())
    }, [dispatch])
 
    const handleReaction = useCallback(
-      async (articleId, formData) => {
-         const reactionType = formData.get('type')
+      async (articleId: string, formData: FormData): Promise<void> => {
+         const reactionType = formData.get('type') as string
          await dispatch(updateReaction({ articleId, reactionType }))
 
          //Gọi API để update server
@@ -225,68 +247,65 @@ function NewFeeds() {
    )
 
    const handleFormSubmit = useCallback(
-      async (formData) => {
+      async (formData: ArticleFormData): Promise<void> => {
          const newFormData = new FormData()
          newFormData.append('caption', formData.content.caption)
-         formData.content.attachment.forEach((file) => {
+         formData.content.attachment.forEach((file: File) => {
             newFormData.append('attachment', file)
          })
          newFormData.append('hashtags', JSON.stringify(formData.content.hashtags))
          newFormData.append('audience', formData.audience)
          newFormData.append('status', formData.status)
-         newFormData.append('project_id', formData.project_id)
-         newFormData.append('link_preview', formData.link_preview)
+         newFormData.append('project_id', formData.project_id || '')
+         newFormData.append('link_preview', (formData as any).link_preview || '')
          dispatch(handleCreateArticle({ data: newFormData }))
       },
       [dispatch]
    )
-   //End Form Create Article
-
-   //Comment Article
-   const [selectedArticle, setSelectedArticle] = useState({})
-   const [isOpenComment, setIsOpenComment] = useState(false)
-   const handleSelectArticle = useCallback(async (feed) => {
+   //End Form Create Article   //Comment Article
+   const [selectedArticle, setSelectedArticle] = useState<ArticleType | null>(null)
+   const [isOpenComment, setIsOpenComment] = useState<boolean>(false)
+   const handleSelectArticle = useCallback(async (feed: ArticleType): Promise<void> => {
       setSelectedArticle(feed)
       setIsOpenComment(true)
    }, [])
 
-   const handleCloseComment = useCallback(() => {
+   const handleCloseComment = useCallback((): void => {
       setIsOpenComment(false)
-      setSelectedArticle({})
-   }, [])
-
-   //End Comment Article
+      setSelectedArticle(null)
+   }, []) //End Comment Article
 
    //Update Article
    const handleOpenUpdateForm = useCallback(
-      async (feed) => {
+      async (feed: ArticleType): Promise<void> => {
          setSelectedArticle(feed)
          dispatch(openUpdateForm())
       },
       [dispatch]
    )
-   const handleCloseUpdateForm = useCallback(async () => {
-      setSelectedArticle({})
+
+   const handleCloseUpdateForm = useCallback(async (): Promise<void> => {
+      setSelectedArticle(null)
       dispatch(closeUpdateForm())
    }, [dispatch])
-   const handleUpdateFormSubmit = useCallback(async (id, formData) => {
+
+   const handleUpdateFormSubmit = useCallback(async (id: string, formData: ArticleFormData): Promise<void> => {
       const newFormData = new FormData()
       newFormData.append('caption', formData.content.caption)
-      formData.content.attachment.forEach((file) => {
+      formData.content.attachment.forEach((file: File) => {
          newFormData.append('attachment', file)
       })
       newFormData.append('hashtags', JSON.stringify(formData.content.hashtags))
       newFormData.append('audience', formData.audience)
       newFormData.append('status', formData.status)
-      newFormData.append('project_id', formData.project_id)
+      newFormData.append('project_id', formData.project_id || '')
       await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }))
       await store.dispatch(updateUpdatedArticle(formData))
       await postActivityUpdateArticle(id)
-   }, [])
-   //End Update Article
+   }, []) //End Update Article
    //Delete Article
    const handleDelete = useCallback(
-      (id) => {
+      (id: string): void => {
          dispatch(updateDeletedArticle(id))
          dispatch(handleDeleteArticle({ id }))
       },
@@ -295,7 +314,7 @@ function NewFeeds() {
 
    useEffect(() => {
       if (onetimefeeds.length > 0) {
-         const articleIds = onetimefeeds.filter((r) => r?._id).map((r) => r?._id)
+         const articleIds = onetimefeeds.filter((r: ArticleType) => r?._id).map((r: ArticleType) => r?._id)
 
          if (articleIds.length > 0) {
             dispatch(handleGetUserBookmarks(articleIds))
@@ -303,12 +322,12 @@ function NewFeeds() {
       }
    }, [dispatch, onetimefeeds])
 
-   const bookmarksMap = useMemo(() => {
-      return new Map(bookmarks.map((r) => [r.target_id.toString(), r.marked]))
+   const bookmarksMap = useMemo((): Map<string, string> => {
+      return new Map((bookmarks as BookmarkItem[]).map((r: BookmarkItem) => [r.target_id.toString(), r.marked]))
    }, [bookmarks])
 
    const bookmarkArticle = useCallback(
-      async (data) => {
+      async (data: BookmarkData): Promise<void> => {
          await dispatch(handleBookmarkArticle({ data }))
          dispatch(updateBookmarks(data))
          if (data.marked === 'yes') {
@@ -323,8 +342,9 @@ function NewFeeds() {
 
    return (
       <div className="flex w-full gap-[16px] pt-[16px] px-[16px]">
-         <div className="lg:w-8/12 w-full">
-            {isOpenUpdateForm ? (
+         <div className="w-full lg:w-8/12">
+            {' '}
+            {isOpenUpdateForm && selectedArticle ? (
                <UpdateArticleForm
                   feed={selectedArticle}
                   onClose={handleCloseUpdateForm}
@@ -332,16 +352,16 @@ function NewFeeds() {
                   isLoadingUpdateArticle={isLoadingUpdateArticle}
                />
             ) : null}
-            {isOpenComment ? (
+            {isOpenComment && selectedArticle ? (
                <CommentList
-                  key={selectedArticle?._id}
+                  key={selectedArticle._id}
                   feed={selectedArticle}
                   onClose={handleCloseComment}
-                  reaction={reactionMap.get(selectedArticle?._id)}
+                  reaction={reactionMap.get(selectedArticle._id)}
                   onReaction={handleReaction}
                   isLoading={isLoadingReactArticle}
                />
-            ) : null}
+            ) : null}{' '}
             {isOpenCreateForm ? (
                <CreateArticleForm
                   onSubmitForm={handleFormSubmit}

@@ -1,16 +1,31 @@
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import { IconlyImage2, IconlySend } from 'components/UI/Iconly'
-import avt from 'assets/images/background/avt.jpg'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { FileUpload } from '@chakra-ui/react'
-import { useState } from 'react'
 import { resetComment, resetReply } from 'store/modules/article'
-import { useDispatch } from 'react-redux'
 import resizeBackground from 'utils/files/resizeBackground'
-const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrReply, handleClickReply, onReset }) => {
+import { RootState, Comment, CommentFormData } from '~/types'
+
+interface NewCommentFormProps {
+   article_id: string
+   onSubmit: (data: CommentFormData) => Promise<void>
+   selectedComment?: Comment
+   isCommentOrReply: 'comment' | 'reply'
+   handleClickReply: () => void
+   onReset: () => void
+}
+
+const NewCommentForm: React.FC<NewCommentFormProps> = ({
+   article_id,
+   onSubmit,
+   selectedComment,
+   isCommentOrReply,
+   handleClickReply,
+   onReset,
+}) => {
    const dispatch = useDispatch()
-   const authUser = useSelector((state) => state.auth.authUser)
-   const [formData, setFormData] = useState({
+   const authUser = useSelector((state: RootState) => state.auth.authUser)
+   const [formData, setFormData] = useState<CommentFormData>({
       article_id: article_id,
       content: {
          caption: '',
@@ -18,10 +33,12 @@ const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrRepl
       },
    })
 
-   const [fileKey, setFileKey] = useState(0)
+   const [fileKey, setFileKey] = useState<number>(0)
 
-   const handleFileChange = async (event) => {
-      const file = event.target.files[0]
+   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+      const file = event.target.files?.[0]
+      if (!file) return
+
       const resizeFile = await resizeBackground(file)
 
       setFormData({
@@ -33,7 +50,7 @@ const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrRepl
       })
    }
 
-   const handleSubmit = async () => {
+   const handleSubmit = async (): Promise<void> => {
       await onSubmit(formData)
       if (isCommentOrReply === 'reply') {
          dispatch(resetReply())
@@ -47,20 +64,19 @@ const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrRepl
             image: '',
          },
       })
-      setFileKey((prev) => prev + 1)
+      setFileKey((prev: number) => prev + 1)
    }
 
-   const handleKeyDown = (e) => {
+   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
       if (e.key === 'Enter' && !e.shiftKey) {
-         e.preventDefault() // Prevent default enter behavior
+         e.preventDefault()
          if (formData.content.caption.trim()) {
-            // Only submit if there's content
             handleSubmit()
          }
       }
    }
 
-   const handleRemoveImage = () => {
+   const handleRemoveImage = (): void => {
       setFormData({
          ...formData,
          content: {
@@ -70,7 +86,7 @@ const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrRepl
       })
    }
 
-   const handlePreviewImage = () => {
+   const handlePreviewImage = (): JSX.Element | null => {
       const image = formData.content.image
       if (formData.content.image) {
          return (
@@ -90,9 +106,10 @@ const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrRepl
             </div>
          )
       }
+      return null
    }
 
-   const handleCancelReply = () => {
+   const handleCancelReply = (): void => {
       setFormData({
          article_id: article_id,
          content: {
@@ -110,7 +127,7 @@ const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrRepl
                   {authUser?.avatar ? (
                      <img src={authUser?.avatar} className="w-8 h-8 rounded-full" />
                   ) : (
-                     <img src={avt} className="w-8 h-8 rounded-full" />
+                     <img src={'avt'} className="w-8 h-8 rounded-full" />
                   )}
                </div>
             </div>
@@ -119,19 +136,19 @@ const NewCommentForm = ({ article_id, onSubmit, selectedComment, isCommentOrRepl
                   <div className="w-full pb-2 flex-2">
                      {isCommentOrReply === 'reply' ? (
                         <div className="space-y-2">
-                           <div className="relative w-full bg-gray-50 rounded-lg overflow-hidden">
-                              <div className="relative border-l-4 border-blue-500 p-3">
+                           <div className="relative w-full overflow-hidden rounded-lg bg-gray-50">
+                              <div className="relative p-3 border-l-4 border-blue-500">
                                  <button
-                                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 rounded-full w-6 h-6 flex items-center justify-center transition-colors duration-200"
+                                    className="absolute flex items-center justify-center w-6 h-6 text-gray-400 transition-colors duration-200 rounded-full top-2 right-2 hover:text-gray-600"
                                     onClick={() => handleCancelReply()}
                                  >
                                     <span className="text-xl">×</span>
-                                 </button>
-                                 <div className="text-xs text-blue-500 font-medium mb-1">
-                                    Replying to {selectedComment.user[0]?.name}
+                                 </button>{' '}
+                                 <div className="mb-1 text-xs font-medium text-blue-500">
+                                    Replying to {selectedComment?.user[0]?.name}
                                  </div>
-                                 <p className="text-sm text-gray-600 pr-8 line-clamp-2">
-                                    {selectedComment.content.caption}
+                                 <p className="pr-8 text-sm text-gray-600 line-clamp-2">
+                                    {selectedComment?.content.caption}
                                  </p>
                               </div>
                            </div>
