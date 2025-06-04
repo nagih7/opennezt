@@ -31,7 +31,7 @@ const Home: React.FC = () => {
                   projects.length > 0 &&
                   projects.map((project: BaseProjectProps, index: number) => (
                      <InterviewCard
-                        key={index}
+                        index={index}
                         project={project}
                         onInterviewPractice={handleInterviewPractice}
                         onViewDetail={handleViewProjectDetails}
