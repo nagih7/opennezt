@@ -11,12 +11,13 @@ import {
 } from 'utils/constants'
 import { setNotifications } from '~/store/modules/notification'
 import { Notification } from '~/types/notification'
+import { API_URL } from '~/config/constants/env'
 
 // Create a context to share socket with other components
 const SocketContext = createContext<Socket | null>(null)
 
 // Socket server URL
-const SOCKET_SERVER_URL = import.meta.env.VITE_API_URL
+const SOCKET_SERVER_URL = API_URL
 
 // Hook to use socket context with TypeScript
 export const useSocket = (): Socket | null => {

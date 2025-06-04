@@ -2,13 +2,16 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import PaginationCustom from 'components/UI/PaginationCustom'
 import { recruitTalents } from 'api/talent'
-import TalentBox from './TalentBox'
 import { accessToTalent } from 'api/activity'
 import { useNavigate } from 'react-router-dom'
 import { User } from '../../types'
 import { useAppDispatch } from '~/store/hooks'
 import { RootState } from '~/store'
 import { ROUTE_CONFIG } from '~/config/constants'
+import { ButtonPrimary } from '~/components/UI/button'
+import { IconlyBookmark, IconlyHeart, IconlyShow } from '~/components/UI/Iconly'
+import { AVATAR_DEFAULT } from '~/utils/constants'
+import { Avatar, AvatarImage } from '~/components/UI/avatar'
 
 interface PageData {
    page: number
@@ -52,7 +55,48 @@ const ListTalents: React.FC = () => {
                      children.forEach((child) => ((child as HTMLElement).style.opacity = '0'))
                   }}
                >
-                  <TalentBox handleViewTalentDetails={handleViewTalentDetails} talent={talent} />
+                  <div className="relative">
+                     <div className="relative group">
+                        <Avatar className="w-[280px] h-[280px] object-cover cursor-pointer rounded-md overflow-hidden">
+                           <AvatarImage src={talent.user.avatar} />
+                           <AvatarImage src={AVATAR_DEFAULT} />
+                        </Avatar>
+
+                        <div
+                           className="absolute top-[15px] right-[15px] fade-element"
+                           style={{
+                              opacity: 0,
+                              transition: 'opacity 0.7s ease-in-out',
+                           }}
+                        >
+                           <ul className="flex flex-col gap-2 pl-0 m-0">
+                              <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
+                                 <IconlyShow size={20} color={'#2f65b9'} />
+                              </li>
+                              <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
+                                 <IconlyHeart size={20} color={'#2f65b9'} backgroundColor={'transparent'} />
+                              </li>
+                              <li className="h-10 w-10 bg-[#ffffff] rounded-md flex justify-center items-center">
+                                 <IconlyBookmark size={20} color={'#2f65b9'} backgroundColor={'transparent'} />
+                              </li>
+                           </ul>
+                        </div>
+                     </div>
+                     <div className="absolute bottom-[-130px] group-hover:bottom-[-90px]  translate-x-full transition-all duration-700 ease-in-out left-[-280px] w-[280px] p-[16px] bg-[#f6f4f4] flex flex-col justify-center items-center gap-2">
+                        <div className="font-semibold text-black no-underline">{talent.user.name}</div>
+
+                        <ButtonPrimary
+                           onClick={() => handleViewTalentDetails(talent.user)}
+                           className="w-[150px] h-[40px] text-sm font-semibold bg-[#2f65b9] text-white hover:bg-[#1a4d8c] mt-[16px] fade-element"
+                           style={{
+                              opacity: 0,
+                              transition: 'opacity 0.3s ease-in-out',
+                           }}
+                        >
+                           VIEW DETAILS
+                        </ButtonPrimary>
+                     </div>
+                  </div>
                </div>
             ))}
          </div>
