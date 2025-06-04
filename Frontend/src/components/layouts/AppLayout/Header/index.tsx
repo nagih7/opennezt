@@ -44,7 +44,7 @@ const Header: React.FC = () => {
                      </span>
                   </Popover.Trigger>
                   {unreadNotifications.length > 0 && (
-                     <span className="absolute top-[1rem] right-[7.5rem] bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full user-select-none">
+                     <span className="absolute top-[1rem] right-[4.5rem] bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full select-none">
                         {unreadNotifications?.length}
                      </span>
                   )}

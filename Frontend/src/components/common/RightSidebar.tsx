@@ -30,9 +30,10 @@ interface Activity {
 interface RightSidebarProps {
    activities: any[]
    action: any
+   isLoading?: boolean
 }
 
-const RightSidebar: React.FC<RightSidebarProps> = ({ activities, action }) => {
+const RightSidebar: React.FC<RightSidebarProps> = ({ activities, action, isLoading }) => {
    const navigate = useNavigate()
    const [displayedActivities, setDisplayedActivities] = useState<Activity[]>([])
    const activitiesContainerRef = useRef<HTMLDivElement>(null)

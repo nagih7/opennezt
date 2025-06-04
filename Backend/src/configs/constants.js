@@ -20,11 +20,17 @@ export const APP_ENV = {
     PRODUCTION: 'production',
     DEVELOPMENT: 'development',
 }
+
+// Loads `.env` file contents into process.env first
+dotenv.config({
+    path: path.join(APP_DIR, '.env'),
+})
+
 export const NODE_ENV = Object.values(APP_ENV).includes(process.env.NODE_ENV) ? process.env.NODE_ENV : APP_ENV.PRODUCTION
 
-// Loads `.env` file contents into process.env
+// Load environment-specific .env file if it exists
 dotenv.config({
-    path: [path.join(APP_DIR, `.env.${NODE_ENV}`), path.join(APP_DIR, '.env')],
+    path: path.join(APP_DIR, `.env.${NODE_ENV}`),
 })
 
 // environment

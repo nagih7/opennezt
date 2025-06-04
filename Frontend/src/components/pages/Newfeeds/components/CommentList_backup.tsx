@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { GoPlus } from 'react-icons/go'
-import avt from 'assets/images/background/avt.jpg'
+import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react'
 import { IconlyChat } from 'components/UI/Iconly'
 import { IconlyHeart } from 'components/UI/Iconly'
 import { IconlySend } from 'components/UI/Iconly'
-import { useMemo } from 'react'
+import { FaCircleCheck } from 'react-icons/fa6'
 import {
    handleCreateComment,
    handleGetListComment,
@@ -14,40 +12,66 @@ import {
    handleReplyComment,
    handleGetUserReplyCommentReactions,
 } from 'api/newfeeds'
-import { useDispatch, useSelector } from 'react-redux'
 import { resetComment, resetReplyReaction, updateCommentReaction, updateCreatedComment } from 'store/modules/article'
-import { useRef, useCallback } from 'react'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
-import Comment from '../Comment'
-import NewCommentForm from '../NewCommentForm'
+import Comment from './Comment'
+import NewCommentForm from './NewCommentForm'
 import { resetReply } from 'store/modules/article'
-import store from '~/store'
+import store, { useAppDispatch, useAppSelector } from '~/store'
 import { useNavigate } from 'react-router-dom'
 import { handleGetLinkPreview } from 'api/linkPreview'
 import { ROUTE_CONFIG } from '~/config/constants'
+import {
+   RootState,
+   Article,
+   Comment as CommentType,
+   CommentDataFilter,
+   UserReaction,
+   CommentFormData,
+   LinkPreview,
+} from '~/types'
 
-const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
+interface CommentListComponentProps {
+   feed: Article
+   reaction?: string
+   onReaction: (feedId: string, data: FormData) => Promise<void>
+   isLoading: boolean
+   onClose: () => void
+}
+
+interface ReplyCommentListItem {
+   replyComments: CommentType[]
+   pagination: {
+      hasMore: boolean
+      limit: number
+      page: number
+   }
+}
+
+interface ReplyCommentList {
+   [key: string]: ReplyCommentListItem
+}
+
+const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    const { _id, user, project, content, reaction_count, created_at, comment_count, link_preview } = feed
-   const { linkDataArticle, isLoadingGetLinkPreview } = useSelector((state) => state.linkPreview)
+   const { linkDataArticle, isLoadingGetLinkPreview } = useAppSelector((state) => state.linkPreview)
 
    const {
       comment,
       isLoadingGetComments,
       comment_reactions,
       comment_pagination,
-      isLoadingGetUserCommentReactions,
       isLoadingReactComment,
       onetimecomments,
       createdComment,
-   } = useSelector((state) => state.article)
+   } = useAppSelector((state: RootState) => state.article)
 
-   const authUser = useSelector((state) => state.auth.authUser)
+   const authUser = useAppSelector((state: RootState) => state.auth.authUser)
 
    const { hasMore, page, limit } = comment_pagination
+   const dispatch = useAppDispatch()
 
-   const dispatch = useDispatch()
-
-   const [dataFilter, setDataFilter] = useState({
+   const [dataFilter, setDataFilter] = useState<CommentDataFilter>({
       articleId: _id,
       limit: 10,
       page: 1,
@@ -64,7 +88,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                articleId: feed?._id,
                page: 1,
                limit: limit,
-            })
+            }) as any
          )
       }
    }, [dispatch, comment, feed, limit, hasMore])
@@ -72,7 +96,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    useEffect(() => {
       // Chỉ gọi API khi cursor thay đổi (không phải lần đầu load)
       if (dataFilter.page !== 1) {
-         dispatch(handleGetListComment(dataFilter))
+         dispatch(handleGetListComment(dataFilter) as any)
       }
    }, [dispatch, dataFilter])
 
@@ -81,24 +105,23 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       console.log(createdComment)
    }, [createdComment, authUser])
 
-   const displayReaction = () => {
-      if (reaction == 'like') {
+   const displayReaction = (): React.ReactElement => {
+      if (reaction === 'like') {
          return (
             <div onClick={() => handleReactionClick('like')} style={{ cursor: 'pointer' }}>
                <IconlyHeart size={25} color={'red'} backgroundColor={'red'} />
             </div>
          )
       }
-      if (reaction == undefined) {
-         return (
-            <div onClick={() => handleReactionClick('like')} style={{ cursor: 'pointer' }}>
-               <IconlyHeart size={25} color={'#6f7f92'} />
-            </div>
-         )
-      }
+      // Default case for undefined or other reactions
+      return (
+         <div onClick={() => handleReactionClick('like')} style={{ cursor: 'pointer' }}>
+            <IconlyHeart size={25} color={'#6f7f92'} backgroundColor={'transparent'} />
+         </div>
+      )
    }
 
-   const handleReactionClick = (type) => {
+   const handleReactionClick = (type: string): void => {
       if (isLoading) return
       const data = new FormData()
       data.append('type', type)
@@ -106,7 +129,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       onReaction(_id, data)
    }
 
-   const handleCloseComment = async () => {
+   const handleCloseComment = async (): Promise<void> => {
       dispatch(resetComment())
       dispatch(resetReply())
       dispatch(resetReplyReaction())
@@ -147,16 +170,14 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    }, [page])
    useEffect(() => {
       hasMoreRef.current = hasMore
-   }, [hasMore])
-   //Lướt xuống bài viết cuối thì load tiếp
-   const observerRef = useRef(null)
+   }, [hasMore]) //Lướt xuống bài viết cuối thì load tiếp
+   const observerRef = useRef<IntersectionObserver | null>(null)
 
    const lastElementRef = useCallback(
-      (node) => {
+      (node: HTMLElement | null) => {
          // Ngắt kết nối observer cũ
          if (observerRef.current) {
             observerRef.current.disconnect()
-            observerRef.current = null
          }
 
          // Tạo observer mới nếu có node và hasMore
@@ -186,7 +207,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    useEffect(() => {
       if (onetimecomments.length > 0) {
          // Lấy tất cả article IDs
-         const commentIds = onetimecomments.filter((comment) => comment?._id).map((comment) => comment?._id)
+         const commentIds = onetimecomments.filter((comment: CommentType) => comment?._id).map((comment: CommentType) => comment?._id)
 
          // Gọi API một lần với array của IDs
          if (commentIds.length > 0) {
@@ -196,65 +217,61 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    }, [onetimecomments, dispatch])
 
    const reactionMap = useMemo(() => {
-      return new Map(comment_reactions.map((r) => [r.target_id.toString(), r.type]))
+      return new Map(comment_reactions.map((r: UserReaction) => [r.target_id.toString(), r.type]))
    }, [comment_reactions])
-
    const handleCommentReaction = useCallback(
-      async (commentId, formData) => {
+      async (commentId: string, formData: FormData) => {
          const reactionType = formData.get('type')
          dispatch(updateCommentReaction({ commentId, reactionType }))
          //Gọi API để update server
          dispatch(handleReactComment({ commentId, data: formData }))
       },
-      [dispatch]
-   )
+      [dispatch]   )
    //===============End=================
+   
    //Form
-   const [isCommentOrReply, setIsCommentOrReply] = useState('comment')
-   const [selectedComment, setSelectedComment] = useState({})
+   const [isCommentOrReply, setIsCommentOrReply] = useState<'comment' | 'reply'>('comment')
+   const [selectedComment, setSelectedComment] = useState<CommentType | null>(null)
 
    const handleFormSubmit = useCallback(
-      async (formData) => {
+      async (formData: CommentFormData) => {
          if (isCommentOrReply === 'reply') {
-            if (selectedComment.parent_id) {
+            if (selectedComment?.parent_id) {
                const newFormData = new FormData()
                newFormData.append('article_id', formData.article_id)
                newFormData.append('comment_id', selectedComment.parent_id)
                newFormData.append('caption', formData.content.caption)
-               newFormData.append('image', formData.content.image)
+               if (formData.content.image) {
+                  newFormData.append('image', formData.content.image)
+               }
                await store.dispatch(handleReplyComment({ data: newFormData }))
             }
-            const newFormData = new FormData()
-            newFormData.append('article_id', formData.article_id)
-            newFormData.append('comment_id', selectedComment?._id)
-            newFormData.append('caption', formData.content.caption)
-            newFormData.append('image', formData.content.image)
-            await store.dispatch(handleReplyComment({ data: newFormData }))
+            if (selectedComment?._id) {
+               const newFormData = new FormData()
+               newFormData.append('article_id', formData.article_id)
+               newFormData.append('comment_id', selectedComment._id)
+               newFormData.append('caption', formData.content.caption)
+               if (formData.content.image) {
+                  newFormData.append('image', formData.content.image)
+               }
+               await store.dispatch(handleReplyComment({ data: newFormData }))
+            }
          }
          if (isCommentOrReply === 'comment') {
             const newFormData = new FormData()
             newFormData.append('article_id', formData.article_id)
             newFormData.append('caption', formData.content.caption)
-            newFormData.append('image', formData.content.image)
+            if (formData.content.image) {
+               newFormData.append('image', formData.content.image)
+            }
             await store.dispatch(handleCreateComment({ data: newFormData }))
          }
       },
       [isCommentOrReply, selectedComment]
    )
-   //End
-   //Reply Comment Logic
-   const replyCommentState = useSelector((state) => state.article)
-   const [replyCommentList, setReplyCommentList] = useState({
-      // [parent_id]: {
-      //    replyComments: [],
-      //    pagination: {
-      //       page: 1,
-      //       limit: 3,
-      //       hasMore: true,
-      //    },
-      //    isLoading: false,
-      // },
-   })
+   //End   //Reply Comment Logic
+   const replyCommentState = useAppSelector((state: RootState) => state.article)
+   const [replyCommentList, setReplyCommentList] = useState<ReplyCommentList>({})
 
    const {
       reply_comments_pagination,
@@ -274,7 +291,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
 
             // Lọc ra những comments mới để tránh trùng lặp
             const newReplies = replyComments.filter(
-               (newReply) => !existingReplies.some((existing) => existing?._id === newReply?._id)
+               (newReply: CommentType) => !existingReplies.some((existing) => existing?._id === newReply?._id)
             )
 
             return {
@@ -288,16 +305,14 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       }
    }, [replyComments, isLoadingGetReplyComments, reply_comments_pagination])
 
-   const [replyDataFilter, setReplyDataFilter] = useState({
+   const [replyDataFilter, setReplyDataFilter] = useState<CommentDataFilter>({
+      articleId: '',
       limit: 3,
       page: 1,
-      hasMore: true,
-      article_id: feed?._id,
-      parent_id: '',
    })
 
    const getParentId = useCallback(
-      (comment) => {
+      (comment: CommentType) => {
          if (comment?._id && replyCommentList[comment?._id]) {
             if (replyCommentList[comment?._id].pagination.hasMore === true) {
                setReplyDataFilter((prev) => ({
@@ -338,15 +353,15 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       }
    }, [isCommentOrReply])
 
-   const selectComment = useCallback((comment) => {
+   const selectComment = useCallback((comment: CommentType) => {
       setSelectedComment(comment)
    }, [])
 
-   const [replyCommentReactions, setReplyCommentReactions] = useState([])
+   const [replyCommentReactions, setReplyCommentReactions] = useState<UserReaction[]>([])
 
    useEffect(() => {
       if (replyComments.length > 0) {
-         const replyCommentIds = replyComments.filter((replyCmt) => replyCmt?._id).map((replyCmt) => replyCmt?._id)
+         const replyCommentIds = replyComments.filter((replyCmt: CommentType) => replyCmt?._id).map((replyCmt: CommentType) => replyCmt?._id)
 
          if (replyCommentIds.length > 0) {
             dispatch(handleGetUserReplyCommentReactions(replyCommentIds))
@@ -362,12 +377,12 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
 
    const replyReactionMap = useMemo(() => {
       return new Map(replyCommentReactions.map((r) => [r.target_id.toString(), r.type]))
-   }, [replyCommentReactions]) //End reply comment logic
-
+   }, [replyCommentReactions]) 
+   //End reply comment logic
+   
    const updateReplyCommentReactions = useCallback(
-      (reply, type) => {
-         const replyCommentIndex = replyCommentList[reply.parent_id]?.replyComments.findIndex(
-            (replyCmt) => replyCmt?._id.toString() === reply?._id.toString()
+      (reply: CommentType, type: string) => {         const replyCommentIndex = replyCommentList[reply.parent_id]?.replyComments.findIndex(
+            (replyCmt: CommentType) => replyCmt?._id.toString() === reply?._id.toString()
          )
 
          const existingReactionIndex = replyCommentReactions.findIndex(
@@ -471,7 +486,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
       setSelectedImageIndex((prev) => (prev === content.attachment.length - 1 ? 0 : prev + 1))
    }
 
-   const [previewData, setPreviewData] = useState(null)
+   const [previewData, setPreviewData] = useState<LinkPreview | null>(null)
 
    // Thêm useEffect để lấy link preview data
    useEffect(() => {
@@ -595,7 +610,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
             >
                <div className="flex items-center gap-3">
                   <div className="w-[65px]">
-                     <img src={avt} className="w-[65px]  rounded-full" />
+                     <img src={''} className="w-[65px]  rounded-full" />
                   </div>
                   <div className="flex items-center justify-between w-full">
                      <div className="flex flex-col w-9/12 gap-2 text-base font-medium">
@@ -603,7 +618,7 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                            {user[0]?.name}
                            <FaCircleCheck className="text-[#3897f0]" />
                            <span className="text-sm">posted in</span>
-                           <span className="">{project[0]?.name || 'no name'}</span>
+                           <span className="">{project?.[0]?.name || 'no name'}</span>
                         </div>
                         <span className="text-xs text-gray-500">
                            {day <= 7
@@ -768,12 +783,11 @@ const CommentList = ({ feed, reaction, onReaction, isLoading, onClose }) => {
                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3 pt-[16px] text-[#6f7f92]">
                      <a className="flex items-center gap-1 text-current no-underline">
-                        {displayReaction(reaction)}
-                        <span className="text-sm">
-                           {reaction_count > 0
-                              ? reaction_count > 1000
-                                 ? Math.floor(reaction_count / 1000) + 'k'
-                                 : reaction_count
+                        {displayReaction()}                        <span className="text-sm">
+                           {(reaction_count.total || 0) > 0
+                              ? (reaction_count.total || 0) > 1000
+                                 ? Math.floor((reaction_count.total || 0) / 1000) + 'k'
+                                 : reaction_count.total
                               : ' '}{' '}
                         </span>
                      </a>
