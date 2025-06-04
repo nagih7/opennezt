@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '~/components/UI/avatar'
 import { BsArrowsAngleExpand } from 'react-icons/bs'
 import ChatActionBar from './components/ChatActionBar'
 import MessageWrap from './components/MessageWrap'
-import { OPENNEZT_LOGO } from '~/utils/constants'
+import { AVATAR_DEFAULT, OPENNEZT_LOGO } from '~/utils/constants'
 import NoChat from './components/NoChat'
 import { LoadingFallback } from '~/routes/loadingFallback'
 import { FaCircleCheck } from 'react-icons/fa6'
@@ -132,8 +132,8 @@ const Message: React.FC = () => {
                         <div className="flex items-center">
                            <span className="mr-[8px]">
                               <Avatar>
-                                 <AvatarFallback>{currentChat.name}</AvatarFallback>
                                  <AvatarImage src={currentChat.logo} />
+                                 <AvatarImage src={AVATAR_DEFAULT} />
                               </Avatar>
                            </span>
                            <span className="flex items-center gap-1 font-[600]">

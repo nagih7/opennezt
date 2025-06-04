@@ -52,8 +52,10 @@
       "zod": "^3.25.23"
    },
    "scripts": {
-      "dev": "vite",
-      "build": "vite build",
+      "dev": "cross-env NODE_ENV=development vite --mode development",
+      "start": "cross-env NODE_ENV=development vite --mode development",
+      "build": "cross-env NODE_ENV=production vite build --mode production",
+      "build:dev": "cross-env NODE_ENV=development vite build --mode development",
       "preview": "vite preview",
       "typecheck": "tsc --noEmit",
       "test": "vitest",
@@ -93,6 +95,7 @@
       "@typescript-eslint/parser": "^5.62.0",
       "@vitejs/plugin-react-swc": "^3.10.0",
       "autoprefixer": "^10.4.21",
+      "cross-env": "^7.0.3",
       "eslint": "^8.48.0",
       "eslint-config-prettier": "^10.1.5",
       "eslint-import-resolver-typescript": "^4.3.4",

@@ -5,12 +5,13 @@ import { RouterProvider } from 'react-router-dom'
 import routes from './routes/routes'
 import { Provider } from 'react-redux'
 import store from '~/store'
-import { SocketProvider, MatchingProvider } from 'contexts'
+import { SocketProvider, MatchingProvider } from '~/contexts'
 import Mobile_Responsive from '~/components/common/Mobile_Responsive'
-import ChakraProvider from 'components/UI/provider'
+import ChakraProvider from '~/components/UI/provider'
 import { Toaster } from 'sonner'
-import { WebPushProvider, WebPushConfig } from './contexts/webpush'
-import { PUBLIC_VALID_KEY } from './utils/constants'
+import { WebPushProvider, WebPushConfig } from '~/contexts/webpush'
+import { VAPID_PUBLIC_KEY } from '~/config/constants/env'
+// import { logEnvironment } from '~/utils/environment'
 
 // Define type for the root element
 const rootElement: HTMLElement | null = document.getElementById('root')
@@ -18,13 +19,16 @@ if (!rootElement) throw new Error('Failed to find the root element')
 
 const root = ReactDOM.createRoot(rootElement)
 
+// Log the current environment configuration
+// logEnvironment()
+
 const isMobileDevice = (): boolean => {
    return /Mobi|Android/i.test(navigator.userAgent)
 }
 
 // Web Push configuration
 const webPushConfig: WebPushConfig = {
-   vapidPublicKey: PUBLIC_VALID_KEY,
+   vapidPublicKey: VAPID_PUBLIC_KEY || '',
    serviceWorkerPath: '/service-worker.js',
    swScope: '/',
    enableAnalytics: true,

@@ -5,7 +5,7 @@ import assert from 'assert'
 import _ from 'lodash'
 
 // extension for assert
-const assertMsg = (key) => `Missing ${key}. Please configure it before running the application.`
+const assertMsg = key => `Missing ${key}. Please configure it before running the application.`
 
 // directory
 export const SOURCE_DIR = path.dirname(__dirname)
@@ -20,9 +20,7 @@ export const APP_ENV = {
     PRODUCTION: 'production',
     DEVELOPMENT: 'development',
 }
-export const NODE_ENV = Object.values(APP_ENV).includes(process.env.NODE_ENV)
-    ? process.env.NODE_ENV
-    : APP_ENV.PRODUCTION
+export const NODE_ENV = Object.values(APP_ENV).includes(process.env.NODE_ENV) ? process.env.NODE_ENV : APP_ENV.PRODUCTION
 
 // Loads `.env` file contents into process.env
 dotenv.config({
@@ -236,13 +234,13 @@ export const BLACKLISTED_URLS = ['traodocu.vn']
 // VALID URLS TYPE
 export const URL_PATTERN = new RegExp(
     '^(https?:\\/\\/)' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])?)\\.)+[a-z]{2,}|' + // domain name
-      'localhost|' + // localhost
-      '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|' + // ipv4
-      '\\[([0-9a-f]{1,4}:){7}[0-9a-f]{1,4}\\])' + // ipv6
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-      '(\\#[-a-z\\d_]*)?$',
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])?)\\.)+[a-z]{2,}|' + // domain name
+        'localhost|' + // localhost
+        '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|' + // ipv4
+        '\\[([0-9a-f]{1,4}:){7}[0-9a-f]{1,4}\\])' + // ipv6
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$',
     'i'
 )
 

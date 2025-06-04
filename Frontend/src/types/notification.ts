@@ -29,6 +29,8 @@ export interface Notification {
    _id: string
    type: NotificationType
    user: NotificationUser
+   user_id?: string
+   source_id?: string
    timestamp: string
    metadata?: NotificationMetadata
    data?: NotificationData

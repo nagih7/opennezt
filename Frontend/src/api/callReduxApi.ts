@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { isFunction } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
 import { TokenManager } from '~/utils/tokenManager'
+import { API_URL } from '~/config/constants/env'
 
 // Define interfaces for API call parameters
 export interface CallApiProps {
@@ -43,7 +44,7 @@ export default async function callReduxApi({
    if (!isFunction(dispatch) || !isFunction(getState)) {
       throw new Error('callGraphQLApi requires dispatch and getState functions')
    }
-   const baseUrlApi = import.meta.env.VITE_API_URL
+   const baseUrlApi = API_URL
    const token = TokenManager.getUserToken()
 
    // Check if variables is FormData to avoid setting Content-Type

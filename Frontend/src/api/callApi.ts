@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { BaseApiProps } from '~/types'
 import { TokenManager } from '~/utils/tokenManager'
+import { API_URL } from '~/config/constants/env'
 
 const apiAxios = axios.create({
-   baseURL: import.meta.env.VITE_API_URL,
+   baseURL: API_URL,
    withCredentials: true,
 })
 
