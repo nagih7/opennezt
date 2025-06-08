@@ -5,7 +5,6 @@ import InputCustom from 'components/UI/InputCustom'
 import { onChangeFormCreateProject } from 'store/modules/project'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
 import { useDispatch, useSelector } from 'react-redux'
-import { toaster } from 'components/UI/toaster'
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import { RootState } from '~/store'
 import { ROUTE_CONFIG } from '~/config/constants/routes'
@@ -43,10 +42,10 @@ const Details: React.FC = () => {
    const handleNextStep = () => {
       // VERIFY
       if (!formData.name) {
-         toaster.create({
-            title: `Name is required.`,
-            type: 'error',
-         })
+         // toaster.create({
+         //    title: `Name is required.`,
+         //    type: 'error',
+         // })
          return
       }
       dispatch(onChangeFormCreateProject(formData))

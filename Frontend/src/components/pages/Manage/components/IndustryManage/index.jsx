@@ -8,7 +8,7 @@ import {
    createOrUpdateIndustry,
    deleteIndustry,
    getListIndustry,
-} from 'api/manage'
+} from '~/api/manage'
 import {
    // CONFIG
    setVisibleModalCreateOrUpdateIndustry,

@@ -7,10 +7,10 @@ import { Provider } from 'react-redux'
 import store from '~/store'
 import { SocketProvider, MatchingProvider } from '~/contexts'
 import Mobile_Responsive from '~/components/common/Mobile_Responsive'
-import ChakraProvider from '~/components/UI/provider'
+import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
 import { Toaster } from 'sonner'
 import { WebPushProvider, WebPushConfig } from '~/contexts/webpush'
-import { VAPID_PUBLIC_KEY } from '~/config/constants/env'
+import { VAPID_PUBLIC_KEY } from '~/config/constants'
 // import { logEnvironment } from '~/utils/environment'
 
 // Define type for the root element
@@ -40,7 +40,7 @@ const webPushConfig: WebPushConfig = {
 root.render(
    <React.StrictMode>
       <Provider store={store}>
-         <ChakraProvider>
+         <ChakraProvider value={defaultSystem}>
             <SocketProvider>
                <WebPushProvider config={webPushConfig}>
                   <MatchingProvider>

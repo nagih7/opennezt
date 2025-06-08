@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react"
-import { createProfileAdditionalInfo, deleteProfileAdditionalInfo, getProfile, updateProfileAdditionalInfo } from "~/api/profile"
-import { ExistingData, Field, FormData } from "../types"
-import { PROFILE_ADDITIONAL_INFO_FIELDS } from "~/utils/constants/additionalInfor"
-import { RootState } from "~/store"
-import { useSelector } from "react-redux"
-import { toast } from "~/components/UI/toast"
+import { useEffect, useState } from 'react'
+import {
+   createProfileAdditionalInfo,
+   deleteProfileAdditionalInfo,
+   getProfile,
+   updateProfileAdditionalInfo,
+} from '~/api/profile'
+import { ExistingData, Field, FormData } from '../types'
+import { PROFILE_ADDITIONAL_INFO_FIELDS } from '~/config/constants/profile'
+import { RootState } from '~/store'
+import { useSelector } from 'react-redux'
+import { toast } from '~/components/UI/toast'
 
 const useAdditionalInfo = () => {
    // ========== STATE FROM REDUX STORE ========== //
@@ -23,7 +28,7 @@ const useAdditionalInfo = () => {
    // ========== Profile Data Fetching ========== //
    const [profile, setProfile] = useState<any>(null)
    const { additional_infos = [] } = profile || {}
-   
+
    const fetchProfile = async () => {
       const response = await getProfile()
       if (response && response.data) {
@@ -32,11 +37,12 @@ const useAdditionalInfo = () => {
    }
 
    useEffect(() => {
-   if (!profile) {
-      if (profile === null) {
-         fetchProfile()
+      if (!profile) {
+         if (profile === null) {
+            fetchProfile()
+         }
       }
-   }}, [profile, getProfile])
+   }, [profile, getProfile])
    // Initialize form state based on fields
    useEffect(() => {
       const initialFormData: FormData = {}
@@ -91,25 +97,30 @@ const useAdditionalInfo = () => {
       })
    }
 
-   const handleCreateProfileAdditionalInfo = async (submitData: { name: string; content: string; _id?: string}): Promise<void> => {
+   const handleCreateProfileAdditionalInfo = async (submitData: {
+      name: string
+      content: string
+      _id?: string
+   }): Promise<void> => {
       const response = await createProfileAdditionalInfo(submitData, 'create')
       try {
          if (response.status === 200 || response.status === 201) {
             toast.success(`${response.message}`)
             setProfile((prevProfile: any) => ({
                ...prevProfile,
-               additional_infos: [
-                  ...prevProfile.additional_infos,
-                  response.data
-               ]
+               additional_infos: [...prevProfile.additional_infos, response.data],
             }))
-         } 
+         }
       } catch (error) {
          toast.error(`${response.message}`)
       }
    }
 
-   const handleUpdateProfileAdditionalInfo = async (submitData: { name: string; content: string; _id?: string}): Promise<void> => {
+   const handleUpdateProfileAdditionalInfo = async (submitData: {
+      name: string
+      content: string
+      _id?: string
+   }): Promise<void> => {
       const response = await updateProfileAdditionalInfo(submitData)
       try {
          if (response.status === 200 || response.status === 201) {
@@ -120,7 +131,7 @@ const useAdditionalInfo = () => {
                   item._id === response.data._id ? response.data : item
                ),
             }))
-         } 
+         }
       } catch (error) {
          toast.error(`${response.message}`)
       }
@@ -138,7 +149,7 @@ const useAdditionalInfo = () => {
          }
          window.location.reload() // Reload to reflect changes
       } catch (error) {
-            toast.error(`${response.message}`)
+         toast.error(`${response.message}`)
       }
    }
 
@@ -187,12 +198,12 @@ const useAdditionalInfo = () => {
          })
    }
    return {
-        fields,
-        formData,
-        existingData,
-        isSaving,
-        handleChange,
-        handleSaveAll,
+      fields,
+      formData,
+      existingData,
+      isSaving,
+      handleChange,
+      handleSaveAll,
    }
 }
 

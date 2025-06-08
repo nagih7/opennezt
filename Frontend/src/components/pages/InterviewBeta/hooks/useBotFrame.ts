@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '~/store'
 import { setCurrentAction } from '~/store/modules/interview'
-import { OPENNEZT_INTERVIEW_LISTEN, OPENNEZT_INTERVIEW_SPEAK } from '~/utils/constants'
+import { OPENNEZT_INTERVIEW_LISTEN, OPENNEZT_INTERVIEW_SPEAK } from '~/config/constants'
 import { createSyncedAudioVideo } from '~/utils/audio/audioHandler'
 
 // Type definitions

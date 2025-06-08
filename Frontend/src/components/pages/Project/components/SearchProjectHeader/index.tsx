@@ -3,7 +3,7 @@ import React from 'react'
 import { useSearchProjectHeader, UseSearchProjectHeaderProps } from './useSearchProjectHeader'
 
 const SearchProjectHeader: React.FC<UseSearchProjectHeaderProps> = (props) => {
-   const { searchTerm, setSearchTerm, handleSearch, handleKeyPress } = useSearchProjectHeader(props)
+   const { searchTerm, setSearchTerm, handleSearch, handleSearchChange, handleKeyPress } = useSearchProjectHeader(props)
 
    return (
       <div className="p-8 bg-[#ffffff] rounded-md">
@@ -13,7 +13,7 @@ const SearchProjectHeader: React.FC<UseSearchProjectHeaderProps> = (props) => {
                placeholder="Search Projects..."
                className="bg-[#f8f9fa] outline-none h-8 w-full rounded-md text-xs font-medium text-black"
                value={searchTerm}
-               onChange={(e) => setSearchTerm(e.target.value)}
+               onChange={(e) => handleSearchChange(e.target.value)}
                onKeyPress={handleKeyPress}
             />
             <button

@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { isFunction } from 'lodash'
 import { AnyAction, Dispatch } from 'redux'
 import { TokenManager } from '~/utils/tokenManager'
-import { API_URL } from '~/config/constants/env'
+import { API_URL } from '~/config/constants'
 
 // Define interfaces for API call parameters
 export interface CallApiProps {
@@ -91,18 +91,3 @@ apiAxios.interceptors.request.use(
    },
    (error) => Promise.reject(error)
 )
-
-export async function callApiSimple({ method, apiPath, variables, headers }: CallApiSimpleProps) {
-   try {
-      const response = await apiAxios.request({
-         url: apiPath,
-         method,
-         headers,
-         data: variables,
-         params: method === 'get' ? variables : undefined,
-      })
-      return { success: true, data: response.data }
-   } catch (error) {
-      return { success: false, error }
-   }
-}

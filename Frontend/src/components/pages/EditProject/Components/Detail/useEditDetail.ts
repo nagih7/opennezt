@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { getMyProjectDetails, updateProjectBasic } from 'api/project'
-import { postProjectDetailsActivitiesBasic } from 'api/activity'
+import { getMyProjectDetails, updateProjectBasic } from '~/api/project'
+import { postProjectDetailsActivitiesBasic } from '~/api/activity'
 import { RootState, AppDispatch } from '~/store'
 import { toast } from 'sonner'
 

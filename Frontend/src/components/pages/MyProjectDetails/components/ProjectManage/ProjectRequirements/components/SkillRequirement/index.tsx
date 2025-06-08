@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Button, createListCollection } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import SelectCustom from 'components/UI/SelectCustom'
-import { getCategoryFramework, getSkillFramework, getSubCategoryFramework } from 'api/user'
+import { getCategoryFramework, getSkillFramework, getSubCategoryFramework } from '~/api/user'
 import { Badge } from '~/components/UI/badge'
-import { updateSkillRequirement } from 'api/project'
-import { postProjectDetailsActivitiesProjectRequirement } from 'api/activity'
+import { updateSkillRequirement } from '~/api/project'
+import { postProjectDetailsActivitiesProjectRequirement } from '~/api/activity'
 import { RootState } from 'store/types'
 import { AppDispatch } from '~/store'
-import { toaster } from 'components/UI/toaster'
 
 interface FormData {
    categories: string[]
@@ -154,10 +153,10 @@ const SkillRequirement: React.FC = () => {
       // Verify if the skill is already added
       const isExist = mySkills.find((skill) => skill._id === formData.skills[0])
       if (isExist) {
-         toaster.create({
-            title: `Skill already added.`,
-            type: 'error',
-         })
+         // toaster.create({
+         //    title: `Skill already added.`,
+         //    type: 'error',
+         // })
       } else {
          setMySkills([...mySkills, ...formData.skillFormat])
          setFormData({

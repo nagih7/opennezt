@@ -7,7 +7,6 @@ import { IconlyEdit, IconlyDelete } from 'components/UI/Iconly'
 import _ from 'lodash'
 import { Button } from '~/components/UI/button'
 // import Filter from "components/pages/UserManagement/components/Filter";
-// import BtnFilter from "components/UI/ButtonFilter";
 
 function TableManage({
    data,

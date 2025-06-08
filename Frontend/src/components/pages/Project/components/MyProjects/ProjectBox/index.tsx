@@ -1,7 +1,7 @@
 import React from 'react'
 import { IconlyDocument, IconlyUser } from 'components/UI/Iconly'
 import { Avatar, Button, Image } from '@chakra-ui/react'
-import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
+import { OPENNEZT_LOGO_GRADIENT } from '~/config/constants'
 import { useProjectBox, UseProjectBoxProps } from './useProjectBox'
 
 const ProjectBox: React.FC<UseProjectBoxProps> = (props) => {
@@ -22,12 +22,8 @@ const ProjectBox: React.FC<UseProjectBoxProps> = (props) => {
                />
             ) : (
                <div className="w-full aspect-[10/5] flex items-center justify-center bg-[#EAEFF8]">
-               <Image
-                  src={OPENNEZT_LOGO_GRADIENT}
-                  alt="OpenNezt"
-                  className="object-contain"
-               />
-            </div>
+                  <Image src={OPENNEZT_LOGO_GRADIENT} alt="OpenNezt" className="object-contain" />
+               </div>
             )}
             <div className="flex flex-col items-center p-8">
                <div className="flex flex-col items-center mt-[-80px]">

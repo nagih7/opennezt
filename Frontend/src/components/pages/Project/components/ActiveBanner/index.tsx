@@ -1,5 +1,5 @@
 import React from 'react'
-import { OPENNEZT_BACKGROUND_GRADIENT } from '~/utils/constants'
+import { OPENNEZT_BACKGROUND_GRADIENT } from '~/config/constants'
 
 const ActiveBanner: React.FC = () => {
    return (

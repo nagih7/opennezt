@@ -20,6 +20,7 @@ export default function createModel(name, collection, definition, options) {
     })
 
     schema.index({ created_at: 1 })
+    schema.index({ updated_at: 1 })
 
     // Apply TTL index if needed
     if (ttlValue) {

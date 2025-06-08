@@ -1,5 +1,5 @@
 import React from 'react'
-import { OPENNEZT_BG_BLACK_ERASER } from '~/utils/constants'
+import { OPENNEZT_BG_BLACK_ERASER } from '~/config/constants'
 import { Dialog, DialogContent } from '~/components/UI/dialog'
 import { useMatching } from '~/contexts'
 

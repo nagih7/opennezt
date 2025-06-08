@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import BannerActive from './components/BannerActive'
 import ProjectOverview from './components/ProjectOverview'
 import ProjectMoreInfo from './components/ProjectMoreInfo'
-import { getProjectDetails } from 'api/project'
+import { getProjectDetails } from '~/api/project'
 import { AppDispatch } from '~/store'
 
 const ProjectDetailsBySeek: React.FC = () => {

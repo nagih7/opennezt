@@ -1,7 +1,7 @@
-import FileUpload from '@/utils/classes/file-upload.js'
-import Article from '../../models/article.js'
-import Reaction from '@/models/reaction.js'
-import Comment from '../../models/comment.js'
+import { FileUpload } from '@/utils/classes'
+import Article from '@/models/article'
+import Reaction from '@/models/reaction'
+import Comment from '@/models/comment'
 import {
     ARTICLE_COMMENT,
     ARTICLE_COMMENT_NOTIFICATION,
@@ -15,15 +15,15 @@ import {
     COMMENT_REPLY_NOTIFICATION,
     LINK_STATIC_URL,
 } from '@/configs'
-import delay from '@/utils/classes/delay.js'
-import Project from '@/models/project.js'
-import Bookmark from '@/models/bookmark.js'
-import Type from '@/models/type.js'
-import AccessLog from '@/models/accessLog.js'
-import ActivityLog from '@/models/activityLog.js'
-import Subscription from '@/models/subscription.js'
+import delay from '@/utils/classes/delay'
+import Project from '@/models/project'
+import Bookmark from '@/models/bookmark'
+import Type from '@/models/type'
+import AccessLog from '@/models/accessLog'
+import ActivityLog from '@/models/activityLog'
+import Subscription from '@/models/subscription'
 import webpush from 'web-push'
-import Role from '@/models/role.js'
+import Role from '@/models/role'
 import { ObjectId } from '@/models'
 
 //Create Article
@@ -441,13 +441,11 @@ export const reactArticle = async (id, user, requestBody) => {
 //End Article Reaction
 
 //Get Article By Id
-export const getArticleById = async (id) => {
+export const getArticleById = async id => {
     const article = await Article.findById(id).lean()
 
     if (article?.content?.attachment) {
-        article.content.attachment = article.content.attachment.map((attachment) =>
-            attachment ? LINK_STATIC_URL + attachment : attachment
-        )
+        article.content.attachment = article.content.attachment.map(attachment => (attachment ? LINK_STATIC_URL + attachment : attachment))
     }
 
     return article
@@ -483,7 +481,7 @@ export const replyComment = async (user, requestBody) => {
         }
     }
     if (imageData instanceof FileUpload) {
-        requestBody.content.image = imageData.save('article-attachment')
+        requestBody.content.image = await imageData.save('article-attachment')
     }
 
     const newComment = await new Comment({
@@ -546,7 +544,7 @@ export const replyComment = async (user, requestBody) => {
     return newComment
 }
 //Get Article's Reactions
-export const getArticleReactions = async (target_id) => {
+export const getArticleReactions = async target_id => {
     const reactions = await Reaction.find({
         target_id: target_id,
     })
@@ -557,7 +555,7 @@ export const getArticleReactions = async (target_id) => {
 //Get User's Reactions
 export const getUserReactions = async (user_id, target_ids) => {
     // Chuyển đổi string thành array và map thành ObjectId
-    const targetIdArray = target_ids.split(',').map((id) => new ObjectId(id))
+    const targetIdArray = target_ids.split(',').map(id => new ObjectId(id))
 
     const reactions = await Reaction.find({
         user_id: user_id,
@@ -702,7 +700,7 @@ export const createComment = async (user, requestBody) => {
         }
     }
     if (imageData instanceof FileUpload) {
-        requestBody.content.image = imageData.save('article-attachment')
+        requestBody.content.image = await imageData.save('article-attachment')
     }
 
     const newComment = new Comment({
@@ -771,7 +769,7 @@ export const createComment = async (user, requestBody) => {
 
 export const getUserCommentReactions = async (user_id, target_ids) => {
     // Chuyển đổi string thành array và map thành ObjectId
-    const targetIdArray = target_ids.split(',').map((id) => new ObjectId(id))
+    const targetIdArray = target_ids.split(',').map(id => new ObjectId(id))
 
     const reactions = await Reaction.find({
         user_id: user_id,
@@ -809,7 +807,7 @@ export const bookmarkArticle = async (requestBody, user) => {
 
 export const getUserBookmarks = async (user, article_ids) => {
     const user_id = user._id
-    const articleIdsArray = article_ids.split(',').map((id) => new Object(id))
+    const articleIdsArray = article_ids.split(',').map(id => new Object(id))
 
     const bookMarks = await Bookmark.find({
         user_id: user_id,
@@ -821,7 +819,7 @@ export const getUserBookmarks = async (user, article_ids) => {
 }
 
 // ========== POST [ARTICLE ACTIVITIES] ========== //
-export const postActivityCreateArticle = async (user) => {
+export const postActivityCreateArticle = async user => {
     const articleCreateType = await Type.findOne({ class: ARTICLE_TYPE, name: ARTICLE_CREATE })
     const newActivity = new AccessLog({
         user_id: user._id,
@@ -966,18 +964,11 @@ export const getArticleActivities = async (user, options = {}) => {
     const { types = [], limit = 10, skip = 0, ownedOnly = false, performedOnly = false } = options
 
     // Lấy tất cả các loại hoạt động cần thiết
-    let activityTypes = [
-        ARTICLE_CREATE,
-        ARTICLE_UPDATE,
-        ARTICLE_SAVE,
-        ARTICLE_REACTION,
-        ARTICLE_COMMENT,
-        ARTICLE_REPLY_COMMENT,
-    ]
+    let activityTypes = [ARTICLE_CREATE, ARTICLE_UPDATE, ARTICLE_SAVE, ARTICLE_REACTION, ARTICLE_COMMENT, ARTICLE_REPLY_COMMENT]
 
     // Lọc theo loại nếu được chỉ định
     if (types.length > 0) {
-        activityTypes = activityTypes.filter((type) => types.includes(type))
+        activityTypes = activityTypes.filter(type => types.includes(type))
     }
 
     // Lấy tất cả type ID trong một truy vấn
@@ -1025,7 +1016,7 @@ export const getArticleActivities = async (user, options = {}) => {
 
     // 1. Truy vấn CREATE activities (từ AccessLog)
     if (activityTypes.includes(ARTICLE_CREATE)) {
-        const createTypeId = typeObjects.find((t) => t.name === ARTICLE_CREATE)?._id
+        const createTypeId = typeObjects.find(t => t.name === ARTICLE_CREATE)?._id
 
         if (createTypeId) {
             const matchCreateCondition = { type_id: createTypeId }
@@ -1055,7 +1046,7 @@ export const getArticleActivities = async (user, options = {}) => {
 
     // 2. Truy vấn SAVE activities
     if (activityTypes.includes(ARTICLE_SAVE)) {
-        const saveTypeId = typeObjects.find((t) => t.name === ARTICLE_SAVE)?._id
+        const saveTypeId = typeObjects.find(t => t.name === ARTICLE_SAVE)?._id
 
         if (saveTypeId) {
             const matchSaveCondition = {
@@ -1095,7 +1086,7 @@ export const getArticleActivities = async (user, options = {}) => {
 
     // 3. Truy vấn UPDATE activities
     if (activityTypes.includes(ARTICLE_UPDATE)) {
-        const updateTypeId = typeObjects.find((t) => t.name === ARTICLE_UPDATE)?._id
+        const updateTypeId = typeObjects.find(t => t.name === ARTICLE_UPDATE)?._id
 
         if (updateTypeId) {
             const matchUpdateCondition = { type_id: updateTypeId }
@@ -1105,10 +1096,7 @@ export const getArticleActivities = async (user, options = {}) => {
 
                 if (!performedOnly) {
                     matchUpdateCondition.user_id = { $ne: user._id }
-                    matchUpdateCondition.$and = [
-                        { 'data.owner_id': user._id },
-                        { $expr: { $ne: ['$user_id', '$data.owner_id'] } },
-                    ]
+                    matchUpdateCondition.$and = [{ 'data.owner_id': user._id }, { $expr: { $ne: ['$user_id', '$data.owner_id'] } }]
                 }
             } else if (performedOnly) {
                 matchUpdateCondition.user_id = user._id
@@ -1151,7 +1139,7 @@ export const getArticleActivities = async (user, options = {}) => {
 
     // 4. Truy vấn REACTION activities
     if (activityTypes.includes(ARTICLE_REACTION)) {
-        const reactionTypeId = typeObjects.find((t) => t.name === ARTICLE_REACTION)?._id
+        const reactionTypeId = typeObjects.find(t => t.name === ARTICLE_REACTION)?._id
 
         if (reactionTypeId) {
             const reactionsOnUserPosts = await ActivityLog.aggregate([
@@ -1200,7 +1188,7 @@ export const getArticleActivities = async (user, options = {}) => {
 
     // 5. Truy vấn COMMENT activities
     if (activityTypes.includes(ARTICLE_COMMENT)) {
-        const commentTypeId = typeObjects.find((t) => t.name === ARTICLE_COMMENT)?._id
+        const commentTypeId = typeObjects.find(t => t.name === ARTICLE_COMMENT)?._id
 
         if (commentTypeId) {
             const commentsOnUserPosts = await ActivityLog.aggregate([
@@ -1266,7 +1254,7 @@ export const getArticleActivities = async (user, options = {}) => {
 
     // 6. Truy vấn REPLY_COMMENT activities
     if (activityTypes.includes(ARTICLE_REPLY_COMMENT)) {
-        const replyCommentTypeId = typeObjects.find((t) => t.name === ARTICLE_REPLY_COMMENT)?._id
+        const replyCommentTypeId = typeObjects.find(t => t.name === ARTICLE_REPLY_COMMENT)?._id
 
         if (replyCommentTypeId) {
             const repliesOnUserComments = await ActivityLog.aggregate([

@@ -52,7 +52,7 @@ const authSlice = createSlice({
          isRegisterSuccess: true,
          authRegister: action.payload.data,
       }),
-      startRequestRegisterFail: (state: AuthState, action: PayloadAction<any>) => {
+      startRequestRegisterFail: (state: AuthState) => {
          return {
             ...state,
             isLoadingRegister: false,
@@ -83,13 +83,13 @@ const authSlice = createSlice({
          ...state,
          isSuccessForgotPassword: false,
       }),
-      startRequestForgotPasswordSuccess: (state: AuthState, action: PayloadAction<any>) => {
+      startRequestForgotPasswordSuccess: (state: AuthState) => {
          return {
             ...state,
             isSuccessForgotPassword: true,
          }
       },
-      startRequestForgotPasswordFail: (state: AuthState, action: PayloadAction<any>) => {
+      startRequestForgotPasswordFail: (state: AuthState) => {
          return {
             ...state,
             isSuccessForgotPassword: false,
@@ -103,14 +103,14 @@ const authSlice = createSlice({
          ...state,
          isLoadingResetPassword: true,
       }),
-      startRequestResetPasswordSuccess: (state: AuthState, action: PayloadAction<any>) => {
+      startRequestResetPasswordSuccess: (state: AuthState) => {
          return {
             ...state,
             isLoadingResetPassword: false,
             resetPasswordSuccess: true,
          }
       },
-      startRequestResetPasswordFail: (state: AuthState, action: PayloadAction<any>) => {
+      startRequestResetPasswordFail: (state: AuthState) => {
          return {
             ...state,
             isLoadingResetPassword: false,
@@ -132,44 +132,6 @@ const authSlice = createSlice({
       }),
 
       setAuthState: (state: AuthState, action: PayloadAction<Partial<AuthState>>) => ({ ...state, ...action.payload }),
-
-      setUserAuth: (state, action: PayloadAction<{ user: AuthAccount; token: string }>) => {
-         state.isUserAuthenticated = true
-         state.user = action.payload.user
-         state.userToken = action.payload.token
-         state.isLoadingUser = false
-      },
-
-      setAdminAuth: (state, action: PayloadAction<{ admin: AuthAccount; token: string }>) => {
-         state.isAdminAuthenticated = true
-         state.admin = action.payload.admin
-         state.adminToken = action.payload.token
-         state.isLoadingAdmin = false
-      },
-
-      clearUserAuth: (state) => {
-         state.isUserAuthenticated = false
-         state.user = null
-         state.userToken = null
-         state.isLoadingUser = false
-      },
-
-      clearAdminAuth: (state) => {
-         state.isAdminAuthenticated = false
-         state.admin = null
-         state.adminToken = null
-         state.isLoadingAdmin = false
-      },
-
-      setLoadingState: (state, action: PayloadAction<{ type: 'user' | 'admin'; loading: boolean }>) => {
-         if (action.payload.type === 'user') {
-            state.isLoadingUser = action.payload.loading
-         } else {
-            state.isLoadingAdmin = action.payload.loading
-         }
-      },
-
-      resetAuthState: () => initialState,
    },
 })
 

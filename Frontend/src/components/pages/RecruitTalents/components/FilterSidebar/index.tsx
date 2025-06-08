@@ -8,8 +8,8 @@ import {
    getIndustryFramework,
    getSkillFramework,
    getSubCategoryFramework,
-} from 'api/user'
-import { recruitTalents } from 'api/talent'
+} from '~/api/user'
+import { recruitTalents } from '~/api/talent'
 import { setFormRecruitTalents } from 'store/modules/talent'
 import { Input } from 'components/UI/input'
 import { FormRecruitTalents, SelectEvent } from '../../types'

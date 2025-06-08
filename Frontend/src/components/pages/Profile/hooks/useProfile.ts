@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react"
-import { useAppSelector, useAppDispatch } from "~/store/hooks"
-import { changeAvatar, changeBackground, getProfile } from "~/api/profile"
-import resizeBackground from "~/utils/files/resizeBackground"
-import resizeLogo from "~/utils/files/resizeLogo"
-import { OPENNEZT_LOGO_GRADIENT, OPENNEZT_LOGO } from "~/utils/constants/asset"
+import { useEffect, useState } from 'react'
+import { useAppSelector } from '~/store'
+import { changeAvatar, changeBackground, getProfile } from '~/api/profile'
+import resizeBackground from '~/utils/files/resizeBackground'
+import resizeLogo from '~/utils/files/resizeLogo'
 
 interface AuthAccount {
    name: string
@@ -12,25 +11,14 @@ interface AuthAccount {
 }
 
 const useProfile = () => {
-   const authUser = useAppSelector((state: any) => state.auth.authUser) as AuthAccount
-   const dispatch = useAppDispatch()
-   const [avatar, setAvatar] = useState<string>(OPENNEZT_LOGO)
-   const [background, setBackground] = useState<string>(OPENNEZT_LOGO_GRADIENT)
+   const authUser = useAppSelector((state) => state.auth.authUser) as AuthAccount
+   const [avatar, setAvatar] = useState<string>(authUser.avatar || '')
+   const [background, setBackground] = useState<string>(authUser.background || '')
    const [keyTable, setKeyTable] = useState<string>('1')
 
    useEffect(() => {
-      if (authUser.avatar) {
-         setAvatar(authUser.avatar)
-      } else {
-         // Set default avatar when no avatar is provided
-         setAvatar(OPENNEZT_LOGO)
-      }
-      if (authUser.background) {
-         setBackground(authUser.background)
-      } else {
-         // Set default background when no background is provided
-         setBackground(OPENNEZT_LOGO_GRADIENT)
-      }
+      setAvatar(authUser.avatar || '')
+      setBackground(authUser.background || '')
    }, [authUser])
 
    const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,16 +29,15 @@ const useProfile = () => {
             const formData = new FormData()
             formData.append('avatar', resizedAvatar)
             await changeAvatar(formData)
-            
+
             // Update local state immediately for better UX
             setAvatar(URL.createObjectURL(resizedAvatar))
-            
+
             // Refresh profile data from server to get updated avatar URL
             const profileData = await getProfile()
             if (profileData?.data?.avatar) {
                setAvatar(profileData.data.avatar)
             }
-            
          } catch (error) {
             // Handle error silently or show user notification
          }
@@ -64,29 +51,20 @@ const useProfile = () => {
             const resizedBackground = await resizeBackground(file)
             const formData = new FormData()
             formData.append('background', resizedBackground)
-            await dispatch(changeBackground(formData))
-            
+            await changeBackground(formData)
+
             // Update local state immediately for better UX
             setBackground(URL.createObjectURL(resizedBackground))
-            
+
             // Refresh profile data from server to get updated background URL
             const profileData = await getProfile()
             if (profileData?.data?.background) {
                setBackground(profileData.data.background)
             }
-            
          } catch (error) {
             // Handle error silently or show user notification
          }
       }
-   }
-
-   const handleAvatarError = () => {
-      setAvatar(OPENNEZT_LOGO)
-   }
-
-   const handleBackgroundError = () => {
-      setBackground(OPENNEZT_LOGO_GRADIENT)
    }
 
    return {
@@ -97,10 +75,7 @@ const useProfile = () => {
       setKeyTable,
       handleAvatarChange,
       handleBackgroundChange,
-      handleAvatarError,
-      handleBackgroundError,
    }
 }
 
 export default useProfile
-   

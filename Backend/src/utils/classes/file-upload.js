@@ -84,20 +84,31 @@ class FileUpload {
         }, this.expiryTime)
     }
 
-    // save: Lưu file vào thư mục upload
-    save(...paths) {
+    // save: Lưu file vào thư mục upload với streaming
+    async save(...paths) {
         if (!this.filepath) {
             const uploadDir = path.join(PUBLIC_DIR, FileUpload.UPLOAD_FOLDER, ...paths)
-            fs.mkdirSync(uploadDir, { recursive: true })
-            fs.writeFileSync(path.join(uploadDir, this.filename), this.buffer)
-            this.filepath = path.posix.join(FileUpload.UPLOAD_FOLDER, ...paths, this.filename)
+            const fullPath = path.join(uploadDir, this.filename)
 
-            // If expiry time is set, schedule file for deletion
-            if (this.expiryTime) {
-                this._scheduleFileDeletion(this.filepath)
+            try {
+                // Create directory if it doesn't exist
+                await fs.promises.mkdir(uploadDir, { recursive: true })
+
+                // Write file asynchronously for better performance
+                await fs.promises.writeFile(fullPath, this.buffer)
+
+                this.filepath = path.posix.join(FileUpload.UPLOAD_FOLDER, ...paths, this.filename)
+
+                // If expiry time is set, schedule file for deletion
+                if (this.expiryTime) {
+                    this._scheduleFileDeletion(this.filepath)
+                }
+
+                return this.filepath
+            } catch (error) {
+                console.error('File save error:', error)
+                throw new Error(`Failed to save file: ${error.message}`)
             }
-
-            return this.filepath
         } else {
             throw new Error('File saved. Use the "filepath" attribute to retrieve the file path.')
         }

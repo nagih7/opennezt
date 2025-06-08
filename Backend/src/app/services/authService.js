@@ -107,7 +107,7 @@ export async function updateProfile(currentUser, { name, email, phone, avatar })
         if (currentUser.avatar) {
             FileUpload.remove(currentUser.avatar)
         }
-        avatar = avatar.save('images')
+        avatar = await avatar.save('images')
         currentUser.avatar = avatar
     }
 

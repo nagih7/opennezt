@@ -2,7 +2,7 @@ import { Image } from '@chakra-ui/react'
 import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
-import { OPENNEZT_LOGO } from 'utils/constants'
+import { OPENNEZT_LOGO } from '~/config/constants'
 import { ROUTE_CONFIG } from '~/config/constants'
 
 interface AccessBoxProps {

@@ -8,7 +8,7 @@ import {
    FRIEND_REQUEST_NOTIFICATION,
    MESSAGE_TYPE,
    PROJECT_INVITATION_NOTIFICATION,
-} from 'utils/constants'
+} from '~/config/constants'
 import { setNotifications } from '~/store/modules/notification'
 import { Notification } from '~/types/notification'
 import { API_URL } from '~/config/constants/env'

@@ -6,7 +6,6 @@ import { TokenManager } from '~/utils/tokenManager'
 import { ROUTE_CONFIG } from '~/config/constants/routes'
 import store from '~/store'
 import { setAuthState } from '~/store/modules/auth'
-import { initialSaga } from '~/store/modules/routing'
 
 interface RootLoaderOptions {
    requireAuth?: boolean
@@ -48,7 +47,7 @@ export const rootLoader = async (loaderArgs: LoaderArgs, options: RootLoaderOpti
 // Handle public routes (no auth required)
 const handlePublicRoute = async (saga: string | null): Promise<null> => {
    if (saga) {
-      store.dispatch(initialSaga(saga))
+      // init saga
    }
 
    return null
@@ -158,7 +157,7 @@ const handleAdminRoute = async (
 
    // Initialize saga
    if (saga) {
-      store.dispatch(initialSaga(saga))
+      // init saga
    }
 
    return null
@@ -208,10 +207,8 @@ const handleUserRoute = async (
       }
    }
 
-   // Initialize saga
    if (saga) {
-      store.dispatch(initialSaga(saga))
+      // init saga
    }
-
    return null
 }

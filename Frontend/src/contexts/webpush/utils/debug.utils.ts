@@ -1,4 +1,4 @@
-import urlBase64ToUint8Array from '../../../utils/webpush/urlBase64ToUint8Array.js'
+import urlBase64ToUint8Array from './urlBase64ToUint8Array.js'
 
 // Interface cho kết quả validation VAPID key
 export interface VapidValidationResult {

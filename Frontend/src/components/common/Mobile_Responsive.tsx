@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { OPENNEZT_LOGO } from 'utils/constants'
+import { OPENNEZT_LOGO } from '~/config/constants'
 
 const Mobile_Responsive: React.FC = () => {
    useEffect(() => {

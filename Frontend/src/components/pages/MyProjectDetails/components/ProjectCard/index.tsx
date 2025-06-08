@@ -1,6 +1,6 @@
 import { Image, Dialog, Portal } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { OPENNEZT_LOGO_GRADIENT, OPENNEZT_LOGO } from 'utils/constants'
+import { OPENNEZT_LOGO_GRADIENT, OPENNEZT_LOGO } from '~/config/constants'
 import LogoForm from '../../../EditProject/Components/Forms/LogoForm'
 import BackgroundForm from '../../../EditProject/Components/Forms/BackgroundForm'
 import BasicForm from '../../../EditProject/Components/Forms/BasicForm'

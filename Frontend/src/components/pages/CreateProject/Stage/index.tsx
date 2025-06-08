@@ -3,9 +3,8 @@ import StepHeader from '../StepHeader'
 import { useNavigate } from 'react-router-dom'
 import SelectCustom from 'components/UI/SelectCustom'
 import { onChangeFormCreateProject } from 'store/modules/project'
-import { getIndustryFramework, getStageFramework } from 'api/user'
+import { getIndustryFramework, getStageFramework } from '~/api/user'
 import { useDispatch, useSelector } from 'react-redux'
-import { toaster } from 'components/UI/toaster'
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import { RootState } from '~/store'
 import { ROUTE_CONFIG } from '~/config/constants/routes'
@@ -54,10 +53,10 @@ const Stage: React.FC = () => {
    // ========== ONCHANGE FUNCTION ========== //
    const handleChange = (event: any, nameSelect?: string) => {
       if (event.value.length > 2) {
-         toaster.create({
-            type: 'error',
-            title: 'You can only select up to 2 industries',
-         })
+         // toaster.create({
+         //    type: 'error',
+         //    title: 'You can only select up to 2 industries',
+         // })
          return
       }
       if (nameSelect) {
@@ -73,17 +72,17 @@ const Stage: React.FC = () => {
    const handleNextStep = () => {
       // VERIFY
       if (!formData.industries.length) {
-         toaster.create({
-            title: `Industry is required.`,
-            type: 'error',
-         })
+         // toaster.create({
+         //    title: `Industry is required.`,
+         //    type: 'error',
+         // })
          return
       }
       if (!formData.stage) {
-         toaster.create({
-            title: `Stage is required.`,
-            type: 'error',
-         })
+         // toaster.create({
+         //    title: `Stage is required.`,
+         //    type: 'error',
+         // })
          return
       }
       dispatch(onChangeFormCreateProject(formData))

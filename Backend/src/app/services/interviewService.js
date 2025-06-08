@@ -87,7 +87,7 @@ export async function replyInterview(currentUser, requestBody) {
     const { audio, interview } = requestBody
     if (audio instanceof FileUpload) {
         // lưu file tạm thời
-        const tempWavFile = audio.save('audio_interview')
+        const tempWavFile = await audio.save('audio_interview')
         // Sử dụng thư viện path để lấy đường dẫn tuyệt đối của file tạm thời
         const audioPath = path.join(PUBLIC_DIR, tempWavFile)
         // Verify if the audio has voice content using manual verification
@@ -171,13 +171,12 @@ export async function closeInterview(requestBody) {
 // Call API tới AI interview để lấy danh sách projects
 export async function getProjectMatching(userId, profile) {
     const matches = await getProjectMatchingInterview(userId, profile)
-
     for (const match of matches) {
         const project = await getProjectByMatching(match.id)
-        match.project = project
+        if (project) match.project = project
     }
-
-    return matches
+    const filteredMatches = matches.filter(match => match.project)
+    return filteredMatches
 }
 
 export async function getPracticeProjects() {

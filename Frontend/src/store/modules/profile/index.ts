@@ -1,6 +1,5 @@
 import { createListCollection } from '@chakra-ui/react'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { toaster } from 'components/UI/toaster'
+import { createSlice } from '@reduxjs/toolkit'
 import { ProfileState } from './types'
 
 // Define the initial state with TypeScript typing
@@ -61,20 +60,20 @@ const profileSlice = createSlice({
          loadingBtnUpdateInfoUser: true,
       }),
       updateInfoUserSuccess: (state, action) => {
-         toaster.create({
-            title: `Update info user successfully.`,
-            type: 'success',
-         })
+         // toaster.create({
+         //    title: `Update info user successfully.`,
+         //    type: 'success',
+         // })
          return {
             ...state,
             loadingBtnUpdateInfoUser: false,
          }
       },
       updateInfoUserFail: (state, action) => {
-         toaster.create({
-            title: `${Object.values(action.payload.data.detail)[0]}`,
-            type: 'error',
-         })
+         // toaster.create({
+         //    title: `${Object.values(action.payload.data.detail)[0]}`,
+         //    type: 'error',
+         // })
          return {
             ...state,
             loadingBtnUpdateInfoUser: false,

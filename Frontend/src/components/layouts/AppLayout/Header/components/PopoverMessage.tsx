@@ -1,6 +1,6 @@
 import NotFound from 'components/UI/NotFound'
 import { Avatar } from '@chakra-ui/react'
-import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from 'utils/constants'
+import { DIRECT_CONVERSATION, GROUP_CONVERSATION } from '~/config/constants'
 import { HiOutlineDotsVertical } from 'react-icons/hi'
 import moment from 'moment'
 import useChat from '~/components/pages/Chat/useChat'

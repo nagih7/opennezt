@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateRoleRequirement } from 'api/project'
+import { updateRoleRequirement } from '~/api/project'
 import SelectCustom from 'components/UI/SelectCustom'
-import { getProjectRoleFramework } from 'api/user'
-import { postProjectDetailsActivitiesProjectRequirement } from 'api/activity'
+import { getProjectRoleFramework } from '~/api/user'
+import { postProjectDetailsActivitiesProjectRequirement } from '~/api/activity'
 import { RootState } from 'store/types'
 import { AppDispatch } from '~/store'
 

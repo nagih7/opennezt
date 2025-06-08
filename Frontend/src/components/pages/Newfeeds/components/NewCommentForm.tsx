@@ -86,7 +86,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
       })
    }
 
-   const handlePreviewImage = (): JSX.Element | null => {
+   const handlePreviewImage = (): React.ReactElement | null => {
       const image = formData.content.image
       if (formData.content.image) {
          return (

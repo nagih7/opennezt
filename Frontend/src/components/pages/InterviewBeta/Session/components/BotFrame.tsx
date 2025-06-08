@@ -1,5 +1,5 @@
 import React from 'react'
-import { OPENNEZT_INTERVIEW_LISTEN, OPENNEZT_INTERVIEW_SPEAK } from 'utils/constants'
+import { OPENNEZT_INTERVIEW_LISTEN, OPENNEZT_INTERVIEW_SPEAK } from '~/config/constants'
 import { useBotFrame } from '../../hooks'
 
 interface BotFrameProps {}

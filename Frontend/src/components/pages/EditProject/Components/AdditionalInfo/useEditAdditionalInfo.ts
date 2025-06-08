@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { updateProjectAdditionalInfos } from 'api/project'
-import { postProjectDetailsActivitiesAdditionalInfo } from 'api/activity'
-import { PROJECT_ADDITIONAL_INFO_FIELDS } from 'utils/constants/additionalInfor'
+import { updateProjectAdditionalInfos } from '~/api/project'
+import { postProjectDetailsActivitiesAdditionalInfo } from '~/api/activity'
+import { PROJECT_ADDITIONAL_INFO_FIELDS } from '~/config/constants/profile'
 import { RootState } from '~/store'
 import { toast } from 'sonner'
 

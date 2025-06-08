@@ -1,12 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { getMyProjectDetails, updateProjectSector } from 'api/project'
-import { getIndustryFramework, getStageFrameworkDirect } from 'api/user'
-import { postProjectDetailsActivitiesSector } from 'api/activity'
+import { getMyProjectDetails, updateProjectSector } from '~/api/project'
+import { getIndustryFramework, getStageFrameworkDirect } from '~/api/user'
+import { postProjectDetailsActivitiesSector } from '~/api/activity'
 import { AppDispatch, RootState } from '~/store'
 import { toast } from 'sonner'
-import { toaster } from 'components/UI/toaster'
 import { createListCollection } from '@chakra-ui/react'
 
 // Define types for the hook
@@ -131,10 +130,10 @@ export const useEditStage = () => {
 
       if (nameSelect === 'industries') {
          if (event.value.length > 2) {
-            toaster.create({
-               type: 'error',
-               title: 'You can only select up to 2 industries',
-            })
+            // toaster.create({
+            //    type: 'error',
+            //    title: 'You can only select up to 2 industries',
+            // })
             return
          }
       }
