@@ -6,7 +6,7 @@ import { replyFriendRequest } from '~/api/talent'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { IconlyAddUser, IconlyBookmark, IconlyLocation, IconlyShieldDone, IconlyUser } from '~/components/UI/Iconly'
 import { Avatar, AvatarImage } from '~/components/UI/avatar'
-import { AVATAR_DEFAULT } from '~/utils/constants'
+import { AVATAR_DEFAULT } from '~/config/constants'
 
 interface ProfileOverviewProps {
    user?: UserDetailsProps

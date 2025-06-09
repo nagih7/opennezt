@@ -8,8 +8,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getListEmployee, handleDeleteEmployee } from '~/api/employee'
 import { setVisibleModalCreateOrUpdateEmployee, setVisibleModalDeleteEmployee } from '~/store/modules/employee'
 import _ from 'lodash'
-import Filter from './components/Filter'
-import BtnFilter from '../../UI/ButtonFilter'
 import AvatarDefault from '~/assets/images/default/AvatarDefault.png'
 import { IconlyDelete, IconlyEdit } from 'components/UI/Iconly'
 import type { Dispatch } from '@reduxjs/toolkit'
@@ -256,7 +254,7 @@ function UserManagement() {
                      </defs>
                   </svg>
                </div>
-               <BtnFilter content={<Filter statusUser={dataFilter.status} onChangeStatus={handleChangeStatus} />} />
+               {/* <ButtonPrimary content={<Filter statusUser={dataFilter.status} onChangeStatus={handleChangeStatus} />} /> */}
             </div>
             <TableCustom
                loading={isLoadingGetListUser}

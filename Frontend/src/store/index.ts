@@ -1,10 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
 import rootReducer from './rootReducer'
-import createSagaMiddleware from 'redux-saga'
-import rootSaga from './sagas'
-
-// Create the saga middleware
-const sagaMiddleware = createSagaMiddleware()
 
 // Configure the store with TypeScript support
 export const store = configureStore({
@@ -12,11 +7,8 @@ export const store = configureStore({
    middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
          serializableCheck: false,
-      }).concat(sagaMiddleware),
+      }),
 })
-
-// Start the root saga
-sagaMiddleware.run(rootSaga)
 
 // Export types
 export type RootState = ReturnType<typeof store.getState>

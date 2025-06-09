@@ -1,9 +1,0 @@
-node_modules
-dist
-build
-coverage
-.next
-.vscode
-*.config.js
-*.config.ts
-vite.config.ts

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { getProfile, updateSkillProfile } from 'api/profile'
-import { getCategoryFramework, getSkillFramework, getSubCategoryFramework } from 'api/user'
+import { getProfile, updateSkillProfile } from '~/api/profile'
+import { getCategoryFramework, getSkillFramework, getSubCategoryFramework } from '~/api/user'
 import { RootState } from '~/store'
 import { FormData, SelectEvent, Skill } from '../types'
 import { toast } from 'components/UI/toast'
@@ -10,7 +10,7 @@ import { Collection } from '~/store/modules/user/types'
 
 export const useSkills = () => {
    // ========== STATE FROM REDUX STORE ========== //
-   const {  isLoadingUpdateSkills } = useSelector((state: RootState) => state.profile)
+   const { isLoadingUpdateSkills } = useSelector((state: RootState) => state.profile)
    const [profile, setProfile] = useState<any>(null)
    const [categoryFramework, setCategoryFramework] = useState<Collection<any>>()
    const [subCategoryFramework, setSubCategoryFramework] = useState<Collection<any>>()
@@ -27,7 +27,8 @@ export const useSkills = () => {
          if (profile === null) {
             fetchProfile()
          }
-   }}, [profile, getProfile])
+      }
+   }, [profile, getProfile])
 
    // ========== STATE MANAGEMENT ========== //
    const [formData, setFormData] = useState<FormData>({
@@ -48,7 +49,7 @@ export const useSkills = () => {
                   label: category.name,
                   value: category._id,
                })),
-            }),
+            })
          )
       }
    }
@@ -68,12 +69,12 @@ export const useSkills = () => {
       const response = await getSubCategoryFramework(categoryId)
       if (response && response.data) {
          setSubCategoryFramework(
-            createListCollection(({
-            items: response.data.map((category: any) => ({
-               label: category.name,
-               value: category._id,
-            })),
-         }),),
+            createListCollection({
+               items: response.data.map((category: any) => ({
+                  label: category.name,
+                  value: category._id,
+               })),
+            })
          )
       }
    }
@@ -94,16 +95,16 @@ export const useSkills = () => {
       const response = await getSkillFramework(categoryId)
       if (response && response.data) {
          setSkillFramework(
-         createListCollection({
-            items: response.data.map((skill: any) => ({
-               label: skill.name,
-               value: skill._id,
-            })),
-         })
+            createListCollection({
+               items: response.data.map((skill: any) => ({
+                  label: skill.name,
+                  value: skill._id,
+               })),
+            })
          )
       }
    }
-   
+
    const handleChangeSubCategory = (event: SelectEvent): void => {
       setFormData({
          ...formData,
@@ -157,7 +158,7 @@ export const useSkills = () => {
    }
 
    const handleSaveChanges = (): void => {
-         handleCallSaveChanges()
+      handleCallSaveChanges()
    }
 
    return {
@@ -172,6 +173,6 @@ export const useSkills = () => {
       handleChangeSkill,
       handleAddSkill,
       handleRemoveSkill,
-      handleSaveChanges
+      handleSaveChanges,
    }
 }

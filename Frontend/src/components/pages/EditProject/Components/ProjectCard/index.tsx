@@ -3,7 +3,7 @@ import { FaCircleCheck } from 'react-icons/fa6'
 import { useDispatch, useSelector } from 'react-redux'
 import { Avatar } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
-import { getMyProjectDetails } from 'api/project'
+import { getMyProjectDetails } from '~/api/project'
 import { AppDispatch, RootState } from 'store/types' // Add appropriate type for your Redux store
 
 const ProjectCard: React.FC = () => {

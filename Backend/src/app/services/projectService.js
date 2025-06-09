@@ -42,10 +42,10 @@ export async function createProject(user, requestBody) {
     const { revenues, funding_sources, additional_infos, logo, background } = requestBody
     // Project
     if (logo instanceof FileUpload) {
-        requestBody.logo = logo.save(PROJECT_LOGO_PATH)
+        requestBody.logo = await logo.save(PROJECT_LOGO_PATH)
     }
     if (background instanceof FileUpload) {
-        requestBody.background = background.save('project_backgrounds')
+        requestBody.background = await background.save('project_backgrounds')
     }
     const project = new Project({
         user_id: user._id,
@@ -1803,6 +1803,9 @@ export async function updateNewMemberActivity(user, { invitationId }) {
 
 // LẤY CHI TIẾT THÔNG TIN DỰ ÁN BẰNG ID
 export async function getProjectDetailsToMatching(projectId) {
+    if (!ObjectId.isValid(projectId)) {
+        throw new Error('Invalid project ID')
+    }
     const project = await Project.aggregate([
         { $match: { _id: new ObjectId(projectId) } },
         {
@@ -1926,11 +1929,13 @@ export async function getProjectDetailsToMatching(projectId) {
         },
     ])
 
-    console.log('Project Details:', project)
     return project[0] || null
 }
 
 export async function getProjectByMatching(projectId) {
+    if (!ObjectId.isValid(projectId)) {
+        return
+    }
     const project = await Project.aggregate([
         { $match: { _id: new ObjectId(projectId) } },
         {
@@ -2260,7 +2265,6 @@ export async function getProjectByMatching(projectId) {
             },
         },
     ])
-    console.log('Project By Matching:', project)
 
     return project[0] || null
 }

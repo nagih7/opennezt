@@ -4,12 +4,7 @@ import { updateUser } from '../../../../../api/profile'
 import { Button } from '@chakra-ui/react'
 import useEditProfile from './hooks/useEditProfile'
 function EditProfile() {
-   const {
-      dataInfoUser,
-      loadingBtnUpdateInfoUser,
-      handleChangeInput,
-      handleConfirmSaveInfoUser,
-   } = useEditProfile()
+   const { dataInfoUser, loadingBtnUpdateInfoUser, handleChangeInput, handleConfirmSaveInfoUser } = useEditProfile()
    return (
       <div className="rounded-2xl px-4 my-8">
          <div className="bg-[#fff] rounded-md">

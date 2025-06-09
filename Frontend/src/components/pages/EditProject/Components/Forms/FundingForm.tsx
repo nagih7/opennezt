@@ -4,7 +4,7 @@ import { GoPlus } from 'react-icons/go'
 import { IconlyDelete } from 'components/UI/Iconly'
 import SelectCustom from 'components/UI/SelectCustom'
 import InputCustom from 'components/UI/InputCustom'
-import { CURRENCY, FUNDING_SOURCES } from 'utils/constants'
+import { CURRENCY, FUNDING_SOURCES } from '~/config/constants'
 import { useEditFundingSources } from '../FundingSources/useEditFundingSources'
 
 const currencyFramework = createListCollection({

@@ -1,26 +1,6 @@
-import {
-    User,
-    Project,
-    ObjectId,
-    NotificationFeed,
-    Industry,
-    ExperienceLevel,
-    Skill,
-    Category,
-    Stage,
-    Type,
-    Role,
-    Subscription,
-} from '@/models'
+import { User, Project, ObjectId, NotificationFeed, Industry, ExperienceLevel, Skill, Category, Stage, Type, Role, Subscription } from '@/models'
 import { FileUpload } from '@/utils/classes'
-import {
-    CANCEL_ACTION,
-    FRIEND_REQUEST_NOTIFICATION,
-    LINK_STATIC_URL,
-    NOTIFICATION_TYPE,
-    SEND_ACTION,
-    WAITING_STATUS,
-} from '@/configs'
+import { CANCEL_ACTION, FRIEND_REQUEST_NOTIFICATION, LINK_STATIC_URL, NOTIFICATION_TYPE, SEND_ACTION, WAITING_STATUS } from '@/configs'
 import { userSockets } from '@/routes'
 import webpush from 'web-push'
 
@@ -107,7 +87,7 @@ export async function updateBackground(user, requestBody) {
         if (user.background) {
             FileUpload.remove(user.background)
         }
-        user.background = requestBody.background.save('background_users')
+        user.background = await requestBody.background.save('background_users')
     }
     await user.save()
 }
@@ -117,7 +97,7 @@ export async function updateAvatar(user, requestBody) {
         if (user.avatar) {
             FileUpload.remove(user.avatar)
         }
-        user.avatar = requestBody.avatar.save('avatars')
+        user.avatar = await requestBody.avatar.save('avatars')
     }
     await user.save()
 }
@@ -145,7 +125,7 @@ export async function getCategories() {
 // Subcategory framework
 export async function getSubCategories(categoryIds) {
     // Handle comma-separated string of IDs
-    const idArray = Array.isArray(categoryIds) ? categoryIds : categoryIds.split(',').map((id) => id.trim())
+    const idArray = Array.isArray(categoryIds) ? categoryIds : categoryIds.split(',').map(id => id.trim())
 
     const subCategories = await Category.find({
         parent_id: { $in: idArray },
@@ -157,7 +137,7 @@ export async function getSubCategories(categoryIds) {
 // Skills framework
 export async function getSkills(categoryIds) {
     // Handle comma-separated string of IDs
-    const idArray = Array.isArray(categoryIds) ? categoryIds : categoryIds.split(',').map((id) => id.trim())
+    const idArray = Array.isArray(categoryIds) ? categoryIds : categoryIds.split(',').map(id => id.trim())
 
     const skills = await Skill.find({
         category_id: { $in: idArray },
@@ -258,7 +238,7 @@ export async function sendFriendRequest(user, { userId }, { action }, io) {
 
             if (notification.length > 0) {
                 // ========== SEND NOTIFICATION ========== //
-                const userSocketId = Object.keys(userSockets).find((socketId) => userSockets[socketId] === userId)
+                const userSocketId = Object.keys(userSockets).find(socketId => userSockets[socketId] === userId)
                 io.to(userSocketId).emit(FRIEND_REQUEST_NOTIFICATION, notification[0])
 
                 // ========== [WEBPUSH] ========== //
@@ -274,7 +254,7 @@ export async function sendFriendRequest(user, { userId }, { action }, io) {
                             type: FRIEND_REQUEST_NOTIFICATION,
                         },
                     })
-                    webpush.sendNotification(subscription, payload).catch(async (err) => {
+                    webpush.sendNotification(subscription, payload).catch(async err => {
                         if (err.statusCode === 410 || err.statusCode === 404) {
                             await Subscription.deleteOne({ endpoint: subscription.endpoint })
                         } else {

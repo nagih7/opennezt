@@ -60,19 +60,6 @@ export const ROUTE_CONFIG = {
          ME: {
             PREFIX: '/projects/me/',
             DETAIL: '/projects/me/:id',
-            EDIT: {
-               PREFIX: '/projects/me/:id/edit/',
-               BASIC: '/projects/me/:id/edit/basic',
-               STAGE: '/projects/me/:id/edit/stage',
-               REVENUE: '/projects/me/:id/edit/revenue',
-               FUNDING: '/projects/me/:id/edit/funding',
-               DESCRIPTION: '/projects/me/:id/edit/description',
-               LOGO: '/projects/me/:id/edit/logo',
-               BACKGROUND: '/projects/me/:id/edit/background',
-               MEMBER: '/projects/me/:id/edit/members',
-               MEDIA: '/projects/me/:id/edit/media',
-               SETTING: '/projects/me/:id/edit/setting',
-            },
          },
       },
       // RECRUIT TALENT
@@ -101,13 +88,13 @@ export const ROUTE_CONFIG = {
          SCHEDULE: '/interviews/schedule',
          QUESTIONS: '/interviews/questions',
       },
-      // // FEED
-      // FEED: {
-      //    PREFIX: '/feed',
-      //    DETAIL: '/feed/:id',
-      //    CREATE: '/feed/create',
-      //    EDIT: '/feed/edit/:id',
-      // },
+      // FEED
+      FEED: {
+         PREFIX: '/feed',
+         DETAIL: '/feed/:id',
+         CREATE: '/feed/create',
+         EDIT: '/feed/edit/:id',
+      },
    },
 
    // Admin routes
@@ -128,6 +115,7 @@ export const ROUTE_CONFIG = {
       DASHBOARD: '/admin/dashboard',
       USERS: '/admin/users',
       SETTINGS: '/admin/settings',
+      PERFORMANCE: '/admin/performance',
    },
 
    // Public routes

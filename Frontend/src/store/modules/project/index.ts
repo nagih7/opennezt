@@ -1,6 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import { ProjectState } from './types'
-import { toaster } from 'components/UI/toaster'
 
 // Define the initial state with TypeScript typing
 const initialState: ProjectState = {
@@ -88,52 +87,6 @@ const projectSlice = createSlice({
          ...state,
          title: 'title',
       }),
-      // ========== My projects ========== //
-      requestGetListMyProjects: (state) => ({
-         ...state,
-         isLoadingGetListMyProjects: true,
-      }),
-      getListMyProjectsSuccess: (state, action) => ({
-         ...state,
-         myProjects:
-            action.payload.data.page === 1
-               ? [...action.payload.data.projects]
-               : [...state.myProjects, ...action.payload.data.projects],
-         paginationListMyProjects: {
-            currentPage: action.payload.data.page,
-            perPage: action.payload.data.per_page,
-            totalPage: action.payload.data.last_page,
-            totalRecord: action.payload.data.total,
-         },
-         isLoadingGetListMyProjects: false,
-      }),
-      getListMyProjectsFail: (state) => ({
-         ...state,
-         isLoadingGetListMyProjects: false,
-      }),
-      // ========== PROJECTS PARTICIPATED ========== //
-      requestGetListProjectsParticipated: (state) => ({
-         ...state,
-         isLoadingGetListProjectsParticipated: true,
-      }),
-      getListProjectsParticipatedSuccess: (state, action) => ({
-         ...state,
-         projectsParticipated:
-            action.payload.data.page === 1
-               ? [...action.payload.data.projects]
-               : [...state.projectsParticipated, ...action.payload.data.projects],
-         paginationProjectsParticipated: {
-            currentPage: action.payload.data.page,
-            perPage: action.payload.data.per_page,
-            lastPage: action.payload.data.last_page,
-            totalRecord: action.payload.data.total,
-         },
-         isLoadingGetListProjectsParticipated: false,
-      }),
-      getListProjectsParticipatedFail: (state) => ({
-         ...state,
-         isLoadingGetListProjectsParticipated: false,
-      }),
 
       // ========== CREATE NEW PROJECT ========== //
       requestCreateNewProject: (state) => ({
@@ -141,11 +94,11 @@ const projectSlice = createSlice({
          isLoadingCreateNewProject: true,
       }),
       createNewProjectSuccess: (state, action) => {
-         toaster.create({
-            title: 'Create project successfully',
-            description: 'You have successfully created the project',
-            type: 'success',
-         })
+         // toaster.create({
+         //    title: 'Create project successfully',
+         //    description: 'You have successfully created the project',
+         //    type: 'success',
+         // })
          window.location.href = `/projects/me/${action.payload.data.project_id}`
          return {
             ...state,
@@ -153,11 +106,11 @@ const projectSlice = createSlice({
          }
       },
       createNewProjectFail: (state, action) => {
-         toaster.create({
-            title: `${Object.values(action.payload.data.detail)[0]}`,
-            description: 'You have failed to create the project',
-            type: 'error',
-         })
+         // toaster.create({
+         //    title: `${Object.values(action.payload.data.detail)[0]}`,
+         //    description: 'You have failed to create the project',
+         //    type: 'error',
+         // })
          return {
             ...state,
             isLoadingCreateNewProject: false,
@@ -228,11 +181,11 @@ const projectSlice = createSlice({
          isLoadingApplyToJoinProject: true,
       }),
       applyToJoinProjectSuccess: (state) => {
-         toaster.create({
-            title: 'Apply to join project successfully',
-            description: 'You have successfully applied to join the project',
-            type: 'success',
-         })
+         // toaster.create({
+         //    title: 'Apply to join project successfully',
+         //    description: 'You have successfully applied to join the project',
+         //    type: 'success',
+         // })
          return {
             ...state,
             isLoadingApplyToJoinProject: false,
@@ -244,11 +197,11 @@ const projectSlice = createSlice({
          }
       },
       applyToJoinProjectFail: (state) => {
-         toaster.create({
-            title: 'Apply to join project failed',
-            description: 'You have failed to apply to join the project',
-            type: 'error',
-         })
+         // toaster.create({
+         //    title: 'Apply to join project failed',
+         //    description: 'You have failed to apply to join the project',
+         //    type: 'error',
+         // })
          return {
             ...state,
             isLoadingApplyToJoinProject: false,
@@ -264,11 +217,11 @@ const projectSlice = createSlice({
          isLoadingDeleteMyProject: true,
       }),
       deleteMyProjectSuccess: (state) => {
-         toaster.create({
-            title: 'Delete project successfully',
-            description: 'You have successfully deleted the project',
-            type: 'success',
-         })
+         // toaster.create({
+         //    title: 'Delete project successfully',
+         //    description: 'You have successfully deleted the project',
+         //    type: 'success',
+         // })
          window.location.href = '/projects'
          return {
             ...state,
@@ -276,11 +229,11 @@ const projectSlice = createSlice({
          }
       },
       deleteMyProjectFail: (state) => {
-         toaster.create({
-            title: 'Delete project failed',
-            description: 'You have failed to delete the project',
-            type: 'error',
-         })
+         // toaster.create({
+         //    title: 'Delete project failed',
+         //    description: 'You have failed to delete the project',
+         //    type: 'error',
+         // })
          return {
             ...state,
             isLoadingDeleteMyProject: false,
@@ -300,10 +253,10 @@ const projectSlice = createSlice({
          isLoadingUpdateRoleRequirement: true,
       }),
       updateRoleRequirementSuccess: (state, action) => {
-         toaster.create({
-            title: 'Update role requirement successfully',
-            type: 'success',
-         })
+         // toaster.create({
+         //    title: 'Update role requirement successfully',
+         //    type: 'success',
+         // })
          return {
             ...state,
             projectDetails: {
@@ -318,10 +271,10 @@ const projectSlice = createSlice({
          }
       },
       updateRoleRequirementFail: (state) => {
-         toaster.create({
-            title: 'Update role requirement failed',
-            type: 'error',
-         })
+         // toaster.create({
+         //    title: 'Update role requirement failed',
+         //    type: 'error',
+         // })
          return {
             ...state,
             isLoadingUpdateRoleRequirement: false,
@@ -333,10 +286,10 @@ const projectSlice = createSlice({
          isLoadingUpdateSkillRequirement: true,
       }),
       updateSkillRequirementSuccess: (state, action) => {
-         toaster.create({
-            title: 'Update skill requirement successfully',
-            type: 'success',
-         })
+         // toaster.create({
+         //    title: 'Update skill requirement successfully',
+         //    type: 'success',
+         // })
          return {
             ...state,
             myProjectDetails: {
@@ -350,10 +303,10 @@ const projectSlice = createSlice({
          }
       },
       updateSkillRequirementFail: (state) => {
-         toaster.create({
-            title: 'Update skill requirement failed',
-            type: 'error',
-         })
+         // toaster.create({
+         //    title: 'Update skill requirement failed',
+         //    type: 'error',
+         // })
          return {
             ...state,
             isLoadingUpdateSkillRequirement: false,
@@ -415,14 +368,6 @@ const projectSlice = createSlice({
 })
 
 export const {
-   // ========== My projects ========== //
-   requestGetListMyProjects,
-   getListMyProjectsSuccess,
-   getListMyProjectsFail,
-   // ========== PROJECTS PARTICIPATED ========== //
-   requestGetListProjectsParticipated,
-   getListProjectsParticipatedSuccess,
-   getListProjectsParticipatedFail,
    // ========= CREATE NEW PROJECT ========== //
    requestCreateNewProject,
    createNewProjectSuccess,

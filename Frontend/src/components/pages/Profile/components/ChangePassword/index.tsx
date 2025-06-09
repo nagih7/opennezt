@@ -5,12 +5,8 @@ import { Button } from '@chakra-ui/react'
 import useChangePassword from './hooks/useChangePassword'
 
 function ChangePassword() {
-   const {
-      dataChangePassword,
-        loadingBtnChangePassword,
-        handleChangeInput,
-        handleConfirmChangePassword,
-   } = useChangePassword()
+   const { dataChangePassword, loadingBtnChangePassword, handleChangeInput, handleConfirmChangePassword } =
+      useChangePassword()
    return (
       <div className="rounded-2xl px-4 my-8">
          <div className="bg-[#fff] rounded-md">

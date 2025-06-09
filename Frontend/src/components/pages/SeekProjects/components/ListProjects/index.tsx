@@ -1,5 +1,5 @@
-import { accessToProject } from 'api/activity'
-import { seekProjects } from 'api/project'
+import { accessToProject } from '~/api/activity'
+import { seekProjects } from '~/api/project'
 import PaginationCustom from 'components/UI/PaginationCustom'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'

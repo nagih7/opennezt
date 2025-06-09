@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { updateProjectFundingSources } from 'api/project'
-import { postProjectDetailsActivitiesFundingSource } from 'api/activity'
+import { updateProjectFundingSources } from '~/api/project'
+import { postProjectDetailsActivitiesFundingSource } from '~/api/activity'
 import { RootState } from '~/store'
 import { toast } from 'sonner'
 

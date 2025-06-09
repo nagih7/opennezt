@@ -5,19 +5,12 @@ import ChangePassword from './components/ChangePassword'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '~/components/UI/tabs'
 import useProfile from './hooks/useProfile'
 import { FaCamera } from 'react-icons/fa'
+import { AVATAR_DEFAULT, OPENNEZT_LOGO_GRADIENT } from '~/config/constants'
 
 const Profile: React.FC = () => {
-   const {
-      authUser,
-      background,
-      avatar,
-      keyTable,
-      setKeyTable,
-      handleBackgroundChange,
-      handleAvatarChange,
-      handleAvatarError,
-      handleBackgroundError,
-   } = useProfile()
+   const { authUser, background, avatar, keyTable, setKeyTable, handleBackgroundChange, handleAvatarChange } =
+      useProfile()
+
    return (
       <div className="w-full h-full">
          <div className="flex flex-wrap -mx-2">
@@ -29,7 +22,9 @@ const Profile: React.FC = () => {
                            src={background}
                            className="w-full h-[300px] bg-contain object-cover brightness-75"
                            alt="background"
-                           onError={handleBackgroundError}
+                           onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                              e.currentTarget.src = OPENNEZT_LOGO_GRADIENT
+                           }}
                         />
                         <div className="absolute px-3 py-2 transition-colors bg-white rounded-lg shadow-lg cursor-pointer bottom-4 right-6 hover:bg-gray-100">
                            <label className="flex items-center cursor-pointer">
@@ -47,7 +42,13 @@ const Profile: React.FC = () => {
                                  <FaCamera className="w-4 h-4" />
                               </label>
                            </div>
-                           <img src={avatar} alt={authUser.name} onError={handleAvatarError} />
+                           <img
+                              src={avatar}
+                              alt={authUser.name}
+                              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                                 e.currentTarget.src = AVATAR_DEFAULT
+                              }}
+                           />
                         </div>
                         <div className="ml-4 drop-shadow-lg">
                            <div className="mb-1 text-lg font-bold text-white">{authUser.name}</div>

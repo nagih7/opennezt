@@ -52,7 +52,7 @@ const ProjectMoreInfo: React.FC = () => {
 
    // ========== RENDER ========== //
    return (
-      <div className='mt-8'>
+      <div className="mt-8">
          <div className="bg-[#ffffff] rounded-md">
             <div className="p-4 2xl:p-6 border-b">
                <span className="text-lg 2xl:text-xl font-semibold">The Project Includes:</span>
@@ -170,16 +170,16 @@ const ProjectMoreInfo: React.FC = () => {
             </Portal>
          </Dialog.Root>
          {/* Reviews */}
-         <div className='bg-[#ffffff] rounded-md mt-8'>
+         <div className="bg-[#ffffff] rounded-md mt-8">
             <div className="p-4 2xl:p-6 border-b">
                <span className="text-lg 2xl:text-xl font-semibold">Reviews</span>
             </div>
             <div className="p-4 2xl:p-6">
                <ul>
-                  <li className='flex items-center gap-2'>
-                     <img src="https://i.pravatar.cc/300?img=4" alt="" className='w-20 h-20 ' />
+                  <li className="flex items-center gap-2">
+                     <img src="https://i.pravatar.cc/300?img=4" alt="" className="w-20 h-20 " />
                      <div className="flex flex-col ">
-                        <h3 className='text-base 2xl:text-lg'>Vuong Manh Nghia </h3>
+                        <h3 className="text-base 2xl:text-lg">Vuong Manh Nghia </h3>
                         <div className="flex text-yellow-400 text-base 2xl:text-[1.2rem]">
                            <span>⭐</span>
                            <span>⭐</span>
@@ -188,8 +188,8 @@ const ProjectMoreInfo: React.FC = () => {
                            <span className="text-gray-300">⭐</span>
                         </div>
                         <p className="text-[#6F7F92] text-xs 2xl:text-sm">
-                           It was a fantastic course with lots of hands on training and fun! Absolutely
-                           recommended to all food lovers !
+                           It was a fantastic course with lots of hands on training and fun! Absolutely recommended to
+                           all food lovers !
                         </p>
                      </div>
                   </li>

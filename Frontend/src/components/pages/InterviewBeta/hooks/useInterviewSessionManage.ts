@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { closeInterview, replyInterview } from 'api/interview'
+import { closeInterview, replyInterview } from '~/api/interview'
 import { createVoiceDetector } from 'utils/audio/voiceDetection'
 import type React from 'react'
 

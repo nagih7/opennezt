@@ -1,60 +1,64 @@
 import { Image } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Project } from 'types'
-import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
+import { OPENNEZT_LOGO_GRADIENT } from '~/config/constants'
 
 interface ProjectGridProps {
-    project: Project;
-    handleViewProjectDetails: (project: Project) => void;
+   project: Project
+   handleViewProjectDetails: (project: Project) => void
 }
 
 const ProjectGrid = ({ project, handleViewProjectDetails }: ProjectGridProps) => {
-    // ========== STATE ========== //
-    const [imageError, setImageError] = useState<boolean>(false)
+   // ========== STATE ========== //
+   const [imageError, setImageError] = useState<boolean>(false)
 
-    // ========== RENDER ========== //
-    return (
-        <div
-            onClick={() => handleViewProjectDetails(project)}
-            className="overflow-hidden rounded-sm cursor-pointer group"
-        >
-            <div className="w-full h-[360px] mx-auto bg-white rounded-[0.2rem]">
-                <div className="relative flex items-center justify-center w-full h-48 overflow-hidden mx-autorounded-md group">
-                    {!imageError && project?.background ?  (
-                        <Image
-                            className="object-cover absolute w-full 2xl:h-[360px] h-[300px] transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110 overflow-hidden rounded-sm cursor-pointer"
-                            aspectRatio={16 / 9}
-                            src={project?.background}
-                            alt={project?.name}
-                            onError={() => setImageError(true)}
-                        />
-                    ) : (
-                        <div className="absolute flex items-center justify-center object-cover w-full">
-                            <Image src={OPENNEZT_LOGO_GRADIENT} alt={project?.name} className='w-full 2xl:h-[360px] h-[300px]' />
-                        </div>
-                    )}
-                </div>
-                <div className="relative p-4">
-                    <div className="flex items-center justify-between">
-                        <p className="bg-[#EAEFF8] p-1 rounded-sm text-[#737F92] text-xs md:text-[0.85rem] font-semibold">
-                            {project.stage?.name}
-                        </p>
-                        <p className="text-xs font-semibold md:text-sm">
-                            By <span className="font-semibold text-blue-600">{project?.user?.name}</span>
-                        </p>
-                    </div>
-
-                    <h5 className="text-base md:text-[0.95rem] font-semibold text-gray-900 mt-2 whitespace-normal break-words leading-[1.3rem]">
-                        {project.name}
-                    </h5>
-                    <div className="flex items-center justify-between mt-3 text-xs text-gray-600 md:text-sm">
-                        <p className="text-xs text-nowrap">📖 {project.articles?.length} Posts</p>
-                        <p className="text-xs text-nowrap">👨‍🎓 {project.members?.length} Members</p>
-                    </div>
-                </div>
+   // ========== RENDER ========== //
+   return (
+      <div
+         onClick={() => handleViewProjectDetails(project)}
+         className="overflow-hidden rounded-sm cursor-pointer group"
+      >
+         <div className="w-full h-[360px] mx-auto bg-white rounded-[0.2rem]">
+            <div className="relative flex items-center justify-center w-full h-48 overflow-hidden mx-autorounded-md group">
+               {!imageError && project?.background ? (
+                  <Image
+                     className="object-cover absolute w-full 2xl:h-[360px] h-[300px] transition-transform !duration-500 !transform !origin-center !ease-out !group-hover:scale-110 overflow-hidden rounded-sm cursor-pointer"
+                     aspectRatio={16 / 9}
+                     src={project?.background}
+                     alt={project?.name}
+                     onError={() => setImageError(true)}
+                  />
+               ) : (
+                  <div className="absolute flex items-center justify-center object-cover w-full">
+                     <Image
+                        src={OPENNEZT_LOGO_GRADIENT}
+                        alt={project?.name}
+                        className="w-full 2xl:h-[360px] h-[300px]"
+                     />
+                  </div>
+               )}
             </div>
-        </div>
-    )
+            <div className="relative p-4">
+               <div className="flex items-center justify-between">
+                  <p className="bg-[#EAEFF8] p-1 rounded-sm text-[#737F92] text-xs md:text-[0.85rem] font-semibold">
+                     {project.stage?.name}
+                  </p>
+                  <p className="text-xs font-semibold md:text-sm">
+                     By <span className="font-semibold text-blue-600">{project?.user?.name}</span>
+                  </p>
+               </div>
+
+               <h5 className="text-base md:text-[0.95rem] font-semibold text-gray-900 mt-2 whitespace-normal break-words leading-[1.3rem]">
+                  {project.name}
+               </h5>
+               <div className="flex items-center justify-between mt-3 text-xs text-gray-600 md:text-sm">
+                  <p className="text-xs text-nowrap">📖 {project.articles?.length} Posts</p>
+                  <p className="text-xs text-nowrap">👨‍🎓 {project.members?.length} Members</p>
+               </div>
+            </div>
+         </div>
+      </div>
+   )
 }
 
 export default ProjectGrid

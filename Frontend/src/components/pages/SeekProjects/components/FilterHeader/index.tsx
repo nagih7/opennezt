@@ -1,7 +1,7 @@
 import { Button, createListCollection, Popover, Portal, Stack, StackSeparator } from '@chakra-ui/react'
 // import { SearchOutlined } from '@mui/icons-material'
-import { seekProjects } from 'api/project'
-import { getIndustryFramework, getStageFramework } from 'api/user'
+import { seekProjects } from '~/api/project'
+import { getIndustryFramework, getStageFramework } from '~/api/user'
 import { IconlyFilter, IconlySearch } from 'components/UI/Iconly'
 import SelectCustom from 'components/UI/SelectCustom'
 import { FC, useEffect, useState, KeyboardEvent, ChangeEvent } from 'react'
@@ -47,18 +47,18 @@ const FilterHeader: FC<FilterHeaderProps> = ({ action, setAction }) => {
    }, []) // Empty dependency array to only run once on mount
 
    const fetchIndustryFramework = async () => {
-         const response = await getIndustryFramework()
-         if (response && response.data) {
-            setIndustryFramework(
-               createListCollection({
+      const response = await getIndustryFramework()
+      if (response && response.data) {
+         setIndustryFramework(
+            createListCollection({
                items: response.data.map((industry: any) => ({
                   label: industry.name,
                   value: industry._id,
                })),
-            }),
-            )
-         }
+            })
+         )
       }
+   }
 
    // Load frameworks if needed
    useEffect(() => {

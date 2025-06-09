@@ -3,7 +3,7 @@ import styles from './styles.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import _ from 'lodash'
 import TableManage from '../TableManage'
-import { createOrUpdateExperienceLevel, deleteExperienceLevel, getListExperienceLevel } from 'api/manage'
+import { createOrUpdateExperienceLevel, deleteExperienceLevel, getListExperienceLevel } from '~/api/manage'
 import {
    setVisibleModalCreateOrUpdateExperienceLevel,
    setVisibleModalDeleteExperienceLevel,

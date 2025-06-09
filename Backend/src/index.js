@@ -3,6 +3,7 @@ import path from 'path'
 import serveFavicon from 'serve-favicon'
 import helmet from 'helmet'
 import multer from 'multer'
+import compression from 'compression'
 import { APP_DEBUG, NODE_ENV, PUBLIC_DIR, VIEW_DIR, APP_URL_CLIENT, MAIL_TO, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, APP_ENV } from './configs'
 import { jsonify, sendMail } from './handlers/responseHandler'
 import corsHandler from './handlers/corsHandler'
@@ -59,8 +60,27 @@ function setupApp(app) {
         app.use(httpRequestHandler)
     }
     app.use(limiter)
+    app.use(
+        compression({
+            filter: (req, res) => {
+                if (req.headers['x-no-compression']) {
+                    return false
+                }
+                return compression.filter(req, res)
+            },
+            threshold: 1024, // Only compress responses larger than 1KB
+            level: 6, // Compression level (1-9, 6 is default)
+        })
+    )
     app.use(serveFavicon(path.join(PUBLIC_DIR, 'favicon.ico')))
-    app.use('/static', express.static(PUBLIC_DIR))
+    app.use(
+        '/static',
+        express.static(PUBLIC_DIR, {
+            maxAge: '1y', // Cache static files for 1 year
+            etag: true,
+            lastModified: true,
+        })
+    )
     app.use(helmet())
 
     app.use(express.json({ limit: '20mb' }))

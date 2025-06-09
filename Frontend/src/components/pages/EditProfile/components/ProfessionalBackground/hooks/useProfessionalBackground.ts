@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getProfile, updateProfessionalProfile } from 'api/profile'
-import { getExperienceLevelFramwork, getIndustryFramework } from 'api/user'
+import { getProfile, updateProfessionalProfile } from '~/api/profile'
+import { getExperienceLevelFramwork, getIndustryFramework } from '~/api/user'
 import { RootState } from '~/store'
 import { FormData, SelectEvent } from '../types'
 import { toast } from 'components/UI/toast'
@@ -16,7 +16,7 @@ export const useProfessionalBackground = () => {
    const [profile, setProfile] = useState<any>(null)
    const [industryFramework, setIndustryFramework] = useState<any>(null)
    const [experienceLevelFramework, setExperienceLevelFramework] = useState<any>(null)
-      useEffect(() => {
+   useEffect(() => {
       if (!profile) {
          const fetchProfile = async () => {
             const response = await getProfile()
@@ -27,7 +27,8 @@ export const useProfessionalBackground = () => {
          if (profile === null) {
             fetchProfile()
          }
-   }}, [profile, getProfile])
+      }
+   }, [profile, getProfile])
 
    // ========== STATE MANAGEMENT ========== //
    const [formData, setFormData] = useState<FormData>({
@@ -40,11 +41,11 @@ export const useProfessionalBackground = () => {
       if (response && response.data) {
          setIndustryFramework(
             createListCollection({
-            items: response.data.map((industry: any) => ({
-               label: industry.name,
-               value: industry._id,
-            })),
-         }),
+               items: response.data.map((industry: any) => ({
+                  label: industry.name,
+                  value: industry._id,
+               })),
+            })
          )
       }
    }
@@ -58,7 +59,7 @@ export const useProfessionalBackground = () => {
                   label: level.name,
                   value: level._id,
                })),
-            }),
+            })
          )
       }
    }
@@ -101,23 +102,20 @@ export const useProfessionalBackground = () => {
 
    const handleUpdateProfessionalProfile = async () => {
       try {
-         const response = await (
-            updateProfessionalProfile({
-               industry_ids: formData.industries,
-               experience_level_id: formData.experience_level[0],
-            })
-         )
+         const response = await updateProfessionalProfile({
+            industry_ids: formData.industries,
+            experience_level_id: formData.experience_level[0],
+         })
          if (response.status === 200) {
             toast.success('Professional background updated successfully.')
-         }
-         else {
+         } else {
             toast.error('Failed to update professional background.')
          }
       } catch (error) {
          toast.error('Failed to update professional background.')
       }
    }
-   
+
    const handleSaveChanges = (): void => {
       handleUpdateProfessionalProfile()
    }
@@ -129,6 +127,6 @@ export const useProfessionalBackground = () => {
       experienceLevelFramework,
       formData,
       handleChange,
-      handleSaveChanges
+      handleSaveChanges,
    }
 }

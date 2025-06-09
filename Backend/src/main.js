@@ -13,24 +13,36 @@ const port = parseInt(process.env.PORT, 10) || 3456
 
 const server = createApp()
 
-db.connect().then(() => console.log('Database connection successful!'))
+// Ensure database connection is established before starting server
+async function startServer() {
+    try {
+        await db.connect()
+        console.log('Database connection successful!')
 
-server.listen(port, host, async function () {
-    let displayHostname = host
-    if (['0.0.0.0', '::'].includes(host)) {
-        if (host === '0.0.0.0') {
-            displayHostname = await getInterfaceIp('IPv4')
-        } else {
-            displayHostname = await getInterfaceIp('IPv6')
-        }
-    }
-    if (host.includes(':')) {
-        displayHostname = `[${displayHostname}]`
-    }
-    console.log(`Server is running on http://${displayHostname}:${port} in ${process.env.NODE_ENV} mode.`)
-})
+        server.listen(port, host, async function () {
+            let displayHostname = host
+            if (['0.0.0.0', '::'].includes(host)) {
+                if (host === '0.0.0.0') {
+                    displayHostname = await getInterfaceIp('IPv4')
+                } else {
+                    displayHostname = await getInterfaceIp('IPv6')
+                }
+            }
+            if (host.includes(':')) {
+                displayHostname = `[${displayHostname}]`
+            }
+            console.log(`Server is running on http://${displayHostname}:${port} in ${process.env.NODE_ENV} mode.`)
+        })
 
-executeScheduledTasks()
+        executeScheduledTasks()
+    } catch (error) {
+        console.error('Failed to start server:', error)
+        process.exit(1)
+    }
+}
+
+// Start the server
+startServer()
 
 // Set up shutdown handlers
 const shutdownHandlers = ['SIGINT', 'SIGTERM', 'uncaughtException', 'unhandledRejection']
@@ -71,7 +83,7 @@ async function gracefulShutdown(err) {
 }
 
 // Register shutdown handlers
-shutdownHandlers.forEach((signal) => {
+shutdownHandlers.forEach(signal => {
     process.on(signal, gracefulShutdown)
 })
 

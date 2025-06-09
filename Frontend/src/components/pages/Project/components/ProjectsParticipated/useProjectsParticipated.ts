@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getListProjectsParticipated } from 'api/project'
+import { getListProjectsParticipated } from '~/api/project'
 
 export interface UseProjectsParticipatedProps {
    isBottom: boolean

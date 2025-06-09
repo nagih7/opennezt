@@ -8,8 +8,7 @@ import googleIcon from '~/assets/images/icon/google.svg'
 import facebookIcon from '~/assets/images/icon/facebook.svg'
 import twitterIcon from '~/assets/images/icon/twitter.svg'
 import useLogin from './useLogin'
-import { Loader2 } from 'lucide-react'
-import { Button, ButtonPrimary } from '~/components/UI/button'
+import { ButtonPrimary } from '~/components/UI/button'
 
 const Login: React.FC = () => {
    const {

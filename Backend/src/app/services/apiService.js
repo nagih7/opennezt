@@ -82,7 +82,7 @@ export async function textToSpeechGoogleCloud(content) {
         })
 
         // Save the file to the uploads/audio directory
-        const audioUrl = audioPath.save('audio_interview')
+        const audioUrl = await audioPath.save('audio_interview')
         return audioUrl
     } catch (error) {
         console.error('Error calling Text-to-Speech API:', error)
@@ -117,7 +117,7 @@ export async function textToSpeechViettelAI(content) {
         })
 
         // Save the file to the uploads/audio directory
-        const audioUrl = audioPath.save('audio_interview')
+        const audioUrl = await audioPath.save('audio_interview')
 
         // Return the URL to access the audio file
         // const audioUrl = `${LINK_STATIC_URL}${filePath}`
@@ -157,7 +157,7 @@ export async function speechToTextGoogleCloud(audioPath) {
 
         // Xử lý kết quả
         if (response.results && response.results.length > 0) {
-            const transcription = response.results.map((result) => result.alternatives[0].transcript).join('\n')
+            const transcription = response.results.map(result => result.alternatives[0].transcript).join('\n')
             return transcription
         } else {
             return

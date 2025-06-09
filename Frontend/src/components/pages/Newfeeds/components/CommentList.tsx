@@ -11,7 +11,7 @@ import {
    handleGetListReplyComment,
    handleReplyComment,
    handleGetUserReplyCommentReactions,
-} from 'api/newfeeds'
+} from '~/api/newfeeds'
 import { resetComment, resetReplyReaction, updateCommentReaction, updateCreatedComment } from 'store/modules/article'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
 import Comment from './Comment'
@@ -19,7 +19,7 @@ import NewCommentForm from './NewCommentForm'
 import { resetReply } from 'store/modules/article'
 import store, { useAppDispatch, useAppSelector } from '~/store'
 import { useNavigate } from 'react-router-dom'
-import { handleGetLinkPreview } from 'api/linkPreview'
+import { handleGetLinkPreview } from '~/api/linkPreview'
 import { ROUTE_CONFIG } from '~/config/constants'
 import {
    RootState,
@@ -43,9 +43,9 @@ interface ReplyCommentListItem {
    replyComments: CommentType[]
    pagination: {
       hasMore: boolean
-      total: number
       limit: number
       page: number
+      total: number
    }
 }
 
@@ -71,7 +71,9 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
 
    const { hasMore, page, limit } = comment_pagination
    const dispatch = useAppDispatch()
+
    const [dataFilter, setDataFilter] = useState<CommentDataFilter>({
+      articleId: _id,
       limit: 10,
       page: 1,
    })
@@ -156,20 +158,25 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
    const hasMoreRef = useRef(hasMore)
    const pageRef = useRef(page)
    const idRef = useRef(_id)
+
    useEffect(() => {
       if (idRef.current !== _id) {
          idRef.current = _id
       }
    })
+
    useEffect(() => {
       isLoadingRef.current = isLoadingGetComments // Cập nhật giá trị ref mỗi khi trạng thái thay đổi
    }, [isLoadingGetComments])
+
    useEffect(() => {
       pageRef.current = page
    }, [page])
+
    useEffect(() => {
       hasMoreRef.current = hasMore
    }, [hasMore]) //Lướt xuống bài viết cuối thì load tiếp
+
    const observerRef = useRef<IntersectionObserver | null>(null)
 
    const lastElementRef = useCallback(
@@ -220,6 +227,7 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
    const reactionMap = useMemo(() => {
       return new Map(comment_reactions.map((r: UserReaction) => [r.target_id.toString(), r.type]))
    }, [comment_reactions])
+
    const handleCommentReaction = useCallback(
       async (commentId: string, formData: FormData) => {
          const reactionType = formData.get('type')
@@ -233,7 +241,7 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
 
    //Form
    const [isCommentOrReply, setIsCommentOrReply] = useState<'comment' | 'reply'>('comment')
-   const [selectedComment, setSelectedComment] = useState<CommentType | null>(null)
+   const [selectedComment, setSelectedComment] = useState<CommentType | undefined>(undefined)
 
    const handleFormSubmit = useCallback(
       async (formData: CommentFormData) => {
@@ -271,17 +279,14 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
       },
       [isCommentOrReply, selectedComment]
    )
-   //End   //Reply Comment Logic
+   //End
+
+   //Reply Comment Logic
    const replyCommentState = useAppSelector((state: RootState) => state.article)
    const [replyCommentList, setReplyCommentList] = useState<ReplyCommentList>({})
 
-   const {
-      reply_comments_pagination,
-      isLoadingGetReplyComments,
-      replyComments,
-      reply_comment_reactions,
-      isLoadingGetReplyCommentReactions,
-   } = replyCommentState
+   const { reply_comments_pagination, isLoadingGetReplyComments, replyComments, reply_comment_reactions } =
+      replyCommentState
 
    useEffect(() => {
       if (replyComments && replyComments.length > 0) {
@@ -300,7 +305,10 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
                ...prevState,
                [parentId]: {
                   replyComments: [...existingReplies, ...newReplies],
-                  pagination: reply_comments_pagination,
+                  pagination: {
+                     ...reply_comments_pagination,
+                     total: reply_comments_pagination.total || 0,
+                  },
                },
             }
          })
@@ -383,8 +391,9 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
       return new Map(replyCommentReactions.map((r) => [r.target_id.toString(), r.type]))
    }, [replyCommentReactions])
    //End reply comment logic
+
    const updateReplyCommentReactions = useCallback(
-      (reply: CommentType, type: 'like' | 'love' | 'laugh' | 'wow' | 'sad' | 'angry') => {
+      (reply: CommentType, type: string) => {
          if (!reply.parent_id) return
 
          const replyCommentIndex = replyCommentList[reply.parent_id]?.replyComments.findIndex(
@@ -392,7 +401,7 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
          )
 
          const existingReactionIndex = replyCommentReactions.findIndex(
-            (reaction) => reaction.target_id.toString() === reply?._id.toString()
+            (reaction: UserReaction) => reaction.target_id.toString() === reply?._id.toString()
          )
 
          if (existingReactionIndex !== -1) {
@@ -404,17 +413,17 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
                )
 
                // Giảm reaction_count
-               if (replyCommentIndex !== -1 && reply.parent_id) {
+               if (replyCommentIndex !== -1) {
                   setReplyCommentList((prevState) => ({
                      ...prevState,
-                     [reply.parent_id]: {
-                        ...prevState[reply.parent_id],
-                        replyComments: prevState[reply.parent_id].replyComments.map(
+                     [reply.parent_id!]: {
+                        ...prevState[reply.parent_id!],
+                        replyComments: prevState[reply.parent_id!].replyComments.map(
                            (comment: CommentType, idx: number) =>
                               idx === replyCommentIndex
                                  ? {
                                       ...comment,
-                                      reaction_count: Math.max(0, (comment.reaction_count as number) - 1),
+                                      reaction_count: Math.max(0, comment.reaction_count - 1),
                                    }
                                  : comment
                         ),
@@ -427,54 +436,51 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
                   const updatedReactions = [...prevReactions]
                   updatedReactions[existingReactionIndex] = {
                      ...updatedReactions[existingReactionIndex],
-                     type: type,
+                     type: type as 'like' | 'love' | 'laugh' | 'wow' | 'sad' | 'angry',
                   }
                   return updatedReactions
                })
             }
          } else {
             // Nếu chưa có reaction -> thêm mới
-            setReplyCommentReactions((prevReactions) => [
-               ...prevReactions,
-               {
-                  _id: 'temp-' + Date.now(),
-                  target_id: reply._id,
-                  user_id: authUser?._id || '',
-                  type: type,
-                  target_type: 'comment',
-                  created_at: new Date().toISOString(),
-               } as UserReaction,
-            ]) // Tăng reaction_count
-            if (replyCommentIndex !== -1 && reply.parent_id) {
-               setReplyCommentList((prevState) => {
-                  const parentId = reply.parent_id!
-                  const currentState = prevState[parentId]
-                  if (!currentState) return prevState
+            const newReaction: UserReaction = {
+               _id: `temp-${Date.now()}`,
+               user_id: authUser?._id || '',
+               target_id: reply?._id || '',
+               target_type: 'comment',
+               type: type as 'like' | 'love' | 'laugh' | 'wow' | 'sad' | 'angry',
+               created_at: new Date().toISOString(),
+            }
 
-                  return {
-                     ...prevState,
-                     [parentId]: {
-                        ...currentState,
-                        replyComments: currentState.replyComments.map((comment: CommentType, idx: number) =>
+            setReplyCommentReactions((prevReactions) => [...prevReactions, newReaction])
+
+            // Tăng reaction_count
+            if (replyCommentIndex !== -1) {
+               setReplyCommentList((prevState) => ({
+                  ...prevState,
+                  [reply.parent_id!]: {
+                     ...prevState[reply.parent_id!],
+                     replyComments: prevState[reply.parent_id!].replyComments.map(
+                        (comment: CommentType, idx: number) =>
                            idx === replyCommentIndex
                               ? {
                                    ...comment,
-                                   reaction_count: (comment.reaction_count as number) + 1,
+                                   reaction_count: comment.reaction_count + 1,
                                 }
                               : comment
-                        ),
-                     },
-                  }
-               })
+                     ),
+                  },
+               }))
             }
          }
       },
       [replyCommentList, replyCommentReactions, authUser]
    )
+
    const handleReactionReplyComment = useCallback(
       async (reply: CommentType, formData: FormData) => {
-         const type = formData.get('type') as 'like' | 'love' | 'laugh' | 'wow' | 'sad' | 'angry'
-         await store.dispatch(handleReactComment({ commentId: reply._id, data: formData }) as any)
+         const type = formData.get('type') as string
+         await store.dispatch(handleReactComment({ commentId: reply?._id, data: formData }))
          updateReplyCommentReactions(reply, type)
       },
       [updateReplyCommentReactions]
@@ -484,11 +490,15 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
       setReplyCommentList({})
    }, [])
 
-   const handleViewTalentDetails = (user) => {
+   const navigate = useNavigate()
+
+   const handleViewTalentDetails = (user: any) => {
       navigate(ROUTE_CONFIG.USER.RECRUIT_TALENT.PREFIX + user._id)
    }
+
    const [isModalOpen, setIsModalOpen] = useState(false)
    const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+
    const handlePrevImage = (e: React.MouseEvent) => {
       e.stopPropagation()
       setSelectedImageIndex((prev) => (prev === 0 ? content.attachment.length - 1 : prev - 1))
@@ -541,7 +551,7 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
       if (!previewData) return null
 
       // Hàm kiểm tra và format URL
-      const getDisplayUrl = (url) => {
+      const getDisplayUrl = (url: string) => {
          try {
             const urlObject = new URL(url)
             return urlObject.hostname
@@ -587,7 +597,6 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
       )
    }
 
-   const navigate = useNavigate()
    return (
       <div className="fixed inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 100 }}>
          <div className="fixed inset-0 bg-black bg-opacity-50" onClick={handleCloseComment}></div>
@@ -600,27 +609,7 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
                )}
             </div>
             {/* Add a scrollable container for the content */}
-            <div
-               className="flex-1 p-8 pb-24 overflow-y-auto"
-               style={{
-                  scrollbarWidth: 'thin',
-                  scrollbarColor: '#CBD5E1 #F1F5F9',
-                  '&::-webkit-scrollbar': {
-                     width: '8px',
-                  },
-                  '&::-webkit-scrollbar-track': {
-                     background: '#F1F5F9',
-                     borderRadius: '4px',
-                  },
-                  '&::-webkit-scrollbar-thumb': {
-                     background: '#CBD5E1',
-                     borderRadius: '4px',
-                  },
-                  '&::-webkit-scrollbar-thumb:hover': {
-                     background: '#94A3B8',
-                  },
-               }}
-            >
+            <div className="flex-1 p-8 pb-24 overflow-y-auto">
                <div className="flex items-center gap-3">
                   <div className="w-[65px]">
                      <img src={''} className="w-[65px]  rounded-full" />
@@ -796,7 +785,7 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3 pt-[16px] text-[#6f7f92]">
                      <a className="flex items-center gap-1 text-current no-underline">
-                        {displayReaction()}{' '}
+                        {displayReaction()}
                         <span className="text-sm">
                            {(reaction_count.total || 0) > 0
                               ? (reaction_count.total || 0) > 1000
@@ -874,7 +863,5 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
       </div>
    )
 }
-
-CommentList.displayName = 'CommentList'
 
 export default CommentList

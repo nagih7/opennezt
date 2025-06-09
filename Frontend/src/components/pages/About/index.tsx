@@ -1,7 +1,7 @@
 import React from 'react'
 import ProfileGroup from './components/ProfileGroup'
 import ProfileOverview from './components/ProfileOverview'
-import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
+import { OPENNEZT_LOGO_GRADIENT } from '~/config/constants'
 import { useProfile, useProfileActive } from './hooks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/UI/tabs'
 import { IconlyMessage, IconlyProfile, IconlyUser } from '~/components/UI/Iconly'

@@ -1,4 +1,4 @@
-import { getMyProjectAccess } from 'api/activity'
+import { getMyProjectAccess } from '~/api/activity'
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 import AccessBox from './AccessBox/Index'

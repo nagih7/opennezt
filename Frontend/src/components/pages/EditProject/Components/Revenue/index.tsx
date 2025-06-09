@@ -7,7 +7,7 @@ import ProjectCard from '../ProjectCard'
 import InputCustom from 'components/UI/InputCustom'
 import SelectCustom from 'components/UI/SelectCustom'
 import { IconlyDelete } from 'components/UI/Iconly'
-import { CURRENCY } from 'utils/constants'
+import { CURRENCY } from '~/config/constants'
 import { useEditRevenue } from './useEditRevenue'
 
 const currencyFramework = createListCollection({

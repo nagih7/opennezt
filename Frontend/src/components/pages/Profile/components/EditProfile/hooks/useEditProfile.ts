@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
-import { useDispatch } from "react-redux"
-import { updateUser } from "~/api/profile"
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { updateUser } from '~/api/profile'
 
 interface DataInfoUser {
    name: string
@@ -55,11 +55,11 @@ const useEditProfile = () => {
       dispatch(updateUser(dataInfoUser) as any)
    }
    return {
-        dataInfoUser,
-        setDataInfoUser,
-        loadingBtnUpdateInfoUser,
-        handleChangeInput,
-        handleConfirmSaveInfoUser,
+      dataInfoUser,
+      setDataInfoUser,
+      loadingBtnUpdateInfoUser,
+      handleChangeInput,
+      handleConfirmSaveInfoUser,
    }
 }
 

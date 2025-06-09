@@ -6,7 +6,7 @@ import { useProfileAvatar } from '../hooks'
 import MatchingProfile from './MatchingProfile'
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '~/components/UI/dialog'
 import { Avatar, AvatarImage } from '~/components/UI/avatar'
-import { AVATAR_DEFAULT } from '~/utils/constants'
+import { AVATAR_DEFAULT } from '~/config/constants'
 import { Input } from '~/components/UI/input'
 import { FaCheckCircle } from 'react-icons/fa'
 
@@ -80,7 +80,6 @@ const ProfileOverview: React.FC = () => {
                   </DialogContent>
                </Dialog>
                <h5 className="text-[#000000] font-bold text-xs md:text-lg flex gap-1 items-center">
-
                   {authUser?.name}
                   <FaCheckCircle className="text-blue-500" />
                </h5>

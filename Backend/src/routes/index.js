@@ -13,6 +13,8 @@ import profileRouter from './profileRouter'
 import talentRouter from './talentRouter'
 import linkPreviewRouter from './linkPreviewRouter'
 import interviewRouter from './interviewRouter'
+import optimizedArticleRouter from './optimizedArticleRouter'
+import performanceRouter from './performanceRouter'
 
 export const userSockets = {}
 
@@ -37,6 +39,8 @@ function route(app, io) {
     app.use('/talents', talentRouter)
     app.use('/link-preview', linkPreviewRouter)
     app.use('/interview', interviewRouter)
+    app.use('/optimized-articles', optimizedArticleRouter)
+    app.use('/performance', performanceRouter)
 
     app.get('/', (req, res) => {
         res.json({

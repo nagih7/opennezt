@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import RightSidebar from '~/components/common/RightSidebar'
 import { useDispatch, useSelector } from 'react-redux'
-import { getProjectDetailsActivities } from 'api/activity'
+import { getProjectDetailsActivities } from '~/api/activity'
 import { useParams } from 'react-router-dom'
 import { RootState } from 'store/types'
 import { AppDispatch } from '~/store'

@@ -1,10 +1,10 @@
 import React from 'react'
 import { IconlyTimeCircle, IconlyArrowRight } from 'components/UI/Iconly'
-import { BsArrowsAngleExpand } from "react-icons/bs";
+import { BsArrowsAngleExpand } from 'react-icons/bs'
 // import useHome from '../../useHome'
 import { BaseProjectProps } from '~/types'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/UI/avatar'
-import { OPENNEZT_LOGO } from '~/utils/constants'
+import { OPENNEZT_LOGO } from '~/config/constants'
 
 interface InterviewCardProps {
    index: number
@@ -15,8 +15,8 @@ interface InterviewCardProps {
 
 export const InterviewCard: React.FC<InterviewCardProps> = ({ project, onInterviewPractice, onViewDetail, index }) => {
    const gradients = [
-      'bg-gradient-to-r from-[#B7445580] to-[#CBA9AE33]', 
-      'bg-gradient-to-r from-[#0A5D9980] to-[#A9D6FF33]', 
+      'bg-gradient-to-r from-[#B7445580] to-[#CBA9AE33]',
+      'bg-gradient-to-r from-[#0A5D9980] to-[#A9D6FF33]',
       'bg-gradient-to-r from-[#56368780] to-[#877A9A33]',
    ]
 
@@ -36,7 +36,7 @@ export const InterviewCard: React.FC<InterviewCardProps> = ({ project, onIntervi
             </div>
             <div className="group-hover:flex items-center transition-all duration-700 ease-in-out hidden absolute right-0 top-0 bg-[#ffffff] rounded-lg m-[10px] cursor-pointer">
                <span className="p-2 border-r">Share</span>
-               <BsArrowsAngleExpand className='w-3 h-3 mx-3'/>
+               <BsArrowsAngleExpand className="w-3 h-3 mx-3" />
             </div>
          </div>
          <div className="p-[10px] bg-[#ffffff] rounded-xl">

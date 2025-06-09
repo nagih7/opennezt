@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { IconlyActivity, IconlyChart, IconlyUser, IconlyWallet } from 'components/UI/Iconly'
 import { useSelector } from 'react-redux'
-import { getTotalUsers } from 'api/manage'
+import { getTotalUsers } from '~/api/manage'
 import store from '~/store'
 import { useNavigate } from 'react-router-dom'
 

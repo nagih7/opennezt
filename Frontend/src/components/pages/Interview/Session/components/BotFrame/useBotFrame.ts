@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { RootState, useAppDispatch, useAppSelector } from '~/store'
 import { setCurrentAction } from '~/store/modules/interview'
 import { createSyncedAudioVideo, SyncedAudioVideoController, stopAllAudio } from '~/utils/audio/audioHandler'
-import { OPENNEZT_INTERVIEW_LISTEN, OPENNEZT_INTERVIEW_SPEAK } from '~/utils/constants'
+import { OPENNEZT_INTERVIEW_LISTEN, OPENNEZT_INTERVIEW_SPEAK } from '~/config/constants'
 
 const useBotFrame = () => {
    const dispatch = useAppDispatch()

@@ -5,7 +5,7 @@ import { ROUTE_CONFIG } from '~/config/constants'
 import { useSocket } from '~/contexts'
 import { useAppSelector } from '~/store'
 import { BaseChatProps, BaseConversationProps, ChatProps, MessageProps } from '~/types'
-import { MESSAGE_TYPE } from '~/utils/constants'
+import { MESSAGE_TYPE } from '~/config/constants'
 
 const useChat = () => {
    const navigate = useNavigate()

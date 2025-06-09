@@ -1,5 +1,4 @@
 import { Dispatch } from 'redux'
-import { AnyAction } from 'redux-saga'
 import { Socket } from 'socket.io-client'
 
 // Base API props
@@ -19,7 +18,7 @@ export interface BaseSocketProps {
 }
 
 export interface ReduxApiProps extends BaseApiProps {
-   actionTypes: [() => AnyAction, (data: any) => AnyAction, (error: any) => AnyAction]
+   actionTypes: [() => any, (data: any) => any, (error: any) => any]
    dispatch: Dispatch
    getState: () => any
 }

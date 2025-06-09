@@ -19,7 +19,7 @@ import {
 import { storageUtils } from './utils/storage.utils'
 import { analyticsUtils } from './utils/analytics.utils'
 import { createSubscriptionManager } from './utils/subscription-manager.utils'
-import urlBase64ToUint8Array from '../../utils/webpush/urlBase64ToUint8Array.js'
+import urlBase64ToUint8Array from './utils/urlBase64ToUint8Array.js'
 import { WEBPUSH_CONSTANTS, ERROR_MESSAGES } from './webpush.constants'
 
 export const WebPushProvider: React.FC<WebPushProviderProps> = ({

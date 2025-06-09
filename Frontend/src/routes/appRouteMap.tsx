@@ -1,4 +1,12 @@
-import { IconlyAddUser, IconlyChat, IconlyFolder, IconlyHome, IconlyProfile, IconlyWork } from 'components/UI/Iconly'
+import {
+   IconlyActivity,
+   IconlyAddUser,
+   IconlyChat,
+   IconlyFolder,
+   IconlyHome,
+   IconlyProfile,
+   IconlyWork,
+} from 'components/UI/Iconly'
 import { RouteConfig } from 'types/route'
 import { ROUTE_CONFIG, Sidebar } from '~/config/constants'
 
@@ -12,7 +20,7 @@ const appRouteMap: RouteConfig[] = [
    },
    // {
    //    label: Sidebar.ACTIVITY,
-   //    icon: <IconlyWork size={24} color="#fff" />,
+   //    icon: <IconlyActivity size={24} color="#fff" />,
    //    path: ROUTE_CONFIG.USER.FEED.PREFIX,
    //    routeActive: [ROUTE_CONFIG.USER.FEED.PREFIX, ROUTE_CONFIG.USER.FEED.DETAIL],
    //    permissions: ['feed_page'],
@@ -28,7 +36,21 @@ const appRouteMap: RouteConfig[] = [
       label: Sidebar.PROJECT,
       icon: <IconlyFolder size={24} color="#fff" />,
       path: ROUTE_CONFIG.USER.PROJECT.PREFIX,
-      routeActive: [ROUTE_CONFIG.USER.PROJECT.PREFIX],
+      routeActive: [
+         ROUTE_CONFIG.USER.PROJECT.PREFIX,
+         ROUTE_CONFIG.USER.PROJECT.ME.PREFIX,
+         ROUTE_CONFIG.USER.PROJECT.ME.DETAIL,
+         ROUTE_CONFIG.USER.PROJECT.CREATE.PREFIX,
+         ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC,
+         ROUTE_CONFIG.USER.PROJECT.CREATE.STAGE,
+         ROUTE_CONFIG.USER.PROJECT.CREATE.REVENUE,
+         ROUTE_CONFIG.USER.PROJECT.CREATE.FUNDING,
+         ROUTE_CONFIG.USER.PROJECT.CREATE.DESCRIPTION,
+         ROUTE_CONFIG.USER.PROJECT.CREATE.LOGO,
+         ROUTE_CONFIG.USER.PROJECT.CREATE.BACKGROUND,
+         ROUTE_CONFIG.USER.PROJECT.CREATE.INVITE,
+         ROUTE_CONFIG.USER.PROJECT.CREATE.MEDIA,
+      ],
       permissions: ['projects_page'],
    },
    {

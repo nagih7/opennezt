@@ -1,7 +1,7 @@
 import React from 'react'
 import { Avatar, Tabs } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
-import { PROJECT_INVITATION_NOTIFICATION, WAITING_STATUS } from 'utils/constants'
+import { PROJECT_INVITATION_NOTIFICATION, WAITING_STATUS } from '~/config/constants'
 import { RootState } from '~/store'
 import { Button } from '~/components/UI/button'
 

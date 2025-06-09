@@ -1,7 +1,7 @@
 import React from 'react'
 import { IconlyDocument, IconlyUser } from 'components/UI/Iconly'
 import { Avatar, Button, Image } from '@chakra-ui/react'
-import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
+import { OPENNEZT_LOGO_GRADIENT } from '~/config/constants'
 import { useProjectBox, UseProjectBoxProps } from './useProjectBox'
 
 const ProjectBox: React.FC<UseProjectBoxProps> = (props) => {

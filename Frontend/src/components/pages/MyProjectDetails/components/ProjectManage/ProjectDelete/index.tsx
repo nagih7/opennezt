@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Tabs } from '@chakra-ui/react'
-import { toaster } from 'components/UI/toaster'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteMyProject } from 'api/project'
+import { deleteMyProject } from '~/api/project'
 import { RootState } from 'store/types'
 import { AppDispatch } from '~/store'
 
@@ -18,10 +17,10 @@ const ProjectDelete: React.FC = () => {
       if (confirmDelete) {
          dispatch(deleteMyProject(myProjectDetails._id))
       } else {
-         toaster.create({
-            title: 'Please confirm that you understand the consequences of deleting this project.',
-            type: 'error',
-         })
+         // toaster.create({
+         //    title: 'Please confirm that you understand the consequences of deleting this project.',
+         //    type: 'error',
+         // })
       }
    }
 

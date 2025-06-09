@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { onChangeFormCreateProject } from 'store/modules/project'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
 import { Button, ButtonGroup } from '@chakra-ui/react'
-import { PROJECT_ADDITIONAL_INFO_FIELDS } from 'utils/constants/additionalInfor'
+import { PROJECT_ADDITIONAL_INFO_FIELDS } from '~/config/constants/profile'
 import { RootState } from '~/store'
 import { ROUTE_CONFIG } from '~/config/constants/routes'
 

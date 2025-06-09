@@ -1,7 +1,7 @@
 import styles from '../../styles.module.scss'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getTotalUsers } from 'api/manage'
+import { getTotalUsers } from '~/api/manage'
 
 const ManageHeader = () => {
    const dispatch = useDispatch()

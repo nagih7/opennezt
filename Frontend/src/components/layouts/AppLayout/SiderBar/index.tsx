@@ -5,7 +5,7 @@ import useSidebar from './useSidebar'
 import { RouteConfig } from '~/types'
 import { useLocation } from 'react-router-dom'
 import { FaCircleCheck } from 'react-icons/fa6'
-import { AVATAR_DEFAULT } from '~/utils/constants'
+import { AVATAR_DEFAULT } from '~/config/constants'
 import { Avatar, AvatarImage } from '~/components/UI/avatar'
 import { ROUTE_CONFIG } from '~/config/constants'
 

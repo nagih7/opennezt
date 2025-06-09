@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { toaster } from '~/components/UI/toaster'
 
 // Type definitions
 interface PermissionStatus {
@@ -72,10 +71,10 @@ export const useInterviewPreview = (): UseInterviewReturn => {
       // Check if we're in a secure context (HTTPS or localhost)
       if (!window.isSecureContext) {
          setError('Media devices can only be accessed in a secure context (HTTPS or localhost)')
-         toaster.create({
-            type: 'error',
-            title: 'This page must be accessed via HTTPS to use cameras and microphones.',
-         })
+         // toaster.create({
+         //    type: 'error',
+         //    title: 'This page must be accessed via HTTPS to use cameras and microphones.',
+         // })
       }
    }, [])
 
@@ -85,10 +84,10 @@ export const useInterviewPreview = (): UseInterviewReturn => {
          // ...existing code...
          if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
             setError("Your browser doesn't support media device access.")
-            toaster.create({
-               type: 'error',
-               title: "Your browser doesn't support media device access.",
-            })
+            // toaster.create({
+            //    type: 'error',
+            //    title: "Your browser doesn't support media device access.",
+            // })
             return
          }
 
@@ -153,18 +152,18 @@ export const useInterviewPreview = (): UseInterviewReturn => {
             if (videoInputs.length > 0) {
                setSelectedVideo(videoInputs[0])
             } else if (videoInputs.length === 0) {
-               toaster.create({
-                  type: 'warning',
-                  title: 'No video devices detected. Please connect a camera to continue.',
-               })
+               // toaster.create({
+               //    type: 'warning',
+               //    title: 'No video devices detected. Please connect a camera to continue.',
+               // })
             }
          } catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : String(error)
             setError(`Failed to access media devices: ${errorMessage}`)
-            toaster.create({
-               type: 'error',
-               title: 'Failed to access media devices. Please check your permissions.',
-            })
+            // toaster.create({
+            //    type: 'error',
+            //    title: 'Failed to access media devices. Please check your permissions.',
+            // })
          }
       }
 
@@ -207,10 +206,10 @@ export const useInterviewPreview = (): UseInterviewReturn => {
             .catch((error: unknown) => {
                const errorMessage = error instanceof Error ? error.message : String(error)
                setError(`Failed to start video: ${errorMessage}`)
-               toaster.create({
-                  type: 'error',
-                  title: 'Failed to start camera. Please check your permissions.',
-               })
+               // toaster.create({
+               //    type: 'error',
+               //    title: 'Failed to start camera. Please check your permissions.',
+               // })
             })
       }
    }, [selectedVideo])
@@ -261,19 +260,19 @@ export const useInterviewPreview = (): UseInterviewReturn => {
             }
          }
 
-         toaster.create({
-            type: 'success',
-            title: 'Permissions granted successfully!',
-         })
+         // toaster.create({
+         //    type: 'success',
+         //    title: 'Permissions granted successfully!',
+         // })
 
          setError(null)
       } catch (error: unknown) {
          const errorMessage = error instanceof Error ? error.message : String(error)
          setError(`Permission request failed: ${errorMessage}`)
-         toaster.create({
-            type: 'error',
-            title: 'Permission request failed. Please check your browser settings.',
-         })
+         // toaster.create({
+         //    type: 'error',
+         //    title: 'Permission request failed. Please check your browser settings.',
+         // })
       }
    } // Xử lý sự kiện chọn thiết bị
    const handleDeviceSelect = (type: DeviceType, device: MediaDeviceInfo) => {
@@ -316,10 +315,10 @@ export const useInterviewPreview = (): UseInterviewReturn => {
       // Ask user to grant permissions again
       requestMediaPermissions()
 
-      toaster.create({
-         type: 'info',
-         title: 'Attempting to detect devices again...',
-      })
+      // toaster.create({
+      //    type: 'info',
+      //    title: 'Attempting to detect devices again...',
+      // })
    }
 
    return {

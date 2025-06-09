@@ -7,9 +7,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { onChangeFormCreateProject } from 'store/modules/project'
 import InputCustom from 'components/UI/InputCustom'
 import { createListCollection } from '@chakra-ui/react'
-import { FUNDING_SOURCES, CURRENCY } from 'utils/constants'
+import { FUNDING_SOURCES, CURRENCY } from '~/config/constants'
 import SelectCustom from 'components/UI/SelectCustom'
-import { toaster } from 'components/UI/toaster'
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import { RootState } from '~/store'
 import { ROUTE_CONFIG } from '~/config/constants/routes'
@@ -82,10 +81,10 @@ const FundingSources: React.FC = () => {
    const handleAddFundingSource = () => {
       // VERIFY
       if (formData.some((item) => !item.name || !item.amount || !item.currency)) {
-         toaster.create({
-            title: `Please fill all fields.`,
-            type: 'error',
-         })
+         // toaster.create({
+         //    title: `Please fill all fields.`,
+         //    type: 'error',
+         // })
          return
       }
       setFormData([...formData, { name: '', amount: '', currency: '' }])

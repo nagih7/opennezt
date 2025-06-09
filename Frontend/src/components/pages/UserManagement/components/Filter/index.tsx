@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './styles.module.scss'
-import SelectCustom from '../../../../../components/UI/Select/index'
-import { STATUS_USER } from '../../../../../utils/constants/app'
+import SelectCustom from '~/components/UI/Select/index'
+import { STATUS_USER } from '~/config/constants'
 
 interface FilterProps {
    onClose?: () => void

@@ -1,19 +1,20 @@
 import React, { forwardRef, useState, useRef, useEffect } from 'react'
 import { GoPlus } from 'react-icons/go'
-import { IconlyBookmark, IconlyDelete, IconlyMoreCircle } from 'components/UI/Iconly'
-import { IconlyChat } from 'components/UI/Iconly'
-import { IconlyHeart } from 'components/UI/Iconly'
-import { IconlySend } from 'components/UI/Iconly'
-import { IconlyEdit } from 'components/UI/Iconly'
+import { IconlyDelete } from '~/components/UI/Iconly'
+import { IconlyChat } from '~/components/UI/Iconly'
+import { IconlyHeart } from '~/components/UI/Iconly'
+import { IconlySend } from '~/components/UI/Iconly'
+import { IconlyEdit } from '~/components/UI/Iconly'
+import { IconlyBookmark } from '~/components/UI/Iconly'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
 import { Button } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { handleGetLinkPreview } from 'api/linkPreview'
+import { handleGetLinkPreview } from '~/api/linkPreview'
 import { ROUTE_CONFIG } from '~/config/constants'
 import { Article as ArticleType } from '~/types'
 import { useAppDispatch, useAppSelector } from '~/store'
 import { Avatar, AvatarImage } from '~/components/UI/avatar'
-import { AVATAR_DEFAULT } from '~/utils/constants'
+import { AVATAR_DEFAULT } from '~/config/constants'
 
 interface BookmarkData {
    article_id: string
@@ -28,16 +29,16 @@ interface ArticleProps {
    onSelect: (feed: ArticleType) => Promise<void>
    onEdit: (feed: ArticleType) => Promise<void>
    onDelete: (id: string) => void
-   onBookmark: (data: BookmarkData) => Promise<void>
    bookmark?: string
+   onBookmark: (data: BookmarkData) => Promise<void>
 }
 
 const Article = forwardRef<HTMLDivElement, ArticleProps>(
-   ({ feed, reaction, onReaction, isLoading, onSelect, onEdit, onDelete, onBookmark, bookmark }, ref) => {
+   ({ feed, reaction, onReaction, isLoading, onSelect, onEdit, onDelete, bookmark, onBookmark }, ref) => {
       const { _id, user, project, content, reaction_count, created_at, comment_count, link_preview } = feed
       const dispatch = useAppDispatch()
       const { linkDataArticle, isLoadingGetLinkPreview } = useAppSelector((state) => state.linkPreview)
-      const [previewData, setPreviewData] = useState(null)
+      const [previewData, setPreviewData] = useState<any>(null)
 
       // Thêm useEffect để lấy link preview data
       useEffect(() => {
@@ -95,7 +96,7 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
                onClick={() => {
                   // Kiểm tra URL trước khi mở
                   try {
-                     new URL(previewData.url)
+                     new URL(previewData?.url)
                      window.open(previewData.url, '_blank')
                   } catch (error) {
                      console.error('Invalid URL:', previewData.url)
@@ -126,7 +127,7 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
       }
 
       const navigate = useNavigate()
-      const displayReaction = () => {
+      const displayReaction = (reaction: string | undefined | null) => {
          if (reaction == 'like') {
             return (
                <div onClick={() => handleReactionClick('like')} style={{ cursor: 'pointer' }}>
@@ -134,10 +135,10 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
                </div>
             )
          }
-         if (reaction == undefined) {
+         if (reaction == undefined || reaction == null) {
             return (
                <div onClick={() => handleReactionClick('like')} style={{ cursor: 'pointer' }}>
-                  <IconlyHeart size={25} color={'#6f7f92'} backgroundColor="none" />
+                  <IconlyHeart size={25} color={'#6f7f92'} backgroundColor={'transparent'} />
                </div>
             )
          }
@@ -170,12 +171,34 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
          onDelete(_id)
       }
 
+      // Bookmark functionality
+      const handleBookmarkClick = () => {
+         const isBookmarked = bookmark === 'yes'
+         onBookmark({
+            article_id: _id,
+            marked: isBookmarked ? 'no' : 'yes',
+         })
+      }
+
+      const displayBookmark = (bookmark: string | undefined) => {
+         const isBookmarked = bookmark === 'yes'
+         return (
+            <div onClick={handleBookmarkClick} style={{ cursor: 'pointer' }}>
+               <IconlyBookmark
+                  size={22}
+                  color={isBookmarked ? '#2f65b9' : '#6f7f92'}
+                  backgroundColor={isBookmarked ? '#2f65b9' : 'transparent'}
+               />
+            </div>
+         )
+      }
+
       //
       const [isShowMore, setIsShowMore] = useState(false)
       const handleClickMore = () => {
          setIsShowMore(!isShowMore)
       }
-      const dropdownRef = useRef(null)
+      const dropdownRef = useRef<HTMLDivElement>(null)
 
       useEffect(() => {
          const handleClickOutside = (event: any) => {
@@ -190,9 +213,6 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
          }
       }, [])
 
-      //==================================================================================================
-      //Posted Date Logic
-      //==================================================================================================
       const postedAt = new Date(created_at)
       const postedDate = postedAt.toDateString()
       const today = new Date()
@@ -200,48 +220,6 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
       const hour = differenceInHours(today, postedAt) % 24
       const minute = differenceInMinutes(today, postedAt) % 60
       const second = differenceInSeconds(today, postedAt) % 60
-      //==================================================================================================
-      //End of Posted Date Logic
-      //==================================================================================================
-
-      const handleBookmark = (data: any) => {
-         onBookmark(data)
-      }
-
-      const displayBookmark = () => {
-         if (bookmark === 'yes') {
-            return (
-               <div
-                  className="flex items-start pr-4 mt-2 text-2xl"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() =>
-                     handleBookmark({
-                        article_id: feed?._id,
-                        marked: 'no',
-                     })
-                  }
-               >
-                  <IconlyBookmark size={25} color={'#6f7f92'} backgroundColor={'#6f7f92'} />
-               </div>
-            )
-         }
-         if (bookmark === 'no' || bookmark === undefined) {
-            return (
-               <div
-                  className="flex items-start pr-4 mt-2 text-2xl"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() =>
-                     handleBookmark({
-                        article_id: feed?._id,
-                        marked: 'yes',
-                     })
-                  }
-               >
-                  <IconlyBookmark size={25} color={'#6f7f92'} backgroundColor={'none'} />
-               </div>
-            )
-         }
-      }
 
       const authUser = useAppSelector((state) => state.auth.authUser)
 
@@ -347,12 +325,12 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
                            >
                               {user[0]?.name}
                            </a>
-                           <GoPlus className="text-[#3897f0]" />
                         </div>
                         {/* {user[0].name} */}
-                        {project[0] ? (
+                        {project && project[0] && (
                            <div className="hidden md:block">
                               {' '}
+                              <GoPlus className="text-[#3897f0]" />
                               <span className="text-sm">posted in</span>
                               <span
                                  className="cursor-pointer"
@@ -360,11 +338,6 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
                               >
                                  <b> {project[0]?.name}</b>
                               </span>
-                           </div>
-                        ) : (
-                           <div className="hidden md:block">
-                              {' '}
-                              <span className="text-sm">created a new post</span>
                            </div>
                         )}
                      </div>
@@ -385,7 +358,6 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
                   <div>
                      <div className="relative flex" ref={dropdownRef}>
                         {verifyAction()}
-                        {displayBookmark(bookmark)}
                         {isShowMore && (
                            <div className="absolute top-full right-0 bg-white shadow-lg rounded-md z-[99999] min-w-[200px] border border-gray-100">
                               <ul className="p-0 m-2">
@@ -565,10 +537,10 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
                   <a className="flex items-center gap-1 text-current no-underline">
                      {displayReaction(reaction)}
                      <span className="text-sm">
-                        {reaction_count > 0
-                           ? reaction_count > 1000
-                              ? Math.floor(reaction_count / 1000) + 'k'
-                              : reaction_count
+                        {(reaction_count.total || 0) > 0
+                           ? (reaction_count.total || 0) > 1000
+                              ? Math.floor((reaction_count.total || 0) / 1000) + 'k'
+                              : reaction_count.total
                            : ''}
                      </span>
                   </a>
@@ -586,6 +558,8 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
                            : ' '}{' '}
                      </span>
                   </a>
+                  {/* Bookmark Button */}
+                  <a className="flex items-center gap-1 text-current no-underline">{displayBookmark(bookmark)}</a>
                </div>
                <div className="flex items-center gap-1 pt-[16px] text-[#6f7f92]">
                   <IconlySend size={22} color={'#6f7f92'} />
@@ -596,7 +570,5 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
       )
    }
 )
-
-Article.displayName = 'Article'
 
 export default Article

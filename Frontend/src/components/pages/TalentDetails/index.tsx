@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import ProfessionalProfile from './components/ProfessionalProfile'
 import ProfileOverview from './components/ProfileOverview'
 import { useParams } from 'react-router-dom'
-import { getTalentDetails } from 'api/talent'
-import { OPENNEZT_LOGO_GRADIENT } from 'utils/constants'
+import { getTalentDetails } from '~/api/talent'
+import { OPENNEZT_LOGO_GRADIENT } from '~/config/constants'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 
 const TalentDetails: React.FC = () => {

@@ -1,7 +1,7 @@
 import moment from 'moment'
 import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/UI/avatar'
-import { AVATAR_DEFAULT } from '~/utils/constants'
+import { AVATAR_DEFAULT } from '~/config/constants'
 
 interface ChatCardProps {
    conversation: any

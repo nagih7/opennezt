@@ -5,19 +5,38 @@ import withSuspense from './loadingFallback'
 import { LoaderArgs } from '~/types'
 import { ROUTE_CONFIG } from '~/config/constants/routes'
 
-// Layouts
-const AppLayout = React.lazy(() => import('components/layouts/AppLayout'))
+// Layouts with preloading
+const AppLayout = React.lazy(() =>
+   import('components/layouts/AppLayout').then((module) => {
+      // Preload critical components
+      import('components/pages/Home')
+      return module
+   })
+)
 const AuthLayout = React.lazy(() => import('components/layouts/AuthLayout'))
 
-// Auth pages
-const Login = React.lazy(() => import('components/pages/Auth/Login'))
+// Auth pages - grouped for better caching
+const Login = React.lazy(() =>
+   import('components/pages/Auth/Login').then((module) => {
+      // Preload related auth components
+      import('components/pages/Auth/Register')
+      return module
+   })
+)
 const Register = React.lazy(() => import('components/pages/Auth/Register'))
 const ForgotPassword = React.lazy(() => import('components/pages/Auth/ForgotPassword'))
 const VerifyAuth = React.lazy(() => import('components/pages/Auth/Verify'))
 const ResetPassword = React.lazy(() => import('components/pages/Auth/ResetPassword'))
 
-// Main pages
-const Home = React.lazy(() => import('components/pages/Home'))
+// Main pages with intelligent preloading
+const Home = React.lazy(() =>
+   import('components/pages/Home').then((module) => {
+      // Preload likely next pages
+      import('components/pages/Profile')
+      import('components/pages/Newfeeds')
+      return module
+   })
+)
 const Profile = React.lazy(() => import('components/pages/Profile'))
 const About = React.lazy(() => import('components/pages/About'))
 const Chat = React.lazy(() => import('components/pages/Chat'))
@@ -62,12 +81,12 @@ const EditProfileFeatures = {
 
 // Account Settings related pages
 const AccountSettingsFeatures = {
-   Main: React.lazy(() => import('components/pages/AccountSettings')),
-   ProfileVisibility: React.lazy(() => import('components/pages/AccountSettings/components/ProfileVisibility')),
-   PrivacyAndSecurity: React.lazy(() => import('components/pages/AccountSettings/components/PrivacyAndSecurity')),
-   Shop: React.lazy(() => import('components/pages/AccountSettings/components/Shop')),
-   BlockList: React.lazy(() => import('components/pages/AccountSettings/components/BlockList')),
-   ExportData: React.lazy(() => import('components/pages/AccountSettings/components/ExportData')),
+   Main: React.lazy(() => import('components/pages/Settings')),
+   ProfileVisibility: React.lazy(() => import('components/pages/Settings/components/ProfileVisibility')),
+   PrivacyAndSecurity: React.lazy(() => import('components/pages/Settings/components/PrivacyAndSecurity')),
+   Shop: React.lazy(() => import('components/pages/Settings/components/Shop')),
+   BlockList: React.lazy(() => import('components/pages/Settings/components/BlockList')),
+   ExportData: React.lazy(() => import('components/pages/Settings/components/ExportData')),
 }
 
 // Talent related pages
@@ -78,16 +97,17 @@ const TalentFeatures = {
    ProjectDetailsBySeek: React.lazy(() => import('components/pages/ProjectDetailsBySeek')),
 }
 
-// const FeedFeatures = {
-//    Feed: React.lazy(() => import('components/pages/Newfeeds')),
-// }
+const FeedFeatures = {
+   Feed: React.lazy(() => import('components/pages/Newfeeds')),
+}
 
 // Other components
 const Interview = React.lazy(() => import('~/components/pages/InterviewBeta/Preview'))
 
 // Admin related pages
-// const AdminFeatures = {
-// }
+const AdminFeatures = {
+   PerformanceDashboard: React.lazy(() => import('~/components/admin/PerformanceDashboard')),
+}
 
 // Define a helper function to create properly typed loader functions
 const createLoader = (
@@ -338,87 +358,6 @@ const router: RouteObject[] = [
       ),
       loader: createLoader(true, 'LOAD_PROJECT_DETAILS_PAGE'),
    },
-   {
-      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.BASIC,
-      element: withSuspense(
-         <AppLayout>
-            <ProjectFeatures.EditProject.Detail />
-         </AppLayout>
-      ),
-      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
-   },
-   {
-      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.STAGE,
-      element: withSuspense(
-         <AppLayout>
-            <ProjectFeatures.EditProject.Stage />
-         </AppLayout>
-      ),
-      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
-   },
-   {
-      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.REVENUE,
-      element: withSuspense(
-         <AppLayout>
-            <ProjectFeatures.EditProject.Revenue />
-         </AppLayout>
-      ),
-      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
-   },
-   {
-      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.FUNDING,
-      element: withSuspense(
-         <AppLayout>
-            <ProjectFeatures.EditProject.FundingSources />
-         </AppLayout>
-      ),
-      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
-   },
-   {
-      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.DESCRIPTION,
-      element: withSuspense(
-         <AppLayout>
-            <ProjectFeatures.EditProject.AdditionalInfo />
-         </AppLayout>
-      ),
-      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
-   },
-   {
-      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.LOGO,
-      element: withSuspense(
-         <AppLayout>
-            <ProjectFeatures.EditProject.Logo />
-         </AppLayout>
-      ),
-      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
-   },
-   {
-      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.BACKGROUND,
-      element: withSuspense(
-         <AppLayout>
-            <ProjectFeatures.EditProject.Background />
-         </AppLayout>
-      ),
-      loader: createLoader(true, 'LOAD_EDIT_PROJECT_PAGE'),
-   },
-   {
-      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.MEMBER,
-      element: withSuspense(
-         <AppLayout>
-            <ProjectFeatures.MyProject.Members />
-         </AppLayout>
-      ),
-      loader: createLoader(true, 'LOAD_PROJECT_MEMBERS_PAGE'),
-   },
-   {
-      path: ROUTE_CONFIG.USER.PROJECT.ME.EDIT.SETTING,
-      element: withSuspense(
-         <AppLayout>
-            <ProjectFeatures.MyProject.ProjectManage />
-         </AppLayout>
-      ),
-      loader: createLoader(true, 'LOAD_PROJECT_SETTING_PAGE'),
-   },
    // Talent routes
    {
       path: ROUTE_CONFIG.USER.RECRUIT_TALENT.PREFIX,
@@ -531,14 +470,25 @@ const router: RouteObject[] = [
       element: withSuspense(<Interview />),
       loader: createLoader(true, 'LOAD_INTERVIEW_PAGE'),
    },
-   // {
-   //    path: ROUTE_CONFIG.USER.FEED.PREFIX,
-   //    element: withSuspense(
-   //       <AppLayout>
-   //          <FeedFeatures.Feed />
-   //       </AppLayout>
-   //    ),
-   // },
+
+   // Admin routes
+   {
+      path: ROUTE_CONFIG.ADMIN.PERFORMANCE,
+      element: withSuspense(
+         <AppLayout>
+            <AdminFeatures.PerformanceDashboard />
+         </AppLayout>
+      ),
+      loader: createLoader(true, 'LOAD_PERFORMANCE_DASHBOARD_PAGE', ['admin']),
+   },
+   {
+      path: ROUTE_CONFIG.USER.FEED.PREFIX,
+      element: withSuspense(
+         <AppLayout>
+            <FeedFeatures.Feed />
+         </AppLayout>
+      ),
+   },
 ]
 
 const routes = createBrowserRouter(router)
