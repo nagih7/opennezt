@@ -10,7 +10,7 @@
     "scripts": {
         "start": "nodemon",
         "seed": "babel-node src/seeders",
-        "build": "del-cli build && cross-env NODE_ENV=build babel src -d build -D",
+        "build": "del-cli build && cross-env NODE_ENV=production babel src -d build -D",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix"
     },
