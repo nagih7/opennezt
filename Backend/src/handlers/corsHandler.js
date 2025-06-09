@@ -1,6 +1,8 @@
 import cors from 'cors'
 import { APP_URL_CLIENT, OTHER_URLS_CLIENT, NODE_ENV, APP_ENV } from '@/configs'
 
+console.log('APP_URL_CLIENT', APP_URL_CLIENT)
+
 export const corsOptions = {
     origin:
         NODE_ENV === APP_ENV.DEVELOPMENT
