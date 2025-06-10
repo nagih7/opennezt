@@ -28,6 +28,10 @@ import {
    CommentFormData,
    LinkPreview,
 } from '~/types'
+import { GoPlus } from 'react-icons/go'
+import { useNavigate } from 'react-router-dom'
+import { AVATAR_DEFAULT, ROUTE_CONFIG } from '~/config/constants'
+import { Avatar, AvatarImage } from '~/components/UI/avatar'
 
 interface CommentListComponentProps {
    feed: Article
@@ -54,6 +58,7 @@ interface ReplyCommentList {
 const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onReaction, isLoading, onClose }) => {
    const { _id, user, project, content, reaction_count, created_at, comment_count, link_preview } = feed
    const { linkDataArticle, isLoadingGetLinkPreview } = useAppSelector((state) => state.linkPreview)
+   const navigate = useNavigate()
 
    const {
       comment,
@@ -243,6 +248,9 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
    //Form
    const [isCommentOrReply, setIsCommentOrReply] = useState<'comment' | 'reply'>('comment')
    const [selectedComment, setSelectedComment] = useState<CommentType | undefined>(undefined)
+         const handleViewTalentDetails = (user: any) => {
+            navigate(ROUTE_CONFIG.USER.RECRUIT_TALENT.PREFIX + user._id)
+         }
 
    const handleFormSubmit = useCallback(
       async (formData: CommentFormData) => {
@@ -664,16 +672,28 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
             {/* Add a scrollable container for the content */}
             <div className="flex-1 p-8 pb-24 overflow-y-auto">
                <div className="flex items-center gap-3">
-                  <div className="w-[65px]">
-                     <img src={''} className="w-[65px]  rounded-full" />
+                  <div className="w-[65px] cursor-pointer" onClick={() => handleViewTalentDetails(user[0])}>
+                     <Avatar className="w-[50px] h-[50px] rounded-full ">
+                        <AvatarImage src={user[0]?.avatar || undefined} />
+                        <AvatarImage src={AVATAR_DEFAULT} />
+                     </Avatar>
                   </div>
                   <div className="flex items-center justify-between w-full">
                      <div className="flex flex-col w-9/12 gap-2 text-base font-medium">
                         <div className="flex items-center gap-2">
                            {user[0]?.name}
-                           <FaCircleCheck className="text-[#3897f0]" />
-                           <span className="text-sm">posted in</span>
-                           <span className="">{project?.[0]?.name || 'no name'}</span>
+                           {project && project[0] && (
+                           <div className="hidden md:block">
+                              {' '}
+                              <GoPlus className="text-[#3897f0]" />
+                              <span
+                                 className="cursor-pointer"
+                                 onClick={() => navigate(ROUTE_CONFIG.USER.PROJECT.PREFIX + project[0]?._id)}
+                              >
+                                 <b> {project[0]?.name}</b>
+                              </span>
+                           </div>
+                        )}
                         </div>
                         <span className="text-xs text-gray-500">
                            {day <= 7
