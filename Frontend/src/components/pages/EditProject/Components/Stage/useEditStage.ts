@@ -130,10 +130,7 @@ export const useEditStage = () => {
 
       if (nameSelect === 'industries') {
          if (event.value.length > 2) {
-            // toaster.create({
-            //    type: 'error',
-            //    title: 'You can only select up to 2 industries',
-            // })
+            toast.error('You can only select up to 2 industries')
             return
          }
       }

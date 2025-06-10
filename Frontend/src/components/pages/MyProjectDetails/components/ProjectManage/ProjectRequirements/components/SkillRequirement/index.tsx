@@ -8,6 +8,7 @@ import { updateSkillRequirement } from '~/api/project'
 import { postProjectDetailsActivitiesProjectRequirement } from '~/api/activity'
 import { RootState } from 'store/types'
 import { AppDispatch } from '~/store'
+import { toast } from 'sonner'
 
 interface FormData {
    categories: string[]
@@ -153,10 +154,7 @@ const SkillRequirement: React.FC = () => {
       // Verify if the skill is already added
       const isExist = mySkills.find((skill) => skill._id === formData.skills[0])
       if (isExist) {
-         // toaster.create({
-         //    title: `Skill already added.`,
-         //    type: 'error',
-         // })
+         toast.error('Skill already added.')
       } else {
          setMySkills([...mySkills, ...formData.skillFormat])
          setFormData({

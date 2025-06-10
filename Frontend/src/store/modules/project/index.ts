@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ProjectState } from './types'
+import { toast } from 'sonner'
 
 // Define the initial state with TypeScript typing
 const initialState: ProjectState = {
@@ -94,11 +95,7 @@ const projectSlice = createSlice({
          isLoadingCreateNewProject: true,
       }),
       createNewProjectSuccess: (state, action) => {
-         // toaster.create({
-         //    title: 'Create project successfully',
-         //    description: 'You have successfully created the project',
-         //    type: 'success',
-         // })
+         toast.success('Create project successfully.')
          window.location.href = `/projects/me/${action.payload.data.project_id}`
          return {
             ...state,
@@ -106,11 +103,7 @@ const projectSlice = createSlice({
          }
       },
       createNewProjectFail: (state, action) => {
-         // toaster.create({
-         //    title: `${Object.values(action.payload.data.detail)[0]}`,
-         //    description: 'You have failed to create the project',
-         //    type: 'error',
-         // })
+         toast.error(`${Object.values(action.payload.data.detail)[0]}`)
          return {
             ...state,
             isLoadingCreateNewProject: false,
@@ -181,11 +174,7 @@ const projectSlice = createSlice({
          isLoadingApplyToJoinProject: true,
       }),
       applyToJoinProjectSuccess: (state) => {
-         // toaster.create({
-         //    title: 'Apply to join project successfully',
-         //    description: 'You have successfully applied to join the project',
-         //    type: 'success',
-         // })
+         toast.success('Apply to join project successfully.')
          return {
             ...state,
             isLoadingApplyToJoinProject: false,
@@ -197,11 +186,7 @@ const projectSlice = createSlice({
          }
       },
       applyToJoinProjectFail: (state) => {
-         // toaster.create({
-         //    title: 'Apply to join project failed',
-         //    description: 'You have failed to apply to join the project',
-         //    type: 'error',
-         // })
+         toast.error('Apply to join project failed.')
          return {
             ...state,
             isLoadingApplyToJoinProject: false,
@@ -217,11 +202,7 @@ const projectSlice = createSlice({
          isLoadingDeleteMyProject: true,
       }),
       deleteMyProjectSuccess: (state) => {
-         // toaster.create({
-         //    title: 'Delete project successfully',
-         //    description: 'You have successfully deleted the project',
-         //    type: 'success',
-         // })
+         toast.success('Delete project successfully.')
          window.location.href = '/projects'
          return {
             ...state,
@@ -229,11 +210,7 @@ const projectSlice = createSlice({
          }
       },
       deleteMyProjectFail: (state) => {
-         // toaster.create({
-         //    title: 'Delete project failed',
-         //    description: 'You have failed to delete the project',
-         //    type: 'error',
-         // })
+         toast.error('Delete project failed.')
          return {
             ...state,
             isLoadingDeleteMyProject: false,
@@ -253,10 +230,7 @@ const projectSlice = createSlice({
          isLoadingUpdateRoleRequirement: true,
       }),
       updateRoleRequirementSuccess: (state, action) => {
-         // toaster.create({
-         //    title: 'Update role requirement successfully',
-         //    type: 'success',
-         // })
+         toast.success('Update role requirement successfully.')
          return {
             ...state,
             projectDetails: {
@@ -271,10 +245,7 @@ const projectSlice = createSlice({
          }
       },
       updateRoleRequirementFail: (state) => {
-         // toaster.create({
-         //    title: 'Update role requirement failed',
-         //    type: 'error',
-         // })
+         toast.error('Update role requirement failed.')
          return {
             ...state,
             isLoadingUpdateRoleRequirement: false,
@@ -286,10 +257,7 @@ const projectSlice = createSlice({
          isLoadingUpdateSkillRequirement: true,
       }),
       updateSkillRequirementSuccess: (state, action) => {
-         // toaster.create({
-         //    title: 'Update skill requirement successfully',
-         //    type: 'success',
-         // })
+         toast.success('Update skill requirement successfully.')
          return {
             ...state,
             myProjectDetails: {
@@ -303,10 +271,7 @@ const projectSlice = createSlice({
          }
       },
       updateSkillRequirementFail: (state) => {
-         // toaster.create({
-         //    title: 'Update skill requirement failed',
-         //    type: 'error',
-         // })
+         toast.error('Update skill requirement failed.')
          return {
             ...state,
             isLoadingUpdateSkillRequirement: false,

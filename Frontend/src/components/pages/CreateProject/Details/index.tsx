@@ -5,9 +5,10 @@ import InputCustom from 'components/UI/InputCustom'
 import { onChangeFormCreateProject } from 'store/modules/project'
 import TextAreaCustom from 'components/UI/TextAreaCustom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, ButtonGroup } from '@chakra-ui/react'
 import { RootState } from '~/store'
 import { ROUTE_CONFIG } from '~/config/constants/routes'
+import { toast } from '~/components/UI/toast'
+import { Button } from '~/components/UI/button'
 
 interface FormData {
    name: string
@@ -42,10 +43,7 @@ const Details: React.FC = () => {
    const handleNextStep = () => {
       // VERIFY
       if (!formData.name) {
-         // toaster.create({
-         //    title: `Name is required.`,
-         //    type: 'error',
-         // })
+         toast.error('Name is required.')
          return
       }
       dispatch(onChangeFormCreateProject(formData))
@@ -85,15 +83,12 @@ const Details: React.FC = () => {
                      />
 
                      <div className="flex justify-end">
-                        <ButtonGroup size="sm" variant="outline">
-                           <Button
-                              onClick={handleNext}
-                              height={50}
-                              className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold"
-                           >
-                              CREATE PROJECT AND CONTINUE
-                           </Button>
-                        </ButtonGroup>
+                        <Button
+                           onClick={handleNext}
+                           className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold h-[50px]"
+                        >
+                           CONTINUE
+                        </Button>
                      </div>
                   </div>
                </div>

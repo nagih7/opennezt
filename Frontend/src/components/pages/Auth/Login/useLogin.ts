@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { login, loginWithSocial } from '~/api/auth'
 import { useMatching } from '~/contexts'
 import { useAppDispatch } from '~/store'
@@ -98,13 +99,16 @@ const useLogin = () => {
                   setLoadingLogin(false)
                   if (err.response?.data?.message) {
                      setMessageError(err.response.data.message)
+                     toast.error(err.response.data.message)
                   } else {
                      setMessageError('Login failed. Please try again.')
+                     toast.error('Login failed. Please try again.')
                   }
                })
          },
          onError: (errors) => {
             setErrorDataLogin(errors as LoginPayload)
+            toast.error('Login failed. Please try again.')
          },
       })
    }

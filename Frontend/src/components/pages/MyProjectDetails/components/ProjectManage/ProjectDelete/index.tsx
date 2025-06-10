@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteMyProject } from '~/api/project'
 import { RootState } from 'store/types'
 import { AppDispatch } from '~/store'
+import { toast } from 'sonner'
 
 const ProjectDelete: React.FC = () => {
    const dispatch = useDispatch<AppDispatch>()
@@ -17,10 +18,7 @@ const ProjectDelete: React.FC = () => {
       if (confirmDelete) {
          dispatch(deleteMyProject(myProjectDetails._id))
       } else {
-         // toaster.create({
-         //    title: 'Please confirm that you understand the consequences of deleting this project.',
-         //    type: 'error',
-         // })
+         toast.error('Please confirm that you understand the consequences of deleting this project.')
       }
    }
 

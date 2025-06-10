@@ -1,11 +1,13 @@
 import React from 'react'
 import { IconlyChat, IconlyNotification } from 'components/UI/Iconly'
-import { Avatar, Popover, Portal } from '@chakra-ui/react'
+import { Popover, Portal } from '@chakra-ui/react'
 import Logo from 'assets/images/logo/opennezt_full_black_old.png'
 import PopoverProfile from './components/PopoverProfile.tsx'
 import PopoverMessage from './components/PopoverMessage.tsx'
 import PopoverNotification from './components/PopoverNotification.tsx'
 import useHeader from './useHeader.ts'
+import { Avatar, AvatarImage } from '~/components/UI/avatar'
+import { AVATAR_DEFAULT } from '~/config/constants/asset'
 
 const Header: React.FC = () => {
    const { authUser, unreadNotifications } = useHeader()
@@ -61,12 +63,10 @@ const Header: React.FC = () => {
 
                <Popover.Root positioning={{ placement: 'bottom-end' }}>
                   <Popover.Trigger asChild>
-                     <span className="cursor-pointer">
-                        <Avatar.Root size={'md'}>
-                           <Avatar.Fallback name={authUser?.name} />
-                           <Avatar.Image src={authUser?.avatar} />
-                        </Avatar.Root>
-                     </span>
+                     <Avatar className="w-[40px] h-[40px] cursor-pointer">
+                        <AvatarImage src={authUser?.avatar || undefined} />
+                        <AvatarImage src={AVATAR_DEFAULT} />
+                     </Avatar>
                   </Popover.Trigger>
                   <Portal>
                      <Popover.Positioner>

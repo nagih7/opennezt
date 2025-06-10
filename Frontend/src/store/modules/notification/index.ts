@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { NotificationState } from './types'
+import { toast } from 'sonner'
 
 // Define the initial state with TypeScript typing
 const initialState: NotificationState = {
@@ -63,10 +64,8 @@ const notificationSlice = createSlice({
       }),
       replyNotificationSuccess: (state, action) => {
          const newNotification = action.payload.data
-         // toaster.create({
-         //    title: `Reply notification successfully.`,
-         //    type: 'success',
-         // })
+
+         toast.success('Reply notification successfully.')
          return {
             ...state,
             notifications: state.notifications.map((notification) => {
@@ -82,10 +81,7 @@ const notificationSlice = createSlice({
          }
       },
       replyNotificationFail: (state) => {
-         // toaster.create({
-         //    title: `Reply notification failed.`,
-         //    type: 'error',
-         // })
+         toast.error('Reply notification failed.')
          return {
             ...state,
             isLoadingReplyNotification: false,

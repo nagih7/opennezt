@@ -12,6 +12,7 @@ import SelectCustom from 'components/UI/SelectCustom'
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import { RootState } from '~/store'
 import { ROUTE_CONFIG } from '~/config/constants/routes'
+import { toast } from 'sonner'
 
 const currencyFramework = createListCollection({
    items: CURRENCY['EN'],
@@ -81,10 +82,7 @@ const FundingSources: React.FC = () => {
    const handleAddFundingSource = () => {
       // VERIFY
       if (formData.some((item) => !item.name || !item.amount || !item.currency)) {
-         // toaster.create({
-         //    title: `Please fill all fields.`,
-         //    type: 'error',
-         // })
+         toast.error('Please fill all fields.')
          return
       }
       setFormData([...formData, { name: '', amount: '', currency: '' }])
