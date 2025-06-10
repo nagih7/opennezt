@@ -145,6 +145,7 @@ export interface ArticleState {
    isLoadingGetReplyComments: boolean
    reply_comment_reactions: UserReaction[]
    isLoadingGetReplyCommentReactions: boolean
+   isLoadingCreateOrReplyComment: boolean
 }
 
 export interface ActivityState {

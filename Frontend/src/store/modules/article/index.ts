@@ -28,7 +28,7 @@ const initialState: ArticleState = {
       hasMore: true,
    },
    isLoadingReactComment: false,
-   isLoadingCreateComment: false,
+   isLoadingCreateOrReplyComment: false,
    isLoadingUpdateArticle: false,
    isOpenUpdateForm: false,
    isLoadingDeleteArticle: false,
@@ -259,16 +259,16 @@ const articleSlice = createSlice({
       },
       createComment: (state) => ({
          ...state,
-         isLoadingCreateComment: true,
+         isLoadingCreateOrReplyComment: true,
       }),
       createCommentSuccess: (state, action) => ({
          ...state,
-         isLoadingCreateComment: false,
+         isLoadingCreateOrReplyComment: false,
          createdComment: action.payload.data,
       }),
       createCommentFail: (state) => ({
          ...state,
-         isLoadingCreateComment: true,
+         isLoadingCreateOrReplyComment: true,
          createdComment: {},
       }),
       updateUpdatedArticle: (state, action) => ({
@@ -360,18 +360,18 @@ const articleSlice = createSlice({
       }),
       replyComment: (state) => ({
          ...state,
-         isLoadingReplyComment: true,
+         isLoadingCreateOrReplyComment: true,
          repliedComment: {},
       }),
       replyCommentSuccess: (state, action) => ({
          ...state,
          repliedComment: action.payload.data,
-         isLoadingReplyComment: false,
+         isLoadingCreateOrReplyComment: false,
       }),
       replyCommentFail: (state) => ({
          ...state,
          repliedComment: {},
-         isLoadingReplyComment: false,
+         isLoadingCreateOrReplyComment: false,
       }),
       resetReplyReaction: (state) => ({
          ...state,
