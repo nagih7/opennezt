@@ -38,6 +38,7 @@ export const changeAvatar = (formData: FormData) => {
       method: 'put',
       apiPath: `/users/avatar`,
       variables: formData,
+      headers: {},
    })
 }
 
