@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { IconlyImage2, IconlySend } from 'components/UI/Iconly'
 import { useSelector, useDispatch } from 'react-redux'
 import { FileUpload } from '@chakra-ui/react'
-import { resetComment, resetReply } from 'store/modules/article'
+import { resetReply, toggleReplies } from 'store/modules/article'
 import resizeBackground from 'utils/files/resizeBackground'
 import { RootState, Comment, CommentFormData } from '~/types'
 
@@ -53,6 +53,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
    const handleSubmit = async (): Promise<void> => {
       await onSubmit(formData)
       if (isCommentOrReply === 'reply') {
+         dispatch(toggleReplies())
          dispatch(resetReply())
          onReset()
          handleClickReply()

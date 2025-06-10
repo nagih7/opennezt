@@ -1,10 +1,12 @@
-import React, { forwardRef, useState } from 'react'
+import { forwardRef } from 'react'
 import { Image } from '@chakra-ui/react'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
 
 import ReplyComment from './ReplyComment'
 import { FaCircleCheck } from 'react-icons/fa6'
 import { CommentProps } from '~/types'
+import { useAppDispatch, useAppSelector } from '~/store'
+import { toggleReplies } from '~/store/modules/article'
 
 const Comment = forwardRef<HTMLLIElement, CommentProps>(
    (
@@ -22,8 +24,8 @@ const Comment = forwardRef<HTMLLIElement, CommentProps>(
       },
       ref
    ) => {
-      const [showReplies, setShowReplies] = useState(false)
-
+      const { showReplies} = useAppSelector((state) => state.article)
+      const dispatch = useAppDispatch()
       if (!comment?._id || !comment?.user?.[0]) {
          return null
       }
@@ -54,7 +56,7 @@ const Comment = forwardRef<HTMLLIElement, CommentProps>(
          if (!showReplies && setParentId && comment) {
             setParentId(comment)
          }
-         setShowReplies(!showReplies)
+         dispatch(toggleReplies())
       }
 
       const handleReply = (): void => {

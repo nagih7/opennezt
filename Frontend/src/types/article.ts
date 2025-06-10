@@ -31,15 +31,15 @@ export interface CommentFormData {
   parent_id?: string
 }
 
-export interface ReactionCount {
-   like?: number
-   love?: number
-   laugh?: number
-   wow?: number
-   sad?: number
-   angry?: number
-   total?: number
-}
+// export interface ReactionCount {
+//    like?: number
+//    love?: number
+//    laugh?: number
+//    wow?: number
+//    sad?: number
+//    angry?: number
+//    total?: number
+// }
 
 export interface DataFilter {
    cursor: Date | number
@@ -64,6 +64,7 @@ export interface UserReaction {
 }
 
 export interface LinkPreview {
+   message: string | undefined
    url: string
    title?: string
    description?: string
@@ -92,7 +93,7 @@ export interface Article {
       name: string
    }[]
    content: ArticleContent
-   reaction_count: ReactionCount
+   reaction_count: number
    comment_count: number
    created_at: string
    updated_at: string
@@ -164,6 +165,7 @@ export interface RootState {
    linkPreview: {
       linkDataArticle: LinkPreview | null
       isLoadingGetLinkPreview: boolean
+      message: string | null
    }
 }
 

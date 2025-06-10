@@ -64,6 +64,7 @@ export const useArticleActions = () => {
    const handleOpenUpdateForm = useCallback(
       async (feed: ArticleType): Promise<void> => {
          setSelectedArticle(feed)
+         dispatch(resetLinkPreview())
          dispatch(openUpdateForm())
       },
       [dispatch]
@@ -84,7 +85,7 @@ export const useArticleActions = () => {
          newFormData.append('hashtags', JSON.stringify(formData.content.hashtags))
          newFormData.append('audience', formData.audience)
          newFormData.append('status', formData.status)
-         newFormData.append('project_id', formData.project_id || '')
+         newFormData.append('project_id', formData.project_id)
          await store.dispatch(handleUpdateArticle({ id: id, data: newFormData }))
          await store.dispatch(updateUpdatedArticle(formData))
          await postActivityUpdateArticle(id)

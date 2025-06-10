@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useAppDispatch, useAppSelector } from '~/store'
 import { getListFeeds } from '~/api/newfeeds'
 import { DataFilter } from '~/types'
@@ -22,25 +22,46 @@ export const useNewFeeds = () => {
       cursor: 0,
       limit: limit,
    })
-
-   // Initial load
+   
+   // Add refs to track API call status
+   const initialLoadMadeRef = useRef(false)
+   const isInitialLoadingRef = useRef(false)
+   const prevFeedsLengthRef = useRef(feeds.length)
+   
+   // Handle initial load AND reload after feeds is cleared
    useEffect(() => {
-      if (feeds.length === 0 && hasMore === true) {
+      // Case 1: Initial load (never loaded before)
+      const isInitialLoad = !initialLoadMadeRef.current && !isInitialLoadingRef.current && feeds.length === 0;
+      
+      // Case 2: Feeds was cleared after having content (e.g. after creating new article)
+      const wasCleared = prevFeedsLengthRef.current > 0 && feeds.length === 0;
+      
+      // Update previous length reference for next check
+      prevFeedsLengthRef.current = feeds.length;
+      
+      if ((isInitialLoad || wasCleared) && hasMore && !isInitialLoadingRef.current) {
+         // Set loading state to prevent duplicate calls
+         isInitialLoadingRef.current = true;
+         
          dispatch(
             getListFeeds({
                cursor: new Date(),
                limit: limit,
             } as any)
-         )
+         ).then(() => {
+            // Mark initial load as complete after API call finishes
+            initialLoadMadeRef.current = true;
+            isInitialLoadingRef.current = false;
+         });
       }
-   }, [dispatch, feeds.length, limit, hasMore])
+   }, [dispatch, feeds.length, limit, hasMore]);
 
-   // Load more when cursor changes
+   // Handle pagination - only runs when cursor changes from its default value
    useEffect(() => {
       if (dataFilter.cursor !== 0) {
-         dispatch(getListFeeds(dataFilter))
+         dispatch(getListFeeds(dataFilter));
       }
-   }, [dispatch, dataFilter])
+   }, [dispatch, dataFilter]);
 
    const loadMore = useMemo(() => ({
       setDataFilter,
@@ -48,7 +69,7 @@ export const useNewFeeds = () => {
       limit,
       hasMore,
       isLoading: isLoadingGetFeeds,
-   }), [setDataFilter, nextCursor, limit, hasMore, isLoadingGetFeeds])
+   }), [setDataFilter, nextCursor, limit, hasMore, isLoadingGetFeeds]);
 
    return {
       feeds,
@@ -56,5 +77,5 @@ export const useNewFeeds = () => {
       isLoadingGetFeeds,
       pagination,
       loadMore,
-   }
-}
+   };
+};

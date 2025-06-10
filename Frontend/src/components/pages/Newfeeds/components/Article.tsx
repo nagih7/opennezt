@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useRef, useEffect } from 'react'
+import { forwardRef, useState, useRef, useEffect } from 'react'
 import { GoPlus } from 'react-icons/go'
 import { IconlyDelete } from '~/components/UI/Iconly'
 import { IconlyChat } from '~/components/UI/Iconly'
@@ -40,19 +40,41 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
       const { linkDataArticle, isLoadingGetLinkPreview } = useAppSelector((state) => state.linkPreview)
       const [previewData, setPreviewData] = useState<any>(null)
 
-      // Thêm useEffect để lấy link preview data
-      useEffect(() => {
-         if (link_preview) {
-            dispatch(handleGetLinkPreview({ data: { url: link_preview } }))
-         }
-      }, [link_preview, dispatch])
+      // Replace both of your useEffect hooks with this single hook:
 
-      // Cập nhật preview data khi có response từ API
+      // Keep track of URLs that we've already requested
+      const requestedUrlsRef = useRef<Set<string>>(new Set())
+
+      // Single useEffect for link preview logic
       useEffect(() => {
+         // Only proceed if we have a valid link_preview URL
+         if (!link_preview) return
+
+         // Return early if we already have the preview data matching our URL
+         if (previewData && previewData.url === link_preview) return
+
+         // If the correct preview data is already in Redux store, just use it
          if (linkDataArticle?.url === link_preview) {
             setPreviewData(linkDataArticle)
+            return
          }
-      }, [linkDataArticle, link_preview])
+
+         // Prevent duplicate API requests for the same URL
+         if (requestedUrlsRef.current.has(link_preview) || isLoadingGetLinkPreview) {
+            return
+         }
+
+         // Mark this URL as requested
+         requestedUrlsRef.current.add(link_preview)
+
+         // Make the API request
+         dispatch(handleGetLinkPreview({ data: { url: link_preview } })).then(() => {
+            // If the response is for our URL, update the preview data
+            if (linkDataArticle?.url === link_preview) {
+               setPreviewData(linkDataArticle)
+            }
+         })
+      }, [link_preview, linkDataArticle, isLoadingGetLinkPreview, dispatch, previewData])
 
       const LinkPreviewSkeleton = () => {
          return (
@@ -536,13 +558,13 @@ const Article = forwardRef<HTMLDivElement, ArticleProps>(
                <div className="flex items-center gap-3 pt-[16px] text-[#6f7f92]">
                   <a className="flex items-center gap-1 text-current no-underline">
                      {displayReaction(reaction)}
-                     <span className="text-sm">
-                        {(reaction_count.total || 0) > 0
-                           ? (reaction_count.total || 0) > 1000
-                              ? Math.floor((reaction_count.total || 0) / 1000) + 'k'
-                              : reaction_count.total
-                           : ''}
-                     </span>
+                           <span className="text-sm">
+                                {reaction_count > 0
+                                    ? reaction_count > 1000
+                                        ? Math.floor(reaction_count / 1000) + 'k'
+                                        : reaction_count
+                                    : ' '}{' '}
+                            </span>
                   </a>
                   <a
                      className="flex items-center gap-1 text-current no-underline"

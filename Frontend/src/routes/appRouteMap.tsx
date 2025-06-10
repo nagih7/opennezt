@@ -18,13 +18,13 @@ const appRouteMap: RouteConfig[] = [
       routeActive: ['/'],
       permissions: ['home_page'],
    },
-   // {
-   //    label: Sidebar.ACTIVITY,
-   //    icon: <IconlyActivity size={24} color="#fff" />,
-   //    path: ROUTE_CONFIG.USER.FEED.PREFIX,
-   //    routeActive: [ROUTE_CONFIG.USER.FEED.PREFIX, ROUTE_CONFIG.USER.FEED.DETAIL],
-   //    permissions: ['feed_page'],
-   // },
+   {
+      label: Sidebar.ACTIVITY,
+      icon: <IconlyActivity size={24} color="#fff" />,
+      path: ROUTE_CONFIG.USER.FEED.PREFIX,
+      routeActive: [ROUTE_CONFIG.USER.FEED.PREFIX, ROUTE_CONFIG.USER.FEED.DETAIL],
+      permissions: ['feed_page'],
+   },
    {
       label: Sidebar.ABOUT_ME,
       icon: <IconlyProfile size={24} color="#fff" />,
