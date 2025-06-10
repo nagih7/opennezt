@@ -73,7 +73,7 @@ const FilterSidebar: React.FC = () => {
 
    useEffect(() => {
       if (categoryFramework?.items?.length === 0) {
-         dispatch(getCategoryFramework())
+         // dispatch(getCategoryFramework())
       }
    }, [dispatch, categoryFramework])
 
@@ -137,7 +137,7 @@ const FilterSidebar: React.FC = () => {
                name="keySearch"
             />
          </div>
-         <div className="bg-[#ffffff] rounded-md mb-8">
+         {/* <div className="bg-[#ffffff] rounded-md mb-8">
             <Select onValueChange={(value) => console.log(value)}>
                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a fruit" />
@@ -153,7 +153,7 @@ const FilterSidebar: React.FC = () => {
                   </SelectGroup>
                </SelectContent>
             </Select>
-         </div>
+         </div> */}
 
          {industryFramework?.items?.length > 0 && (
             <div className="bg-[#ffffff] rounded-md mb-8">
