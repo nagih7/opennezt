@@ -488,6 +488,7 @@ const router: RouteObject[] = [
             <FeedFeatures.Feed />
          </AppLayout>
       ),
+      loader: createLoader(true, 'LOAD_FEED_PAGE'),
    },
 ]
 

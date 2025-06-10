@@ -33,25 +33,25 @@ const ProfileOverview: React.FC = () => {
             </div>
             <div className="flex flex-col items-center w-4/12">
                <div className="relative flex flex-col items-center bg-[#ffffff] mb-10 p-1 rounded-md">
-                  <label
+                  {/* <label
                      htmlFor="file-upload"
                      className="absolute top-[-150px] right-[-80px] z-50 bg-[#2f65b9] w-8 h-8 rounded-full flex items-center justify-center
                      cursor-pointer"
                   >
                      <IconlyCamera size={18} color={'#ffffff'} />
-                  </label>
+                  </label> */}
                   <Avatar className="absolute top-[-137px] bg-[#ffffff] p-1 object-cover max-w-[150px] w-[150px] h-[150px] overflow-hidden rounded-md">
                      <AvatarImage src={authUser?.avatar} />
                      <AvatarImage src={AVATAR_DEFAULT} />
                   </Avatar>
-                  <Input
+                  {/* <Input
                      value={avatarFileSrc || undefined}
                      id="file-upload"
                      type="file"
                      accept="image/png, image/jpeg"
                      onChange={handleUploadAvatar}
                      style={{ display: 'none' }}
-                  />
+                  /> */}
                   <Badge
                      className="absolute top-[-2px] z-50 rounded-md flex justify-center items-center w-[68px] h-[22px]"
                      colorPalette="green"
