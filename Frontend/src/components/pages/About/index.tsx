@@ -26,8 +26,6 @@ const About: React.FC = () => {
       return <div>has accessed your profile.</div>
    }
 
-   if (!profile) return null
-
    return (
       <div className="relative bg-[#ffffff] w-full max-h-full mb-8">
          <img

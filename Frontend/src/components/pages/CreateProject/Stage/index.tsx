@@ -3,11 +3,13 @@ import StepHeader from '../StepHeader'
 import { useNavigate } from 'react-router-dom'
 import SelectCustom from 'components/UI/SelectCustom'
 import { onChangeFormCreateProject } from 'store/modules/project'
-import { getIndustryFramework, getStageFramework } from '~/api/user'
-import { useDispatch, useSelector } from 'react-redux'
-import { Button, ButtonGroup } from '@chakra-ui/react'
-import { RootState } from '~/store'
+import { getStageFramework } from '~/api/user'
+import { useSelector } from 'react-redux'
+import { RootState, useAppDispatch } from '~/store'
 import { ROUTE_CONFIG } from '~/config/constants/routes'
+import { toast } from 'sonner'
+import { useEditStage } from '../../EditProject/Components/Stage/useEditStage'
+import { Button } from '~/components/UI/button'
 
 interface FormData {
    industries: string[]
@@ -15,11 +17,12 @@ interface FormData {
 }
 
 const Stage: React.FC = () => {
-   const dispatch = useDispatch()
+   const { industryFramework } = useEditStage()
+   const dispatch = useAppDispatch()
    const navigate = useNavigate()
    // ========== STATE FROM REDUX ========== //
    const { formCreateProject } = useSelector((state: RootState) => state.project)
-   const { industryFramework, stageFramework } = useSelector((state: RootState) => state.user)
+   const { stageFramework } = useSelector((state: RootState) => state.user)
    // ========== STATE ========== //
    const [formData, setFormData] = useState<FormData>({
       industries: [],
@@ -32,11 +35,6 @@ const Stage: React.FC = () => {
          navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC)
       }
    }, [navigate, formCreateProject.name])
-
-   useEffect(() => {
-      if (!industryFramework.length) dispatch(getIndustryFramework())
-      // eslint-disable-next-line
-   }, [dispatch])
 
    useEffect(() => {
       if (!stageFramework.length) dispatch(getStageFramework())
@@ -53,10 +51,7 @@ const Stage: React.FC = () => {
    // ========== ONCHANGE FUNCTION ========== //
    const handleChange = (event: any, nameSelect?: string) => {
       if (event.value.length > 2) {
-         // toaster.create({
-         //    type: 'error',
-         //    title: 'You can only select up to 2 industries',
-         // })
+         toast.error('You can only select up to 2 industries')
          return
       }
       if (nameSelect) {
@@ -64,25 +59,14 @@ const Stage: React.FC = () => {
       }
    }
 
-   const handlePreviousStep = () => {
-      dispatch(onChangeFormCreateProject(formData))
-      navigate(ROUTE_CONFIG.USER.PROJECT.CREATE.BASIC)
-   }
-
    const handleNextStep = () => {
       // VERIFY
       if (!formData.industries.length) {
-         // toaster.create({
-         //    title: `Industry is required.`,
-         //    type: 'error',
-         // })
+         toast.error('Industry is required.')
          return
       }
       if (!formData.stage) {
-         // toaster.create({
-         //    title: `Stage is required.`,
-         //    type: 'error',
-         // })
+         toast.error('Stage is required.')
          return
       }
       dispatch(onChangeFormCreateProject(formData))
@@ -132,24 +116,18 @@ const Stage: React.FC = () => {
                         />
                      </div>
                      <div className="flex justify-end gap-6">
-                        <ButtonGroup size="sm" variant="outline">
-                           <Button
-                              onClick={handlePrevStep}
-                              isDisabled={currentStep === 0}
-                              height={50}
-                              className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold "
-                           >
-                              BACK TO PREVIOUS STEP
-                           </Button>
-                           <Button
-                              onClick={handleNext}
-                              height={50}
-                              isDisabled={currentStep === 6}
-                              className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold "
-                           >
-                              NEXT STEP
-                           </Button>
-                        </ButtonGroup>
+                        <Button
+                           onClick={handlePrevStep}
+                           className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold h-[50px]"
+                        >
+                           BACK TO PREVIOUS STEP
+                        </Button>
+                        <Button
+                           onClick={handleNext}
+                           className="mt-[14px] px-[28px] py-3 text-sm bg-[#2f65b9] rounded-md text-[#ffffff] font-semibold h-[50px]"
+                        >
+                           NEXT STEP
+                        </Button>
                      </div>
                   </div>
                </div>

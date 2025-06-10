@@ -46,7 +46,7 @@ const ProjectMoreInfo: React.FC = () => {
    const handleChangeFormRequest = (e: any, name: keyof FormRequest) => {
       setFormRequest((prev) => ({
          ...prev,
-         [name]: e.value[0],
+         [name]: e.value,
       }))
    }
 
@@ -54,8 +54,8 @@ const ProjectMoreInfo: React.FC = () => {
    return (
       <div className="mt-8">
          <div className="bg-[#ffffff] rounded-md">
-            <div className="p-4 2xl:p-6 border-b">
-               <span className="text-lg 2xl:text-xl font-semibold">The Project Includes:</span>
+            <div className="p-4 border-b 2xl:p-6">
+               <span className="text-lg font-semibold 2xl:text-xl">The Project Includes:</span>
             </div>
             <div className="p-4 2xl:p-6">
                <p className=" text-[#6F7F92] flex">
@@ -99,7 +99,6 @@ const ProjectMoreInfo: React.FC = () => {
                Apply
             </Button>
          )}
-         {/* Modal Confirm Apply */}
          <Dialog.Root
             open={isOpenModalConfirmApply}
             onOpenChange={(e: any) => (e.open ? null : handleCloseModalConfirmApply())}
@@ -171,8 +170,8 @@ const ProjectMoreInfo: React.FC = () => {
          </Dialog.Root>
          {/* Reviews */}
          <div className="bg-[#ffffff] rounded-md mt-8">
-            <div className="p-4 2xl:p-6 border-b">
-               <span className="text-lg 2xl:text-xl font-semibold">Reviews</span>
+            <div className="p-4 border-b 2xl:p-6">
+               <span className="text-lg font-semibold 2xl:text-xl">Reviews</span>
             </div>
             <div className="p-4 2xl:p-6">
                <ul>

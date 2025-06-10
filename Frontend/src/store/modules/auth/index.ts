@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AuthState, AuthAccount } from './types'
+import { AuthState } from './types'
+import { toast } from 'sonner'
 
 // Define the initial state with TypeScript typing
 const initialState: AuthState = {
@@ -53,6 +54,7 @@ const authSlice = createSlice({
          authRegister: action.payload.data,
       }),
       startRequestRegisterFail: (state: AuthState) => {
+         toast.error('Register failed. Please try again.')
          return {
             ...state,
             isLoadingRegister: false,
