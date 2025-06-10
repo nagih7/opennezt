@@ -585,6 +585,26 @@ export const getCommentList = async (user, requestQuery) => {
                 localField: 'user_id',
                 foreignField: '_id',
                 as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
             },
         },
         {
@@ -645,6 +665,26 @@ export const getReplyCommentList = async (user, requestQuery) => {
                 localField: 'user_id',
                 foreignField: '_id',
                 as: 'user',
+                pipeline: [
+                    {
+                        $addFields: {
+                            avatar: {
+                                $cond: {
+                                    if: { $eq: [{ $ifNull: ['$avatar', ''] }, ''] },
+                                    then: '',
+                                    else: { $concat: [LINK_STATIC_URL, '$avatar'] },
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            name: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
             },
         },
         {
@@ -658,9 +698,6 @@ export const getReplyCommentList = async (user, requestQuery) => {
                 },
             },
         },
-        // {
-        //     $sort: { created_at: -1 },
-        // },
         {
             $skip: skip,
         },
@@ -1462,4 +1499,3 @@ export const getManageArticleList = async (user, requestQuery) => {
         },
     }
 }
-//

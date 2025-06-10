@@ -7,6 +7,8 @@ import { FaCircleCheck } from 'react-icons/fa6'
 import { CommentProps } from '~/types'
 import { useAppDispatch, useAppSelector } from '~/store'
 import { toggleReplies } from '~/store/modules/article'
+import { Avatar, AvatarImage } from '~/components/UI/avatar'
+import { AVATAR_DEFAULT } from '~/config/constants'
 
 const Comment = forwardRef<HTMLLIElement, CommentProps>(
    (
@@ -69,13 +71,10 @@ const Comment = forwardRef<HTMLLIElement, CommentProps>(
             <ul className="pl-0">
                <li ref={ref}>
                   <div className="flex items-center gap-2">
-                     <div className="w-[40px] h-[40px]">
-                        {userData?.avatar ? (
-                           <img src={userData?.avatar} className="rounded-full" />
-                        ) : (
-                           <img src={''} className="rounded-full" />
-                        )}
-                     </div>
+                     <Avatar className="w-[40px] h-[40px]">
+                        <AvatarImage src={user[0].avatar || undefined} />
+                        <AvatarImage src={AVATAR_DEFAULT} />
+                     </Avatar>
                      <div className="flex items-center">
                         <a className="flex items-center gap-1 text-sm font-medium text-black no-underline">
                            <span className="hover:text-[#3897f0]">{userData?.name}</span>

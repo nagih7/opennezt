@@ -25,6 +25,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
 }) => {
    const dispatch = useDispatch()
    const authUser = useSelector((state: RootState) => state.auth.authUser)
+   const { isLoadingCreateOrReplyComment } = useSelector((state: RootState) => state.article)
    const [formData, setFormData] = useState<CommentFormData>({
       article_id: article_id,
       content: {
@@ -206,12 +207,18 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                   </div>
                </div>
                {formData.content.image || formData.content.caption ? (
-                  <div className="flex" onClick={handleSubmit} style={{ cursor: 'pointer' }}>
-                     <IconlySend size={30} color={'#6f7f92'} />
+                  <div className="flex" onClick={handleSubmit} style={{ cursor: isLoadingCreateOrReplyComment ? 'not-allowed' : 'pointer' }}>
+                     {isLoadingCreateOrReplyComment ? (
+                        <div className="flex items-center justify-center w-6 h-6">
+                           <div className="w-5 h-5 border-2 border-t-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                     ) : (
+                        <IconlySend size={30} color={'#2b62d9'} />
+                     )}
                   </div>
                ) : (
                   <div className="flex" style={{ cursor: 'pointer' }}>
-                     <IconlySend size={30} color={'#6f7f92'} />
+                     <IconlySend size={30} color={'#2b62d9'} />
                   </div>
                )}
             </div>

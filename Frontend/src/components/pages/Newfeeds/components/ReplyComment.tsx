@@ -3,6 +3,8 @@ import { FaCircleCheck } from 'react-icons/fa6'
 import { Image } from '@chakra-ui/react'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
 import { ReplyCommentProps } from '~/types'
+import { Avatar, AvatarImage } from '~/components/UI/avatar'
+import { AVATAR_DEFAULT } from '~/config/constants'
 
 const ReplyComment: React.FC<ReplyCommentProps> = ({
    reply,
@@ -40,11 +42,10 @@ const ReplyComment: React.FC<ReplyCommentProps> = ({
       <div className="mb-3">
          <div className="flex items-center gap-2">
             <div className="w-[32px] h-[32px]">
-               {userData?.avatar ? (
-                  <img src={userData?.avatar} className="w-full h-full rounded-full" />
-               ) : (
-                  <img src={'avt'} className="w-full h-full rounded-full" />
-               )}
+               <Avatar className="w-[40px] h-[40px]">
+                  <AvatarImage src={user[0].avatar || undefined} />
+                  <AvatarImage src={AVATAR_DEFAULT} />
+               </Avatar>
             </div>
             <div className="flex items-center">
                <a className="flex items-center gap-1 text-sm font-medium text-black no-underline">

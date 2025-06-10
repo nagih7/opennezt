@@ -1,7 +1,8 @@
-import AvatarDefault from '../../../../assets/images/default/AvatarDefault.png'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Avatar, AvatarImage } from '~/components/UI/avatar'
 import { Input } from '~/components/UI/input'
+import { AVATAR_DEFAULT } from '~/config/constants'
 import { NewArticleProps, RootState } from '~/types'
 
 const NewArticle: React.FC<NewArticleProps> = ({ onOpenForm }) => {
@@ -14,7 +15,10 @@ const NewArticle: React.FC<NewArticleProps> = ({ onOpenForm }) => {
    return (
       <>
          <div className="flex gap-3 bg-[#ffffff] p-8 rounded-md mb-4 w-full">
-            <img src={authUser?.avatar || AvatarDefault} className="w-[50px] h-[50px] rounded-full"></img>
+            <Avatar className="w-[40px] h-[40px]">
+               <AvatarImage src={authUser?.avatar || undefined} />
+               <AvatarImage src={AVATAR_DEFAULT} />
+            </Avatar>
             <Input
                className="rounded-lg cursor-pointer"
                placeholder={`${authUser?.name} do you want to create a article?`}
