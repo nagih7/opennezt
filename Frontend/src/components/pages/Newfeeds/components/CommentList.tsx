@@ -18,9 +18,7 @@ import Comment from './Comment'
 import NewCommentForm from './NewCommentForm'
 import { resetReply } from 'store/modules/article'
 import store, { useAppDispatch, useAppSelector } from '~/store'
-import { useNavigate } from 'react-router-dom'
 import { handleGetLinkPreview } from '~/api/linkPreview'
-import { ROUTE_CONFIG } from '~/config/constants'
 import {
    RootState,
    Article,
@@ -78,12 +76,13 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
       page: 1,
    })
 
-   useEffect(() => {
-      console.log(comment)
-   }, [comment])
+   // First useEffect for initial load only
+   const initialLoadMadeRef = useRef(false)
 
    useEffect(() => {
-      if (comment.length === 0 && hasMore === true) {
+      if (dataFilter.page === 1 && comment.length === 0 && hasMore === true && !initialLoadMadeRef.current) {
+         // Initial load - only happens once
+         initialLoadMadeRef.current = true
          dispatch(
             handleGetListComment({
                articleId: feed?._id,
@@ -91,19 +90,21 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
                limit: limit,
             }) as any
          )
-      }
-   }, [dispatch, comment, feed, limit, hasMore])
-
-   useEffect(() => {
-      // Chỉ gọi API khi cursor thay đổi (không phải lần đầu load)
-      if (dataFilter.page !== 1) {
+      } else if (dataFilter.page > 1) {
+         // Loading more comments (pagination)
          dispatch(handleGetListComment(dataFilter) as any)
       }
-   }, [dispatch, dataFilter])
+   }, [dispatch, feed, limit, hasMore, dataFilter, comment.length])
+
+   // Second useEffect for pagination only
+   useEffect(() => {
+      if (dataFilter.page > 1) {
+         dispatch(handleGetListComment(dataFilter) as any)
+      }
+   }, [dataFilter.page])
 
    useEffect(() => {
       store.dispatch(updateCreatedComment({ createdComment, authUser }))
-      console.log(createdComment)
    }, [createdComment, authUser])
 
    const displayReaction = (): React.ReactElement => {
@@ -255,7 +256,34 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
                   newFormData.append('image', formData.content.image)
                }
                await store.dispatch(handleReplyComment({ data: newFormData }))
+               
+               // Tăng reply_count của comment cha
+               if (selectedComment.parent_id) {
+                  const parentComment = comment.find((c) => c._id === selectedComment.parent_id)
+                  if (parentComment) {
+                     // Tăng reply_count của comment được reply
+                     const updatedComment = {
+                        ...parentComment,
+                        reply_count: (parentComment.reply_count || 0) + 1
+                     }
+                     
+                     // Cập nhật lại state comment
+                     dispatch({ 
+                        type: 'article/updateCommentReplyCount', 
+                        payload: { commentId: selectedComment.parent_id, count: updatedComment.reply_count } 
+                     })
+                  }
+               }
+               
+               // Tăng comment_count của article
+               dispatch({
+                  type: 'article/incrementArticleCommentCount',
+                  payload: feed._id
+               })
+               
+               return
             }
+            
             if (selectedComment?._id) {
                const newFormData = new FormData()
                newFormData.append('article_id', formData.article_id)
@@ -265,8 +293,31 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
                   newFormData.append('image', formData.content.image)
                }
                await store.dispatch(handleReplyComment({ data: newFormData }))
+               
+               // Tăng reply_count của comment được reply
+               const commentToUpdate = comment.find((c) => c._id === selectedComment._id)
+               if (commentToUpdate) {
+                  // Tăng reply_count của comment được reply
+                  const updatedComment = {
+                     ...commentToUpdate,
+                     reply_count: (commentToUpdate.reply_count || 0) + 1
+                  }
+                  
+                  // Cập nhật lại state comment
+                  dispatch({ 
+                     type: 'article/updateCommentReplyCount', 
+                     payload: { commentId: selectedComment._id, count: updatedComment.reply_count } 
+                  })
+               }
+               
+               // Tăng comment_count của article
+               dispatch({
+                  type: 'article/incrementArticleCommentCount',
+                  payload: feed._id
+               })
             }
          }
+         
          if (isCommentOrReply === 'comment') {
             const newFormData = new FormData()
             newFormData.append('article_id', formData.article_id)
@@ -275,9 +326,11 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
                newFormData.append('image', formData.content.image)
             }
             await store.dispatch(handleCreateComment({ data: newFormData }))
+            
+            // Comment_count của article sẽ tự động được cập nhật thông qua response API
          }
       },
-      [isCommentOrReply, selectedComment]
+      [isCommentOrReply, selectedComment, dispatch, comment, feed]
    )
    //End
 
@@ -350,9 +403,15 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
 
    useEffect(() => {
       if (replyDataFilter.parent_id) {
-         dispatch(handleGetListReplyComment({ dataFilter: replyDataFilter }))
+         // Ensure article_id is always set and parent_id is a string
+         const dataFilterWithArticleId = {
+            ...replyDataFilter,
+            article_id: feed._id,
+            parent_id: replyDataFilter.parent_id ?? '',
+         }
+         dispatch(handleGetListReplyComment({ dataFilter: dataFilterWithArticleId }))
       }
-   }, [replyDataFilter, dispatch])
+   }, [replyDataFilter, dispatch, feed._id])
 
    const handleClickReply = useCallback(async () => {
       if (isCommentOrReply === 'comment') {
@@ -489,12 +548,6 @@ const CommentList: React.FC<CommentListComponentProps> = ({ feed, reaction, onRe
    const handleReset = useCallback(() => {
       setReplyCommentList({})
    }, [])
-
-   const navigate = useNavigate()
-
-   const handleViewTalentDetails = (user: any) => {
-      navigate(ROUTE_CONFIG.USER.RECRUIT_TALENT.PREFIX + user._id)
-   }
 
    const [isModalOpen, setIsModalOpen] = useState(false)
    const [selectedImageIndex, setSelectedImageIndex] = useState(0)

@@ -48,6 +48,7 @@ const initialState: ArticleState = {
    isLoadingBookmarkArticle: false,
    bookmarks: [],
    isLoadingGetBookmarks: false,
+   showReplies: false, // To manage the visibility of replies
 }
 
 const articleSlice = createSlice({
@@ -154,7 +155,6 @@ const articleSlice = createSlice({
             hasMore: true,
          },
          feeds: [],
-         reactions: [],
       }),
       createArticleFail: (state) => ({
          ...state,
@@ -436,6 +436,29 @@ const articleSlice = createSlice({
       },
 
       // Add other reducers as needed based on the full state
+      toggleReplies: (state) => ({
+         ...state,
+         showReplies: !state.showReplies, // Toggle the visibility of replies
+      }),
+      updateCommentReplyCount: (state, action) => {
+         const { commentId, count } = action.payload
+         const commentIndex = state.comment.findIndex(comment => comment._id === commentId)
+   
+         if (commentIndex !== -1) {
+            state.comment[commentIndex].reply_count = count
+         }
+      },
+
+      incrementArticleCommentCount: (state, action) => {
+         // Tăng comment_count tổng của bài viết
+         // Chỉ sử dụng trong UI, backend sẽ cập nhật giá trị thực
+         const articleId = action.payload
+         
+         // Nếu bạn lưu article hiện tại trong state, cập nhật nó
+         if (state.currentArticle && state.currentArticle._id === articleId) {
+            state.currentArticle.comment_count = (state.currentArticle.comment_count || 0) + 1
+         }
+      },
    },
 })
 
@@ -501,6 +524,9 @@ export const {
    getUserBookmarksSuccess,
    getUserBookmarksFail,
    updateBookmarks,
+   toggleReplies,
+   updateCommentReplyCount,
+   incrementArticleCommentCount,
 } = articleSlice.actions
 
 export default articleSlice.reducer

@@ -37,7 +37,6 @@ function NewFeeds(): React.ReactElement {
       handleCloseUpdateForm,
       handleUpdateFormSubmit,
       handleDelete,
-      setSelectedArticle,
    } = useArticleActions()
 
    const {

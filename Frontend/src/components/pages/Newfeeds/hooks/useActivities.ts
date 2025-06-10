@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useAppDispatch, useAppSelector } from '~/store'
 import { getActivitiesArticle } from '~/api/activity'
 
@@ -19,11 +19,16 @@ interface Activity {
  */
 export const useActivities = () => {
    const dispatch = useAppDispatch()
+   const initialFetchCompleted = useRef(false)
 
    const { activities, isLoadingActivities, limit: activitiesLimit } = useAppSelector((state) => state.activity)
 
    useEffect(() => {
-      dispatch(getActivitiesArticle({ skip: 0, limit: activitiesLimit }))
+      // Only fetch activities if this is the first time or if the limit has changed
+      if (!initialFetchCompleted.current || initialFetchCompleted.current === false) {
+         dispatch(getActivitiesArticle({ skip: 0, limit: activitiesLimit }))
+         initialFetchCompleted.current = true
+      }
    }, [dispatch, activitiesLimit])
 
    return {
