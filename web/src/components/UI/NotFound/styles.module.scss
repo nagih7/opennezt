@@ -1,0 +1,16 @@
+@use '../../../assets/scss/variables.scss' as *;
+
+.notFoundWrap {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   height: 100%;
+   width: 100%;
+   background-color: #f5f5f5;
+   border-radius: $borderRadius;
+   box-shadow: $boxShadow;
+
+   .notFoundContent {
+   }
+}

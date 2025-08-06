@@ -1,0 +1,14 @@
+@use '../../../../../assets/scss/variables' as *;
+
+.orderWrap {
+   border-radius: 4px;
+   margin-bottom: 20px;
+
+  :global {
+    [role="tablist"] {
+      background-color: white;
+      color: #333;
+      font-weight: 400;
+    }
+  }
+}

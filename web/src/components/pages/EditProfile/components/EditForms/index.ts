@@ -1,0 +1,5 @@
+export  {default as EditBackground} from './EditBackground'
+export {default as EditEducation} from './EditEducation'
+export {default as EditCertification} from './EditCertification'
+export {default as EditExpertise} from './EditExpertise'
+export {default as EditAdditional} from './EditAdditional'

@@ -1,0 +1,177 @@
+$colorBackground: #f6f6f9;
+$mainColor: #212631;
+$backgroundMain: #f4f5f6;
+$mainColorDark: #2a2a4a;
+$colorWhite: #fff;
+$colorBlack: #363949;
+$colorActive: #6c9bcf;
+$colorPrimary: #6c9bcf;
+$colorWarning: #f7d060;
+$colorSuccess: #1b9c85;
+$colorNote: #677483;
+$backgroundHoverMain: #2a303d;
+$hoverSecondaryAccent: #8577ff;
+
+$colorSidebarActive: #2f65b9;
+
+$colorWhiteHover: #fcfcfe;
+
+$colorError: #e74c3c;
+
+$colorBlue: #1a85f8;
+$colorBlueNormal: #0172cb;
+$colorGrey: #d5dadd;
+
+$colorDark1: #28293d;
+$colorDark2: #555770;
+$colorDark3: #8f90a6;
+$colorDark4: #c7c9d9;
+$colorLight: #e4e4eb;
+$colorLight1: #ebebf0;
+$colorLight2: #f2f2f5;
+$colorLight3: #fafafc;
+$colorLight4: #ffffff;
+$colorRed: #e60a32;
+$colorRed1: #eb3b5b;
+$colorRed2: #ff5c5c;
+$colorRed3: #e0211f;
+$colorGreen: #05a660;
+$colorGreen1: #06c270;
+$colorGreen2: #39d98a;
+$colorBlue: #004fc4;
+$colorBlue1: #2f6bff;
+$colorBlue2: #5b8def;
+$colorYellow: #e5b800;
+$colorYellow1: #ffcc00;
+$colorYellow2: #fddd48;
+$colorOrange: #e57a00;
+$colorOrange1: #ff8800;
+$colorOrange2: #fdac42;
+
+$colorBorderDark: #8f90a6;
+$colorBorderLight: #c7c9d9;
+$colorBorderRed: #ff3b3b;
+$colorBorderGreen: $colorGreen1;
+$colorBorderBlue: #0063f7;
+$colorBorderYellow: #fc0;
+$colorBorderOrange: #f80;
+$colorBorderDefault: #e9ecef;
+
+$secondaryColor: #f3f4f6;
+
+//Text color - Start
+$colorText40: #d2d6e5;
+$colorText50: #abb4ce;
+$colorText90: #3d4667;
+$colorText80: #4a577f;
+$colorText70: #5e6e99;
+$colorText100: #363e59;
+
+//Color support
+$colorBackgroundSupport: #fafdff;
+$colorBorderSupport: #c7c9d9;
+
+// Input
+$colorBorderInput: #bac7d5;
+$colorBackgroundInputError: #fff5f5;
+$colorBorderInputError: $colorRed1;
+$colorTextError: $colorRed1;
+$colorBackGroundInputFile: $colorLight4;
+$colorBorderInputFile: #d2d6e5;
+
+// Button
+$colorBackgroundButton: #2b3847;
+$colorTextButton: $colorLight4;
+$colorBackgroundButtonCancel: #6b7f8d;
+$colorBackgroundButtonRemove: #abb4ce;
+$colorTextButtonRemove: #7e8cb2;
+$colorBackgroundButtonFilter: #fff;
+$colorTextButtonFilter: #000000;
+$colorBorderButtonFilter: #bac7d5;
+
+// notification
+$colorBackgroundSuccess: #e4f6d8;
+$colorBorderSuccess: #b8daa2;
+$colorBackgroundError: #ffebe9;
+$colorBorderError: #e0b4ad;
+$colorBackgroundWarning: #f8f4d2;
+$colorBorderWarning: #ddd8a9;
+
+// Table
+$colorBorderTableContent: #abb4ce;
+
+// Pagination
+$colorBackgroundPaginationButton: $colorLight4;
+$colorBorderPaginationButton: #dfe3e8;
+$colorBackgroundPaginationButtonLast: #919eab;
+
+// Checked
+$colorBackgroundChecked: #0172cb;
+$colorBackgroundCheckedHover: #249cfb;
+$colorBackgroundHover: #b8c4d3;
+$colorBackgroundDisableChecked: #abb4ce;
+
+//Break
+$colorBorderBreakWrap: #d2d6e5;
+$colorBorderBreak: #abb4ce;
+
+//FilterOrder
+$colorFilter: #3d4667;
+$colorActivateFilter: #ebedf3;
+$colorDayPicker: #0080ff;
+$colorBackgroundDayPicker: #d9ecff;
+
+//Select
+$colorBackgroundInputSelect: #e8edf1;
+
+//Tabs
+$colorTabInkBar: #2d2e2e;
+$colorTabActiveBg: #f1f4f7;
+
+// Order
+$colorBlueDark: #005aa3;
+$colorGreenDark: #2d7738;
+$colorRedDark: #eb3b5b;
+$colorWaring: #ba5d00;
+$colorRed: #c30326;
+
+// Line
+$colorLine: #323a49;
+$colorLineLight: #e5e7eb;
+
+// Box
+$boxShadow: 0 0rem 2rem $colorLight;
+$boxShadow1: 0 1rem 1rem $colorLight1;
+$boxShadowDark: 0 0rem 1rem $colorNote;
+$boxShadowHover: 0 0rem 0rem $colorLight1;
+$backgroundNavItemActive: #848bc42e;
+$navItemAciive: #6c9bcf;
+$secondaryAccent: #6d5dfc;
+
+// Icon
+$colorNavbar: #7d8da1;
+
+// Border
+$colorBorder: #d2d6e5;
+$borderRadius: 0.5rem;
+$borderRadius1: 1rem;
+$borderRadius2: 1.2rem;
+$borderRadius3: 1.5rem;
+$borderRadius4: 2rem;
+
+// Text
+$textColor: #374151;
+$color-primary: #6c9bcf;
+
+$textColorDark: #1f2937;
+
+// Size Navbar
+// $sizeNavbar: 200px;
+$sizeNavbar: 270px;
+$colorPlaceholder: #949698;
+
+// Card
+$cardPadding: 1.8rem;
+
+// Variant
+$textColorDarkVariant: #677483;

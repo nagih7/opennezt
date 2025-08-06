@@ -1,0 +1,38 @@
+# TypeScript
+*.d.ts
+*.tsbuildinfo
+
+# Vite
+/dist
+/.vite
+
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+package-lock.json
+
+# Testing
+/coverage
+
+# Production
+/build
+
+
+# Misc
+.DS_Store
+.env
+.env.development
+.env.production
+
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.idea/
+
+/memory-bank
+
+/.direnv
+

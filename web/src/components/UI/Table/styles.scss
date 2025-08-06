@@ -1,0 +1,12 @@
+@use '../../../assets/scss/variables' as *;
+
+.table-custom {
+   overflow: hidden;
+   .ant-table {
+      .ant-table-thead {
+         .ant-table-cell {
+            color: $colorBlack;
+         }
+      }
+   }
+}
